@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'AddressSansPro';
+    src: url('AddressSansPro-Regular.woff2') format('woff2'),
+        url('AddressSansPro-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lane - Narrow';
+    src: url('Lane-Narrow.woff2') format('woff2'),
+        url('Lane-Narrow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
