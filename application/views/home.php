@@ -17,122 +17,86 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
 			</div>
-			 
+
+			<div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner-registration.jpg">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 col-lg-4 col-xl-5 text-center">
+						</div>
+						<div class="col-md-12 col-lg-7 col-xl-7 text-center">
+							<div class="row justify-content-center">
+									<h2 class="font-weight-bold text-white font-kanit f-28">Signup Today for a Free 30-Day Trial</h2>
+							</div>
+							<div class="row row-margin-top">
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<input type="text" class="form-control" id="inputFirstname" placeholder="First Name">
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<input type="text" class="form-control" id="inputLastname" placeholder="Last Name">
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<input type="text" class="form-control" id="inputEmailAddress" placeholder="Email Address">
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<input type="text" class="form-control" id="inputPhoneNumber" placeholder="Phone Number">
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<input type="text" class="form-control" id="inputBusinessName" placeholder="Business Name">
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<select class="form-control" id="sel1">
+													<option>Number of Employees</option>
+													<option>1 (Just Me)</option>
+													<option>2-3</option>
+													<option>4-10</option>
+													<option>11-15</option>
+													<option>16-20</option>
+													<option>20+</option>
+											</select>
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<select class="form-control" id="sel1">
+													<option>--Select your Industry--</option>
+													<option>Aerospace Industry</option>
+													<option>Transport Industry</option>
+													<option>Computer Industry</option>
+													<option>Telecommunication industry</option>
+													<option>Agriculture industry</option>
+													<option>Construction Industry</option>
+													<option>Education Industry</option>
+											</select>
+									</div>
+									<div class="col-md-12 col-lg-6 row-margin-top">
+											<select class="form-control" id="sel1">
+													<option>--Select your Role--</option>
+													<option>Aerospace Industry</option>
+													<option>Transport Industry</option>
+													<option>Computer Industry</option>
+													<option>Telecommunication industry</option>
+													<option>Agriculture industry</option>
+													<option>Construction Industry</option>
+													<option>Education Industry</option>
+											</select>
+									</div>
+							</div>
+							<div class="row row-margin-top">
+									<div class="col-md-12 col-lg-6">
+											<button type="button" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
+											<label class="font-weight-bold text-white">No credit card required</label>
+									</div>
+									<div class="col-md-12 col-lg-6">
+											<label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 		</div>
 	</section>
 	<!-- Hero section end  -->
-
-
-    <!-- Sign Up Form section  -->
-    
-    <style type="text/css">
-        .signupForm {
-            margin-top: -80px;
-            position: relative;
-            z-index: 1;
-            background-color: #3d2453 !important;
-        }
-        .row-margin-top {
-            margin-top: 10px;
-        }
-
-        .slick-center > div {
-            transform: scale(1);
-        }
-        .slider__item > img {
-            width: 100%;
-            height: auto;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css">
-    <section class="signupForm customBuz bg_purple mt-8">
-        <div class="container">
-            <div class="row" style="padding-bottom: 80px;">
-                <div class="col-xs-12 col-md-12 col-lg-6 row-margin-top justify-content-center">
-                    <div class="lazy slider" data-sizes="50vw">
-                        <div>
-                            <img src="https://placeimg.com/560/350/arch">
-                        </div>
-                        <div>
-                            <img src="https://placeimg.com/560/350/nature">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-12 col-lg-6 row-margin-top">
-                        <div class="row justify-content-center">
-                            <h2 class="font-weight-bold text-white">Signup Today for a Free 30-Day Trial</h2>
-                        </div>
-                        <div class="row row-margin-top">
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <input type="text" class="form-control" id="inputFirstname" placeholder="First Name">
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <input type="text" class="form-control" id="inputLastname" placeholder="Last Name">
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <input type="text" class="form-control" id="inputEmailAddress" placeholder="Email Address">
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <input type="text" class="form-control" id="inputPhoneNumber" placeholder="Phone Number">
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <input type="text" class="form-control" id="inputBusinessName" placeholder="Business Name">
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <select class="form-control" id="sel1">
-                                    <option>Number of Employees</option>
-                                    <option>1 (Just Me)</option>
-                                    <option>2-3</option>
-                                    <option>4-10</option>
-                                    <option>11-15</option>
-                                    <option>16-20</option>
-                                    <option>20+</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <select class="form-control" id="sel1">
-                                    <option>--Select your Industry--</option>
-                                    <option>Aerospace Industry</option>
-                                    <option>Transport Industry</option>
-                                    <option>Computer Industry</option>
-                                    <option>Telecommunication industry</option>
-                                    <option>Agriculture industry</option>
-                                    <option>Construction Industry</option>
-                                    <option>Education Industry</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 col-lg-6 row-margin-top">
-                                <select class="form-control" id="sel1">
-                                    <option>--Select your Role--</option>
-                                    <option>Aerospace Industry</option>
-                                    <option>Transport Industry</option>
-                                    <option>Computer Industry</option>
-                                    <option>Telecommunication industry</option>
-                                    <option>Agriculture industry</option>
-                                    <option>Construction Industry</option>
-                                    <option>Education Industry</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row row-margin-top">
-                            <div class="col-md-12 col-lg-6">
-                                <button type="button" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
-                                <label class="font-weight-bold text-white">No credit card required</label>
-                            </div>
-                            <div class="col-md-12 col-lg-6">
-                                <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
-                            </div>                    
-                        </div>
-                        
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Sign Up Form section end  -->
-
-
-
 	<section class="manageBusiness">
         <div class="customContainer">
             <div class="row">
@@ -165,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-2.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-2-v2.jpg" class="card-img" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -229,7 +193,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-6.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-6-v2.jpg" class="card-img" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -322,7 +286,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </section>
-    <!-- <section class="timeTracking mt-8">
+    <section class="timeTracking mt-8">
         <div class="customContainer">
             <div class="row">
                 <div class="col-sm-12">
@@ -334,7 +298,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="row">
                         <div class="col-lg-7 col-md-5">
                             <div class="imgHolder">
-                                <img src="<?php echo $url->assets ?>frontend/images/time-tracking.png" class="img-fluid" alt="time tracking">
+                                <img src="<?php echo $url->assets ?>frontend/images/time-tracking.jpg" class="img-fluid" alt="time tracking">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-7 align-self-center">
@@ -363,7 +327,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-    </section> -->
+    </section>
     <!-- <section class="gpsLocation mt-8">
         <div class="customContainer">
             <div class="row">
@@ -418,7 +382,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-6 col-md-7 text-right">
                     <div class="systemInfo ml-neg5">
                         <h3>Contact Manager</h3>
-                        <h4>Keep track of both current and prospective clients</h4>
+                        <h4 class="weight-600 subtle-fade">Keep track of both current and prospective clients</h4>
                         <p>Easily send notifications to clients about appointments, or other reminders or find them with our GPS integration without having to manually input addresses </p>
                                           </div>
                 </div>
@@ -437,11 +401,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-6 col-md-7 text-left align-self-center">
                     <div class="systemInfo">
                         <h3>Easy Work Order Management</h3>
-                        <h4>Manage your jobs from anywhere</h4>
-                       
+                        <h4 class="weight-600 subtle-fade">Manage your jobs from anywhere</h4>
+
                             <p>With our online app, nSmartrac allows you to manage your assignments from where ever you happen to be. No need to come in the office for additional paperwork. </p>
-                           
-                        
+
+
                     </div>
                 </div>
             </div>
@@ -449,7 +413,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-6 col-md-7 text-right">
                     <div class="systemInfo">
                         <h3 class="mt-5">Receive payments online</h3>
-                        <h4>Payment Collection Made Easy</h4>
+                        <h4 class="weight-600 subtle-fade">Payment Collection Made Easy</h4>
                         <p>nSmartrac is integrated with apps like Square, PayPal and WePay. This means any payments can be automatically deposited to the destination of your choice.</p>
                     </div>
                 </div>
@@ -458,7 +422,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <img src="<?php echo $url->assets ?>frontend/images/trialimg_3.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
-                
+
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -522,18 +486,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-4">
                     <div class="princing-item starter h-100">
 
-                    
+
                     <div class="pricing-divider ">
                         <h3 class="text-light">Starter</h3>
-                        
-                        
-                        
+
+
+
                     </div>
                     <div class="card-body mt-0 shadow h-100">
                         <div class="cardText">
                         <h4 class="my-0 display-2 text-light font-weight-normal mb-3"><span class="h3">$</span> <span class="price"> 29</span> <span
                             class="h5"><span class="pricehalf">99</span><span class="pricetxt">per month</span></span></h4>
-                            
+
                         <ul class="list-unstyled mb-5 position-relative">
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
@@ -549,8 +513,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="princing-item team h-100">
                     <div class="pricing-divider ">
                         <h3 class="text-light">Team</h3>
-                        
-                        
+
+
                     </div>
                     <div class="card-body mt-0 shadow h-100">
                         <div class="cardText">
@@ -562,9 +526,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
-                            
-                            
-                            
+
+
+
                         </ul>
                         <button type="button" class="btn btn-lg btn-block  btn-custom ">Sign up for free</button>
                     </div>
@@ -575,8 +539,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="princing-item enterprise h-100">
                     <div class="pricing-divider ">
                         <h3 class="text-light">Enterprise</h3>
-                        
-                        
+
+
                     </div>
                     <div class="card-body mt-0 shadow h-100">
                         <div class="cardText">
@@ -588,7 +552,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
-                           
+
                         </ul>
                         <button type="button" class="btn btn-lg btn-block btn-custom ">Sign up for free</button>
                     </div>
