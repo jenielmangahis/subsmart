@@ -1,6 +1,6 @@
 /* =================================
 ------------------------------------
-	Template Name: Industry.INC
+	Template Name: Industry.INC 
 	Description: Industry.INC HTML Template
 	Author: colorlib
 	Author URI: https://www.colorlib.com/
@@ -64,9 +64,9 @@ $(window).on('load', function() {
 	$('.hero-slider').owlCarousel({
 		nav: true,
 		dots: false,
-		loop: false,
+		loop: true,
 		navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
-		autoplay: false,
+		autoplay: true,
 		items: 1,
 		animateOut: 'fadeOut',
     	animateIn: 'fadeIn',
@@ -117,7 +117,7 @@ $(window).on('load', function() {
 	$('.video-popup').magnificPopup({
 		type: 'iframe'
 	});
-
+	
 	/*------------------
 		Accordions
 	--------------------*/
