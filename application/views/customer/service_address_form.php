@@ -3,6 +3,7 @@
     <input type="hidden" name="customer_id" value="<?php echo (!empty($customer)) ? $customer->id : '' ?>">
     <input type="hidden" name="action_type" value="<?php echo (!empty($action)) ? $action : '' ?>">
     <input type="hidden" name="data_index" value="<?php echo (isset($data_index)) ? $data_index : '' ?>">
+    <input type="hidden" name="row-counter" value="">
     <div class="form-group">
         <div class="row">
             <div class="col-md-6 col-sm-12">

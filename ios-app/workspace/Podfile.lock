@@ -1,0 +1,107 @@
+PODS:
+  - AFDateHelper (4.3.0)
+  - Alamofire (4.8.0)
+  - AlamofireJsonToObjects (2.4.1):
+    - Alamofire
+    - EVReflection
+  - AlamofireObjectMapper (5.2.1):
+    - Alamofire (~> 4.7)
+    - ObjectMapper (~> 3.4)
+  - DLRadioButton (1.4.12)
+  - DTTextField (0.3.0)
+  - EVReflection (5.10.1):
+    - EVReflection/Core (= 5.10.1)
+  - EVReflection/Core (5.10.1)
+  - EzPopup (1.1)
+  - Floaty (4.2.0)
+  - FontAwesome.swift (1.9.0)
+  - FSCalendar (2.8.1)
+  - Kingfisher (5.13.3):
+    - Kingfisher/Core (= 5.13.3)
+  - Kingfisher/Core (5.13.3)
+  - Material (3.1.8):
+    - Material/Core (= 3.1.8)
+  - Material/Core (3.1.8):
+    - Motion (~> 3.1.1)
+  - Motion (3.1.3):
+    - Motion/Core (= 3.1.3)
+  - Motion/Core (3.1.3)
+  - ObjectMapper (3.5.2)
+  - PureLayout (3.1.5)
+  - RxCocoa (4.5.0):
+    - RxSwift (>= 4.4.2, ~> 4.4)
+  - RxSwift (4.5.0)
+  - SearchTextField (1.2.4)
+  - SideMenu (6.4.8)
+  - SVProgressHUD (2.2.5)
+
+DEPENDENCIES:
+  - AFDateHelper (~> 4.2)
+  - Alamofire (= 4.8)
+  - AlamofireJsonToObjects
+  - AlamofireObjectMapper
+  - DLRadioButton
+  - DTTextField
+  - EzPopup
+  - Floaty (~> 4.2.0)
+  - FontAwesome.swift
+  - FSCalendar
+  - Kingfisher
+  - Material
+  - PureLayout
+  - RxCocoa (~> 4.0)
+  - RxSwift (~> 4.0)
+  - SearchTextField
+  - SideMenu
+  - SVProgressHUD
+
+SPEC REPOS:
+  trunk:
+    - AFDateHelper
+    - Alamofire
+    - AlamofireJsonToObjects
+    - AlamofireObjectMapper
+    - DLRadioButton
+    - DTTextField
+    - EVReflection
+    - EzPopup
+    - Floaty
+    - FontAwesome.swift
+    - FSCalendar
+    - Kingfisher
+    - Material
+    - Motion
+    - ObjectMapper
+    - PureLayout
+    - RxCocoa
+    - RxSwift
+    - SearchTextField
+    - SideMenu
+    - SVProgressHUD
+
+SPEC CHECKSUMS:
+  AFDateHelper: b769c07d3d4784ee9a74633285304261bb27dc52
+  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  AlamofireJsonToObjects: 2f652417f69ca86f229b704cdd00370bb892af45
+  AlamofireObjectMapper: 1989f690e982b71921b9253f53a4f33a9bc00d88
+  DLRadioButton: d7c4e225ed0e8013cef7be61455230c7557ad7c1
+  DTTextField: c26deead1a51c92156e2a638ac7d2c702c2f345e
+  EVReflection: 8124de482178d34ccd56473e16cd95990f9a1113
+  EzPopup: b959cfb0d70d782a28e770a96c454df0401467c7
+  Floaty: e2bd5a0f6f7f70899e26ff2da31081c8bee8d1b0
+  FontAwesome.swift: a403b88cec950511745ba8f2decd1b6a07346d13
+  FSCalendar: 5245140456fcbcac5824c203b98bd8068bdfee1a
+  Kingfisher: d2b3d6a7200c93b34de9afcdf25c8dd9282ec277
+  Material: a2a3f400a3b549d53ef89e56c58c4535b29db387
+  Motion: cf1e060e489f6661126374d5c60dbd2ed991605c
+  ObjectMapper: b53ae947d370bf89423e86be7d4e2d2b2a8d3f40
+  PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
+  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
+  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  SearchTextField: 40dc3cc57def5a211f263cac263622c163bbc25a
+  SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+
+PODFILE CHECKSUM: 9903dbaffe08b0531584b215551d1939e37f3fd3
+
+COCOAPODS: 1.9.1

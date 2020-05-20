@@ -9,10 +9,10 @@ https://fonts.googleapis.com/css?family=Roboto:400,
 
 body {
     background-repeat: repeat;
-    background:#fff;
+    background: #dddddd;
     font-family: Roboto, sans-serif;
     color: #000;
-    background: #ecf5fe;
+    /*background: #ecf5fe;*/
     font-size: 14px;
 }
 

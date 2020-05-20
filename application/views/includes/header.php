@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
+    <script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
     
@@ -100,7 +101,14 @@
                             <li class="dropdown notification-list list-inline-item">
                                 <div class="dropdown notification-list nav-pro-img">
                                     <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <img src="<?php echo (companyProfileImage(logged('comp_id'))) ? companyProfileImage(logged('comp_id')) : $url->assets ?>" alt="user" class="rounded-circle">
+                                        <?php /*<img src="<?php //echo (companyProfileImage(logged('comp_id'))) ? companyProfileImage(logged('comp_id')) : $url->assets ?>" alt="user" class="rounded-circle">*/ ?>
+                                        <?php 
+                                            /*$image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
+                                            if( !@getimagesize($image) ){
+                                                $image = base_url('uploads/users/default.png');
+                                            }*/
+                                        ?>
+                                        <img src="<?php //echo $image; ?>" alt="user" class="rounded-circle">
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                         <a class="dropdown-item" href="<?php echo url('dashboard')?>"><i class="mdi mdi-account-circle m-r-5"></i>Dashboard</a> 

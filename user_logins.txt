@@ -1,0 +1,6 @@
+login	Email	PW	Role	Status
+admin	support@nsmartrac.com	sony@123	Super Admin	Not Working
+admin_user1	user1@test.com	sony@123	nsmart user	Not Working
+company_admin	company1@test.com	sony@123	company owner	Working
+company1_user1	compuser1@test.com	sony@123	company manager	Working
+comp3_user2	comp3user2@test.com	sony@123	company sales rep	Working

@@ -9,7 +9,7 @@
             <div class="col-sm-6">
                <h1 class="page-title">Files</h1>
                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">Manage Files</li>
+                  <li class="breadcrumb-item active">Manage Files&emsp;<?php echo $path; ?></li>
                </ol>
             </div>
             <div class="col-sm-6">
@@ -20,6 +20,16 @@
                      <i class="mdi mdi-settings mr-2"></i> Add New Files
                      </a> 
 					 
+                     <?php //endif ?>
+                  </div>
+               </div>
+               <div class="float-right d-none d-md-block" style="margin-right: 10px">
+                  <div class="dropdown">
+                     <?php //if (hasPermissions('users_add')): ?>
+                     <button type="button" class="btn btn-primary" id="btn-folder-manager">
+                     <i class="mdi mdi-settings mr-2"></i> Select Folder
+                     </button> 
+                
                      <?php //endif ?>
                   </div>
                </div>
@@ -71,10 +81,21 @@
    </div>
    <!-- end container-fluid -->
 </div>
+<div><input type="hidden" id="current_selected_folder_id" value=<?php echo $folder_id; ?>></div>
 <!-- page wrapper end -->
+
+<?php echo $folder_manager; ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
    $(document).ready( function () {
         $('#dataTable1').DataTable();
+
+        $('#btn-select-folder-manager').click(function(){
+            if(!jQuery.isEmptyObject(selected_folder)){
+               window.location.href = base_url + 'vault/' + selected_folder.id;
+            } else {
+               window.location.href = base_url + 'vault';   
+            }
+         });
     } );
 </script>

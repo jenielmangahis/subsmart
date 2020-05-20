@@ -9,6 +9,7 @@
 <!-- jQuery  -->
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
+<script src="<?php echo $url->assets ?>js/folders_files.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/waves.min.js"></script>
@@ -32,12 +33,16 @@
 <script src="<?php echo $url->assets ?>plugins/select2/dist/js/select2.full.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
 
 <!-- Include calender js files -->
 <!-- <script src="<?php echo base_url() ?>calender/assets/js/calendar.js"></script> -->
 
 
 <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
+<script src="<?php echo $url->assets ?>js/sign_new.js"></script>
+<script src="<?php echo $url->assets ?>js/sign.js"></script>
+<script src="<?php echo $url->assets ?>js/sign2.js"></script>
 <script>
     jQuery(document).ready(function () {
         jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
@@ -46,10 +51,7 @@
             var dataURL = canvas.toDataURL("image/png");
             jQuery("#saveSignatureDB").val(dataURL);
         });
-
-
     });
-
 </script>
 <script type="text/javascript">
     window.base_url = <?php echo json_encode(base_url()); ?>;

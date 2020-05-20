@@ -69,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Estimate#</label>
                                     <input type="text" class="form-control" name="estimate_date" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus
+                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-4 form-group">
@@ -297,7 +297,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div> -->
 
-
+                            <div class="row">
+                              <div class="col-md-4">
+                                  <label for="billing_date">Upload estimate contract</label>
+                                  <input type="file" name="est_contract_upload" id="est_contract_upload"
+                                         class="form-control"/>
+                              </div>
+                              <div class="col-md-1">
+                                <label for="or_separator"></label>
+                                <h5 name="or_separator" id="or_separator" class="text-center"> OR </h5>
+                              </div>
+                              <div class="col-md-7">
+                                <label for="title">File<small> Select document from file vault</small></label>
+                                <div class="input-group">
+                                  <input type="text" class="form-control" name="fs_selected_file_text" id="fs_selected_file_text" placeholder="Selected File" disabled>
+                                  <input type="number" class="form-control" name="fs_selected_file" id="fs_selected_file" hidden>
+                                  <div class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="btn-fileVault-SelectFile">
+                                      <i class="fa fa-folder-open-o"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <button type="submit" class="btn btn-flat btn-primary">Save</button>
@@ -385,6 +408,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- page wrapper end -->
 </div>
+
+<?php echo $file_selection; ?>
 <?php include viewPath('includes/footer'); ?>
 
 <script>

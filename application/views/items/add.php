@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="form-group">
                                                 <label for="formClient-Name">Price *</label>
                                                 <input type="text" class="form-control" name="price"
-                                                       id="formClient-Name" required placeholder="Enter Name"/>
+                                                       id="formClient-Name" required placeholder="Enter Price"/>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -59,13 +59,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                           autocomplete="off" spellcheck="false"></textarea>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <!-- <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="formClient-Name">Discount</label>
                                                 <input type="text" class="form-control" name="discount"
                                                        id="formClient-Name" value="0"/>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <div class="col-sm-6">
                                             <div class="form-group">
@@ -112,7 +112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <!-- <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label for="discount_fixed">1st year Cost</label> <span
                                                         class="help help-sm">(optional)</span>
@@ -125,7 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="discount_fixed">2st year Cost</label> <span
+                                                <label for="discount_fixed">2nd year Cost</label> <span
                                                         class="help help-sm">(optional)</span>
                                                 <div class="input-group">
                                                     <div class="input-group-addon">$</div>
@@ -136,7 +136,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="discount_fixed">3st year Cost</label> <span
+                                                <label for="discount_fixed">3rd year Cost</label> <span
                                                         class="help help-sm">(optional)</span>
                                                 <div class="input-group">
                                                     <div class="input-group-addon">$</div>
@@ -147,7 +147,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="discount_fixed">4st year Cost</label> <span
+                                                <label for="discount_fixed">4th year Cost</label> <span
                                                         class="help help-sm">(optional)</span>
                                                 <div class="input-group">
                                                     <div class="input-group-addon">$</div>
@@ -155,7 +155,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                            autocomplete="off">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-sm-6 mt-3">
                                             <button type="submit" class="btn btn-flat btn-primary">Submit</button>
                                         </div>

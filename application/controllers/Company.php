@@ -14,9 +14,9 @@ class Company extends MY_Controller {
 
 		parent::__construct();
 
-		$this->page_data['page']->title = 'Comapny Management';
+		$this->page_data['page']->title = 'Company Management';
 
-		$this->page_data['page']->menu = 'comapnies';	
+		$this->page_data['page']->menu = 'companies';	
 
 		$user_id = getLoggedUserID();
 		

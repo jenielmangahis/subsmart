@@ -36,18 +36,18 @@ justify-content: center;
 					
 					<div class="col-12 d-md-none d-block p-0">
 					<div class="smart__grid" id="1">
-							<div><a href="http://oscuz.com/nsmartfrontend/workorder/add">Add Work Order</a></div>
+							<div><a href="http://nsmartrac.com/workorder/add">Add Work Order</a></div>
 							<div>Sales</div>
 							<div>View Customer</div>
 							<div>Inquiries</div>
-							<div><a href="http://oscuz.com/nsmartfrontend/workorder">Work Orders</a></div>
+							<div><a href="http://nsmartrac.com/workorder">Work Orders</a></div>
 							<div>Marketing</div>
 							<div>Reports</div>
-							<div><a href="http://oscuz.com/nsmartfrontend/workcalender">schedule</a></div>
+							<div><a href="http://nsmartrac.com/workcalender">schedule</a></div>
 							<div>Inventory</div>
 							<div>Items</div>
-							<div><a href="http://oscuz.com/nsmartfrontend/menu3">Sub Menu 1</div>
-							<div><a href="http://oscuz.com/nsmartfrontend/menu2">Sub Menu 2</a></div>
+							<div><a href="http://nsmartrac.com/menu3">Sub Menu 1</div>
+							<div><a href="http://nsmartrac.com/menu2">Sub Menu 2</a></div>
 					</div>
 					 
 					</div>
@@ -58,13 +58,13 @@ justify-content: center;
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
 						<ol class="breadcrumb">
-                            <img src="<?php echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;">
+                            <img src="<?php //echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;">
                             <?php 
-                               $id = logged('id');
+                               /*$id = logged('id');
                                $query = $this->db->query("Select name from users where id = $id");
-                               $query11 = $query->row();                             
+                               $query11 = $query->row();  */                           
                             ?>
-                            <h5 style="margin: 30px 0 0px 10px;"><?php echo ucfirst($query11->name);?></h5>
+                            <h5 style="margin: 30px 0 0px 10px;"><?php echo getLoggedName();?></h5>
                         </ol>
 						<!--
                             <div class="dropdown"><button
@@ -134,23 +134,23 @@ justify-content: center;
 						<div class="card-body">
 							<h4 class="mt-0 header-title mb-4">Quick Start</h4>
 							<div class="qUickStart">
-								<span class="icon">A</span>
+								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">A</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/items') ?>">Add a New Item</a></h4>
-									<span>At vero eos et accusamus et iusto odio dignissimos ducimus qui deleniti atque..</span>
+									<h4><a href="<?php echo url('/items') ?>">Add a New Client</a></h4>
+									<span>Sign up a new client and add to database</span>
 								</div>
 							</div>
 							<div class="qUickStart">
-								<span class="icon">B</span>
+								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">B</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/plans') ?>">Add a New Plan</a></h4>
-									<span>At vero eos et accusamus et iusto odio dignissimos ducimus qui deleniti atque..</span>
+									<h4><a href="<?php echo url('/plans') ?>">Select an Existing Client</a></h4>
+									<span>Work with an existing client</span>
 								</div>
 							</div>
 							<div class="qUickStart">
-								<span class="icon">C</span>
+								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">C</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/workorder/add') ?>">Add a New Workorder</a></h4>
+									<h4><a href="<?php echo url('/workorder/add') ?>">Add a New Event</a></h4>
 									<span>At vero eos et accusamus et iusto odio dignissimos ducimus qui deleniti atque..</span>
 								</div>
 							</div>
@@ -446,12 +446,12 @@ justify-content: center;
   <div class="mdc-bottom-navigation">
       <nav class="mdc-bottom-navigation__list">
         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-          <span class="material-icons mdc-bottom-navigation__list-item__icon">history</span>
+          <span class="material-icons mdc-bottom-navigation__list-item__icon">History</span>
           <span class="mdc-bottom-navigation__list-item__text">Recents</span>
         </span>
         <span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-          <span class="material-icons mdc-bottom-navigation__list-item__icon">favorite</span>
-          <span class="mdc-bottom-navigation__list-item__text">Favourites</span>
+          <span class="material-icons mdc-bottom-navigation__list-item__icon">Favorite</span>
+          <span class="mdc-bottom-navigation__list-item__text">Favorites</span>
         </span>
         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
           <span class="material-icons mdc-bottom-navigation__list-item__icon">

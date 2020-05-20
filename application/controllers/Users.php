@@ -98,6 +98,35 @@ class Users extends MY_Controller {
 
 		redirect('users/businessview');
 	}
+
+	// added for tracking Timesheet of employees
+	public function timesheet()
+	{	
+		$this->load->model('timesheet_model');
+		ifPermissions('users_list');
+
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		
+		$this->page_data['users'] = $this->users_model->getUsers();
+		
+		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+		
+		$this->load->view('users/timesheet', $this->page_data);
+
+	}
+
+	public function tracklocation()
+	{	
+		ifPermissions('users_list');
+
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		
+		$this->page_data['users'] = $this->users_model->getUsers();
+			
+		
+		$this->load->view('users/tracklocation', $this->page_data);
+
+	}
 	
 	public function index()
 
@@ -419,7 +448,56 @@ class Users extends MY_Controller {
 
 	}
 
+	// timesheet 
+	public function clock_in()
+	{
+		print_r($this->input->post());
+		$this->load->model('timesheet_model');
+		$data = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Clock In',
+			'timestamp' => $this->input->post('current_time_in'),
+			'entry_type' => 'Normal'
+			/*'user_id' => $this->input->post('clockin_user_id'),
+			'comp_id' => $this->input->post('clockin_comp_id'),
+			'clock_in' => $this->input->post('current_time_in'),
+			'session_key' => $this->input->post('clockin_sess'),
+			'status' => $this->input->post('clockin_status')*/
+		);
 
+
+
+		$this->timesheet_model->clockIn($data);
+
+	}
+	public function clock_out()
+	{
+		$this->load->model('timesheet_model');
+		$data = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Clock Out',
+			'timestamp' => $this->input->post('current_time_in'),
+			'entry_type' => 'Normal'
+			/*'user_id' => $this->input->post('clockin_user_id'),
+			'comp_id' => $this->input->post('clockin_comp_id'),
+			'clock_out' => $this->input->post('current_time_in'),
+			'session_key' => $this->input->post('clockin_sess'),
+			'status' => $this->input->post('clockin_status')*/
+		);
+
+		$this->timesheet_model->clockOut($data);
+
+	}
+
+	public function getClockIn(){
+		$this->load->model('timesheet_model');
+		$data = array(
+			'user_id' => $this->input->post('clockin_user_id'),
+			'session_key' => $this->input->post('clockin_sess'),
+		);
+
+		$this->timesheet_model->checkClockIn($data);
+	}
 
 	public function change_status($id)
 

@@ -18,6 +18,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
+                             <?php if (isset($estimates) && count($estimates)>0) { ?>
+                                                <a class="btn btn-primary btn-md" href="<?php echo base_url('estimate/print') ?>">
+                                                    <span class="fa fa-print "></span> Print
+                                                </a>
+                                            <?php } ?>
+
                             <a class="btn btn-primary btn-md" href="<?php echo base_url('estimate/add') ?>">
                                 <span class="fa fa-plus"></span> New Estimate
                             </a>

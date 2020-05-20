@@ -62,7 +62,7 @@
                       <div><i class="fa fa-user" aria-hidden="true"></i> <?php echo $row['contact_name'];?></div>
                       <div><i class="fa fa-users" aria-hidden="true"></i> <?php echo $row['contact_mobile'];?></div>
                       <div><i class="fa fa-calendar" aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->workorder_date));?></div>
-                       <h4 ><span><a href="http://oscuz.com/nsmartfrontend/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span></h4>
+                       <h4 ><span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span></h4>
                     </div>
                   </div>
                 </div>
@@ -92,7 +92,7 @@
                                 <tr>
                                     <td><?php echo 'WO-00'.$row->id?></td>       
                                     <td><?php echo date('M d, Y', strtotime($row->workorder_date));?></td>
-									<td><?php echo $this->users_model->getRowById($row->user_id, 'name')?></td>   
+                                    <td><?php echo $this->users_model->getRowById($row->user_id, 'name')?></td>   
                                     <td><?php echo $row->contact_name;?></td>
                                     <td><?php echo $row->contact_mobile;?></td>                                  
                                     <td>

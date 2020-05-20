@@ -206,37 +206,73 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <h3>Service Addresses</h3>
                                     <p>Optional, create a list of service addresses, only if different than billing
                                         addresses.</p>
+<input type="hidden" value="<?php echo (!empty($customer->service_address) && count($customer->service_address)>0)?count($customer->service_address)+1:1;?>" name="service_address_container_counter">
+                                    <input type="hidden" value="" name="service_address_container_deleted_addresses">
+
                                     <div id="service_address_container">
                                         <ul class="customer-address-list">
                                             <?php if (!empty($customer->service_address)) { ?>
                                                 <?php foreach ($customer->service_address as $key => $serviceAddress) { ?>
-                                                    <li class=" customer-address-list__item">
-                                                        <div class="row">
-                                                            <div class="col-md-5">
-                                                            <span class="customer-address-list__item-name">
-                                                                <?php echo $serviceAddress['address'] ?>, <?php echo $serviceAddress['address_secondary'] ?> <br>
-                                                                <?php echo $serviceAddress['city'] ?>, <?php echo $serviceAddress['zip'] ?>, <?php echo $serviceAddress['state'] ?> </span>
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <?php echo $serviceAddress['name'] ?>
-                                                                <br> <?php echo $serviceAddress['email'] ?>
-                                                                , <?php echo $serviceAddress['phone'] ?> </div>
-                                                            <div class="col-md-2 text-right">
-                                                                <a class="customer-address-list__edit"
-                                                                   data-toggle="modal"
-                                                                   data-target="#modalServiceAddress"
-                                                                   data-customer-id="<?php echo $customer->id ?>"
-                                                                   data-id="<?php echo $key ?>"
-                                                                   href="javascript:void(0)"><span
-                                                                            class="fa fa-edit"></span> edit</a>
-                                                                <a class="customer-address-list__delete"
-                                                                   data-customer-id="<?php echo $customer->id ?>"
-                                                                   data-id="<?php echo $key ?>"
-                                                                   href="javascript:void(0)"><span
-                                                                            class="fa fa-trash"></span></a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
+            <li class=" customer-address-list__item" id="customer-address-list-counter-<?php echo $key+1; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][id]" value="<?php echo $serviceAddress['id']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][address]" value="<?php echo $serviceAddress['address']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][address_secondary]" value="<?php echo $serviceAddress['address_secondary']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][city]" value="<?php echo $serviceAddress['city']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][zip]" value="<?php echo $serviceAddress['zip']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][name]" value="<?php echo $serviceAddress['name']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][email]" value="<?php echo $serviceAddress['email']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][phone]" value="<?php echo $serviceAddress['phone']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][notes]" value="<?php echo $serviceAddress['notes']; ?>">
+                <input type="hidden" name="service_address[<?php echo $key+1; ?>][state]" value="<?php echo $serviceAddress['state']; ?>">
+            
+                <div class="row">
+                    <div class="col-md-5">
+                    <span class="customer-address-list__item-name">
+                        <?php echo $serviceAddress['address'] ?>, <?php echo $serviceAddress['address_secondary'] ?> <br>
+                        <?php echo $serviceAddress['city'] ?>, <?php echo $serviceAddress['zip'] ?>, <?php echo $serviceAddress['state'] ?> </span>
+                    </div>
+                    <div class="col-md-5">
+                        <?php echo $serviceAddress['name'] ?>
+                        <br> <?php echo $serviceAddress['email'] ?>
+                        , <?php echo $serviceAddress['phone'] ?> </div>
+                    <div class="col-md-2 text-right">
+                        <a class="customer-address-list__edit"
+                            data-toggle="modal"
+                            data-target="#modalServiceAddress"
+                            data-customer-id="<?php echo $customer->id ?>"
+                            data-id="<?php echo $serviceAddress['id'] ?>"
+                            data-input-address= "<?php echo $serviceAddress['address']; ?>"
+                            data-input-address_secondary= "<?php echo $serviceAddress['address_secondary']; ?>"
+                            data-input-city= "<?php echo $serviceAddress['city']; ?>"
+                            data-input-zip= "<?php echo $serviceAddress['zip']; ?>"
+                            data-input-name= "<?php echo $serviceAddress['name']; ?>"
+                            data-input-email= "<?php echo $serviceAddress['email']; ?>"
+                            data-input-phone= "<?php echo $serviceAddress['phone']; ?>"
+                            data-input-notes= "<?php echo $serviceAddress['notes']; ?>"
+                            data-input-state= "<?php echo $serviceAddress['state']; ?>"
+                            data-input-counter="<?php echo $key+1; ?>"
+                            data-input-state_text= "'+state_text+'"
+                            href="javascript:void(0)"><span
+                                    class="fa fa-edit"></span> edit</a>
+                        <a class="customer-address-list__delete"
+                            data-customer-id="<?php echo $customer->id ?>"
+                            data-id="<?php echo $serviceAddress['id'] ?>"
+                            data-input-address= "<?php echo $serviceAddress['address']; ?>"
+                            data-input-address_secondary= "<?php echo $serviceAddress['address_secondary']; ?>"
+                            data-input-city= "<?php echo $serviceAddress['city']; ?>"
+                            data-input-zip= "<?php echo $serviceAddress['zip']; ?>"
+                            data-input-name= "<?php echo $serviceAddress['name']; ?>"
+                            data-input-email= "<?php echo $serviceAddress['email']; ?>"
+                            data-input-phone= "<?php echo $serviceAddress['phone']; ?>"
+                            data-input-notes= "<?php echo $serviceAddress['notes']; ?>"
+                            data-input-state= "<?php echo $serviceAddress['state']; ?>"
+                            data-input-counter="<?php echo $key+1; ?>"
+                            data-input-state_text= "'+state_text+'"
+                            href="javascript:void(0)"><span
+                                    class="fa fa-trash"></span></a>
+                    </div>
+                </div>
+            </li>
                                                 <?php } ?>
                                             <?php } ?>
                                         </ul>
@@ -276,10 +312,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12 form-group">
                                     <label>Group</label>
-                                    <span class="help help-sm">(optional, assign user to groups)</span>
-
+                                    <span class="help help-sm">(optional, assign user to groups)</span> &nbsp;&nbsp;
+ <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal" data-target="#modalAddNewGroup"><span class="fa fa-plus-square fa-margin-right"></span> Add Group</a>
                                     <?php if (!empty($groups)) { ?>
                                         <div data-customer-group="list">
+                                         <span class="customer-group-list-div">
                                             <?php foreach ($groups as $group) { ?>
                                                 <div class="checkbox checkbox-sec margin-right">
                                                     <input type="checkbox" name="customer_group[]"
@@ -291,6 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </label>
                                                 </div>
                                             <?php } ?>
+                                          </span>
                                         </div>
                                     <?php } ?>
                                 </div>

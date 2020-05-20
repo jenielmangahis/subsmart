@@ -134,7 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <img src="<?php echo $url->assets ?>img/credit/visa.png" alt="Visa">
         <img src="<?php echo $url->assets ?>img/credit/mastercard.png" alt="Mastercard">
         <img src="<?php echo $url->assets ?>img/credit/american-express.png" alt="American Express">
-        <img src="<?php echo $url->assets ?>img/credit/paypal2.png" alt="Paypal">
+        <img src="<?php echo $url->assets ?>img/credit/paypal2.png" alt="PayPal">
 
         <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
           Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr

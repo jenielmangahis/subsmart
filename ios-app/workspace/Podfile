@@ -1,0 +1,30 @@
+platform :ios, '13.0'
+
+target 'nSmarTrac' do
+  use_frameworks!
+  inhibit_all_warnings!
+
+  # Pods for nSmarTrac
+  #pod 'Firebase/Crashlytics'
+  #pod 'Firebase/Analytics'
+  #pod 'Firebase/Messaging'
+  pod 'AFDateHelper', '~> 4.2'
+  pod 'Alamofire', '4.8'
+  pod 'AlamofireJsonToObjects'
+  pod 'AlamofireObjectMapper'
+  pod 'DLRadioButton'
+  pod 'DTTextField'
+  pod 'EzPopup'
+  pod 'Floaty', '~> 4.2.0'
+  pod 'FontAwesome.swift'
+  pod 'FSCalendar'
+  pod 'Kingfisher'
+  pod 'Material'
+  pod 'PureLayout'
+  pod 'RxCocoa', '~> 4.0'
+  pod 'RxSwift', '~> 4.0'
+  pod 'SearchTextField'
+  pod 'SideMenu'
+  pod 'SVProgressHUD'
+
+end

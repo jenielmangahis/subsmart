@@ -1,6 +1,17 @@
 <?php include viewPath('includes/header'); ?>
 <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
-
+<style>
+  .custom-signaturepad {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .custom-signaturepad .sigWrapper canvas {
+      width: 100%;
+  }
+  .custom-signaturepad .sigPad  {
+    width: 100% !important;
+  }
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->
@@ -1449,24 +1460,24 @@
                                             and you authorize payment and confirmation with nSmarTrac. </p>
                                     </div>
                                 </div>
-                                <div class=" col-md-6">
-                                    <h5>Company Representative Approval</h5>
+                                <div class="col-md-12 float-left custom-signaturepad">
+                                <div class="col-md-4 float-left">
+                                    <h6>Company Representative Approval</h6>
 
                                     <?php if ($workorder->company_rep_approval) {
 
                                         $img = str_replace('[removed]', '', $workorder->company_rep_approval); ?>
                                         <img src="<?php echo 'data:image/png;base64,' . $img; ?>" alt=""
-                                             style="width: 300px;">
+                                             style="width: 100%;">
                                     <?php } else { ?>
-                                        <div class="sigPad" id="smoothed" style="width:404px;">
+                                        <div class="sigPad" id="smoothed" >
                                             <ul class="sigNav">
                                                 <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                                 <li class="clearButton"><a href="#clear">Clear</a></li>
                                             </ul>
                                             <div class="sig sigWrapper" style="height:auto;">
                                                 <div class="typed"></div>
-                                                <canvas class="pad" id="company_representative_approval_signature"
-                                                        width="400" height="250"></canvas>
+                                                <canvas class="pad" id="company_representative_approval_signature"></canvas>
                                                 <input type="hidden" name="output-2" class="output">
                                             </div>
                                         </div>
@@ -1483,23 +1494,22 @@
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-6">
-                                    <h5>Primary Account Holder</h5>
+                                <div class="col-md-4 float-left">
+                                    <h6>Primary Account Holder</h6>
                                     <?php if ($workorder->primary_account_holder) {
 
                                         $img = str_replace('[removed]', '', $workorder->primary_account_holder); ?>
                                         <img src="<?php echo 'data:image/png;base64,' . $img; ?>" alt=""
-                                             style="width: 300px;">
+                                             style="width: 100%;">
                                     <?php } else { ?>
-                                        <div class="sigPad" id="smoothed2" style="width:404px;">
+                                        <div class="sigPad" id="smoothed2" >
                                             <ul class="sigNav">
                                                 <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                                 <li class="clearButton"><a href="#clear">Clear</a></li>
                                             </ul>
                                             <div class="sig sigWrapper" style="height:auto;">
                                                 <div class="typed"></div>
-                                                <canvas class="pad" id="primary_account_holder_signature" width="400"
-                                                        height="250"></canvas>
+                                                <canvas class="pad" id="primary_account_holder_signature"></canvas>
                                                 <input type="hidden" name="output-2" class="output">
                                             </div>
                                         </div>
@@ -1516,24 +1526,23 @@
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-6">
-                                    <h5>Secondary Account Holder</h5>
+                                <div class="col-md-4 float-left">
+                                    <h6>Secondary Account Holder</h6>
 
                                     <?php if ($workorder->secondary_account_holder) {
 
                                         $img = str_replace('[removed]', '', $workorder->secondary_account_holder); ?>
                                         <img src="<?php echo 'data:image/png;base64,' . $img; ?>" alt=""
-                                             style="width: 300px;">
+                                             style="width: 100%;">
                                     <?php } else { ?>
-                                        <div class="sigPad" id="smoothed3" style="width:404px;">
+                                        <div class="sigPad" id="smoothed3" >
                                             <ul class="sigNav">
                                                 <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                                 <li class="clearButton"><a href="#clear">Clear</a></li>
                                             </ul>
                                             <div class="sig sigWrapper" style="height:auto;">
                                                 <div class="typed"></div>
-                                                <canvas class="pad" id="secondary_account_holder_signature" width="400"
-                                                        height="250"></canvas>
+                                                <canvas class="pad" id="secondary_account_holder_signature"></canvas>
                                                 <input type="hidden" name="output-2" class="output">
                                             </div>
                                         </div>
@@ -1548,6 +1557,7 @@
                                            value="<?php echo (!empty($workorder->secondary_account_holder_name)) ? $workorder->secondary_account_holder_name : '' ?>"
                                            id="comp_rep_approval" placeholder=""/>
 
+                                </div>
                                 </div>
                             </div>
 

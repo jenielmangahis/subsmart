@@ -44,6 +44,8 @@ class Workorder extends MY_Controller
     {
 
         $role = logged('role');
+        $this->page_data['workorderStatusFilters'] = array ();
+        $this->page_data['workorders'] = array ();
         if ($role == 2 || $role == 3) {
             $comp_id = logged('comp_id');
 
@@ -148,6 +150,7 @@ class Workorder extends MY_Controller
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id' => $comp_id]);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id' => $comp_id]);
 
+        $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('workorder/add', $this->page_data);
     }
 
@@ -698,6 +701,78 @@ class Workorder extends MY_Controller
                 'status' => 'error'
             )
         ));
+    }
+
+    public function print($tab_index = 0)
+    {
+
+        $role = logged('role');
+        if ($role == 2 || $role == 3) {
+            $comp_id = logged('comp_id');
+
+            if (!empty($tab_index)) {
+                $this->page_data['tab_index'] = $tab_index;
+                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $comp_id);
+            } else {
+
+                // search
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                } elseif (!empty(get('order'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+
+                } else {
+
+                    $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($comp_id);
+                }
+            }
+
+            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($comp_id);
+        }
+        if ($role == 4) {
+
+            if (!empty($tab_index)) {
+
+                $this->page_data['tab_index'] = $tab_index;
+                $this->page_data['workorders'] = $this->workorder_model->filterBy();
+
+            } elseif (!empty(get('order'))) {
+
+                $this->page_data['order'] = get('order');
+                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+
+            } else {
+
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                } else {
+                    $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
+                }
+            }
+
+            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
+        }
+
+        // unserialized the value
+
+        $statusFilter = array();
+        foreach ($this->page_data['workorders'] as $workorder) {
+
+            if (is_serialized($workorder)) {
+
+                $workorder = unserialize($workorder);
+            }
+        }
+
+//        print_r($this->page_data['workorders']); die;
+
+        $this->load->view('workorder/print/list', $this->page_data);
     }
 }
 

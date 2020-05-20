@@ -1,5 +1,17 @@
 <?php include viewPath('includes/header'); ?>
 <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+<style>
+  .custom-signaturepad {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .custom-signaturepad .sigWrapper canvas {
+      width: 100%;
+  }
+  .custom-signaturepad .sigPad  {
+    width: 100% !important;
+  }
+</style>
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -1379,11 +1391,29 @@
                                             signed document.</p>
                                     </div>
                                 </div>
-                                <div class=" col-md-12">
-                                    <div class="col-md-4">
-                                        <label for="billing_date">Upload user agreemnet</label>
-                                        <input type="file" name="user_agreementupload" id="user_agreementupload"
-                                               class="form-control"/>
+                                <div class=" col-md-12 mt-3">
+                                  <div class="row">
+                                      <div class="col-md-4">
+                                          <label for="billing_date">Upload user agreement</label>
+                                          <input type="file" name="user_agreementupload" id="user_agreementupload"
+                                                 class="form-control"/>
+                                      </div>
+                                      <div class="col-md-1">
+                                        <label for="or_separator"></label>
+                                        <h5 name="or_separator" id="or_separator" class="text-center"> OR </h5>
+                                      </div>
+                                      <div class="col-md-7">
+                                        <label for="title">File<small> Select document from file vault</small></label>
+                                        <div class="input-group">
+                                          <input type="text" class="form-control" name="fs_selected_file_text" id="fs_selected_file_text" placeholder="Selected File" disabled>
+                                          <input type="number" class="form-control" name="fs_selected_file" id="fs_selected_file" hidden>
+                                          <div class="input-group-btn">
+                                            <button class="btn btn-default" type="button" id="btn-fileVault-SelectFile">
+                                              <i class="fa fa-folder-open-o"></i>
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                 </div>
                             </div>
@@ -1397,6 +1427,72 @@
                                             and you authorize payment and confirmation with nSmarTrac. </p>
                                     </div>
                                 </div>
+
+
+                                <div class="col-md-12 float-left custom-signaturepad">
+                                   
+                                    <div class="col-md-4 float-left">
+                                          <h6>Company Representative Approval</h6>
+                                          <div class="sigPad" id="smoothed" > <!-- style="width:404px;" -->
+                                              <ul class="sigNav">
+                                                  <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                  <li class="clearButton"><a href="#clear">Clear</a></li>
+                                              </ul>
+                                              <div class="sig sigWrapper" style="height:auto;">
+                                                  <div class="typed"></div>
+                                                  <canvas class="pad" id="company_representative_approval_signature"></canvas>  <!--  width="400" height="250" -->
+                                                  <input type="hidden" name="output-2" class="output">
+                                              </div>
+                                          </div>
+                                          <input type="hidden" id="saveCompanySignatureDB" name="company_representative_approval_signature">
+                                          <!-- <br> -->
+                                          <label for="comp_rep_approval">Printed Name</label>
+                                          <input type="text6" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval" placeholder=""/>
+                                    </div>
+
+                                    <div class=" col-md-4 float-left">
+                                          <h6>Primary Account Holder</h6>
+                                          <div class="sigPad" id="smoothed2" > <!-- style="width:404px;" -->
+                                              <ul class="sigNav">
+                                                  <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                  <li class="clearButton"><a href="#clear">Clear</a></li>
+                                              </ul>
+                                              <div class="sig sigWrapper" style="height:auto;">
+                                                  <div class="typed"></div>
+                                                  <canvas class="pad" id="primary_account_holder_signature"></canvas>  <!--  width="400" height="250" -->
+                                                  <input type="hidden" name="output-2" class="output">
+                                              </div>
+                                          </div>
+                                          <input type="hidden" id="savePrimaryAccountSignatureDB" name="primary_account_holder_signature">
+                                          <!-- <br>-->
+                                          <label for="comp_rep_approval">Printed Name</label>
+                                          <input type="text6" class="form-control mb-3" name="primary_account_holder_name" id="comp_rep_approval" placeholder=""/> 
+
+                                    </div>
+
+
+                                    <div class=" col-md-4 float-left">
+                                          <h6>Secondary Account Holder</h6>
+                                          <div class="sigPad" id="smoothed3" > <!-- style="width:404px;" -->
+                                              <ul class="sigNav">
+                                                  <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                  <li class="clearButton"><a href="#clear">Clear</a></li>
+                                              </ul>
+                                              <div class="sig sigWrapper" style="height:auto;">
+                                                  <div class="typed"></div>
+                                                  <canvas class="pad" id="secondary_account_holder_signature"></canvas>  <!--  width="400" height="250" -->
+                                                  <input type="hidden" name="output-2" class="output">
+                                              </div>
+                                          </div>
+                                          <input type="hidden" id="saveSecondaryAccountSignatureDB" name="secondery_account_holder_signature">
+                                          <!-- <br> -->
+                                          <label for="comp_rep_approval">Printed Name</label>
+                                          <input type="text6" class="form-control mb-3" name="secondery_account_holder_name" id="comp_rep_approval" placeholder=""/> 
+
+                                    </div>
+                                </div>
+
+
                                 <div class=" col-md-6">
                                     <h5>Company Representative Approval</h5>
                                     <div class="sigPad" id="smoothed" style="width:404px;">
@@ -1665,6 +1761,7 @@
     </div>
 </div>
 
+<?php echo $file_selection; ?>
 <?php include viewPath('includes/footer'); ?>
 
 <script>
@@ -1694,7 +1791,7 @@
             var form = new FormData();
             form.append('upload', file);
             $.ajax({
-                url: '/nsmartfrontend/docread.php',
+                url: '/docread.php',
                 type: "POST",
                 cache: false,
                 contentType: false,

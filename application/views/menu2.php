@@ -50,7 +50,7 @@ justify-content: center;
 							<div>Add Customer</div> 
 							<div>Find Customer</div> 
 
-							<div><a href="http://oscuz.com/nsmartfrontend/dashboard">Back to Dashboard<a></div>
+							<div><a href="http://nsmartrac.com/dashboard">Back to Dashboard<a></div>
 					</div>
 					 
 					</div>

@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array( 'basic', 'url', 'file', 'form', 'cookie', 'security' );
+$autoload['helper'] = array( 'basic', 'url', 'file', 'form', 'cookie', 'security', 'directory');
 
 /*
 | -------------------------------------------------------------------
@@ -146,4 +146,6 @@ $autoload['model'] = array(
 	'plans_model',
 	'business_model',
 	'templates_model',
+	'folders_model',
+	'folders_permissions_model'
 );

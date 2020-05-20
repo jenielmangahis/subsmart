@@ -139,7 +139,7 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = FALSE;
+$config['composer_autoload'] = 'vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -799,3 +799,6 @@ $config['intrusion_items'] = array(
     'Thermostat',
     'Skybell',
 );
+
+$config['stripe_key'] = 'pk_test_hjeeWGYx4ZrBXrmPdnmUddYO00Uryd5SNs';
+$config['stripe_secret'] = 'sk_test_ySLVeLtXMiChzCGS7raSxEdt00pZq8UAxo';

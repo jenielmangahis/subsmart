@@ -44,10 +44,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12">
                                     <h3>Basic Customer Info</h3>
                                 </div>
+                                
                                 <div class="col-md-12 margin-bottom-ter no-padding">
                                     <div class="form-group" id="customer_type_group">
-                                        <label for="">Customer Type</label><br/>
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3">
+                                        <div class="col-md-6">
+                                            <label for="">Customer Type</label><br/>
+                                            <select id="customer_types" name="customer_types_id"
+                                                    data-customer-source="dropdown" class="form-control searchable-dropdown"
+                                                    placeholder="Select">
+                                                <option value="0">- none -</option>
+                                            </select>
+                                        </div>
+                                        
+                                        
+                                       <!--  <div class="checkbox checkbox-sec margin-right my-0 mr-3">
                                             <input type="radio" name="customer_type" value="Residential"
                                                    checked="checked" id="customer_type"
                                                    onchange="toggle_advance_options()">
@@ -62,7 +72,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <input type="radio" name="customer_type" value="Advance" id="advance"
                                                    onchange="toggle_advance_options()">
                                             <label for="advance"><span>Advance</span></label>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -126,9 +136,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="suite_unit">Suite/Unit</label>
-                                    <input type="text" class="form-control" name="suite_unit" id="suite_unit" required
+                                    <input type="text" class="form-control" name="suite_unit" id="suite_unit" 
                                            placeholder="Enter Name" autofocus
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                           <!-- required -->
                                 </div>
 
                                 <div class="col-md-4 form-group">
@@ -159,7 +170,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <h3>Service Addresses</h3>
                                     <p>Optional, create a list of service addresses, only if different than billing
                                         addresses.</p>
-                                    <div id="service_address_container"></div>
+                                    <div id="service_address_container">
+                                        <ul class="customer-address-list"></ul>
+                                    </div>
+                                    <input type="hidden" value="1" name="service_address_container_counter">
+                                    <input type="hidden" value="" name="service_address_container_deleted_addresses">
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalServiceAddress"><span
                                                 class="fa fa-plus-square fa-margin-right"></span> Add New Address</a>
@@ -175,7 +190,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <!-- <input type="text" class="form-control" name="birthday" id="birthday" required placeholder="Enter Name" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
 
                                     <div class="input-group date" data-provide="datepicker">
-                                        <input type="text" class="form-control" name="birthday" id="birthday">
+                                        <input type="text" class="form-control" name="birthday" id="birthday" maxlength="10">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -194,9 +209,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12 form-group">
                                     <label>Group</label>
                                     <span class="help help-sm">(optional, assign user to groups)</span>
-
+                                    &nbsp;&nbsp;
+                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal" data-target="#modalAddNewGroup"><span class="fa fa-plus-square fa-margin-right"></span> Add Group</a>
                                     <?php if (!empty($groups)) { ?>
                                         <div data-customer-group="list">
+                                            <span class="customer-group-list-div">
                                             <?php foreach ($groups as $group) { ?>
                                                 <div class="checkbox checkbox-sec margin-right">
                                                     <input type="checkbox" name="customer_group[]"
@@ -207,10 +224,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </label>
                                                 </div>
                                             <?php } ?>
+                                            </span>
                                         </div>
                                     <?php } ?>
                                 </div>
 
+                                
+                                
                                 <div class="col-md-12 form-group">
                                     <label for="notes">Comments <small>(some remarks for internal use)</small></label>
                                     <textarea name="notes" cols="40" rows="3" class="form-control"
@@ -218,12 +238,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
-
                             <div class="row" id="advance_customer_view" style="display: none">
 
                                 <div class="row p-3">
                                     <div class="col-md-12">
-                                        <h3>Account Information</h3>
+                                        <h3>Payment Info</h3>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="monitoring_id">Monitoring ID</label>
@@ -388,7 +407,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <label for="exp_date">Expiration year</label>
                                                 <input type="text" class="form-control card-expiry-year required"
                                                        name="card[exp_date]" id="exp_date" min="<?php echo date('Y') ?>"
-                                                       max="<?php echo date(Y) + 50 ?>" placeholder="" required
+                                                       max="<?php echo date('Y') + 50 ?>" placeholder="" required
                                                        disabled/>
                                             </div>
                                             <div class=" col-md-2">
@@ -424,6 +443,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Service Address -->
+            <div class="modal fade" id="modalServiceGroup" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Group</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -484,6 +523,64 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="modalAddNewCustomerTypes" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Customer Type</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frm_add_new_customer_types" name="modal-form" method="post">
+                                <div class="validation-error" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label>Type</label> <span class="form-required">*</span>
+                                    <input type="text" name="title" value="" class="form-control"
+                                           autocomplete="off">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="modal fade" id="modalAddNewGroup" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <b class="modal-title" id="exampleModalLabel">Add New Group</b>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="padding:30px 30px 10px 30px;">
+                            <form id="frm_add_new_group" name="modal-form" method="post">
+                                <div class="validation-error" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label>Group Name</label> <span class="form-required">*</span>
+                                    <input type="text" name="title" value="" class="form-control" required 
+                                           autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label> <span class="form-required">*</span>
+                                    <textarea class="form-control" required name="description" autocomplete="off"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -513,4 +610,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
             return false;
         }
     }
+
+
+     $(document).ready(function() {
+             $("input[name=birthday]").keydown(function(event) {
+        // Allow only backspace and delete
+        if ( event.keyCode == 46 || event.keyCode == 8 ) {
+            // let it happen, don't do anything
+        }
+        else {
+            // Ensure that it is a number and stop the keypress
+            if (event.keyCode < 48 || event.keyCode > 57 ) {
+                event.preventDefault(); 
+            }   
+        }
+    });
+    
+    $("input[name=birthday]").keyup(function(event){
+        console.log($(this).val());
+        if ($(this).val().length == 2){
+            $(this).val($(this).val() + "/");
+        }else if ($(this).val().length == 5){
+            $(this).val($(this).val() + "/");
+        }
+    });
+    
+});
 </script>
+<style>
+ .select2-container--open{       z-index: 0;}
+ span.select2-selection.select2-selection--single {
+    font-size: 16px;
+}
+</style>

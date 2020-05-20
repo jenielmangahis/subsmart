@@ -50,7 +50,7 @@ justify-content: center;
 							<div>Photo Gallery</div>
 							<div>Settings</div>
 							<div>Customizable</div>
-							<div><a href="http://oscuz.com/nsmartfrontend/dashboard">Back to Dashboard<a></div>
+							<div><a href="http://nsmartrac.com/dashboard">Back to Dashboard<a></div>
 					</div>
 					</div>
 					

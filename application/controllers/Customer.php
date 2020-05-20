@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // add services
 include_once 'application/services/CustomerGroup.php';
 include_once 'application/services/CustomerSource.php';
+include_once 'application/services/CustomerTypes.php';
 include_once 'application/services/CustomerTicket.php';
 
 class Customer extends MY_Controller
@@ -25,6 +26,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->menu = 'customers';
 
         $this->load->model('Customer_model', 'customer_model');
+        $this->load->model('CustomerAddress_model', 'customeraddress_model');
 
 
         $this->checkLogin();
@@ -287,7 +289,7 @@ class Customer extends MY_Controller
 
         $this->page_data['customer'] = $this->customer_model->getById($id);
 
-        $this->page_data['customer']->service_address = unserialize($this->page_data['customer']->service_address);
+        //$this->page_data['customer']->service_address = unserialize($this->page_data['customer']->service_address);
 
         $this->page_data['customer']->additional_contacts = unserialize($this->page_data['customer']->additional_contacts);
 
@@ -305,6 +307,8 @@ class Customer extends MY_Controller
 
         $this->load->model('Source_model', 'source_model');
 
+        $this->page_data['customer']->service_address = $this->customeraddress_model->getByModelAndType($id,'customer','service_address');
+
         $this->page_data['customer']->source = $this->source_model->getSource($this->page_data['customer']->source_id);
 
 
@@ -317,12 +321,11 @@ class Customer extends MY_Controller
 
     {
 
+
         $user = (object)$this->session->userdata('logged');
 
         $comp_id = logged('comp_id');
 
-
-//         echo '<pre>'; print_r($this->input->post()); die;
 
 
         $data = array(
@@ -380,18 +383,28 @@ class Customer extends MY_Controller
 
         // create() will be called insted of update()
 
-        if (!empty($cid)) {
+        // if (!empty($cid)) {
 
 
-            $id = $this->customer_model->update($cid, $data);
+        //     $id = $this->customer_model->update($cid, $data);
 
-        } else {
-
+        // } else {
 
             $id = $this->customer_model->create($data);
 
-        }
+            if(!empty($this->input->post('service_address')))
+            {
+                foreach($this->input->post('service_address') as $key => $value)
+                {
+                    $temp_data = $value;
+                    $temp_data['customer_id'] = $id;
+                    $temp_data['module'] = 'customer';
+                    $temp_data['type'] = 'service_address';
+                    $this->customeraddress_model->create($temp_data);                
+                }
+            }
 
+        // }
 
         $this->activity_model->add("User #$user->id Updated by User:" . logged('name'));
 
@@ -427,10 +440,6 @@ class Customer extends MY_Controller
         $user = (object)$this->session->userdata('logged');
 
         $comp_id = logged('comp_id');
-
-
-        // echo '<pre>'; print_r($this->input->post()); die;
-
 
         $data = array(
 
@@ -478,6 +487,39 @@ class Customer extends MY_Controller
 
         $id = $this->customer_model->update($id, $data);
 
+
+        if(!empty($this->input->post('service_address'))>0)
+        {
+            foreach($this->input->post('service_address') as $key => $value)
+            {
+                $temp_data = $value;
+                unset($temp_data['id']);
+
+                if(isset($value['id']) && $value['id'] != '' && $value['id'] > 0)
+                {
+                  // $this->customeraddress_model->update($temp_data)->where('id',$value->id);
+                   // $this->db->where('id', $id);
+                   //  $this->db->update('user', $data);
+                   $this->db->where('id', $value['id']);
+                    $this->db->update($this->customeraddress_model->table, $temp_data);
+                } else {
+                    $temp_data['customer_id'] = $id;
+                    $temp_data['module'] = 'customer';
+                    $temp_data['type'] = 'service_address';
+                    $this->customeraddress_model->create($temp_data);
+                }
+            }
+        }
+
+
+        if($this->input->post('service_address_container_deleted_addresses') !='')
+        {
+            $delete_list = explode(",", $this->input->post('service_address_container_deleted_addresses'));        
+            $this->db->from($this->customeraddress_model->table);
+            $this->db->where('customer_id ', $id);
+            $this->db->where_in('id', $delete_list);
+            $this->db->delete();
+        }
 
         $this->activity_model->add("User #$user->id Updated by User:" . logged('name'));
 
@@ -952,6 +994,12 @@ class Customer extends MY_Controller
         $customerSource = new CustomerSource($this);
     }
 
+    public function types()
+    {
+        // pass the $this so that we can use it to load view, model, library or helper classes
+        $customerTypes = new CustomerTypes($this);
+    }
+
     /**
      *
      */
@@ -959,6 +1007,112 @@ class Customer extends MY_Controller
     {
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerTicket = new CustomerTicket($this);
+    }
+
+
+    public function group_form()
+    {
+        $get = $this->input->get();
+        if (!empty($get)) {
+            $this->page_data['action'] = $get['action'];
+            $this->page_data['data_index'] = $get['index'];
+            $this->page_data['customer'] = $this->customer_model->getCustomer($get['customer_id']);
+            $this->page_data['group'] = $this->customer_model->getServiceAddress(array('id' => $get['customer_id']), $get['index']);
+        }
+        die($this->load->view('customer/group_form', $this->page_data, true));
+    }
+
+
+    public function print($status_index = 0)
+    {
+
+        $role = logged('role');
+
+        if ($role == 2 || $role == 3) {
+
+            $comp_id = logged('comp_id');
+
+            if (!empty($status_index)) {
+
+                $this->page_data['tab_index'] = $status_index;
+                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $comp_id);
+            } else {
+
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $comp_id);
+                } elseif (!empty(get('type'))) {
+
+                    $this->page_data['type'] = get('type');
+
+                    if (!empty(get('order'))) {
+                        $this->page_data['order'] = get('order');
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                    } else {
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $comp_id);
+                    }
+                } else {
+
+                    if (!empty(get('order'))) {
+                        $this->page_data['order'] = get('order');
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                    } else {
+//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+                    }
+
+//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+                }
+            }
+
+            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($comp_id);
+
+        }
+
+        if ($role == 4) {
+
+            if (!empty($status_index)) {
+
+                $this->page_data['tab_index'] = $status_index;
+                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index));
+            } else {
+
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')));
+                } elseif (!empty(get('type'))) {
+
+                    $this->page_data['type'] = get('type');
+
+                    if (!empty(get('order'))) {
+                        $this->page_data['order'] = get('order');
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
+                    } else {
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
+                    }
+                } else {
+
+                    if (!empty(get('order'))) {
+                        $this->page_data['order'] = get('order');
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
+                    } else {
+//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
+                        $this->page_data['customers'] = $this->customer_model->getAllByUserId();
+                    }
+
+//                    $this->page_data['customers'] = $this->customer_model->getAllByUserId();
+                }
+            }
+
+            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
+        }
+
+//        print_r($this->page_data['statusCount']); die;
+
+        $this->load->view('customer/print/list', $this->page_data);
+
     }
 }
 

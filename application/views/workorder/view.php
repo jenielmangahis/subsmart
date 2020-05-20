@@ -87,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									</div>
 									<div class="col-sm-12 col-sm-pull-12">
 												<div style="margin-bottom: 20px;">
-		                							<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://oscuz.com/nsmartfrontend/assets/dashboard/images/logo.png">
+		                							<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
 		         							   </div>
 
 		         							   <div class="user-info">

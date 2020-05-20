@@ -189,7 +189,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </span>
         <span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
           <span class="material-icons mdc-bottom-navigation__list-item__icon">favorite</span>
-          <span class="mdc-bottom-navigation__list-item__text">Favourites</span>
+          <span class="mdc-bottom-navigation__list-item__text">Favorites</span>
         </span>
         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
           <span class="material-icons mdc-bottom-navigation__list-item__icon">

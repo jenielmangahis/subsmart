@@ -2,12 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 
+
+
 <!-- jQuery 3 -->
 <script src="<?php echo $assets ?>/js/jquery/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo $assets ?>/bootstrap/js/bootstrap.min.js"></script>
 <!-- iCheck -->
 <script src="<?php echo $assets ?>/plugins/iCheck/icheck.min.js"></script>
+
+<script src="<?php echo $assets ?>/js/sign.js"></script>
+
 <script>
   $(function () {
     $('input').iCheck({

@@ -3,7 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/estimate'); ?>
+    <?php //include viewPath('includes/sidebars/estimate'); ?>
+    <?php include viewPath('includes/sidebars/items'); ?>
     <?php include viewPath('includes/notifications'); ?>
     <div wrapper__section>
         <div class="container-fluid">
@@ -24,6 +25,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
+
+                                            <?php if (isset($items) && count($items)>0) { ?>
+                                                <a class="btn btn-primary btn-md" href="<?php echo base_url('items/print') ?>">
+                                                    <span class="fa fa-print "></span> Print
+                                                </a>
+                                            <?php } ?>
+
                                             <?php if (hasPermissions('WORKORDER_MASTER')): ?>
                                                 <a class="btn btn-primary btn-md"
                                                    href="<?php echo url('items/add') ?>"><span

@@ -43,14 +43,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <input type="text" class="form-control"
                                                        name="title"
                                                        id="title"
-                                                       value="<?php echo (!empty($customerGroup)) ? $customerGroup->title : '' ?>"
+                                                       value="<?php echo (isset($old_data['title']))?$old_data['title']:(!empty($customerGroup)) ? $customerGroup->title : '' ?>"
                                                        required
                                                        placeholder="Enter title" autofocus/>
+                                                <?php if(isset($custom_errors['title']) && $custom_errors['title']!='' ) { ?>
+                                                    <label id="title-error" class="error" for="title"><?php echo $custom_errors['title']; ?></label>
+                                                <?php } ?>
                                                 <?php if (!empty($customerGroup)) { ?>
                                                     <input type="hidden" name="id"
                                                            value="<?php echo $customerGroup->id ?>">
                                                 <?php } ?>
                                             </div>
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label for="notes">Description <small>(some description for internal use)</small></label>
+                                            <textarea name="description" rows="3" class="form-control" style="height:150px !important;resize: none;" autocomplete="off"><?php echo (!empty($customerGroup) && isset($customerGroup->description) && $customerGroup->description != '') ? $customerGroup->description : '' ?><?php echo (isset($old_data['description']))?$old_data['description']:(!empty($customerGroup)) ? $customerGroup->description : ''  ?></textarea>
+                                            <?php if(isset($custom_errors['description']) && $custom_errors['description']!='' ) { ?>
+                                                <label id="title-error" class="error" for="description"><?php echo $custom_errors['description']; ?></label>
+                                            <?php } ?>
                                         </div>
                                         <div class="col-sm-12 mt-3">
                                             <button type="submit" class="btn btn-flat btn-primary">Submit</button>

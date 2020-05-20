@@ -93,6 +93,24 @@ class Estimate extends MY_Controller
     public function add()
     {
 
+
+
+        
+    $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+    $result_autoincrement = $query_autoincrment->result_array();
+
+    if(count( $result_autoincrement )) {
+        if($result_autoincrement[0]['AUTO_INCREMENT'])
+        {
+            $this->page_data['auto_increment_estimate_id'] = 1;    
+        } else {
+            
+            $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+        }
+    } else {
+        $this->page_data['auto_increment_estimate_id'] = 0;        
+    }
+
         $user_id = logged('id');
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -106,6 +124,7 @@ class Estimate extends MY_Controller
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id'=>$comp_id]);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id' => $comp_id]);
 
+        $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);
 
     }
@@ -292,5 +311,66 @@ class Estimate extends MY_Controller
     {
 
         $this->index($index);
+    }
+
+
+
+    public function print($tab = '')
+    {
+        $role = logged('role');
+        if ($role == 2 || $role == 3) {
+            $comp_id = logged('comp_id');
+
+            if (!empty($tab)) {
+                $this->page_data['tab'] = $tab;
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $comp_id);
+            } else {
+
+                // search
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $comp_id);
+                } elseif (!empty(get('order'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $comp_id);
+
+                } else {
+                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($comp_id);
+                }
+            }
+
+            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($comp_id);
+        }
+
+        if ($role == 4) {
+
+            if (!empty($tab)) {
+
+                $this->page_data['tab'] = $tab;
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab));
+
+
+            } elseif (!empty(get('order'))) {
+
+                $this->page_data['order'] = get('order');
+                $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+
+            } else {
+
+                if (!empty(get('search'))) {
+
+                    $this->page_data['search'] = get('search');
+                    $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                } else {
+                    $this->page_data['estimates'] = $this->estimate_model->getAllByUserId();
+                }
+            }
+
+            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount();
+        }
+
+        $this->load->view('estimate/print/list', $this->page_data);
     }
 }

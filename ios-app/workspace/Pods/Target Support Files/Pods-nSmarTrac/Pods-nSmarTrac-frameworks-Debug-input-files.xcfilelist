@@ -1,0 +1,22 @@
+${PODS_ROOT}/Target Support Files/Pods-nSmarTrac/Pods-nSmarTrac-frameworks.sh
+${BUILT_PRODUCTS_DIR}/AFDateHelper/AFDateHelper.framework
+${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
+${BUILT_PRODUCTS_DIR}/AlamofireJsonToObjects/AlamofireJsonToObjects.framework
+${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework
+${BUILT_PRODUCTS_DIR}/DLRadioButton/DLRadioButton.framework
+${BUILT_PRODUCTS_DIR}/DTTextField/DTTextField.framework
+${BUILT_PRODUCTS_DIR}/EVReflection/EVReflection.framework
+${BUILT_PRODUCTS_DIR}/EzPopup/EzPopup.framework
+${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework
+${BUILT_PRODUCTS_DIR}/Floaty/Floaty.framework
+${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework
+${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
+${BUILT_PRODUCTS_DIR}/Material/Material.framework
+${BUILT_PRODUCTS_DIR}/Motion/Motion.framework
+${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework
+${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework
+${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework
+${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework
+${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework
+${BUILT_PRODUCTS_DIR}/SearchTextField/SearchTextField.framework
+${BUILT_PRODUCTS_DIR}/SideMenu/SideMenu.framework

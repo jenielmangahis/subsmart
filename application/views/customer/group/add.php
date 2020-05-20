@@ -38,11 +38,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <div class="form-group">
+                                            <div class="form-group <?php echo (isset($custom_errors['title']) && $custom_errors['title']!='' )?'has-feedback':''; ?>">
                                                 <label for="title">Name *</label>
-                                                <input type="text" class="form-control" name="title" id="title" required
-                                                       placeholder="Enter title" autofocus/>
+                                                <input type="text" class="form-control col-sm-6" name="title" id="title" value="<?php echo (isset($old_data['title']))?$old_data['title']:''  ?>" placeholder="Enter title" autofocus/>
+                                                <?php if(isset($custom_errors['title']) && $custom_errors['title']!='' ) { ?>
+                                                    <label id="title-error" class="error" for="title"><?php echo $custom_errors['title']; ?></label>
+                                                <?php } ?>
                                             </div>
+                                        </div>
+                                        <div class="col-md-12 form-group <?php echo (isset($custom_errors['description']) && $custom_errors['description']!='' )?'has-feedback':''; ?>">
+                                            <label for="notes">Description <small>(some description for internal use)</small></label>
+                                            <textarea name="description" cols="40" rows="3" class="form-control" autocomplete="off"><?php echo (isset($old_data['description']))?$old_data['description']:''  ?></textarea>
+                                           <?php if(isset($custom_errors['description']) && $custom_errors['description']!='' ) { ?>
+                                                    <label id="title-error" class="error" for="description"><?php echo $custom_errors['description']; ?></label>
+                                                <?php } ?>
                                         </div>
                                         <div class="col-sm-12 mt-3">
                                             <button type="submit" class="btn btn-flat btn-primary">Submit</button>
@@ -52,8 +61,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-
-                    <?php echo form_close(); ?>
+                    </form>
+                    <?php /* echo form_close(); */ ?>
                 </div>
                 <!-- /.box -->
             </section>

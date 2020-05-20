@@ -19,7 +19,6 @@ class Estimate_model extends MY_Model
 
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {
-
         $user_id = getLoggedUserID();
 
         $this->db->select('*');

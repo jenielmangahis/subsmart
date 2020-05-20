@@ -90,12 +90,14 @@ class Workcalender extends MY_Controller
         }
 
 
-        // workorders
+        /*// workorders
         if ($role == 2 || $role == 3) {
             $comp_id = logged('comp_id');
+            $comp_id = 15;
             $workorders = $this->workorder_model->getAllOrderByCompany($comp_id);
         }
         if ($role == 4) {
+
             $workorders = $this->workorder_model->getAllByUserId();
         }
 
@@ -143,6 +145,60 @@ class Workcalender extends MY_Controller
             }
 
             $this->page_data['events'] = array_merge($this->page_data['events'], $workorder_events);
+        }*/
+
+
+        $this->page_data['wordorders'] = array();
+
+        // workorders
+        $workorders = $this->workorder_model->getAllByUserId('', '', 0, logged('id'), array());
+
+
+
+        // perform serialize decode operation
+        foreach ($workorders as $key => $workorder) {
+
+            $workorder->$key = serialize_to_array($workorder);
+        }
+
+//        echo '<pre>'; print_r($workorders); die;
+
+        if (!empty($workorders)) {
+
+            $workorder_events = array();
+
+            foreach ($workorders as $k => $workorder) {
+
+                $user = get_user_by_id($workorder->user_id);
+
+                // label of the event
+                if (!empty($workorder->customer)) {
+
+                    if (!empty($calender_settings)) {
+
+                        $title = make_calender_wordorder_label($calender_settings, $workorder);
+
+                    } else {
+
+                        $date = date('a', strtotime($workorder->date_issued));
+                        $date = substr($date, -2, 1);
+                        $title = date('g', strtotime($workorder->date_issued)) . $date;
+                        $title .= ' ' . $workorder->customer['first_name'] . ' ' . $workorder->customer['last_name'] . ', ';
+                        $title .= $workorder->customer['contact_mobile'];
+                        $title .= ', $' . $workorder->total['eqpt_cost'];
+                    }
+                }
+
+                $workorder_events[$k]['wordOrderId'] = $workorder->id;
+                $workorder_events[$k]['workorder_status'] = $workorder->account_type;
+                $workorder_events[$k]['title'] = $title;
+                $workorder_events[$k]['start'] = date('Y-m-d', strtotime($workorder->date_issued));
+                $workorder_events[$k]['end'] = date('Y-m-d', strtotime($workorder->date_issued));
+                $workorder_events[$k]['userName'] = ($user) ? $user->name : '';
+                $workorder_events[$k]['backgroundColor']    = get_event_color($workorder->status_id);
+            }
+
+            $this->page_data['wordorders'] = array_merge($this->page_data['wordorders'], $workorder_events);
         }
 
 //         echo '<pre>'; print_r($this->page_data['events']); die;
@@ -592,6 +648,68 @@ class Workcalender extends MY_Controller
         }
 
         die(json_encode($this->page_data['events']));
+    }
+
+    public function print_calender()
+    {
+        // echo $this->input->get('default_view');
+        // echo $this->input->get('default_date');
+
+        $this->page_data['default_date'] = $this->input->get('default_date');
+        $this->page_data['default_view'] = $this->input->get('default_view');
+
+
+        $this->load->model('Event_model', 'event_model');
+
+        $role = logged('role');
+        if ($role == 2 || $role == 3) {
+            $comp_id = logged('comp_id'); $comp_id = 15;
+            $events = $this->event_model->getAllByCompany($comp_id);
+        }
+        if ($role == 4) {
+            $events = $this->event_model->getAllByUserId();
+        }
+
+        $this->page_data['events'] = array();
+
+        // setting of the calender
+        $calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+
+        if (!empty($events)) {
+
+            foreach ($events as $key => $event) {
+
+                $customer = get_customer_by_id($event->customer_id);
+
+                // label of the event
+                if (!empty($customer)) {
+
+                    if (!empty($calender_settings)) {
+
+                        $title = make_calender_event_label($calender_settings, $event, $customer);
+
+                    } else {
+
+                        $date = date('a', strtotime($event->start_time));
+                        $date = substr($date, -2, 1);
+                        $title = date('g', strtotime($event->start_time)) . $date;
+                        $title .= ' ' . $customer->contact_name . ', ' . $customer->mobile;
+                    }
+                }
+
+                $this->page_data['events'][$key]['eventId'] = $event->id;
+                $this->page_data['events'][$key]['status'] = $event->status;
+                $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
+                $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
+                if($event->end_date != "1970-01-01" && $event->end_date != "" && $event->end_date != null){
+
+                $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
+                }
+                // $this->page_data['events'][$key]['userName']         = ($user) ? $user->name : '';
+                $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
+            }
+        }
+        $this->load->view('workcalender/reports/calender-print', $this->page_data);
     }
 }
 

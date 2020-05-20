@@ -240,7 +240,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </table>
                         <?php } else { ?>
                             <div class="page-empty-container">
-                                <h5 class="page-empty-header">You haven't got any expenses</h5>
+                                <h5 class="page-empty-header">You do not have any expenses</h5>
                                
                             </div>
                         <?php } ?>

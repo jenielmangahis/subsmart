@@ -38,10 +38,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <?php
                             $id = logged('id');
 
-                            $servername = "localhost";
-                            $username = "oscuz_sony";
-                            $password = "Sony@123";
-                            $dbname = "oscuz_nsmart";
+                            $servername = "gator4155.hostgator.com";
+                            $username = "admintom_admin";
+                            $password = "SmarTrac1$!";
+                            $dbname = "admintom_nsmart";
 
                             // Create connection
                             $conn = new mysqli($servername, $username, $password, $dbname);
@@ -73,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->workorder_date)); ?>
                                                 </div>
                                                 <h4>
-                                                    <span><a href="http://oscuz.com/nsmartfrontend/workorder/edit/<?php echo $ss; ?>">View estimate</a></span>
+                                                    <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View estimate</a></span>
                                                 </h4>
                                             </div>
                                         </div>

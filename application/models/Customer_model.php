@@ -9,6 +9,8 @@ class Customer_model extends MY_Model
 
     public function getAll()
     {
+
+        
         $role = logged('role');
 
         if ($role == 2 || $role == 3) {

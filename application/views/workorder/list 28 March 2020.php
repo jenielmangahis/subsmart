@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         aria-hidden="true"></i><?php echo date('M d, Y', strtotime($workorder->date_issued)); ?>
                                                 </div>
 <!--                                                <h4>-->
-<!--                                                    <span><a href="http://oscuz.com/nsmartfrontend/workorder/edit/--><?php //echo $ss; ?><!--">View Workorder</a></span>-->
+<!--                                                    <span><a href="http://nsmartrac.com/workorder/edit/--><?php //echo $ss; ?><!--">View Workorder</a></span>-->
 <!--                                                </h4>-->
                                             </div>
                                         </div>

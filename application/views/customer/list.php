@@ -26,6 +26,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
+
+                                            <?php if (isset($customers) && count($customers) > 0) { ?>
+                                                <a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
+                                                    <span class="fa fa-print "></span> Print
+                                                </a>
+                                            <?php } ?>
                                             <?php if (hasPermissions('WORKORDER_MASTER')): ?>
                                                 <!-- <a href="<?php echo url('customer/add') ?>" class="btn btn-primary" aria-expanded="false">
 									<i class="mdi mdi-settings mr-2"></i> New Customer

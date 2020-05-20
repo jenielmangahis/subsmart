@@ -13,53 +13,87 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="d-block d-none  hid-deskx">
                             <?php
-                            $id = logged('id');
+                                /* $id = logged('id');
 
-                            $servername = "localhost";
-                            $username = "oscuz_sony";
-                            $password = "Sony@123";
-                            $dbname = "oscuz_nsmart";
+                                $servername = "gator4155.hostgator.com";
+                                $username = "admintom_admin";
+                                $password = "SmarTrac1$!";
+                                $dbname = "admintom_nsmart";
 
-                            // Create connection
-                            $conn = new mysqli($servername, $username, $password, $dbname);
-                            // Check connection
-                            if ($conn->connect_error) {
-                                die("Connection failed: " . $conn->connect_error);
-                            }
+                                // Create connection
+                                $conn = new mysqli($servername, $username, $password, $dbname);
+                                // Check connection
+                                if ($conn->connect_error) {
+                                    die("Connection failed: " . $conn->connect_error);
+                                }
 
-                            $sql = "SELECT  * from workorders WHERE `user_id`=$id";
-                            $result = $conn->query($sql);
+                                $sql = "SELECT  * from workorders WHERE `user_id`=$id";
+                                $result = $conn->query($sql);
 
-
-                            if ($result->num_rows > 0) {
-                                // output data of each row
-                                while ($row = $result->fetch_assoc()) {
-                                    $ss = $row['id'];
-                                    ?>
-                                    <div card__columns>
-                                        <div class="c__header">
-                                            <h4> <?php echo 'WO-00' . $row['id']; ?></h4>
-                                            <div class="card__columns_dec">
-                                                <div><i class="fa fa-user"
-                                                        aria-hidden="true"></i> <?php echo $row['contact_name']; ?>
+                                if ($wordorders->num_rows > 0) {
+                                    // output data of each row
+                                    while ($row = $result->fetch_assoc()) {
+                                        $ss = $row['id'];
+                                        ?>
+                                        <div card__columns>
+                                            <div class="c__header">
+                                                <h4> <?php echo 'WO-00' . $row['id']; ?></h4>
+                                                <div class="card__columns_dec">
+                                                    <div><i class="fa fa-user"
+                                                            aria-hidden="true"></i> <?php echo $row['contact_name']; ?>
+                                                    </div>
+                                                    <div><i class="fa fa-users"
+                                                            aria-hidden="true"></i> <?php echo $row['contact_mobile']; ?>
+                                                    </div>
+                                                    <div><i class="fa fa-calendar"
+                                                            aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
+                                                    </div>
+                                                    <h4>
+                                                        <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
+                                                    </h4>
                                                 </div>
-                                                <div><i class="fa fa-users"
-                                                        aria-hidden="true"></i> <?php echo $row['contact_mobile']; ?>
-                                                </div>
-                                                <div><i class="fa fa-calendar"
-                                                        aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
-                                                </div>
-                                                <h4>
-                                                    <span><a href="http://oscuz.com/nsmartfrontend/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
-                                                </h4>
                                             </div>
                                         </div>
-                                    </div>
-                                    <?php
+                                        <?php
+                                    }
+                                } else {
+                                    echo "No Workorders";
+                                }*/
+                            ?>
+
+                            <?php
+                               
+
+                                if (count($wordorders) > 0) {
+                                    // output data of each row
+                                     foreach($wordorders as $row) {
+                                        $ss = $row['id'];
+                                        ?>
+                                        <div card__columns>
+                                            <div class="c__header">
+                                                <h4> <?php echo 'WO-00' . $row['id']; ?></h4>
+                                                <div class="card__columns_dec">
+                                                    <div><i class="fa fa-user"
+                                                            aria-hidden="true"></i> <?php echo $row['contact_name']; ?>
+                                                    </div>
+                                                    <div><i class="fa fa-users"
+                                                            aria-hidden="true"></i> <?php echo $row['contact_mobile']; ?>
+                                                    </div>
+                                                    <div><i class="fa fa-calendar"
+                                                            aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
+                                                    </div>
+                                                    <h4>
+                                                        <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php 
+                                    }
+                                } else {
+                                    echo "No Workorders";
                                 }
-                            } else {
-                                echo "No Workorders";
-                            } ?>
+                            ?>
                         </div>
                         <div class="card-body hid-desk">
                             <div class="calender-toolbar" id="calender_toolbar"><h1 class="page-title">Schedule</h1>
@@ -69,7 +103,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <option value='local' selected>local</option>
                                             <option value='UTC'>UTC</option>
                                         </select>-->
-										<span class="text-ter">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec" href="http://oscuz.com/nsmartfrontend/settings/schedule"><span class="fa fa-cog"></span> Change</a>
+										<span class="text-ter">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec" href="http://nsmartrac.com/settings/schedule"><span class="fa fa-cog"></span> Change</a>
                                     </div>
                                     <?php if (!empty($users)) { ?>
                                         <div class="form-group">
@@ -82,7 +116,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     <?php } ?>
                                     <div class="form-group margin-left-sec" role="group" aria-label="...">
-                                        <a class="btn btn-sec btn-md" data-calendar="print" href="#" target="_blank">
+                                         <a class="btn btn-sec btn-md" id="print-calender"  data-calendar="print" href="#">
                                             <span class="fa fa-print fa-margin-right"></span> Print
                                         </a>
                                     </div>
@@ -435,4 +469,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             calendar.setOption('timeZone', this.value);
         });
     }
+</script>
+
+<script>    
+    $('#print-calender').click(function(){  
+        var defaultView = calendar.view.type;   
+        var defaultDate = calendar.view.type;   
+
+        window.open("<?php echo base_url('workcalender/print_calender') ?>"+'?default_view='+defaultView, '_blank');    
+        //+'&default_date='+defaultDate;    
+    });         
 </script>

@@ -163,6 +163,27 @@ class Items extends MY_Controller
             die('true');
     }
 
+    public function print()
+    {
+
+        ifPermissions('items_list');
+
+        $get = $this->input->get();
+
+        // print_r($get); die;
+
+        // $this->page_data['items'] = $this->items_model->get();
+        $comp_id = logged('comp_id');
+
+        if (!empty($get['search'])) {
+            $this->page_data['search'] = $get['search'];
+            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $comp_id);
+        } else {
+            $this->page_data['items'] = $this->items_model->getByWhere(['comp_id' => $comp_id]);
+        }
+
+        $this->load->view('items/print/list', $this->page_data);
+    }
 }
 
 

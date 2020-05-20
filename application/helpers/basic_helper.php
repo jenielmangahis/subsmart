@@ -87,7 +87,7 @@ if (!function_exists('userProfile')) {
 
         if ($id != 'default')
             $url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'img_type') . '?' . time());
-        // $url = 'http://oscuz.com/nsmart/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
+        // $url = 'http://nsmartrac.com/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
 
         return $url;
     }
@@ -595,9 +595,11 @@ if (!function_exists('hasPermissions')) {
             exit();
         }
 
-        //echo '<pre>';print_r($code);die;
+        //echo '<pre>';print_r(logged('role'));print_r($code);die;
 
-        if (!empty($CI->role_permissions_model->getByWhere(['role' => logged('role'), 'permission' => $code]))) {
+        //if (!empty($CI->role_permissions_model->getByWhere(['role' => logged('role'), 'permission' => $code]))) {
+        $role = logged('role');
+        if (!empty($CI->role_permissions_model->getByPermissionCode($role, $code))) {
 
 
             return true;
@@ -681,6 +683,98 @@ if (!function_exists('obfuscate_email')) {
     }
 }
 
+if (!function_exists('getFoldersByRole')) {
+
+    function getFoldersByRole($getallparent = false, $getallchild = false)
+    {
+        $CI = &get_instance();
+        $uid = logged('id');
+        $role_id = logged('role');
+        $comp_id = logged('comp_id');
+
+        $lowest_rank = 0;
+        $users_rank = 0;
+
+        $ranks = $CI->db->query(
+            'select max(rank) as `ranks` from roles '.
+            'union all '.
+            'select rank from roles where id = ' . $role_id)->result();
+
+        foreach ($ranks as $key => $value) {
+            if($lowest_rank == 0){
+                $lowest_rank = $value->ranks;
+            } else {
+                $users_rank = $value->ranks;
+            }
+        }
+
+        $user_where = '';
+        if($lowest_rank == $users_rank){
+            $user_where = 'and a.uid = ' . $uid . ' ';
+        }
+
+        $and = '';
+
+        if($getallparent){
+            $and = 'and a.parent = 0 ';
+        } else if($getallchild){
+            $and = 'and a.parent <> 0 ';
+        }
+
+        $sql = 'select ' . 
+
+               'a.* '.
+
+               'from folders a '.
+
+               'left join users b on b.id = a.uid '.
+               'left join roles c on c.id = b.role '.
+               'inner join ('.
+                'select '.
+
+                'rank '.
+
+                'from roles '.
+
+                'where id = ' . $role_id .
+               ') d on c.rank >= d.rank '.
+
+               'where a.comp_id = ' . $comp_id . ' ' . $user_where . $and . 
+
+               'order by folder_order ASC';
+
+        return $CI->db->query($sql);
+    }
+
+}
+
+if (!function_exists('getRolesForFolderPermission')){
+    function getRolesForFolderPermission(){
+        $CI = &get_instance();
+        $uid = logged('id');
+        $role_id = logged('role');
+        
+        $sql = 'select '.
+
+               'a.id, '.
+               'a.title '.
+
+               'from roles a '.
+               'where (select b.rank from users a left join roles b on b.id = a.role where a.id = ' . $uid . ') <= a.rank '.
+                 'and a.id <> ' . $role_id;
+
+        return $CI->db->query($sql);    
+    }
+}
+
+function getFolderManagerView(){
+    $CI = &get_instance();
+
+    $rolesForFolderPermission = getRolesForFolderPermission();
+    $rolesForFolderPermission = $rolesForFolderPermission->result();
+
+    return $CI->load->view('modals/folder_manager', array('permissions' => $rolesForFolderPermission), TRUE);
+}
 
 function get_event_color($work_status)
 {
@@ -1263,6 +1357,17 @@ function get_customer_source($id)
     return $CI->customerSource_model->getById($id);
 }
 
+/**
+ * @return mixed
+ */
+function get_source()
+{
+    $CI =& get_instance();
+    $CI->load->model('Source_model', 'source_model');
+
+    return $CI->source_model->get();
+}
+
 
 /**
  * @param int $status
@@ -1350,4 +1455,861 @@ function count_equipment_items($equipment_id) {
     $CI->load->model('EquipmentItem_model', 'equipmentItem_model');
 
     return $CI->equipmentItem_model->countItems($equipment_id);
+}
+
+/**
+ * @return mixed
+ */
+function get_inquiries_count()
+{
+    $CI =& get_instance();
+    $CI->load->model('Inquiry_model', 'inquiry_model');
+    $today = date("Y-m-d");
+
+    return count($CI->inquiry_model->getByWhere(array('user_id' => logged('id'), 'created_at' => $today)));
+}
+
+/**
+ * @return mixed
+ */
+function get_format_date($date)
+{
+    $new_date=date_create($date);
+    return date_format($new_date,"M d, Y");
+}
+
+/**
+ * @return mixed
+ */
+function get_invoice_count($id)
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $today = date("Y-m-d");
+
+    switch($id) {
+        case 2:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'due_date' => $today, 'is_recurring' => 0)));
+
+        case 3:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'due_date <' => $today, 'is_recurring' => 0)));
+
+        case 4:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Partial Paid", 'is_recurring' => 0)));
+
+        case 5:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Paid", 'is_recurring' => 0)));
+
+        case 6:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Draft", 'is_recurring' => 0)));
+
+        default:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'user_id' => logged('id'), 'is_recurring' => 0)));
+    }
+}
+
+/**
+ * @return mixed
+ */
+function get_recurring_count($id)
+{
+    $CI =& get_instance();
+    $comp_id = logged('comp_id');
+    $CI->load->model('Invoice_model', 'invoice_model');
+
+    switch($id) {
+        case 2:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Active", "is_recurring" => 1)));
+
+        case 3:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Stopped", "is_recurring" => 1)));
+
+        default:
+            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'user_id' => logged('id'), "is_recurring" => 1)));
+    }
+}
+
+/**
+ * @return mixed
+ */
+function get_invoice_amount($type)
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $result = 0;
+    $start_date = date("Y") . "-01-01";
+    $end_date = date("Y") . "-12-31";
+
+    switch ($type) {
+        case "year":
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            return total_invoice_amount($result); 
+
+        case "pending":
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
+            return total_invoice_amount($result);
+
+        default:
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
+            return total_invoice_amount($result);
+    }
+}
+
+/**
+ * @return mixed
+ */
+function total_invoice_amount($invoices)
+{
+    $grand_total = 0;
+    foreach ($invoices as $invoice) {
+        $totals = unserialize($invoice->invoice_totals);
+        $grand_total += floatval($totals['grand_total']);
+    }
+
+    return number_format($grand_total, 2, '.', ',');
+}
+
+/**
+ * return invoice details based on ID
+ */
+function get_invoice_by_id($invoice_id, $key = '')
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice');
+
+    if (!empty($key)) {
+        return $CI->invoice->getinvoice($invoice_id)->$key;
+    }
+
+    return $CI->invoice->getinvoice($invoice_id);
+}
+
+/**
+ * return invoice details based on ID
+ */
+function get_reports_by_date($start_date, $end_date, $month, $action)
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Estimate_model', 'estimate_model');
+    $comp_id = logged('comp_id');
+    $final_res = 0;
+
+    switch ($action) {
+        case 'num_estimate':
+            $result = $CI->estimate_model->getByWhere(array('company_id' => $comp_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
+            $final_res = report_totals_by_month($result, $month, $action);
+            break;
+        
+        case 'estimate_amount':
+            $result = $CI->estimate_model->getByWhere(array('company_id' => $comp_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
+            $final_res = report_totals_by_month($result, $month, $action);
+            break;
+
+        case 'num_invoice':
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            $final_res = report_totals_by_month($result, $month, 'num_invoice');
+            break;
+        
+        case 'invoice_amount':
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            $final_res = report_totals_by_month($result, $month, "invoice_amount");
+            break;
+
+        case 'paid_invoice':
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
+            $final_res = report_totals_by_month($result, $month, "invoice_amount");
+            break;
+
+        case 'due_invoice':
+            $today = date("Y-m-d");
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'due_date <=' => $today, 'status !=' => 'Paid'));
+            $final_res = report_totals_by_month($result, $month, "invoice_amount");
+            break;
+    }
+
+    return $final_res;
+}
+
+/**
+ * @return mixed
+ */
+function get_invoice_amount_by_date($type, $start_date, $end_date)
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $result = 0;
+
+    switch ($type) {
+        case "paid":
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
+            return total_invoice_amount($result);
+    }
+}
+
+/**
+ * @return mixed
+ */
+function report_totals_by_month($results, $month, $action)
+{
+    $grand_total = 0;
+    switch ($action) {
+        case 'num_estimate':
+            foreach ($results as $result) {
+                $date = explode("-",$result->estimate_date);
+                if ($date[1] == $month) {
+                    $grand_total += 1;
+                }
+            }
+            break;
+
+        case 'estimate_amount':
+            foreach ($results as $result) {
+                $date = explode("-",$result->estimate_date);
+                $totals = unserialize($result->estimate_eqpt_cost);
+                if ($date[1] == $month) {
+                    $grand_total += (floatval($totals['eqpt_cost']) + floatval($totals['sales_tax']) + floatval($totals['inst_cost']) + floatval($totals['one_time']) + floatval($totals['m_monitoring']));
+                }
+            }
+            break;
+
+        case 'num_invoice':
+            foreach ($results as $result) {
+                $date = explode("-",$result->date_issued);
+                if ($date[1] == $month) {
+                    $grand_total += 1;
+                }
+            }
+            break;
+
+        case 'invoice_amount':
+            foreach ($results as $result) {
+                $totals = unserialize($result->invoice_totals);
+                $date = explode("-",$result->date_issued);
+                if ($date[1] == $month) {
+                    $grand_total += floatval($totals['grand_total']);
+                }
+            }
+            break;
+    }
+
+    return $grand_total;
+}
+
+/**
+ * @return mixed
+ */
+function setPageName($type) {
+    $title = '';
+    
+    switch($type) {
+        case "monthly-closeout":
+            $title = "Monthly Closeout";
+            break;
+
+        case "yearly-closeout":
+            $title = "Yearly Closeout";
+            break;
+
+        case "profit-loss":
+            $title = "Profit and Loss";
+            break;
+
+        case "work-order-by-employee":
+            $title = "Sales Leaderboard";
+            break;
+
+        case "payment-by-method":
+            $title = "Payments Type Summary";
+            break;
+
+        case "payment-by-month":
+            $title = "Payments Received";
+            break;
+
+        case "payment-by-item":
+            $title = "Sales By Items";
+            break;
+
+        case "payment-by-material-item":
+            $title = "Material Sales Report";
+            break;
+
+        case "payment-by-product-item":
+            $title = "Product Sales Report";
+            break;
+
+        case "payment-repeated-by-customer":
+            $title = "Repeated Business";
+            break;
+
+        case "sales-demographics":
+            $title = "Sales Demographics";
+            break;
+
+        case "account-receivable":
+            $title = "Account Receivable";
+            break;
+
+        case "invoice-by-date":
+            $title = "Invoice by Date";
+            break;
+
+        case "invoice-aging-summary":
+            $title = "Aging Summary";
+            break;
+
+        case "account-receivable-com-vs-res":
+            $title = "Commercial vs Residential";
+            break;
+
+        case "expense-by-category":
+            $title = "Expenses By Category Summary";
+            break;
+
+        case "expense-by-month-by-category":
+            $title = "Expenses By Category";
+            break;
+
+        case "expense-by-month-by-customer":
+            $title = "Expenses By Customer";
+            break;
+
+        case "expense-by-month-by-work-order":
+            $title = "Expenses By Work Order";
+            break;
+
+        case "expense-by-month-by-work-vendor":
+            $title = "Expenses By Work Vendor";
+            break;
+
+        case "estimate-status-by-month":
+            $title = "Estimates Summary";
+            break;
+
+        case "payment-by-customer":
+            $title = "Sales Summary By Customer";
+            break;
+        
+        case "customer-sales":
+            $title = "Sales By Customer";
+            break;
+                
+        case "payment-by-customer-group":
+            $title = "Sales By Customer Groups";
+            break;
+                
+        case "customer-source":
+            $title = "Sales By Customer Source";
+            break;
+                        
+        case "customer-tax-by-month":
+            $title = "Tax Paid by Customers";
+            break;
+                                    
+        case "customer-by-city-state":
+            $title = "Customer Demographics";
+            break;
+                                                
+        case "customer-by-source":
+            $title = "Customer Source";
+            break;
+        
+        case "employee-payroll-summary":
+            $title = "Payroll Summary";
+            break;
+                    
+        case "employee-payroll-by-employee":
+            $title = "Payroll By Employee";
+            break;
+                                
+        case "employee-payroll-log":
+            $title = "Payroll Log Details";
+            break;
+                                            
+        case "employee-payroll-percent-commission":
+            $title = "Percent Sales Commission Report";
+            break;
+                                                        
+        case "summary-by-period":
+            $title = "Time Log Summary";
+            break;
+                                                                    
+        case "timesheet-entries":
+            $title = "Time Log Details";
+            break;
+                                                                            
+        case "work-order-status":
+            $title = "Work Order Status";
+            break;
+                                                                                        
+        case "sales-tax":
+            $title = "Sales Tax";
+            break;
+                                                                                        
+        case "invoice-items-no-tax":
+            $title = "Non Taxable Sales";
+            break;
+    }
+
+    return $title;
+}
+
+function getLoggedName() {
+    $CI =& get_instance();
+    $CI->load->model('Users_model', 'user_model');
+    $result = $CI->user_model->getByWhere(array('id' => logged('id')));
+
+    return ucwords($result[0]->name);
+}
+
+function getPaymentByMethod($start_date, $end_date, $month) {
+    $CI =& get_instance();
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->payment_records_model->getByWhere(array('company_id' => $comp_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $fn = [];
+    $total = 0;
+    $cc = 0;
+    $cash = 0;
+    $check = 0;
+    $grand_total = 0;
+
+    foreach ($results as $result) {
+        $date = explode("-",$result->payment_date);
+        if ($date[1] == $month) {
+            $total += floatval($result->invoice_amount);
+            switch (strtolower($result->payment_method)) {
+                case "cc":
+                    $cc += floatval($result->invoice_amount);
+                    break;
+
+                case "cash":
+                    $cash += floatval($result->invoice_amount);
+                    break;
+                
+                case "check":
+                    $check += floatval($result->invoice_amount);
+                    break;
+            }
+        }
+
+        $grand_total += floatval($result->invoice_amount);
+    }
+
+    ($total > 0) ? array_push($fn, array($total)) : $total = 0;
+    ($cc > 0) ? array_push($fn, array("Credit Card", dollar_format($cc))) : $cc = 0;
+    ($cash > 0) ? array_push($fn, array("Cash", dollar_format($cash))) : $cash = 0;
+    ($check > 0) ? array_push($fn, array("Check", dollar_format($check))) : $check = 0;
+
+    return $fn;
+}
+
+function getPaymentByMonth($start_date, $end_date, $month) {
+    $CI =& get_instance();
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->payment_records_model->getByWhere(array('company_id' => $comp_id,'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $fn = [];
+    $comp_id = [];
+    $total = 0;
+
+    foreach ($results as $result) {
+        $date = explode("-",$result->payment_date);
+        if ($date[1] == $month) {
+            $total += floatval($result->invoice_amount);
+            if (!in_array($result->customer_id, $comp_id)) {
+                array_push($comp_id, $result->customer_id);
+                array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, '', '', ''));
+                array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
+            } else {
+                array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
+            }
+        }
+    }
+    if (count($fn) > 0) {
+        $fn[0] = array_merge($fn[0], array(dollar_format($total), $total));
+    }
+
+    return $fn;
+}
+
+function getAccountReceivable($start_date, $end_date, $month) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $fn = [array('0')];
+    $num_invoice = 0;
+    $total_invoice = 0;
+    $paid_invoice = 0;
+    $due_invoice = 0;
+    $tip_invoice = 0;
+    $fees_invoice = 0;
+
+    foreach ($results as $result) {
+        $date = explode("-",$result->date_issued);
+        if ($date[1] == $month && $result->status != "Paid") {
+            $monthly_paid = 0;
+            $monthly_tip = 0;
+            $monthly_fees = 0;
+            $num_invoice += 1;
+            $totals = unserialize($result->invoice_totals);
+            $total_invoice += floatval($totals['grand_total']);
+            $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result->invoice_number));
+            foreach ($invoices as $inv) {
+                $tip_invoice += $inv->invoice_tip;
+                $monthly_tip += $inv->invoice_tip;
+                $paid_invoice += $inv->invoice_amount;
+                $monthly_paid += $inv->invoice_amount;
+            }
+            $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
+            $due_invoice += $monthly_due;
+            $new_date=date_format(date_create($result->date_issued),"d-M-Y");
+            array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+        }
+    }
+    if (count($results) > 0 && count($fn) > 1) {
+        $fn[0] = array_merge($fn[0], array($num_invoice, dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
+        unset($fn[0][0]);
+        return $fn;
+    } else {
+        $fn = [];
+    }
+
+    return $fn;
+}
+
+function getAccountReceivableResCom($start_date, $end_date, $month) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $fn = [array('0')];
+    $res_num_invoice = 0;
+    $res_total_invoice = 0;
+    $res_paid_invoice = 0;
+    $res_due_invoice = 0;
+    $res_tip_invoice = 0;
+    $res_fees_invoice = 0;
+    $com_num_invoice = 0;
+    $com_total_invoice = 0;
+    $com_paid_invoice = 0;
+    $com_due_invoice = 0;
+    $com_tip_invoice = 0;
+    $com_fees_invoice = 0;
+
+    foreach ($results as $result) {
+        $date = explode("-",$result->date_issued);
+        if ($date[1] == $month) {
+            $monthly_paid = 0;
+            $monthly_tip = 0;
+            $monthly_fees = 0;
+            $totals = unserialize($result->invoice_totals);
+            if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
+                $res_num_invoice += 1;
+                $res_total_invoice += floatval($totals['grand_total']);
+            } else {
+                $com_num_invoice += 1;
+                $com_total_invoice += floatval($totals['grand_total']);
+            }
+            $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result->invoice_number));
+            foreach ($invoices as $inv) {
+                if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
+                    $res_tip_invoice += $inv->invoice_tip;
+                    $res_paid_invoice += $inv->invoice_amount;
+                } else {
+                    $com_tip_invoice += $inv->invoice_tip;
+                    $com_paid_invoice += $inv->invoice_amount;
+                }
+                $monthly_tip += $inv->invoice_tip;
+                $monthly_paid += $inv->invoice_amount;
+            }
+            $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
+            if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
+                $res_due_invoice += $monthly_due;
+            } else {
+                $com_due_invoice += $monthly_due;
+            }
+            $new_date=date_format(date_create($result->date_issued),"d-M-Y");
+            if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
+                array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, '', '', '', '', '', '', '', dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+            } else {
+                array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, '', dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees), '', '', '', '', '', '',));
+            }
+        }
+    }
+    if (count($results) > 0 && count($fn) > 1) {
+        $fn[0] = array_merge($fn[0], array($com_num_invoice, dollar_format($com_total_invoice), dollar_format($com_paid_invoice), dollar_format($com_due_invoice), dollar_format($com_tip_invoice), dollar_format($com_fees_invoice), $res_num_invoice, dollar_format($res_total_invoice), dollar_format($res_paid_invoice), dollar_format($res_due_invoice), dollar_format($res_tip_invoice), dollar_format($res_fees_invoice)));
+        unset($fn[0][0]);
+        return $fn;
+    } else {
+        $fn = [];
+    }
+
+    return $fn;
+}
+
+function getInvoiceByDate($start_date, $end_date, $month) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $fn = [];
+    $day = [];
+    $num_invoice = 0;
+    $total_invoice = 0;
+    $paid_invoice = 0;
+    $due_invoice = 0;
+    $tip_invoice = 0;
+    $fees_invoice = 0;
+
+    foreach ($results as $result) {
+        $date = explode("-",$result->date_issued);
+        if ($date[1] == $month) {
+            if (!in_array($result->date_issued, $day)) {
+                array_push($day, $result->date_issued);
+                $counter = 0;
+                array_push($fn, array(date_format(date_create($result->date_issued),"d-M-Y")));
+                foreach ($results as $result1) {
+                    if ($result->date_issued == $result1->date_issued) {
+                        $monthly_paid = 0;
+                        $monthly_tip = 0;
+                        $monthly_fees = 0;
+                        $num_invoice += 1;
+                        $counter += 1;
+                        $totals = unserialize($result1->invoice_totals);
+                        $total_invoice += floatval($totals['grand_total']);
+                        $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result1->invoice_number));
+                        foreach ($invoices as $inv) {
+                            $tip_invoice += $inv->invoice_tip;
+                            $monthly_tip += $inv->invoice_tip;
+                            $paid_invoice += $inv->invoice_amount;
+                            $monthly_paid += $inv->invoice_amount;
+                        }
+                        $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
+                        $due_invoice += $monthly_due;
+                        $new_date=date_format(date_create($result1->date_issued),"d-M-Y");
+                        array_push($fn, array($new_date,"Invoice #".$result1->invoice_number. "(".$result1->status.")", get_customer_by_id($result1->customer_id)->contact_name, dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+                    }
+                }
+                $fn[count($fn) - ($counter + 1)] = array_merge($fn[count($fn) - ($counter + 1)], array($num_invoice, "", dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
+            }
+        }
+    }
+
+    return $fn;
+}
+
+function getPaymentByCustomer($start_date, $end_date) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+
+    foreach ($results as $result) {
+        if (!in_array($result->customer_id, $comp_user)) {
+            array_push($comp_user, $result->customer_id);
+            $num_invoice = 0;
+            $total_invoice = 0;
+            $paid_invoice = 0;
+
+            foreach ($results as $result2) {
+                if ($result2->customer_id === $result->customer_id) {
+                    $num_invoice += 1;
+                    $paid_invoice += 1;
+                    $grand_num_invoice += 1;
+                    $grand_paid_invoice += 1;
+
+                    $totals1 = unserialize($result2->invoice_totals);
+                    $total_invoice += floatval($totals1['grand_total']);
+                    $grand_total += floatval($totals1['grand_total']);
+                }
+            }
+            array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->customer_type,0,1), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
+        }
+    }
+
+    array_push($fn, array("Total", "", $grand_num_invoice, $grand_paid_invoice, dollar_format($grand_total)));
+    return $fn;
+}
+
+function getPaymentByItem($start_date, $end_date) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+
+    foreach ($results as $result) {
+        $items = unserialize($result2->invoice_items);
+
+        if (!in_array($result->customer_id, $comp_user)) {
+            array_push($comp_user, $result->customer_id);
+            $num_invoice = 0;
+            $total_invoice = 0;
+            $paid_invoice = 0;
+
+            foreach ($results as $result2) {
+                if ($result2->customer_id === $result->customer_id) {
+                    $num_invoice += 1;
+                    $paid_invoice += 1;
+                    $grand_num_invoice += 1;
+                    $grand_paid_invoice += 1;
+
+                    $totals1 = unserialize($result2->invoice_totals);
+                    $total_invoice += floatval($totals1['grand_total']);
+                    $grand_total += floatval($totals1['grand_total']);
+                }
+            }
+            array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->customer_type,0,1), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
+        }
+    }
+
+    array_push($fn, array("Total", "", $grand_num_invoice, $grand_paid_invoice, dollar_format($grand_total)));
+    return $fn;
+}
+
+function getPaymentByCustomerGroup($start_date, $end_date) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $cusGroups = get_customer_groups();
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $fn = [];
+    $grand_count = 0;
+    $grand_total = 0;
+
+    foreach ($cusGroups as $cusGroup) {
+        $count = 0;
+        $total_sales = 0;
+        foreach ($results as $result) {
+            if (get_customer_by_id($result->customer_id)->customer_group) {
+                $groups = unserialize(get_customer_by_id($result->customer_id)->customer_group);
+                foreach ($groups as $group) {
+                    if ($group === $cusGroup->title) {
+                        $count += 1;
+                        $grand_count += 1;
+                        $totals1 = unserialize($result2->invoice_totals);
+                        $total_invoice += floatval($totals1['grand_total']);
+                        $total_sales += floatval($totals1['grand_total']);
+                        $grand_total += floatval($totals1['grand_total']);
+                    }
+                }
+            }
+        }
+        array_push($fn, array($cusGroup->title, $count, dollar_format($total_sales)));
+    }
+
+
+    array_push($fn, array("Total", $grand_count, dollar_format($grand_total)));
+    return $fn;
+}
+
+function getCustomerSource($start_date, $end_date) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $comp_id = logged('comp_id');
+    $cusSources = get_source();
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $fn = [];
+    $res_total = 0;
+    $res_invoice_total = 0;
+    $com_total = 0;
+    $com_invoice_total = 0;
+
+    foreach ($cusSources as $cusSource) {
+        $res = 0;
+        $res_invoice = 0;
+        $com = 0;
+        $com_invoice = 0;
+        foreach ($results as $result) {
+            if (get_customer_by_id($result->customer_id)->source_id === $cusSource->id) {
+                if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
+                    $res_total += 1;
+                    $res += 1;
+                    $totals1 = unserialize($result->invoice_totals);
+                    $res_invoice += floatval($totals1['grand_total']);
+                    $res_invoice_total += floatval($totals1['grand_total']);
+                } else if (get_customer_by_id($result->customer_id)->customer_type == "Commercial") {
+                    $com_total += 1;
+                    $com += 1;
+                    $totals1 = unserialize($result->invoice_totals);
+                    $com_invoice += floatval($totals1['grand_total']);
+                    $com_invoice_total += floatval($totals1['grand_total']);
+                }
+            }
+        }
+        array_push($fn, array($cusSource->source_name, $res, dollar_format($res_invoice), $com, dollar_format($com_invoice)));
+    }
+
+    array_push($fn, array("Total", $res_total, dollar_format($res_invoice_total), $com_total, dollar_format($com_invoice_total)));
+    
+    return $fn;
+}
+
+function getCustomerBySource() {
+    $CI =& get_instance();
+    $CI->load->model('Customer_model', 'customer_model');
+    $comp_id = logged('comp_id');
+    $cusSources = get_source();
+    $customers = $CI->customer_model->getByWhere(array('company_id' => $comp_id));
+    $fn = [];
+    $res_total = 0;
+    $com_total = 0;
+    $cus_total = 0;
+
+    foreach ($cusSources as $cusSource) {
+        $res = 0;
+        $com = 0;
+        $cus = 0;
+        foreach ($customers as $customer) {
+            if ($customer->source_id === $cusSource->id) {
+                if ($customer->customer_type == "Residential") {
+                    $res_total += 1;
+                    $res += 1;
+                    $cus += 1;
+                    $cus_total += 1;
+                } else if ($customer->customer_type == "Commercial") {
+                    $com_total += 1;
+                    $com += 1;
+                    $cus += 1;
+                    $cus_total += 1;
+                }
+            }
+        }
+        array_push($fn, array($cusSource->source_name, $cus, $res, $com));
+    }
+
+    array_push($fn, array("Total", $cus_total, $res_total, $com_total));
+    
+    return $fn;
+}
+
+function getPaymentType($type) {
+    switch($type) {
+        case "cc":
+            return "Credit Card";
+        
+        case "check":
+            return "Check";
+            
+        case "cash":
+            return "Cash";
+    }
 }

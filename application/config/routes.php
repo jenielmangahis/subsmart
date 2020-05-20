@@ -64,6 +64,31 @@ $route['services/(:any)?/(:any)?'] = 'service/$1/$2';
 $route['services/(:any)?'] = 'service/$1';
 $route['services'] = 'service';
 
+//survey module
+$route['vault/(:num)'] = 'vault/index/$1';
+$route['survey/(:num)'] = 'survey/view/$1';
+$route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
+$route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
+$route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3'; 
+//question module
+$route['survey/update/question'] = 'survey/updateQuestion';
+$route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';
+$route['survey/delete/question/(:num)']['GET'] = 'survey/deleteQuestion/$1';
+$route['survey/order/question']['POST'] = 'survey/orderUpdate/$1';
 
+$route['survey/add/question/choice/(:num)/(:num)'] = 'survey/addQuestionChoice/$1/$2';
 // [AdminLTE]
 $route['adminlte/(:any)'] = 'adminlte/main/$1';
+
+// [Invoice]
+$route['invoice/recurring/add'] = 'invoice/recurring_add';
+
+$route['reports/main/report/(:any)'] = 'reports/report/$1';
+
+$route['survey/tribute/(:num)'] = 'survey/getQuestions/$1';
+
+$route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
+$route['survey/tribue'] = 'survey/getQuestions';
+$route['survey/result/$1'] = 'survey/result/$1';
+$route['survey/share/$1'] = 'survey/share/$1';
+$route['survey/answer/$1'] = 'survey/answer/$1';

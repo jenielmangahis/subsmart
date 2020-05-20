@@ -1,0 +1,6 @@
+framework module AlamofireJsonToObjects {
+  umbrella header "AlamofireJsonToObjects-umbrella.h"
+
+  export *
+  module * { export * }
+}

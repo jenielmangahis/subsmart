@@ -46,14 +46,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="container">
 				<div class="row align-items-center">
 					<div class="col-md-6">
-						<p>TAKE CONTROL OVER YOUR BUSINESS & GET UP THE SPEED! <b class="ml-5">CALL US AT <span>818-264-3344</span></b></p>
+						<p>TAKE CONTROL OF YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5">CALL US AT <span>(850) ###-####</span></b></p>
 					</div>
 					<div class="col-md-6 text-md-right">
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
-							<a href=""><i class="fa fa-dribbble"></i></a>
-							<a href=""><i class="fa fa-behance"></i></a>
+							
 						</div>
 					</div>
 				</div>
@@ -64,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<div class="row">
 					<div class="col-12 d-flex align-items-center site-logo-holder">
 						<!-- Logo --> 
-						<a href="http://oscuz.com/nsmartfrontend/" class="site-logo">
+						<a href="http://nsmartrac.com/" class="site-logo">
 							<img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">
 						</a>
 						
@@ -76,19 +75,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</ul>
 						</nav>
 						<nav class="site-nav-menu ml-auto">
-							<ul class="w-100" style="margin-top:8px;">
-								<li class="active"><a href="http://oscuz.com/nsmartfrontend/">Home</a></li>
+							<ul class="over-write-menu" style="margin-top:8px;">
+								<li class="active"><a href="http://nsmartrac.com/">Home</a></li>
 								<li><a href="">FEATURES</a></li>
-								<li><a href="">PRICING </a>
+								<li><a href="">PRICING </a></li>
 									<!--<ul class="sub-menu">
 										<li><a href="">Elements</a></li>
 									</ul>-->
-								</li>
+								
 								<li><a href="">FAQs</a></li>
-								<li><a href="">Contact</a></li>
-								<li><a href="">FREE TRIAL</a></li>
-								<li class="active d-block d-md-none"><a href="<?php echo url('/login') ?>">Login</a></li>
-								<li class="d-block d-md-none"><a href="<?php echo url('/home/signup') ?>">Sign Up</a></li>
+								<li><a href="">CONTACT</a></li>
+								<li class="no-break"><a href="" class="no-break">FREE TRIAL</a></li>
+								<!-- <li class="active d-block d-md-none"><a href="<?php echo url('/login') ?>">Login</a></li>
+								<li class="d-block d-md-none"><a href="<?php echo url('/home/signup') ?>">Sign Up</a></li> -->
 							</ul>
 						</nav>
 						</div>

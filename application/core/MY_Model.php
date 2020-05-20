@@ -74,7 +74,7 @@ class MY_Model extends CI_Model {
 
 	  * @param int $id Primary Key Example - id 
 
-	  * @param string $row coloumn name Example - name 
+	  * @param string $row column name Example - name 
 
 	  * 
 
@@ -211,8 +211,93 @@ class MY_Model extends CI_Model {
 	}
 
 
+	/**
 
+	  * Transactional create
 
+	  * parameters
+	  * - array $data
+
+	  * return boolean
+	*/
+
+	function trans_create($data, $isBatch = false){
+		$this->db->trans_start();
+			if(!$isBatch){
+          		$this->db->insert($this->table, $data);
+          	} else {
+          		$this->db->insert_batch($this->table, $data);	
+          	}
+        $this->db->trans_complete();
+        if($this->db->trans_status() === false){
+          $this->db->trans_rollback();
+        } else {
+          $this->db->trans_commit();
+        }
+
+        return $this->db->trans_status();
+	}
+
+	/**
+
+	  * Transactional update
+
+	  * parameters
+	  * - array $data
+	  * - array $condition
+
+	  * return boolean
+	*/
+
+	function trans_update($data, $condition){
+		$this->db->trans_start();
+          $this->db->update($this->table, $data, $condition);
+        $this->db->trans_complete();
+        if($this->db->trans_status() === false){
+          $this->db->trans_rollback();
+        } else {
+          $this->db->trans_commit();
+        }
+
+        return $this->db->trans_status();
+	}
+
+	/**
+
+	  * Transactional delete
+
+	  * parameters
+	  * - array $data
+	  * - array $condition
+
+	  * return array $result
+	*/
+
+	function trans_delete($data, $condition){
+		$this->db->trans_start();
+          $this->db->delete($this->table, $condition);
+        $error = $this->db->error();
+        $this->db->trans_complete();
+        if($this->db->trans_status() === false){
+          $this->db->trans_rollback();
+        } else {
+          $this->db->trans_commit();
+        }
+
+        if($error['code'] == 1451){
+        	$message = 'Cannot delete record. Record being used';
+        } else {
+        	$message = $error['message'];
+        }
+
+        $result = array(
+        	'status' => $this->db->trans_status(),
+        	'message' => $message
+        );
+        
+
+        return $result;
+	}
 
 	/**
 

@@ -184,8 +184,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
                                         </td>
                                         <td><?php echo get_user_by_id($workorder->user_id)->name ?></td>
-                                        <td><?php echo get_priority_by_id($workorder->priority_id)->title ?></td>
-                                        <td><?php echo get_status_by_id($workorder->status_id)->title ?></td>
+                                        <td><?php echo ($workorder->priority_id > 0)?get_priority_by_id($workorder->priority_id)->title:'' ?></td>
+                                        <td><?php echo ($workorder->status_id > 0)?get_status_by_id($workorder->status_id)->title:''; ?></td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
                                                 <button class="btn btn-default dropdown-toggle" type="button"
