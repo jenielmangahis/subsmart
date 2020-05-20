@@ -13,12 +13,79 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<h2>THE COMPLETE<br />
 							Field Service Management</h2>
 							<p style="display:block !important;">Sales & Marketing Automation, It’s All Right Here!</p>
-							<a href="<?php echo url('/home/signup') ?>" class="site-btn sb-white mr-4 mb-3">START YOUR FREE TRIAL</a> 
+							<a href="<?php echo url('/home/signup') ?>" class="site-btn sb-white mr-4 mb-3">START YOUR FREE TRIAL</a>
 						</div>
 					</div>
 				</div>
 			</div>
-			 
+
+			<div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner-registration.jpg">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 col-lg-4 col-xl-6 text-center">
+						</div>
+						<div class="col-md-12 col-lg-6 col-xl-6 text-center">
+							<h2 class="reg-banner-title">Signup Today for a <br/> Free 30-Day Trial</h2>
+							<form class="mt-4">
+								<div class="reg-block">
+									<div class="col-xl-6 float-left">
+										<input type="name" name="name" required class="form-control" id="inputName" value="" placeholder="First Name">
+									</div>
+									<div class="col-xl-6 float-left">
+										<input type="name" name="name" required class="form-control" id="inputName" value="" placeholder="Last Name">
+									</div>
+								</div>
+								<div class="reg-block">
+									<div class="col-xl-6 float-left">
+										<input type="name" name="name" required class="form-control" id="inputName" value="" placeholder="Email Address">
+									</div>
+									<div class="col-xl-6 float-left">
+										<input type="name" name="name" required class="form-control" id="inputName" value="" placeholder="Phone Number">
+									</div>
+								</div>
+								<div class="reg-block">
+									<div class="col-xl-6 float-left">
+										<input type="name" name="name" required class="form-control" id="inputName" value="" placeholder="Business Name">
+									</div>
+									<div class="col-xl-6 float-left">
+										<input type="number" name="name" required class="form-control" id="inputName" value="" placeholder="Number of Employees">
+									</div>
+								</div>
+								<div class="reg-block">
+									<div class="col-xl-6 float-left">
+										<select type="name" name="name" required class="form-control" id="inputName" value="">
+											<option value="" disabled="true" selected>Select your Industry</option>
+											<option value="agriculture">Agriculture</option>
+											<option value="aerospace">Aerospace</option>
+											<option value="computer">Computer</option>
+											<option value="telecommunication">Telecommunication</option>
+											<option value="construction">Construction</option>
+											<option value="transport">Transport</option>
+											<option value="education">Education</option>
+											<option value="pharmaceutical">Pharmaceutical</option>
+										</select>
+									</div>
+									<div class="col-xl-6 float-left">
+										<select type="name" name="name" required class="form-control" id="inputName" value="">
+											<option value="" disabled="true" selected>Select your Role</option>
+											<option value="transporter">Transporter</option>
+											<option value="Surgeon">Surgeon</option>
+											<option value="broker">Broker</option>
+											<option value="system_analyst">System Analyst</option>
+											<option value="scientist">Scientist</option>
+										</select>
+									</div>
+								</div>
+							</form>
+							<br class="clear" />
+							<a href="<?php echo url('/home/signup') ?>" class="site-btn sb-white mr-4 mb-3">START YOUR FREE TRIAL</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
 		</div>
 	</section>
 	<!-- Hero section end  -->
@@ -159,13 +226,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-sm-12">
                     <div class="sectionHeader pb-5 w-75 m-auto">
                         <h2>Time Tracking App Integration</h2>
-                        <h4>The simplest timesheet app for small businesses</h4>
+                        <h4 class="weight-600 subtle-fade">The simplest timesheet app for small businesses</h4>
                         <p>Tap a button to clock in and start tracking your time. Your work hours turn into simple, accurate timesheet reports automatically.</p>
                     </div>
                     <div class="row">
                         <div class="col-lg-7 col-md-5">
                             <div class="imgHolder">
-                                <img src="<?php echo $url->assets ?>frontend/images/time-tracking.png" class="img-fluid" alt="time tracking">
+                                <img src="<?php echo $url->assets ?>frontend/images/time-tracking.jpg" class="img-fluid" alt="time tracking">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-7 align-self-center">
@@ -249,7 +316,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-6 col-md-7 text-right">
                     <div class="systemInfo ml-neg5">
                         <h3>Manage contacts, send notifications</h3>
-                        <h4>Clients & Prospects Control</h4>
+                        <h4 class="weight-600 subtle-fade">Clients & Prospects Control</h4>
                         <p>he address of your customers can be seamlessly integrated into nSmartrac. </p>
                         <p>This means you receive clear directions and maps for simple navigations. </p>
                     </div>
@@ -269,7 +336,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-6 col-md-7 text-left align-self-center">
                     <div class="systemInfo">
                         <h3>Create and assign work orders</h3>
-                        <h4>Order Processing & Tracking from Anywhere</h4>
+                        <h4 class="weight-600 subtle-fade">Order Processing & Tracking from Anywhere</h4>
                         <ul>
                             <li>nSmartrac allows you to track and update a time log, where you can add before and after pictures.</li>
                             <li>Your customers can then sign off on the job once it's completed. It doesn't get any easier than that.</li>
@@ -281,7 +348,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-6 col-md-7 text-right">
                     <div class="systemInfo">
                         <h3 class="mt-5">Receive payments online</h3>
-                        <h4>Payment Colection Made Easy</h4>
+                        <h4 class="weight-600 subtle-fade">Payment Colection Made Easy</h4>
                         <p>nSmartrac is integrated with apps like Square, Paypal and Wepay. This means any payments can be automatically deposited to the destination of your choice.</p>
                     </div>
                 </div>
@@ -290,7 +357,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <img src="<?php echo $url->assets ?>frontend/images/trialimg3.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
-                
+
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -354,18 +421,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-lg-4">
                     <div class="princing-item starter h-100">
 
-                    
+
                     <div class="pricing-divider ">
                         <h3 class="text-light">Starter</h3>
-                        
-                        
-                        
+
+
+
                     </div>
                     <div class="card-body mt-0 shadow h-100">
                         <div class="cardText">
                         <h4 class="my-0 display-2 text-light font-weight-normal mb-3"><span class="h3">$</span> <span class="price"> 29</span> <span
                             class="h5"><span class="pricehalf">99</span><span class="pricetxt">per month</span></span></h4>
-                            
+
                         <ul class="list-unstyled mb-5 position-relative">
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
@@ -381,8 +448,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="princing-item team h-100">
                     <div class="pricing-divider ">
                         <h3 class="text-light">Team</h3>
-                        
-                        
+
+
                     </div>
                     <div class="card-body mt-0 shadow h-100">
                         <div class="cardText">
@@ -394,9 +461,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
-                            
-                            
-                            
+
+
+
                         </ul>
                         <button type="button" class="btn btn-lg btn-block  btn-custom ">Sign up for free</button>
                     </div>
@@ -407,8 +474,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="princing-item enterprise h-100">
                     <div class="pricing-divider ">
                         <h3 class="text-light">Enterprise</h3>
-                        
-                        
+
+
                     </div>
                     <div class="card-body mt-0 shadow h-100">
                         <div class="cardText">
@@ -420,7 +487,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
                             <li>Lorem ipsum dolor sit amet, consectetuer </li>
-                           
+
                         </ul>
                         <button type="button" class="btn btn-lg btn-block btn-custom ">Sign up for free</button>
                     </div>
