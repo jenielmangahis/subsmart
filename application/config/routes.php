@@ -69,7 +69,7 @@ $route['vault/(:num)'] = 'vault/index/$1';
 $route['survey/(:num)'] = 'survey/view/$1';
 $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
 $route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
-$route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3'; 
+$route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
 //question module
 $route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';
@@ -92,3 +92,5 @@ $route['survey/tribue'] = 'survey/getQuestions';
 $route['survey/result/$1'] = 'survey/result/$1';
 $route['survey/share/$1'] = 'survey/share/$1';
 $route['survey/answer/$1'] = 'survey/answer/$1';
+
+$route['features'] = 'features';
