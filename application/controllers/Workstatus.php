@@ -15,8 +15,8 @@ class Workstatus extends MY_Controller {
 	{ 
 		ifPermissions('plan_list');
 		
-		$comp_id =  logged('comp_id');
-		$this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id'=>$comp_id]);
+		$company_id =  logged('company_id');
+		$this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
 		$this->load->view('workstatus/list', $this->page_data);
 	}
 	
@@ -36,9 +36,9 @@ class Workstatus extends MY_Controller {
 
 		postAllowed();			
 		
-		$comp_id =  logged('comp_id');
+		$company_id =  logged('company_id');
 		$permission = $this->Workstatus_model->create([
-			'comp_id' => $comp_id,
+			'company_id' => $company_id,
 			'title' => $this->input->post('title'),
 			'color' => $this->input->post('color')
 		]);
@@ -56,9 +56,9 @@ class Workstatus extends MY_Controller {
 
 		postAllowed();
 		
-		$comp_id =  logged('comp_id');
+		$company_id =  logged('company_id');
 		$data = [
-			'comp_id' => $comp_id,
+			'company_id' => $company_id,
 			'title' => $this->input->post('title'),
 			'color' => $this->input->post('color')
 		];

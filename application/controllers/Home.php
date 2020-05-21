@@ -48,7 +48,7 @@ class Home extends MY_Controller {
 		'b_email' => post('email')
 	]);
 	
-	$this->users_model->update($id, ['comp_id' => $business_id]);
+	$this->users_model->update($id, ['company_id' => $business_id]);
 
 		if (!empty($_FILES['image']['name'])) {
 

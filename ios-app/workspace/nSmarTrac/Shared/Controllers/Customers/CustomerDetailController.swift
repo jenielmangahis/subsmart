@@ -44,10 +44,10 @@ class CustomerDetailController: UITableViewController {
         
         // configure icons
         nameIcon.image = UIImage.fontAwesomeIcon(name: .user, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        emailIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        mobileIcon.image = UIImage.fontAwesomeIcon(name: .mobile, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        emailIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        mobileIcon.image = UIImage.fontAwesomeIcon(name: .mobileAlt, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         phoneIcon.image = UIImage.fontAwesomeIcon(name: .phone, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        emailNotifyIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        emailNotifyIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         smsNotifyIcon.image = UIImage.fontAwesomeIcon(name: .sms, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         locationIcon.image = UIImage.fontAwesomeIcon(name: .mapMarkerAlt, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         

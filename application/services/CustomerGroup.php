@@ -65,7 +65,7 @@ class CustomerGroup
     {
         $post = $this->app->input->post();
         $this->app->page_data['old_data'] = $post;
-        $comp_id = logged('company_id');
+        $company_id = logged('company_id');
 
 
         $this->app->db->select('*');
@@ -96,7 +96,7 @@ class CustomerGroup
                 $job_type_id = $this->app->customerGroup_model->create([
 
                     'user_id' => getLoggedUserID(),
-                    'company_id' => $comp_id,
+                    'company_id' => $company_id,
                     'title' => $post['title'],
                     'description' => $post['description']
                 ]);
@@ -136,7 +136,7 @@ class CustomerGroup
     {
         $post = $this->app->input->post();
         $this->app->page_data['old_data'] = $post;
-        $comp_id = logged('company_id');
+        $company_id = logged('company_id');
 
 
         $this->app->db->select('*');
@@ -169,7 +169,7 @@ class CustomerGroup
                 $job_type_id = $this->app->customerGroup_model->create([
 
                     'user_id' => getLoggedUserID(),
-                    'company_id' => $comp_id,
+                    'company_id' => $company_id,
                     'title' => $post['title'],
                     'description' => $post['description']
                 ]);

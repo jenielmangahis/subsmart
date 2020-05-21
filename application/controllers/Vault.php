@@ -80,12 +80,12 @@ class Vault extends MY_Controller {
 			$folder_path = $folder->path;
 		}
 
-		$cid=logged('comp_id');	
+		$cid=logged('company_id');	
 		$uid=logged('id');	
 		$data = [
 			'title' => $this->input->post('title'),
 			'uid' => $uid,
-			'comp_id' => $cid,
+			'company_id' => $cid,
 			'folder' => $folder_id
 			// 'estimate_resource' => $this->input->post('estimate_resource'),
 			// 'invoice_resource' => $this->input->post('invoice_resource')

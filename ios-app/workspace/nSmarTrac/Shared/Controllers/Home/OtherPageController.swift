@@ -56,13 +56,13 @@ class OtherPageController: UIViewController {
 extension OtherPageController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 9
+        return 7
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let titles = ["Back", "Estimates", "Marketing", "Work Order", "Cost Estimator", "Virtual Estimator", "Clock Out"]
-        let icons: [FontAwesome] = [.replyAll, .sign, .clipboardList, .userClock, .calculator, .route, .stopwatch]
-        let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 48, height: 48))
+        let titles = ["Back", "Estimates", "Marketing", "Inventory", "Cost Estimator", "Virtual Estimator", "Clock Out"]
+        let icons: [FontAwesome] = [.replyAll, .calculatorAlt, .clipboardList, .dollyFlatbed, .calculator, .route, .stopwatch]
+        let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 48, height: 48))
         
         // Configure the cell...
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! MenuCell

@@ -173,7 +173,7 @@ class Folders extends MY_Controller {
 
 		$uid = logged('id');
 		$role_id = logged('role');
-		$comp_id = logged('comp_id');
+		$company_id = logged('company_id');
 		$parent = 0;
 
 		if(isset($_POST['roles'])){
@@ -205,7 +205,7 @@ class Folders extends MY_Controller {
 
 				   'from folders '.
 
-				   'where comp_id = ' . $comp_id . ' ' .
+				   'where company_id = ' . $company_id . ' ' .
 
 				   'order by folder_order DESC ' .
 
@@ -225,7 +225,7 @@ class Folders extends MY_Controller {
 				'folder_name' => $folder_name,
 				'path' => $path,
 				'parent' => $parent,
-				'comp_id' => $comp_id,
+				'company_id' => $company_id,
 				'folder_order' => $folder_order 
 			);
 

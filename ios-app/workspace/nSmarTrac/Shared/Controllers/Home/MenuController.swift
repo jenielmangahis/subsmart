@@ -41,8 +41,8 @@ class MenuController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let titles = ["Home", "Customers", "Quick Links", "Business Contacts", "Leads", "Tasks", "Inventory", "Map", "Calculator", "Estimator", "Expense Tracker", "Notifications", "My Info", "Settings", "Company Profile", "Logout"]
-        let icons: [FontAwesome] = [.home, .users, .link, .addressBook, .clipboardList, .tasks, .dollyFlatbed, .map, .calculator, .calculatorAlt, .tools, .bell, .userCircle, .cog, .briefcase, .signOutAlt]
-        let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
+        let icons: [FontAwesome] = [.home, .users, .link, .addressBook, .clipboardList, .tasks, .dollyFlatbed, .map, .calculator, .calculatorAlt, .moneyBill, .bell, .userCircle, .cog, .briefcase, .signOutAlt]
+        let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .regular, textColor: .white, size: CGSize(width: 24, height: 24))
         
         // Configure the cell...
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)

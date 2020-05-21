@@ -22,7 +22,7 @@ class EventDetailController: UITableViewController {
         super.viewDidLoad()
         
         // configure icons
-        calendarIcon.image = UIImage.fontAwesomeIcon(name: .calendarDay, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        calendarIcon.image = UIImage.fontAwesomeIcon(name: .calendarDay, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {

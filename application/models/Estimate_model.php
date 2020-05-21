@@ -6,12 +6,12 @@ class Estimate_model extends MY_Model
 
     public $table = 'estimates';
 
-    public function getAllByCompany($comp_id)
+    public function getAllByCompany($company_id)
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();

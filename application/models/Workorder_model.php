@@ -6,12 +6,12 @@ class Workorder_model extends MY_Model
 
     public $table = 'workorders';
 
-    public function getAllOrderByCompany($comp_id, $options = array())
+    public function getAllOrderByCompany($company_id, $options = array())
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
 
         if (!empty($options)) {
 

@@ -177,7 +177,7 @@ if (!function_exists('get')) {
 
 
 /**
- * Die/Stops the request if its not a 'post' requetst type
+ * Die/Stops the request if its not a 'post' request type
  *
  * @return boolean
  *
@@ -312,6 +312,7 @@ if (!function_exists('logged')) {
             $logged = $CI->users_model->getById(json_decode(get_cookie('logged'))->id);
         }
 
+        //print_r($logged);die;
 
         return (!$key) ? $logged : $logged->{$key};
     }
@@ -350,10 +351,10 @@ if (!function_exists('viewPath')) {
 
  */
 
-if (!function_exists('DateFomatDb')) {
+if (!function_exists('DateFormatDb')) {
 
 
-    function DateFomatDb($date)
+    function DateFormatDb($date)
 
     {
 
@@ -363,11 +364,11 @@ if (!function_exists('DateFomatDb')) {
 
 
 /**
- * Currency formating
+ * Currency formatting
  *
  * @param int/float/string $amount
  *
- * @return string $amount formated amount with currency symbol
+ * @return string $amount formatted amount with currency symbol
  *
 
  */
@@ -385,9 +386,9 @@ if (!function_exists('currency')) {
 
 
 /**
- * Find & returns the vlaue if exists in db
+ * Find & returns the value if exists in db
  *
- * @param string $key key which is used to check in db - Refrence: settings table - key column
+ * @param string $key key which is used to check in db - Reference: settings table - key column
  *
  * @return string/boolean $value if exists value else false
  *
@@ -449,7 +450,7 @@ if (!function_exists('breadcrumb')) {
 
 
 /**
- * Finds and return the ipaddres of client user
+ * Finds and return the ipaddress of client user
  *
  * @param array $ipaddress IpAddress
  *
@@ -462,37 +463,37 @@ if (!function_exists('ip_address')) {
     function ip_address()
     {
 
-        $ipaddress = '';
+        $ip_address = '';
 
         if (isset($_SERVER['HTTP_CLIENT_IP']))
 
-            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+            $ip_address = $_SERVER['HTTP_CLIENT_IP'];
 
         else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
 
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
 
         else if (isset($_SERVER['HTTP_X_FORWARDED']))
 
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+            $ip_address = $_SERVER['HTTP_X_FORWARDED'];
 
         else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
 
-            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+            $ip_address = $_SERVER['HTTP_FORWARDED_FOR'];
 
         else if (isset($_SERVER['HTTP_FORWARDED']))
 
-            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+            $ip_address = $_SERVER['HTTP_FORWARDED'];
 
         else if (isset($_SERVER['REMOTE_ADDR']))
 
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
+            $ip_address = $_SERVER['REMOTE_ADDR'];
 
         else
 
-            $ipaddress = 'UNKNOWN';
+            $ip_address = 'UNKNOWN';
 
-        return $ipaddress;
+        return $ip_address;
     }
 }
 
@@ -527,7 +528,7 @@ if (!function_exists('getEmailShortCodes')) {
 
 
 /**
- * Redirects with error if user doesnt have the permission to passed key/module
+ * Redirects with error if user doesn't have the permission to passed key/module
  *
  * @param string $code Code permissions
  *
@@ -690,7 +691,7 @@ if (!function_exists('getFoldersByRole')) {
         $CI = &get_instance();
         $uid = logged('id');
         $role_id = logged('role');
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $lowest_rank = 0;
         $users_rank = 0;
@@ -739,7 +740,7 @@ if (!function_exists('getFoldersByRole')) {
                 'where id = ' . $role_id .
                ') d on c.rank >= d.rank '.
 
-               'where a.comp_id = ' . $comp_id . ' ' . $user_where . $and . 
+               'where a.company_id = ' . $company_id . ' ' . $user_where . $and . 
 
                'order by folder_order ASC';
 
@@ -793,7 +794,7 @@ function all_users()
     $CI =& get_instance();
     $CI->load->model('Users_model', 'user');
 
-    return $CI->user->getByWhere(['comp_id' => logged('comp_id')]);
+    return $CI->user->getByWhere(['company_id' => logged('company_id')]);
 }
 
 
@@ -1485,27 +1486,27 @@ function get_invoice_count($id)
 {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $today = date("Y-m-d");
 
     switch($id) {
         case 2:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'due_date' => $today, 'is_recurring' => 0)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'due_date' => $today, 'is_recurring' => 0)));
 
         case 3:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'due_date <' => $today, 'is_recurring' => 0)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'due_date <' => $today, 'is_recurring' => 0)));
 
         case 4:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Partial Paid", 'is_recurring' => 0)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'status' => "Partial Paid", 'is_recurring' => 0)));
 
         case 5:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Paid", 'is_recurring' => 0)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'status' => "Paid", 'is_recurring' => 0)));
 
         case 6:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Draft", 'is_recurring' => 0)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'status' => "Draft", 'is_recurring' => 0)));
 
         default:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'user_id' => logged('id'), 'is_recurring' => 0)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'user_id' => logged('id'), 'is_recurring' => 0)));
     }
 }
 
@@ -1515,18 +1516,18 @@ function get_invoice_count($id)
 function get_recurring_count($id)
 {
     $CI =& get_instance();
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $CI->load->model('Invoice_model', 'invoice_model');
 
     switch($id) {
         case 2:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Active", "is_recurring" => 1)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'status' => "Active", "is_recurring" => 1)));
 
         case 3:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'status' => "Stopped", "is_recurring" => 1)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'status' => "Stopped", "is_recurring" => 1)));
 
         default:
-            return count($CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'user_id' => logged('id'), "is_recurring" => 1)));
+            return count($CI->invoice_model->getByWhere(array('company_id' => $company_id, 'user_id' => logged('id'), "is_recurring" => 1)));
     }
 }
 
@@ -1537,22 +1538,22 @@ function get_invoice_amount($type)
 {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $result = 0;
     $start_date = date("Y") . "-01-01";
     $end_date = date("Y") . "-12-31";
 
     switch ($type) {
         case "year":
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             return total_invoice_amount($result); 
 
         case "pending":
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
             return total_invoice_amount($result);
 
         default:
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
             return total_invoice_amount($result);
     }
 }
@@ -1594,38 +1595,38 @@ function get_reports_by_date($start_date, $end_date, $month, $action)
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Estimate_model', 'estimate_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $final_res = 0;
 
     switch ($action) {
         case 'num_estimate':
-            $result = $CI->estimate_model->getByWhere(array('company_id' => $comp_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
+            $result = $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, $action);
             break;
         
         case 'estimate_amount':
-            $result = $CI->estimate_model->getByWhere(array('company_id' => $comp_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
+            $result = $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, $action);
             break;
 
         case 'num_invoice':
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, 'num_invoice');
             break;
         
         case 'invoice_amount':
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, "invoice_amount");
             break;
 
         case 'paid_invoice':
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
             $final_res = report_totals_by_month($result, $month, "invoice_amount");
             break;
 
         case 'due_invoice':
             $today = date("Y-m-d");
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'due_date <=' => $today, 'status !=' => 'Paid'));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'due_date <=' => $today, 'status !=' => 'Paid'));
             $final_res = report_totals_by_month($result, $month, "invoice_amount");
             break;
     }
@@ -1640,12 +1641,12 @@ function get_invoice_amount_by_date($type, $start_date, $end_date)
 {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $result = 0;
 
     switch ($type) {
         case "paid":
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
             return total_invoice_amount($result);
     }
 }
@@ -1863,14 +1864,15 @@ function getLoggedName() {
     $CI->load->model('Users_model', 'user_model');
     $result = $CI->user_model->getByWhere(array('id' => logged('id')));
 
-    return ucwords($result[0]->name);
+    //return ucwords($result[0]->name);
+    return ucwords($result[0]->FName);
 }
 
 function getPaymentByMethod($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Payment_records_model', 'payment_records_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->payment_records_model->getByWhere(array('company_id' => $comp_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $company_id = logged('company_id');
+    $results = $CI->payment_records_model->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
     $fn = [];
     $total = 0;
     $cc = 0;
@@ -1911,18 +1913,18 @@ function getPaymentByMethod($start_date, $end_date, $month) {
 function getPaymentByMonth($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Payment_records_model', 'payment_records_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->payment_records_model->getByWhere(array('company_id' => $comp_id,'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $company_id = logged('company_id');
+    $results = $CI->payment_records_model->getByWhere(array('company_id' => $company_id,'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
     $fn = [];
-    $comp_id = [];
+    $company_id = [];
     $total = 0;
 
     foreach ($results as $result) {
         $date = explode("-",$result->payment_date);
         if ($date[1] == $month) {
             $total += floatval($result->invoice_amount);
-            if (!in_array($result->customer_id, $comp_id)) {
-                array_push($comp_id, $result->customer_id);
+            if (!in_array($result->customer_id, $company_id)) {
+                array_push($company_id, $result->customer_id);
                 array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, '', '', ''));
                 array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
             } else {
@@ -1941,8 +1943,8 @@ function getAccountReceivable($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Payment_records_model', 'payment_records_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $company_id = logged('company_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
     $fn = [array('0')];
     $num_invoice = 0;
     $total_invoice = 0;
@@ -1988,8 +1990,8 @@ function getAccountReceivableResCom($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Payment_records_model', 'payment_records_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $company_id = logged('company_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
     $fn = [array('0')];
     $res_num_invoice = 0;
     $res_total_invoice = 0;
@@ -2059,8 +2061,8 @@ function getInvoiceByDate($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Payment_records_model', 'payment_records_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $company_id = logged('company_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
     $fn = [];
     $day = [];
     $num_invoice = 0;
@@ -2110,8 +2112,8 @@ function getInvoiceByDate($start_date, $end_date, $month) {
 function getPaymentByCustomer($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $company_id = logged('company_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
     $fn = [];
     $comp_user = [];
     $grand_total = 0;
@@ -2148,8 +2150,8 @@ function getPaymentByCustomer($start_date, $end_date) {
 function getPaymentByItem($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $company_id = logged('company_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
     $fn = [];
     $comp_user = [];
     $grand_total = 0;
@@ -2188,9 +2190,9 @@ function getPaymentByItem($start_date, $end_date) {
 function getPaymentByCustomerGroup($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $cusGroups = get_customer_groups();
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
     $fn = [];
     $grand_count = 0;
     $grand_total = 0;
@@ -2224,9 +2226,9 @@ function getPaymentByCustomerGroup($start_date, $end_date) {
 function getCustomerSource($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $cusSources = get_source();
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $comp_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
     $fn = [];
     $res_total = 0;
     $res_invoice_total = 0;
@@ -2266,9 +2268,9 @@ function getCustomerSource($start_date, $end_date) {
 function getCustomerBySource() {
     $CI =& get_instance();
     $CI->load->model('Customer_model', 'customer_model');
-    $comp_id = logged('comp_id');
+    $company_id = logged('company_id');
     $cusSources = get_source();
-    $customers = $CI->customer_model->getByWhere(array('company_id' => $comp_id));
+    $customers = $CI->customer_model->getByWhere(array('company_id' => $company_id));
     $fn = [];
     $res_total = 0;
     $com_total = 0;

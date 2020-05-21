@@ -75,13 +75,13 @@ class CustomerTypes
     {
         $post = $this->app->input->post();
 
-        $comp_id = logged('company_id');
+        $company_id = logged('company_id');
 
         if (empty($post['id'])) {
 
             $job_type_id = $this->app->customerTypes_model->create([
 
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'title' => $post['title']
             ]);
         } else {

@@ -73,7 +73,9 @@
  /*---------------------
  Helper CSS
   -----------------------*/
-
+ .font-kanit {
+  font-family: 'Kanit', sans-serif !important;
+ }
  .section-title {
    text-align: center;
  }
@@ -105,9 +107,11 @@
  .text-white a {
    color: #fff;
  }
+
  .float-left {
    float:left;
  }
+
  .clear {
    clear:both;
  }
@@ -360,15 +364,15 @@
    line-height: 1;
  }
   .header-top p  span{
-    color:#fada97
+	  color:#fada97
   }
  .site-logo-holder:after{
-  content: "";
+	content: "";
     position: absolute;
     left: 0px;
     width: 100%;
     height: 100%;
-    background: url(../images/rec.png) no-repeat;
+    background: url(../images/rec2.png) no-repeat;
     bottom:-14px;
     background-size: cover;
     margin-left: -130px;
@@ -449,19 +453,24 @@
    list-style: none;
  }
 
+ .site-nav-menu ul li ,
  .site-nav-menu1 ul li {
    display: inline-block;
    position: relative;
  }
+
  .subtle-fade {
    color: #a07cad !important;
  }
+
  .weight-600 {
    font-weight: 600;
  }
+
  .site-nav-menu ul li,  .site-nav-menu1 ul li {
    display:inline-flex;
  }
+
  .site-nav-menu ul li a {
   display: block;
   padding: 0 26px;
@@ -472,9 +481,14 @@
   position: relative;
   text-transform: uppercase;
  }
+
+ .f-28 {
+   font-size: 28px !important;
+ }
+
  .site-nav-menu1 ul li a {
    display: block;
-   padding: 0 34px;
+   padding: 0 21px;
    margin-right: 0px;
    font-size: 12px;
    font-weight: 600;
@@ -482,6 +496,8 @@
    position: relative;
    text-transform: uppercase;
  }
+
+
 
  .site-nav-menu ul li .sub-menu {
    position: absolute;
@@ -540,6 +556,7 @@
  /* ----------------
   Hero Section
   ---------------------*/
+
  .hero-slider .owl-nav button.owl-prev,
  .hero-slider .owl-nav button.owl-next {
    position: absolute;
@@ -588,6 +605,11 @@
     text-transform: uppercase;
  }
 
+
+
+
+
+
  .hero-item .site-btn {
    opacity: 0;
    top: 50px;
@@ -620,9 +642,9 @@
 }
 
 .manageBusiness{
-  margin-top:-80px;
-  position:relative;
-  z-index:1
+	margin-top:-80px;
+	position:relative;
+	z-index:1
 }
 
 .customContainer {
@@ -678,7 +700,7 @@
 .cardHolder h5.card-title a {
     color: #61376f;
     text-decoration: none;
-  font-weight:bold;
+	font-weight:bold;
 }
 
 .cardHolder p {
@@ -692,9 +714,7 @@
 }
 
 .cardHolder .imgHolder img {
-    object-fit: none;
-    object-position: 50% 50%;
-    object-position: -52px -35px;
+    object-fit: cover;
 }
 
 
@@ -737,9 +757,11 @@
   display: flex;
   margin-bottom: 16px;
 }
+
 .reg-banner-title {
   font-size: 34px;
 }
+
 /*time tracking */
 
 .timeTrackingList ul {
@@ -752,7 +774,7 @@
     color: #e05656;
     margin: 0;
     font-size: 24px;
-  font-weight:bold;
+	font-weight:bold;
 }
 
 .timeTrackingList ul li p {
@@ -1117,10 +1139,40 @@ span.pricehalf:before {
     padding: 20px;
 }
 
+ul.footer-list {
+  list-style: none;
+  margin-top: 20px;
+}
+ul.footer-list li {
+  padding-bottom: 6px;
+}
+ul.footer-list li a {
+  color: #dedede;
+  font-size: 17px;
+}
+ul.footer-list li a:hover {
+  color:#ffe2a7;
+}
+/* Home Signup */
+.signupForm {
+    margin-top: -80px;
+    position: relative;
+    z-index: 1;
+    background-color: #3d2453 !important;
+}
+.row-margin-top {
+    margin-top: 10px;
+}
+
+.slick-center > div {
+    transform: scale(1);
+}
+.slider__item > img {
+    width: 100%;
+    height: auto;
+}
+
 @media(max-width:991px) {
-    .reg-banner-title {
-      font-size: 38px !important;
-    }
     .sectionHeader h2 {
         font-size: 40px;
     }
@@ -1214,9 +1266,25 @@ span.pricehalf:before {
 
  .footer-section {
    background: #32243d;
-   padding-bottom: 0;
-   padding-top:50px;
+   padding-bottom:50px;
+   padding-top:43px;
    font-size:11px;
+ }
+ .footer-copyright {
+   font-size: 15px;
+   margin-top: 10px;
+   display: block;
+   color:#dadada;
+ }
+ .m-auto {
+   margin: 0 auto;
+ }
+ .line-footer {
+   clear: both;
+   width: 100%;
+   border-top: 1px solid rgb(142, 115, 18);
+   margin-top: 30px;
+   margin-bottom: 30px;
  }
 
  .footer-widget {
@@ -1237,7 +1305,7 @@ span.pricehalf:before {
    color:#c3c3c3
  }
  .footer-widget.about-widget p strong{
-   color:#fff
+	 color:#fff
  }
 
  .footer-widget .fw-title {
@@ -1348,14 +1416,14 @@ span.pricehalf:before {
    padding-top: 25px;
  }
  .footer-widget-right{
-       display: flex;
+	     display: flex;
     flex-direction: column;
     height: 100%;
     padding-bottom: 50px;
-  margin-bottom:0px;
+	margin-bottom:0px;
  }
  .footer-widget-right .footer-search{
-   margin-top: auto;
+	 margin-top: auto;
  }
  .copyright a {
    color: #646470;
@@ -2065,7 +2133,7 @@ span.pricehalf:before {
    }
  }
  .header-section .footer-social a{
-   margin-bottom: 0px;
+	 margin-bottom: 0px;
     font-size: 11px;
     width: 22px;
     height: 22px;
@@ -2090,11 +2158,11 @@ span.pricehalf:before {
    }
  }
  .site-navbar{
-   position:relative;
-   z-index:9;
+	 position:relative;
+	 z-index:9;
  }
  .site-navbar:after{
-   content: "";
+	 content: "";
     height: 70px;
     background: #fff;
     width: 20vw;
@@ -2269,10 +2337,10 @@ margin-bottom: 10px;
    .site-logo-holder:after,
   .site-navbar::after,
    .site-logo-holder:before{
-     display:none !important
+	   display:none !important
    }
    .slicknav_btn{
-     position: absolute;
+	   position: absolute;
 
 right: 10px;
 
@@ -2404,7 +2472,7 @@ font-size: 12px;
  }
 
  @media(max-width:767px){
-   .slicknav_btn {
+	 .slicknav_btn {
     position: absolute;
     right: 10px;
     top: 100px;
@@ -2412,3 +2480,10 @@ font-size: 12px;
     z-index: 999999;
 }
  }
+
+.no-break {
+    white-space: nowrap;
+}
+.over-write-menu li {
+    width: 90px;
+}

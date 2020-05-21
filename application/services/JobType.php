@@ -59,7 +59,7 @@ class JobType
     {
         $post = $this->app->input->post();
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $this->app->load->model('JobType_model', 'jobType_model');
 
@@ -68,7 +68,7 @@ class JobType
             $job_type_id = $this->app->jobType_model->create([
 
                 'user_id' => getLoggedUserID(),
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'title' => $post['title']
             ]);
         } else {

@@ -9,10 +9,10 @@ class FormsBuilder_model extends MY_Model {
 
 	public function getAllForms() {
 
-		$comp_id = logged('comp_id');
+		$company_id = logged('company_id');
 		$this->db->select('*');
 		$this->db->from($this->table);
-		$this->db->where('company_id', $comp_id);
+		$this->db->where('company_id', $company_id);
 
 		$query = $this->db->get();
 		return $query->result();
@@ -20,10 +20,10 @@ class FormsBuilder_model extends MY_Model {
 
 	public function getById($id) {
 
-		$comp_id = logged('comp_id');
+		$company_id = logged('company_id');
 		$this->db->select('*');
 		$this->db->from($this->table_custom);
-		$this->db->where('company_id', $comp_id);
+		$this->db->where('company_id', $company_id);
 		$this->db->where('id', $id);
 
 		$query = $this->db->get();

@@ -61,8 +61,8 @@ class CustomerTicket
         $this->app->page_data['params'] = $get;
 
         $this->app->load->model('Plans_model', 'plan_model');
-        $comp_id = logged('comp_id');
-        $this->app->page_data['plans'] = $this->app->plans_model->getByWhere(['comp_id' => $comp_id]);
+        $company_id = logged('company_id');
+        $this->app->page_data['plans'] = $this->app->plans_model->getByWhere(['company_id' => $company_id]);
 
         // auto generate ticket number
         $this->app->page_data['ticket_number'] = "TKT-" . time();
@@ -74,7 +74,7 @@ class CustomerTicket
         }
 
         // user company
-        $company_id = logged('comp_id');
+        $company_id = logged('company_id');
         $company = get_company_by_id($company_id);
 
         if ( !empty($company) ) {
@@ -110,7 +110,7 @@ class CustomerTicket
 //        print_r($post);
 //        die;
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         //
         if (is_array(post('item'))) {
@@ -159,7 +159,7 @@ class CustomerTicket
             $ticket_id = $this->app->customerTicket_model->create([
 
                 'user_id' => getLoggedUserID(),
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'customer_id' => post('customer_id'),
                 'ticket_number' => post('ticket_number'),
                 'tech_info' => serialize(post('tech_info')),

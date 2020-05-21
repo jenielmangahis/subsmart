@@ -637,7 +637,7 @@ $user_id = getLoggedUserID();
                             <i class="mdi mdi-wallet m-r-5"></i> Expense Vendor
                         </a> -->
                         <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Recievables
+                            <i class="mdi mdi-wallet m-r-5"></i> Receivables
                         </a>
                         <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Workers

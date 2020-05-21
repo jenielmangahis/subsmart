@@ -23,8 +23,8 @@ class Event extends MY_Controller
     {
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
-            $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+            $company_id = logged('company_id');
+            $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
             $this->page_data['customers'] = $this->customer_model->getAllByUserId();
@@ -35,13 +35,13 @@ class Event extends MY_Controller
 
     public function save()
     {
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         // echo '<pre>'; print_r($this->input->post()); die;
 
         $data = array(
 
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'what_of_even' => (post('what_of_even')) ? post('what_of_even') : '',
             'description' => post('description'),
@@ -179,12 +179,12 @@ class Event extends MY_Controller
         // print_r($post); die;
 
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (isset($post['employee_id']))
-                $events = $this->event_model->getAllByCompany($comp_id, $post['employee_id']);
+                $events = $this->event_model->getAllByCompany($company_id, $post['employee_id']);
             else
-                $events = $this->event_model->getAllByCompany($comp_id);
+                $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
             if (isset($post['employee_id']))
@@ -215,14 +215,14 @@ class Event extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($post['employee_id'])) {
 
-                $workorders = $this->workorder_model->getAllOrderByCompany($comp_id, ['user_id' => $post['employee_id']]);
+                $workorders = $this->workorder_model->getAllOrderByCompany($company_id, ['user_id' => $post['employee_id']]);
             } else {
 
-                $workorders = $this->workorder_model->getAllOrderByCompany($comp_id);
+                $workorders = $this->workorder_model->getAllOrderByCompany($company_id);
             }
         }
         if ($role == 4) {
@@ -338,8 +338,8 @@ class Event extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
-            $workorders = $this->workorder_model->getAllOrderByCompany($comp_id);
+            $company_id = logged('company_id');
+            $workorders = $this->workorder_model->getAllOrderByCompany($company_id);
         }
         if ($role == 4) {
             $workorders = $this->workorder_model->getAllByUserId();

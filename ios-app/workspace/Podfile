@@ -23,6 +23,7 @@ target 'nSmarTrac' do
   pod 'PureLayout'
   pod 'RxCocoa', '~> 4.0'
   pod 'RxSwift', '~> 4.0'
+  pod 'ScrollableSegmentedControl', '~> 1.4.0'
   pod 'SearchTextField'
   pod 'SideMenu'
   pod 'SVProgressHUD'

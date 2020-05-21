@@ -6,7 +6,7 @@ class Event_model extends MY_Model
 
     public $table = 'events';
 
-    public function getAllByCompany($comp_id, $user_id=0)
+    public function getAllByCompany($company_id, $user_id=0)
     {
 
         $this->db->select('events.id, company_id, customer_id, workorder_id, description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
@@ -17,7 +17,7 @@ class Event_model extends MY_Model
             $this->db->where('user_events.user_id', $user_id);
         }
 
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();

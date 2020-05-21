@@ -230,7 +230,7 @@ extension ContactsController: UITableViewDelegate, UITableViewDataSource {
         }
         
         // nameButton
-        let nameButton = Utils.createPurpleButton(28, 12, Int((Device.width-40)/2), "Jane Smith", hasArrow: true)
+        let nameButton = Utils.createPurpleButton(28, 12, Int(Device.width-40), "Jane Smith", hasArrow: true)
         cell.contentView.addSubview(nameButton)
         
         // topLeft view

@@ -82,13 +82,13 @@ class Users_model extends MY_Model {
 	public function getUsers() {
 
 		$parent_id = getLoggedUserID();
-		$cid=logged('comp_id');
+		$cid=logged('company_id');
 
 		$this->db->select('*');
 		$this->db->from($this->table);
 		$this->db->where('parent_id', $parent_id);
 		$this->db->or_where('id', $parent_id);
-		$this->db->or_where('comp_id',$cid );
+		$this->db->or_where('company_id',$cid );
 		// $this->db->where('role !=', 1);
 		$query = $this->db->get();
 // echo $this->db->last_query(); die;
@@ -99,7 +99,7 @@ class Users_model extends MY_Model {
 	public function getUser($user_id) {
 
 		$parent_id = getLoggedUserID();
-		$cid=logged('comp_id');
+		$cid=logged('company_id');
 
 		$this->db->select('*');
 		$this->db->from($this->table);

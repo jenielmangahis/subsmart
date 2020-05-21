@@ -45,8 +45,8 @@ class Workcalender extends MY_Controller
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
-            $events = $this->event_model->getAllByCompany($comp_id);
+            $company_id = logged('company_id');
+            $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
             $events = $this->event_model->getAllByUserId();
@@ -92,9 +92,9 @@ class Workcalender extends MY_Controller
 
         /*// workorders
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
-            $comp_id = 15;
-            $workorders = $this->workorder_model->getAllOrderByCompany($comp_id);
+            $company_id = logged('company_id');
+            $company_id = 15;
+            $workorders = $this->workorder_model->getAllOrderByCompany($company_id);
         }
         if ($role == 4) {
 
@@ -215,7 +215,7 @@ class Workcalender extends MY_Controller
     {
         $this->checkLogin();
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $user_id = logged('id');
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -224,7 +224,7 @@ class Workcalender extends MY_Controller
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id' => $comp_id]);
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $this->page_data['workorder']->zones = $this->workzone_model->getZones($user_id);
         $this->load->view('workcalender/edit', $this->page_data);
@@ -258,9 +258,9 @@ class Workcalender extends MY_Controller
         postAllowed();
         ifPermissions('add_plan');
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $permission = $this->Workstatus_model->create([
-            'comp_id' => $comp_id,
+            'company_id' => $company_id,
             'title' => $this->input->post('title'),
             'color' => $this->input->post('color')
         ]);
@@ -568,7 +568,7 @@ class Workcalender extends MY_Controller
             $zones = post('zone');
 
             // clear
-            $oldZones = $this->workzone_model->getAll(['user_id' => logged('id'), 'company_id' => logged('comp_id'), 'workorder_id' => $id]);
+            $oldZones = $this->workzone_model->getAll(['user_id' => logged('id'), 'company_id' => logged('company_id'), 'workorder_id' => $id]);
             foreach ($oldZones as $zone) {
 
                 $this->workzone_model->delete($zone->id);
@@ -578,7 +578,7 @@ class Workcalender extends MY_Controller
 
                 $zdata = array();
                 $zdata['user_id'] = logged('id');
-                $zdata['company_id'] = logged('comp_id');
+                $zdata['company_id'] = logged('company_id');
                 $zdata['workorder_id'] = $id;
                 $zdata['existing'] = $zone;
                 $zdata['zone_number'] = $zones['zone_number'][$k];
@@ -663,8 +663,8 @@ class Workcalender extends MY_Controller
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id'); $comp_id = 15;
-            $events = $this->event_model->getAllByCompany($comp_id);
+            $company_id = logged('company_id'); $company_id = 15;
+            $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
             $events = $this->event_model->getAllByUserId();

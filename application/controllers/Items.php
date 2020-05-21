@@ -16,8 +16,8 @@ class Items extends MY_Controller
     {
         $keyword = get('sk');
         // $res = $this->items_model->getByLike('title',$keyword);
-        $comp_id = logged('comp_id');
-        $res = $this->db->where('comp_id', $comp_id)->like('title', $keyword, 'after')->get('items')->result();
+        $company_id = logged('company_id');
+        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
         foreach ($res as $row) {
             $gh = "'" . $row->title . "'," . $row->price . "," . $row->discount;
 
@@ -36,13 +36,13 @@ class Items extends MY_Controller
         // print_r($get); die;
 
         // $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         if (!empty($get['search'])) {
             $this->page_data['search'] = $get['search'];
-            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $comp_id);
+            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['comp_id' => $comp_id]);
+            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
         }
 
         $this->load->view('items/list', $this->page_data);
@@ -69,9 +69,9 @@ class Items extends MY_Controller
         postAllowed();
 
         ifPermissions('items_add');
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $permission = $this->items_model->create([
-            'comp_id' => $comp_id,
+            'company_id' => $company_id,
             'title' => $this->input->post('title'),
             'price' => $this->input->post('price'),
             'description' => $this->input->post('description'),
@@ -101,9 +101,9 @@ class Items extends MY_Controller
         postAllowed();
 
         ifPermissions('items_edit');
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $data = [
-            'comp_id' => $comp_id,
+            'company_id' => $company_id,
             'title' => $this->input->post('title'),
             'price' => $this->input->post('price'),
             'description' => $this->input->post('description'),
@@ -173,13 +173,13 @@ class Items extends MY_Controller
         // print_r($get); die;
 
         // $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         if (!empty($get['search'])) {
             $this->page_data['search'] = $get['search'];
-            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $comp_id);
+            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['comp_id' => $comp_id]);
+            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
         }
 
         $this->load->view('items/print/list', $this->page_data);

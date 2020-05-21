@@ -21,7 +21,7 @@ class More extends MY_Controller {
 	public function upgrades(){	
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid=logged('comp_id');
+		$cid=logged('company_id');
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		
 		/*$this->page_data['userid'] = $user->id;

@@ -111,10 +111,10 @@ class FormBuilder extends MY_Controller {
 		    )
 		);
 
-		$comp_id = logged('comp_id');
+		$company_id = logged('company_id');
 		$this->db->select('*');
 		$this->db->from($this->formsbuilder_model->table_custom);
-		$this->db->where('company_id', $comp_id);
+		$this->db->where('company_id', $company_id);
 		$this->db->where('id', 1);
 		$query = $this->db->get();
 
@@ -131,10 +131,10 @@ class FormBuilder extends MY_Controller {
 	{	
 
 		
-		$comp_id = logged('comp_id');
+		$company_id = logged('company_id');
 		$this->db->select('*');
 		$this->db->from($this->formsbuilder_model->table_custom);
-		$this->db->where('company_id', $comp_id);
+		$this->db->where('company_id', $company_id);
 		$this->db->where('id', $this->input->post('id'));
 
 		$query = $this->db->get();
@@ -142,7 +142,7 @@ class FormBuilder extends MY_Controller {
 		if(count($query->result()) > 0) {
 
 			$data = array(
-		        'company_id' => logged('comp_id'),
+		        'company_id' => logged('company_id'),
 		        'form_type' => 'default',
 		        'form_data' => $this->input->post('data'),
 		        'id' => $this->input->post('id')
@@ -153,7 +153,7 @@ class FormBuilder extends MY_Controller {
 
 
 		    $data = array(
-		        'company_id' => logged('comp_id'),
+		        'company_id' => logged('company_id'),
 		        'form_type' => 'default',
 		        'form_data' => $this->input->post('data'),
 		        'id' => $this->input->post('id')

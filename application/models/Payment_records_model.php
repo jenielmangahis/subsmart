@@ -13,9 +13,9 @@ class Payment_records_model extends MY_Model
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
-            return $this->getAllByCompany($comp_id);
+            return $this->getAllByCompany($company_id);
 
         } else {
 
@@ -23,11 +23,11 @@ class Payment_records_model extends MY_Model
         }
     }
 
-    public function getAllByCompany($comp_id)
+    public function getAllByCompany($company_id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
         
         $query = $this->db->get();
         return $query->row();

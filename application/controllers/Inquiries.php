@@ -61,43 +61,43 @@ class Inquiries extends MY_Controller {
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($status_index)) {
 
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('status' => $status_index), $comp_id);
+                $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('status' => $status_index), $company_id);
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('type'))) {
 
                     $this->page_data['type'] = get('type');
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $comp_id);
+                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $company_id);
                     }
                 } else {
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-//                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $comp_id);
-                        $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($comp_id);
+//                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $company_id);
+                        $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($company_id);
                     }
 
-//                    $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($comp_id);
+//                    $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($company_id);
                 }
             }
 
-            $this->page_data['statusCount'] = $this->inquiry_model->getStatusWithCount($comp_id);
+            $this->page_data['statusCount'] = $this->inquiry_model->getStatusWithCount($company_id);
 
         }
 
@@ -155,9 +155,9 @@ class Inquiries extends MY_Controller {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
         //
-        $comp_id = logged('comp_id');
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id' => $comp_id]);
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id' => $comp_id]);
+        $company_id = logged('company_id');
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 		
         $this->load->view('inquiry/add', $this->page_data);
 	}
@@ -167,7 +167,7 @@ class Inquiries extends MY_Controller {
     {
 
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $user_id = logged('id');
 
@@ -187,7 +187,7 @@ class Inquiries extends MY_Controller {
 
         }
 
-        $this->page_data['inquiry'] = $this->inquiry_model->getByWhere(['company_id' => $comp_id]);
+        $this->page_data['inquiry'] = $this->inquiry_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['inquiry'] = $this->inquiry_model->getById($id);
 
@@ -217,7 +217,7 @@ class Inquiries extends MY_Controller {
     {
         $user = (object)$this->session->userdata('logged');
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
 
 //         echo '<pre>'; print_r($this->input->post()); die;
@@ -237,7 +237,7 @@ class Inquiries extends MY_Controller {
             'source_id' => post('inquiry_source_id'),
             'comments' => post('notes'),
             'user_id' => $user->id,
-            'company_id' => $comp_id
+            'company_id' => $company_id
         );
 
 
@@ -298,7 +298,7 @@ class Inquiries extends MY_Controller {
 
         $user = (object)$this->session->userdata('logged');
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
 
         // echo '<pre>'; print_r($this->input->post()); die;
@@ -341,7 +341,7 @@ class Inquiries extends MY_Controller {
 
             'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
 
-            'company_id' => $comp_id
+            'company_id' => $company_id
         );
 
 
@@ -633,9 +633,9 @@ class Inquiries extends MY_Controller {
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
-            $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($comp_id, $get);
+            $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($company_id, $get);
 
         }
 

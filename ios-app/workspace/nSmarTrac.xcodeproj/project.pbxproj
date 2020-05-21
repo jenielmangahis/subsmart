@@ -28,6 +28,14 @@
 		8C13D476245FEDB2008E23B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C13D474245FEDB2008E23B8 /* LaunchScreen.storyboard */; };
 		8C38075C246A75B300BD7FC8 /* AddLeadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C38075B246A75B300BD7FC8 /* AddLeadController.swift */; };
 		8C38075F246ABC1600BD7FC8 /* ScheduleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C38075E246ABC1600BD7FC8 /* ScheduleController.swift */; };
+		8C3914782474F098002AB83D /* InventoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3914772474F098002AB83D /* InventoryController.swift */; };
+		8C39147A2474F0DA002AB83D /* AddInventoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3914792474F0DA002AB83D /* AddInventoryController.swift */; };
+		8C39147C2474F0EF002AB83D /* EditInventoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C39147B2474F0EF002AB83D /* EditInventoryController.swift */; };
+		8C39147E24750682002AB83D /* InvoicesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C39147D24750682002AB83D /* InvoicesController.swift */; };
+		8C391480247506B8002AB83D /* InvoiceDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C39147F247506B8002AB83D /* InvoiceDetailController.swift */; };
+		8C391482247506CD002AB83D /* AddInvoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C391481247506CD002AB83D /* AddInvoiceController.swift */; };
+		8C391484247506EB002AB83D /* EditInvoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C391483247506EB002AB83D /* EditInvoiceController.swift */; };
+		8C3914862475082C002AB83D /* InvoiceFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3914852475082C002AB83D /* InvoiceFilterController.swift */; };
 		8C5820E0247336A000E21A8E /* Font Awesome 5 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5820DB2473369F00E21A8E /* Font Awesome 5 Brands-Regular-400.otf */; };
 		8C5820E1247336A000E21A8E /* Font Awesome 5 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5820DC2473369F00E21A8E /* Font Awesome 5 Duotone-Solid-900.otf */; };
 		8C5820E2247336A000E21A8E /* Font Awesome 5 Pro-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5820DD2473369F00E21A8E /* Font Awesome 5 Pro-Regular-400.otf */; };
@@ -131,6 +139,14 @@
 		8C13D477245FEDB2008E23B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8C38075B246A75B300BD7FC8 /* AddLeadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLeadController.swift; sourceTree = "<group>"; };
 		8C38075E246ABC1600BD7FC8 /* ScheduleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleController.swift; sourceTree = "<group>"; };
+		8C3914772474F098002AB83D /* InventoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryController.swift; sourceTree = "<group>"; };
+		8C3914792474F0DA002AB83D /* AddInventoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInventoryController.swift; sourceTree = "<group>"; };
+		8C39147B2474F0EF002AB83D /* EditInventoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryController.swift; sourceTree = "<group>"; };
+		8C39147D24750682002AB83D /* InvoicesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoicesController.swift; sourceTree = "<group>"; };
+		8C39147F247506B8002AB83D /* InvoiceDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceDetailController.swift; sourceTree = "<group>"; };
+		8C391481247506CD002AB83D /* AddInvoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInvoiceController.swift; sourceTree = "<group>"; };
+		8C391483247506EB002AB83D /* EditInvoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInvoiceController.swift; sourceTree = "<group>"; };
+		8C3914852475082C002AB83D /* InvoiceFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceFilterController.swift; sourceTree = "<group>"; };
 		8C5820DB2473369F00E21A8E /* Font Awesome 5 Brands-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 5 Brands-Regular-400.otf"; sourceTree = "<group>"; };
 		8C5820DC2473369F00E21A8E /* Font Awesome 5 Duotone-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 5 Duotone-Solid-900.otf"; sourceTree = "<group>"; };
 		8C5820DD2473369F00E21A8E /* Font Awesome 5 Pro-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 5 Pro-Regular-400.otf"; sourceTree = "<group>"; };
@@ -247,6 +263,9 @@
 		8C0350F5246B8C8300B27E54 /* Inventory */ = {
 			isa = PBXGroup;
 			children = (
+				8C3914772474F098002AB83D /* InventoryController.swift */,
+				8C3914792474F0DA002AB83D /* AddInventoryController.swift */,
+				8C39147B2474F0EF002AB83D /* EditInventoryController.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -346,6 +365,18 @@
 			path = Schedule;
 			sourceTree = "<group>";
 		};
+		8C3914762474EFCE002AB83D /* Invoices */ = {
+			isa = PBXGroup;
+			children = (
+				8C39147D24750682002AB83D /* InvoicesController.swift */,
+				8C3914852475082C002AB83D /* InvoiceFilterController.swift */,
+				8C39147F247506B8002AB83D /* InvoiceDetailController.swift */,
+				8C391481247506CD002AB83D /* AddInvoiceController.swift */,
+				8C391483247506EB002AB83D /* EditInvoiceController.swift */,
+			);
+			path = Invoices;
+			sourceTree = "<group>";
+		};
 		8C853D3A2462AA0900DD8209 /* Customers */ = {
 			isa = PBXGroup;
 			children = (
@@ -433,6 +464,7 @@
 		8CF2B68124600254000982D9 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				8C3914762474EFCE002AB83D /* Invoices */,
 				8C0350ED246B871B00B27E54 /* WorkOrder */,
 				8C38075D246ABBF900BD7FC8 /* Schedule */,
 				8C0350F8246B8DA600B27E54 /* Expenses */,
@@ -713,6 +745,7 @@
 				8C853D422462AF9400DD8209 /* AppUser.swift in Sources */,
 				8C0B4C182471340000501048 /* CustomerFilterController.swift in Sources */,
 				8C5C4390246D263500B66BB6 /* BlockDetailController.swift in Sources */,
+				8C391484247506EB002AB83D /* EditInvoiceController.swift in Sources */,
 				8C38075F246ABC1600BD7FC8 /* ScheduleController.swift in Sources */,
 				8CC2F3B524727D99007D466D /* EditExpensesController.swift in Sources */,
 				8CF2B6B924600D09000982D9 /* UINavigationBar+Gradient.swift in Sources */,
@@ -731,6 +764,7 @@
 				8C0B2E292469222A009322A4 /* AddCustomerCustomEstimateController.swift in Sources */,
 				8C853D3E2462AB2F00DD8209 /* App.swift in Sources */,
 				8C0350EF246B874100B27E54 /* WorkOrderController.swift in Sources */,
+				8C3914862475082C002AB83D /* InvoiceFilterController.swift in Sources */,
 				8C841B8B246963F10013834D /* AddQuickLinkController.swift in Sources */,
 				8CC2F3B324727D72007D466D /* AddExpensesController.swift in Sources */,
 				8CF60E082465463C00FD9831 /* CustomerDetailController.swift in Sources */,
@@ -739,6 +773,7 @@
 				8CC2F3B124727D4A007D466D /* ExpenseDetailController.swift in Sources */,
 				8CFAE8EB24696D66003E80B7 /* EditContactController.swift in Sources */,
 				8CC2F3C124728743007D466D /* AddMileageGPSController.swift in Sources */,
+				8C3914782474F098002AB83D /* InventoryController.swift in Sources */,
 				8CF60E102465724E00FD9831 /* CustomerTabController.swift in Sources */,
 				8CF0BEB92464057D009A8D75 /* EditCustomerController.swift in Sources */,
 				8C853D402462AC9300DD8209 /* APIClient.swift in Sources */,
@@ -747,11 +782,13 @@
 				8C0350E7246B869000B27E54 /* AddEventController.swift in Sources */,
 				8CF2B6BA24600D09000982D9 /* Extensions.swift in Sources */,
 				8C5C4388246D145A00B66BB6 /* LeadsController.swift in Sources */,
+				8C39147E24750682002AB83D /* InvoicesController.swift in Sources */,
 				8CF2B6BC24600D42000982D9 /* Globals.swift in Sources */,
 				8C38075C246A75B300BD7FC8 /* AddLeadController.swift in Sources */,
 				8CE94BC324724B6900FBD92D /* WorkOrderFilterController.swift in Sources */,
 				8CC2F3B924727EC6007D466D /* AddMileageDistanceController.swift in Sources */,
 				8CF2B6C924602CBA000982D9 /* MenuController.swift in Sources */,
+				8C391482247506CD002AB83D /* AddInvoiceController.swift in Sources */,
 				8CF2B6A224600C3B000982D9 /* BaseFormController.swift in Sources */,
 				8CFAE8E924696D52003E80B7 /* AddContactController.swift in Sources */,
 				8CF2B6A124600C3B000982D9 /* ScrollViewController.swift in Sources */,
@@ -764,9 +801,12 @@
 				8CF2B6A324600C3B000982D9 /* MaterialFormController.swift in Sources */,
 				8C5C4392246D264700B66BB6 /* EventDetailController.swift in Sources */,
 				8CFAE8E524696CDA003E80B7 /* ContactsController.swift in Sources */,
+				8C39147A2474F0DA002AB83D /* AddInventoryController.swift in Sources */,
+				8C391480247506B8002AB83D /* InvoiceDetailController.swift in Sources */,
 				8C0350F3246B876400B27E54 /* EditWorkOrderController.swift in Sources */,
 				8CF2B6A024600C3B000982D9 /* VerticalStackController.swift in Sources */,
 				8CF1F1192464284B00A47582 /* OtherPageController.swift in Sources */,
+				8C39147C2474F0EF002AB83D /* EditInventoryController.swift in Sources */,
 				8C853D442462AF9F00DD8209 /* CacheManager.swift in Sources */,
 				8CF2B6B824600D09000982D9 /* UIView+Gradient.swift in Sources */,
 				8CF2B69C24600C3B000982D9 /* BaseMaterialFormController.swift in Sources */,

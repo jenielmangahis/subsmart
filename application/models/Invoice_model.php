@@ -13,9 +13,9 @@ class Invoice_model extends MY_Model
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
-            return $this->getAllByCompany($comp_id);
+            return $this->getAllByCompany($company_id);
 
         } else {
 
@@ -23,11 +23,11 @@ class Invoice_model extends MY_Model
         }
     }
 
-    public function getAllByCompany($comp_id, $type, $filter = array())
+    public function getAllByCompany($company_id, $type, $filter = array())
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
         $this->db->where('is_recurring', $type);
 
         if (!empty($filter)) {
@@ -380,11 +380,11 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
-    function duplicateRecord($primary_key, $comp_id) {
+    function duplicateRecord($primary_key, $company_id) {
 
         $this->db->where('id', $primary_key);
         $query = $this->db->get($this->table);
-        $invoice = $this->getLastRow($comp_id);
+        $invoice = $this->getLastRow($company_id);
         $new_invoice_number = explode("-", $invoice->invoice_number)[0] . '-' . strval(intval(explode("-", $invoice->invoice_number)[1]) + 1);
 
         foreach ($query->result() as $row){
@@ -411,10 +411,10 @@ class Invoice_model extends MY_Model
         return $this->db->update($this->table, ['status' => 'Due']);
     }
 
-    function getLastRow ($comp_id) {
+    function getLastRow ($company_id) {
         $this->db->select("*");
         $this->db->from($this->table);
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
         $this->db->limit(1);
         $this->db->order_by('id',"DESC");
         $query = $this->db->get();

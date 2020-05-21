@@ -137,7 +137,7 @@ extension AppDelegate {
         } else if App.shared.selectedMenu == .Tasks {
             
         } else if App.shared.selectedMenu == .Inventory {
-            
+            switchToInventory()
         } else if App.shared.selectedMenu == .Map {
             
         } else if App.shared.selectedMenu == .Calculator {
@@ -257,6 +257,14 @@ extension AppDelegate {
     public func switchToInvoices() {
         let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
         let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_InvoicesController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToInventory() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_InventoryController"))
         let transition = CATransition()
         transition.type = CATransitionType.fade
         window!.set(rootViewController: navController, withTransition: transition)

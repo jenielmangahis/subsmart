@@ -34,7 +34,7 @@ class Users extends MY_Controller {
 	{	
 		ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
-		$cid=logged('comp_id');
+		$cid=logged('company_id');
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));		
 		$this->page_data['profiledata'] = $profiledata[0];
 		$this->load->view('business', $this->page_data);
@@ -44,7 +44,7 @@ class Users extends MY_Controller {
 		ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid=logged('comp_id');
+		$cid=logged('company_id');
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		
 		$this->page_data['userid'] = $user->id;
@@ -162,14 +162,14 @@ class Users extends MY_Controller {
 		ifPermissions('users_add');
 		postAllowed();
 		$user = (object)$this->session->userdata('logged');	
-		$cid=logged('comp_id');		
+		$cid=logged('company_id');		
 		$id = $this->users_model->create([
 			'role' => post('role'),
 			'name' => post('name'),
 			'username' => post('username'),
 			'email' => post('email'),
 			'phone' => post('phone'),
-			'comp_id' => $cid,
+			'company_id' => $cid,
 			'address' => post('address'),
 			'status' => (int) post('status'),
 			'password_plain' =>  post('password'),
@@ -275,7 +275,7 @@ class Users extends MY_Controller {
 
 		postAllowed();
 
-		$cid=logged('comp_id');
+		$cid=logged('company_id');
 
 		$data = [
 
@@ -288,7 +288,7 @@ class Users extends MY_Controller {
 			'email' => post('email'),
 
 			'phone' => post('phone'),
-			'comp_id' => $cid,
+			'company_id' => $cid,
 			
 
 			'address' => post('address'),
@@ -459,7 +459,7 @@ class Users extends MY_Controller {
 			'timestamp' => $this->input->post('current_time_in'),
 			'entry_type' => 'Normal'
 			/*'user_id' => $this->input->post('clockin_user_id'),
-			'comp_id' => $this->input->post('clockin_comp_id'),
+			'company_id' => $this->input->post('clockin_company_id'),
 			'clock_in' => $this->input->post('current_time_in'),
 			'session_key' => $this->input->post('clockin_sess'),
 			'status' => $this->input->post('clockin_status')*/
@@ -479,7 +479,7 @@ class Users extends MY_Controller {
 			'timestamp' => $this->input->post('current_time_in'),
 			'entry_type' => 'Normal'
 			/*'user_id' => $this->input->post('clockin_user_id'),
-			'comp_id' => $this->input->post('clockin_comp_id'),
+			'company_id' => $this->input->post('clockin_company_id'),
 			'clock_out' => $this->input->post('current_time_in'),
 			'session_key' => $this->input->post('clockin_sess'),
 			'status' => $this->input->post('clockin_status')*/

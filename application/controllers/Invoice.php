@@ -45,25 +45,25 @@ class Invoice extends MY_Controller {
         $role = logged('role');
         $type = 0;
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $company_id, $type);
             } else {    
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $company_id, $type);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $company_id, $type);
 
                 } else {
-                    $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, $type);
                 }
             }
         }
@@ -79,14 +79,14 @@ class Invoice extends MY_Controller {
             } elseif (!empty(get('order'))) {
 
                 $this->page_data['order'] = get('order');
-                $this->page_data['invoice'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
+                $this->page_data['invoice'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id, $type);
 
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['invoice'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
+                    $this->page_data['invoice'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id, $type);
                 } else {
                     $this->page_data['invoice'] = $this->invoice_model->getAllByUserId();
                 }
@@ -101,25 +101,25 @@ class Invoice extends MY_Controller {
         $role = logged('role');
         $type = 1;
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $company_id, $type);
             } else {
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $company_id, $type);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $company_id, $type);
 
                 } else {
-                    $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
+                    $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, $type);
                 }
             }
         }
@@ -139,7 +139,7 @@ class Invoice extends MY_Controller {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
 
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('comp_id'));
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
@@ -167,7 +167,7 @@ class Invoice extends MY_Controller {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
 
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('comp_id'));
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
@@ -185,9 +185,9 @@ class Invoice extends MY_Controller {
 
     public function settings()
     {
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $this->page_data['setting'] = null;
-        $setting = $this->invoice_settings_model->getAllByCompany($comp_id);
+        $setting = $this->invoice_settings_model->getAllByCompany($company_id);
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
@@ -250,11 +250,11 @@ class Invoice extends MY_Controller {
             'grand_total' => post('grand_total') ? post('grand_total') : 0
         );
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $id = $this->invoice_model->create([
             'user_id' => $user->id,
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'job_location' => post('job_location'),
             'job_name' => post('job_name'),
@@ -288,11 +288,11 @@ class Invoice extends MY_Controller {
         postAllowed();
 
         $user = (object)$this->session->userdata('logged');
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $id = $this->payment_records_model->create([
             'user_id' => $user->id,
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'invoice_amount' => post('amount'),
             'invoice_tip' => post('amount_tip'),
@@ -370,11 +370,11 @@ class Invoice extends MY_Controller {
                 break;
         }
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $id = $this->invoice_model->create([
             'user_id' => $user->id,
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'job_location' => post('job_location'),
             'job_name' => post('job_name'),
@@ -474,11 +474,11 @@ class Invoice extends MY_Controller {
             'office_phone' => post('from_office_phone_show'),
         );
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         if (!$id) {
             $this->invoice_settings_model->create([
                 'user_id' => $user->id,
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'invoice_number' => serialize($invoice_number),
                 'residential' => serialize($residential),
                 'commercial' => serialize($commercial),
@@ -498,7 +498,7 @@ class Invoice extends MY_Controller {
         } else {
             $this->invoice_settings_model->update($id, [
                 'user_id' => $user->id,
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'invoice_number' => serialize($invoice_number),
                 'residential' => serialize($residential),
                 'commercial' => serialize($commercial),
@@ -527,7 +527,7 @@ class Invoice extends MY_Controller {
 
     public function edit($id)
     {
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $user_id = logged('id');
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -586,12 +586,12 @@ class Invoice extends MY_Controller {
             'grand_total' => post('grand_total') ? post('grand_total') : 0
         );
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $id = $this->invoice_model->update($id, [
 
             'user_id' => $user->id,
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'job_location' => post('job_location'),
             'job_name' => post('job_name'),
@@ -626,7 +626,7 @@ class Invoice extends MY_Controller {
     {
         $invoice = get_invoice_by_id($id);
         $user = get_user_by_id(logged('id'));
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('comp_id'));
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
@@ -678,7 +678,7 @@ class Invoice extends MY_Controller {
      */
     public function mark_as_sent($id)
     {
-        $ids = $this->invoice_model->markAsSent($id, logged('comp_id'));
+        $ids = $this->invoice_model->markAsSent($id, logged('company_id'));
         $this->activity_model->add("invoice #$id Mark As Sent by User:" . logged('name'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'invoice has been Mark As Sent Successfully');
@@ -691,7 +691,7 @@ class Invoice extends MY_Controller {
      */
     public function clone($id)
     {
-        $id = $this->invoice_model->duplicateRecord($id, logged('comp_id'));
+        $id = $this->invoice_model->duplicateRecord($id, logged('company_id'));
         $this->activity_model->add("invoice #$id Clone by User:" . logged('name'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'invoice has been Cloned Successfully');
@@ -866,13 +866,13 @@ class Invoice extends MY_Controller {
         $this->page_data['format'] = $format;
 
         if ($format === "pdf") {
-            $img = explode("/", parse_url((companyProfileImage(logged('comp_id'))) ? companyProfileImage(logged('comp_id')) : $url->assets)['path']);
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->library('pdf');
             $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename);
         } else {
-            $this->page_data['profile'] = (companyProfileImage(logged('comp_id'))) ? companyProfileImage(logged('comp_id')) : $url->assets;
+            $this->page_data['profile'] = (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets;
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->view('invoice/pdf/template', $this->page_data);
         }

@@ -17,8 +17,8 @@ class Plans extends MY_Controller {
 		ifPermissions('plan_list');
 
 		// $this->page_data['items'] = $this->items_model->get();
-		$comp_id =  logged('comp_id');
-		$this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id'=>$comp_id]);
+		$company_id =  logged('company_id');
+		$this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
 		/* echo "<pre>"; print_r($this->page_data['items']); die; */
 		$this->load->view('plans/list', $this->page_data);
 	}
@@ -77,9 +77,9 @@ class Plans extends MY_Controller {
 		}
 		
 		
-		$comp_id =  logged('comp_id');
+		$company_id =  logged('company_id');
 		$permission = $this->plans_model->create([
-			'comp_id' => $comp_id,
+			'company_id' => $company_id,
 			'plan_name' => $this->input->post('plan_name'),
 			'status' => $this->input->post('status'),
 			'items' => $paln_items			
@@ -127,9 +127,9 @@ class Plans extends MY_Controller {
 		}
 		
 		// echo "<pre>"; print_r($itemArray); die;
-		$comp_id =  logged('comp_id');
+		$company_id =  logged('company_id');
 		$data = [
-			'comp_id' => $comp_id,
+			'company_id' => $company_id,
 			'plan_name' => $this->input->post('plan_name'),
 			'status' => $this->input->post('status'),
 			'items' => $paln_items	

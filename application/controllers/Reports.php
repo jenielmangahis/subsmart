@@ -68,10 +68,10 @@ class Reports extends MY_Controller {
     public function report($id)
 	{
         $this->getUsers();    
-        $comp_id = logged('comp_id');  
+        $company_id = logged('company_id');  
         $this->page_data['type'] = $id;           
-        $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($comp_id);           
-        $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, 0);           
+        $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);           
+        $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, 0);           
         $this->load->view('report/main/popular_reports', $this->page_data);
     }
     public function preview()
@@ -84,7 +84,7 @@ class Reports extends MY_Controller {
         $formattedEndDate = $this->input->get('format_end_time');
 
         if ($format === "pdf") {
-            $img = explode("/", parse_url((companyProfileImage(logged('comp_id'))) ? companyProfileImage(logged('comp_id')) : $url->assets)['path']);
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
             if ($type == "commercial_vs_residential") {
                 $orientation = "landscape";

@@ -41,9 +41,9 @@ class LeadDetailController: UITableViewController {
         editBarButton.image = UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: .white, size: CGSize(width: 24, height: 24))
         deleteBarButton.image = UIImage.fontAwesomeIcon(name: .trashAlt, style: .regular, textColor: .white, size: CGSize(width: 24, height: 24))
         nameIcon.image = UIImage.fontAwesomeIcon(name: .tag, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        emailIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        mobileIcon.image = UIImage.fontAwesomeIcon(name: .mobile, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        emailNotifyIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        emailIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        mobileIcon.image = UIImage.fontAwesomeIcon(name: .mobileAlt, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        emailNotifyIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         smsNotifyIcon.image = UIImage.fontAwesomeIcon(name: .sms, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         
         // set title

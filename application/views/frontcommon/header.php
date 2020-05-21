@@ -45,10 +45,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="header-top">
 			<div class="container">
 				<div class="row align-items-center">
-					<div class="col-md-6">
-						<p>TAKE CONTROL OF YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5">CALL US AT <span>(850) ###-####</span></b></p>
+					<div class="col-md-7">
+						<p>TAKE CONTROL OF YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5">CALL US AT <span>(844) 406-7286</span></b></p>
 					</div>
-					<div class="col-md-6 text-md-right">
+					<div class="col-md-5 text-md-right">
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>

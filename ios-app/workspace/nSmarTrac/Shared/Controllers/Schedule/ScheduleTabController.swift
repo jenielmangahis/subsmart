@@ -39,7 +39,7 @@ class ScheduleTabController: UITabBarController, UITabBarControllerDelegate {
         var tabBarList: [UIViewController] = []
         
         for (index, value) in tabs.enumerated() {
-            let image = UIImage.fontAwesomeIcon(name: icons[index], style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 24, height: 24))
+            let image = UIImage.fontAwesomeIcon(name: icons[index], style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 24, height: 24))
             let tabBarItem  = UITabBarItem(title: value, image: image, tag: index)
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "sb_EventDetailController") as! EventDetailController
             controller.tabBarItem = tabBarItem

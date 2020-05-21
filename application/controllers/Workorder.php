@@ -47,30 +47,30 @@ class Workorder extends MY_Controller
         $this->page_data['workorderStatusFilters'] = array ();
         $this->page_data['workorders'] = array ();
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($tab_index)) {
                 $this->page_data['tab_index'] = $tab_index;
-                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $comp_id);
+                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
             } else {
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
                 } else {
 
-                    $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
                 }
             }
 
-            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($comp_id);
+            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
         }
         if ($role == 4) {
 
@@ -82,14 +82,14 @@ class Workorder extends MY_Controller
             } elseif (!empty(get('order'))) {
 
                 $this->page_data['order'] = get('order');
-                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } else {
                     $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
                 }
@@ -146,9 +146,9 @@ class Workorder extends MY_Controller
             $this->page_data['customer']->customer = get_customer_by_id($get['customer_id']);
         }
 
-        $comp_id = logged('comp_id');
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id' => $comp_id]);
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id' => $comp_id]);
+        $company_id = logged('company_id');
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('workorder/add', $this->page_data);
@@ -242,7 +242,7 @@ class Workorder extends MY_Controller
             'm_monitoring' => post('m_monitoring') ? post('m_monitoring') : 0
         );
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         // create the workorder customer
         $this->load->model('Customer_model', 'customer_model');
@@ -260,7 +260,7 @@ class Workorder extends MY_Controller
             'postal_code' => post('customer')['zip'],
             'state' => post('customer')['state'],
             'birthday' => date('Y-m-d', strtotime(post('customer')['contact_dob'])),
-            'company_id' => $comp_id
+            'company_id' => $company_id
         ]);
 
 //        print_r(serialize(post('post_service_summary'))); die;
@@ -271,7 +271,7 @@ class Workorder extends MY_Controller
             $id = $this->workorder_model->create([
 
                 'user_id' => $user->id,
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'customer_id' => $customer_id,
                 'customer' => serialize(post('customer')),
                 'emergency_call_list' => serialize(post('emergency_call_list')),
@@ -366,7 +366,7 @@ class Workorder extends MY_Controller
             'm_monitoring' => post('m_monitoring') ? post('m_monitoring') : 0
         );
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         // create the workorder customer
         $workorder = $this->workorder_model->getById($id);
@@ -385,13 +385,13 @@ class Workorder extends MY_Controller
             'postal_code' => post('customer')['zip'],
             'state' => post('customer')['state'],
             'birthday' => date('Y-m-d', strtotime(post('customer')['contact_dob'])),
-            'company_id' => $comp_id
+            'company_id' => $company_id
         ]);
 
 
         $data = [
             'user_id' => $user->id,
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
             'customer_id' => $customer_id,
             'customer' => serialize(post('customer')),
             'emergency_call_list' => serialize(post('emergency_call_list')),
@@ -450,7 +450,7 @@ class Workorder extends MY_Controller
 
     public function edit($id)
     {
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
         $user_id = logged('id');
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -459,9 +459,9 @@ class Workorder extends MY_Controller
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id' => $comp_id]);
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id' => $comp_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         foreach ($this->page_data['workorder'] as $key => $workorder) {
 
@@ -708,30 +708,30 @@ class Workorder extends MY_Controller
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($tab_index)) {
                 $this->page_data['tab_index'] = $tab_index;
-                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $comp_id);
+                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
             } else {
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
                 } else {
 
-                    $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
                 }
             }
 
-            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($comp_id);
+            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
         }
         if ($role == 4) {
 
@@ -743,14 +743,14 @@ class Workorder extends MY_Controller
             } elseif (!empty(get('order'))) {
 
                 $this->page_data['order'] = get('order');
-                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id);
+                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } else {
                     $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
                 }

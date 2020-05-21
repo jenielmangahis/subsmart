@@ -44,20 +44,21 @@ class WorkOrderDetailController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // set title
+        self.parent?.navigationItem.title = "#WO-00517"
+        
         // configure icons
         calendarIcon.image = UIImage.fontAwesomeIcon(name: .calendarDay, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         nameIcon.image = UIImage.fontAwesomeIcon(name: .user, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        emailIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
-        mobileIcon.image = UIImage.fontAwesomeIcon(name: .mobile, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        emailIcon.image = UIImage.fontAwesomeIcon(name: .envelope, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
+        mobileIcon.image = UIImage.fontAwesomeIcon(name: .mobileAlt, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         phoneIcon.image = UIImage.fontAwesomeIcon(name: .phone, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         locationIcon.image = UIImage.fontAwesomeIcon(name: .mapMarkerAlt, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 22, height: 22))
         
         btnMap.setImage(UIImage.fontAwesomeIcon(name: .map, style: .regular, textColor: AppTheme.defaultLinkColor, size: CGSize(width: 22, height: 22)), for: .normal)
         btnCopy.setImage(UIImage.fontAwesomeIcon(name: .copy, style: .regular, textColor: AppTheme.defaultLinkColor, size: CGSize(width: 22, height: 22)), for: .normal)
         
-        // set title
-        self.parent?.navigationItem.title = "#WO-00517"
-        
+        // configure logo
         customerLogo.kf.setImage(with: URL(string: "https://www.markate.com/cdn/20200131/avatar_14356_2efeea8595_md.jpg"))
     }
     

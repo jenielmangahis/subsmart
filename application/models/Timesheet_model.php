@@ -81,13 +81,13 @@ class Timesheet_model extends MY_Model {
     public function getClockIns()
     {
         $parent_id = getLoggedUserID();
-        $cid=logged('comp_id');
+        $cid=logged('company_id');
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('comp_id', $parent_id);
+        $this->db->where('company_id', $parent_id);
         $this->db->or_where('id', $parent_id);
-        $this->db->or_where('comp_id',$cid );
+        $this->db->or_where('company_id',$cid );
         // $this->db->where('role !=', 1);
         $query = $this->db->get();
         // echo $this->db->last_query(); die;
@@ -100,13 +100,13 @@ class Timesheet_model extends MY_Model {
     public function getClockOuts($id)
     {
         $parent_id = getLoggedUserID();
-        $cid=logged('comp_id');
+        $cid=logged('company_id');
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('comp_id', $parent_id);
+        $this->db->where('company_id', $parent_id);
         $this->db->or_where('id', $parent_id);
-        $this->db->or_where('comp_id',$cid );
+        $this->db->or_where('company_id',$cid );
         // $this->db->where('role !=', 1);
         $query = $this->db->get();
         // echo $this->db->last_query(); die;

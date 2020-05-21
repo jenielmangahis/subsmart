@@ -9,6 +9,7 @@
 import UIKit
 import Floaty
 import FontAwesome_swift
+import ScrollableSegmentedControl
 import SideMenu
 
 class ExpensesController: UIViewController {
@@ -20,6 +21,7 @@ class ExpensesController: UIViewController {
     @IBOutlet var inboxButtonItem: UIBarButtonItem!
     @IBOutlet var searchView: UIView!
     @IBOutlet var textField: UITextField!
+    @IBOutlet var segmentedControl: ScrollableSegmentedControl!
     @IBOutlet var tableView: UITableView!
     
     @IBOutlet var tableTop: NSLayoutConstraint!
@@ -41,6 +43,7 @@ class ExpensesController: UIViewController {
         initNavBar()
         initFAB()
         initSearchView()
+        initScrollableSegmentControl()
         setupIndicator()
         setupRefreshControl()
     }
@@ -137,6 +140,37 @@ class ExpensesController: UIViewController {
         
         self.isFiltered = true
         self.tableView.reloadData()
+    }
+    
+    // MARK: - Scrollable Segment Control -
+    
+    func initScrollableSegmentControl() {
+        segmentedControl.segmentStyle = .textOnly
+        segmentedControl.insertSegment(withTitle: "TOTAL", at: 0)
+        segmentedControl.insertSegment(withTitle: "EXPENSES", at: 1)
+        segmentedControl.insertSegment(withTitle: "MILEAGE", at: 2)
+        
+        segmentedControl.addTarget(self, action: #selector(segmentSelected(sender:)), for: .valueChanged)
+        segmentedControl.backgroundColor = AppTheme.defaultMidOpaque
+        segmentedControl.tintColor = AppTheme.defaultMidOpaque
+        segmentedControl.segmentContentColor = UIColor.white
+        segmentedControl.selectedSegmentContentColor = AppTheme.defaultColor
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.fixedSegmentWidth = true
+        segmentedControl.underlineSelected = true
+    }
+    
+    @objc func segmentSelected(sender:ScrollableSegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            break
+        case 1:
+            break
+        case 2:
+            break
+        default:
+            break
+        }
     }
     
     // MARK: - Activity Indicator -

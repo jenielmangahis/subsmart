@@ -31,6 +31,7 @@ PODS:
   - RxCocoa (4.5.0):
     - RxSwift (>= 4.4.2, ~> 4.4)
   - RxSwift (4.5.0)
+  - ScrollableSegmentedControl (1.4.0)
   - SearchTextField (1.2.4)
   - SideMenu (6.4.8)
   - SVProgressHUD (2.2.5)
@@ -51,6 +52,7 @@ DEPENDENCIES:
   - PureLayout
   - RxCocoa (~> 4.0)
   - RxSwift (~> 4.0)
+  - ScrollableSegmentedControl (~> 1.4.0)
   - SearchTextField
   - SideMenu
   - SVProgressHUD
@@ -75,6 +77,7 @@ SPEC REPOS:
     - PureLayout
     - RxCocoa
     - RxSwift
+    - ScrollableSegmentedControl
     - SearchTextField
     - SideMenu
     - SVProgressHUD
@@ -98,10 +101,11 @@ SPEC CHECKSUMS:
   PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  ScrollableSegmentedControl: 56f7baa7f1d7e622e00abb9d6658856c2d52dd4b
   SearchTextField: 40dc3cc57def5a211f263cac263622c163bbc25a
   SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: 9903dbaffe08b0531584b215551d1939e37f3fd3
+PODFILE CHECKSUM: 1f84fecbd04ca4cd5c3dc9b9a8aeca42bae32cf5
 
 COCOAPODS: 1.9.1

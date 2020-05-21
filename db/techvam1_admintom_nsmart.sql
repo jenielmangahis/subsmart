@@ -1708,7 +1708,7 @@ INSERT INTO `events` (`id`, `company_id`, `customer_id`, `what_of_even`, `workor
 CREATE TABLE `filevault` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
-  `comp_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
   `fullfile` varchar(1000) NOT NULL,
   `title` varchar(250) NOT NULL,
   `estimate_resource` varchar(50) NOT NULL,
@@ -1720,7 +1720,7 @@ CREATE TABLE `filevault` (
 -- Dumping data for table `filevault`
 --
 
-INSERT INTO `filevault` (`id`, `uid`, `comp_id`, `fullfile`, `title`, `estimate_resource`, `invoice_resource`, `modified`) VALUES
+INSERT INTO `filevault` (`id`, `uid`, `company_id`, `fullfile`, `title`, `estimate_resource`, `invoice_resource`, `modified`) VALUES
 (8, 59, 15, '1_(4).png', 'Hand Files', '1', '1', '2020-03-30 20:31:49'),
 (7, 60, 15, 'unnamed_(4).jpg', 'Michelle Marsh', '0', '0', '2020-03-30 20:31:45'),
 (6, 60, 15, 'AM_mc_vs_dc_ae.jpg', 'sasfasf', '2', '2', '2020-03-13 14:23:29');
@@ -1733,7 +1733,7 @@ INSERT INTO `filevault` (`id`, `uid`, `comp_id`, `fullfile`, `title`, `estimate_
 
 CREATE TABLE `items` (
   `id` int(11) NOT NULL,
-  `comp_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
   `model` varchar(250) NOT NULL,
   `title` varchar(350) NOT NULL,
   `price` int(11) NOT NULL,
@@ -1755,7 +1755,7 @@ CREATE TABLE `items` (
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`id`, `comp_id`, `model`, `title`, `price`, `price1`, `price2`, `price3`, `price4`, `description`, `type`, `discount_type`, `discount`, `cost`, `url`, `notes`, `modified`) VALUES
+INSERT INTO `items` (`id`, `company_id`, `model`, `title`, `price`, `price1`, `price2`, `price3`, `price4`, `description`, `type`, `discount_type`, `discount`, `cost`, `url`, `notes`, `modified`) VALUES
 (11, 15, '1', '4 Buttons Remote', 159, 0, 0, 0, 0, '', 'Service', '', 100, 0, '', '', '2020-02-27 07:21:13'),
 (12, 16, '1', 'Alpha Keypad 6160 RF', 199, 0, 0, 0, 0, '', 'Service', '', 139, 0, '', '', '2020-02-27 07:21:22'),
 (14, 16, '1', 'Commercial Alarm QSP', 60, 0, 0, 0, 0, '', 'service', '', 0, 0, '', ' ', '2020-02-27 12:35:11'),
@@ -1909,7 +1909,7 @@ CREATE TABLE `plan_type` (
   `id` int(11) NOT NULL,
   `plan_name` varchar(255) NOT NULL,
   `status` int(11) NOT NULL,
-  `comp_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
   `items` text NOT NULL,
   `modified` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -1918,7 +1918,7 @@ CREATE TABLE `plan_type` (
 -- Dumping data for table `plan_type`
 --
 
-INSERT INTO `plan_type` (`id`, `plan_name`, `status`, `comp_id`, `items`, `modified`) VALUES
+INSERT INTO `plan_type` (`id`, `plan_name`, `status`, `company_id`, `items`, `modified`) VALUES
 (1, 'Phone Line', 1, 15, '', '2020-03-27 14:24:50'),
 (2, 'Cellular', 1, 15, 'a:1:{i:0;a:6:{s:4:\"item\";s:0:\"\";s:9:\"item_type\";s:7:\"product\";s:8:\"quantity\";s:1:\"1\";s:8:\"location\";s:0:\"\";s:8:\"discount\";s:1:\"0\";s:5:\"price\";s:1:\"0\";}}', '2020-03-25 18:17:22'),
 (3, 'WIFI', 1, 15, 'a:3:{i:0;a:6:{s:4:\"item\";s:45:\"AC Transformer 16.5V 40VA w/X-10 (vista only)\";s:9:\"item_type\";s:7:\"product\";s:8:\"quantity\";s:1:\"1\";s:8:\"location\";s:0:\"\";s:8:\"discount\";s:1:\"0\";s:5:\"price\";s:3:\"179\";}i:1;a:6:{s:4:\"item\";s:18:\"Commercial DVR QSP\";s:9:\"item_type\";s:7:\"product\";s:8:\"quantity\";s:1:\"1\";s:8:\"location\";s:0:\"\";s:8:\"discount\";s:1:\"0\";s:5:\"price\";s:2:\"90\";}i:2;a:6:{s:4:\"item\";s:20:\"Doorbell Chime Setup\";s:9:\"item_type\";s:7:\"product\";s:8:\"quantity\";s:1:\"1\";s:8:\"location\";s:0:\"\";s:8:\"discount\";s:1:\"0\";s:5:\"price\";s:2:\"79\";}}', '2020-03-06 18:27:16'),
@@ -2170,7 +2170,7 @@ CREATE TABLE `users` (
   `last_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `role` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
-  `comp_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
   `reset_token` text NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `img_type` text NOT NULL,
@@ -2183,7 +2183,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `username`, `email`, `password`, `password_plain`, `phone`, `address`, `last_login`, `role`, `parent_id`, `comp_id`, `reset_token`, `status`, `img_type`, `profile_img_type`, `created_at`, `updated_at`) VALUES
+INSERT INTO `users` (`id`, `name`, `username`, `email`, `password`, `password_plain`, `phone`, `address`, `last_login`, `role`, `parent_id`, `company_id`, `reset_token`, `status`, `img_type`, `profile_img_type`, `created_at`, `updated_at`) VALUES
 (1, 'Administrator', 'admin', 'support@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '123456', 'dsf', '2020-04-12 00:02:59', 1, 0, 0, '', 1, 'png', NULL, '2018-06-27 13:00:16', '0000-00-00 00:00:00'),
 (54, 'admin user1', 'admin_user1', 'user1@test.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '9632587410', 'admin user address', '2020-04-12 00:00:33', 6, 1, 0, '', 1, 'jpg', NULL, '2020-02-07 10:57:52', '0000-00-00 00:00:00'),
 (55, 'company admin', 'company_admin', 'company1@test.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '8521479630', 'company 1 address', '2020-04-20 10:04:45', 2, 1, 13, '', 1, 'png', NULL, '2020-02-07 11:17:29', '0000-00-00 00:00:00'),
@@ -2298,7 +2298,7 @@ INSERT INTO `workorders` (`id`, `user_id`, `company_id`, `customer_id`, `custome
 
 CREATE TABLE `work_status` (
   `id` int(11) NOT NULL,
-  `comp_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `color` varchar(20) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -2307,7 +2307,7 @@ CREATE TABLE `work_status` (
 -- Dumping data for table `work_status`
 --
 
-INSERT INTO `work_status` (`id`, `comp_id`, `title`, `color`) VALUES
+INSERT INTO `work_status` (`id`, `company_id`, `title`, `color`) VALUES
 (1, 16, 'New', '#00ff40'),
 (2, 16, 'Very Urgent', '#ff0000'),
 (3, 16, 'Sehcdule', '#ff8000'),

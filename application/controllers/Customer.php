@@ -103,43 +103,43 @@ class Customer extends MY_Controller
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($status_index)) {
 
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $comp_id);
+                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $company_id);
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('type'))) {
 
                     $this->page_data['type'] = get('type');
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
                     }
                 } else {
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $comp_id);
-                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
+                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
                     }
 
-//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
                 }
             }
 
-            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($comp_id);
+            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($company_id);
 
         }
 
@@ -265,7 +265,7 @@ class Customer extends MY_Controller
     {
 
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $user_id = logged('id');
 
@@ -285,7 +285,7 @@ class Customer extends MY_Controller
 
         }
 
-        $this->page_data['customer'] = $this->customer_model->getByWhere(['company_id' => $comp_id]);
+        $this->page_data['customer'] = $this->customer_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['customer'] = $this->customer_model->getById($id);
 
@@ -324,7 +324,7 @@ class Customer extends MY_Controller
 
         $user = (object)$this->session->userdata('logged');
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
 
 
@@ -365,7 +365,7 @@ class Customer extends MY_Controller
 
             'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
 
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
 
             'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
 
@@ -439,7 +439,7 @@ class Customer extends MY_Controller
 
         $user = (object)$this->session->userdata('logged');
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         $data = array(
 
@@ -478,7 +478,7 @@ class Customer extends MY_Controller
 
             'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
 
-            'company_id' => $comp_id,
+            'company_id' => $company_id,
 
             'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
 
@@ -686,11 +686,11 @@ class Customer extends MY_Controller
         //
 
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['comp_id' => $comp_id]);
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
 
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['comp_id' => $comp_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['groups'] = get_customer_groups();
 
@@ -914,9 +914,9 @@ class Customer extends MY_Controller
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
-            $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id, $get);
+            $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id, $get);
 
         }
 
@@ -1030,43 +1030,43 @@ class Customer extends MY_Controller
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
             if (!empty($status_index)) {
 
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $comp_id);
+                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $company_id);
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $comp_id);
+                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('type'))) {
 
                     $this->page_data['type'] = get('type');
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
                     }
                 } else {
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $comp_id);
+                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $comp_id);
-                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
+                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
                     }
 
-//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($comp_id);
+//                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
                 }
             }
 
-            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($comp_id);
+            $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount($company_id);
 
         }
 

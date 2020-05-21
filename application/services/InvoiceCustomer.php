@@ -73,14 +73,14 @@ class InvoiceCustomer
     {
         $post = $this->app->input->post();
 
-        $comp_id = logged('comp_id');
+        $company_id = logged('company_id');
 
         if (empty($post['id'])) {
 
             $job_type_id = $this->app->customer_model->create([
 
                 'user_id' => getLoggedUserID(),
-                'company_id' => $comp_id,
+                'company_id' => $company_id,
                 'title' => $post['title']
             ]);
         } else {

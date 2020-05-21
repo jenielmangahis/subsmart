@@ -138,7 +138,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <form name="clockin_form" method="post">
                                                                 <input type="hidden" name="current_time_in" value="<?php echo date('Y-m-d H:i'); ?>" />
                                                                 <input type="hidden" name="clockin_user_id" value="<?php echo $row->id; ?>" />
-                                                                <input type="hidden" name="clockin_comp_id" value="<?php echo $users1->id; ?>" />
+                                                                <input type="hidden" name="clockin_company_id" value="<?php echo $users1->id; ?>" />
                                                                 <input type="hidden" name="clockin_status" value="1" />
                                                                 <input type="hidden" name="clockin_sess" value="<?php echo $clockin_sess; ?>" />
                                                                 

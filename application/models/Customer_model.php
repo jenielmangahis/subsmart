@@ -15,9 +15,9 @@ class Customer_model extends MY_Model
 
         if ($role == 2 || $role == 3) {
 
-            $comp_id = logged('comp_id');
+            $company_id = logged('company_id');
 
-            return $this->getAllByCompany($comp_id);
+            return $this->getAllByCompany($company_id);
 
         } else {
 
@@ -25,12 +25,12 @@ class Customer_model extends MY_Model
         }
     }
 
-    public function getAllByCompany($comp_id, $filter = array())
+    public function getAllByCompany($company_id, $filter = array())
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $comp_id);
+        $this->db->where('company_id', $company_id);
 
         if (!empty($filter)) {
 
