@@ -2350,11 +2350,61 @@ ul.footer-list li a:hover {
   .text-ter {
     color: #888888;
   }
+  .top-0 {
+    position: relative;
+    top: 0px;
+  }
+  .cta {
+    height: 435px;
+    background: url(../images/app_bg.jpg) no-repeat bottom center;
+    background-size: cover;
+  }
+  .cta .container {
+    height: 435px;
+    position: relative;
+    display: table;
+  }
+  .cta__btn {
+    width: 100%;
+    margin-top: -34px;
+    text-align: center;
+    position: relative;
+  }
+  .cta__btn .btn {
+    background: #7d37b1;
+    border:0px;
+    padding: 16px 44px;
+  }
+  .cta .container {
+    text-align: center;
+  }
+  .cta p {
+    color: white;
+    font-size: 17px;
+  }
+  .cta h3 {
+    color: #fff;
+    margin-top: 120px;
+    margin-bottom: 40px;
+  }
   ol.feature__list > li {
     position: relative;
     margin-bottom: 36px;
     padding-left: 80px;
     color: #7d7d7d;
+  }
+  .feature-report {
+    position: relative;
+  }
+  .feature-report__text {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    text-align: left;
+    width: 325px;
+  }
+  .group-section-4 {
+    background: #eff5f9;
   }
  /* ----------------
  Responsive

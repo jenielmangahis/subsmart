@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  	<meta name="description" content="Industry.INC HTML Template">
 	<meta name="keywords" content="industry, html">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+
 	<!-- Favicon -->
 	<link href="<?php echo $url->assets ?>frontend/img/favicon.ico" rel="shortcut icon"/>
 
@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </head>
 <body>
- 
+
 
 	<!-- Header section  -->
 	<header class="header-section clearfix">
@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
-							
+
 						</div>
 					</div>
 				</div>
@@ -62,11 +62,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="container">
 				<div class="row">
 					<div class="col-12 d-flex align-items-center site-logo-holder">
-						<!-- Logo --> 
+						<!-- Logo -->
 						<a href="http://nsmartrac.com/" class="site-logo">
 							<img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">
 						</a>
-						
+
 						<div style="margin-left: auto;text-align: right;">
 						<nav class="site-nav-menu1 ml-auto d-none d-md-block">
 							<ul class="">
@@ -76,13 +76,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						</nav>
 						<nav class="site-nav-menu ml-auto">
 							<ul class="over-write-menu" style="margin-top:8px;">
-								<li class="active"><a href="http://nsmartrac.com/">Home</a></li>
-								<li><a href="">FEATURES</a></li>
+								<li class="active"><a href="<?php echo url('/') ?>">Home</a></li>
+								<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 								<li><a href="">PRICING </a></li>
 									<!--<ul class="sub-menu">
 										<li><a href="">Elements</a></li>
 									</ul>-->
-								
+
 								<li><a href="">FAQs</a></li>
 								<li><a href="">CONTACT</a></li>
 								<li class="no-break"><a href="" class="no-break">FREE TRIAL</a></li>
@@ -97,7 +97,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</header>
 	<!-- Header section end  -->
-
-
-
-

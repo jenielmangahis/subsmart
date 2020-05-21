@@ -6,7 +6,7 @@
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Get Started</h5></li>
-							<li><a href="#">Features</a></li>
+							<li><a href="<?php echo url('/features') ?>">Features</a></li>
 							<li><a href="#">Pricing</a></li>
 						</ul>
 					</div>
