@@ -2770,3 +2770,37 @@ font-size: 12px;
 .over-write-menu li {
     width: 90px;
 }
+
+.group-feature {
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.1s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+  background-color: white;
+}
+.group-feature:hover, .group-feature:focus, .group-feature:active {
+  -webkit-transform: translateY(-8px);
+  transform: translateY(-8px);
+  background-color: #00C363;
+} 
+
+.group__name {  
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.1s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+
+.group-feature-text {
+  -webkit-transform: translateY(-8px);
+  transform: translateY(-8px);
+  color: #00C363;
+} 

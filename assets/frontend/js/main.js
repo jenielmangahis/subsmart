@@ -176,4 +176,20 @@ $(window).on('load', function() {
 
 	});
 
+	/*------------------
+		Feature Hover
+	--------------------*/
+
+	$(".group-feature").hover(
+		function(){
+			var key = $(this).attr("data-key");
+			$(".group-"+key).addClass("group-feature-text");
+		},
+		function(){
+			var key = $(this).attr("data-key");
+	  		$(".group-"+key).removeClass("group-feature-text");
+		}
+	);
+
+
 })(jQuery);

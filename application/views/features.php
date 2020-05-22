@@ -25,40 +25,40 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="row group-section__row">
             <div class="col-sm-3">
                 <div class="group" data-to="group-management">
-                    <div class="group__box">
+                    <div class="group__box group-feature" data-key="management">
                         <img class="group__img" alt="management" src="https://www.markate.com/assets/images/app/public/pricing/feature_management.png">
                     </div>
-                    <div class="group__name">
+                    <div class="group__name group-management">
                         Management
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="group" data-to="group-finances">
-                    <div class="group__box">
+                    <div class="group__box group-feature" data-key="finances">
                         <img class="group__img" alt="finances" src="https://www.markate.com/assets/images/app/public/pricing/feature_finances.png">
                     </div>
-                    <div class="group__name">
+                    <div class="group__name group-finances">
                         Finances
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="group" data-to="group-insights">
-                    <div class="group__box">
+                    <div class="group__box group-feature" data-key="insight">
                         <img class="group__img" alt="insights" src="https://www.markate.com/assets/images/app/public/pricing/feature_insights.png">
                     </div>
-                    <div class="group__name">
+                    <div class="group__name group-insight">
                         Insights
                     </div>
                 </div>
             </div>
 						<div class="col-sm-3">
 								<div class="group" data-to="group-insights">
-									<div class="group__box">
+									<div class="group__box group-feature" data-key="marketing">
 											<img class="group__img" alt="marketing" src="https://www.markate.com/assets/images/app/public/pricing/feature_marketing.png">
 									</div>
-									<div class="group__name">
+									<div class="group__name group-marketing">
 											Marketing
 									</div>
 								</div>
