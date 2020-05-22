@@ -2787,10 +2787,10 @@ font-size: 12px;
 .group-feature:hover, .group-feature:focus, .group-feature:active {
   -webkit-transform: translateY(-8px);
   transform: translateY(-8px);
-  background-color: #00C363;
-} 
+  background-color: #b985e8;
+}
 
-.group__name {  
+.group__name {
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.1s;
   -webkit-transition-property: transform;
@@ -2802,5 +2802,5 @@ font-size: 12px;
 .group-feature-text {
   -webkit-transform: translateY(-8px);
   transform: translateY(-8px);
-  color: #00C363;
-} 
+  color: #8b45bf;
+}

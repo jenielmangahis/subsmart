@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <div class="col-sm-6">
-                <img class="img-responsive" alt="dashboard" src="https://www.markate.com/assets/images/app/public/features/feature_2_dashboard.png">
+                <img class="img-responsive" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-sm-3">
                 <div class="group" data-to="group-management">
                     <div class="group__box group-feature" data-key="management">
-                        <img class="group__img" alt="management" src="https://www.markate.com/assets/images/app/public/pricing/feature_management.png">
+                        <img class="group__img" alt="management" src="<?php echo $url->assets ?>frontend/images/feature_management.png">
                     </div>
                     <div class="group__name group-management">
                         Management
@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-sm-3">
                 <div class="group" data-to="group-finances">
                     <div class="group__box group-feature" data-key="finances">
-                        <img class="group__img" alt="finances" src="https://www.markate.com/assets/images/app/public/pricing/feature_finances.png">
+                        <img class="group__img" alt="finances" src="<?php echo $url->assets ?>frontend/images/feature_finances.png">
                     </div>
                     <div class="group__name group-finances">
                         Finances
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-sm-3">
                 <div class="group" data-to="group-insights">
                     <div class="group__box group-feature" data-key="insight">
-                        <img class="group__img" alt="insights" src="https://www.markate.com/assets/images/app/public/pricing/feature_insights.png">
+                        <img class="group__img" alt="insights" src="<?php echo $url->assets ?>frontend/images/feature_insights.png">
                     </div>
                     <div class="group__name group-insight">
                         Insights
@@ -56,7 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="col-sm-3">
 								<div class="group" data-to="group-insights">
 									<div class="group__box group-feature" data-key="marketing">
-											<img class="group__img" alt="marketing" src="https://www.markate.com/assets/images/app/public/pricing/feature_marketing.png">
+											<img class="group__img" alt="marketing" src="<?php echo $url->assets ?>frontend/images/feature_marketing.png">
 									</div>
 									<div class="group__name group-marketing">
 											Marketing
@@ -123,18 +123,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         Manage customers and send notifications
                     </h3>
                     <p>
-                        With Markate, customer information is stored within the intuitive dashboard. So you can easily find addresses with directions and maps for clear navigation.
+                        With nSmarTrac, customer information is stored within the intuitive dashboard. So you can easily find addresses with directions and maps for clear navigation.
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="customers management" src="https://www.markate.com/assets/images/app/public/features/feature_2_customers.png">
+                    <img class="img-responsive" alt="customers management" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="work orders" src="https://www.markate.com/assets/images/app/public/features/feature_2_work_orders.png">
+                    <img class="img-responsive" alt="work orders" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>
@@ -162,7 +162,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="schedule" src="https://www.markate.com/assets/images/app/public/features/feature_2_schedule.png">
+                    <img class="img-responsive" alt="schedule" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
@@ -177,11 +177,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="invoices" src="https://www.markate.com/assets/images/app/public/features/feature_2_invoice.png">
+                    <img class="img-responsive" alt="invoices" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>Send custom estimates and invoices</h3>
-                    <p>Markate lets you build custom estimates and send invoices from the palm of your hand.</p>
+                    <p>nSmarTrac lets you build custom estimates and send invoices from the palm of your hand.</p>
                     <br/>
                     <ol class="feature__list">
                         <li>
@@ -200,24 +200,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <h3>Get paid online</h3>
                     <ol class="feature__list">
                         <li>
-                            Through Markate, payments are safely and securely deposited through our Square, Paypal and Wepay integrated processors.
-                            <img class="img-responsive margin-top" src="https://www.markate.com/assets/images/app/public/features/payments_logo.png">
+                            Through nSmarTrac, payments are safely and securely deposited through our Square, Paypal and Wepay integrated processors.
                         </li>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="online payment" src="https://www.markate.com/assets/images/app/public/features/feature_2_invoice_payment.png">
+                    <img class="img-responsive" alt="online payment" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="expenses" src="https://www.markate.com/assets/images/app/public/features/feature_expense.png">
+                    <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>Track expenses</h3>
-                    <p>What used to be a stressful, time-consuming task just got a whole lot easier. Markate lets you:</p>
+                    <p>What used to be a stressful, time-consuming task just got a whole lot easier. nSmarTrac lets you:</p>
                     <br/>
                     <ol class="feature__list">
                         <li>
@@ -239,11 +238,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <h2>Fact</h2>
         <p>
-            Companies using Markate realized a <br><span>3.5x increase</span> in productivity alone.
+            Companies using nSmarTrac realized a <br><span>3.5x increase</span> in productivity alone.
         </p>
     </div>
     <div class="dyk__btn">
-        <a class="btn btn-violet btn-xl" href="https://www.markate.com/business/register">Try it now for free</a>
+        <a class="btn btn-violet btn-xl" href="#">Try it now for free</a>
     </div>
 </section>
 <section class="group-section-3" id="group-insights">
@@ -252,12 +251,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="group-title">Insights</div>
         <div class="row">
             <div class="col-sm-6">
-                <img class="img-responsive" alt="reports" src="https://www.markate.com/assets/images/app/public/features/feature_report.png">
+                <img class="img-responsive" alt="reports" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
             </div>
             <div class="col-sm-6 systemInfo">
                 <h3>Get instant insights</h3>
                 <br/>
-                <p>Markate provides users with valuable reports and insights that paint a clearer picture of where your business is now and where its going.</p>
+                <p>nSmarTrac provides users with valuable reports and insights that paint a clearer picture of where your business is now and where its going.</p>
             </div>
         </div>
     </div>
@@ -272,7 +271,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="booking plugin" src="https://www.markate.com/assets/images/app/public/features/feature_booking.png">
+                    <img class="img-responsive" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>
@@ -298,7 +297,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <br/>
                     <ol class="feature__list">
                         <li>
-                            Effortlessly make a deal with Markate and promote it on your website.
+                            Effortlessly make a deal with nSmarTrac and promote it on your website.
                         </li>
                         <li>
                             Customers can book and appointment and seal the deal instantly.
@@ -306,14 +305,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="run deals" src="https://www.markate.com/assets/images/app/public/features/feature_2_deal.png">
+                    <img class="img-responsive" alt="run deals" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="booking plugin" src="https://www.markate.com/assets/images/app/public/features/feature_postcard.png">
+                    <img class="img-responsive" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>
@@ -342,7 +341,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="customer finder 360" src="https://www.markate.com/assets/images/app/public/features/feature_2_customer_360.png">
+                    <img class="img-responsive" alt="customer finder 360" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
@@ -350,7 +349,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="Email automation" src="https://www.markate.com/assets/images/app/public/features/feature_2_proposal_kit.png">
+                    <img class="img-responsive" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>Proposal Kit</h3>
@@ -376,7 +375,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="expenses" src="https://www.markate.com/assets/images/app/public/features/feature_sms_automation.png">
+                    <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6 systemInfo">
                     <h3>SMS Automation</h3>
@@ -402,19 +401,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             Now you can send custom emails to customers on specific occasions, like: when an invoice is due, work order is completed or bill has been paid.
                         </li>
                         <li>
-                            Markate lets you effortlessly customize the email templates while utilizing smart placeholders for your convenience.
+                            nSmarTrac lets you effortlessly customize the email templates while utilizing smart placeholders for your convenience.
                         </li>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="Email automation" src="https://www.markate.com/assets/images/app/public/features/feature_2_automation_email.png">
+                    <img class="img-responsive" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="Postcard automation" src="https://www.markate.com/assets/images/app/public/features/feature_automation_postcard_2.png">
+                    <img class="img-responsive" alt="Postcard automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
                 <div class="col-sm-6">
                     <h3>Postcard Automation</h3>
@@ -434,11 +433,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </section>
 <section class="cta">
     <div class="container systemInfo">
-        <h3>Ready to try Markate?</h3>
-        <p>Markate is designed with small businesses in mind.<br>Manage on the go, save some time and make more money.</p>
+        <h3>Ready to try nSmarTrac?</h3>
+        <p>nSmarTrac is designed with small businesses in mind.<br>Manage on the go, save some time and make more money.</p>
     </div>
     <div class="cta__btn">
-        <a class="btn btn-primary btn-xl" href="https://www.markate.com/business/register">Get started now</a>
+        <a class="btn btn-primary btn-xl" href="#">Get started now</a>
     </div>
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
