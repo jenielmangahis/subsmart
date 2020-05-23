@@ -22,6 +22,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12 col-lg-4 col-xl-5 text-center">
+
+                                <div id="slideshow">
+                                   <div>
+                                     <img src="http://farm6.static.flickr.com/5224/5658667829_2bb7d42a9c_m.jpg">
+                                   </div>
+                                   <div>
+                                     <img src="http://farm6.static.flickr.com/5230/5638093881_a791e4f819_m.jpg">
+                                   </div>
+                                </div>
+
 						</div>
 						<div class="col-md-12 col-lg-7 col-xl-7 text-center">
 							<div class="row justify-content-center">
@@ -694,5 +704,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	 autoplaySpeed: 2000,
 	 centerMode: true,
      });
+
+    
     </script>
 <?php include viewPath('frontcommon/footer'); ?>

@@ -362,6 +362,7 @@
    color: #fff;
    font-size: 12px;
    line-height: 1;
+   margin: 0px !important;
  }
   .header-top p  span{
 	  color:#fada97
@@ -2478,6 +2479,23 @@ Pricing
  .slider.round:before {
    border-radius: 50%;
  }
+  #slideshow {
+    margin: 80px auto;
+    position: relative;
+    width: 240px;
+    height: 240px;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  }
+  #slideshow > div {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+
+>>>>>>> fcca74f9731b881b326ecd197563f382efa2777a
  /* ----------------
  Responsive
   ---------------------*/
