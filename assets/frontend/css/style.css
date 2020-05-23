@@ -2482,10 +2482,17 @@ Pricing
 #slideshow {
   margin: 80px auto;
   position: relative;
-  width: 240px;
+  width: auto;
   height: 240px;
   padding: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  max-width: 450px;
+}
+.testimonial-desc {
+  font-size: 18px;
+  padding: 25px;
+  text-align: justify;
+  font-weight: 200;
+  font-family: 'Kanit', sans-serif !important;
 }
 #slideshow > div {
   position: absolute;
@@ -2493,6 +2500,33 @@ Pricing
   left: 10px;
   right: 10px;
   bottom: 10px;
+}
+.testimonial-desc {
+  font-size: 18px;
+  padding: 25px;
+  text-align: justify;
+  font-weight: 200;
+  font-family: 'Kanit', sans-serif !important;
+  color: white;
+}
+h3.testimonial-name {
+  color: white;
+  font-weight: 600;
+  font-size: 24px;
+}
+div.testimonial-card {
+  background: #3e175f63;
+  padding: 20px 10px;
+  height: 290px;
+  position: relative;
+  bottom: 55px;
+}
+div.testimonial-card img {
+  border-radius: 100px;
+  width: 70px !important;
+  display: block;
+  height: 69px;
+  margin: 0 auto;
 }
  /* ----------------
  Responsive

@@ -197,6 +197,7 @@ $(window).on('load', function() {
 /*------------------
 	Homepage feature signup slider
 --------------------*/
+/*------------------
  $("#slideshow > div:gt(0)").hide();
  setInterval(function() {
   $('#slideshow > div:first')
@@ -206,3 +207,4 @@ $(window).on('load', function() {
     .end()
     .appendTo('#slideshow');
  }, 3000);
+ --------------------*/

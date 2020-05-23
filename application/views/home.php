@@ -22,16 +22,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12 col-lg-4 col-xl-5 text-center">
-
-                                <div id="slideshow">
-                                   <div>
-                                     <img src="http://farm6.static.flickr.com/5224/5658667829_2bb7d42a9c_m.jpg">
-                                   </div>
-                                   <div>
-                                     <img src="http://farm6.static.flickr.com/5230/5638093881_a791e4f819_m.jpg">
-                                   </div>
-                                </div>
-
+                <div id="slideshow">
+                   <div>
+										 <div class="testimonial-card">
+											 <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
+											 <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
+											 <h3 class="testimonial-name">John Doe</h3>
+										 </div>
+                   </div>
+									 <div>
+										 <div class="testimonial-card">
+											 <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
+											 <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
+											 <h3 class="testimonial-name">John Doe</h3>
+										 </div>
+									 </div>
+                </div>
 						</div>
 						<div class="col-md-12 col-lg-7 col-xl-7 text-center">
 							<div class="row justify-content-center">
@@ -705,6 +711,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	 centerMode: true,
      });
 
-    
+
     </script>
 <?php include viewPath('frontcommon/footer'); ?>
