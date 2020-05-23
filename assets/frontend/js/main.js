@@ -195,10 +195,13 @@ $(window).on('load', function() {
 	 /*------------------
 	Homepage feature signup slider
     --------------------*/
+})(jQuery);
 
+  /*------------------
+	Homepage feature signup slider
+  --------------------*/
 
-	
-	$("#slideshow > div:gt(0)").hide();
+  $("#slideshow > div:gt(0)").hide();
 	setInterval(function() {
 	$('#slideshow > div:first')
 	.fadeOut(1000)
@@ -207,19 +210,8 @@ $(window).on('load', function() {
 	.end()
 	.appendTo('#slideshow');
 	}, 3000);		
- 
-})(jQuery);
-
-  /*------------------
-	Homepage feature signup slider
-  --------------------*/
 
  function initialSlider() {
- 	alert("test");
-	$('#slideshow > div:first')
-	.fadeOut(1000)
-	.next()
-	.fadeIn(1000)
-	.end()
-	.appendTo('#slideshow');
+ 	
+ 	$("#slideshow > div:gt(0)").hide();
 }
