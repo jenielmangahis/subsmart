@@ -75,6 +75,20 @@ $(window).on('load', function() {
 	});
 
 	/*------------------
+		Hero Slider homepage signup
+	--------------------*/
+	$('.hero-slider-signup').owlCarousel({
+		autoplayHoverPause: false,
+		nav: false,
+		dots: false,
+		loop: true,
+		autoplay: true,
+		items: 1,
+		animateOut: 'fadeOut',
+    	animateIn: 'fadeIn',
+	});
+
+	/*------------------
 		Brands Slider
 	--------------------*/
 	$('#client-carousel').owlCarousel({
@@ -192,26 +206,6 @@ $(window).on('load', function() {
 		}
 	);
 
-	 /*------------------
-	Homepage feature signup slider
-    --------------------*/
 })(jQuery);
 
-  /*------------------
-	Homepage feature signup slider
-  --------------------*/
-
-  $("#slideshow > div:gt(0)").hide();
-	setInterval(function() {
-	$('#slideshow > div:first')
-	.fadeOut(1000)
-	.next()
-	.fadeIn(1000)
-	.end()
-	.appendTo('#slideshow');
-	}, 3000);		
-
- function initialSlider() {
- 	
- 	$("#slideshow > div:gt(0)").hide();
-}
+ 
