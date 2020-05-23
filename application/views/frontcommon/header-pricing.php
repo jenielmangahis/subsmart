@@ -27,6 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
+	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/pricing.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
 
@@ -37,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<![endif]-->
 
 </head>
-<body>
+<body class="page-template page-template-empty-template page-template-empty-template-php page page-id-37223 wpb-js-composer js-comp-ver-5.7 vc_responsive payroll--horizontal dom-ready wload premium-payroll-on">
 
 
 	<!-- Header section  -->
