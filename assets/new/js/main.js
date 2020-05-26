@@ -1,6 +1,6 @@
 /* =================================
 ------------------------------------
-	Template Name: Industry.INC 
+	Template Name: Industry.INC
 	Description: Industry.INC HTML Template
 	Author: colorlib
 	Author URI: https://www.colorlib.com/
@@ -117,7 +117,7 @@ $(window).on('load', function() {
 	$('.video-popup').magnificPopup({
 		type: 'iframe'
 	});
-	
+
 	/*------------------
 		Accordions
 	--------------------*/

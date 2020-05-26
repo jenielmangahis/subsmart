@@ -24,14 +24,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="col-md-12 col-lg-4 col-xl-5 text-center">
 
                             <div class="hero-slider-signup owl-carousel">
-                                <div class="hero-item" > 
+                                <div class="hero-item" >
                                     <div class="testimonial-card">
                                         <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
                                         <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
                                         <h3 class="testimonial-name">John Doe</h3>
                                     </div>
                                 </div>
-                                <div class="hero-item" > 
+                                <div class="hero-item" >
                                     <div class="testimonial-card">
                                         <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
                                         <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
@@ -40,9 +40,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                           
+
 						</div>
-						<div class="col-md-12 col-lg-7 col-xl-7 text-center">
+						<div class="col-md-12 col-lg-7 col-xl-7 text-center pt-110">
 							<div class="row justify-content-center">
 									<h2 class="font-weight-bold text-white font-kanit f-28">Signup Today for a Free 30-Day Trial</h2>
 							</div>
