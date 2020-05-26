@@ -95,3 +95,4 @@ $route['survey/answer/$1'] = 'survey/answer/$1';
 
 $route['features'] = 'features';
 $route['pricing'] = 'pricing';
+$route['registration'] = 'register';

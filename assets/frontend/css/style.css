@@ -2579,6 +2579,133 @@ div.testimonial-card img {
     left: -10vw;
     bottom: -14px;
  }
+ /* Register Page */
+ .side-image--regular {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 650px;
+    left: 0;
+    opacity: 0;
+    background: url(../images/bg-reg.jpeg) center right / cover no-repeat;
+}
+.form-container-reg {
+  width: 600px;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+.tw-radio-button .tw-radio-check {
+  border-radius: 50%;
+  text-align: center;
+  width: 0px;
+  height: 0px;
+  margin: 0 0 0 11px;
+  transition: all .15s ease-in-out;
+}
+.tw-radio-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #d3d5d8;
+  background: #fff;
+  display: inline-block;
+  padding: 0;
+  vertical-align: middle;
+  transition: border .15s ease-in-out;
+}
+div.input-group {
+  margin-bottom: 11px;
+}
+div.input-group input {
+  padding: 23px 15px;
+}
+.z-100 {
+  z-index: 100;
+}
+.reg-select {
+  width: 100%;
+  height: 48px;
+  background: white;
+  border:1px solid #ced4db;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 10px 16px;
+  color:#4a5259;
+}
+.btn-green-2 {
+  color: #fff;
+  font-weight: 600;
+  padding: 9px 28px;
+  background: #2fd06d;
+  margin-top: 14px;
+  display: block;
+  text-align: center;
+  font-size: 19px;
+}
+.btn-green-2:hover {
+  color: #7c05da;
+}
+.country-select-label {
+  margin-top: 5px;
+  font-size: 13px;
+  padding-left: 2px;
+  color: #8021c5;
+  font-weight: 600;
+}
+.reg-color {
+  color: #8021c5 !important;
+  font-weight: 600;
+}
+
+div.input-group input::placeholder {
+  color: #adadad;
+  opacity: 1;
+}
+label.reg-def {
+  padding: 20px;
+  font-size: 16px;
+  display: block;
+  cursor: pointer;
+  line-height: 24px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  padding-right: 16px;
+  color: #2e4369;
+  background-color: #fff;
+  border: 1px solid #d3d5d8;
+  border-radius: 3px;
+  -webkit-transition: border .15s ease-in-out,background-color .15s ease-in-out;
+  -o-transition: border .15s ease-in-out,background-color .15s ease-in-out;
+  transition: border .15s ease-in-out,background-color .15s ease-in-out;
+}
+.tw-radio-button[checked] .tw-radio-check, .tw-radio-button.checked .tw-radio-check {
+  width: 12px;
+  height: 12px;
+  margin: 5px;
+  display: block;
+  background-color: #00b9ff;
+}
+.container-signup {
+  padding: 40px 100px;
+}
+.block {
+  display: block;
+}
+.reg-header {
+  font-size: 29px;
+  font-weight: 600;
+  color: #403f3f;
+  width: 500px;
+  margin: 0 auto;
+}
+.f-height {
+  height: 650px;
+}
+.image-fader {
+  opacity: 1 !important;
+  transition: all .5s ease-out;
+}
  /* Medium screen : 992px. */
 
  @media only screen and (min-width: 992px) and (max-width: 1199px) {
