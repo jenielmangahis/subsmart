@@ -27,9 +27,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
+	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/pricing.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
 
+	<!-- Fullcalendar -->
+	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/fullcalendar/core.css"/>
+	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/fullcalendar/daygrid.css"/>
+	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/fullcalendar/list.css"/>
+	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/fullcalendar/timegrid.css"/>
 
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -37,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<![endif]-->
 
 </head>
-<body>
+<body class="page-template page-template-empty-template page-template-empty-template-php page page-id-37223 wpb-js-composer js-comp-ver-5.7 vc_responsive payroll--horizontal dom-ready wload premium-payroll-on">
 
 
 	<!-- Header section  -->
@@ -85,8 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 								<li><a href="">FAQs</a></li>
 								<li><a href="">CONTACT</a></li>
-								<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
-								<li class="no-break"><a href="" class="no-break">FREE TRIAL</a></li>								
+								<li class="no-break"><a href="" class="no-break">FREE TRIAL</a></li>
 								<!-- <li class="active d-block d-md-none"><a href="<?php echo url('/login') ?>">Login</a></li>
 								<li class="d-block d-md-none"><a href="<?php echo url('/home/signup') ?>">Sign Up</a></li> -->
 							</ul>
