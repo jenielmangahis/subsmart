@@ -74,19 +74,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </select>
                                     </div>
                                     <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <select class="form-control" id="sel1">
+                                        <select class="form-control cmb-industry" id="sel1">
 
                                             <option>--Select your Industry--</option>
-                                            <option>Building Contractors</option>
-                                            <option>Financial Services</option>
-                                            <option>Technical Services</option>
-                                            <option>Health And Beauty</option>
-                                            <option>Transportation</option>
-                                            <option>Organization/ Cleaning</option>
-                                            <option>Entertainment Services</option>
-                                            <option>Design Services</option>
-                                            <option>Business Services</option>
-                                            <option>Other</option>
+                                            <option value="Building Contractors">Building Contractors</option>
+                                            <option value="Financial Services">Financial Services</option>
+                                            <option value="Technical Services">Technical Services</option>
+                                            <option value="Health And Beauty">Health And Beauty</option>
+                                            <option value="Transportation">Transportation</option>
+                                            <option value="Organization / Cleaning">Organization / Cleaning</option>
+                                            <option value="Entertainment Services">Entertainment Services</option>
+                                            <option value="Design Services">Design Services</option>
+                                            <option value="Business Services">Business Services</option>
+                                            <option value="Other">Other</option>
 
                                             <!-- <option value="-">--Select your Industry--</option>
                                             <option value="Accountant">Accountant</option>
@@ -180,11 +180,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
 
                                     <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <select class="form-control" id="sel1">
+                                        <select class="form-control cmb-specific-business" id="sel1">
 
                                             <option>--Select your Specific Business--</option>
-                                            <option>Cabinetry</option>
-                                            <option>Chimney/ Fireplace</option>
+                                            <!-- <option>Cabinetry</option>
+                                            <option>Chimney / Fireplace</option>
                                             <option>Concrete & Asphalt</option>
                                             <option>Deck & Patio</option>
                                             <option>Demolition</option>
@@ -208,7 +208,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Snow Removal</option>
                                             <option>Solar & Energy</option>
                                             <option>Tile & Grout</option>
-                                            <option>Tree Services</option>
+                                            <option>Tree Services</option> -->
 
                                             <!-- 
                                             <option>--Select your Role--</option>
@@ -232,7 +232,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <option>Credit Counselor</option>
                                         <option>Financial Planner</option>
                                         <option>Insurance</option>
-                                        <option>Lender </option>
+                                        <option>Lender</option>
                                         <option>Tax Planner</option>
 
                                         </select>
@@ -244,7 +244,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                     <select class="form-control" id="sel1">
                                     <option>Massage</option>
-                                    <option>Barber/ Stylist</option>
+                                    <option>Barber / Stylist</option>
                                     <option>Make-up artist</option>
                                     <option>Costume Designer</option>
                                     <option>Fitness Instructors</option>
@@ -273,7 +273,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <select class="form-control" id="sel1">
                                             <option>Computer Services</option>
                                             <option>Document Storage & Destruction</option>
-                                            <option>IT & Networking </option>
+                                            <option>IT & Networking</option>
                                             <option>Security Systems</option>
                                         </select>
                                     </div> 
@@ -285,7 +285,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <select class="form-control" id="sel1">
                                             <option>Interior Design</option>
                                             <option>Architecture</option>
-                                            <option>Event Photography/ Videography</option>
+                                            <option>Event Photography / Videography</option>
                                             <option>Graphics & Printing</option>
                                         </select>
                                     </div> 
@@ -308,7 +308,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <!-- 
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
-                                            <option>A/ V Service</option>
+                                            <option>A/V Service</option>
                                             <option>Booking Agent</option>
                                             <option>Catering</option>
                                             <option>Event Planner</option>
@@ -859,19 +859,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </section> -->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript">
-     $(".lazy").slick({
-     dots: false,
-     prevArrow: false,
-     nextArrow: false,
-     slidesToScroll: 1,
-     autoplay: true,
-     autoplaySpeed: 2000,
-     centerMode: true,
-     });
-
-
-    </script>
 <?php include viewPath('frontcommon/footer'); ?>
+<script src="<?php echo $url->assets ?>frontend/js/slick.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var base_url = "<?php echo base_url();?>";
+
+        $(".cmb-industry").change(function(){
+            var selected_industry = $(this).val();
+            $.ajax({
+               type: "POST",
+               url: base_url + '/get_specific_business',      
+               data: {"selected_industry":selected_industry},
+               success: function(o)
+               {
+                  $(".cmb-specific-business").empty();
+                  $(".cmb-specific-business").append(o);
+               }
+            });
+        });
+
+        $(".lazy").slick({
+         dots: false,
+         prevArrow: false,
+         nextArrow: false,
+         slidesToScroll: 1,
+         autoplay: true,
+         autoplaySpeed: 2000,
+         centerMode: true,
+        });
+    });
+</script>

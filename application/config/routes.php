@@ -60,6 +60,8 @@ $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';
 $route['equipments'] = 'equipment';
 
+$route['get_specific_business'] = 'home/getSpecificBusinessByIndustry';
+
 $route['services/(:any)?/(:any)?'] = 'service/$1/$2';
 $route['services/(:any)?'] = 'service/$1';
 $route['services'] = 'service';
