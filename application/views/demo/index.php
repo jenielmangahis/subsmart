@@ -84,9 +84,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           </div>
 
           <div class="col-md-7">
+              <div class="calendar-form">
                 <div id='loading'>loading...</div>
                 <div id='calendar'></div>
                 <div class="calendar-date-schedule"></div>
+              </div>
+              <div class="schedule-fillup-form hidden">
+                  <p>Enter Details</p>
+                  <?php echo form_open('demo/request_demo', ['class' => 'form-validate']); ?>
+                    <input type="hidden" name="demo_time" value="" id="demo_time">
+                    <input type="hidden" name="demo_date" value="" id="demo_date">
+                    <div class="col-md-6 form-group">
+                        <label for="contact_name">Name *</label>
+                        <input type="text" class="form-control" name="name" id="name"
+                               required />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="contact_name">Email *</label>
+                        <input type="text" class="form-control" name="email" id="email"
+                               required />
+                        <a class="btn btn-info btn-add-guests" href="javascript:void(0);">Add Guests</a>
+                    </div>
+                    <div class="col-md-6 form-group hidden grp-guest-emails">
+                        <label for="contact_name">Guest Email(s)</label>
+                        <textarea class="form-control" name="guest_emails" id="guest_emails" required></textarea>
+                        <small>Notify up to 10 additional guests of the scheduled event.</small>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="contact_name">Phone Number *</label>
+                        <input type="text" class="form-control" name="phone_number" id="phone_number"
+                               required />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="contact_name">Please let us know the key features you are interested to know. *</label>
+                        <textarea class="form-control" name="key_features" id="key_features" required></textarea>
+                        
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="contact_name">Send text reminder to</label>
+                        <input type="text" class="form-control" name="text_reminder" id="text_reminder" />
+                    </div>
+                    <div class="col-sm-12 mt-3">
+                        <button type="submit" class="btn btn-flat btn-primary">Schedule Event</button>
+                        <a href="javascript:void(0);" class="btn btn-info btn-change-schedule">Change Schedule</a>
+                    </div>
+                  <?php echo form_close(); ?>
+                  </form>
+              </div>
           </div>
         </div>        
     </div>
@@ -98,8 +142,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 var base_url = "<?php echo base_url();?>";
 
 document.addEventListener('DOMContentLoaded', function() {
-var calendarEl = document.getElementById('calendar');
 
+$(".btn-add-guests").click(function(){
+  $(this).addClass("hidden");
+  $(".grp-guest-emails").removeClass("hidden");  
+});
+
+$(".btn-change-schedule").click(function(){
+  $(".btn-add-guests").removeClass("hidden");
+  $(".grp-guest-emails").addClass("hidden");
+  $(".schedule-fillup-form").addClass("hidden");
+  $(".calendar-form").removeClass("hidden");
+  $(".calendar-date-schedule").html("");
+});
+
+var calendarEl = document.getElementById('calendar');
 var calendar = new FullCalendar.Calendar(calendarEl, {
   plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
   header: {
@@ -119,7 +176,13 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
               $(".calendar-date-schedule").html(o); 
            },
            complete: function() {
-             
+              $("#demo_date").val(info.dateStr);
+
+              $(".btn-time-schedule").click(function(){              
+                $("#demo_time").val(demo_time);
+                $(".calendar-form").addClass("hidden");
+                $(".schedule-fillup-form").removeClass("hidden");                
+              });
           }
         });
     }, 1000);        
