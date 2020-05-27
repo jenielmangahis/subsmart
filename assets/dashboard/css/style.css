@@ -974,6 +974,7 @@ body .navigation-menu {
     margin: 0;
     line-height: initial;
     font-weight: normal;
+    text-align: left;
 }
 
 .page-title-box .breadcrumb {

@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import CoreLocation
 import FontAwesome_swift
 
 enum LeftMenu: String {
@@ -30,11 +31,21 @@ enum LeftMenu: String {
     
     case Schedule
     case WorkOrder
+    case FileVault
     case Bulletin
     case Invoices
     case Reports
     case RoutePlanner
     case Marketing
+    case Employees
+    case CollageMaker
+    case Estimates
+    case CostEstimator
+    case VirtualEstimator
+    case ClockOut
+    
+    case Chat
+    case Messages
 }
 
 class App {
@@ -54,6 +65,7 @@ class App {
     
     private(set) var environment: Environment = .staging
     
+    var userLocation: CLLocation? = nil
     var selectedMenu: LeftMenu? = nil
     
     

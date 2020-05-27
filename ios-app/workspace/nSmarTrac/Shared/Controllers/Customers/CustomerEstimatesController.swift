@@ -41,6 +41,7 @@ extension CustomerEstimatesController: FloatyDelegate, UIGestureRecognizerDelega
         
         // init
         floaty.fabDelegate  = self
+        floaty.sticky       = true
         floaty.buttonColor  = AppTheme.defaultColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         floaty.paddingY     = 60

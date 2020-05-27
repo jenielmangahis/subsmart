@@ -63,11 +63,11 @@
                                     <i class="fas fa-ellipsis-h"></i>
                                   </button>
                                   <div class="dropdown-menu">
-                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="<?= base_url() ?>survey/<?= $survey->id ?>">Edit</a>
-                                    <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="<?= base_url() ?>survey/delete/<?= $survey->id ?>">Delete</a>
-                                    <a id="btn-preview-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="<?= base_url() ?>survey/preview/<?= $survey->id ?>">View</a>
-                                    <a id="btn-result-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="<?= base_url() ?>survey/result/<?= $survey->id ?>">Results</a>
-                                    <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="<?= base_url() ?>survey/share/<?= $survey->id ?>"> Share</a>
+                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/<?= $survey->id ?>">Edit</a>
+                                    <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>">Delete</a>
+                                    <a id="btn-preview-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/preview/<?= $survey->id ?>">View</a>
+                                    <a id="btn-result-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/result/<?= $survey->id ?>">Results</a>
+                                    <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"> Share</a>
                                   </div>
                                 </div>
                               </li>

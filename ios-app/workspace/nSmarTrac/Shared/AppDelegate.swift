@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import CoreLocation
+import GooglePlaces
+import MapKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let locationManager = CLLocationManager()
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -34,6 +39,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         App.shared.bootstrap(with: application, launchOptions: launchOptions)
         App.shared.reachability.startListening()
         
+        // Google Places
+        GMSPlacesClient.provideAPIKey("AIzaSyCivN_OzwrQb0SLeQt65tbgF_Oj9bIm108")
+        
+        // Sample chat
+        if UserDefaults.isFirstLaunch() {
+            // Enable Text Messages
+            UserDefaults.standard.set(true, forKey: "Text Messages")
+        }
+        
         
         updateRootViewController()
         setupNotificationObservers()
@@ -51,13 +65,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         App.shared.reachability.startListening()
+        initiateLocation()
     }
 
-    func applicationDidBecomeActive(_ application: UIApplication) {}
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        App.shared.reachability.startListening()
+        initiateLocation()
+    }
 
     func applicationWillTerminate(_ application: UIApplication) {}
 
 
+}
+
+// MARK: - CLLocation -
+
+extension AppDelegate: CLLocationManagerDelegate {
+    
+    func initiateLocation() {
+        // initiate the map
+        if CLLocationManager.locationServicesEnabled() == true {
+            if CLLocationManager.authorizationStatus() == .restricted || CLLocationManager.authorizationStatus() == .denied ||  CLLocationManager.authorizationStatus() == .notDetermined {
+                locationManager.requestWhenInUseAuthorization()
+            }
+            
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.delegate = self
+            locationManager.startUpdatingLocation()
+        } else {
+            print("PLease turn on location services or GPS")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.locationManager.stopUpdatingLocation()
+        App.shared.userLocation = locations.first
+        
+        NotificationCenter.default.post(name: Notifications.didLocationEnabled, object: self, userInfo: nil)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Unable to access your current location")
+    }
 }
 
 extension UIApplication {
@@ -162,14 +211,26 @@ extension AppDelegate {
             switchToWorkOrder()
         } else if App.shared.selectedMenu == .Tasks {
             
+        } else if App.shared.selectedMenu == .FileVault {
+                          
         } else if App.shared.selectedMenu == .Bulletin {
             
         } else if App.shared.selectedMenu == .Invoices {
             switchToInvoices()
-        } else if App.shared.selectedMenu == .Reports {
-            
         } else if App.shared.selectedMenu == .Marketing {
             
+        } else if App.shared.selectedMenu == .Estimates {
+            switchToEstimates()
+        } else if App.shared.selectedMenu == .Reports {
+            switchToReports()
+        } else if App.shared.selectedMenu == .Employees {
+            switchToEmployees()
+        } else if App.shared.selectedMenu == .CollageMaker {
+                   
+        } else if App.shared.selectedMenu == .Chat {
+            switchToChat()
+        } else if App.shared.selectedMenu == .Messages {
+            switchToMailbox()
         } else {
             /*if !App.shared.user.isGuest() {
                 App.shared.selectedMenu = .Home
@@ -265,6 +326,70 @@ extension AppDelegate {
     public func switchToInventory() {
         let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
         let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_InventoryController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToEstimates() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_EstimatesController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToReports() {
+        let sb = UIStoryboard(name: "Reports", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_ReportsController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToEmployees() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_EmployeesController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToFileVault() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_FilesController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToNotifications() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_NotificationsController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToSettings() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_SettingsController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToChat() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_MessagesController"))
+        let transition = CATransition()
+        transition.type = CATransitionType.fade
+        window!.set(rootViewController: navController, withTransition: transition)
+    }
+    
+    public func switchToMailbox() {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let navController = UINavigationController(rootViewController: sb.instantiateViewController(withIdentifier: "sb_MailboxController"))
         let transition = CATransition()
         transition.type = CATransitionType.fade
         window!.set(rootViewController: navController, withTransition: transition)

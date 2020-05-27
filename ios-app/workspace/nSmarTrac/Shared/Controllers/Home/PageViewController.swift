@@ -74,6 +74,16 @@ class PageViewController: UIPageViewController {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
     
+    @IBAction func chatButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Chat
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
+    @IBAction func messagesButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Messages
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
     // MARK: - Functions -
     
     private func homeController() -> UIViewController {

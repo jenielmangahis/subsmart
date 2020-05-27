@@ -1,155 +1,115 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-  .form_builder_area hr {
-        margin-top: 0px;
-    margin-bottom: 15px;
-  }
-  .form_builder ul li {
-    padding: 2px !important;
-    border: 1px solid #e4e2e2;
-  }
-  .form_builder ul li i {
-    margin-top: 0.3rem;
-  }
-  .sidenav { height: 100%; width: 250px; position: fixed; }
-</style>
+
 <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/css/bootstrap.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/css/jquery.ui.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/css/font-awesome.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/css/app.css">
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/basscss.css"> -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/seconds-part/css/form_builder.css"/>
-
+<style>
+  .form-control { height: 34px !important; }
+  .input-main-box:not(:first-child) {  margin-top:9px; }  
+  #main-drag-and-drop-area { font-size: 1.1em !important; }
+  .column { width: 100%; float: left; padding-bottom: 30px; }
+  .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; }
+  .portlet-content { padding: 0.4em; /* border: 1px solid #cccccc; */ }
+  .input-draggable-parent-div { padding-top: 20px; padding-bottom: 20px; }
+  .col-form-label { line-height: 26px; font-weight: normal; font-size: 15px; }
+  .portlet-toggle {position: absolute; top: 20%; right: 10px; margin-top: -8px; }
+  .portlet-header { padding: 0.2em 0.3em; /* margin-bottom: 0.5em; */ position: relative; }
+  .input-main-box { width:100%; border: 1px solid #cccccc; padding:3px; background:white; }
+  .input-draggable-parent-child-div { padding-top:25px; min-height: 50px; padding-bottom:25px; }
+  .portlet-placeholder { border: 1px dotted black; margin: 1em 1em 1em 0; height: 90px; width:100%; background: #cccccc; }
+  .option_div .option .actions .add_action{ padding: 3px 6px; background: green; border-radius: 50px; }
+  .option_div .option .actions .remove_action{ padding: 3px 6px; background: red; border-radius: 50px; }
+</style>
 <!-- page wrapper start -->
 <div class="wrapper">
 
-    <div class="form_builder" style="margin-top: 25px">
-                <div class="row">
-                
-                <textarea style="display: none;" id="json_data_current" type="hidden"><?php echo (isset($selected_data[0]) && $selected_data[0]->form_data != '')?$selected_data[0]->form_data:''; ?></textarea>
-                  <div class="col-sm-2 pl-0">
-                      <nav class="nav-sidebar">
-                          <ul class="nav sidenav">
-                              <li class="form_bal_textfield">
-                                  <a href="javascript:;">Text Field <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_textarea">
-                                  <a href="javascript:;">Text Area <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_select">
-                                  <a href="javascript:;">Select <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_radio">
-                                  <a href="javascript:;">Radio Button <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_checkbox">
-                                  <a href="javascript:;">Checkbox <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_email">
-                                  <a href="javascript:;">Email <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_number">
-                                  <a href="javascript:;">Number <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_password">
-                                  <a href="javascript:;">Password <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_date">
-                                  <a href="javascript:;">Date <i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_button">
-                                  <a href="javascript:;">Button<i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                              <li class="form_bal_signature">
-                                  <a href="javascript:;">Signature<i class="fa fa-plus-circle pull-right"></i></a>
-                              </li>
-                          </ul>
-                      </nav>
-                  </div>
+  <div class="col-sm-12">
+    <div class="row">
+      <label class="col-sm-1 col-form-label text-right">Form Edit</label>
+      <div class="col-sm-5">
+        <select class="form-control" name="custome_forms">
+          <option value="new">New Form</option>
+          <?php foreach($forms as $job) { ?>
+            <option value="<?php echo $job->forms_id; ?>" <?php echo (isset($selected_form_id) && $selected_form_id > 0)?'selected="selected"':''; ?>><?php echo $job->form_title; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" onClick="getFormData()">  Go </button>
+      <a class="ml-3 mt-3 d-none" id="preview_url_formbuilder" href="<?php echo base_url('builder/demo/13'); ?>">Click to preview</a>
+    </div>
+  </div>
+  <div class="col-sm-12 ">
+    <div class="form-group row ">
+      <label class="col-sm-1 col-form-label text-right">Form Title</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" name="custom_forms_title">
+      </div>
+      <label class="col-sm-1 col-form-label text-right">Add to</label>
+      <div class="col-sm-2">
+        <select class="form-control" >
+          <?php foreach($jobs as $job) { ?>
+            <option value="<?php echo $job->jobs_id; ?>"><?php echo $job->job_name; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+  </div>
 
-                    <div class="col-md-10 bal_builder">
-                      
-                      <div class="col-sm-12 mb-1 pl-0">
-                        <select name="main_form_name" class="col-sm-6 form-control">
-                          <option value="0">New Form</option>
-                          <?php foreach($forms as $key => $value) { ?>
-                            <option value="<?php echo $value->id; ?>" <?php echo (isset($selected_id) && $selected_id!=0 && $selected_id == $value->id)?'selected="selected"':''; ?>><?php echo $value->form_type; ?></option>
-                          <?php } ?>
-                        </select>
-                        <input type="button" class="pull-left ml-4 p-3" id="setformname" value="   Go   ">
-                    </div >
-                    <div class="col-md-10  pl-0">
-                        <div class="col-md-2 my-4">Form Name</div>
-                      <input placeholder="Enter Form Name" type="text" class="form-control col-md-4" value="<?php echo ($selected_id != 0)?$selected_data[0]->form_type:''; ?>" name="form_name" >
-                      <?php if($selected_id != 0) { ?>
-                        <a href="<?php echo base_url(); ?>formbuilder/demo/<?php echo $selected_id; ?>">Click To Preview.</a>
-                      <?php } ?>
-                    </div>
-                      <div class="environment col-md-12">
-                        
-                        <div class="main_row_append_box ml4 js-sortable sortable list flex flex-column list-reset"></div>
-
-                            <div class="form_generated_box">
-                              
-                            </div>
-                            <textarea class="code_box form-control"></textarea>
-                            <!-- adder Button -->
-
-                            <div style="margin-top: 20px">
-                              <a href="#" class="btn btn-primary btn_round main_row_btn pull-left">
-                                <i class="fa fa-plus"></i> Add Group
-                              </a>
-                              <span class="pull-right">
-                                <!-- <span class="btn_round html_btn btn btn-default" data-code-btn="code">
-                                  View HTML <i class="fa fa-code"></i>
-                                </span>
-                                <span class="btn_round generate_btn btn btn-success">
-                                  Preview
-                                </span> -->
-                                <span class="btn_round html_btn btn btn-success" onClick="getCall()">Save</span>
-                              </span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <!-- end adder Button -->
-                          <!-- <button class="ml4 js-serialize-button button navy bg-yellow">Serialize</button>   -->
-
-                          <!-- <div style="background: red;">
-                            
-                                <div class="dragger">1</div>
-                                <div class="dragger">2</div>
-                                <div class="dragger">3</div>
-                                <div class="dragger">4</div>
-                                <div class="dragger">5</div>
-                                <div class="dropper">
-                                    <p>Drop</p>
-                                </div>
-                          </div>   -->
-                    </div>                      
-                    </div>
-                    <!-- <div class="col-md-5 bal_builder">
-                        <div class="form_builder_area"></div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="col-md-12">
-                            <form class="form-horizontal">
-                                <div class="preview"></div>
-                                <div style="display: none" class="form-group plain_html"><textarea rows="50" class="form-control"></textarea></div>
-                            </form>
-                        </div>
-                    </div> -->
-                </div>
-            </div>
-
-
-
-
-
-
-   
-</div>
-   <!-- end container-fluid -->
+  <div class="form_builder">
+    <div class="col-sm-12 mb-5">
+      <div class="col-sm-2">
+        <nav class="nav-sidebar border border-dark">
+          <ul class="nav pt-2">
+              <li class="form_bal_textfield">
+                  <a href="javascript:;">Text Field <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_textarea">
+                  <a href="javascript:;">Text Area <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_radio">
+                  <a href="javascript:;">Radio Button <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_checkbox">
+                  <a href="javascript:;">Checkbox <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_select">
+                  <a href="javascript:;">Dropdown <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_fileupload">
+                  <a href="javascript:;">File Upload <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_phone">
+                  <a href="javascript:;">Phone <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_email">
+                  <a href="javascript:;">Email <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <li class="form_bal_address">
+                  <a href="javascript:;">Address <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+              <!-- <li class="form_bal_password">
+                  <a href="javascript:;">Password <i class="fa fa-plus-circle pull-right"></i></a>
+              </li> -->
+              <li class="form_bal_date">
+                  <a href="javascript:;">Date <i class="fa fa-plus-circle pull-right"></i></a>
+              </li>
+          </ul>
+      </nav>
+      </div>
+      <div class="col-sm-10 border border-dark p-0" style="min-height: 445px;">
+            
+          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 445px;"></div>
+          
+          <button onclick="addGroup()" class="pull-left">Add Group</button>
+          <button onclick="saveForm()" class="pull-left ml-2">Save Form</button>
+      </div>
+    </div>
+  </div>  
 </div>
 <!-- page wrapper end -->
 
@@ -165,57 +125,610 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-        <!-- <script src="<?php echo $url->assets ?>formbuilder/seconds-part/js/form_builder.js"></script> -->
+<!-- <script src="<?php echo $url->assets ?>formbuilder/seconds-part/js/form_builder.js"></script> -->
 
-<script type="text/javascript">
-  sortable('.js-sortable', {
-    forcePlaceholderSize: true,
-    placeholderClass: 'mb1 bg-navy border border-yellow',
-    hoverClass: 'bg-maroon yellow',
-    itemSerializer: function (item, container) {
-      item.parent = '[parentNode]'
-      item.node = '[Node]'
-      item.html = item.html.replace('<','&lt;')
-      return item
-    },
-    containerSerializer: function (container) {
-      container.node = '[Node]'
-      return container
-    }
-  })
-  document.querySelector('.js-serialize-button').addEventListener('click', function () {
-    let serialized = sortable('.js-sortable', 'serialize')
-    document.querySelector('.serialized-content').innerHTML = JSON.stringify(serialized, null, ' ')
-  })
-</script>
+
 <script>
-// function allowDrop(ev) {
-//     ev.preventDefault();
-// }
 
-// function drag(ev) {
-//     ev.dataTransfer.setData("text", ev.target.id);
-// }
+    if("<?php echo (isset($selected_form_id) && $selected_form_id > 0)? true : false ; ?>" ==true)
+    {
+      getFormData(); 
+    }
+    function getFormData() {
+      $('#main-drag-and-drop-area').html('');
+      var form_id = $( "select[name='custome_forms'] option:selected" ).val();
+      //alert($('select[name="custome_forms"] option:selected').val());
+      if( form_id == 'new')
+      {
+        $('#preview_url_formbuilder').addClass('d-none');
+        $('input[name="custom_forms_title"]').val(''); 
+      } else {
+       
+        $('#preview_url_formbuilder').removeClass('d-none');
+        $('#preview_url_formbuilder').attr('href','<?php echo base_url('builder/demo/'); ?>'+form_id);
+        $.ajax({
+          type: "GET",
+          url: "<?php echo base_url() ?>" + "builder/formdetail/"+form_id,
+          data: {},
+          success: function(data) {
+            var result = jQuery.parseJSON(data);
+            if(data != '') {
+              $('input[name="custom_forms_title"]').val(result.form_title); 
 
-// function drop(ev) {
-//     ev.preventDefault();
-//     var data = ev.dataTransfer.getData("text");
-//     ev.target.appendChild(document.getElementById(data));
-// }
+              $.each(result.questions, function( index, value ) {
+                
+                //
+                var question_sub = "";
+                if(value.parent_question > 0)
+                { 
+                  question_sub = ' .question-box-'+value.parent_question + ' .input-draggable-parent-child-div';
+                }
 
-function removeInputContainer(e) {
-      $(e).closest( "#form-field-container" ).remove();
-}
-$(document).ready(function () {
-    $('.dragger').draggable({
-        revert: "invalid",
-        helper: function () {
-            return $("<div class='dragger'></div>").append('raviraj');
+                if(value.q_type == 'text') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getTextFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt']));
+                } else if(value.q_type == 'textarea') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getTextAreaFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['limit'],value.parameter['limit_range'],value.parameter['reachtextboxformatting']));
+                } else if(value.q_type == 'selection') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getSelectionFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['allow_other'],value.parameter['selection_type'],value.options));
+                } else if(value.q_type == 'file-upload') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getFileUploadFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required']));
+                } else if(value.q_type == 'phone') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getPhoneFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['extension'],value.parameter['phone_type_selector']));
+                } else if(value.q_type == 'email') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getEmailFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required']));
+                } else if(value.q_type == 'address') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getAddressFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['country_input']));
+                } else if(value.q_type == 'date-picker') {
+                  $('#main-drag-and-drop-area ' + question_sub).append(getDatePickerFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required']));
+                } else if(value.q_type == 'group') {
+                  addGroup(value.Questions_id,value.question,value.description);
+                }
+                
+              });
+            }
+          }
+        });
+
+      }
+      
+    }
+
+    function convertValue (value) { 
+      return (value == undefined) ? '' : value ;
+    }
+
+    function setValiationError(value) {
+      $(value).addClass('validation-error-input');
+    }
+
+    function removeUndefiendParameter(parameter) {
+      
+      let temp = {};
+      $.each(parameter, function( indexParameter, valueParameter ) {
+        if(valueParameter != undefined)
+        {
+          temp[indexParameter] = valueParameter;
         }
-    });
-});
+      });
+
+      return temp;
+
+    }
+
+    function saveForm() {
+      var formSubmitted = true;
+      var form_id = convertValue($( "select[name='custome_forms'] option:selected" ).val());
+      var form_title = convertValue($( "input[name='custom_forms_title']" ).val());
+      var formData = {
+        form_id : form_id,
+        form_title : form_title,
+        questions : []
+      };
+      var priority = 1;
+      // if(form_id > 0) {
+      //   setValiationError($( "select[name='custome_forms'] option:selected" ));
+      //   formSubmitted = false;
+      // }
+      if(form_title == "") {
+        $( "input[name='custom_forms_title']" ).addClass('validation-error-input');
+        formSubmitted = false;
+      }
+
+      $('#main-drag-and-drop-area').children('div').each(function(key,value) {
+     
+        $(value).find('input[name="question_label"]').removeClass('validation-error-input');
+
+        var question_type = $(value).attr('data-input-box-type');
+        
+        if ( question_type == 'single-input' ) {
+          
+
+          var question_id = convertValue($(value).attr('data-question-id'));
+          var question_label = convertValue($(value).find('input[name="question_label"]').val());
+          var question_description = convertValue($(value).find('input[name="question_description"]').val());
+          var question_input_type = $(value).attr('data-input-type');
+          if(question_label == '') {
+            setValiationError($(value).find('input[name="question_label"]'));
+            formSubmitted = false;
+          }
+
+
+
+          var parameter = {};
+          parameter['required'] = $(value).find('input[name="question_required"]').prop("checked");
+          parameter['encrypt'] = $(value).find('input[name="question_encrypt"]').prop("checked");
+          parameter['country_input'] = $(value).find('input[name="country_input"]').prop("checked");
+          parameter['extension'] = $(value).find('input[name="extension_input"]').prop("checked");
+          parameter['allow_other'] = $(value).find('input[name="allow_other"]').prop("checked");
+          parameter['reachtextboxformatting'] = $(value).find('input[name="reachtextboxformatting"]').prop("checked");
+
+
+          if(question_input_type == 'selection')
+          {
+            parameter['selection_type'] = $(value).find('input[name="'+$(value).attr('data-field-id')+'"]:checked').val();
+          }
+
+          parameter['phone_type_selector'] = $(value).find('input[name="phone_type_selector"]').prop("checked");
+          
+          parameter['limit'] = $(value).find('input[name="limit_text"]').prop("checked");
+          parameter['limit_range'] = $(value).find('input[name="limit_range"]').val();
+          
+          
+          
+          parameter = removeUndefiendParameter(parameter);
+
+          var options = [];
+          $(value).find('.option_div').children('.option').each(function(keyOption,valueOption) {
+
+            if($(valueOption).find('input[name="option_text"]').val() == '') {
+              setValiationError($(valueOption).find('input[name="option_text"]'));
+              formSubmitted = false;
+            } else {
+              $(valueOption).find('input[name="option_text"]').removeClass('validation-error-input');
+            }
+            options.push({
+              "options_id": $(valueOption).attr('data-option-id'),
+              "question_id": question_id,
+              "options": "Option " + (keyOption + 1),
+              "option_value": $(valueOption).find('input[name="option_text"]').val(),
+              "option_order": keyOption+1
+            });
+          });
+
+          var tempFormData = {
+            'Questions_id':question_id,
+            'question':question_label,
+            'q_type':question_input_type,
+            'description':question_description,
+            'question_order':priority,
+            //'parent_question':priority,
+            'parameter':parameter,
+            'conditions':'',
+            'style':'',
+            'options':options
+          };
+
+          if( question_input_type == 'selection' ) {
+            var removed_options_ids = $(value).find('.option_div').attr('data-removed-options');
+            tempFormData['deletedOptions'] = removed_options_ids;
+          }
+
+          formData.questions.push(tempFormData);
+
+          priority = priority + 1;
+
+        } else if ( question_type == 'group' ) {
+          
+          $(value).find('input[name="group_label"]').removeClass('validation-error-input');
+
+          var parameter = {};
+
+          var question_id = convertValue($(value).attr('data-question-id'));
+          var group_label = convertValue($(value).find('input[name="group_label"]').val());
+          var group_description = convertValue($(value).find('input[name="group_description"]').val());
+          var group_order = priority;
+
+          if(group_label == '') {
+            setValiationError($(value).find('input[name="group_label"]'));
+            formSubmitted = false;
+          }
+          
+          var temp_questions = {
+            'Questions_id':question_id,
+            'question':group_label,
+            'q_type':'group',
+            'description':group_description,
+            'question_order':priority,
+            //'parent_question':priority,
+            'parameter':parameter,
+            'conditions':'',
+            'style':'',
+            'questions':[]
+          };
+
+          priority = priority + 1;
+
+          $(value).find('.input-draggable-parent-child-div').children('.question-box').each(function(childrenKey,childrenValue){
+              var sub_question_type = $(childrenValue).attr('data-input-box-type');
+
+              var sub_question_id = convertValue($(childrenValue).attr('data-question-id'));
+              var question_label = convertValue($(childrenValue).find('input[name="question_label"]').val());
+              var question_description = convertValue($(childrenValue).find('input[name="question_description"]').val());
+              var question_input_type = $(childrenValue).attr('data-input-type');
+              if(question_label == '') {
+                setValiationError($(childrenValue).find('input[name="question_label"]'));
+                formSubmitted = false;
+              }
+
+
+              var parameter = {};
+              parameter['required'] = $(childrenKey).find('input[name="question_required"]').prop("checked");
+              parameter['encrypt'] = $(childrenKey).find('input[name="question_encrypt"]').prop("checked");
+              parameter['country_input'] = $(childrenKey).find('input[name="country_input"]').prop("checked");
+              parameter['extension'] = $(childrenKey).find('input[name="extension_input"]').prop("checked");
+              parameter['limit'] = $(childrenKey).find('input[name="limit_text"]').prop("checked");
+              parameter['limit_range'] = $(childrenKey).find('input[name="limit_range"]').val();
+              parameter['phone_type_selector'] = $(childrenKey).find('input[name="phone_type_selector"]').prop("checked");
+              parameter['allow_other'] = $(childrenKey).find('input[name="allow_other"]').prop("checked");
+              parameter['reachtextboxformatting'] = $(childrenKey).find('input[name="reachtextboxformatting"]').prop("checked");
+              parameter['selection_type'] = $(childrenKey).find('input[name="selection_type"]:checked').val();
+              parameter['selection_type'] = $(childrenKey).find('input[name="selection_type"]:checked').val();
+              
+              parameter = removeUndefiendParameter(parameter);
+
+              if(question_input_type == 'selection')
+              {
+                parameter['selection_type'] = $(childrenValue).find('input[name="'+$(childrenValue).attr('data-field-id')+'"]:checked').val();
+              }
+              
+              var options = [];
+                $(childrenValue).find('.option_div').children('.option').each(function(keyOption,valueOption) {
+
+                  if($(valueOption).find('input[name="option_text"]').val() == '') {
+                    setValiationError($(valueOption).find('input[name="option_text"]'));
+                    formSubmitted = false;
+                  } else {
+                    $(valueOption).find('input[name="option_text"]').removeClass('validation-error-input');
+                  }
+                  options.push({
+                    "options_id": $(valueOption).attr('data-option-id'),
+                    "question_id": sub_question_id,
+                    "options": "Option " + (keyOption + 1),
+                    "option_value": $(valueOption).find('input[name="option_text"]').val(),
+                    "option_order": keyOption + 1
+                  });
+              });
+
+              var temp_questions_temp = {
+                'Questions_id':sub_question_id,
+                'question':question_label,
+                'q_type':question_input_type,
+                'description':question_description,
+                'question_order':priority,
+                'parent_question':group_order,
+                'parameter':parameter,
+                'conditions':'',
+                'style':'',
+                'options':options
+              };
+
+
+
+              if( question_input_type == 'selection' ) {
+                var removed_options_ids = $(childrenValue).find('.option_div').attr('data-removed-options');
+                temp_questions_temp['deletedOptions'] = removed_options_ids;
+              }
+              temp_questions.questions.push(temp_questions_temp);
+
+              priority = priority + 1;
+          });
+
+          formData.questions.push(temp_questions);
+        }
+      });
+      
+      // return false;
+      if(formSubmitted == true) {
+          
+          $.ajax({
+            type: "POST",
+            url: "<?php echo base_url() ?>" + "builder/saveform",
+            data: formData,
+            success: function(data) {
+              var result = jQuery.parseJSON(data);
+              //setFoldersTreeview(result);
+              if(data != '') {
+                  $('input[name="custom_forms_title"]').val(result.form_title);
+                  window.open("<?php echo base_url('builder') ?>" + '?form_id=' + result.form_id, '_self'); 
+              }
+            }
+          });
+
+      }
+    }
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  // form builder configuration
+  function addOptions(e) {
+    $(e).parents('.option_div').append('<div class="col-sm-12 option" data-option-id="0"><label class="col-sm-2 col-form-label text-right option_text_label">Option 2</label> <input class="col-sm-4" type="text" name="option_text"><div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div></div>');
+    $(e).parents('.option_div').children('.option').each((key,value) => {
+      $(e).parents('.option_div').children('.option').eq(key).find('.option_text_label').html('Option '+(key+1));
+    });
+  }
+
+  function removeOptions(e) {
+
+    var option_id = parseInt($(e).parents('.option').attr('data-option-id'));
+    // 
+    if(option_id > 0)
+    {
+      var removed_options_ids = $(e).parents('.option_div').attr('data-removed-options');
+      if(removed_options_ids == '')
+      {
+        removed_options_ids = option_id;
+      } else {
+        removed_options_ids = removed_options_ids + ',' + option_id;
+      }
+      $(e).parents('.option_div').attr('data-removed-options',removed_options_ids);
+      $(e).parents('.option').remove();
+    }
+  }
+
+    $( function() {
+        // $( ".column" ).sortable({
+        //   connectWith: ".column",
+        //   handle: ".portlet-header",
+        //   cancel: ".portlet-toggle",
+        //   placeholder: "portlet-placeholder ui-corner-all"
+        // });
+  
+        // $( ".portlet" )
+        //   .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+        //   .find( ".portlet-header" )
+        //     .addClass( "ui-widget-header ui-corner-all" )
+        //     .prepend( "<!--<span class='ui-icon-minusthick portlet-toggle mr-5'><i class='fa fa-minus'></i></span><span class='ui-icon-minusthick portlet-toggle mr-1'><i class='fa fa-trash'></i></span>-->");
+    
+        // $( ".portlet-toggle" ).on( "click", function() {
+        //   var icon = $( this );
+        //   icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+        //   icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+        // });
+
+        $( ".input-draggable-parent-div" ).sortable({
+          connectWith: ".connectedSortable",
+          placeholder: "portlet-placeholder"
+        }).disableSelection();
+
+
+        $(".form_bal_textfield").draggable({
+            helper: function () {
+                return getTextFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+
+        $(".form_bal_textarea").draggable({
+            helper: function () {
+                return getTextAreaFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+        
+        $(".form_bal_select").draggable({
+            helper: function () {
+                return getSelectionFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+        
+        $(".form_bal_radio").draggable({
+            helper: function () {
+                return getSelectionFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+        
+        $(".form_bal_checkbox").draggable({
+            helper: function () {
+                return getSelectionFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+
+        $(".form_bal_fileupload").draggable({
+            helper: function () {
+                return getFileUploadFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+
+        $(".form_bal_date").draggable({
+            helper: function () {
+                return getDatePickerFieldHTML();
+            },
+            connectToSortable: ".connectedSortable"
+        });
+
+        $(".form_bal_email").draggable({
+          helper: function () {
+              return getEmailFieldHTML();
+          },
+          connectToSortable: ".connectedSortable"
+        });
+
+        $(".form_bal_phone").draggable({
+          helper: function () {
+              return getPhoneFieldHTML();
+          },
+          connectToSortable: ".connectedSortable"
+        });
+
+        $(".form_bal_address").draggable({
+          helper: function () {
+              return getAddressFieldHTML();
+          },
+          connectToSortable: ".connectedSortable"
+        });
+        
+        
+
+    });
+
+
+    function getTextFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,question_encrypt = false) {
+
+        var required = question_required == 'true' ? 'checked' : '';
+        var encryptData = question_encrypt == 'true' ? 'checked' : '';
+
+        
+        var field = generateField();
+        var html = '<div data-question-id="'+question_id+'" data-input-type="text" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_encrypt" '+encryptData+'> Encrypt Data </div> </div> </div>';
+        return html;
+    }
+
+    function getEmailFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false) {
+        var field = generateField();
+        var required = question_required == 'true' ? 'checked' : '';
+
+        var html = '<div data-question-id="'+question_id+'" data-input-type="email" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Email Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div>  </div> </div>';
+        return html;
+    }
+
+    function getPhoneFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,extension = false,phone_type_selector = false) {
+        var field = generateField();
+        var required = question_required == 'true' ? 'checked' : '';
+        var extension = extension == 'true' ? 'checked' : '';
+        var phone_type_selector = phone_type_selector == 'true' ? 'checked' : '';
+
+        var html = '<div data-question-id="'+question_id+'" data-input-type="phone" ';
+        html = html + 'class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Phone</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input class="form-control" value="'+question_description+'" name="question_description" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="extension_input" '+extension+'> Include Extension Field</div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="phone_type_selector" '+phone_type_selector+'> Include Phone Type Selector</div> </div> </div>';
+        return html;
+    }
+
+    function getAddressFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,country_input = false) {
+        var field = generateField();
+        var required = question_required == 'true' ? 'checked' : '';
+        var country_input = country_input == 'true' ? 'checked' : '';
+
+        var html = '<div data-question-id="'+question_id+'" data-input-type="address" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Address</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="country_input" '+country_input+' value="true"> Include Country Input</div> </div> </div>';
+        return html;
+    }
+    
+
+    function getTextAreaFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_encrypt = false,limit = false,limit_range = '',reachTextBoxFormatting = false) {
+        var field = generateField();
+        var required = question_required == 'true' ? 'checked' : '';
+        var encryptData = question_encrypt == 'true' ? 'checked' : '';
+        var limit = limit == 'true' ? 'checked' : '';
+        var reachTextBoxFormatting = reachTextBoxFormatting == 'true' ? 'checked' : '';
+
+        var html = '<div  data-question-id="'+question_id+'" data-input-type="textarea" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input" > ';
+        html = html + ' <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Area</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" '+encryptData+' name="question_encrypt"> Encrypt Data </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" '+limit+' name="limit_text"> Limit Text<input class="form-control" name="limit_range" value="'+limit_range+'" type="text"></div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="reachtextboxformatting" '+reachTextBoxFormatting+'> Use Rich Text Formatting</div> </div> </div>';
+        return html;
+    }
+
+
+    function getSelectionFieldHTML(question_id = '0', question_label = '', question_description = '', question_required = false, allow_other = false, selection_type = 'radio', options = []) {
+      var field = generateField();
+      var required = question_required == 'true' ? 'checked' : '';
+      var allow_other = allow_other == 'true' ? 'checked' : '';
+      
+
+      var option_text = '';
+      if(options.length > 0)
+      {
+        $.each(options, function( index, value ) {
+          option_text = option_text + '<div class="col-sm-12 option" data-option-id="' + value.options_id + '"><label class="col-sm-2 col-form-label text-right option_text_label">'+value.options+'</label> <input class="col-sm-4" type="text" name="option_text" value="'+value.option_value+'"><div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> '+((index > 0)?'<a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a>':'')+'</div></div>';
+        });
+      } else {
+          option_text = '<div class="col-sm-12 option" data-option-id="0"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>';
+      }
+
+      var html = '<div data-field-id="selection_type-'+field+'" data-question-id="'+question_id+'" data-input-type="selection" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Selection</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="allow_other" '+allow_other+'> Allow Other</div>';
+
+      html = html + '<label class="text-right mb-0 pt-1">Selection Type</label> <div class="col-sm-4 text-left"> <input name="selection_type-'+field+'" value="radio" type="radio" '+((selection_type == 'radio')?'checked':'')+'> Radio Button &nbsp;<input name="selection_type-'+field+'" value="checkbox" type="radio" '+((selection_type == 'checkbox')?'checked':'')+'> Checkbox &nbsp;<input name="selection_type-'+field+'" value="dropdown" type="radio" '+((selection_type == 'dropdown')?'checked':'')+'> Drop Down </div> </div> <br><div class="row option_div" data-removed-options="">'+option_text+'</div></div>';
+      // <div class="col-sm-12 option"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>
+      return html;
+    }
+
+    function getFileUploadFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false) {
+        var field = generateField();
+        var required = question_required == 'true' ? 'checked' : '';
+
+
+        var html = '<div data-question-id="'+question_id+'" data-input-type="file-upload" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">File Upload </div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> </div> </div>';
+        return html;
+    }
+
+    function getDatePickerFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false) {
+      var field = generateField();
+      var required = question_required == 'true' ? 'checked' : '';
+
+
+      var html = '<div data-question-id="'+question_id+'" data-input-type="date-picker" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Date Picker</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> </div> </div>';
+      return html;
+    }
+
+    function randomKey() {
+
+      return Math.floor(Math.random() * (100000 - 1 + 1) + 57);
+    }
+
+
+    function addGroup(question_id = '0',question_label = '',question_description = '') {
+
+      var generateField = randomKey();
+
+      $('#main-drag-and-drop-area').append('<div data-question-id="'+question_id+'" data-input-type="group" class=" input-main-box portlet question-box question-box-'+question_id+'" data-input-box-type="group" id="portlet-'+generateField+'"><div class="portlet-header"><div class="row"><label class="col-sm-2 col-form-label text-right">Group Label</label><div class="col-sm-5"><input class="form-control" name="group_label" type="text" value="'+question_label+'"></div></div><div class="row"><label class="col-sm-2 col-form-label text-right">Field Description</label><div class="col-sm-5"><input class="form-control" name="group_description" value="'+question_description+'" type="text"></div></div></div><div class="portlet-content input-draggable-parent-child-div connectedSortable"></div></div>');
+
+      // $( ".column" ).sortable({
+      //   connectWith: ".column",
+      //   handle: ".portlet-header",
+      //   cancel: ".portlet-toggle",
+      //   placeholder: "portlet-placeholder ui-corner-all"
+      // });
+  
+      $( "#portlet-"+generateField )
+        .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+        .find( ".portlet-header" )
+          .addClass( "ui-widget-header ui-corner-all" )
+          .prepend( "<span class='ui-icon-minusthick portlet-toggle mr-2'><i class='fa fa-minus'></i></span><!--<span class='ui-icon-minusthick portlet-toggle mr-1'><i class='fa fa-trash'></i></span>-->");
+  
+      $( "#portlet-"+generateField+" .portlet-toggle" ).on( "click", function() {
+        var icon = $( this );
+        icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+        icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+      });
+
+      $( "#portlet-"+generateField+" .input-draggable-parent-child-div" ).sortable({
+        connectWith: ".connectedSortable",
+        placeholder: "portlet-placeholder"
+      }).disableSelection();
+
+    }
+
+  </script>
 <style type="text/css">
+  .validation-error-input {
+      border: red 1px solid !important;
+      background: #ff00000d !important;
+  }
   .form_builder_field {
     width: 100% !important;
     border-radius: 15px;
@@ -236,238 +749,9 @@ $(document).ready(function () {
   .form_builder_area .form_builder_field .form_output .form-group {
     margin-bottom: 10px !important;
     text-align: left;
-}
-</style>
-
-
-<script type="text/javascript">
-  function getCall() {
-
-      var c = __mr_box.clone(true, true);
-      var mainbox = c.find('.cb_display_box');
-      var removables = c.find('.removable');
-      
-      var btn = __html_btn;
-      var btn_txt = btn.attr('data-code-btn');
-
-      // Remove handlers
-      c.find('.removable, .delete, .remove_btn').remove();
-      c.removeClass('cb_display_box, no-drag');
-
-      var __generate_html = [];
-      mainbox.each(function(i, v) {
-        
-        var __generate_html_temp = {
-          "group_name":"",
-          "group_description":"",
-          "fields":[]
-        };
-
-        __generate_html_temp.group_name = $(v).find('.group-description input[name="group-label"]').val();
-        __generate_html_temp.group_description = $(v).find('.group-field-description input[name="group-field-description"]').val();
-
-        var fbox = $(v).find('.form_builder_area .form_output');
-        // fbox.each(function (i1, v1) {
-          
-        //   var inputType = $(v1).find('.form_output').attr('data-type');
-
-        //   if(inputType = '')
-
-          
-        // });
-
-        fbox.each(function (i1, v1) {
-          
-            var temp_inputs = {};
-
-            var data_type = $(v1).attr('data-type');
-
-            temp_inputs.input_type = data_type;
-            temp_inputs.required = false;
-            //var field = $(v1).attr('data-field');
-            temp_inputs.label = $(v1).find('.form_input_label').val();
-            temp_inputs.name = $(v1).find('.form_input_name').val();
-
-            if (data_type === 'text') {
-                temp_inputs.placeholder = $(v1).find('.form_input_placeholder').val();
-                var checkbox = $(v1).find('.form-check-input');
-                var required = '';
-                if (checkbox.is(':checked')) {
-                    temp_inputs.required = true;
-                }
-
-            }
-            if (data_type === 'number') {
-                temp_inputs.placeholder = $(v1).find('.form_input_placeholder').val();
-                var checkbox = $(v1).find('.form-check-input');
-                var required = '';
-                if (checkbox.is(':checked')) {
-                    temp_inputs.required = true;
-                }
-            }
-            if (data_type === 'email') {
-                temp_inputs.placeholder = $(v1).find('.form_input_placeholder').val();
-                var checkbox = $(v1).find('.form-check-input');
-                var required = '';
-                if (checkbox.is(':checked')) {
-                    temp_inputs.required = true;
-                }
-            }
-            if (data_type === 'password') {
-                temp_inputs.placeholder = $(v1).find('.form_input_placeholder').val();
-                var checkbox = $(v1).find('.form-check-input');
-                var required = '';
-                if (checkbox.is(':checked')) {
-                    temp_inputs.required = true;
-                }
-            }
-            if (data_type === 'textarea') {
-                temp_inputs.placeholder = $(v1).find('.form_input_placeholder').val();
-                var checkbox = $(v1).find('.form-check-input');
-                var required = '';
-                if (checkbox.is(':checked')) {
-                    temp_inputs.required = true;
-                }
-            }
-            if (data_type === 'date') {
-                var checkbox = $(v1).find('.form-check-input');
-                var required = '';
-                if (checkbox.is(':checked')) {
-                    temp_inputs.required = true;
-                }
-            }
-            if (data_type === 'button') {
-                temp_inputs.btn_class = $(v1).find('.form_input_button_class').val();
-                temp_inputs.btn_value = $(v1).find('.form_input_button_value').val();
-
-                delete temp_inputs.label;
-                // delete temp_inputs.name;
-                delete temp_inputs.required;
-            }
-            if (data_type === 'select') {
-                var option_html = ''; temp_inputs.options = [];
-                $(v1).find('select option').each(function (iOption, vOption) {
-                    var option = $(vOption).html();
-                    var value = $(vOption).val();
-                    temp_inputs.options.push({ "value" : value , "option" : option });
-                });
-            }
-            if (data_type === 'radio') {
-                var option_html = ''; temp_inputs.options = [];
-                $(v1).find('.mt-radio').each(function (iOption, vOption) {
-                    var option = $(vOption).find('p').html();
-                    var value = $(vOption).find('input[type=radio]').val();
-                    temp_inputs.options.push({ "value" : value , "option" : option });
-                });
-            }
-            if (data_type === 'checkbox') {
-                var option_html = ''; temp_inputs.options = [];
-                $(v1).find('.mt-checkbox').each(function (iOption, vOption) {
-                    var option = $(vOption).find('p').html();
-                    var value = $(vOption).find('input[type=checkbox]').val();
-                    temp_inputs.options.push({ "value" : value , "option" : option });
-                });
-            }
-            __generate_html_temp.fields.push(temp_inputs);
-        });
-        __generate_html.push(__generate_html_temp);
-        
-      });
-
-      var saveButton = $(".save_btn");
-      jQuery.ajax({
-        url: "<?php echo base_url(); ?>formbuilder/save",
-        type: "POST",
-        data: { id:<?php echo $selected_id; ?>,form_name:$('input[name="form_name"]').val(),data:JSON.stringify(__generate_html)},
-        beforeSend: function () {
-          $(saveButton).attr("disabled", true);
-          $(saveButton).text("saving...");
-        },
-        success: function (response) {
-          response = jQuery.parseJSON( response );
-          window.location.href = "<?php echo base_url(); ?>formbuilder/forms/"+response.id
-          $(saveButton).attr("disabled", false);
-          $(saveButton).text("Save");
-          $("#modalAddNewCustomerTypes").modal("hide");
-          
-        }
-      });
-      //console.log(JSON.stringify(__generate_html));
   }
-
-  $(document).ready( function () {
-
-
-    if($('input[name="json_data_current"]').val() != "" && "<?php echo (isset($selected_id) && $selected_id!=0)?true:false; ?>"==true)
-    {
-     
-
-      var __old_json_data = $('#json_data_current').val();
-      __old_json_data = JSON.parse(__old_json_data);
-      
-      $.each( __old_json_data, function( key, value ) {
-          $('.main_row_btn').click();
-          $( '.main_row_append_box .dropper:eq('+key+') .group-description input[name="group-label"]' ).val(value.group_name);
-          $( '.main_row_append_box .dropper:eq('+key+') .group-field-description input[name="group-field-description"]' ).val(value.group_description);
-
-          $( '.main_row_append_box .dropper:eq('+key+')').html();
-          
-          $( '.main_row_append_box .dropper:eq('+key+') .form_builder_area').addClass('form_builder_area_droppable_'+key);
-
-          $.each( value.fields, function( keyFields, valueFields ) {
-
-            var field_data = valueFields;
-            //label = '', placeholder = '', name = '', required = false
-            var data_type = valueFields.input_type;
-            if (data_type === 'text') {
-              $('.form_builder_area_droppable_'+key).append(getTextFieldHTML(field_data.label, field_data.placeholder, field_data.name, field_data.required));
-
-            }
-            if (data_type === 'number') {
-                $('.form_builder_area_droppable_'+key).append(getNumberFieldHTML(field_data.label, field_data.placeholder, field_data.name, field_data.required));
-            }
-            if (data_type === 'email') {
-
-              $('.form_builder_area_droppable_'+key).append(getEmailFieldHTML(field_data.label, field_data.placeholder, field_data.name, field_data.required));
-            }
-            if (data_type === 'password') {
-              $('.form_builder_area_droppable_'+key).append(getPasswordFieldHTML(field_data.label, field_data.placeholder, field_data.name, field_data.required));
-            }
-            if (data_type === 'textarea') {
-              $('.form_builder_area_droppable_'+key).append(getTextAreaFieldHTML(field_data.label, field_data.placeholder, field_data.name, field_data.required));
-            }
-            if (data_type === 'date') {
-              $('.form_builder_area_droppable_'+key).append(getDateFieldHTML(field_data.label, field_data.name, field_data.required));
-            }
-            if (data_type === 'button') {
-              $('.form_builder_area_droppable_'+key).append(getButtonFieldHTML(field_data.btn_class,field_data.btn_value,field_data.name));
-            }
-            if (data_type === 'select') {
-             
-                $('.form_builder_area_droppable_'+key).append(getSelectFieldHTML(field_data.label, field_data.name, field_data.options));
-               
-            }
-            if (data_type === 'radio') {
-               $('.form_builder_area_droppable_'+key).append(getRadioFieldHTML(field_data.label, field_data.name, field_data.options));
-             
-            }
-            if (data_type === 'checkbox') {
-              $('.form_builder_area_droppable_'+key).append(getCheckboxFieldHTML(field_data.label, field_data.name, field_data.options));
-        
-            }
-            
-            
-
-
-          });
-
-
-      });
-
-    }
-  });
-
-  $('#setformname').click(function(){
-    window.open("<?php echo base_url('formbuilder/forms') ?>"+'/'+$('select[name="main_form_name"]').val(), '_self'); 
-  });
-</script>
+  .form_builder .nav-sidebar {
+    border:0px
+  } .form_builder ul li { padding: 0px; }
+  .nav-sidebar ul i{ margin-top: 0.3rem; }
+</style>

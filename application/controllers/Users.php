@@ -25,28 +25,29 @@ class Users extends MY_Controller {
 	public function businessprofile()
 	{	
 		$user = (object)$this->session->userdata('logged');		
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$user->id));		
+		$profiledata = $this->business_model->getByWhere(array('company_id'=>$user->id));		
 		$this->page_data['profiledata'] = $profiledata[0];
 		$this->load->view('businessprofile', $this->page_data);
 	}
 	
 	public function businessview()
 	{	
-		ifPermissions('businessdetail');
+		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
+		//print_r($user);die;
 		$cid=logged('company_id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));		
+		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));		
 		$this->page_data['profiledata'] = $profiledata[0];
 		$this->load->view('business', $this->page_data);
 
 	}
 	public function businessdetail(){	
-		ifPermissions('businessdetail');
+		//ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
 		$cid=logged('company_id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
-		
+		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));	
+		//dd($profiledata);die;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata[0];
 		
@@ -103,7 +104,7 @@ class Users extends MY_Controller {
 	public function timesheet()
 	{	
 		$this->load->model('timesheet_model');
-		ifPermissions('users_list');
+		//ifPermissions('users_list');
 
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
@@ -132,7 +133,8 @@ class Users extends MY_Controller {
 
 	{	
 
-		ifPermissions('users_list');
+		//ifPermissions('users_list');
+
 
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
@@ -165,16 +167,17 @@ class Users extends MY_Controller {
 		$cid=logged('company_id');		
 		$id = $this->users_model->create([
 			'role' => post('role'),
-			'name' => post('name'),
+			'FName' => post('FName'),
+			'LName' => post('LName'),
 			'username' => post('username'),
 			'email' => post('email'),
-			'phone' => post('phone'),
+			
 			'company_id' => $cid,
-			'address' => post('address'),
+			
 			'status' => (int) post('status'),
 			'password_plain' =>  post('password'),
 			'password' => hash( "sha256", post('password') ),			
-			'parent_id' => $user->id
+			//'parent_id' => $user->id
 		]);
 
 
@@ -200,7 +203,7 @@ class Users extends MY_Controller {
 
 
 
-		$this->activity_model->add('New User $'.$id.' Created by User:'.logged('name'), logged('id'));
+		$this->activity_model->add('New User $'.$id.' Created by User:'.logged('FName'), logged('id'));
 		$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', 'New User Created Successfully');	
 

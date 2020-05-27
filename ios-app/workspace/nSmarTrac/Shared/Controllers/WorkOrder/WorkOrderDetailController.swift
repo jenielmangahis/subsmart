@@ -14,7 +14,6 @@ class WorkOrderDetailController: UITableViewController {
     
     // MARK: - Properties -
     
-    
     @IBOutlet var calendarIcon: UIImageView!
     @IBOutlet var nameIcon: UIImageView!
     @IBOutlet var emailIcon: UIImageView!

@@ -209,6 +209,16 @@ class ExpensesController: UIViewController {
     @IBAction func sideMenuTapped(_ sender: Any) {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
+    
+    @IBAction func chatButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Chat
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
+    @IBAction func messagesButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Messages
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
 
 }
 
@@ -306,6 +316,7 @@ extension ExpensesController: FloatyDelegate {
         
         // init
         floaty.fabDelegate  = self
+        floaty.sticky       = true
         floaty.buttonColor  = AppTheme.defaultColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         floaty.addItem("Search", icon: UIImage.fontAwesomeIcon(name: .search, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in

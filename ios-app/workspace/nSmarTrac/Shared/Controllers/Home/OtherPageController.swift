@@ -56,12 +56,12 @@ class OtherPageController: UIViewController {
 extension OtherPageController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return 11
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let titles = ["Back", "Estimates", "Marketing", "Inventory", "Cost Estimator", "Virtual Estimator", "Clock Out"]
-        let icons: [FontAwesome] = [.replyAll, .calculatorAlt, .clipboardList, .dollyFlatbed, .calculator, .route, .stopwatch]
+        let titles = ["Back", "Estimates", "Marketing", "Inventory", "Reports", "Bulletin", "Employees", "Collage Maker", "Cost Estimator", "Virtual Estimator", "Clock Out"]
+        let icons: [FontAwesome] = [.replyAll, .calculatorAlt, .bullhorn, .dollyFlatbed, .chartLine, .newspaper, .users, .cameraRetro, .calculator, .route, .stopwatch]
         let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 48, height: 48))
         
         // Configure the cell...
@@ -84,10 +84,10 @@ extension OtherPageController: UICollectionViewDelegate, UICollectionViewDataSou
         if indexPath.row == 0 {
             pageViewController?.scrollToViewController(index: 0)
         } else {
-            //let shortcuts: [LeftMenu] = [.Schedule, .Tasks, .Bulletin, .Invoices, .Reports, .Marketing]
-            //App.shared.selectedMenu = shortcuts[indexPath.row]
+            let shortcuts: [LeftMenu] = [.Estimates, .Marketing, .Inventory, .Reports, .Employees, .CollageMaker, .CostEstimator, .VirtualEstimator, .ClockOut]
+            App.shared.selectedMenu = shortcuts[indexPath.row-1]
             
-            //NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
         }
     }
 }

@@ -16,6 +16,16 @@ PODS:
   - Floaty (4.2.0)
   - FontAwesome.swift (1.9.0)
   - FSCalendar (2.8.1)
+  - GoogleMaps (3.1.0):
+    - GoogleMaps/Maps (= 3.1.0)
+  - GoogleMaps/Base (3.1.0)
+  - GoogleMaps/Maps (3.1.0):
+    - GoogleMaps/Base
+  - GooglePlaces (3.1.0):
+    - GoogleMaps/Base (= 3.1.0)
+  - InputBarAccessoryView (4.3.2):
+    - InputBarAccessoryView/Core (= 4.3.2)
+  - InputBarAccessoryView/Core (4.3.2)
   - Kingfisher (5.13.3):
     - Kingfisher/Core (= 5.13.3)
   - Kingfisher/Core (5.13.3)
@@ -23,6 +33,8 @@ PODS:
     - Material/Core (= 3.1.8)
   - Material/Core (3.1.8):
     - Motion (~> 3.1.1)
+  - MessageKit (3.1.0):
+    - InputBarAccessoryView (~> 4.3.0)
   - Motion (3.1.3):
     - Motion/Core (= 3.1.3)
   - Motion/Core (3.1.3)
@@ -47,8 +59,11 @@ DEPENDENCIES:
   - Floaty (~> 4.2.0)
   - FontAwesome.swift
   - FSCalendar
+  - GoogleMaps
+  - GooglePlaces
   - Kingfisher
   - Material
+  - MessageKit
   - PureLayout
   - RxCocoa (~> 4.0)
   - RxSwift (~> 4.0)
@@ -70,8 +85,12 @@ SPEC REPOS:
     - Floaty
     - FontAwesome.swift
     - FSCalendar
+    - GoogleMaps
+    - GooglePlaces
+    - InputBarAccessoryView
     - Kingfisher
     - Material
+    - MessageKit
     - Motion
     - ObjectMapper
     - PureLayout
@@ -94,8 +113,12 @@ SPEC CHECKSUMS:
   Floaty: e2bd5a0f6f7f70899e26ff2da31081c8bee8d1b0
   FontAwesome.swift: a403b88cec950511745ba8f2decd1b6a07346d13
   FSCalendar: 5245140456fcbcac5824c203b98bd8068bdfee1a
+  GoogleMaps: 5c13302e6fe6bb6e686b267196586b91cd594225
+  GooglePlaces: e874db179f2675c4f3eeda0b686b540273a578b0
+  InputBarAccessoryView: 7985d418040a05fe894bd4b8328dd43ab35517c3
   Kingfisher: d2b3d6a7200c93b34de9afcdf25c8dd9282ec277
   Material: a2a3f400a3b549d53ef89e56c58c4535b29db387
+  MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
   Motion: cf1e060e489f6661126374d5c60dbd2ed991605c
   ObjectMapper: b53ae947d370bf89423e86be7d4e2d2b2a8d3f40
   PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
@@ -106,6 +129,6 @@ SPEC CHECKSUMS:
   SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: 1f84fecbd04ca4cd5c3dc9b9a8aeca42bae32cf5
+PODFILE CHECKSUM: 7c382f0467603810b19aae9efa8a914ae27c1a5d
 
 COCOAPODS: 1.9.1

@@ -59,8 +59,8 @@ extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let titles = ["Schedule", "Work Order", "Tasks", "Bulletin", "Invoices", "Route Planner", "Expenses", "More"]
-        let icons: [FontAwesome] = [.alarmClock, .userClock, .tasks, .newspaper, .fileInvoiceDollar, .truckMoving, .moneyBill, .ellipsisH]
+        let titles = ["Schedule", "Work Order", "Tasks", "File Vault", "Invoices", "Route Planner", "Expenses", "More"]
+        let icons: [FontAwesome] = [.alarmClock, .userClock, .tasks, .inbox, .fileInvoiceDollar, .truckMoving, .moneyBill, .ellipsisH]
         let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 48, height: 48))
         
         // Configure the cell...

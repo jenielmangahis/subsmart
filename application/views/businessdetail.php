@@ -1,5 +1,6 @@
 <?php
-   defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
@@ -21,9 +22,9 @@
    </nav>
    <div wrapper__section>
       <div class="col-md-24 col-lg-24 col-xl-18">
-         <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-			<input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
-			<input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
+         <?php //echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+			<input type="hidden" name="id" value="<?php //echo $profiledata->id; ?>">
+			<input type="hidden" name="user_id" value="<?php //echo $profiledata->user_id; ?>">
             <div class="card">
                <h3>Basic Info</h3>
                <div class="row">
@@ -39,7 +40,7 @@
                         <div>
                            <label>Profile Picture</label>
                            <div>
-                              <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" src="<?php echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>"></a>
+                              <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" src="<?php //echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>"></a>
                            </div>                           
 						   <div class="margin-top margin-bottom ">
 							<input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="previewImage(this, '#imagePreview')">
@@ -60,14 +61,14 @@
                      <div class="form-group">
                         <label>Business Street Address</label> <span class="form-required">*</span>
                         <div class="help help-sm help-block">Type in to search for your address</div>
-                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php echo $profiledata->address ?>" placeholder="e.g. 123 Old Oak Drive" required="">
+                        <input type="text" name="address"  id="address" class="form-control" autocomplete="off" value="<?php //echo $profiledata->address ?>" placeholder="e.g. 123 Old Oak Drive" required="">
                         <span class="validation-error-field" data-formerrors-for-name="address" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
                   <div class="col-md-6">
                      <label>Suite/Unit</label> <span class="help">(optional)</span>
                      <div class="help help-sm help-block">Suite #</div>
-                     <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" required="">
+                     <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php //echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" required="">
                      <span class="validation-error-field" data-formerrors-for-name="unit_nbr" data-formerrors-message="true" style="display: none;"></span>
                   </div>
                </div>
@@ -75,17 +76,17 @@
                   <div class="row">
                      <div class="col-md-4">
                         <label>City</label> <span class="form-required">*</span>
-                        <input type="text" name="city"  class="form-control" id="city" value="<?php echo $profiledata->city ?>" autocomplete="off" placeholder="e.g. Phoenix" required="">
+                        <input type="text" name="city"  class="form-control" id="city" value="<?php //echo $profiledata->city ?>" autocomplete="off" placeholder="e.g. Phoenix" required="">
                         <span class="validation-error-field" data-formerrors-for-name="city" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                      <div class="col-md-4">
                         <label>Zip/Postal Code</label> <span class="form-required">*</span>
-                        <input type="text" name="zip"  class="form-control" id="zip" value="<?php echo $profiledata->zip ?>" autocomplete="off" placeholder="e.g. 86336" required="">
+                        <input type="text" name="zip"  class="form-control" id="zip" value="<?php //echo $profiledata->zip ?>" autocomplete="off" placeholder="e.g. 86336" required="">
                         <span class="validation-error-field" data-formerrors-for-name="zip" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                      <div class="col-md-4">
                         <label>State/Province</label> <span class="form-required">*</span>
-                        <input type="text" name="state" value="<?php echo $profiledata->zip ?>" class="form-control" id="state"/>
+                        <input type="text" name="state" value="<?php //echo $profiledata->zip ?>" class="form-control" id="state"/>
                      </div>
                   </div>
                </div>
@@ -99,12 +100,12 @@
                         <label>Business Phone</label> <span class="form-required">*</span>
                         <div class="help help-sm help-block">We'll send you text/sms notifications to this nr.</div>
                         <div>
-                           <input type="text" name="b_phone" value="<?php echo $profiledata->b_phone ?>"  class="form-control" autocomplete="off" required="">
+                           <input type="text" name="b_phone" value="<?php //echo $profiledata->b_phone ?>"  class="form-control" autocomplete="off" required="">
                            <span class="validation-error-field" data-formerrors-for-name="phone" data-formerrors-message="true" style="display: none;"></span>
                         </div>
                         <div>
                            <div class="checkbox checkbox-sec">
-                              <input type="checkbox" name="is_public_phone" value="1" <?php if($profiledata->is_public_phone==1){ ?> checked="checked" <?php } ?> id="is_public_phone">
+                              <input type="checkbox" name="is_public_phone" value="1" <?php //if($profiledata->is_public_phone==1){ ?> checked="checked" <?php //} ?> id="is_public_phone">
                               <label for="is_public_phone"><span>Show <i>business phone</i> on my public profile</span></label>
                            </div>
                            &nbsp; <a class="help-tooltip" data-toggle="tooltip" title="" data-original-title="Select this if you want to display this phone number on your public profile page."><span class="fa fa-question-circle"></span></a>
@@ -117,19 +118,19 @@
                            <div class="col-md-9">
                               <label>Office Phone</label> <span class="help">(optional)</span>
                               <div class="help help-block help-sm">If you want to show the office phone on profile</div>
-                              <input type="text" name="office_phone" value="<?php echo $profiledata->office_phone ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890">
+                              <input type="text" name="office_phone" value="<?php //echo $profiledata->office_phone ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890">
                            </div>
                            <div class="col-md-3">
                               <label>Ext</label> <span class="help">(optional)</span>
                               <div class="help help-block help-sm">Extension</div>
-                              <input type="text" name="office_phone_extn" value="1" <?php echo $profiledata->office_phone_extn ?>  class="form-control" autocomplete="off" placeholder="e.g. 123">
+                              <input type="text" name="office_phone_extn" value="1" <?php //echo $profiledata->office_phone_extn ?>  class="form-control" autocomplete="off" placeholder="e.g. 123">
                            </div>
                         </div>
                         <span class="validation-error-field" data-formerrors-for-name="office_phone" data-formerrors-message="true" style="display: none;"></span>
                         <span class="validation-error-field" data-formerrors-for-name="office_phone_extn" data-formerrors-message="true" style="display: none;"></span>
                         <div>
                            <div class="checkbox checkbox-sec">
-                              <input type="checkbox" name="is_public_office_phone" value="1" <?php if($profiledata->is_public_office_phone==1){ ?> checked="checked" <?php } ?> id="is_public_office_phone">
+                              <input type="checkbox" name="is_public_office_phone" value="1" <?php //if($profiledata->is_public_office_phone==1){ ?> checked="checked" <?php //} ?> id="is_public_office_phone">
                               <label for="is_public_office_phone"><span>Show <i>office phone</i> on my public profile
                               </span></label>
                            </div>
@@ -142,7 +143,7 @@
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Business Email</label> <span class="form-required">*</span>
-                        <input type="text" name="b_email" value="<?php echo $profiledata->b_email ?>"  class="form-control" autocomplete="off" placeholder="Business Email" required="">
+                        <input type="text" name="b_email" value="<?php //echo $profiledata->b_email ?>"  class="form-control" autocomplete="off" placeholder="Business Email" required="">
                         <span class="validation-error-field" data-formerrors-for-name="email" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -160,11 +161,11 @@
                         <label>Do you provide Emergency Service?</label> <span class="form-required">*</span>
                         <div>
                            <div class="checkbox checkbox-sec margin-right">
-                              <input type="radio" name="is_emergency_support" value="1" <?php if($profiledata->is_emergency_support==1){ ?> checked="checked" <?php } ?> id="is_emergency_support_1">
+                              <input type="radio" name="is_emergency_support" value="1" <?php //if($profiledata->is_emergency_support==1){ ?> checked="checked" <?php //} ?> id="is_emergency_support_1">
                               <label for="is_emergency_support_1"><span>Yes</span></label>
                            </div>
                            <div class="checkbox checkbox-sec">
-                              <input type="radio" name="is_emergency_support" value="0" <?php if($profiledata->is_emergency_support==0){ ?> checked="checked" <?php } ?> id="is_emergency_support_2">
+                              <input type="radio" name="is_emergency_support" value="0" <?php //if($profiledata->is_emergency_support==0){ ?> checked="checked" <?php //} ?> id="is_emergency_support_2">
                               <label for="is_emergency_support_2"><span>No</span></label>
                            </div>
                         </div>
@@ -172,7 +173,7 @@
                      <div class="col-md-6">
                         <div data-toggle-for="is_emergency_support">
                            <label>24/7 Emergency Phone Number</label> <span class="form-required">*</span>
-                           <input type="text" name="phone_emergency" value="<?php echo $profiledata->phone_emergency ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890" required="">
+                           <input type="text" name="phone_emergency" value="<?php //echo $profiledata->phone_emergency ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890" required="">
                            <span class="validation-error-field" data-formerrors-for-name="phone_emergency" data-formerrors-message="true" style="display: none;"></span>
                         </div>
                      </div>
@@ -210,11 +211,11 @@
                         <label>Do you work with other Business or Sub Contract?</label>
                         <div>
                            <div class="checkbox checkbox-sec margin-right">
-                              <input type="radio" name="is_subcontract_allowed" value="1" <?php if($profiledata->is_subcontract_allowed==1){ ?> checked="checked" <?php } ?> id="is_subcontract_allowed_1">
+                              <input type="radio" name="is_subcontract_allowed" value="1" <?php //if($profiledata->is_subcontract_allowed==1){ ?> checked="checked" <?php //} ?> id="is_subcontract_allowed_1">
                               <label for="is_subcontract_allowed_1"><span>Yes</span></label>
                            </div>
                            <div class="checkbox checkbox-sec">
-                              <input type="radio" name="is_subcontract_allowed" value="0"  <?php if($profiledata->is_subcontract_allowed==0){ ?> checked="checked" <?php } ?> id="is_subcontract_allowed_2">
+                              <input type="radio" name="is_subcontract_allowed" value="0"  <?php //if($profiledata->is_subcontract_allowed==0){ ?> checked="checked" <?php //} ?> id="is_subcontract_allowed_2">
                               <label for="is_subcontract_allowed_2"><span>No</span></label>
                            </div>
                         </div>
@@ -227,7 +228,7 @@
                      <div class="form-group">
                         <label>Business Number (EIN #)</label>
                         <div class="help help-block help-sm">If entered it will appear on invoices.</div>
-                        <input type="text" name="business_number" value="<?php echo $profiledata->business_number; ?>"  class="form-control" autocomplete="off">
+                        <input type="text" name="business_number" value="<?php //echo $profiledata->business_number; ?>"  class="form-control" autocomplete="off">
                         <span class="validation-error-field" data-formerrors-for-name="employee_count" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -236,7 +237,7 @@
                   <label>Service Location</label>
                   <div class="help help-sm help-block">Enter the areas or neighborhoods where you provide your services.</div>
                   <div class="bootstrap-tagsinput"><input type="text" placeholder="Area or neighborhood"></div>
-                  <input type="text" name="service_loc" value="<?php echo $profiledata->service_loc ?>"  class="form-control" id="service_locations" autocomplete="off" placeholder="Area or neighborhood" style="display: none;">
+                  <input type="text" name="service_loc" value="<?php //echo $profiledata->service_loc ?>"  class="form-control" id="service_locations" autocomplete="off" placeholder="Area or neighborhood" style="display: none;">
                   <span class="validation-error-field" data-formerrors-for-name="service_locations" data-formerrors-message="true" style="display: none;"></span>
                </div>
                <div class="row">
@@ -260,7 +261,7 @@
                   </div>
                </div>
             </div>
-    <?php echo form_close(); ?>
+    <?php //echo form_close(); ?>
          <div class="modal fileuploadmodal-modal" id="fileuploadmodal-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                <div class="modal-content">

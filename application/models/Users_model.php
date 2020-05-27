@@ -81,18 +81,35 @@ class Users_model extends MY_Model {
 
 	public function getUsers() {
 
-		$parent_id = getLoggedUserID();
+		/*$parent_id = getLoggedUserID();
+		//$cid=logged('comp_id');
+
 		$cid=logged('company_id');
 
 		$this->db->select('*');
 		$this->db->from($this->table);
+		//$this->db->where('parent_id', $parent_id);
 		$this->db->where('parent_id', $parent_id);
 		$this->db->or_where('id', $parent_id);
 		$this->db->or_where('company_id',$cid );
 		// $this->db->where('role !=', 1);
 		$query = $this->db->get();
-// echo $this->db->last_query(); die;
+		// echo $this->db->last_query(); die;
+		return $query->result();*/
+
+		// edited using the new column names
+		$parent_id = getLoggedUserID();
+		$cid=logged('company_id');
+
+		$this->db->select('*');
+		$this->db->from($this->table);
+		//$this->db->where('parent_id', $parent_id);
+		$this->db->where('id', $parent_id);
+		$this->db->or_where('company_id',$cid );
+		$query = $this->db->get();
+
 		return $query->result();
+
 	}
 
 

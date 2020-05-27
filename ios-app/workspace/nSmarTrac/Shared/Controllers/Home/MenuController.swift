@@ -40,8 +40,8 @@ class MenuController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let titles = ["Home", "Customers", "Quick Links", "Business Contacts", "Leads", "Tasks", "Inventory", "Map", "Calculator", "Estimator", "Expense Tracker", "Notifications", "My Info", "Settings", "Company Profile", "Logout"]
-        let icons: [FontAwesome] = [.home, .users, .link, .addressBook, .clipboardList, .tasks, .dollyFlatbed, .map, .calculator, .calculatorAlt, .moneyBill, .bell, .userCircle, .cog, .briefcase, .signOutAlt]
+        let titles = ["Home", "Customers", "Quick Links", "Business Contacts", "Leads", "Tasks", "Inventory", "Map", "Calculator", "Estimator", "Expense Tracker", "Notifications", "My Account", "Company Profile", "Settings", "Logout"]
+        let icons: [FontAwesome] = [.home, .users, .link, .addressBook, .clipboardList, .tasks, .dollyFlatbed, .map, .calculator, .calculatorAlt, .moneyBill, .bell, .userCircle, .briefcase, .cog, .signOutAlt]
         let image = UIImage.fontAwesomeIcon(name: icons[indexPath.row], style: .regular, textColor: .white, size: CGSize(width: 24, height: 24))
         
         // Configure the cell...
@@ -94,10 +94,10 @@ class MenuController: UITableViewController {
             App.shared.selectedMenu = .MyInfo
             break
         case 13:
-            App.shared.selectedMenu = .Settings
+            App.shared.selectedMenu = .CompanyProfile
             break
         case 14:
-            App.shared.selectedMenu = .CompanyProfile
+            App.shared.selectedMenu = .Settings
             break
         case 15:
             //App.shared.user.logout()

@@ -79,16 +79,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td width="60"><?php echo $row->id ?></td>
                                                     <td width="50" class="text-center">
                                                         <?php 
-                                                            $avatar = userProfile($row->id);
+                                                            /*$avatar = userProfile($row->id);
                                                             if ( !@getimagesize($avatar) ){
                                                                 $avatar = base_url('uploads/users/default.png');
-                                                            }
+                                                            }*/
                                                         ?>
                                                         <!-- <img src="<?php //echo userProfile($row->id) ?>" width="40" height="40" alt="" class="img-avtar"> -->
-                                                        <img src="<?php echo $avatar; ?>" width="40" height="40" alt="" class="img-avtar">
+                                                        <!-- <img src="<?php //echo $avatar; ?>" width="40" height="40" alt="" class="img-avtar"> -->
+                                                        <img src="<?php echo base_url('uploads/users/default.png');?>" width="40" height="40" alt="Profile Picture" class="img-avatar" />
                                                     </td>
                                                     <td id="name">
-                                                        <?php echo $row->name ?>
+                                                        <?php echo $row->FName.' '.$row->LName; ?>
                                                     </td>
                                                     <?php /*<td><?php //echo $row->email ?></td>
                                                     <td><?php //echo $row->password_plain ?></td>
@@ -112,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?php 
                                                                 // clock in for each user; temporarily specifying the first data in the array
                                                                 if( !empty($clockin_arr) ){
-                                                                    $user_clock_in = $clockin_arr[0]->clock_in;
+                                                                    $user_clock_in = $clockin_arr[0]->timestamp;
                                                                     echo date('h:i a', strtotime($user_clock_in))." Manual Clock In";    
                                                                 }
                                                                                                                                 
@@ -134,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td id="">
                                                         
 
-                                                        <?php if (hasPermissions('users_edit')): ?>
+                                                        <?php //if (hasPermissions('users_edit')): ?>
                                                             <form name="clockin_form" method="post">
                                                                 <input type="hidden" name="current_time_in" value="<?php echo date('Y-m-d H:i'); ?>" />
                                                                 <input type="hidden" name="clockin_user_id" value="<?php echo $row->id; ?>" />
@@ -164,7 +165,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 </button>
                                                                 <?php endif;?>
                                                             </form>
-                                                        <?php endif ?>
+                                                        <?php //endif ?>
                                                     </td>
 
                                                     <!-- Modal -->

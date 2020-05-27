@@ -26,6 +26,11 @@ struct Notifications {
     static let didLogin = Notification.Name("com.nsmartrac.notification.name.didLogin")
     static let willLogout = Notification.Name("com.nsmartrac.notification.name.willLogout")
     static let didLogout = Notification.Name("com.nsmartrac.notification.name.didLogout")
+    
+    static let didLocationEnabled = Notification.Name("com.nsmartrac.notification.name.didLocationEnabled")
+    
+    static let willAddStandardEstimates = Notification.Name("com.nsmartrac.notification.name.willAddStandardEstimates")
+    static let willAddOptionsEstimates = Notification.Name("com.nsmartrac.notification.name.willAddOptionsEstimates")
 }
 
 struct Device {

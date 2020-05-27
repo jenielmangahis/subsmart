@@ -29,7 +29,6 @@ function add_main_row(e){
 	e.preventDefault();
 	__mr_box.append(main_row);
 
-
 	$(".form_bal_textfield").draggable({
         helper: function () {
             return getTextFieldHTML();

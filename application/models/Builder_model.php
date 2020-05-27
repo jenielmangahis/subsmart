@@ -8,6 +8,7 @@ class Builder_model extends MY_Model {
 	public $table_form_responses = 'form_responses';
 	public $table_options = 'options';
 	public $table_questions = 'questions';
+    public $table_form_groups = 'form_groups';
 
 	public function __construct(){
 		parent::__construct();
@@ -19,6 +20,49 @@ class Builder_model extends MY_Model {
         $this->db->select('*');
         $this->db->from($this->table_jobs);
         $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_forms($id = 0) {
+
+        if( $id  == 0 )
+        {
+            $company_id = logged('company_id');
+            $this->db->select('*');
+            $this->db->from($this->table_custom_forms);
+            $this->db->where('company_id', $company_id);
+            $query = $this->db->get();
+            return $query->result();
+        } else {
+            $company_id = logged('company_id');
+            $this->db->select('*');
+            $this->db->from($this->table_custom_forms);
+            $this->db->where('company_id', $company_id);
+            $query=$this->db->get();
+            $row=$query->row();
+            return $row;
+        }
+    }
+
+    public function get_forms_questions($id) {
+
+        $company_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from($this->table_questions);
+        $this->db->order_by("question_order", "asc");
+        $this->db->where('company_id', $company_id);
+        $this->db->where('forms_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_forms_questions_options($id) {
+
+        $this->db->select('*');
+        $this->db->from($this->table_options);
+        $this->db->order_by("option_order", "asc");
+        $this->db->where('question_id', $id);
         $query = $this->db->get();
         return $query->result();
     }

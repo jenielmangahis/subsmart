@@ -67,18 +67,19 @@ extension WorkOrderTabController: FloatyDelegate {
         
         // init
         floaty.fabDelegate  = self
+        floaty.sticky       = true
         floaty.buttonColor  = .clear
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .clear, size: CGSize(width: 30, height: 30))
         floaty.paddingY     = 0
         
-        floaty.addItem("Notes", icon: UIImage.fontAwesomeIcon(name: .fileAlt, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Notes", icon: UIImage.fontAwesomeIcon(name: .fileAlt, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             self.floaty.close()
         })
-        floaty.addItem("Log Time", icon: UIImage.fontAwesomeIcon(name: .stopwatch, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Log Time", icon: UIImage.fontAwesomeIcon(name: .stopwatch, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })
-        floaty.addItem("Reschedule", icon: UIImage.fontAwesomeIcon(name: .calendar, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Reschedule", icon: UIImage.fontAwesomeIcon(name: .calendar, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })
@@ -86,7 +87,7 @@ extension WorkOrderTabController: FloatyDelegate {
             
             self.floaty.close()
         })
-        floaty.addItem("Attach Photo", icon: UIImage.fontAwesomeIcon(name: .image, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Attach Photo", icon: UIImage.fontAwesomeIcon(name: .image, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })
@@ -94,19 +95,19 @@ extension WorkOrderTabController: FloatyDelegate {
             
             self.floaty.close()
         })
-        floaty.addItem("Cancel Schedule", icon: UIImage.fontAwesomeIcon(name: .ban, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Cancel Schedule", icon: UIImage.fontAwesomeIcon(name: .ban, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })
-        floaty.addItem("Request Signature", icon: UIImage.fontAwesomeIcon(name: .signature, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Request Signature", icon: UIImage.fontAwesomeIcon(name: .signature, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })
-        floaty.addItem("Convert To Invoice", icon: UIImage.fontAwesomeIcon(name: .fileInvoiceDollar, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Convert To Invoice", icon: UIImage.fontAwesomeIcon(name: .fileInvoiceDollar, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })
-        floaty.addItem("Convert To Estimate", icon: UIImage.fontAwesomeIcon(name: .calculator, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Convert To Estimate", icon: UIImage.fontAwesomeIcon(name: .calculator, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             
             self.floaty.close()
         })

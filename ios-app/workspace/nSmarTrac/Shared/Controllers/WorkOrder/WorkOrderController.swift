@@ -175,6 +175,16 @@ class WorkOrderController: UIViewController {
     @IBAction func sideMenuTapped(_ sender: Any) {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
+    
+    @IBAction func chatButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Chat
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
+    @IBAction func messagesButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Messages
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
 
 }
 
@@ -284,6 +294,7 @@ extension WorkOrderController: FloatyDelegate {
         
         // init
         floaty.fabDelegate  = self
+        floaty.sticky       = true
         floaty.buttonColor  = AppTheme.defaultColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         floaty.addItem("Search", icon: UIImage.fontAwesomeIcon(name: .search, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
@@ -295,7 +306,7 @@ extension WorkOrderController: FloatyDelegate {
             self.pushTo(storyBoard: "Main", identifier: "sb_WorkOrderFilterController")
             self.floaty.close()
         })
-        floaty.addItem("Add", icon: UIImage.fontAwesomeIcon(name: .edit, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Add", icon: UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             self.pushTo(storyBoard: "Main", identifier: "sb_AddWorkOrderController")
             self.floaty.close()
         })

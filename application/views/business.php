@@ -14,16 +14,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div role="white__holder">
 						<div role="white__holder_section_holder">
 							<div class="profile-headline">
-								<a class="a-alert a-edit" href="<?php echo url('users/businessdetail') ?>"><span class="fa fa-edit"></span> edit</a> <img class="profile-avatar" src="<?php echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>">
+								<a class="a-alert a-edit" href="<?php echo url('users/businessdetail') ?>"><span class="fa fa-edit"></span> edit</a> <img class="profile-avatar" src="<?php //echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>">
 								<div class="profile-cnt">
 									<div class="profile-cnt-h">
-										<h1><?php echo $profiledata->b_name ?></h1>
+										<h1><?php //echo $profiledata->b_name ?></h1>
 									</div>
-									<div class="profile-address"><?php echo $profiledata->city ?>, <?php echo $profiledata->state ?></div>
+									<div class="profile-address"><?php //echo $profiledata->city ?>, <?php //echo $profiledata->state ?></div>
 								</div>
 							</div>
 							<div class="profile-about mt-4">
-							<?php echo $profiledata->business_desc; ?></div>
+							<?php //echo $profiledata->business_desc; ?></div>
 						</div>
 						<div role="white__holder_section_holder">
 							<div class="profile-service">
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<a class="a-alert a-edit" href="pro/business/services"><span class="fa fa-edit"></span> edit</a>
 									<div class="margin-bottom-sec">
 										<div class="profile-service-title">Residential Services Offered</div>
-										<span class="profile-service-category-item"><img class="profile-service-icon" width="36" src="https://www.markate.com/assets/images/icons/camera_check.png"> <span class="profile-service-item"><?php echo $profiledata->service_loc ?></span></span>
+										<span class="profile-service-category-item"><img class="profile-service-icon" width="36" src="https://www.markate.com/assets/images/icons/camera_check.png"> <span class="profile-service-item"><?php //echo $profiledata->service_loc ?></span></span>
 									</div>
 								</div>
 							</div>
@@ -133,35 +133,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<a class="a-alert a-edit" href="<?php echo url('users/businessdetail') ?>"><span class="fa fa-edit"></span> edit</a>
 							<div class="margin-bottom-sec">
 								<span class="side-title">Business Phone</span><br>
-								<?php echo $profiledata->b_phone ?>
+								<?php //echo $profiledata->b_phone ?>
 							</div>
 							<div class="phone-emergency">
 								<span class="side-title">24/7 Emergency</span><br>
-								<?php echo $profiledata->phone_emergency ?>
+								<?php //echo $profiledata->phone_emergency ?>
 							</div>
 						</div>
 						<div class="margin-bottom-ter">
 							<div class="margin-bottom-sec">
 								<span class="side-title">Contact Name</span><br>
 								<?php 
-                               $id = $profiledata->user_id;
+                               /*$id = $profiledata->user_id;
                                $query = $this->db->query("Select name from users where id = $id");
-                               $query11 = $query->row();                             
+                               $query11 = $query->row();*/                             
                             ?>
-                            <?php echo ucfirst($query11->name);?>
+                            <?php //echo ucfirst($query11->name);?>
 							</div>
-							<span class="side-title"><?php echo $profiledata->b_name; ?></span><br>
-							<?php echo $profiledata->address ?>, <br>
-							<?php echo $profiledata->city ?>,  <?php echo $profiledata->state ?> <?php echo $profiledata->zip ?>, <br>
+							<span class="side-title"><?php //echo $profiledata->b_name; ?></span><br>
+							<?php //echo $profiledata->address ?>, <br>
+							<?php //echo $profiledata->city ?>,  <?php //echo $profiledata->state ?> <?php //echo $profiledata->zip ?>, <br>
 							United States<br>
 							<div class="side-title margin-top-sec">Website</div>
-							<a class="a-default" href="<?php echo $profiledata->website ?>" target="_blank"><?php echo $profiledata->website ?></a><br>
+							<a class="a-default" href="<?php echo $profiledata->website ?>" target="_blank"><?php //echo $profiledata->website ?></a><br>
 						</div>
 						<div class="margin-bottom">
 							<div class="side-title">Quick Facts</div>
 							<ul class="side-facts">
-								<li>Business since <?php echo $profiledata->year_est ?></li>
-								<li><?php echo $profiledata->employee_count ?> employees</li>
+								<li>Business since <?php //echo $profiledata->year_est ?></li>
+								<li><?php //echo $profiledata->employee_count ?> employees</li>
 								<li>Works with other businesses or sub-contractors</li>
 							</ul>
 						</div>

@@ -10,6 +10,7 @@ import UIKit
 import DLRadioButton
 import Floaty
 import FontAwesome_swift
+import Kingfisher
 import Material
 
 class Utils {
@@ -173,6 +174,14 @@ class Utils {
         return header
     }
     
+    // create avatar
+    public static func createAvatar(_ x: Int, _ y: Int, _ mWidth: Int, _ imageUrl: String) -> UIImageView {
+        let imageView = UIImageView(frame: CGRect(x: x, y: y, width: mWidth, height: mWidth))
+        //imageView.kf.setImage(with: URL(string: imageUrl))
+        imageView.image = UIImage.fontAwesomeIcon(name: .userCircle, style: .solid, textColor: .lightGray, size: CGSize(width: 40, height: 40))
+        return imageView
+    }
+    
     // create button with right arrow
     public static func createPurpleButton(_ x: Int, _ y: Int, _ mWidth: Int, _ text: String, hasArrow: Bool = true) -> UIButton {
         // create label
@@ -272,7 +281,7 @@ class Utils {
     public static func createPurpleLabel(_ x: Int, _ y: Int, _ mWidth: Int, _ text: String, _ textAlignment: NSTextAlignment = .left) -> UILabel {
         // create label
         let label            = UILabel(frame: CGRect(x: x, y: y, width: mWidth, height: 21))
-        label.font           = UIFont.robotoFont(ofSize: 14)
+        label.font           = UIFont.robotoBoldFont(ofSize: 14)
         label.textAlignment  = textAlignment
         label.textColor      = AppTheme.defaultColor
         label.text           = text
@@ -316,6 +325,106 @@ class Utils {
         label.text              = text
         
         return label
+    }
+    
+    // create view for chat messages
+    public static func createChatView(_ x: Int, _ y: Int, _ mWidth: Int, _ mHeight: Int, _ sender: String, _ text: String, _ time: String, _ avatar: String = "") -> UIView {
+        // create view
+        let view = UIView(frame: CGRect(x: x, y: y, width: mWidth, height: mHeight))
+        view.backgroundColor = .clear
+        
+        // avatar
+        let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
+        //imageView.kf.setImage(with: URL(string: avatar))
+        imageView.image = UIImage.fontAwesomeIcon(name: .userCircle, style: .solid, textColor: .lightGray, size: CGSize(width: 40, height: 40))
+        view.addSubview(imageView)
+        
+        // create sender label
+        let senderLabel             = UILabel(frame: CGRect(x: 54, y: 12, width: mWidth-114, height: 21))
+        senderLabel.font            = UIFont.robotoBoldFont(ofSize: 14)
+        senderLabel.textAlignment   = .left
+        senderLabel.textColor       = AppTheme.defaultColor
+        senderLabel.text            = sender
+        view.addSubview(senderLabel)
+        
+        // create time label
+        let label            = UILabel(frame: CGRect(x: Device.width-84, y: 12, width: 60, height: 21))
+        label.font           = UIFont.robotoFont(ofSize: 13)
+        label.textAlignment  = .right
+        label.textColor      = UIColor(rgb: 0x545454)
+        label.text           = time
+        view.addSubview(label)
+        
+        // create value
+        let bottomLabel             = UILabel(frame: CGRect(x: 54, y: 40, width: mWidth-44, height: 42))
+        bottomLabel.font            = UIFont.robotoFont(ofSize: 13)
+        bottomLabel.numberOfLines   = 0
+        bottomLabel.textAlignment   = .left
+        bottomLabel.textColor       = UIColor(rgb: 0x545454)
+        bottomLabel.text            = text
+        bottomLabel.sizeToFit()
+        view.addSubview(bottomLabel)
+        
+        // create arrow
+        let arrow = UIButton(frame: CGRect(x: Device.width-24, y: 12, width: 15, height: 22))
+        arrow.setImage(UIImage.fontAwesomeIcon(name: .chevronRight, style: .solid, textColor: .lightGray, size: CGSize(width: 12, height: 12)), for: .normal)
+        view.addSubview(arrow)
+        
+        return view
+    }
+    
+    // create view for inbox messages
+    public static func createInboxView(_ x: Int, _ y: Int, _ mWidth: Int, _ mHeight: Int, _ sender: String, _ subject: String, _ message: String, _ time: String, _ avatar: String = "") -> UIView {
+        // create view
+        let view = UIView(frame: CGRect(x: x, y: y, width: mWidth, height: mHeight))
+        view.backgroundColor = .clear
+        
+        // avatar
+        let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 40, height: 40))
+        //imageView.kf.setImage(with: URL(string: avatar))
+        imageView.image = UIImage.fontAwesomeIcon(name: .userCircle, style: .solid, textColor: .lightGray, size: CGSize(width: 40, height: 40))
+        view.addSubview(imageView)
+        
+        // create sender label
+        let senderLabel             = UILabel(frame: CGRect(x: 54, y: 12, width: mWidth-114, height: 21))
+        senderLabel.font            = UIFont.robotoBoldFont(ofSize: 14)
+        senderLabel.textAlignment   = .left
+        senderLabel.textColor       = AppTheme.defaultColor
+        senderLabel.text            = sender
+        view.addSubview(senderLabel)
+        
+        // create time label
+        let label            = UILabel(frame: CGRect(x: Device.width-84, y: 12, width: 60, height: 21))
+        label.font           = UIFont.robotoFont(ofSize: 13)
+        label.textAlignment  = .right
+        label.textColor      = UIColor(rgb: 0x545454)
+        label.text           = time
+        view.addSubview(label)
+        
+        // create subject labe
+        let subjectLabel            = UILabel(frame: CGRect(x: 54, y: 34, width: mWidth-44, height: 16))
+        subjectLabel.font           = UIFont.robotoFont(ofSize: 13)
+        subjectLabel.textAlignment  = .left
+        subjectLabel.textColor      = AppTheme.defaultColor
+        subjectLabel.text           = subject
+        view.addSubview(subjectLabel)
+        
+        // create message label
+        let bottomLabel             = UILabel(frame: CGRect(x: 54, y: 54, width: mWidth-44, height: 26))
+        bottomLabel.font            = UIFont.robotoFont(ofSize: 13)
+        bottomLabel.numberOfLines   = 2
+        bottomLabel.textAlignment   = .left
+        bottomLabel.textColor       = UIColor(rgb: 0x545454)
+        bottomLabel.text            = message
+        bottomLabel.sizeToFit()
+        view.addSubview(bottomLabel)
+        
+        // create arrow
+        let arrow = UIButton(frame: CGRect(x: Device.width-24, y: 12, width: 15, height: 22))
+        arrow.setImage(UIImage.fontAwesomeIcon(name: .chevronRight, style: .solid, textColor: .lightGray, size: CGSize(width: 12, height: 12)), for: .normal)
+        view.addSubview(arrow)
+        
+        return view
     }
     
     public static func createBottomBorder(_ y: Int) -> UIView {

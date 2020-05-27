@@ -175,6 +175,16 @@ class InventoryController: UIViewController {
     @IBAction func sideMenuTapped(_ sender: Any) {
         self.present(SideMenuManager.default.leftMenuNavigationController!, animated: true, completion: nil)
     }
+    
+    @IBAction func chatButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Chat
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
+    
+    @IBAction func messagesButtonTapped(_ sender: Any) {
+        App.shared.selectedMenu = .Messages
+        NotificationCenter.default.post(name: Notifications.didSwitchLeftMenu, object: self, userInfo: nil)
+    }
 
 }
 
@@ -229,9 +239,13 @@ extension InventoryController: UITableViewDelegate, UITableViewDataSource {
             $0.removeFromSuperview()
         }
         
-        // nameButton
-        let nameButton = Utils.createPurpleButton(28, 12, Int(Device.width-40), "Alpha Keypad 6160 RF", hasArrow: true)
-        cell.contentView.addSubview(nameButton)
+        // nameLabel
+        let nameLabel = Utils.createPurpleLabel(28, 12, Int((Device.width-40)/2), "Alpha Keypad 6160 RF")
+        cell.contentView.addSubview(nameLabel)
+        
+        // qty view
+        let qtyView = Utils.createInvoiceLabel(Int(Device.width/2), 12, Int((Device.width-40)/2), "99pcs")
+        cell.contentView.addSubview(qtyView)
         
         // topLeft view
         let topLeft = Utils.createView(20, 50, Int((Device.width-40)/2), 50, "PRICE", "$199.00", [.top, .right])
@@ -260,6 +274,7 @@ extension InventoryController: FloatyDelegate {
         
         // init
         floaty.fabDelegate  = self
+        floaty.sticky       = true
         floaty.buttonColor  = AppTheme.defaultColor
         floaty.buttonImage  = UIImage.fontAwesomeIcon(name: .plus, style: .solid, textColor: .white, size: CGSize(width: 30, height: 30))
         floaty.addItem("Search", icon: UIImage.fontAwesomeIcon(name: .search, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
@@ -267,7 +282,7 @@ extension InventoryController: FloatyDelegate {
             self.tableTop.constant = 0.0
             self.floaty.close()
         })
-        floaty.addItem("Add", icon: UIImage.fontAwesomeIcon(name: .edit, style: .regular, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
+        floaty.addItem("Add", icon: UIImage.fontAwesomeIcon(name: .edit, style: .solid, textColor: AppTheme.defaultColor, size: CGSize(width: 30, height: 30)), handler: { item in
             self.pushTo(storyBoard: "Main", identifier: "sb_AddInventoryController")
             self.floaty.close()
         })

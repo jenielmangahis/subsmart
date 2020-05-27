@@ -55,7 +55,6 @@ class Survey extends MY_Controller
   }
 
   public function add(){
-    
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
@@ -171,11 +170,30 @@ class Survey extends MY_Controller
     $this->page_data['questions'] = $this->survey_model->getQuestionsPreview($id);
     $this->load->view('survey/preview', $this->page_data);
   }
+
+
   public function answer($id){
+    // ini_set('display_errors', 1);
+    // // echo 'test';
+    // // var_dump($this->input->post('stripeToken'));exit;
+    // // require_once('application/libraries/stripe-php/init.php');
+    // require_once('application/libraries/stripe-php/init.php');
+    //     \Stripe\Stripe::setApiKey("sk_test_mMoB3fX3PZwWzdDGj1EwGr9E004bgLdyLv");
+        
+    //     \Stripe\Charge::create ([
+    //       "amount" => 100 * 100,
+    //       "currency" => "usd",
+    //       "source" => $this->input->post('stripeToken'),
+    //       "description" => "Test payment from itsolutionstuff.com." 
+    //       ]);
+          // var_dump("test");exit;
+
     $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
     echo json_encode($answered);
     exit;
   }
+
+
   public function orderUpdate(){
 
     $data = $this->survey_model->orderUpdate($_POST['id']);

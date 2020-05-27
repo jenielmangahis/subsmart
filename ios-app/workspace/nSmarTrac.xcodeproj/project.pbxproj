@@ -26,6 +26,12 @@
 		8C13D46C245FEDB1008E23B8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C13D46B245FEDB1008E23B8 /* AppDelegate.swift */; };
 		8C13D473245FEDB2008E23B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C13D472245FEDB2008E23B8 /* Assets.xcassets */; };
 		8C13D476245FEDB2008E23B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C13D474245FEDB2008E23B8 /* LaunchScreen.storyboard */; };
+		8C1DBA5C247B92910057204D /* sound1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8C1DBA5A247B90350057204D /* sound1.m4a */; };
+		8C1DBA5D247B92910057204D /* sound2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8C1DBA5B247B90350057204D /* sound2.m4a */; };
+		8C1DBA5F247BBB160057204D /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1DBA5E247BBB160057204D /* MessagesController.swift */; };
+		8C1DBA61247BD8890057204D /* MailboxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1DBA60247BD8890057204D /* MailboxController.swift */; };
+		8C1DBA63247BD9760057204D /* InboxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1DBA62247BD9760057204D /* InboxController.swift */; };
+		8C1DBA65247BD98D0057204D /* ComposeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1DBA64247BD98D0057204D /* ComposeController.swift */; };
 		8C38075C246A75B300BD7FC8 /* AddLeadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C38075B246A75B300BD7FC8 /* AddLeadController.swift */; };
 		8C38075F246ABC1600BD7FC8 /* ScheduleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C38075E246ABC1600BD7FC8 /* ScheduleController.swift */; };
 		8C3914782474F098002AB83D /* InventoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3914772474F098002AB83D /* InventoryController.swift */; };
@@ -47,6 +53,16 @@
 		8C5C438E246D25DB00B66BB6 /* WorkOrderDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5C438D246D25DB00B66BB6 /* WorkOrderDetailController.swift */; };
 		8C5C4390246D263500B66BB6 /* BlockDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5C438F246D263500B66BB6 /* BlockDetailController.swift */; };
 		8C5C4392246D264700B66BB6 /* EventDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5C4391246D264700B66BB6 /* EventDetailController.swift */; };
+		8C7EF23F247B68AF00AB0150 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF23E247B68AF00AB0150 /* ChatViewController.swift */; };
+		8C7EF241247B6B2300AB0150 /* MockUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF240247B6B2300AB0150 /* MockUser.swift */; };
+		8C7EF243247B6B4300AB0150 /* MockSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF242247B6B4300AB0150 /* MockSocket.swift */; };
+		8C7EF245247B6B7A00AB0150 /* MockMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF244247B6B7A00AB0150 /* MockMessage.swift */; };
+		8C7EF249247B6C5E00AB0150 /* BasicAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF248247B6C5E00AB0150 /* BasicAudioController.swift */; };
+		8C7EF24C247B6CF000AB0150 /* CustomMessageFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF24B247B6CF000AB0150 /* CustomMessageFlowLayout.swift */; };
+		8C7EF250247B7B8700AB0150 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF24F247B7B8700AB0150 /* SampleData.swift */; };
+		8C7EF252247B7BF400AB0150 /* Lorem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF251247B7BF400AB0150 /* Lorem.swift */; };
+		8C7EF254247B7D1C00AB0150 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7EF253247B7D1C00AB0150 /* ChatController.swift */; };
+		8C804FF5247D23FF0002E101 /* Reports.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C804FF4247D23FF0002E101 /* Reports.storyboard */; };
 		8C841B8B246963F10013834D /* AddQuickLinkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C841B8A246963F10013834D /* AddQuickLinkController.swift */; };
 		8C841B8D2469640A0013834D /* EditQuickLinkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C841B8C2469640A0013834D /* EditQuickLinkController.swift */; };
 		8C853D3C2462AA3A00DD8209 /* CustomersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C853D3B2462AA3A00DD8209 /* CustomersController.swift */; };
@@ -54,6 +70,16 @@
 		8C853D402462AC9300DD8209 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C853D3F2462AC9300DD8209 /* APIClient.swift */; };
 		8C853D422462AF9400DD8209 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C853D412462AF9400DD8209 /* AppUser.swift */; };
 		8C853D442462AF9F00DD8209 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C853D432462AF9F00DD8209 /* CacheManager.swift */; };
+		8C99398D24763E9D00A0FECC /* AddItemVendorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C99398C24763E9D00A0FECC /* AddItemVendorController.swift */; };
+		8C99398F24763ECA00A0FECC /* EditItemVendorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C99398E24763ECA00A0FECC /* EditItemVendorController.swift */; };
+		8C9939912476412300A0FECC /* EstimatesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9939902476412300A0FECC /* EstimatesController.swift */; };
+		8C993993247648FF00A0FECC /* EstimateFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C993992247648FF00A0FECC /* EstimateFilterController.swift */; };
+		8C9939952476491600A0FECC /* EstimateDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9939942476491600A0FECC /* EstimateDetailController.swift */; };
+		8C99399B24764ABD00A0FECC /* AddStandardEstimateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C99399A24764ABD00A0FECC /* AddStandardEstimateController.swift */; };
+		8C99399D24764ACA00A0FECC /* EditStandardEstimateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C99399C24764ACA00A0FECC /* EditStandardEstimateController.swift */; };
+		8C99399F24764B0600A0FECC /* AddCustomEstimateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C99399E24764B0600A0FECC /* AddCustomEstimateController.swift */; };
+		8C9939A124764B1400A0FECC /* EditCustomEstimateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9939A024764B1400A0FECC /* EditCustomEstimateController.swift */; };
+		8C9939A324764B6E00A0FECC /* EstimateOptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9939A224764B6E00A0FECC /* EstimateOptionController.swift */; };
 		8CC2F3AF24727D0E007D466D /* ExpensesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC2F3AE24727D0E007D466D /* ExpensesController.swift */; };
 		8CC2F3B124727D4A007D466D /* ExpenseDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC2F3B024727D4A007D466D /* ExpenseDetailController.swift */; };
 		8CC2F3B324727D72007D466D /* AddExpensesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC2F3B224727D72007D466D /* AddExpensesController.swift */; };
@@ -110,6 +136,10 @@
 		8CF60E0C2465484500FD9831 /* CustomerEstimatesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF60E0B2465484500FD9831 /* CustomerEstimatesController.swift */; };
 		8CF60E0E2465485500FD9831 /* CustomerInvoicesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF60E0D2465485500FD9831 /* CustomerInvoicesController.swift */; };
 		8CF60E102465724E00FD9831 /* CustomerTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF60E0F2465724E00FD9831 /* CustomerTabController.swift */; };
+		8CF72DF524779191002964DD /* ReportsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF72DF424779191002964DD /* ReportsController.swift */; };
+		8CF72DF82477ABFD002964DD /* EmployeesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF72DF72477ABFD002964DD /* EmployeesController.swift */; };
+		8CF72DFA2477AC0E002964DD /* AddEmployeeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF72DF92477AC0E002964DD /* AddEmployeeController.swift */; };
+		8CF72DFC2477AC28002964DD /* EditEmployeeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF72DFB2477AC28002964DD /* EditEmployeeController.swift */; };
 		8CFAE8E524696CDA003E80B7 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFAE8E424696CDA003E80B7 /* ContactsController.swift */; };
 		8CFAE8E924696D52003E80B7 /* AddContactController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFAE8E824696D52003E80B7 /* AddContactController.swift */; };
 		8CFAE8EB24696D66003E80B7 /* EditContactController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFAE8EA24696D66003E80B7 /* EditContactController.swift */; };
@@ -137,6 +167,12 @@
 		8C13D472245FEDB2008E23B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C13D475245FEDB2008E23B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8C13D477245FEDB2008E23B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8C1DBA5A247B90350057204D /* sound1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound1.m4a; sourceTree = "<group>"; };
+		8C1DBA5B247B90350057204D /* sound2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound2.m4a; sourceTree = "<group>"; };
+		8C1DBA5E247BBB160057204D /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
+		8C1DBA60247BD8890057204D /* MailboxController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailboxController.swift; sourceTree = "<group>"; };
+		8C1DBA62247BD9760057204D /* InboxController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxController.swift; sourceTree = "<group>"; };
+		8C1DBA64247BD98D0057204D /* ComposeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeController.swift; sourceTree = "<group>"; };
 		8C38075B246A75B300BD7FC8 /* AddLeadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLeadController.swift; sourceTree = "<group>"; };
 		8C38075E246ABC1600BD7FC8 /* ScheduleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleController.swift; sourceTree = "<group>"; };
 		8C3914772474F098002AB83D /* InventoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryController.swift; sourceTree = "<group>"; };
@@ -158,6 +194,16 @@
 		8C5C438D246D25DB00B66BB6 /* WorkOrderDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkOrderDetailController.swift; sourceTree = "<group>"; };
 		8C5C438F246D263500B66BB6 /* BlockDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockDetailController.swift; sourceTree = "<group>"; };
 		8C5C4391246D264700B66BB6 /* EventDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailController.swift; sourceTree = "<group>"; };
+		8C7EF23E247B68AF00AB0150 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		8C7EF240247B6B2300AB0150 /* MockUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUser.swift; sourceTree = "<group>"; };
+		8C7EF242247B6B4300AB0150 /* MockSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSocket.swift; sourceTree = "<group>"; };
+		8C7EF244247B6B7A00AB0150 /* MockMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessage.swift; sourceTree = "<group>"; };
+		8C7EF248247B6C5E00AB0150 /* BasicAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAudioController.swift; sourceTree = "<group>"; };
+		8C7EF24B247B6CF000AB0150 /* CustomMessageFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMessageFlowLayout.swift; sourceTree = "<group>"; };
+		8C7EF24F247B7B8700AB0150 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		8C7EF251247B7BF400AB0150 /* Lorem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lorem.swift; sourceTree = "<group>"; };
+		8C7EF253247B7D1C00AB0150 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
+		8C804FF4247D23FF0002E101 /* Reports.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Reports.storyboard; sourceTree = "<group>"; };
 		8C841B8A246963F10013834D /* AddQuickLinkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddQuickLinkController.swift; sourceTree = "<group>"; };
 		8C841B8C2469640A0013834D /* EditQuickLinkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditQuickLinkController.swift; sourceTree = "<group>"; };
 		8C853D3B2462AA3A00DD8209 /* CustomersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomersController.swift; sourceTree = "<group>"; };
@@ -165,6 +211,16 @@
 		8C853D3F2462AC9300DD8209 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		8C853D412462AF9400DD8209 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
 		8C853D432462AF9F00DD8209 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		8C99398C24763E9D00A0FECC /* AddItemVendorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemVendorController.swift; sourceTree = "<group>"; };
+		8C99398E24763ECA00A0FECC /* EditItemVendorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemVendorController.swift; sourceTree = "<group>"; };
+		8C9939902476412300A0FECC /* EstimatesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimatesController.swift; sourceTree = "<group>"; };
+		8C993992247648FF00A0FECC /* EstimateFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimateFilterController.swift; sourceTree = "<group>"; };
+		8C9939942476491600A0FECC /* EstimateDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimateDetailController.swift; sourceTree = "<group>"; };
+		8C99399A24764ABD00A0FECC /* AddStandardEstimateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStandardEstimateController.swift; sourceTree = "<group>"; };
+		8C99399C24764ACA00A0FECC /* EditStandardEstimateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStandardEstimateController.swift; sourceTree = "<group>"; };
+		8C99399E24764B0600A0FECC /* AddCustomEstimateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCustomEstimateController.swift; sourceTree = "<group>"; };
+		8C9939A024764B1400A0FECC /* EditCustomEstimateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCustomEstimateController.swift; sourceTree = "<group>"; };
+		8C9939A224764B6E00A0FECC /* EstimateOptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimateOptionController.swift; sourceTree = "<group>"; };
 		8CC2F3AE24727D0E007D466D /* ExpensesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesController.swift; sourceTree = "<group>"; };
 		8CC2F3B024727D4A007D466D /* ExpenseDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseDetailController.swift; sourceTree = "<group>"; };
 		8CC2F3B224727D72007D466D /* AddExpensesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpensesController.swift; sourceTree = "<group>"; };
@@ -221,6 +277,10 @@
 		8CF60E0B2465484500FD9831 /* CustomerEstimatesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerEstimatesController.swift; sourceTree = "<group>"; };
 		8CF60E0D2465485500FD9831 /* CustomerInvoicesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerInvoicesController.swift; sourceTree = "<group>"; };
 		8CF60E0F2465724E00FD9831 /* CustomerTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerTabController.swift; sourceTree = "<group>"; };
+		8CF72DF424779191002964DD /* ReportsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsController.swift; sourceTree = "<group>"; };
+		8CF72DF72477ABFD002964DD /* EmployeesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployeesController.swift; sourceTree = "<group>"; };
+		8CF72DF92477AC0E002964DD /* AddEmployeeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmployeeController.swift; sourceTree = "<group>"; };
+		8CF72DFB2477AC28002964DD /* EditEmployeeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEmployeeController.swift; sourceTree = "<group>"; };
 		8CFAE8E424696CDA003E80B7 /* ContactsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
 		8CFAE8E824696D52003E80B7 /* AddContactController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactController.swift; sourceTree = "<group>"; };
 		8CFAE8EA24696D66003E80B7 /* EditContactController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContactController.swift; sourceTree = "<group>"; };
@@ -266,6 +326,8 @@
 				8C3914772474F098002AB83D /* InventoryController.swift */,
 				8C3914792474F0DA002AB83D /* AddInventoryController.swift */,
 				8C39147B2474F0EF002AB83D /* EditInventoryController.swift */,
+				8C99398C24763E9D00A0FECC /* AddItemVendorController.swift */,
+				8C99398E24763ECA00A0FECC /* EditItemVendorController.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -277,11 +339,19 @@
 			path = Calculator;
 			sourceTree = "<group>";
 		};
-		8C0350F7246B8D9B00B27E54 /* Estimator */ = {
+		8C0350F7246B8D9B00B27E54 /* Estimates */ = {
 			isa = PBXGroup;
 			children = (
+				8C9939902476412300A0FECC /* EstimatesController.swift */,
+				8C993992247648FF00A0FECC /* EstimateFilterController.swift */,
+				8C9939942476491600A0FECC /* EstimateDetailController.swift */,
+				8C9939A224764B6E00A0FECC /* EstimateOptionController.swift */,
+				8C99399A24764ABD00A0FECC /* AddStandardEstimateController.swift */,
+				8C99399C24764ACA00A0FECC /* EditStandardEstimateController.swift */,
+				8C99399E24764B0600A0FECC /* AddCustomEstimateController.swift */,
+				8C9939A024764B1400A0FECC /* EditCustomEstimateController.swift */,
 			);
-			path = Estimator;
+			path = Estimates;
 			sourceTree = "<group>";
 		};
 		8C0350F8246B8DA600B27E54 /* Expenses */ = {
@@ -338,6 +408,15 @@
 			path = nSmarTrac;
 			sourceTree = "<group>";
 		};
+		8C1DBA59247B8F840057204D /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				8C1DBA5A247B90350057204D /* sound1.m4a */,
+				8C1DBA5B247B90350057204D /* sound2.m4a */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		8C38075A246A758F00BD7FC8 /* Leads */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,6 +454,172 @@
 				8C391483247506EB002AB83D /* EditInvoiceController.swift */,
 			);
 			path = Invoices;
+			sourceTree = "<group>";
+		};
+		8C5015542477DADE00073F72 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		8C5015552477DBF600073F72 /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Accounts;
+			sourceTree = "<group>";
+		};
+		8C5015562477DC0100073F72 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		8C5015572477DC0C00073F72 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				8C7EF23D247B687100AB0150 /* iMessageKit */,
+				8C1DBA5E247BBB160057204D /* MessagesController.swift */,
+				8C7EF253247B7D1C00AB0150 /* ChatController.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		8C7EF23D247B687100AB0150 /* iMessageKit */ = {
+			isa = PBXGroup;
+			children = (
+				8C7EF24D247B6D6600AB0150 /* AudioController */,
+				8C7EF24E247B7B7500AB0150 /* DataGeneration */,
+				8C7EF24A247B6CE200AB0150 /* Layout */,
+				8C7EF247247B6BAA00AB0150 /* Models */,
+				8C1DBA59247B8F840057204D /* Sounds */,
+				8C7EF23E247B68AF00AB0150 /* ChatViewController.swift */,
+			);
+			path = iMessageKit;
+			sourceTree = "<group>";
+		};
+		8C7EF247247B6BAA00AB0150 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8C7EF244247B6B7A00AB0150 /* MockMessage.swift */,
+				8C7EF242247B6B4300AB0150 /* MockSocket.swift */,
+				8C7EF240247B6B2300AB0150 /* MockUser.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8C7EF24A247B6CE200AB0150 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				8C7EF24B247B6CF000AB0150 /* CustomMessageFlowLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		8C7EF24D247B6D6600AB0150 /* AudioController */ = {
+			isa = PBXGroup;
+			children = (
+				8C7EF248247B6C5E00AB0150 /* BasicAudioController.swift */,
+			);
+			path = AudioController;
+			sourceTree = "<group>";
+		};
+		8C7EF24E247B7B7500AB0150 /* DataGeneration */ = {
+			isa = PBXGroup;
+			children = (
+				8C7EF251247B7BF400AB0150 /* Lorem.swift */,
+				8C7EF24F247B7B8700AB0150 /* SampleData.swift */,
+			);
+			path = DataGeneration;
+			sourceTree = "<group>";
+		};
+		8C7EF255247B7ECF00AB0150 /* FileVault */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FileVault;
+			sourceTree = "<group>";
+		};
+		8C7EF256247B7F2400AB0150 /* Mailbox */ = {
+			isa = PBXGroup;
+			children = (
+				8C1DBA60247BD8890057204D /* MailboxController.swift */,
+				8C1DBA62247BD9760057204D /* InboxController.swift */,
+				8C1DBA64247BD98D0057204D /* ComposeController.swift */,
+			);
+			path = Mailbox;
+			sourceTree = "<group>";
+		};
+		8C804FEA247D01B00002E101 /* Taxes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Taxes;
+			sourceTree = "<group>";
+		};
+		8C804FEB247D01C60002E101 /* WorkOrders */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = WorkOrders;
+			sourceTree = "<group>";
+		};
+		8C804FEC247D11380002E101 /* Timesheet */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Timesheet;
+			sourceTree = "<group>";
+		};
+		8C804FED247D11460002E101 /* Employees */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Employees;
+			sourceTree = "<group>";
+		};
+		8C804FEE247D11560002E101 /* Customers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Customers;
+			sourceTree = "<group>";
+		};
+		8C804FEF247D11CD0002E101 /* Estimates */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Estimates;
+			sourceTree = "<group>";
+		};
+		8C804FF0247D11DB0002E101 /* Expenses */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Expenses;
+			sourceTree = "<group>";
+		};
+		8C804FF1247D11E90002E101 /* Receivables */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Receivables;
+			sourceTree = "<group>";
+		};
+		8C804FF2247D11F50002E101 /* Sales */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Sales;
+			sourceTree = "<group>";
+		};
+		8C804FF3247D11FA0002E101 /* PopularReports */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PopularReports;
 			sourceTree = "<group>";
 		};
 		8C853D3A2462AA0900DD8209 /* Customers */ = {
@@ -464,11 +709,19 @@
 		8CF2B68124600254000982D9 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				8C7EF256247B7F2400AB0150 /* Mailbox */,
+				8C5015572477DC0C00073F72 /* Chat */,
+				8C5015562477DC0100073F72 /* Settings */,
+				8C5015552477DBF600073F72 /* Accounts */,
+				8C5015542477DADE00073F72 /* Notifications */,
+				8C7EF255247B7ECF00AB0150 /* FileVault */,
+				8CF72DF62477A64E002964DD /* Employees */,
+				8CF72DF32477916D002964DD /* Reports */,
 				8C3914762474EFCE002AB83D /* Invoices */,
 				8C0350ED246B871B00B27E54 /* WorkOrder */,
 				8C38075D246ABBF900BD7FC8 /* Schedule */,
 				8C0350F8246B8DA600B27E54 /* Expenses */,
-				8C0350F7246B8D9B00B27E54 /* Estimator */,
+				8C0350F7246B8D9B00B27E54 /* Estimates */,
 				8C0350F6246B8CA100B27E54 /* Calculator */,
 				8C0350F5246B8C8300B27E54 /* Inventory */,
 				8C0350F4246B8C6700B27E54 /* Tasks */,
@@ -517,6 +770,7 @@
 			isa = PBXGroup;
 			children = (
 				8CF2B68D24600A27000982D9 /* Main.storyboard */,
+				8C804FF4247D23FF0002E101 /* Reports.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -576,6 +830,34 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
+		8CF72DF32477916D002964DD /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				8C804FF3247D11FA0002E101 /* PopularReports */,
+				8C804FF2247D11F50002E101 /* Sales */,
+				8C804FF1247D11E90002E101 /* Receivables */,
+				8C804FF0247D11DB0002E101 /* Expenses */,
+				8C804FEF247D11CD0002E101 /* Estimates */,
+				8C804FEE247D11560002E101 /* Customers */,
+				8C804FED247D11460002E101 /* Employees */,
+				8C804FEC247D11380002E101 /* Timesheet */,
+				8C804FEB247D01C60002E101 /* WorkOrders */,
+				8C804FEA247D01B00002E101 /* Taxes */,
+				8CF72DF424779191002964DD /* ReportsController.swift */,
+			);
+			path = Reports;
+			sourceTree = "<group>";
+		};
+		8CF72DF62477A64E002964DD /* Employees */ = {
+			isa = PBXGroup;
+			children = (
+				8CF72DF72477ABFD002964DD /* EmployeesController.swift */,
+				8CF72DF92477AC0E002964DD /* AddEmployeeController.swift */,
+				8CF72DFB2477AC28002964DD /* EditEmployeeController.swift */,
+			);
+			path = Employees;
+			sourceTree = "<group>";
+		};
 		8CFAE8E324696B70003E80B7 /* Contacts */ = {
 			isa = PBXGroup;
 			children = (
@@ -616,6 +898,7 @@
 				8C13D465245FEDB1008E23B8 /* Frameworks */,
 				8C13D466245FEDB1008E23B8 /* Resources */,
 				1E053BC98DEF7E608D410479 /* [CP] Embed Pods Frameworks */,
+				B29A787FFB78ADD5B8311109 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -664,8 +947,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C1DBA5C247B92910057204D /* sound1.m4a in Resources */,
+				8C1DBA5D247B92910057204D /* sound2.m4a in Resources */,
 				8C5820E1247336A000E21A8E /* Font Awesome 5 Duotone-Solid-900.otf in Resources */,
 				8CF2B68C246009D1000982D9 /* img-bgLogin.jpg in Resources */,
+				8C804FF5247D23FF0002E101 /* Reports.storyboard in Resources */,
 				8CF2B6A924600C69000982D9 /* Lato-Regular.ttf in Resources */,
 				8C5820E4247336A000E21A8E /* Font Awesome 5 Pro-Solid-900.otf in Resources */,
 				8CF2B6AB24600C69000982D9 /* Muli-Regular.ttf in Resources */,
@@ -704,6 +990,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nSmarTrac/Pods-nSmarTrac-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B29A787FFB78ADD5B8311109 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nSmarTrac/Pods-nSmarTrac-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nSmarTrac/Pods-nSmarTrac-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nSmarTrac/Pods-nSmarTrac-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C1F48844E21C7D4D6E47F403 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -733,9 +1036,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C99399F24764B0600A0FECC /* AddCustomEstimateController.swift in Sources */,
+				8C1DBA61247BD8890057204D /* MailboxController.swift in Sources */,
+				8C7EF23F247B68AF00AB0150 /* ChatViewController.swift in Sources */,
+				8C7EF241247B6B2300AB0150 /* MockUser.swift in Sources */,
 				8CC2F3BB24728493007D466D /* EditMileageDistanceController.swift in Sources */,
 				8C0B2E2124690605009322A4 /* AddOtherContactController.swift in Sources */,
 				8C0B2E2724692204009322A4 /* AddCustomerStandardEstimateController.swift in Sources */,
+				8CF72DF524779191002964DD /* ReportsController.swift in Sources */,
+				8C9939952476491600A0FECC /* EstimateDetailController.swift in Sources */,
 				8CF60E0A2465483100FD9831 /* CustomerScheduleController.swift in Sources */,
 				8CC2F3AF24727D0E007D466D /* ExpensesController.swift in Sources */,
 				8CF0BEB724640567009A8D75 /* AddCustomerController.swift in Sources */,
@@ -749,22 +1058,31 @@
 				8C38075F246ABC1600BD7FC8 /* ScheduleController.swift in Sources */,
 				8CC2F3B524727D99007D466D /* EditExpensesController.swift in Sources */,
 				8CF2B6B924600D09000982D9 /* UINavigationBar+Gradient.swift in Sources */,
+				8C9939A324764B6E00A0FECC /* EstimateOptionController.swift in Sources */,
 				8CC2F3C324729BDE007D466D /* ScheduleTabController.swift in Sources */,
 				8CF2B6C724602BBB000982D9 /* HomeController.swift in Sources */,
+				8CF72DFA2477AC0E002964DD /* AddEmployeeController.swift in Sources */,
 				8C13D46C245FEDB1008E23B8 /* AppDelegate.swift in Sources */,
 				8C0350E5246B867B00B27E54 /* EditBlockTimeController.swift in Sources */,
 				8CF2B6B424600D09000982D9 /* UIViewController+Extensions.swift in Sources */,
 				8C0B2E25246921A6009322A4 /* AddCustomerScheduleController.swift in Sources */,
 				8C0350E3246B866900B27E54 /* AddBlockTimeController.swift in Sources */,
+				8CF72DF82477ABFD002964DD /* EmployeesController.swift in Sources */,
+				8C1DBA5F247BBB160057204D /* MessagesController.swift in Sources */,
 				8C853D3C2462AA3A00DD8209 /* CustomersController.swift in Sources */,
 				8CF2B69124600C1F000982D9 /* MyPickerView.swift in Sources */,
+				8C99399D24764ACA00A0FECC /* EditStandardEstimateController.swift in Sources */,
+				8C7EF243247B6B4300AB0150 /* MockSocket.swift in Sources */,
 				8CF2B6B724600D09000982D9 /* UIView+Designable.swift in Sources */,
 				8C5C438E246D25DB00B66BB6 /* WorkOrderDetailController.swift in Sources */,
 				8CF60E0C2465484500FD9831 /* CustomerEstimatesController.swift in Sources */,
+				8C7EF254247B7D1C00AB0150 /* ChatController.swift in Sources */,
 				8C0B2E292469222A009322A4 /* AddCustomerCustomEstimateController.swift in Sources */,
+				8C9939A124764B1400A0FECC /* EditCustomEstimateController.swift in Sources */,
 				8C853D3E2462AB2F00DD8209 /* App.swift in Sources */,
 				8C0350EF246B874100B27E54 /* WorkOrderController.swift in Sources */,
 				8C3914862475082C002AB83D /* InvoiceFilterController.swift in Sources */,
+				8C7EF245247B6B7A00AB0150 /* MockMessage.swift in Sources */,
 				8C841B8B246963F10013834D /* AddQuickLinkController.swift in Sources */,
 				8CC2F3B324727D72007D466D /* AddExpensesController.swift in Sources */,
 				8CF60E082465463C00FD9831 /* CustomerDetailController.swift in Sources */,
@@ -777,6 +1095,7 @@
 				8CF60E102465724E00FD9831 /* CustomerTabController.swift in Sources */,
 				8CF0BEB92464057D009A8D75 /* EditCustomerController.swift in Sources */,
 				8C853D402462AC9300DD8209 /* APIClient.swift in Sources */,
+				8C7EF249247B6C5E00AB0150 /* BasicAudioController.swift in Sources */,
 				8CF2B69D24600C3B000982D9 /* MaterialTextField.swift in Sources */,
 				8CF0BEBB246406EA009A8D75 /* PageViewController.swift in Sources */,
 				8C0350E7246B869000B27E54 /* AddEventController.swift in Sources */,
@@ -787,10 +1106,14 @@
 				8C38075C246A75B300BD7FC8 /* AddLeadController.swift in Sources */,
 				8CE94BC324724B6900FBD92D /* WorkOrderFilterController.swift in Sources */,
 				8CC2F3B924727EC6007D466D /* AddMileageDistanceController.swift in Sources */,
+				8C1DBA63247BD9760057204D /* InboxController.swift in Sources */,
 				8CF2B6C924602CBA000982D9 /* MenuController.swift in Sources */,
 				8C391482247506CD002AB83D /* AddInvoiceController.swift in Sources */,
 				8CF2B6A224600C3B000982D9 /* BaseFormController.swift in Sources */,
 				8CFAE8E924696D52003E80B7 /* AddContactController.swift in Sources */,
+				8C1DBA65247BD98D0057204D /* ComposeController.swift in Sources */,
+				8C9939912476412300A0FECC /* EstimatesController.swift in Sources */,
+				8CF72DFC2477AC28002964DD /* EditEmployeeController.swift in Sources */,
 				8CF2B6A124600C3B000982D9 /* ScrollViewController.swift in Sources */,
 				8C841B8D2469640A0013834D /* EditQuickLinkController.swift in Sources */,
 				8CF2B6B524600D09000982D9 /* UITextField+Extensions.swift in Sources */,
@@ -799,6 +1122,8 @@
 				8C0B2E2E246961D0009322A4 /* QuickLinksController.swift in Sources */,
 				8C0B2E2324690622009322A4 /* AddOtherAddressController.swift in Sources */,
 				8CF2B6A324600C3B000982D9 /* MaterialFormController.swift in Sources */,
+				8C7EF252247B7BF400AB0150 /* Lorem.swift in Sources */,
+				8C993993247648FF00A0FECC /* EstimateFilterController.swift in Sources */,
 				8C5C4392246D264700B66BB6 /* EventDetailController.swift in Sources */,
 				8CFAE8E524696CDA003E80B7 /* ContactsController.swift in Sources */,
 				8C39147A2474F0DA002AB83D /* AddInventoryController.swift in Sources */,
@@ -808,18 +1133,23 @@
 				8CF1F1192464284B00A47582 /* OtherPageController.swift in Sources */,
 				8C39147C2474F0EF002AB83D /* EditInventoryController.swift in Sources */,
 				8C853D442462AF9F00DD8209 /* CacheManager.swift in Sources */,
+				8C99398D24763E9D00A0FECC /* AddItemVendorController.swift in Sources */,
 				8CF2B6B824600D09000982D9 /* UIView+Gradient.swift in Sources */,
 				8CF2B69C24600C3B000982D9 /* BaseMaterialFormController.swift in Sources */,
 				8C5C438C246D148000B66BB6 /* EditLeadController.swift in Sources */,
 				8CF2B685246002A2000982D9 /* LoginController.swift in Sources */,
 				8C0350E9246B86D200B27E54 /* EditEventController.swift in Sources */,
 				8CC2F3BF24728641007D466D /* EditMileageOdometerController.swift in Sources */,
+				8C7EF24C247B6CF000AB0150 /* CustomMessageFlowLayout.swift in Sources */,
 				8CE94BC12472464400FBD92D /* ContactFilterController.swift in Sources */,
 				8C5C438A246D146F00B66BB6 /* LeadDetailController.swift in Sources */,
 				8CF2B6BE24600D7D000982D9 /* Utils.swift in Sources */,
+				8C99399B24764ABD00A0FECC /* AddStandardEstimateController.swift in Sources */,
 				8CF2B69E24600C3B000982D9 /* MaterialFormFieldToolbar.swift in Sources */,
 				8CF2B6B624600D09000982D9 /* UIFont+Extensions.swift in Sources */,
+				8C7EF250247B7B8700AB0150 /* SampleData.swift in Sources */,
 				8CF2B6A424600C3B000982D9 /* MaterialDatePickerField.swift in Sources */,
+				8C99398F24763ECA00A0FECC /* EditItemVendorController.swift in Sources */,
 				8C0350F1246B875200B27E54 /* AddWorkOrderController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
