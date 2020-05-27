@@ -1133,6 +1133,56 @@ footer{
 .container-fluid{
    padding:0 10px
 }
+/* Demo Calendar */
+.time-schedule {
+  padding-top: 110px;
+}
+.schedule-text {
+  font-size: 19px;
+  font-weight: 600;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  color: #a5a5a5;
+}
+div.pick-time p {
+  font-size: 14px;
+  font-weight: 600;
+}
+a.btn-add-guests {
+  margin-top: 18px;
+  margin-bottom: 5px;
+}
+.cn-name {
+  font-size: 12px;
+}
+.mt-15 {
+  margin-top: 15px;
+}
+a.btn-time-schedule {
+  width: 100%;
+  font-size: 18px;
+  margin-top: 13px;
+}
+.align-center {
+  text-align: center;
+}
+.loader-pos {
+  margin: auto;
+  position: absolute !important;
+  top: 100px !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  z-index: 999 !important;
+}
+textarea.vr-cs {
+  position: relative;
+  top: 12px;
+  height: 92px;
+}
+.mtc-13 {
+  margin-top: 13px !important;
+}
 @media (min-width:1024px){
    .container-fluid{
        width:960px;

@@ -70,10 +70,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </section>
   </section>
   <section class="ccontainer cust-hero-container">
-    <div class="content-container" style="margin-bottom: 20px;">
+    <div class="content-container" style="margin-bottom: 20px;padding-bottom:100px;">
         <div class="row">
-          <div class="col-md-5">
-                <img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">                
+          <div class="col-md-4 pl-0 pr-2">
+                <img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">
                 <br />
                 <br />
                 <h3 style="padding:20px 0px;">Schedule Demo</h3>
@@ -83,56 +83,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <p>Thank you,<br /><b>Team nSmartTrac</b></p>
           </div>
 
-          <div class="col-md-7">
+          <div class="col-md-6">
               <div class="calendar-form">
                 <div id='loading'>loading...</div>
                 <div id='calendar'></div>
-                <div class="calendar-date-schedule"></div>
+                <div class="loader-container"></div>
               </div>
               <div class="schedule-fillup-form hidden">
-                  <p>Enter Details</p>
+                  <p class="schedule-text">Enter Details</p>
                   <?php echo form_open('demo/request_demo', ['class' => 'form-validate']); ?>
                     <input type="hidden" name="demo_time" value="" id="demo_time">
                     <input type="hidden" name="demo_date" value="" id="demo_date">
                     <div class="col-md-6 form-group">
-                        <label for="contact_name">Name *</label>
+                        <!-- <label for="contact_name">Name *</label> -->
                         <input type="text" class="form-control" name="name" id="name"
-                               required />
+                               required placeholder="Name *" />
                     </div>
                     <div class="col-md-6 form-group">
-                        <label for="contact_name">Email *</label>
-                        <input type="text" class="form-control" name="email" id="email"
+                        <!-- <label for="contact_name">Email *</label> -->
+                        <input type="text" class="form-control" name="email" id="email" placeholder="Email *"
                                required />
-                        <a class="btn btn-info btn-add-guests" href="javascript:void(0);">Add Guests</a>
+                        <a class="btn btn-info btn-add-guests pt-2 pb-2" href="javascript:void(0);">Add Guests</a>
                     </div>
-                    <div class="col-md-6 form-group hidden grp-guest-emails">
-                        <label for="contact_name">Guest Email(s)</label>
-                        <textarea class="form-control" name="guest_emails" id="guest_emails" required></textarea>
+                    <div class="col-md-6 form-group hidden grp-guest-emails time-grp">
+                        <!-- <label for="contact_name">Guest Email(s)</label> -->
+                        <textarea class="form-control mtc-13" name="guest_emails" id="guest_emails" required placeholder="Guest Email(s)"></textarea>
                         <small>Notify up to 10 additional guests of the scheduled event.</small>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="contact_name">Phone Number *</label>
-                        <input type="text" class="form-control" name="phone_number" id="phone_number"
-                               required />
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label for="contact_name">Please let us know the key features you are interested to know. *</label>
-                        <textarea class="form-control" name="key_features" id="key_features" required></textarea>
-                        
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label for="contact_name">Send text reminder to</label>
-                        <input type="text" class="form-control" name="text_reminder" id="text_reminder" />
-                    </div>
-                    <div class="col-sm-12 mt-3">
-                        <button type="submit" class="btn btn-flat btn-primary">Schedule Event</button>
-                        <a href="javascript:void(0);" class="btn btn-info btn-change-schedule">Change Schedule</a>
+                    <div class="col-md-12 pl-0 pr-0">
+                      <div class="col-md-6 form-group time-grp">
+                          <!-- <label for="contact_name">Phone Number *</label> -->
+                          <input type="text" class="form-control mtc-13" name="phone_number" id="phone_number" placeholder="Phone Number *"
+                                 required />
+                          <input type="text" class="form-control mt-15" name="text_reminder" id="text_reminder" placeholder="Send text reminder to" />
+                      </div>
+                      <div class="col-md-6 form-group time-grp">
+                          <!-- <label for="contact_name" class="cn-name">Please let us know the key features you are interested to know. *</label> -->
+                          <textarea class="form-control vr-cs" name="key_features" id="key_features" required placeholder="Please let us know the key features you are interested to know. *"></textarea>
+                      </div>
+                      <div class="col-sm-12 mt-3 calendar-btn align-center">
+                          <button type="submit" class="btn btn-flat btn-primary">Schedule Event</button>
+                          <a href="javascript:void(0);" class="btn btn-info btn-change-schedule">Change Schedule</a>
+                      </div>
                     </div>
                   <?php echo form_close(); ?>
                   </form>
               </div>
           </div>
-        </div>        
+          <div class="col-md-2 time-schedule">
+            <div class="calendar-date-schedule"></div>
+          </div>
+        </div>
     </div>
   </section>
 </section>
@@ -145,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 $(".btn-add-guests").click(function(){
   $(this).addClass("hidden");
-  $(".grp-guest-emails").removeClass("hidden");  
+  $(".grp-guest-emails").removeClass("hidden");
 });
 
 $(".btn-change-schedule").click(function(){
@@ -165,28 +166,29 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     right: ''
   },
   dateClick: function(info) {
-    $(".calendar-date-schedule").html("<div class='three-quarters-loader'></div>"); 
+    $(".loader-container").html("<div class='three-quarters-loader loader-pos'></div>");
     setTimeout(function () {
         $.ajax({
            type: "POST",
-           url: base_url + 'demo/time_schedule',      
+           url: base_url + 'demo/time_schedule',
            data: {"date":info.dateStr},
            success: function(o)
            {
-              $(".calendar-date-schedule").html(o); 
+              $(".calendar-date-schedule").html(o);
            },
            complete: function() {
               $("#demo_date").val(info.dateStr);
-
-              $(".btn-time-schedule").click(function(){              
+              $(".loader-container").html('');
+              $(".btn-time-schedule").click(function(){
                 $("#demo_time").val(demo_time);
+                $(".calendar-date-schedule").html('');
                 $(".calendar-form").addClass("hidden");
-                $(".schedule-fillup-form").removeClass("hidden");                
+                $(".schedule-fillup-form").removeClass("hidden");
               });
           }
         });
-    }, 1000);        
-    
+    }, 1000);
+
   },
   /*defaultDate: '2020-02-12',*/
   editable: false,
