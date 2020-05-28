@@ -6,6 +6,7 @@ class Builder_model extends MY_Model {
 	public $table_jobs_row_entry = 'jobs_row_entry';
 	public $table_custom_forms = 'custom_forms';
 	public $table_form_responses = 'form_responses';
+    public $table_form_responses_rows = 'form_responses_rows';
 	public $table_options = 'options';
 	public $table_questions = 'questions';
     public $table_form_groups = 'form_groups';

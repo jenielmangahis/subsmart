@@ -133,7 +133,8 @@ class Users_model extends MY_Model {
 
 		$this->db->select('COUNT(id) as totalUsers');
 		$this->db->from($this->table);
-		$this->db->where('parent_id', $parent_id);
+		//$this->db->where('parent_id', $parent_id);
+		$this->db->where('company_id', $parent_id);
 		$query = $this->db->get()->row();	
 
 		return $query->totalUsers;
@@ -206,7 +207,7 @@ class Users_model extends MY_Model {
 
 
 
-		$this->activity_model->add($row->name.' ('.$row->username.') Logged in', $row->id);
+		$this->activity_model->add($row->FName.' ('.$row->username.') Logged in', $row->id);
 
 
 
@@ -302,7 +303,8 @@ class Users_model extends MY_Model {
 
 		$this->db->select('*');
 		$this->db->from($this->table);
-		$this->db->where('parent_id', $user_id);
+		//$this->db->where('parent_id', $user_id);
+		$this->db->where('company_id', $user_id);
 
 		if($loggedUserId) {
 

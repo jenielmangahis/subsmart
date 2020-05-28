@@ -79,19 +79,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<div class="col-md-6 pr-0 float-left">
 							<div class="input-group">
-								<select class="reg-select z-100 cmb-industry" id="sel2">
-										<option>--Select your Industry--</option>
-                                        <option value="Building Contractors">Building Contractors</option>
-                                        <option value="Financial Services">Financial Services</option>
-                                        <option value="Technical Services">Technical Services</option>
-                                        <option value="Health And Beauty">Health And Beauty</option>
-                                        <option value="Transportation">Transportation</option>
-                                        <option value="Organization / Cleaning">Organization / Cleaning</option>
-                                        <option value="Entertainment Services">Entertainment Services</option>
-                                        <option value="Design Services">Design Services</option>
-                                        <option value="Business Services">Business Services</option>
-                                        <option value="Other">Other</option>
-										<!-- <option value="-">--Select your Industry--</option>
+								<select class="reg-select z-100" id="sel2">
+										<option value="-">--Select your Industry--</option>
 										<option value="Accountant">Accountant</option>
 										<option value="Alarm Company">Alarm Company</option>
 										<option value="Alternative Therapy">Alternative Therapy</option>
@@ -177,57 +166,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<option value="Well Pumps">Well Pumps</option>
 										<option value="Widlife Control">Widlife Control</option>
 										<option value="Windows">Windows</option>
-										<option value="Wines">Wines</option> -->
+										<option value="Wines">Wines</option>
 								</select>
 							</div>
 						</div>
+
 						<div class="col-md-6 float-left">
-							<div class="input-group">
-                            <select class="reg-select z-100 cmb-specific-business" id="sel1">
-
-                                <option>--Select your Specific Business--</option>
-                                <!-- <option>Cabinetry</option>
-                                <option>Chimney / Fireplace</option>
-                                <option>Concrete & Asphalt</option>
-                                <option>Deck & Patio</option>
-                                <option>Demolition</option>
-                                <option>Doors & Windows</option>
-                                <option>Drywall</option>
-                                <option>Fencing</option>
-                                <option>Flooring</option>
-                                <option>Framer</option>
-                                <option>General Contractor</option>
-                                <option>Handy Man</option>
-                                <option>Home Inspection</option>
-                                <option>HVAC</option>
-                                <option>Landscaper</option>
-                                <option>Lawn Care</option>
-                                <option>Lighting</option>
-                                <option>Painter</option>
-                                <option>Plumber</option>
-                                <option>Pool & Spa</option>
-                                <option>Roofers</option>
-                                <option>Sewer & Septic</option>
-                                <option>Snow Removal</option>
-                                <option>Solar & Energy</option>
-                                <option>Tile & Grout</option>
-                                <option>Tree Services</option> -->
-
-                                <!-- 
-                                <option>--Select your Role--</option>
-                                <option>Aerospace Industry</option>
-                                <option>Transport Industry</option>
-                                <option>Computer Industry</option>
-                                <option>Telecommunication industry</option>
-                                <option>Agriculture industry</option>
-                                <option>Construction Industry</option>
-                                <option>Education Industry</option> 
-                                -->
-
-                            </select>
-                           	</div>
-                        </div>
-						<div class="col-md-6 pr-0 float-left">
 							<div class="input-group">
 								<select class="reg-select z-100" id="sel3">
 										<option>--Select your Role--</option>
@@ -241,6 +185,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</select>
 							</div>
 						</div>
+
 
 						<div class="col-md-12">
 							<div class="input-group">
@@ -262,33 +207,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
-<script type="text/javascript">
-    $(function(){
-        var base_url = "<?php echo base_url();?>";
-
-        $(".cmb-industry").change(function(){
-            var selected_industry = $(this).val();
-            $.ajax({
-               type: "POST",
-               url: base_url + '/get_specific_business',      
-               data: {"selected_industry":selected_industry},
-               success: function(o)
-               {
-                  $(".cmb-specific-business").empty();
-                  $(".cmb-specific-business").append(o);
-               }
-            });
-        });
-
-        $(".lazy").slick({
-         dots: false,
-         prevArrow: false,
-         nextArrow: false,
-         slidesToScroll: 1,
-         autoplay: true,
-         autoplaySpeed: 2000,
-         centerMode: true,
-        });
-    });
-</script>
-

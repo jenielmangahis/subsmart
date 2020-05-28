@@ -6119,7 +6119,8 @@ fieldset[disabled] .btn.focus {
 	content: "\f111";
 	font-size: 9px;
 	color: #fff;
-	padding: 0px 0px 0px 6px;
+	/*padding: 0px 0px 0px 6px;*/
+    padding: 1px 6px 0px 5px;
 	border: 2px solid #38c46e; /*2bde73; #52bfd1;*/
 	background-color: #64d38f;
 }

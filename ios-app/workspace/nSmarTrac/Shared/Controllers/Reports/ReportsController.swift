@@ -24,12 +24,16 @@ class ReportsController: UIViewController {
     let array3 = ["Account Receivable", "Invoice by Date", "Aging Summary", "Commercial vs Residential"]
     let array4 = ["Expenses By Category Summary", "Expenses By Category", "Expenses By Customer", "Expenses By Work Order", "Expenses By Vendor"]
     let array5 = ["Estimates Summary"]
-    let array6 = ["Sales Summary By Customer", "Sales By Customer", "Sales By Customer Groups", "Sales By Customer Source", "Tax Paid by Customers", "Customer Demographics", "Customer Source"]
+    let array6 = ["Sales Summary By Customer", "Sales By Customer Groups", "Sales By Customer Source", "Tax Paid by Customers", "Customer Demographics", "Customer Source"]
     let array7 = ["Payroll Summary", "Payroll By Employee", "Payroll Log Details", "Percent Sales Commission Report"]
     let array8 = ["Time Log Summary", "Time Log Details"]
     let array9 = ["Work Order Status"]
     let array10 = ["Sales Tax", "Non Taxable Sales"]
+    
+    let ids1 = ["sb_MonthlyCloseoutController", "sb_YearlyCloseoutController", "sb_ProfitLossController", "sb_SalesLeaderboardController"]
+    
     var titles: [[String]] = []
+    var identifier: [[String]] = []
     
 
     // MARK: - Lifecycle -
@@ -39,6 +43,7 @@ class ReportsController: UIViewController {
         initNavBar()
         
         titles = [array1, array2, array3, array4, array5, array6, array7, array8, array9, array10]
+        identifier = [ids1]
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -135,6 +140,6 @@ extension ReportsController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        self.pushTo(storyBoard: "Reports", identifier: "sb_PaymentByMonthController")
     }
 }
