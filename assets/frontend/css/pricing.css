@@ -5552,7 +5552,8 @@ body.payroll--horizontal .payroll--wrapper{
    border-bottom:1px solid #ccc;
    position:relative;
    margin-left:-10px;
-   margin-right:-10px
+   margin-right:-10px;
+   height:150px !important;
 }
 .payroll-text{
    font-size:12px;
@@ -5588,7 +5589,7 @@ body.payroll--horizontal .payroll--wrapper{
 }
 .payroll--section.section--core{
    background-color:#fff;
-   padding-top:144px;
+   /*padding-top:144px;*/
    margin-top:12px
 }
 .payroll--section .section--title{
@@ -6776,5 +6777,9 @@ body.try-it-free .pricing-card-layout .price-container .pricing-section{
    height:2px;
    width:100%!important;
    margin-bottom:15px
+}
+.addon-list li{
+  display: inline-block;
+  width: 40%;
 }
 /*Magic Carpet End*/

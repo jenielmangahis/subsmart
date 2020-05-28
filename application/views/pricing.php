@@ -699,7 +699,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </label>
                                 </div>
                                 <div class="section--right">
-                                    <ul> 
+                                    <ul class="addon-list"> 
                                         <li> Ask Customer for Review </li>
                                         <li> Online Booking </li>
                                         <li> Lead Contact Form </li>
@@ -722,7 +722,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </label>
                                 </div>
                                 <div class="section--right">
-                                    <ul> 
+                                    <ul class="addon-list"> 
                                         <li> NiceJob Connector </li>
                                         <li> Deals & Steals </li>
                                         <li> Proposal Kit </li>
