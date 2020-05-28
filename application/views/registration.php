@@ -109,8 +109,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</div>
 </div>
 </section>
-<<<<<<< HEAD
 <?php include viewPath('frontcommon/footer'); ?>
-=======
-<?php include viewPath('frontcommon/footer'); ?>
->>>>>>> remotes/origin/staging
