@@ -1085,11 +1085,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div></div>
   </section>
 </section>
-<section class="ccontainer ss-section all-plans-include" style="margin-top: 20px; margin-bottom: 20px; " id="section-2">
-    <div class="content-container">
-        <div class="ctext">
-            <h2 style="font-size: 36px; line-height: 29px; text-align: left;" class="all-plans-title">Testimonials</h2>
-        </div>
+<section class="ccontainer ss-section all-plans-include" style="margin-bottom: 20px; " id="section-2">
+    <div class="content-container">        
         <div class="grid-image-text container-fluid g_vertical_align_image">
             <div class="row grid-container-960">
                 <div class="hero-slider-signup owl-carousel">
