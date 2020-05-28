@@ -1085,32 +1085,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div></div>
   </section>
 </section>
-<section class="ccontainer ss-section all-plans-include" style="padding-top: 30px; padding-bottom: 20px; " id="section-2">
+<section class="ccontainer ss-section all-plans-include" style="margin-top: 20px; margin-bottom: 20px; " id="section-2">
     <div class="content-container">
         <div class="ctext">
-            <h2 style="font-size: 36px; line-height: 29px; text-align: left;" class="all-plans-title">Testimonials
-            </h2>
+            <h2 style="font-size: 36px; line-height: 29px; text-align: left;" class="all-plans-title">Testimonials</h2>
         </div>
         <div class="grid-image-text container-fluid g_vertical_align_image">
             <div class="row grid-container-960">
-                
                 <div class="hero-slider-signup owl-carousel">
                     <div class="hero-item" >
                         <div class="testimonial-card">
                             <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
-                            <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
-                            <h3 class="testimonial-name">John Doe</h3>
+                            <div class="testimonial-content">
+                                <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
+                                <h3 class="testimonial-name">John Doe</h3>
+                            </div>
                         </div>
                     </div>
                     <div class="hero-item" >
                         <div class="testimonial-card">
                             <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
-                            <h3 class="testimonial-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</h3>
-                            <h3 class="testimonial-name">John Wayne</h3>
+                            <div class="testimonial-content">
+                                <h3 class="testimonial-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</h3>
+                                <h3 class="testimonial-name">John Wayne</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
-                   
             </div>
             <section class="ccontainer None">
                 <div class="grid-image-text container-fluid g_vertical_align_image footer">
