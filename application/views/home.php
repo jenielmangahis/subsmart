@@ -83,20 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                    <div class="input-group">
-                                        <select class="form-control" id="sel3">
-                                            <option>--Select your Role--</option>
-                                            <?php foreach( $roles as $role ){ ?>
-                                                <option value="<?php echo $role; ?>"><?php echo $role; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-12 col-lg-12 row-margin-top">
-                                    <input type="text" class="form-control" id="password" placeholder="Your Password">
-                                </div>
+                                </div>                                                          
                             </div>
                             <div class="row row-margin-top">
                                 <div class="col-md-12 col-lg-6">

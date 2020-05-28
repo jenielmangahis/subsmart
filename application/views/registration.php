@@ -90,18 +90,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</select>
 							</div>
 						</div>						
-						<div class="col-md-6 float-left">
-							<div class="input-group">
-								<select class="reg-select z-100" id="sel3">
-									<option>--Select your Role--</option>
-                                    <?php foreach( $roles as $role ){ ?>
-                                        <option value="<?php echo $role; ?>"><?php echo $role; ?></option>
-                                    <?php } ?>
-								</select>
-							</div>
-						</div>
-
-
 						<div class="col-md-12">
 							<div class="input-group">
 								<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
