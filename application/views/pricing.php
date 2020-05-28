@@ -142,15 +142,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
+                                            <div class="price-container-title">Essential</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">100</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">39.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">50</span>
+                                                        <span class="ct">$</span><span class="aw">19.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
@@ -171,7 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
+                                            <div class="price-container-title">Essential</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -222,7 +222,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ess">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Essentials</div>
+                                            <div class="price-container-title">Extra</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -251,7 +251,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Essentials</div>
+                                            <div class="price-container-title">Extra</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -280,15 +280,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Essentials</div>
+                                            <div class="price-container-title">Extra</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">115</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">99.98</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">57</span>
+                                                        <span class="ct">$</span><span class="aw">49.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
@@ -309,7 +309,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Essentials</div>
+                                            <div class="price-container-title">Extra</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -372,7 +372,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <section class="ccontainer None mt-features-single-row-text-only qb-plus">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
+                                            <div class="price-container-title">Extreme</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -401,7 +401,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
+                                            <div class="price-container-title">Extreme</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -430,15 +430,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
+                                            <div class="price-container-title">Extreme</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">145</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">139.98</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">72</span>
+                                                        <span class="ct">$</span><span class="aw">69.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
@@ -459,7 +459,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
+                                            <div class="price-container-title">Extreme</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -522,7 +522,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Advanced</div>
+                                            <div class="price-container-title">Elite</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -552,7 +552,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Advanced</div>
+                                            <div class="price-container-title">Elite</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -581,15 +581,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Advanced</div>
+                                            <div class="price-container-title">Elite</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">225</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">179.98</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">113</span>
+                                                        <span class="ct">$</span><span class="aw">89.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
@@ -611,7 +611,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Advanced</div>
+                                            <div class="price-container-title">Elite</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -689,10 +689,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <ul>
                             <li class="core-add-on payroll--section section--core" data-popup="14">
                                 <div class="section--left">
-                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>Payroll Core</div>
+                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>$5 Add-ons</div>
                                     <div class="payroll-text">
-                                        Add <span class="add-ons-original-price">$45</span><span class="add-ons-discounted-price"> $22.50</span><span class="month">/mo</span><br>
-                                        <span>+ $4/employee/mo</span>
+                                       
                                     </div>
                                     <label class="switch pricing-switch add-ons-slide-switch">
                                       <input type="checkbox" class="add-on-switch">
@@ -700,17 +699,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </label>
                                 </div>
                                 <div class="section--right">
-                                    <p>Cover the basics—easily pay your team and have your payroll taxes done for you.
-                                        &nbsp;</p><span data-popup="14" class="lmore-popup">Learn
-                                        more</span>
+                                    <ul> 
+                                        <li> Ask Customer for Review </li>
+                                        <li> Online Booking </li>
+                                        <li> Lead Contact Form </li>
+                                        <li> Email Blast </li>
+                                        <li> Employee Access </li>
+                                        <li> Virtual Number </li>
+                                        <li> SMS Blast </li>
+                                    </ul>
                                 </div>
                             </li>
                             <li class="premium-add-on payroll--section section--prem" data-popup="65">
                                 <div class="section--left">
-                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>Payroll Premium</div>
+                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>$10 Add-ons</div>
                                     <div class="payroll-text">
-                                        Add <span class="add-ons-original-price">$75</span><span class="add-ons-discounted-price"> $37.50</span><span class="month">/mo</span><br>
-                                        <span>+ $8/employee/mo</span>
+                                        
                                     </div>
                                     <label class="switch pricing-switch add-ons-slide-switch">
                                       <input type="checkbox" class="add-on-switch">
@@ -718,40 +722,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </label>
                                 </div>
                                 <div class="section--right">
-                                    <p>Manage your team and perfect payday with powerful tools and services.&nbsp;</p><span data-popup="65" class="lmore-popup">Learn more</span>
-                                </div>
-                            </li>
-                            <li class="elite-add-on payroll--section section--elite" data-popup="15">
-                                <div class="section--left">
-                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>Payroll Elite</div>
-                                    <div class="payroll-text">
-                                        Add <span class="add-ons-original-price">$125</span><span class="add-ons-discounted-price"> $62.50</span><span class="month">/mo</span><br>
-                                        <span>+ $10/employee/mo</span>
-                                    </div>
-                                    <label class="switch pricing-switch add-ons-slide-switch">
-                                      <input type="checkbox" class="add-on-switch">
-                                      <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <div class="section--right">
-                                    <p>Access on-demand experts to simplify payday and protect what matters most<sup>5</sup>.&nbsp;<span data-popup="15" class="lmore-popup">Learn more</span></p>
-                                </div>
-                            </li>
-                            <li class="expert-add-on payroll--section section--expert" data-popup="101">
-                                <div class="section--left">
-                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i> Bookkeeping Setup</div>
-                                    <div class="payroll-text">
-                                        Add <span class="add-ons-discounted-price">$50</span><span class="month">&nbsp;one-time session</span>
-                                    </div>
-                                    <label class="switch pricing-switch add-ons-slide-switch">
-                                      <input type="checkbox" class="add-on-switch">
-                                      <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <div class="section--right">
-                                    <p>Fast, customized setup of your QuickBooks with an expert who has your
-                                        back.&nbsp;<span data-popup="101" class="lmore-popup">Learn more</span>
-                                    </p>
+                                    <ul> 
+                                        <li> NiceJob Connector </li>
+                                        <li> Deals & Steals </li>
+                                        <li> Proposal Kit </li>
+                                    </ul>
                                 </div>
                             </li>
                         </ul>
@@ -789,15 +764,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Self-Employed</div>
+                                            <div class="price-container-title">Enterprise</div>
                                             <div class="price-container">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through" style="width:23% !important;"></span><span class="ct">$</span><span class="aw">15<span class="buy-disc-dura-for-se">*</span></span>
+                                                        <span class="line-through" style="width:23% !important;"></span><span class="ct">$</span><span class="aw">299.98<span class="buy-disc-dura-for-se">*</span></span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">7</span>
+                                                        <span class="ct">$</span><span class="aw">149.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
@@ -1113,41 +1088,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="ccontainer ss-section all-plans-include" style="padding-top: 30px; padding-bottom: 20px; " id="section-2">
     <div class="content-container">
         <div class="ctext">
-            <h2 style="font-size: 36px; line-height: 29px; text-align: left;" class="all-plans-title">All plans include
+            <h2 style="font-size: 36px; line-height: 29px; text-align: left;" class="all-plans-title">Testimonials
             </h2>
         </div>
         <div class="grid-image-text container-fluid g_vertical_align_image">
             <div class="row grid-container-960">
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                    <div class="cimage clearfix ">
-                        <img class="cq-dd-image img-left" alt="receipt" src="<?php echo $url->assets ?>frontend/images/invoice.png" style="width:73px;">
+                
+                <div class="hero-slider-signup owl-carousel">
+                    <div class="hero-item" >
+                        <div class="testimonial-card">
+                            <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
+                            <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
+                            <h3 class="testimonial-name">John Doe</h3>
+                        </div>
                     </div>
-                    <div class="ctext">
-                        <h4>Receipt capture</h4>
-                        <p><span class="p2">Snap photos of your receipts and we’ll automatically match them to existing
-                                expenses.</span></p>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                    <div class="cimage clearfix">
-                        <img class="cq-dd-image img-left" alt="chat_support" src="<?php echo $url->assets ?>frontend/images/chat-2-icon.png" style="width:73px;">
-                    </div>
-                    <div class="ctext">
-                        <h4>QuickBooks support</h4>
-                        <p><span class="p2">A member of our support team is ready and available to answer your
-                                QuickBooks questions.<sup>4</sup></span></p>
+                    <div class="hero-item" >
+                        <div class="testimonial-card">
+                            <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
+                            <h3 class="testimonial-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</h3>
+                            <h3 class="testimonial-name">John Wayne</h3>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                    <div class="cimage clearfix ">
-                        <img class="cq-dd-image img-left" alt="app-logos-v2" src="<?php echo $url->assets ?>frontend/images/app-logos-v2.svg">
-                    </div>
-                    <div class="ctext">
-                        <h4>App integration</h4>
-                        <p><span class="p2">Use the apps you know and love to keep your business running
-                                smoothly.</span></p>
-                    </div>
-                </div>
+                   
             </div>
             <section class="ccontainer None">
                 <div class="grid-image-text container-fluid g_vertical_align_image footer">

@@ -5548,7 +5548,7 @@ body.payroll--horizontal .payroll--wrapper{
    z-index:2
 }
 .payroll--section{
-   padding:14px 0;
+   padding:33px 0;
    border-bottom:1px solid #ccc;
    position:relative;
    margin-left:-10px;
@@ -5588,7 +5588,7 @@ body.payroll--horizontal .payroll--wrapper{
 }
 .payroll--section.section--core{
    background-color:#fff;
-   padding-top:13px;
+   padding-top:144px;
    margin-top:12px
 }
 .payroll--section .section--title{
