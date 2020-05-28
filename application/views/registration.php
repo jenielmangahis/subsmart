@@ -80,164 +80,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="col-md-6 pr-0 float-left">
 							<div class="input-group">
 								<select class="reg-select z-100 cmb-industry" id="sel2">
-										<option>--Select your Industry--</option>
-                                        <option value="Building Contractors">Building Contractors</option>
-                                        <option value="Financial Services">Financial Services</option>
-                                        <option value="Technical Services">Technical Services</option>
-                                        <option value="Health And Beauty">Health And Beauty</option>
-                                        <option value="Transportation">Transportation</option>
-                                        <option value="Organization / Cleaning">Organization / Cleaning</option>
-                                        <option value="Entertainment Services">Entertainment Services</option>
-                                        <option value="Design Services">Design Services</option>
-                                        <option value="Business Services">Business Services</option>
-                                        <option value="Other">Other</option>
-										<!-- <option value="-">--Select your Industry--</option>
-										<option value="Accountant">Accountant</option>
-										<option value="Alarm Company">Alarm Company</option>
-										<option value="Alternative Therapy">Alternative Therapy</option>
-										<option value="Appriasal">Appriasal</option>
-										<option value="Audio & TV">Audio & TV</option>
-										<option value="Baby Sitting">Baby Sitting</option>
-										<option value="Barber">Barber</option>
-										<option value="Business Services">Business Services</option>
-										<option value="Cabinetry">Cabinetry</option>
-										<option value="Calking & Sealants">Calking & Sealants</option>
-										<option value="Catering">Catering</option>
-										<option value="CPU Services">CPU Services</option>
-										<option value="Credit Repair">Credit Repair</option>
-										<option value="Concrete & Asphalt">Concrete & Asphalt</option>
-										<option value="Cooking">Cooking</option>
-										<option value="Credit Counselor">Credit Counselor</option>
-										<option value="Deck & Patio">Deck & Patio</option>
-										<option value="Demolition">Demolition</option>
-										<option value="Docment Storage & Destruction">Docment Storage & Destruction</option>
-										<option value="Doors">Doors</option>
-										<option value="Drywall">Drywall</option>
-										<option value="Fencing">Fencing</option>
-										<option value="Financial Planner">Financial Planner</option>
-										<option value="Fireplace & Chimney">Fireplace & Chimney</option>
-										<option value="Fitness">Fitness</option>
-										<option value="Fleet & Trucks">Fleet & Trucks</option>
-										<option value="Graphics & Printing">Graphics & Printing</option>
-										<option value="Gutters">Gutters</option>
-										<option value="Handy Man">Handy Man</option>
-										<option value="Health & Beauty">Health & Beauty</option>
-										<option value="Home Inspection">Home Inspection</option>
-										<option value="Install & Assemble">Install & Assemble</option>
-										<option value="Insurance">Insurance</option>
-										<option value="Interior & Surface Cleaning">Interior & Surface Cleaning</option>
-										<option value="IT & Networking">IT & Networking</option>
-										<option value="Janitorial">Janitorial</option>
-										<option value="Junk Removal">Junk Removal</option>
-										<option value="Lanscaper">Lanscaper</option>
-										<option value="Laundry">Laundry</option>
-										<option value="Legal and Medical fields">Legal and Medical fields</option>
-										<option value="Lender">Lender</option>
-										<option value="Lighting">Lighting</option>
-										<option value="Locksmith">Locksmith</option>
-										<option value="Marine Services">Marine Services</option>
-										<option value="Massage">Massage</option>
-										<option value="Medical">Medical</option>
-										<option value="Mortgage Broker">Mortgage Broker</option>
-										<option value="Moving">Moving</option>
-										<option value="Music & Singing">Music & Singing</option>
-										<option value="Natural Stone">Natural Stone</option>
-										<option value="Neighborhood Chores">Neighborhood Chores</option>
-										<option value="Notary">Notary</option>
-										<option value="Organization & Interior Design">Organization & Interior Design</option>
-										<option value="Parties">Parties</option>
-										<option value="Painter">Painter</option>
-										<option value="Pets">Pets</option>
-										<option value="Photography">Photography</option>
-										<option value="Pool & Spa">Pool & Spa</option>
-										<option value="Plumber">Plumber</option>
-										<option value="Propert Manager">Propert Manager</option>
-										<option value="Real Estate">Real Estate</option>
-										<option value="Restoration">Restoration</option>
-										<option value="Rehuatory & Environmental">Rehuatory & Environmental</option>
-										<option value="Roof & Attic">Roof & Attic</option>
-										<option value="Rug Cleaning">Rug Cleaning</option>
-										<option value="Security">Security</option>
-										<option value="Sewer & Septic">Sewer & Septic</option>
-										<option value="Sliding">Sliding</option>
-										<option value="Sprinkler Systems">Sprinkler Systems</option>
-										<option value="Smart Home">Smart Home</option>
-										<option value="Snow Removal">Snow Removal</option>
-										<option value="Solar & Energy">Solar & Energy</option>
-										<option value="Tax Planner">Tax Planner</option>
-										<option value="Tech Help">Tech Help</option>
-										<option value="Transportation">Transportation</option>
-										<option value="Device Repair">Device Repair</option>
-										<option value="Tile & Grout">Tile & Grout</option>
-										<option value="Tree Services">Tree Services</option>
-										<option value="Tutoring">Tutoring</option>
-										<option value="Water Heater">Water Heater</option>
-										<option value="Water Transfer Printing">Water Transfer Printing</option>
-										<option value="Water Treatment">Water Treatment</option>
-										<option value="Well Pumps">Well Pumps</option>
-										<option value="Widlife Control">Widlife Control</option>
-										<option value="Windows">Windows</option>
-										<option value="Wines">Wines</option> -->
+									<option>--Select your Industry--</option>
+	                                <?php foreach( $business as $key => $values ){ ?>
+	                                    <optgroup label="<?php echo $key; ?>">
+	                                    <?php foreach( $values as $value ){ ?>
+	                                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+	                                    <?php } ?>
+	                                <?php } ?>
 								</select>
 							</div>
-						</div>
+						</div>						
 						<div class="col-md-6 float-left">
 							<div class="input-group">
-                            <select class="reg-select z-100 cmb-specific-business" id="sel1">
-
-                                <option>--Select your Specific Business--</option>
-                                <!-- <option>Cabinetry</option>
-                                <option>Chimney / Fireplace</option>
-                                <option>Concrete & Asphalt</option>
-                                <option>Deck & Patio</option>
-                                <option>Demolition</option>
-                                <option>Doors & Windows</option>
-                                <option>Drywall</option>
-                                <option>Fencing</option>
-                                <option>Flooring</option>
-                                <option>Framer</option>
-                                <option>General Contractor</option>
-                                <option>Handy Man</option>
-                                <option>Home Inspection</option>
-                                <option>HVAC</option>
-                                <option>Landscaper</option>
-                                <option>Lawn Care</option>
-                                <option>Lighting</option>
-                                <option>Painter</option>
-                                <option>Plumber</option>
-                                <option>Pool & Spa</option>
-                                <option>Roofers</option>
-                                <option>Sewer & Septic</option>
-                                <option>Snow Removal</option>
-                                <option>Solar & Energy</option>
-                                <option>Tile & Grout</option>
-                                <option>Tree Services</option> -->
-
-                                <!-- 
-                                <option>--Select your Role--</option>
-                                <option>Aerospace Industry</option>
-                                <option>Transport Industry</option>
-                                <option>Computer Industry</option>
-                                <option>Telecommunication industry</option>
-                                <option>Agriculture industry</option>
-                                <option>Construction Industry</option>
-                                <option>Education Industry</option> 
-                                -->
-
-                            </select>
-                           	</div>
-                        </div>
-						<div class="col-md-6 pr-0 float-left">
-							<div class="input-group">
 								<select class="reg-select z-100" id="sel3">
-										<option>--Select your Role--</option>
-										<option>Aerospace Industry</option>
-										<option>Transport Industry</option>
-										<option>Computer Industry</option>
-										<option>Telecommunication industry</option>
-										<option>Agriculture industry</option>
-										<option>Construction Industry</option>
-										<option>Education Industry</option>
+									<option>--Select your Role--</option>
+                                    <?php foreach( $roles as $role ){ ?>
+                                        <option value="<?php echo $role; ?>"><?php echo $role; ?></option>
+                                    <?php } ?>
 								</select>
 							</div>
 						</div>
@@ -262,33 +121,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
-<script type="text/javascript">
-    $(function(){
-        var base_url = "<?php echo base_url();?>";
-
-        $(".cmb-industry").change(function(){
-            var selected_industry = $(this).val();
-            $.ajax({
-               type: "POST",
-               url: base_url + '/get_specific_business',      
-               data: {"selected_industry":selected_industry},
-               success: function(o)
-               {
-                  $(".cmb-specific-business").empty();
-                  $(".cmb-specific-business").append(o);
-               }
-            });
-        });
-
-        $(".lazy").slick({
-         dots: false,
-         prevArrow: false,
-         nextArrow: false,
-         slidesToScroll: 1,
-         autoplay: true,
-         autoplaySpeed: 2000,
-         centerMode: true,
-        });
-    });
-</script>
-

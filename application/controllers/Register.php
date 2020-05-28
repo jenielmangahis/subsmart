@@ -7,6 +7,8 @@ class Register extends MY_Controller {
 		$this->page_data['page']->title = 'nSmart - Registration';
 	}
 	public function index(){
+		$this->page_data['business'] = getIndustryBusiness();
+		$this->page_data['roles']    = getRegistrationRoles();
 		$this->load->view('registration', $this->page_data);
 	}
 }

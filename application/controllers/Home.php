@@ -15,6 +15,8 @@ class Home extends MY_Controller {
 
 
 	public function index(){	
+		$this->page_data['business'] = getIndustryBusiness();
+		$this->page_data['roles']    = getRegistrationRoles();
 		$this->load->view('home', $this->page_data);
 	}
 
