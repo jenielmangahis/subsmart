@@ -101,6 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 						</div>
 
+
 						<div class="col-md-12">
 							<div class="input-group">
 								<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
@@ -120,4 +121,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</div>
 </div>
 </section>
+<<<<<<< HEAD
 <?php include viewPath('frontcommon/footer'); ?>
+=======
+<?php include viewPath('frontcommon/footer'); ?>
+>>>>>>> remotes/origin/staging
