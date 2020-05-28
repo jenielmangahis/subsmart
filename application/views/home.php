@@ -83,6 +83,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
+                                </div> 
+                                <div class="col-md-12 col-lg-6 row-margin-top">
+                                    <div class="input-group">
+                                        <input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password" style="padding:18px 15px;">
+                                    </div>
                                 </div>                                                          
                             </div>
                             <div class="row row-margin-top">

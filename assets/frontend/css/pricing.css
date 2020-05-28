@@ -3557,7 +3557,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-111px;
+   margin-left:-76px;
    border-radius:4px
 }
 .lineup-container .pricing-card-layout .qb-ess .price-container-title:after{
@@ -3567,7 +3567,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-89px;
+   margin-left:-45px;
    border-radius:4px
 }
 .lineup-container .pricing-card-layout .qb-plus .price-container-title:after{
@@ -3577,7 +3577,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-37px;
+   margin-left:-67px;
    border-radius:4px
 }
 .lineup-container .pricing-card-layout .qb-se .price-container-title:after{
@@ -3587,7 +3587,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-134px;
+   margin-left:-87px;
    border-radius:4px
 }
 .all-plans-include .g_vertical_align_image.footer .col-md-12{
@@ -4797,7 +4797,7 @@ section.r-site-footer.resp-site-footer.gs-footer a.gs-a-bold:focus{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-94px;
+   margin-left:-40px;
    border-radius:4px
 }
 .video-overlay-novideo{
@@ -5544,7 +5544,7 @@ body.payroll--horizontal .payroll--wrapper{
    color:#fff;
    font-weight:600;
    top:-15px;
-   padding-top:6px;
+   padding-top:3px;
    z-index:2
 }
 .payroll--section{
@@ -5552,7 +5552,8 @@ body.payroll--horizontal .payroll--wrapper{
    border-bottom:1px solid #ccc;
    position:relative;
    margin-left:-10px;
-   margin-right:-10px
+   margin-right:-10px;
+   height:150px !important;
 }
 .payroll-text{
    font-size:12px;
@@ -5588,7 +5589,7 @@ body.payroll--horizontal .payroll--wrapper{
 }
 .payroll--section.section--core{
    background-color:#fff;
-   padding-top:144px;
+   /*padding-top:144px;*/
    margin-top:12px
 }
 .payroll--section .section--title{
@@ -6776,5 +6777,9 @@ body.try-it-free .pricing-card-layout .price-container .pricing-section{
    height:2px;
    width:100%!important;
    margin-bottom:15px
+}
+.addon-list li{
+  display: inline-block;
+  width: 40%;
 }
 /*Magic Carpet End*/
