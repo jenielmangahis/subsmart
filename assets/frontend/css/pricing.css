@@ -6782,4 +6782,33 @@ body.try-it-free .pricing-card-layout .price-container .pricing-section{
   display: inline-block;
   width: 40%;
 }
+.testimonial-content{
+  background-color: #ffffff;
+  margin-top: 15px;
+  padding:8px;
+}
+.hero-item {
+   height: auto;
+   display: -webkit-box;
+   display: -ms-flexbox;
+   display: flex;
+   -webkit-box-align: center;
+   -ms-flex-align: center;
+   align-items: center;
+}
+div.testimonial-card {
+  background: #3e175f63;
+  padding: 20px 10px;
+  height: 290px;
+  position: relative;
+  bottom: 30px;
+  padding: 43px;
+}
+h3.testimonial-name {
+  color: white;
+  font-weight: 600;
+  font-size: 24px;
+  text-align: right;
+  font-style: italic;
+}
 /*Magic Carpet End*/

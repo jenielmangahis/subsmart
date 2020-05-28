@@ -586,11 +586,9 @@
    left: auto;
    right: 0;
  }
- .testimonial-card{
-  padding: 50px !important;
- }
+
  .hero-item {
-   /*height: 585px;*/
+   height: 585px;
    display: -webkit-box;
    display: -ms-flexbox;
    display: flex;
@@ -2513,19 +2511,12 @@ Pricing
   text-align: justify;
   font-weight: 200;
   font-family: 'Kanit', sans-serif !important;
-  color: white;  
-}
-.testimonial-content{
-  background-color: #ffffff;
-  margin-top: 15px;
-  padding:8px;
+  color: white;
 }
 h3.testimonial-name {
   color: white;
   font-weight: 600;
   font-size: 24px;
-  text-align: right;
-  font-style: italic;
 }
 div.testimonial-card {
   background: #3e175f63;
