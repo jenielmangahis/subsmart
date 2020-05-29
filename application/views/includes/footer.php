@@ -1,10 +1,10 @@
 <!-- Footer -->
 <footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">Copyright © 2020 nSmartrac. All rights reserved.</div>
-        </div>
-    </div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">Copyright © 2020 nSmartrac. All rights reserved.</div>
+		</div>
+	</div>
 </footer><!-- End Footer -->
 <!-- jQuery  -->
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
@@ -20,6 +20,7 @@
 <!-- App js<script src="<?php echo $url->assets ?>dashboard/pages/dashboard.js"></script> -->
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js"></script>
@@ -36,68 +37,71 @@
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
 
 <!-- Include calender js files -->
-<!-- <script src="<?php echo base_url() ?>calender/assets/js/calendar.js"></script> -->
+<!-- <script src="<?php //echo base_url() ?>calender/assets/js/calendar.js"></script> -->
+<!-- dynamic assets goes  -->
+<!-- <#?php echo put_footer_assets(); ?> -->
 
-
-<script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
+<!-- <script src="<?php //echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
+<script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
+<script src="<?php //echo $url->assets ?>jSignature-master/libs/modernizr.js"></script> -->
+<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>	
+<!-- <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
 <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
 <script src="<?php echo $url->assets ?>js/sign.js"></script>
 <script src="<?php echo $url->assets ?>js/sign2.js"></script>
 <script>
-    jQuery(document).ready(function () {
-        jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
-        jQuery("#CustomerSign").on("click touchstart", function () {
-            var canvas = document.getElementById("CustomerSign");
-            var dataURL = canvas.toDataURL("image/png");
-            jQuery("#saveSignatureDB").val(dataURL);
-        });
-    });
-</script>
+	jQuery(document).ready(function () {
+		jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
+		jQuery("#CustomerSign").on("click touchstart", function () {
+			var canvas = document.getElementById("CustomerSign");
+			var dataURL = canvas.toDataURL("image/png");
+			jQuery("#saveSignatureDB").val(dataURL);
+		});
+	});
+</script> -->
 <script type="text/javascript">
-    window.base_url = <?php echo json_encode(base_url()); ?>;
+	window.base_url = <?php echo json_encode(base_url()); ?>;
 </script>
 
-<!-- dynamic assets goes  -->
-<?php echo put_footer_assets(); ?>
 
 <style>
-    .suggestions {
-        padding: 0px;
-        list-style: none;
-        position: absolute;
-        z-index: 66666;
-        background: #fff;
-        width: 325px;
-    }
+	.suggestions {
+		padding: 0px;
+		list-style: none;
+		position: absolute;
+		z-index: 66666;
+		background: #fff;
+		width: 325px;
+	}
 
-    .suggestions li {
-        padding: 10px 8px;
-        border-bottom: 1px solid;
-        cursor: pointer;
-    }
+	.suggestions li {
+		padding: 10px 8px;
+		border-bottom: 1px solid;
+		cursor: pointer;
+	}
 
-    .mdc-top-app-bar-fixed-adjust {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        z-index: 99;
-        display: flex;
-        justify-content: space-evenly;
-    }
+	.mdc-top-app-bar-fixed-adjust {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		z-index: 99;
+		display: flex;
+		justify-content: space-evenly;
+	}
 
-    .mdc-top-app-bar-fixed-adjust .mdc-bottom-navigation__list {
-        height: 100%;
-        display: flex;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-    }
+	.mdc-top-app-bar-fixed-adjust .mdc-bottom-navigation__list {
+		height: 100%;
+		display: flex;
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+	}
 
-    .mdc-top-app-bar-fixed-adjust .mdc-bottom-navigation__list .mdc-bottom-navigation__list-item {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-    }
+	.mdc-top-app-bar-fixed-adjust .mdc-bottom-navigation__list .mdc-bottom-navigation__list-item {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
 </style>
 
 </body>

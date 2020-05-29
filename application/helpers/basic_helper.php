@@ -86,7 +86,7 @@ if (!function_exists('userProfile')) {
         $url = urlUpload('users/' . $id . '.png?' . time());
 
         if ($id != 'default')
-            $url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'img_type') . '?' . time());
+            $url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
         // $url = 'http://nsmartrac.com/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
 
         return $url;

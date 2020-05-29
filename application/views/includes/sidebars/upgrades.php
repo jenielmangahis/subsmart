@@ -1,19 +1,23 @@
 <style type="text/css">
     div[role="wrapper"] .navbar-side .nav-header {
-        background-color: #1c0b3b;
-        padding: 30px;
+        background-color: #32243d;
+        padding: 20px;
         margin-bottom: 0px;
-        color: #fff;
-        border-bottom: 1px solid #ccc;
+        color: #45a73c;
+        /*border-bottom: 1px solid #ccc;*/
     }
     div[role="wrapper"] .navbar-side {
-        background-color: #340c84;
+        background-color: #32243d;
     }
     ul.nav li.submenus:hover {
         background: #45a73c;
         background: -moz-linear-gradient(top, #45a73c 0%, #67ce5e 100%);
         background: -webkit-linear-gradient(top, #45a73c 0%,#67ce5e 100%);
         background: linear-gradient(to bottom, #45a73c 0%,#67ce5e 100%);
+    }
+    div[role="wrapper"] .navbar-side .nav li > a {
+        color: #fff;
+        text-align: left;
     }
 </style>
 <nav class="navbar-side d-none d-md-block">

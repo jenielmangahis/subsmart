@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Invoice_model extends MY_Model
 {
 
-    public $table = 'invoices';
+    public $table = 'invoice';
 
 
     public function getAll()
@@ -28,7 +28,6 @@ class Invoice_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('is_recurring', $type);
 
         if (!empty($filter)) {
 
@@ -273,7 +272,6 @@ class Invoice_model extends MY_Model
 
         $this->db->select('id, status, COUNT(id) as total');
         $this->db->from($this->table);
-        $this->db->where('is_recurring', $type);
 
 
         if (isset($company_id)) {
@@ -295,7 +293,6 @@ class Invoice_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('is_recurring', $type);
 
         if (!empty($filters)) {
 

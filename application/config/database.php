@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 /*
 | -------------------------------------------------------------------
 | DATABASE CONNECTIVITY SETTINGS
@@ -72,18 +73,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
-
-
-
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	//'database' => 'admintom_nsmart', //old DB
-	'database' => 'admintom_nsmart',   //company test DB
-//'database' => 'admintom_nsmart_admin',   //nsmart admin DB
-// 'database' => 'admintom_template',   //blank Client side DB.. do not insert data into these tables, create a copy
+	'database' => 'admintom_nsmart', //nsmartrac_live
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
