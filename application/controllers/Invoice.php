@@ -36,6 +36,7 @@ class Invoice extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'assets/frontend/js/invoice/add.js',
+            'assets/frontend/js/job_creation/main.js',
             'assets/js/invoice.js'
         ));
     }
@@ -130,25 +131,25 @@ class Invoice extends MY_Controller {
     public function add()
     {
 
-        $user_id = logged('id');
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        // $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
-        if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        } else {
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        }
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
 
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        // $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-        if (!empty($setting)) {
-            foreach ($setting as $key => $value) {
-                if (is_serialized($value)) {
-                    $setting->{$key} = unserialize($value);
-                }
-            }
-            $this->page_data['setting'] = $setting;
-        }
+        // if (!empty($setting)) {
+        //     foreach ($setting as $key => $value) {
+        //         if (is_serialized($value)) {
+        //             $setting->{$key} = unserialize($value);
+        //         }
+        //     }
+        //     $this->page_data['setting'] = $setting;
+        // }
         
 
         $this->load->view('invoice/add', $this->page_data);

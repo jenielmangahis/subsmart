@@ -86,7 +86,7 @@ if (!function_exists('userProfile')) {
         $url = urlUpload('users/' . $id . '.png?' . time());
 
         if ($id != 'default')
-            $url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'img_type') . '?' . time());
+            $url = urlUpload('users/' . $id . '.' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
         // $url = 'http://nsmartrac.com/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
 
         return $url;
@@ -2314,4 +2314,145 @@ function getPaymentType($type) {
         case "cash":
             return "Cash";
     }
+}
+
+function getIndustryBusiness(){
+    $business = [
+        'Building Contractors' => [
+            'Cabinetry' => 'Cabinetry',
+            'Chimney / Fireplace' => 'Chimney / Fireplace',
+            'Concrete & Asphalt' => 'Concrete & Asphalt',
+            'Deck & Patio' => 'Deck & Patio',
+            'Demolition' => 'Demolition',
+            'Doors & Windows' => 'Doors & Windows',
+            'Drywall' => 'Drywall',
+            'Fencing' => 'Fencing',
+            'Flooring' => 'Flooring',
+            'Framer' => 'Framer',
+            'General Contractor' => 'General Contractor',
+            'Handy Man' => 'Handy Man',
+            'Home Inspection' => 'Home Inspection',
+            'HVAC' => 'HVAC',
+            'Landscaper' => 'Landscaper',
+            'Lawn Care' => 'Lawn Care',
+            'Lighting' => 'Lighting',
+            'Painter' => 'Painter',
+            'Plumber' => 'Plumber',
+            'Pool & Spa' => 'Pool & Spa',
+            'Roofers' => 'Roofers',
+            'Sewer & Septic' => 'Sewer & Septic',
+            'Snow Removal' => 'Snow Removal',
+            'Solar & Energy' => 'Solar & Energy',
+            'Tile & Grout' => 'Tile & Grout',
+            'Tree Services' => 'Tree Services'
+        ],
+        'Financial Services' => [
+            'Appraisal' => 'Appraisal',
+            'Credit Counselor' => 'Credit Counselor',
+            'Financial Planner' => 'Financial Planner',
+            'Insurance' => 'Insurance',
+            'Lender' => 'Lender',
+            'Tax Planner' => 'Tax Planner'
+        ],
+        'Technical Services' => [
+            'Computer Services' => 'Computer Services',
+            'Document Storage & Destruction' => 'Document Storage & Destruction',
+            'IT & Networking' => 'IT & Networking',
+            'Security Systems' => 'Security Systems'
+        ],
+        'Health And Beauty' => [
+            'Massage' => 'Massage',
+            'Barber / Stylist' => 'Barber / Stylist',
+            'Make-up artist' => 'Make-up artist',
+            'Costume Designer' => 'Costume Designer',
+            'Fitness Instructors' => 'Fitness Instructors'
+        ],
+        'Transportation' => [
+            'Auto Repair' => 'Auto Repair',
+            'Boat Repair' => 'Boat Repair',
+            'Detailing' => 'Detailing',
+            'Marine Services' => 'Marine Services',
+            'Pilot for hire' => 'Pilot for hire',
+            'Professional Driving' => 'Professional Driving',
+            'Repossession' => 'Repossession',
+            'Towing' => 'Towing'
+        ],
+        'Organization / Cleaning' => [
+            'Commercial cleaning' => 'Commercial cleaning',
+            'Disaster recovery' => 'Disaster recovery',
+            'Junk Removal' => 'Junk Removal',
+            'Restoration' => 'Restoration',
+            'Upholstery Cleaners' => 'Upholstery Cleaners'
+        ],
+        'Entertainment Services' => [
+            'A/V Service' => 'A/V Service',
+            'Booking Agent' => 'Booking Agent',
+            'Catering' => 'Catering',
+            'Event Planner' => 'Event Planner',
+            'Music & Singing' => 'Music & Singing',
+            'Party Entertainer' => 'Party Entertainer'
+        ],
+        'Design Services' => [
+            'Interior Design' => 'Interior Design',
+            'Architecture' => 'Architecture',
+            'Event Photography / Videography' => 'Event Photography / Videography',
+            'Graphics & Printing' => 'Graphics & Printing'
+        ],
+        'Business Services' => [
+            'Cabinetry' => 'Cabinetry',
+            'Chimney / Fireplace' => 'Chimney / Fireplace',
+            'Concrete & Asphalt' => 'Concrete & Asphalt',
+            'Deck & Patio' => 'Deck & Patio',
+            'Demolition' => 'Demolition',
+            'Doors & Windows' => 'Doors & Windows',
+            'Drywall' => 'Drywall',
+            'Fencing' => 'Fencing',
+            'Flooring' => 'Flooring',
+            'Framer' => 'Framer',
+            'General Contractor' => 'General Contractor',
+            'Handy Man' => 'Handy Man',
+            'Home Inspection' => 'Home Inspection',
+            'HVAC' => 'HVAC',
+            'Landscaper' => 'Landscaper',
+            'Lawn Care' => 'Lawn Care',
+            'Lighting' => 'Lighting',
+            'Painter' => 'Painter',
+            'Plumber' => 'Plumber',
+            'Pool & Spa' => 'Pool & Spa',
+            'Roofers' => 'Roofers',
+            'Sewer & Septic' => 'Sewer & Septic',
+            'Snow Removal' => 'Snow Removal',
+            'Solar & Energy' => 'Solar & Energy',
+            'Tile & Grout' => 'Tile & Grout',
+            'Tree Services' => 'Tree Services'
+        ],
+        'Other' => [
+            'Environmental Services' => 'Environmental Services',
+            'Locksmith' => 'Locksmith',
+            'Movers' => 'Movers',
+            'Multi level marketing' => 'Multi level marketing',
+            'Pet Grooming' => 'Pet Grooming',
+            'Private security' => 'Private security',
+            'Property Manager' => 'Property Manager',
+            'Real Estate' => 'Real Estate',
+            'Sales' => 'Sales',
+            'Tutoring' => 'Tutoring'
+        ]
+    ];
+
+    return $business;
+}
+
+function getRegistrationRoles(){
+    $roles = [
+        'Aerospace Industry' => 'Aerospace Industry',
+        'Transport Industry' => 'Transport Industry',
+        'Computer Industry' => 'Computer Industry',
+        'Telecommunication industry' => 'Telecommunication industry',
+        'Agriculture industry' => 'Agriculture industry',
+        'Construction Industry' => 'Construction Industry',
+        'Education Industry' => 'Education Industry'
+    ];
+
+    return $roles;
 }

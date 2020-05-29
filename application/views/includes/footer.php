@@ -20,6 +20,7 @@
 <!-- App js<script src="<?php echo $url->assets ?>dashboard/pages/dashboard.js"></script> -->
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js"></script>
@@ -36,12 +37,14 @@
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
 
 <!-- Include calender js files -->
-<!-- <script src="<?php echo base_url() ?>calender/assets/js/calendar.js"></script> -->
+<!-- <script src="<?php //echo base_url() ?>calender/assets/js/calendar.js"></script> -->
+<!-- dynamic assets goes  -->
+<!-- <#?php echo put_footer_assets(); ?> -->
 
-<script src="<?php echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
-<script src="<?php echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
-<script src="<?php echo $url->assets ?>jSignature-master/libs/modernizr.js"></script>
-	
+<!-- <script src="<?php //echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
+<script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
+<script src="<?php //echo $url->assets ?>jSignature-master/libs/modernizr.js"></script> -->
+<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>	
 <!-- <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
 <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
 <script src="<?php echo $url->assets ?>js/sign.js"></script>
@@ -60,8 +63,6 @@
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 </script>
 
-<!-- dynamic assets goes  -->
-<?php echo put_footer_assets(); ?>
 
 <style>
 	.suggestions {

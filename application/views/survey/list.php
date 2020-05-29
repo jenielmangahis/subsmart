@@ -122,5 +122,6 @@
     cursor: pointer;
   }
 </style>
-
+<?php echo put_footer_assets(); ?>
 <?php include viewPath('includes/footer'); ?>
+
