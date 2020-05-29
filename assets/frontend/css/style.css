@@ -159,6 +159,16 @@
    background: #081624;
  }
 
+ .st-rl {
+   background: #80aef71c;
+  padding-top: 100px;
+  padding-bottom: 100px;
+ }
+
+ .rounded-xl {
+   border-radius: 40px;
+ }
+
  .site-btn.sb-light-dark {
    color: #fff;
    background: #304a5f;

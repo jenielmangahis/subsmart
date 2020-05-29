@@ -83,12 +83,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-                                </div> 
+                                </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                     <div class="input-group">
                                         <input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password" style="padding:18px 15px;">
                                     </div>
-                                </div>                                                          
+                                </div>
                             </div>
                             <div class="row row-margin-top">
                                 <div class="col-md-12 col-lg-6">
@@ -249,7 +249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-1.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-1-v2.png" class="card-img" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -309,7 +309,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="row">
                         <div class="col-lg-7 col-md-5">
                             <div class="imgHolder">
-                                <img src="<?php echo $url->assets ?>frontend/images/time-tracking.jpg" class="img-fluid" alt="time tracking">
+                                <img src="<?php echo $url->assets ?>frontend/images/time-tracking-v2.jpg" class="img-fluid" alt="time tracking">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-7 align-self-center">
@@ -378,12 +378,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </section> -->
-    <section class="startTrial mt-8">
+    <section class="startTrial st-rl mt-8">
         <div class="customContainer">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="startTrialBtn mb-5 text-center">
-                        <a href="<?php echo url('/home/signup') ?>" class="btn btn-green">
+                        <a href="<?php echo url('/home/signup') ?>" class="btn btn-green rounded-xl">
                             START YOUR <span class="yColor">FREE TRIAL</span>
                         </a>
                     </div>
@@ -399,14 +399,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/trialimg_1.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/contact-manager.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
             </div>
             <div class="row mt-5">
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/trialimg_2.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/invoice-home.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-7 text-left align-self-center">
@@ -430,19 +430,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/trialimg_3.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/work-management.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="startTrialBtn my-5 text-center"> <button class="btn btn-green yColor"> See MORE FEATURES </button> </div>
+                    <div class="startTrialBtn my-5 text-center"> <button class="btn btn-green yColor rounded-xl"> See MORE FEATURES </button> </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="customBuz bg_purple mt-8">
+    <section class="customBuz bg_purple">
         <div class="customContainer">
             <div class="row">
                 <div class="col-sm-12">
@@ -616,7 +616,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('frontcommon/footer'); ?>
 <script src="<?php echo $url->assets ?>frontend/js/slick.min.js"></script>
 <script type="text/javascript">
-    $(function(){        
+    $(function(){
         $(".lazy").slick({
          dots: false,
          prevArrow: false,
