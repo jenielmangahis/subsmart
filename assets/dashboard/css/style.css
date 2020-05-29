@@ -95,7 +95,7 @@ strong {
 }
 
 .dropdown-menu {
-    padding: 4px 0;
+    /*padding: 4px 0;
     font-size: 14px;
     border: 1px solid rgba(0, 0, 0, .15) !important;
     border-radius: 4px;
@@ -103,11 +103,11 @@ strong {
     margin: 0;
     top: 100% !important;
     transform: none !important;
-    left: 0 !important;
+    left: auto !important;
     padding: 0;
     border: none;
 
-    width: 240px;
+    width: 240px;*/
 
 }
 
