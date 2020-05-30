@@ -16,11 +16,12 @@
  h6 {
   margin: 0;
     font-weight: 100;
-    font-family: 'Lane - Narrow' !important;
+    font-family: "Open Sans", sans-serif;
  }
 
  h1 {
-   font-size: 70px;
+   font-size: 66px;
+   line-height: 70px;
  }
 
  h2 {
@@ -44,7 +45,8 @@
  }
 
  p {
-   font-size: 14px;
+  font-size: 16px;
+  line-height: 23px;
  }
 
  img {
@@ -161,8 +163,19 @@
 
  .st-rl {
    background: #80aef71c;
-  padding-top: 100px;
+  padding-top: 5px;
   padding-bottom: 100px;
+ }
+
+ .b-43 {
+   position: relative;
+  bottom: 43px;
+ }
+
+ .hl-purple {
+   font-weight: 800 !important;
+   font-size: 52px;
+   color: #743aa9;
  }
 
  .rounded-xl {
@@ -444,6 +457,11 @@
    background: #ffc000;
  }
 
+ .bottom-60 {
+   position: relative;
+   bottom: 60px;
+ }
+
  .search-switch-warp {
    padding-top: 20px;
  }
@@ -615,7 +633,7 @@
     opacity: 0;
     top: 50px;
     position: relative;
-    font-family: 'Lane - Narrow';
+    font-family: "Open Sans", sans-serif;
     text-align: center;
     text-transform: uppercase;
  }
@@ -808,6 +826,11 @@
     color: #3b3b3b
 }
 
+.eff-title {
+  font-size: 57px;
+  line-height: 56px;
+}
+
 .btn-red {
     font-size: 24px;
     color: #fff;
@@ -890,6 +913,11 @@ section.gpsLocation {
     /* IE6-9 */
 }
 
+.w-120 {
+  width: 120%;
+  max-width: 120%;
+}
+
 .btn-green:hover {
     color: #fff;
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3eba2e+0,56bc4a+100 */
@@ -942,7 +970,7 @@ section.gpsLocation {
 }
 
 .systemInfo h3 {
-    font-size: 55px;
+    font-size: 48px;
     font-weight: 300;
     margin-bottom: 50px;
 }
@@ -1212,6 +1240,10 @@ ul.footer-list li a:hover {
 }
 .row-margin-top {
     margin-top: 10px;
+}
+
+.mb-25 {
+  margin-bottom: 25px !important;
 }
 
 .slick-center > div {
@@ -2191,6 +2223,10 @@ ul.footer-list li a:hover {
    position: relative;
    top: 0px;
  }
+ .img-30 {
+   max-width: 350px;
+   width: 100%;
+ }
  .margin-top {
   margin-top: 30px;
  }
@@ -2208,7 +2244,7 @@ ul.footer-list li a:hover {
  .group-title {
    color: #694a86;
    text-transform: uppercase;
-   font-size: 18px;
+   font-size: 24px;
    font-weight: bold;
    text-align: center;
    margin-top: 110px;
@@ -2302,7 +2338,7 @@ ul.footer-list li a:hover {
   }
 
   .dyk {
-    background: url(../images/dyk_bg.jpg) no-repeat right bottom;
+    background: url(../images/graph.jpg) no-repeat right bottom;
     background-size: cover;
     height: 610px;
   }
@@ -2506,7 +2542,7 @@ Pricing
   padding: 25px;
   text-align: justify;
   font-weight: 200;
-  font-family: 'Kanit', sans-serif !important;
+  font-family: "Open Sans", sans-serif;
 }
 #slideshow > div {
   position: absolute;
@@ -2520,8 +2556,11 @@ Pricing
   padding: 25px;
   text-align: justify;
   font-weight: 200;
-  font-family: 'Kanit', sans-serif !important;
+  font-family: "Open Sans", sans-serif;
   color: white;
+}
+h4.weight-600.subtle-fade {
+  margin-bottom: 15px;
 }
 h3.testimonial-name {
   color: white;
@@ -2722,6 +2761,25 @@ label.reg-def {
    .site-navbar {
      text-align: center;
    }
+   .bottom-60 {
+    position: relative;
+    bottom: 34px;
+  }
+  .bottom-sm-30 {
+    position: relative;
+    bottom: 43px;
+  }
+  .sectionHeader h2 {
+    text-transform: uppercase;
+    font-size: 42px;
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+  .systemInfo h3 {
+    font-size: 46px;
+    font-weight: 300;
+    margin-bottom: 50px;
+  }
    .site-logo {
      display: block;
      padding-top: 20px;

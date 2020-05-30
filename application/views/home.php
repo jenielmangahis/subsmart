@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-md-12 col-lg-7 col-xl-7 text-center pt-110">
                             <div class="row justify-content-center">
-                                    <h2 class="font-weight-bold text-white font-kanit f-28">Signup Today for a Free 30-Day Trial</h2>
+                                    <h2 class="font-weight-bold text-white f-28">Signup Today for a Free 30-Day Trial</h2>
                             </div>
                             <div class="row row-margin-top">
                                 <div class="col-md-12 col-lg-6 row-margin-top">
@@ -287,7 +287,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="sectionHeader pb-5 w-75 m-auto">
-                        <h2>Discover Why nSmarTrac is <span class="d-md-block">So IMPORTANT for Your Business</span></h2>
+                        <h2 class="hl-purple">Discover Why nSmarTrac is So IMPORTANT for Your Business</h2>
                     </div>
                     <!-- <div class="videoHolder">
                         <a href="#"><img src="<?php echo $url->assets ?>frontend/images/videoIcon.png" alt="img icon"></a>
@@ -381,7 +381,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <section class="startTrial st-rl mt-8">
         <div class="customContainer">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12 b-43">
                     <div class="startTrialBtn mb-5 text-center">
                         <a href="<?php echo url('/home/signup') ?>" class="btn btn-green rounded-xl">
                             START YOUR <span class="yColor">FREE TRIAL</span>
@@ -410,7 +410,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-7 text-left align-self-center">
-                    <div class="systemInfo">
+                    <div class="systemInfo bottom-60">
                         <h3>Easy Work Order Management</h3>
                         <h4 class="weight-600 subtle-fade">Manage your jobs from anywhere</h4>
 
@@ -422,7 +422,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row mt-5">
                 <div class="col-lg-6 col-md-7 text-right">
-                    <div class="systemInfo">
+                    <div class="systemInfo bottom-sm-30">
                         <h3 class="mt-5">Receive payments online</h3>
                         <h4 class="weight-600 subtle-fade">Payment Collection Made Easy</h4>
                         <p>nSmartrac is integrated with apps like Square, PayPal and WePay. This means any payments can be automatically deposited to the destination of your choice.</p>
