@@ -25,7 +25,7 @@ class Users extends MY_Controller {
 	public function businessprofile()
 	{	
 		$user = (object)$this->session->userdata('logged');		
-		$profiledata = $this->business_model->getByWhere(array('company_id'=>$user->id));		
+		$profiledata = $this->business_model->getByWhere(array('id'=>$user->id));		
 		$this->page_data['profiledata'] = $profiledata[0];
 		$this->load->view('businessprofile', $this->page_data);
 	}
@@ -35,8 +35,8 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
-		$cid=logged('company_id');
-		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));		
+		$cid=logged('id');
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));		
 		$this->page_data['profiledata'] = $profiledata[0];
 		$this->load->view('business', $this->page_data);
 
@@ -45,8 +45,8 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid=logged('company_id');
-		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));	
+		$cid=logged('id');
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata[0];
@@ -284,7 +284,8 @@ class Users extends MY_Controller {
 
 			'role' => post('role'),
 
-			'name' => post('name'),
+			'FName' => post('FName'),
+			'LName' => post('LName'),
 
 			'username' => post('username'),
 
@@ -351,7 +352,7 @@ class Users extends MY_Controller {
 
 
 
-		$this->activity_model->add("User #$id Updated by User:".logged('name'));
+		$this->activity_model->add("User #$id Updated by User:".logged('FName'));
 
 
 

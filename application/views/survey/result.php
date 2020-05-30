@@ -37,7 +37,7 @@
                }
              }
             $total_count = count($question->survey_answer);
-            $percentage = $token_result / $total_count * 100;
+            $percentage = $token_result / 1 * 100; // need to update
        ?>
    <?php endforeach; ?>
    <div wrapper__section>
@@ -91,7 +91,7 @@
                                     }
                                   }
                                  $total_count = count($question->survey_answer);
-                                 $percentage = $token_result / $total_count * 100;
+                                 $percentage = $token_result / 1 * 100; // need to update
                             ?>
                             <li class="list-group-item d-flex justify-content-between">
                             <p class="mb-0 d-flex align-items-center"> <i class="icon-design <?= $question->template_icon ?>" style="background-color: <?= $question->template_color ?>;"></i> <?= $question->question ?></p>

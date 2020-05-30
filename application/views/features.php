@@ -69,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="features-group__name">Management</div>
             <ul class="features-group__list">
                 <li>Manage customers and send <br/> SMS/email notifications</li>
-                <li>Create & Assign Proposals, Workorders, <br/> and Service Tickets</li>
+                <li>Create & Assign Proposals, Work Orders, <br/> and Service Tickets</li>
                 <li>Assigned Appointment Scheduling</li>
                 <li>Time Clock & GPS locator</li>
             </ul>
@@ -87,11 +87,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="features-group">
             <div class="features-group__name">Marketing</div>
             <ul class="features-group__list">
-                <li>Create your own online store</li>
+                <!-- <li>Create your own online store</li> -->
                 <li>Run exclusive deals and campaigns</li>
                 <li>SMS & Email Blasts</li>
-								<li>Personalized Campaigns</li>
-                <li>Customer Finder 360</li>
+				<li>Personalized Campaigns</li>
+                <!-- <li>Customer Finder 360</li>  This looks like a trademarked term, we need our own name for whatever this is.  -->
             </ul>
         </div>
 				<div class="features-group">

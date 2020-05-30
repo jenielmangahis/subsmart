@@ -99,9 +99,9 @@ $user_id = getLoggedUserID();
                         <?php //if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i>Tickets</a>
                         <?php //endif ?>
-                        <?php if (hasPermissions('items_list')): ?>
+                        <?php //if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('inquiries') ?>"><i class="fa fa-question-circle"></i>Inquiries</a>
-                        <?php endif ?>
+                        <?php //endif ?>
                         <?php //if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('services') ?>"><i class="fa fa-user-circle-o"></i>Leads</a>
                         <?php //endif ?>

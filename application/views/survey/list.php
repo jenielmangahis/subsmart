@@ -8,7 +8,7 @@
     border-radius:10px;
   }
   #survey-card:hover {
-    transform: scale(1.02);
+    transform: none;
   }
 </style>
 

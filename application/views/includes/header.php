@@ -26,7 +26,13 @@
     <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
-
+    <style type="text/css">
+     #signature{
+            width: 100%;
+            height: 200px;
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>

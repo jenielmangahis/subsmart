@@ -4,6 +4,8 @@ $(document).ready(function () {
     $("#feesInventory").hide();
     $("#itemGroups").hide();
     $("#newItemInventory").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#onHandInventory").fadeIn();
   });
 
@@ -12,6 +14,8 @@ $(document).ready(function () {
     $("#feesInventory").hide();
     $("#itemGroups").hide();
     $("#newItemInventory").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#servicesInventory").fadeIn();
   });
 
@@ -20,6 +24,8 @@ $(document).ready(function () {
     $("#onHandInventory").hide();
     $("#itemGroups").hide();
     $("#newItemInventory").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#feesInventory").fadeIn();
   });
 
@@ -28,6 +34,8 @@ $(document).ready(function () {
     $("#onHandInventory").fadeOut();
     $("#feesInventory").fadeOut();
     $("#newItemInventory").fadeOut();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#itemGroups").fadeOut();
   });
 
@@ -36,6 +44,8 @@ $(document).ready(function () {
     $("#onHandInventory").fadeOut();
     $("#feesInventory").fadeOut();
     $("#newItemInventory").fadeOut();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#itemGroups").fadeOut();
   });
 
@@ -43,6 +53,9 @@ $(document).ready(function () {
     $("#servicesInventory").fadeOut();
     $("#onHandInventory").fadeOut();
     $("#feesInventory").fadeOut();
+    $("#newItemInventory").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#itemGroups").fadeOut();
   });
 
@@ -51,6 +64,8 @@ $(document).ready(function () {
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
     $("#newItemInventory").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#itemGroups").fadeIn();
   });
 
@@ -59,7 +74,29 @@ $(document).ready(function () {
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
     $("#itemGroups").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
     $("#newItemInventory").fadeIn();
+  });
+
+  $("#addNewServiceInventory").click(function () {
+    $("#servicesInventory").hide();
+    $("#onHandInventory").hide();
+    $("#feesInventory").hide();
+    $("#itemGroups").hide();
+    $("#newFeesInventory").hide();
+    $("#newItemInventory").hide();
+    $("#newServiceInventory").fadeIn();
+  });
+
+  $("#addNewFeesInventory").click(function () {
+    $("#servicesInventory").hide();
+    $("#onHandInventory").hide();
+    $("#feesInventory").hide();
+    $("#itemGroups").hide();
+    $("#newServiceInventory").hide();
+    $("#newItemInventory").hide();
+    $("#newFeesInventory").fadeIn();
   });
 
   $("#invoiceCreatedDate, #workOrderCreatedDate, #estimateDate").datetimepicker(

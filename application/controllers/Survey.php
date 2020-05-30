@@ -66,8 +66,8 @@ class Survey extends MY_Controller
       'data' => $data
     );
     echo json_encode($result);
+    redirect('/survey', 'refresh');
     exit;
-    // redirect('/survey', 'refresh');
   }
 
   public function delete($id){
@@ -173,21 +173,23 @@ class Survey extends MY_Controller
 
 
   public function answer($id){
-    // ini_set('display_errors', 1);
-    // // echo 'test';
-    // // var_dump($this->input->post('stripeToken'));exit;
-    // // require_once('application/libraries/stripe-php/init.php');
-    // require_once('application/libraries/stripe-php/init.php');
-    //     \Stripe\Stripe::setApiKey("sk_test_mMoB3fX3PZwWzdDGj1EwGr9E004bgLdyLv");
-        
-    //     \Stripe\Charge::create ([
-    //       "amount" => 100 * 100,
-    //       "currency" => "usd",
-    //       "source" => $this->input->post('stripeToken'),
-    //       "description" => "Test payment from itsolutionstuff.com." 
-    //       ]);
-          // var_dump("test");exit;
-
+    
+    if($this->input->post('stripeToken') != NULL){
+      require_once('application/libraries/stripe-php/init.php');
+      \Stripe\Stripe::setApiKey("sk_test_mMoB3fX3PZwWzdDGj1EwGr9E004bgLdyLv");
+      
+      \Stripe\Charge::create ([
+        "amount" => 100 * 100,
+        "currency" => "usd",
+        "source" => $this->input->post('stripeToken'),
+        "description" => "Test payment from itsolutionstuff.com." 
+        ]);
+      
+      unset($_POST['answer']);
+      unset($_POST['stripeToken']);
+    }
+   
+   
     $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
     echo json_encode($answered);
     exit;

@@ -236,6 +236,52 @@ class Builder extends MY_Controller {
 		$this->load->view('roles/add', $this->page_data);
 	}
 
+	public function saveFormResponse() {
+
+		if($this->input->post('form_id')) {
+
+			$questions = $this->input->post('question');
+
+			if( isset ( $questions ) && !empty ( $questions ) ) {
+
+				if(count($questions) > 0)
+				{
+					$data = array (
+						'form_id' 		=> $this->input->post('form_id'),
+						'job_id' 		=> $this->input->post('job_id'),
+						'user_id' 		=> logged('id'),
+						'company_id' 	=> logged('company_id'),
+					);
+					$this->db->insert( $this->builder_model->table_form_responses_rows, $data);
+					$form_responses_rows_id = $this->db->insert_id();
+				}
+
+				foreach($questions as $key => $value) {
+
+					$temp_value = (is_array($value)==true)?implode(",",$value):$value;
+
+					$data = array (
+						'key' 			=> $key,
+						'value' 		=> $temp_value,
+						'response_time' => date('Y-m-d H:i:s'),
+						'user_id' 		=> logged('id'),
+						'company_id' 	=> logged('company_id'),
+						'job_id' 		=> $this->input->post('job_id'),
+						'row_id' 		=> $form_responses_rows_id
+					);
+
+					$this->db->insert( $this->builder_model->table_form_responses, $data);
+				} 
+
+			}
+
+
+		}
+
+		redirect('builder/demo/'.$this->input->post('form_id'));
+
+	}
+
 	public function demo($id) {
 		$formdetail = $this->builder_model->get_forms($id);
 
@@ -268,10 +314,20 @@ class Builder extends MY_Controller {
 		        $this->db->where('forms_id', $id);
 		        $query = $this->db->get();
 		        $formdetail->questions[$key]->questions = $query->result();
+
+		        foreach ($formdetail->questions[$key]->questions as $keySubQuestions => $valueSubQuestions) {
+		        	if($valueSubQuestions->parameter != '') {
+						$formdetail->questions[$key]->questions[$keySubQuestions]->parameter = json_decode($valueSubQuestions->parameter);
+					}
+
+					if($valueSubQuestions->q_type == 'selection')
+					{
+						$formdetail->questions[$key]->questions[$keySubQuestions]->options = $this->builder_model->get_forms_questions_options($valueSubQuestions->Questions_id);
+					}
+		        }
 			}
 		}	
 
-		
 		$this->page_data['formdetail'] = $formdetail; 
 		$this->load->view('builder/demo', $this->page_data);
 		// $this->load->view('roles/add', $this->page_data);

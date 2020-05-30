@@ -43,20 +43,21 @@ function getInputHtml($valueQuestions){
 
   $questionParameterRequire = (isset($valueQuestions->parameter->required) && $valueQuestions->parameter->required == true) ? 'required' : '' ;
   
-  $questionName = 'question_'.$valueQuestions->Questions_id;
+  $questionId = 'question_'.$valueQuestions->Questions_id;
+  $questionName = 'question['.$valueQuestions->Questions_id.']';
   switch ($valueQuestions->q_type) {
       case "text":
 
 
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          echo '<input type="text" class="form-control" name="'.$valueQuestions->Questions_id.'" id="question_'.$valueQuestions->Questions_id.'" '.$questionParameterRequire.' autofocus/>';
+          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' autofocus/>';
         
           break;
       
       case "textarea":
        
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          echo '<textarea name="'.$valueQuestions->Questions_id.'" cols="40" rows="3" class="form-control" autocomplete="off"></textarea>';
+          echo '<textarea name="'.$questionName.'" cols="40" rows="3" class="form-control" autocomplete="off" '.$questionParameterRequire.'></textarea>';
         
           break;
       
@@ -66,7 +67,7 @@ function getInputHtml($valueQuestions){
           
           if($valueQuestions->parameter->selection_type == 'dropdown')
           {
-            echo '<select name="'.$questionName.'" id="'.$questionName.'" class="form-control">';
+            echo '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control" '.$questionParameterRequire.'>';
               if(isset($valueQuestions->options))
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
@@ -83,8 +84,8 @@ function getInputHtml($valueQuestions){
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
                   echo '<div class="radio radio-sec margin-right my-0 mr-3 float-left">
-                            <input type="radio" name="'.$questionName.'" value="'.$valueOptions->option_value.'" id="'.$questionName.'-option-'.$valueOptions->options_id.'">
-                            <label for="'.$questionName.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
+                            <input type="radio" name="'.$questionName.'" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.'>
+                            <label for="'.$questionId.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
                         </div>';
                 }
               }
@@ -98,45 +99,45 @@ function getInputHtml($valueQuestions){
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
                   echo '<div class="checkbox checkbox-sec margin-right my-0 mr-3 float-left">
-                            <input type="checkbox" name="'.$questionName.'" value="'.$valueOptions->option_value.'" id="'.$questionName.'-option-'.$valueOptions->options_id.'">
-                            <label for="'.$questionName.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
+                            <input type="checkbox" name="'.$questionName.'[]" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.'>
+                            <label for="'.$questionId.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
                         </div>';
                 }
               }
               echo '</div>';
           }
-
+          
           break;
       
       case "file-upload":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo ' <input type="file" class="form-control" name="'.$questionName.'" id="'.$questionName.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" >';
+          echo ' <input type="file" class="form-control" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" >';
 
           break;
       case "phone":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionName.' '.$questionParameterRequire.'"/>';
+          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.'/>';
 
           break;
       case "email":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="email" class="form-control" name="'.$questionName.'" id="'.$questionName.' " '.$questionParameterRequire.'/>';
+          echo '<input type="email" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
 
           break;
 
       case "address":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionName.' " '.$questionParameterRequire.'/>';
+          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
 
           break;
       case "date-picker":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="date" class="form-control" name="'.$questionName.'" id="'.$questionName.' " '.$questionParameterRequire.'/>';
+          echo '<input type="date" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
 
           break;
       default:
@@ -145,12 +146,12 @@ function getInputHtml($valueQuestions){
 }
 ?>
             <!-- end row -->
-            <?php echo form_open_multipart('builder/save', ['class' => 'form-validate require-validation', 'id' => 'customer_form', 'autocomplete' => 'off']); ?>
 
+            <?php echo form_open_multipart('builder/saveFormResponse', ['class' => 'form-validate require-validation', 'id' => 'customer_form', 'autocomplete' => 'off']); ?>
 
-            <style>
+            <input type="hidden" name="form_id" value="<?php echo $formdetail->forms_id; ?>">
+            <input type="hidden" name="job_id" value="0">
 
-            </style>
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
@@ -169,14 +170,14 @@ function getInputHtml($valueQuestions){
 
                                       
                                         if( $valueQuestions->q_type != 'group' ) {
-                                ?>
-                                        <div class="col-md-6 form-group">
-                                <?php    
+                                
+                                        echo '<div class="col-md-6 form-group">';
+                                
                                         
                                           getInputHtml ($valueQuestions);
-                                  ?> 
-                                        </div>
-                                  <?php
+                                
+                                        echo '</div>';
+                                  
                                         }
 
                                         if( $valueQuestions->q_type == 'group' ) {
@@ -188,7 +189,9 @@ function getInputHtml($valueQuestions){
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions)
                                           {
                                             echo '<div class="col-md-6 form-group">';
-                                          
+                                            // echo "<pre>";
+                                            // print_r($valueSubQuestions);
+                                           // echo "</pre>";
                                             getInputHtml ($valueSubQuestions);
                                           
                                             echo '</div>';
@@ -197,38 +200,10 @@ function getInputHtml($valueQuestions){
                                           echo "</div>";
                                         }
 
-
-
-                              
-                                ?>
-
-
-                                  
-                                      
-                                        
-
-
-
-                                <?php
                                     }
                                 }
                                 ?>
-                                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                
+                                  
                             </div>
 
                             <div class="row">
@@ -244,152 +219,7 @@ function getInputHtml($valueQuestions){
             </div>
 
             <?php echo form_close(); ?>
-
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceGroup" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Group</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Additional Contact -->
-            <div class="modal fade" id="modalAdditionalContacts" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_source" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Source Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modalAddNewCustomerTypes" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Customer Type</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_customer_types" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Type</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div class="modal fade" id="modalAddNewGroup" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <b class="modal-title" id="exampleModalLabel">Add New Group</b>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" style="padding:30px 30px 10px 30px;">
-                            <form id="frm_add_new_group" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Group Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control" required 
-                                           autocomplete="off">
-                                </div>
-                                <div class="form-group">
-                                    <label>Description</label> <span class="form-required">*</span>
-                                    <textarea class="form-control" required name="description" autocomplete="off"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
             <!-- end row -->
         </div>
         <!-- end container-fluid -->

@@ -146,6 +146,9 @@
         var data = new FormData(document.getElementById('form-survey'));
         var timer = $('#t').html();
         data.append('timer', parseInt(timer));
+        for (var pair of data.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
         var url = $('#form-survey').attr('href');
         $.ajax({
           url: url,
