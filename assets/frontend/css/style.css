@@ -918,6 +918,11 @@ section.gpsLocation {
   max-width: 120%;
 }
 
+.w-110 {
+  width: 110%;
+  max-width: 110%;
+}
+
 .btn-green:hover {
     color: #fff;
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3eba2e+0,56bc4a+100 */
@@ -970,7 +975,7 @@ section.gpsLocation {
 }
 
 .systemInfo h3 {
-    font-size: 48px;
+    font-size: 44px;
     font-weight: 300;
     margin-bottom: 50px;
 }

@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <div class="col-sm-6">
-                <img class="img-responsive w-120" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                <img class="img-responsive w-120" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_dashboard.png">
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="group-title">Management</div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo text-right pt-5">
+                <div class="col-sm-6 systemInfo text-right pt-2">
                     <h3 class="pt-2">
                         Manage customers and <br/> send notifications
                     </h3>
@@ -127,16 +127,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="customers management" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive" alt="customers management" src="<?php echo $url->assets ?>frontend/images/contact-manager.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="work orders" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="work orders" src="<?php echo $url->assets ?>frontend/images/invoice-home.png">
                 </div>
-                <div class="col-sm-6 systemInfo pt-4 mt-2 pl-4">
+                <div class="col-sm-6 systemInfo pt-4 mt-2 pl-5">
                     <h3>
                         Create and assign <br/> work orders
                     </h3>
@@ -161,8 +161,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         Now you can schedule appointments for both your customers and employees, without barely lifting a finger.
                     </p>
                 </div>
-                <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="schedule" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                <div class="col-sm-6 pl-3">
+                    <img class="img-responsive" alt="schedule" src="<?php echo $url->assets ?>frontend/images/work-management.png">
                 </div>
             </div>
         </div>
@@ -177,9 +177,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="invoices" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive" alt="invoices" src="<?php echo $url->assets ?>frontend/images/invoice-home.png">
                 </div>
-                <div class="col-sm-6 systemInfo pl-4 mt-2 pt-3">
+                <div class="col-sm-6 systemInfo pl-4 mt-2 pt-3 pl-4">
                     <h3 class="mb-25">Send custom estimates <br/> and invoices</h3>
                     <p>nSmarTrac lets you build custom estimates and send invoices from the palm of your hand.</p>
                     <br/>
@@ -213,9 +213,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/mileage.png">
                 </div>
-                <div class="col-sm-6 systemInfo pt-5 pl-4">
+                <div class="col-sm-6 systemInfo pt-4 pl-4">
                     <h3>Track expenses</h3>
                     <p>What used to be a stressful, time-consuming task just got a whole lot easier. nSmarTrac lets you:</p>
                     <br/>
@@ -252,9 +252,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="group-title">Insights</div>
         <div class="row">
             <div class="col-sm-6">
-                <img class="img-responsive w-120" alt="reports" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                <img class="img-responsive w-110" alt="reports" src="<?php echo $url->assets ?>frontend/images/chart.png">
             </div>
-            <div class="col-sm-6 systemInfo pt-5 pl-4">
+            <div class="col-sm-6 systemInfo pt-4 pl-5">
                 <h3>Get instant insights</h3>
                 <p>nSmarTrac provides users with valuable reports and insights that paint a clearer picture of where your business is now and where its going.</p>
             </div>
