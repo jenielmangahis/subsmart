@@ -73,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="content-container" style="margin-bottom: 20px;">
         <div class="row">
           <div class="col-md-5">
-                <img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">                
+                <img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">
                 <br />
                 <br />
                 <h3 style="padding:20px 0px;">Schedule Demo</h3>
@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div id='calendar'></div>
                 <div class="calendar-date-schedule"></div>
           </div>
-        </div>        
+        </div>
     </div>
   </section>
 </section>
@@ -106,22 +106,22 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         right: ''
       },
       dateClick: function(info) {
-        $(".calendar-date-schedule").html("<div class='three-quarters-loader'></div> Loading"); 
+        $(".calendar-date-schedule").html("<div class='three-quarters-loader'></div> Loading");
         setTimeout(function () {
             $.ajax({
                type: "POST",
-               url: base_url + 'demo/time_schedule',      
+               url: base_url + 'demo/time_schedule',
                data: {"date":info.dateStr},
                success: function(o)
                {
-                  $(".calendar-date-schedule").html(o); 
+                  $(".calendar-date-schedule").html(o);
                },
                complete: function() {
-                 
+
               }
             });
-        }, 1000);        
-        
+        }, 1000);
+
       },
       /*defaultDate: '2020-02-12',*/
       editable: false,
