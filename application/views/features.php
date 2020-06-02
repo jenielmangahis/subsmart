@@ -7,14 +7,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="headline">
     <div class="container spacing-ft">
         <div class="row">
-            <div class="col-sm-6">
-                <h1>Effortlessly run<br> your business</h1>
-								<div class="startTrialBtn m-auto pt-4">
+            <div class="col-sm-6 pt-5 mt-3">
+                <h1 class="eff-title">Effortlessly run<br> your business</h1>
+								<div class="startTrialBtn m-auto pt-5">
                   <a href="#" class="btn btn-violet">Get Started Now</a>
                 </div>
             </div>
             <div class="col-sm-6">
-                <img class="img-responsive" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                <img class="img-responsive w-120" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_dashboard.png">
             </div>
         </div>
     </div>
@@ -118,27 +118,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="group-title">Management</div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo text-right">
-                    <h3>
-                        Manage customers and send notifications
+                <div class="col-sm-6 systemInfo text-right pt-2">
+                    <h3 class="pt-2">
+                        Manage customers and <br/> send notifications
                     </h3>
                     <p>
                         With nSmarTrac, customer information is stored within the intuitive dashboard. So you can easily find addresses with directions and maps for clear navigation.
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="customers management" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive" alt="customers management" src="<?php echo $url->assets ?>frontend/images/contact-manager.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="work orders" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="work orders" src="<?php echo $url->assets ?>frontend/images/invoice-home.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pt-4 mt-2 pl-5">
                     <h3>
-                        Create and assign work orders
+                        Create and assign <br/> work orders
                     </h3>
                     <p>Two simple steps that will help you increase productivity:</p>
                     <br/>
@@ -155,14 +155,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo text-right">
+                <div class="col-sm-6 systemInfo text-right pt-5">
                     <h3>Seamless appointment scheduling</h3>
                     <p>
                         Now you can schedule appointments for both your customers and employees, without barely lifting a finger.
                     </p>
                 </div>
-                <div class="col-sm-6">
-                    <img class="img-responsive" alt="schedule" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                <div class="col-sm-6 pl-3">
+                    <img class="img-responsive" alt="schedule" src="<?php echo $url->assets ?>frontend/images/work-management.png">
                 </div>
             </div>
         </div>
@@ -177,10 +177,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="invoices" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive" alt="invoices" src="<?php echo $url->assets ?>frontend/images/invoice-home.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
-                    <h3>Send custom estimates and invoices</h3>
+                <div class="col-sm-6 systemInfo pl-4 mt-2 pt-3 pl-4">
+                    <h3 class="mb-25">Send custom estimates <br/> and invoices</h3>
                     <p>nSmarTrac lets you build custom estimates and send invoices from the palm of your hand.</p>
                     <br/>
                     <ol class="feature__list">
@@ -196,25 +196,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo text-right">
+                <div class="col-sm-6 systemInfo text-right pt-5">
                     <h3>Get paid online</h3>
                     <ol class="feature__list">
                         <li>
                             Through nSmarTrac, payments are safely and securely deposited through our Square, Paypal and Wepay integrated processors.
+                            <img class="img-responsive margin-top img-30" src="<?php echo $url->assets ?>frontend/images/payments-img.png">
                         </li>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="online payment" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="online payment" src="<?php echo $url->assets ?>frontend/images/invoice-v2.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/mileage.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pt-4 pl-4">
                     <h3>Track expenses</h3>
                     <p>What used to be a stressful, time-consuming task just got a whole lot easier. nSmarTrac lets you:</p>
                     <br/>
@@ -251,11 +252,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="group-title">Insights</div>
         <div class="row">
             <div class="col-sm-6">
-                <img class="img-responsive" alt="reports" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                <img class="img-responsive w-110" alt="reports" src="<?php echo $url->assets ?>frontend/images/chart.png">
             </div>
-            <div class="col-sm-6 systemInfo">
+            <div class="col-sm-6 systemInfo pt-4 pl-5">
                 <h3>Get instant insights</h3>
-                <br/>
                 <p>nSmarTrac provides users with valuable reports and insights that paint a clearer picture of where your business is now and where its going.</p>
             </div>
         </div>
@@ -271,13 +271,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pl-4 pt-5 mt-3">
                     <h3>
                         Create your own online store
                     </h3>
-                    <br/>
                     <ol class="feature__list">
                         <li>
                             Customize your store with your business in mind. Simply upload your credentials, pictures, service areas, reviews and so much more.
@@ -291,8 +290,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo">
-                    <h3>Run exclusive deals and campaigns</h3>
+                <div class="col-sm-6 systemInfo pt-4 mt-2">
+                    <h3>Run exclusive deals <br/> and campaigns</h3>
                     <p>Creating deals just got a whole lot easier.</p>
                     <br/>
                     <ol class="feature__list">
@@ -305,20 +304,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="run deals" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="run deals" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pl-4 pt-5">
                     <h3>
                         Personalized postcards for your customers
                     </h3>
-                    <br/>
                     <ol class="feature__list">
                         <li>
                             This is a priceless way to build connections and show your customers just how much you care.
@@ -332,7 +330,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pt-5 mt-4">
                     <h3>
                         Customer Finder 360
                     </h3>
@@ -341,7 +339,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="customer finder 360" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="customer finder 360" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
@@ -349,9 +347,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pl-4 pt-5">
                     <h3>Proposal Kit</h3>
                     <ol class="feature__list">
                         <li>
@@ -375,9 +373,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pl-4 pt-5">
                     <h3>SMS Automation</h3>
                     <br/>
                     <ol class="feature__list">
@@ -393,7 +391,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="feature">
             <div class="row">
-                <div class="col-sm-6 systemInfo">
+                <div class="col-sm-6 systemInfo pt-5">
                     <h3>Email Automation</h3>
                     <br/>
                     <ol class="feature__list">
@@ -406,18 +404,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive" alt="Postcard automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="Postcard automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 systemInfo pt-5">
                     <h3>Postcard Automation</h3>
-                    <br/>
                     <ol class="feature__list">
                         <li>
                             Simply send postcards to your customers once an invoice has been paid.

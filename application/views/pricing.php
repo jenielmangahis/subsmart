@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- <div class="ctext expert--anchor">Now set up QuickBooks with a Live Bookkeeping expert<sup>6</sup></div> -->
                     </div>
                     <div class="table-row" id="content_left">
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 875px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 900px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
@@ -295,7 +295,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 875px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 900px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ess">
                                     <div class="eCommerce-product-div">
@@ -506,12 +506,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
-                                        </ul>                                        
+                                        </ul>
                                     </div>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 875px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 900px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-plus">
                                     <div class="eCommerce-product-div">
@@ -721,12 +721,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
-                                        </ul> 
+                                        </ul>
                                     </div>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 875px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 900px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
@@ -939,7 +939,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
-                                        </ul> 
+                                        </ul>
                                     </div>
                                 </section>
                             </div>
@@ -952,7 +952,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="section--left">
                                     <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>$5 Add-ons</div>
                                     <div class="payroll-text">
-                                       
+
                                     </div>
                                     <label class="switch pricing-switch add-ons-slide-switch">
                                       <input type="checkbox" class="add-on-switch">
@@ -960,7 +960,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </label>
                                 </div>
                                 <div class="section--right">
-                                    <ul class="addon-list"> 
+                                    <ul class="addon-list">
                                         <li> Ask Customer for Review </li>
                                         <li> Online Booking </li>
                                         <li> Lead Contact Form </li>
@@ -975,7 +975,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="section--left">
                                     <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>$10 Add-ons</div>
                                     <div class="payroll-text">
-                                        
+
                                     </div>
                                     <label class="switch pricing-switch add-ons-slide-switch">
                                       <input type="checkbox" class="add-on-switch">
@@ -983,7 +983,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </label>
                                 </div>
                                 <div class="section--right">
-                                    <ul class="addon-list"> 
+                                    <ul class="addon-list">
                                         <li> NiceJob Connector </li>
                                         <li> Deals & Steals </li>
                                         <li> Proposal Kit </li>
@@ -1021,7 +1021,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="table-row" id="content_right">
                         <div class="pricing-card-layout-content none pcolumns_w1 col-md-12 col-sm-4 col-sm-offset-4 col-xs-12 pccol_1">
-                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 850px;">
+                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 882px;">
                                 <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
@@ -1142,7 +1142,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
-                                        </ul> 
+                                        </ul>
                                         <p class="info-text" style="display: flex;"></p>
                                     </div>
                                 </section>
@@ -1158,25 +1158,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   </section>
 </section>
 <section class="ccontainer ss-section all-plans-include" style="margin-bottom: 20px; " id="section-2">
-    <div class="content-container">        
-        <div class="grid-image-text container-fluid g_vertical_align_image">
-            <div class="row grid-container-960">
+    <div class="content-container">
+        <div class="grid-image-text container-fluid g_vertical_align_image pl-4">
+            <div class="row grid-container-960 pl-4">
                 <div class="hero-slider-signup owl-carousel">
                     <div class="hero-item" >
-                        <div class="testimonial-card">
-                            <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
-                            <div class="testimonial-content">
-                                <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
-                                <h3 class="testimonial-name">John Doe</h3>
+                        <div class="testimonial-card-pricing">
+                            <div class="col-sm-2 float-left">
+                              <img class="img-pricing-testimonial" src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
+                            </div>
+                            <div class="col-sm-10 float-left pr-5">
+                                <h3 class="testimonial-desc-pricing">"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"</h3>
+                                <h3 class="testimonial-name-pricing pr-4 color-purple">John Doe</h3>
+                                <p class="float-right pr-4 color-purple">Business Owner</p>
                             </div>
                         </div>
                     </div>
                     <div class="hero-item" >
-                        <div class="testimonial-card">
-                            <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
-                            <div class="testimonial-content">
-                                <h3 class="testimonial-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</h3>
-                                <h3 class="testimonial-name">John Wayne</h3>
+                        <div class="testimonial-card-pricing">
+                            <div class="col-sm-2 float-left">
+                              <img class="img-pricing-testimonial" src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
+                            </div>
+                            <div class="col-sm-10 float-left pr-5">
+                                <h3 class="testimonial-desc-pricing">"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.""</h3>
+                                <h3 class="testimonial-name-pricing pr-4 color-purple">John Wayne</h3>
+                                <p class="float-right pr-4 color-purple">Business Owner</p>
                             </div>
                         </div>
                     </div>

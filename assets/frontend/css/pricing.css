@@ -5343,7 +5343,7 @@ p.popup-subhead{
    padding-bottom:15px!important
 }
 .payroll--horizontal .pricing-card-layout-qb .pcolumns_w3 .pricing-card-layout-content-wrapper{
-   height:750px!important
+   height:880px!important
 }
 .payroll--wrapper .elite-add-on:after{
    content:"Get QuickBooks set up with a Live Bookkeeping expert";
@@ -5494,7 +5494,7 @@ span.tooltip-icon {
 }
 /* Payroll Section Start */
 .payroll--horizontal .pricing-card-layout-qb .pcolumns_w3 .pricing-card-layout-content-wrapper,.payroll--horizontal.pricing-card-layout-qb .pcolumns_w1 .pricing-card-layout-content-wrapper{
-   height:750px!important
+   height:880px!important
 }
 .payroll--wrapper .elite-add-on:after{
    content:"Get QuickBooks set up with a Live Bookkeeping expert";
@@ -5758,6 +5758,27 @@ body.expert-payroll-on.core-payroll-on .qb-se .blue-button,body.expert-payroll-o
    right:24px;
    cursor:pointer
 }
+img.img-pricing-testimonial {
+  position: relative;
+  top: 14px;
+}
+.testimonial-desc-pricing {
+    font-size: 19px;
+    padding: 30px;
+    text-align: justify;
+    font-weight: 500;
+    font-family: "Open Sans", sans-serif;
+    color: #616161 !important;
+}
+.color-purple {
+  color:#694a85 !important;
+}
+h3.testimonial-name-pricing {
+    font-weight: 600;
+    font-size: 24px;
+    text-align: right;
+    font-style: italic;
+}
 .dom-ready .global-sprite{
    background-image:url(https://quickbooks.intuit.com/etc/designs/harmony/images/global-sprite.svg)
 }
@@ -5767,6 +5788,13 @@ body.expert-payroll-on.core-payroll-on .qb-se .blue-button,body.expert-payroll-o
    opacity:1
 }
 /* Misc missing CSS End */
+img.img-pricing-testimonial {
+  border-radius: 150px;
+  width: 133px !important;
+  height: 130px;
+  display: block;
+  margin: 0 auto;
+}
 /* Lineup related CSS */
 .try-it-free .eCommerce-product-div .tryit-free-link-url{
    text-align:left!important;

@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Items_model extends MY_Model
 {
     public $table = 'items';
+    public $table_categories = 'item_categories';
 
     public function __construct()
     {
