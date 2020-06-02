@@ -610,6 +610,20 @@ if (!function_exists('hasPermissions')) {
     }
 }
 
+if (!function_exists('getLoggedFullName')) {
+
+
+    function getLoggedFullName($userId)
+    {
+        $finalUserId = ($userId) ? $userId : logged('id');
+        $CI =& get_instance();
+        $CI->load->model('Users_model', 'user_model');
+        $result = $CI->user_model->getByWhere(array('id' => $finalUserId));
+
+        return ucwords($result[0]->FName) . ' ' . ucwords($result[0]->LName);
+    }
+}
+
 if (!function_exists('getLoggedUserID')) {
 
 
@@ -619,6 +633,18 @@ if (!function_exists('getLoggedUserID')) {
         $CI = &get_instance();
         $user = (object)$CI->session->userdata('logged');
         return $user->id;
+    }
+}
+
+if (!function_exists('getLoggedCompanyID')) {
+
+
+    function getLoggedCompanyID()
+    {
+
+        $CI = &get_instance();
+        $company_id = logged('company_id');
+        return $company_id;
     }
 }
 

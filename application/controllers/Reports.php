@@ -151,16 +151,9 @@ class Reports extends MY_Controller {
     public function getUsers() {
 
         $user_id =  logged('id');
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();	
-        
-        if($parent_id->parent_id == 1) { // ****** if user is company ******//
-
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        
-        } else {			
-        
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);			
-        }       
+        $comp_id = logged('company_id');			
+    
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($comp_id, $user_id);			     
 
     }
 
