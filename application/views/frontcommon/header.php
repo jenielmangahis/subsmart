@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
 									<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
-									<li><a href="<?php echo url('/') ?>">CONTACT</a></li>
+									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
 									<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
 								</ul>
 							</nav>
