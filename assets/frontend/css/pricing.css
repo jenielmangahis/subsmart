@@ -29,6 +29,14 @@ input{
    padding-left:10px;
    padding-right:10px
 }
+.sp-r {
+  margin-bottom: 10px;
+  color: #694a85;
+  font-weight: 600;
+}
+.sp-txt {
+  padding-left: 12px;
+}
 .row{
    margin-left:-10px;
    margin-right:-10px

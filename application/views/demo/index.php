@@ -77,7 +77,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <br />
                 <br />
                 <h3 style="padding:20px 0px;">Schedule Demo</h3>
-                <div data-container="details" class="sp-ui"><div class="styles-Item__cls1___3haTY"><span class="fa fa-clock-o"></span>1&nbsp;hr </div><div class="styles-Item__cls1___3haTY"><span class="fa fa-phone"></span>Phone call</div></div>
+                <div data-container="details" class="sp-ui">
+                  <div class="sp-r">
+                    <span class="fa fa-clock-o"></span><span class="sp-txt">1&nbsp;hr</span>
+                  </div>
+                  <div class="sp-r">
+                    <span class="fa fa-phone"></span><span class="sp-txt">Phone call</span>
+                  </div>
+                </div>
                 <br />
                 <p>Demo agenda: Understand your questions and requirements and show you how Nsmartrac can help your business needs.</p>
                 <p>We’d like to take this moment to thank you for your interest in Nsmartrac. We hope you will find this platform valuable and make your business unique in the competitive landscape.</p>
