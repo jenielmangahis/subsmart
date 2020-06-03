@@ -1530,6 +1530,12 @@ ul.footer-list li a:hover {
    display: inline-block;
  }
 
+ .contact-spacing {
+   padding-top: 100px;
+   padding-bottom: 120px;
+   background: url(../images/headline_bg.png) repeat-x right bottom;
+ }
+
  .footer-menu li a {
    display: block;
    padding: 21px 17px;

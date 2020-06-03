@@ -210,7 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Tile & Grout</option>
                                             <option>Tree Services</option>
 
-                                            <!-- 
+                                            <!--
                                             <option>--Select your Role--</option>
                                             <option>Aerospace Industry</option>
                                             <option>Transport Industry</option>
@@ -218,7 +218,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Telecommunication industry</option>
                                             <option>Agriculture industry</option>
                                             <option>Construction Industry</option>
-                                            <option>Education Industry</option> 
+                                            <option>Education Industry</option>
                                             -->
 
                                         </select>
@@ -240,7 +240,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                      -->
 
                                     <!-- Health And Beauty -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                     <select class="form-control" id="sel1">
                                     <option>Massage</option>
@@ -249,11 +249,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <option>Costume Designer</option>
                                     <option>Fitness Instructors</option>
                                     </select>
-                                    </div> 
+                                    </div>
                                     -->
 
                                     <!-- Transportation Services -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
                                             <option>Auto Repair</option>
@@ -268,7 +268,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div> -->
 
                                     <!--Technical Services -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
                                             <option>Computer Services</option>
@@ -276,11 +276,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>IT & Networking </option>
                                             <option>Security Systems</option>
                                         </select>
-                                    </div> 
+                                    </div>
                                     -->
 
                                     <!--Design Services -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
                                             <option>Interior Design</option>
@@ -288,11 +288,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Event Photography/ Videography</option>
                                             <option>Graphics & Printing</option>
                                         </select>
-                                    </div> 
+                                    </div>
                                     -->
 
                                     <!--Organization/ Cleaning -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
                                             <option>Commercial cleaning</option>
@@ -301,11 +301,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Restoration</option>
                                             <option>Upholstery Cleaners</option>
                                         </select>
-                                    </div> 
+                                    </div>
                                     -->
 
                                     <!--Entertainment Services -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
                                             <option>A/ V Service</option>
@@ -315,11 +315,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Music & Singing</option>
                                             <option>Party Entertainer</option>
                                         </select>
-                                    </div> 
+                                    </div>
                                     -->
 
                                     <!--Other Services -->
-                                    <!-- 
+                                    <!--
                                     <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
                                             <option>Environmental Services </option>
@@ -333,8 +333,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option>Sales</option>
                                             <option>Tutoring </option>
                                         </select>
-                                    </div> -->           
-                                                                 
+                                    </div> -->
+
                             </div>
                             <div class="row row-margin-top">
                                     <div class="col-md-12 col-lg-6">
@@ -645,14 +645,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/trialimg_1.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/trialimg.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
             </div>
             <div class="row mt-5">
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/trialimg_2.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/trialimg.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-7 text-left align-self-center">
@@ -676,7 +676,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/trialimg_3.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/trialimg.png" class="img-fluid" alt="trial image">
                     </div>
                 </div>
 

@@ -271,9 +271,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/booking.png">
                 </div>
-                <div class="col-sm-6 systemInfo pl-4 pt-5 mt-3">
+                <div class="col-sm-6 systemInfo pl-5 pt-5 mt-3">
                     <h3>
                         Create your own online store
                     </h3>
@@ -304,16 +304,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="run deals" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="run deals" src="<?php echo $url->assets ?>frontend/images/feature_deal.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/feature_postcard.png">
                 </div>
-                <div class="col-sm-6 systemInfo pl-4 pt-5">
+                <div class="col-sm-6 systemInfo pl-5 pt-5">
                     <h3>
                         Personalized postcards for your customers
                     </h3>
@@ -339,7 +339,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="customer finder 360" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="customer finder 360" src="<?php echo $url->assets ?>frontend/images/feature_360.png">
                 </div>
             </div>
         </div>
@@ -347,9 +347,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_proposal.png">
                 </div>
-                <div class="col-sm-6 systemInfo pl-4 pt-5">
+                <div class="col-sm-6 systemInfo pl-5 pt-5">
                     <h3>Proposal Kit</h3>
                     <ol class="feature__list">
                         <li>
@@ -373,9 +373,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="expenses" src="<?php echo $url->assets ?>frontend/images/feature_automation.png">
                 </div>
-                <div class="col-sm-6 systemInfo pl-4 pt-5">
+                <div class="col-sm-6 systemInfo pl-5 pt-5">
                     <h3>SMS Automation</h3>
                     <br/>
                     <ol class="feature__list">
@@ -404,16 +404,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </ol>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-120" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_email.png">
                 </div>
             </div>
         </div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="Postcard automation" src="<?php echo $url->assets ?>frontend/images/feature_2_dashboard_pr.png">
+                    <img class="img-responsive w-110" alt="Postcard automation" src="<?php echo $url->assets ?>frontend/images/feature_pscard.png">
                 </div>
-                <div class="col-sm-6 systemInfo pt-5">
+                <div class="col-sm-6 systemInfo pt-5 pl-5">
                     <h3>Postcard Automation</h3>
                     <ol class="feature__list">
                         <li>
