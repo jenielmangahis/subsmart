@@ -16,8 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					
 					<style>
 						.smart__grid{
-							background:
-							#fff;
+							background: #fff;
 							display: grid;
 							grid-template-columns: 1fr 1fr;
 							grid-gap: 10px;
@@ -25,12 +24,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							padding: 10px;
 						}
 						.smart__grid > div{
-							background:
-#f2f2f2;
-text-align: center;
-display: flex;
-align-items: center;
-justify-content: center;
+							background: #f2f2f2;
+							text-align: center;
+							display: flex;
+							align-items: center;
+							justify-content: center;
 						} 
 					</style>
 					
@@ -58,15 +56,17 @@ justify-content: center;
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
 						<ol class="breadcrumb">
-                            <img src="<?php //echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;">
+							<?php $image = base_url('uploads/users/default.png'); ?>
+							<img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;">
+                            <!-- <img src="<?php //echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
                             <?php 
                                /*$id = logged('id');
                                $query = $this->db->query("Select name from users where id = $id");
                                $query11 = $query->row();  */                           
                             ?>
-                            <h5 style="margin: 30px 0 0px 10px;"><?php echo getLoggedName();?></h5>
+                            <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName();?></h5>
                         </ol>
-						<!--
+							<!--
                             <div class="dropdown"><button
                                     class="btn btn-primary dropdown-toggle arrow-none waves-effect waves-light"
                                     type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i

@@ -5,50 +5,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
-    <div>
+    <div wrapper__section>
+        <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Create Job</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
-                                    </a>
-                                <?php endif ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="validation-error" id="estimate-error" style="display: none;">You selected Credit Card Payments as payment method for this invoice. Please configure the <a href="https://www.markate.com/pro/settings/payments/main">Online Payment processor</a> first to accept cart payments.</div>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+                        <?php echo form_open('job/saveJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+                            <h2 class="page-title text-left">Create Job</h2>
                             <div class="row">
                                 <div class="col-md-2" style="margin-top:10px;">
-                                    <label for="job_name">Job Number:</label>
+                                    <label for="job_number">Job Number: 1000-01</label>
+                                    <input type="hidden" name="jobNumber" value="1000-01">
                                 </div>
                                 <div class="col-md-2" style="margin-top:10px;">
-                                    <label for="job_name">Added By:</label>
+                                    <label for="createdBy">Added By: <?php echo getLoggedFullName(0); ?></label>
+                                    <input type="hidden" name="createdBy" value="<?php echo getLoggedUserID(); ?>">
                                 </div>
                                 <div class="col-md-2" style="margin-top:10px;">
                                     <label for="job_name">Added Date:</label>
+                                    <label for="job_name"><?php echo date('Y-m-d'); ?></label>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <button class="btn btn-primary" data-action="update">Save</button>
-                                    <button class="btn btn-primary" data-action="send">Edit</button>
-                                    <a class="btn btn-default" href="<?php echo url('invoice') ?>">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                    <a class="btn btn-default" href="<?php echo url('job') ?>">Cancel</a>
                                 </div>
                             </div>
                             <div class="row">
@@ -73,14 +57,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-2 form-group">
                                     <label for="exampleFormControlSelect1">Job Type</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                    <option value="1" selected>New Installation</option>
-                                    <option>System Upgrade</option>
-                                    <option>Maintenance</option>
-                                    <option>Monitoring</option>
-                                    <option>Repair</option>
-                                    <option>Warranty Call</option>
-                                    <option>Design</option>
+                                    <select class="form-control" name="job_type" id="exampleFormControlSelect1" required>
+                                    <option value="2" selected>New Installation</option>
+                                    <option value="3">System Upgrade</option>
+                                    <option value="4">Maintenance</option>
+                                    <option value="5">Monitoring</option>
+                                    <option value="6">Repair</option>
+                                    <option value="7">Warranty Call</option>
+                                    <option value="8">Design</option>
                                     </select>
                                 </div>
                                 <div class="col-md-1 form-group">
@@ -402,9 +386,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <select class="form-control" id="exampleFormControlSelect1">
                                                             <option value="" selected>Service</option>
                                                             <option>Material</option>
-                                                            <option>Cameras</option>
-                                                            <option>Locks</option>
-                                                            <option>DVR</option>
+                                                            <?php foreach($items_categories as $cat) : ?>
+                                                                <option value="<?php echo $cat->item_categories_id; ?>"><?php echo $cat->name; ?></option>
+                                                            <?php endforeach; ?>
                                                             <option>Fees</option>
                                                         </select>
                                                     </div>
@@ -574,6 +558,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                         </div>
+                        <?php echo form_close(); ?>
                     </div>
                     <!-- end card -->
                 </div>

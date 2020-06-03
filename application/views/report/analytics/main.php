@@ -40,13 +40,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </a>
                                     </li>
                                         <li>
-                                        <a href="https://www.markate.com/pro/track/customers">
+                                        <a href="#">
                                             <span class="stats-name">Customers Total</span>
                                             <span class="stats-value">381</span>
                                         </a>
                                     </li>
                                         <li>
-                                        <a href="https://www.markate.com/pro/promote/deals/main">
+                                        <a href="#">
                                             <span class="stats-name">Active Deals</span>
                                             <span class="stats-value">0</span>
                                         </a>
@@ -55,9 +55,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="header-top">
                                     <h3>Business Profile</h3>
                                     <div class="avatar">
-                                        <img class="user-avatar" src="https://www.markate.com/cdn/20200131/avatar_14356_2efeea8595_xs.jpg">
+                                        <img class="user-avatar" src="#">
                                         <div class="avatar-cnt">
-                                            ADi<br><a class="a-ter" href="https://www.markate.com/business/adi-0">view public profile</a>
+                                            ADi<br><a class="a-ter" href="#">view public profile</a>
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <h3>Job Leads</h3>
                                     </div>
                                     <div class="col-sm-12 text-right">
-                                        <a class="a-ter" href="https://www.markate.com/pro/jobs/search">view job leads</a>
+                                        <a class="a-ter" href="#">view job leads</a>
                                     </div>
                                 </div>
                                 <hr>
@@ -176,7 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <h3>Deals</h3>
                                     </div>
                                     <div class="col-sm-12 text-right">
-                                        <a class="a-ter" href="https://www.markate.com/pro/promote/deals/main">view deals</a>
+                                        <a class="a-ter" href="#">view deals</a>
                                     </div>
                                 </div>
                                 <hr>
