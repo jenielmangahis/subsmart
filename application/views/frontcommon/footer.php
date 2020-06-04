@@ -6,15 +6,15 @@
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Get Started</h5></li>
-							<li><a href="#">Features</a></li>
-							<li><a href="#">Pricing</a></li>
+							<li><a href="<?php echo url('/features') ?>">Features</a></li>
+							<li><a href="<?php echo url('/pricing') ?>">Pricing</a></li>
 						</ul>
 					</div>
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Our Company</h5></li>
 							<li><a href="#">About us</a></li>
-							<li><a href="#">Contact</a></li>
+							<li><a href="<?php echo url('/contact') ?>">Contact</a></li>
 						</ul>
 					</div>
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
@@ -33,7 +33,7 @@
 						<div class="footer-social text-left">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
-						</div>						
+						</div>
 					</div>
 					<!-- <div class="footer-widget about-widget">
 						<img src="<?php echo $url->assets ?>frontend/images/nsmar.jpg" alt="">
