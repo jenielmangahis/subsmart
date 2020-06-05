@@ -17,12 +17,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
+                                <?php //if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Employee
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                            class="btn btn-sm btn-default" title="View User"
                                                            data-toggle="tooltip"><i class="fa fa-eye"></i></a>
                                                     <?php endif ?>
-                                                    <?php if (hasPermissions('users_delete')): ?>
+                                                    <?php //if (hasPermissions('users_delete')): ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id): ?>
                                                             <a href="<?php echo url('users/delete/' . $row->id) ?>"
                                                                class="btn btn-sm btn-default"
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                title="You cannot Delete this User" data-toggle="tooltip"
                                                                disabled><i class="fa fa-trash"></i></a>
                                                         <?php endif ?>
-                                                    <?php endif ?>
+                                                    <?php //endif ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>

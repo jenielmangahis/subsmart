@@ -25,9 +25,7 @@ class Inventory extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'assets/frontend/js/invoice/add.js',
             'assets/frontend/js/inventory/main.js',
-            'assets/js/invoice.js'
         ));
     }
 
@@ -36,18 +34,22 @@ class Inventory extends MY_Controller
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
+        $this->page_data['active_category'] = "Show All";
+        $type = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "material";
 
-        if (!empty($get['search'])) {
-            $this->page_data['search'] = $get['search'];
-            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $comp_id);
+
+        if (!empty($get['category'])) {
+            $this->page_data['category'] = $get['category'];
+            $this->page_data['active_category'] = $get['category'];
+            $this->page_data['items'] = $this->items_model->filterBy(['category' => $get['category']], $comp_id, $type);
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $comp_id]);
-            $comp = array(
-                'company_id' => $comp_id
-            );
-            $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $comp_id, 'type' => $type]);
         }
-
+        
+        $comp = array(
+            'company_id' => $comp_id
+        );
+        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
         $this->load->view('inventory/list', $this->page_data);
     }
   
@@ -73,7 +75,6 @@ class Inventory extends MY_Controller
     public function saveItems()
     {
         postAllowed();
-
         $comp_id = logged('company_id');
         $permission = $this->items_model->create([
             'company_id' => $comp_id,
@@ -82,11 +83,13 @@ class Inventory extends MY_Controller
             'model' => $this->input->post('model_number'),
             'COGS' => $this->input->post('cost_of_goods'),
             'price' => $this->input->post('cost'),
+            'brand' => $this->input->post('brand'),
+            'cost_per' => $this->input->post('cost_per'),
             'description' => $this->input->post('description'),
             'url' => $this->input->post('product_url'),
             'notes' => '',
             'item_categories_id' => $this->input->post('item_category'),
-            'status' => 1,
+            'is_active' => 1,
             'vendor_id' => $this->input->post('vendor'),
             'units' => $this->input->post('unit'),
 
@@ -97,6 +100,50 @@ class Inventory extends MY_Controller
         $this->session->set_flashdata('alert', 'New item Created Successfully');
         
         redirect('inventory');
+    }
+
+    public function saveServiceItems() 
+    {
+        postAllowed();
+
+        $comp_id = logged('company_id');
+        $permission = $this->items_model->create([
+            'company_id' => $comp_id,
+            'title' => $this->input->post('service_name'),
+            'type' => $this->input->post('service_item_type'),
+            'price' => $this->input->post('service_cost'),
+            'description' => $this->input->post('service_description'),
+            'frequency' => $this->input->post('service_frequency'),
+            'is_active' => 1
+        ]);
+
+        $this->activity_model->add("New item #$permission Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'New item Created Successfully');
+        
+        redirect('inventory?type=service');
+    }
+    
+    public function saveFeeItems()
+    {
+        postAllowed();
+
+        $comp_id = logged('company_id');
+        $permission = $this->items_model->create([
+            'company_id' => $comp_id,
+            'title' => $this->input->post('fee_name'),
+            'type' => $this->input->post('fee_item_type'),
+            'price' => $this->input->post('fee_cost'),
+            'description' => $this->input->post('fee_desc'),
+            'frequency' => $this->input->post('fee_frequency'),
+            'is_active' => 1
+        ]);
+
+        $this->activity_model->add("New item #$permission Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'New item Created Successfully');
+        
+        redirect('inventory?type=fees');
     }
 }
 

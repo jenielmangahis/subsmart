@@ -1,65 +1,211 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Form builder</title>
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/jquery.ui.css">
-	<link rel="stylesheet" href="css/font-awesome.css">
-	<link rel="stylesheet" href="css/app.css">
-</head>
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
-<body>
+<style> .form-group label { float: left; } </style>
 
-	<div class="container">
+<?php include viewPath('includes/header'); ?>
 
-		<div class="col-md-12"></div>
-			<div class="col-md-3"></div>
-			<div class="col-md-9">
-				<div class="environment">
-					<h1>Naurix Form-Builder</h1>
-				
-					<div class="main_row_append_box" id="sortable"></div>
-				
-					<div class="form_generated_box"></div>
-				
-					<textarea class="code_box form-control"></textarea>
-				
-					<!-- adder Button -->
-					<div style="margin-top: 20px">
-						<a href="#" class="btn btn-primary btn_round main_row_btn">
-							<i class="fa fa-plus"></i> Add Group
-						</a>
-				
-						<span class="pull-right">
-							<span class="btn_round html_btn btn btn-default" data-code-btn="code">
-								View HTML <i class="fa fa-code"></i>
-							</span>
-				
-							<span class="btn_round generate_btn btn btn-success">
-								Preview
-							</span>
-						</span>
-					</div>
-					<div class="clearfix"></div>
-					<!-- end adder Button -->
-				
-				</div>
-			</div>
-		</div>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/customer'); ?>
+    <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
 
-	</div>
-	
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/jquery.ui.js"></script>
-	<script type="text/javascript" src="js/template.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
-</body>
-</html>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title"><?php echo $formdetail->form_title; ?></h1>
+                        <!-- <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Add your new customer.</li>
+                        </ol> -->
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-right d-none d-md-block">
+                            <div class="dropdown">
+                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                    <a href="<?php echo base_url('customer') ?>" class="btn btn-primary"
+                                       aria-expanded="false">
+                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Customer
+                                    </a>
+                                <?php endif ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- end row -->
+
+            <?php echo form_open_multipart('builder/saveFormResponse', ['class' => 'form-validate require-validation', 'id' => 'customer_form', 'autocomplete' => 'off']); ?>
+
+            <input type="hidden" name="form_id" value="<?php echo $formdetail->forms_id; ?>">
+            <input type="hidden" name="job_id" value="0">
+
+            <div class="row custom__border">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- <div class="col-md-12">
+                                    <h3>sfsdf</h3>
+                                </div> -->
+                                <?php
+
+                                if(isset($formdetail->questions)) {
+
+
+                                    foreach($formdetail->questions as $keyQuestions => $valueQuestions)
+                                    {
+
+                                      
+                                        if( $valueQuestions->q_type != 'group' && $valueQuestions->q_type != 'reperator' ) {
+                                
+                                        echo '<div class="col-md-6 form-group">';
+                                
+                                        
+                                          getInputHtml ($valueQuestions);
+                                
+                                        echo '</div>';
+                                  
+                                        }
+
+                                        if( $valueQuestions->q_type == 'group' ) {
+                                          echo '<div class="col-md-12 form-group">';
+                                            echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+
+
+                                                                                
+                                          foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions)
+                                          {
+                                            echo '<div class="col-md-6 form-group">';
+                                            // echo "<pre>";
+                                            // print_r($valueSubQuestions);
+                                           // echo "</pre>";
+                                            getInputHtml ($valueSubQuestions);
+                                          
+                                            echo '</div>';
+                                          }
+                                            echo "</div>";
+                                          echo "</div>";
+                                        }
+
+                                        if( $valueQuestions->q_type == 'reperator' ) {
+                                        
+                                          $dummyHtml = '';
+                                        
+                                          echo '<div class="col-md-12 form-group">';
+                                            $dummyHtml .= '<div class="col-md-12 reperator_tab" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+                                              echo "<div class='reperator'>";
+                                          foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
+                                            $dummyHtml .= '<div class="col-md-6">';
+                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                            $dummyHtml .= '</div>';
+                                          }
+                                          
+                                          $dummyHtml .= '<div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
+                                              echo "</div>";
+
+                                          echo $dummyHtml;
+
+                                            echo "</div>";
+                                          echo "</div>";
+
+                                        } 
+                                        if( $valueQuestions->q_type == 'custom-reperator' ) {
+                                        
+                                          $dummyHtml = '';
+                                        
+                                          echo '<div class="col-md-12 form-group">';
+                                            $dummyHtml .= '<div class="col-md-12 reperator_tab" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+                                              echo "<div class='reperator'>";
+                                          foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
+                                            $dummyHtml .= '<div class="col-md-6">';
+                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                            $dummyHtml .= '</div>';
+                                          }
+                                          
+                                          $dummyHtml .= '<div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
+                                              echo "</div>";
+
+                                          echo $dummyHtml;
+
+                                            echo "</div>";
+                                          echo "</div>";
+
+                                        }
+                                    }
+                                }
+                                ?>
+                                  
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <button type="submit" class="btn btn-flat btn-primary">Save</button>
+                                    <a href="<?php echo url('customer') ?>" class="btn btn-danger">Cancel this</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
+
+            <?php echo form_close(); ?>
+           
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- page wrapper end -->
+</div>
+<?php include viewPath('includes/footer'); ?>
+
+<script>
+
+    function addOptions(e)  {
+      console.log($(e).parents('.reperator_tab').html());
+    }
+    function validatecard() {
+        var inputtxt = $('.card-number').val();
+
+        if (inputtxt == 4242424242424242) {
+            $('.require-validation').submit();
+        } else {
+            alert("Not a valid card number!");
+            return false;
+        }
+    }
+
+
+     $(document).ready(function() {
+             $("input[name=birthday]").keydown(function(event) {
+        // Allow only backspace and delete
+        if ( event.keyCode == 46 || event.keyCode == 8 ) {
+            // let it happen, don't do anything
+        }
+        else {
+            // Ensure that it is a number and stop the keypress
+            if (event.keyCode < 48 || event.keyCode > 57 ) {
+                event.preventDefault(); 
+            }   
+        }
+    });
+    
+    $("input[name=birthday]").keyup(function(event){
+        console.log($(this).val());
+        if ($(this).val().length == 2){
+            $(this).val($(this).val() + "/");
+        }else if ($(this).val().length == 5){
+            $(this).val($(this).val() + "/");
+        }
+    });
+    
+});
+</script>
 <style>
-	.container {
-		width: 100%;
-	}
+ .select2-container--open{       z-index: 0;}
+ span.select2-selection.select2-selection--single {
+    font-size: 16px;
+}
 </style>

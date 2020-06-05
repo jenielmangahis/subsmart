@@ -1894,6 +1894,18 @@ function getLoggedName() {
     return ucwords($result[0]->FName);
 }
 
+function getItemCategoryName($categories, $id) {
+
+    $name = $id;
+    foreach ($categories as $category) {
+        if ($category->item_categories_id == $id) {
+            $name = $category->name;
+        }
+    }
+
+    return ucwords($name);
+}
+
 function getPaymentByMethod($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Payment_records_model', 'payment_records_model');
@@ -2424,45 +2436,22 @@ function getIndustryBusiness(){
             'Event Photography / Videography' => 'Event Photography / Videography',
             'Graphics & Printing' => 'Graphics & Printing'
         ],
-        'Business Services' => [
-            'Cabinetry' => 'Cabinetry',
-            'Chimney / Fireplace' => 'Chimney / Fireplace',
-            'Concrete & Asphalt' => 'Concrete & Asphalt',
-            'Deck & Patio' => 'Deck & Patio',
-            'Demolition' => 'Demolition',
-            'Doors & Windows' => 'Doors & Windows',
-            'Drywall' => 'Drywall',
-            'Fencing' => 'Fencing',
-            'Flooring' => 'Flooring',
-            'Framer' => 'Framer',
-            'General Contractor' => 'General Contractor',
-            'Handy Man' => 'Handy Man',
-            'Home Inspection' => 'Home Inspection',
-            'HVAC' => 'HVAC',
-            'Landscaper' => 'Landscaper',
-            'Lawn Care' => 'Lawn Care',
-            'Lighting' => 'Lighting',
-            'Painter' => 'Painter',
-            'Plumber' => 'Plumber',
-            'Pool & Spa' => 'Pool & Spa',
-            'Roofers' => 'Roofers',
-            'Sewer & Septic' => 'Sewer & Septic',
-            'Snow Removal' => 'Snow Removal',
-            'Solar & Energy' => 'Solar & Energy',
-            'Tile & Grout' => 'Tile & Grout',
-            'Tree Services' => 'Tree Services'
-        ],
         'Other' => [
             'Environmental Services' => 'Environmental Services',
             'Locksmith' => 'Locksmith',
             'Movers' => 'Movers',
             'Multi level marketing' => 'Multi level marketing',
             'Pet Grooming' => 'Pet Grooming',
-            'Private security' => 'Private security',
+            'Private Security' => 'Private Security',
             'Property Manager' => 'Property Manager',
             'Real Estate' => 'Real Estate',
             'Sales' => 'Sales',
-            'Tutoring' => 'Tutoring'
+            'Tutoring' => 'Tutoring',
+
+            'Notary' => 'Notary',
+            'Laundry' => 'Laundry',
+            'Install & Assemble' => 'Install & Assemble',
+            'Travel Agent' => 'Travel Agent',
         ]
     ];
 

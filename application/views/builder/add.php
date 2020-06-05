@@ -103,14 +103,71 @@
       </div>
       <div class="col-sm-10 border border-dark p-0" style="min-height: 445px;">
             
-          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 445px;"></div>
+          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 445px;">
+            
+
+
+
+
+
+
+            <div data-question-id="0" data-input-type="text" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input">
+                <div class="row">
+                  <label class="col-sm-2 col-form-label text-right">Question / Label</label>
+                  <div class="col-sm-5">
+                    <input value="sdfsdf" name="question_label" class="form-control" type="text"> 
+                  </div>
+                  <div class="col-sm-4 text-right">Text Field</div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label text-right">Field Description</label>
+                  <div class="col-sm-5">
+                    <input value="sfsdf" name="question_description" class="form-control" type="text">
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label text-right"></label>
+                  <div class="col-sm-2 text-left">
+                    <input class="" type="checkbox" value="true" name="question_required" checked="checked" > Required 
+                  </div>
+                  <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_encrypt" checked="true"> Encrypt Data </div>
+
+                  
+
+
+                  <div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="" name="question_styling_font_color"></div></div></div>
+
+
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          </div>
           
           <button onclick="addGroup()" class="pull-left">Add Group</button>
+          <button onclick="addGroupRepeater()" class="pull-left">Add Repeater</button>
           <button onclick="saveForm()" class="pull-left ml-2">Save Form</button>
       </div>
     </div>
   </div>  
 </div>
+
+
+
 <!-- page wrapper end -->
 
 <script type="text/javascript" src="<?php echo $url->assets ?>formbuilder/js/jquery.js"></script>
@@ -130,6 +187,20 @@
 
 <script>
 
+var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHide(this)">Styling</a> </div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="" name="question_styling_class"></div></div>';
+
+  function showHide(e) {
+    
+    if($(e).parent('div').parent('div').find('.styling').hasClass('d-none') == false) {
+      $(e).parent('div').parent('div').find('.styling').addClass('d-none');
+    } else {
+      $(e).parent('div').parent('div').find('.styling').removeClass('d-none');
+    }
+    // if($(e).parent('div').parent('div').find('.styling').css('display') == 'none')
+    //   $(e).parent('div').parent('div').find('.styling').show();
+    // else 
+    //   $(e).parent('div').parent('div').find('.styling').hide();
+  }
     if("<?php echo (isset($selected_form_id) && $selected_form_id > 0)? true : false ; ?>" ==true)
     {
       getFormData(); 
@@ -165,23 +236,25 @@
                 }
 
                 if(value.q_type == 'text') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getTextFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getTextFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'textarea') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getTextAreaFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['limit'],value.parameter['limit_range'],value.parameter['reachtextboxformatting']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getTextAreaFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['limit'],value.parameter['limit_range'],value.parameter['reachtextboxformatting'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'selection') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getSelectionFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['allow_other'],value.parameter['selection_type'],value.options));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getSelectionFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['allow_other'],value.parameter['selection_type'],value.options,value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'file-upload') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getFileUploadFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getFileUploadFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'phone') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getPhoneFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['extension'],value.parameter['phone_type_selector']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getPhoneFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['extension'],value.parameter['phone_type_selector'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'email') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getEmailFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getEmailFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'address') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getAddressFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['country_input']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getAddressFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['country_input'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'date-picker') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getDatePickerFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required']));
+                  $('#main-drag-and-drop-area ' + question_sub).append(getDatePickerFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
                 } else if(value.q_type == 'group') {
                   addGroup(value.Questions_id,value.question,value.description);
+                } else if(value.q_type == 'reperator') {
+                  addGroupRepeater(value.Questions_id,value.question,value.description);
                 }
                 
               });
@@ -261,7 +334,11 @@
           parameter['extension'] = $(value).find('input[name="extension_input"]').prop("checked");
           parameter['allow_other'] = $(value).find('input[name="allow_other"]').prop("checked");
           parameter['reachtextboxformatting'] = $(value).find('input[name="reachtextboxformatting"]').prop("checked");
-
+          
+          parameter['question_styling_class'] = $(value).find('input[name="question_styling_class"]').val();
+          parameter['question_styling_maxlength'] = $(value).find('input[name="question_styling_maxlength"]').val();
+          parameter['question_styling_background_color'] = $(value).find('input[name="question_styling_background_color"]').val();
+          parameter['question_styling_font_color'] = $(value).find('input[name="question_styling_font_color"]').val();
 
           if(question_input_type == 'selection')
           {
@@ -362,18 +439,134 @@
 
 
               var parameter = {};
-              parameter['required'] = $(childrenKey).find('input[name="question_required"]').prop("checked");
-              parameter['encrypt'] = $(childrenKey).find('input[name="question_encrypt"]').prop("checked");
-              parameter['country_input'] = $(childrenKey).find('input[name="country_input"]').prop("checked");
-              parameter['extension'] = $(childrenKey).find('input[name="extension_input"]').prop("checked");
-              parameter['limit'] = $(childrenKey).find('input[name="limit_text"]').prop("checked");
-              parameter['limit_range'] = $(childrenKey).find('input[name="limit_range"]').val();
-              parameter['phone_type_selector'] = $(childrenKey).find('input[name="phone_type_selector"]').prop("checked");
-              parameter['allow_other'] = $(childrenKey).find('input[name="allow_other"]').prop("checked");
-              parameter['reachtextboxformatting'] = $(childrenKey).find('input[name="reachtextboxformatting"]').prop("checked");
-              parameter['selection_type'] = $(childrenKey).find('input[name="selection_type"]:checked').val();
-              parameter['selection_type'] = $(childrenKey).find('input[name="selection_type"]:checked').val();
+              parameter['required'] = $(childrenValue).find('input[name="question_required"]').prop("checked");
+              parameter['encrypt'] = $(childrenValue).find('input[name="question_encrypt"]').prop("checked");
+              parameter['country_input'] = $(childrenValue).find('input[name="country_input"]').prop("checked");
+              parameter['extension'] = $(childrenValue).find('input[name="extension_input"]').prop("checked");
+              parameter['limit'] = $(childrenValue).find('input[name="limit_text"]').prop("checked");
+              parameter['limit_range'] = $(childrenValue).find('input[name="limit_range"]').val();
+              parameter['phone_type_selector'] = $(childrenValue).find('input[name="phone_type_selector"]').prop("checked");
+              parameter['allow_other'] = $(childrenValue).find('input[name="allow_other"]').prop("checked");
+              parameter['reachtextboxformatting'] = $(childrenValue).find('input[name="reachtextboxformatting"]').prop("checked");
+              parameter['selection_type'] = $(childrenValue).find('input[name="selection_type"]:checked').val();
+              parameter['selection_type'] = $(childrenValue).find('input[name="selection_type"]:checked').val();
               
+              parameter['question_styling_class'] = $(childrenValue).find('input[name="question_styling_class"]').val();
+              parameter['question_styling_maxlength'] = $(childrenValue).find('input[name="question_styling_maxlength"]').val();
+              parameter['question_styling_background_color'] = $(childrenValue).find('input[name="question_styling_background_color"]').val();
+              parameter['question_styling_font_color'] = $(childrenValue).find('input[name="question_styling_font_color"]').val();
+
+              parameter = removeUndefiendParameter(parameter);
+
+              if(question_input_type == 'selection')
+              {
+                parameter['selection_type'] = $(childrenValue).find('input[name="'+$(childrenValue).attr('data-field-id')+'"]:checked').val();
+              }
+              
+              var options = [];
+                $(childrenValue).find('.option_div').children('.option').each(function(keyOption,valueOption) {
+
+                  if($(valueOption).find('input[name="option_text"]').val() == '') {
+                    setValiationError($(valueOption).find('input[name="option_text"]'));
+                    formSubmitted = false;
+                  } else {
+                    $(valueOption).find('input[name="option_text"]').removeClass('validation-error-input');
+                  }
+                  options.push({
+                    "options_id": $(valueOption).attr('data-option-id'),
+                    "question_id": sub_question_id,
+                    "options": "Option " + (keyOption + 1),
+                    "option_value": $(valueOption).find('input[name="option_text"]').val(),
+                    "option_order": keyOption + 1
+                  });
+              });
+
+              var temp_questions_temp = {
+                'Questions_id':sub_question_id,
+                'question':question_label,
+                'q_type':question_input_type,
+                'description':question_description,
+                'question_order':priority,
+                'parent_question':group_order,
+                'parameter':parameter,
+                'conditions':'',
+                'style':'',
+                'options':options
+              };
+
+              if( question_input_type == 'selection' ) {
+                var removed_options_ids = $(childrenValue).find('.option_div').attr('data-removed-options');
+                temp_questions_temp['deletedOptions'] = removed_options_ids;
+              }
+              temp_questions.questions.push(temp_questions_temp);
+
+              priority = priority + 1;
+          });
+
+          formData.questions.push(temp_questions);
+        } else if ( question_type == 'reperator' ) {
+          
+          $(value).find('input[name="group_label"]').removeClass('validation-error-input');
+
+          var parameter = {};
+
+          var question_id = convertValue($(value).attr('data-question-id'));
+          var group_label = convertValue($(value).find('input[name="group_label"]').val());
+          var group_description = convertValue($(value).find('input[name="group_description"]').val());
+          var group_order = priority;
+
+          if(group_label == '') {
+            setValiationError($(value).find('input[name="group_label"]'));
+            formSubmitted = false;
+          }
+          
+          var temp_questions = {
+            'Questions_id':question_id,
+            'question':group_label,
+            'q_type':'reperator',
+            'description':group_description,
+            'question_order':priority,
+            //'parent_question':priority,
+            'parameter':parameter,
+            'conditions':'',
+            'style':'',
+            'questions':[]
+          };
+
+          priority = priority + 1;
+
+          $(value).find('.input-draggable-parent-child-div').children('.question-box').each(function(childrenKey,childrenValue){
+              var sub_question_type = $(childrenValue).attr('data-input-box-type');
+
+              var sub_question_id = convertValue($(childrenValue).attr('data-question-id'));
+              var question_label = convertValue($(childrenValue).find('input[name="question_label"]').val());
+              var question_description = convertValue($(childrenValue).find('input[name="question_description"]').val());
+              var question_input_type = $(childrenValue).attr('data-input-type');
+              if(question_label == '') {
+                setValiationError($(childrenValue).find('input[name="question_label"]'));
+                formSubmitted = false;
+              }
+
+
+              var parameter = {};
+
+              parameter['required'] = $(childrenValue).find('input[name="question_required"]').prop("checked");
+              parameter['encrypt'] = $(childrenValue).find('input[name="question_encrypt"]').prop("checked");
+              parameter['country_input'] = $(childrenValue).find('input[name="country_input"]').prop("checked");
+              parameter['extension'] = $(childrenValue).find('input[name="extension_input"]').prop("checked");
+              parameter['limit'] = $(childrenValue).find('input[name="limit_text"]').prop("checked");
+              parameter['limit_range'] = $(childrenValue).find('input[name="limit_range"]').val();
+              parameter['phone_type_selector'] = $(childrenValue).find('input[name="phone_type_selector"]').prop("checked");
+              parameter['allow_other'] = $(childrenValue).find('input[name="allow_other"]').prop("checked");
+              parameter['reachtextboxformatting'] = $(childrenValue).find('input[name="reachtextboxformatting"]').prop("checked");
+              parameter['selection_type'] = $(childrenValue).find('input[name="selection_type"]:checked').val();
+              parameter['selection_type'] = $(childrenValue).find('input[name="selection_type"]:checked').val();
+              
+              parameter['question_styling_class'] = $(value).find('input[name="question_styling_class"]').val();
+              parameter['question_styling_maxlength'] = $(value).find('input[name="question_styling_maxlength"]').val();
+              parameter['question_styling_background_color'] = $(value).find('input[name="question_styling_background_color"]').val();
+              parameter['question_styling_font_color'] = $(value).find('input[name="question_styling_font_color"]').val();
+
               parameter = removeUndefiendParameter(parameter);
 
               if(question_input_type == 'selection')
@@ -427,7 +620,7 @@
         }
       });
       
-      // return false;
+      
       if(formSubmitted == true) {
           
           $.ajax({
@@ -591,47 +784,47 @@
     });
 
 
-    function getTextFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,question_encrypt = false) {
+    function getTextFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,question_encrypt = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
 
         var required = question_required == 'true' ? 'checked' : '';
         var encryptData = question_encrypt == 'true' ? 'checked' : '';
 
         
         var field = generateField();
-        var html = '<div data-question-id="'+question_id+'" data-input-type="text" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_encrypt" '+encryptData+'> Encrypt Data </div> </div> </div>';
+        var html = '<div data-question-id="'+question_id+'" data-input-type="text" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_encrypt" '+encryptData+'> Encrypt Data </div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div> </div>';
         return html;
     }
 
-    function getEmailFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false) {
+    function getEmailFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
 
-        var html = '<div data-question-id="'+question_id+'" data-input-type="email" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Email Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div>  </div> </div>';
+        var html = '<div data-question-id="'+question_id+'" data-input-type="email" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Email Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div>  </div> </div>';
         return html;
     }
 
-    function getPhoneFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,extension = false,phone_type_selector = false) {
+    function getPhoneFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,extension = false,phone_type_selector = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
         var extension = extension == 'true' ? 'checked' : '';
         var phone_type_selector = phone_type_selector == 'true' ? 'checked' : '';
 
         var html = '<div data-question-id="'+question_id+'" data-input-type="phone" ';
-        html = html + 'class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Phone</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input class="form-control" value="'+question_description+'" name="question_description" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="extension_input" '+extension+'> Include Extension Field</div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="phone_type_selector" '+phone_type_selector+'> Include Phone Type Selector</div> </div> </div>';
+        html = html + 'class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Phone</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input class="form-control" value="'+question_description+'" name="question_description" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="extension_input" '+extension+'> Include Extension Field</div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="phone_type_selector" '+phone_type_selector+'> Include Phone Type Selector</div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div> </div> </div>';
         return html;
     }
 
-    function getAddressFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,country_input = false) {
+    function getAddressFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,country_input = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
         var country_input = country_input == 'true' ? 'checked' : '';
 
-        var html = '<div data-question-id="'+question_id+'" data-input-type="address" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Address</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="country_input" '+country_input+' value="true"> Include Country Input</div> </div> </div>';
+        var html = '<div data-question-id="'+question_id+'" data-input-type="address" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Address</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="country_input" '+country_input+' value="true"> Include Country Input</div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div> </div> </div>';
         return html;
     }
     
 
-    function getTextAreaFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_encrypt = false,limit = false,limit_range = '',reachTextBoxFormatting = false) {
+    function getTextAreaFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_encrypt = false,limit = false,limit_range = '',reachTextBoxFormatting = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
         var encryptData = question_encrypt == 'true' ? 'checked' : '';
@@ -639,12 +832,12 @@
         var reachTextBoxFormatting = reachTextBoxFormatting == 'true' ? 'checked' : '';
 
         var html = '<div  data-question-id="'+question_id+'" data-input-type="textarea" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input" > ';
-        html = html + ' <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Area</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" '+encryptData+' name="question_encrypt"> Encrypt Data </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" '+limit+' name="limit_text"> Limit Text<input class="form-control" name="limit_range" value="'+limit_range+'" type="text"></div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="reachtextboxformatting" '+reachTextBoxFormatting+'> Use Rich Text Formatting</div> </div> </div>';
+        html = html + ' <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Area</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" '+encryptData+' name="question_encrypt"> Encrypt Data </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" '+limit+' name="limit_text"> Limit Text<input class="form-control" name="limit_range" value="'+limit_range+'" type="text"></div> <div class="col-sm-3 text-left"> <input class="" type="checkbox" name="reachtextboxformatting" '+reachTextBoxFormatting+'> Use Rich Text Formatting</div> <div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div> </div>';
         return html;
     }
 
 
-    function getSelectionFieldHTML(question_id = '0', question_label = '', question_description = '', question_required = false, allow_other = false, selection_type = 'radio', options = []) {
+    function getSelectionFieldHTML(question_id = '0', question_label = '', question_description = '', question_required = false, allow_other = false, selection_type = 'radio', options = [], question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
       var field = generateField();
       var required = question_required == 'true' ? 'checked' : '';
       var allow_other = allow_other == 'true' ? 'checked' : '';
@@ -662,26 +855,26 @@
 
       var html = '<div data-field-id="selection_type-'+field+'" data-question-id="'+question_id+'" data-input-type="selection" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Selection</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="allow_other" '+allow_other+'> Allow Other</div>';
 
-      html = html + '<label class="text-right mb-0 pt-1">Selection Type</label> <div class="col-sm-4 text-left"> <input name="selection_type-'+field+'" value="radio" type="radio" '+((selection_type == 'radio')?'checked':'')+'> Radio Button &nbsp;<input name="selection_type-'+field+'" value="checkbox" type="radio" '+((selection_type == 'checkbox')?'checked':'')+'> Checkbox &nbsp;<input name="selection_type-'+field+'" value="dropdown" type="radio" '+((selection_type == 'dropdown')?'checked':'')+'> Drop Down </div> </div> <br><div class="row option_div" data-removed-options="">'+option_text+'</div></div>';
+      html = html + '<label class="text-right mb-0 pt-1">Selection Type</label> <div class="col-sm-4 text-left"> <input name="selection_type-'+field+'" value="radio" type="radio" '+((selection_type == 'radio')?'checked':'')+'> Radio Button &nbsp;<input name="selection_type-'+field+'" value="checkbox" type="radio" '+((selection_type == 'checkbox')?'checked':'')+'> Checkbox &nbsp;<input name="selection_type-'+field+'" value="dropdown" type="radio" '+((selection_type == 'dropdown')?'checked':'')+'> Drop Down </div> </div> <br><div class="row option_div" data-removed-options="">'+option_text+'</div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div>';
       // <div class="col-sm-12 option"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>
       return html;
     }
 
-    function getFileUploadFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false) {
+    function getFileUploadFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
 
 
-        var html = '<div data-question-id="'+question_id+'" data-input-type="file-upload" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">File Upload </div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> </div> </div>';
+        var html = '<div data-question-id="'+question_id+'" data-input-type="file-upload" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">File Upload </div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div> </div> </div>';
         return html;
     }
 
-    function getDatePickerFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false) {
+    function getDatePickerFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
       var field = generateField();
       var required = question_required == 'true' ? 'checked' : '';
 
 
-      var html = '<div data-question-id="'+question_id+'" data-input-type="date-picker" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Date Picker</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> </div> </div>';
+      var html = '<div data-question-id="'+question_id+'" data-input-type="date-picker" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Date Picker</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div> </div>';
       return html;
     }
 
@@ -723,6 +916,37 @@
 
     }
 
+    function addGroupRepeater(question_id = '0',question_label = '',question_description = '') {
+
+      var generateField = randomKey();
+
+      $('#main-drag-and-drop-area').append('<div data-question-id="'+question_id+'" data-input-type="reperator" class=" input-main-box portlet question-box question-box-'+question_id+'" data-input-box-type="reperator" id="portlet-'+generateField+'"><div class="portlet-header"><div class="row"><label class="col-sm-2 col-form-label text-right">Group Label</label><div class="col-sm-5"><input class="form-control" name="group_label" type="text" value="'+question_label+'"></div><label class="col-sm-4 col-form-label text-right">Repeater</label></div><div class="row"><label class="col-sm-2 col-form-label text-right">Field Description</label><div class="col-sm-5"><input class="form-control" name="group_description" value="'+question_description+'" type="text"></div></div></div><div class="portlet-content input-draggable-parent-child-div connectedSortable"></div></div>');
+
+      // $( ".column" ).sortable({
+      //   connectWith: ".column",
+      //   handle: ".portlet-header",
+      //   cancel: ".portlet-toggle",
+      //   placeholder: "portlet-placeholder ui-corner-all"
+      // });
+  
+      $( "#portlet-"+generateField )
+        .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+        .find( ".portlet-header" )
+          .addClass( "ui-widget-header ui-corner-all" )
+          .prepend( "<span class='ui-icon-minusthick portlet-toggle mr-2'><i class='fa fa-minus'></i></span><!--<span class='ui-icon-minusthick portlet-toggle mr-1'><i class='fa fa-trash'></i></span>-->");
+  
+      $( "#portlet-"+generateField+" .portlet-toggle" ).on( "click", function() {
+        var icon = $( this );
+        icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+        icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+      });
+
+      $( "#portlet-"+generateField+" .input-draggable-parent-child-div" ).sortable({
+        connectWith: ".connectedSortable",
+        placeholder: "portlet-placeholder"
+      }).disableSelection();
+
+    }
   </script>
 <style type="text/css">
   .validation-error-input {

@@ -84,7 +84,8 @@ $user_id = getLoggedUserID();
                         <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i>Customers</a>
+                        <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i>Customer Manager</a>
+						<a class="dropdown-item" href="<?php echo base_url('#') ?>"><i class=""></i>Create Job</a>
                         <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i>Estimates</a>
                         <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                             <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i>Work Orders</a>
@@ -315,4 +316,3 @@ $user_id = getLoggedUserID();
         </div><!-- end #navigation -->
     </div><!-- end container -->
 </div><!-- end navbar-custom -->
-

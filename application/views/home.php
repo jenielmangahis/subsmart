@@ -64,13 +64,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
-                                                <option value="0">Number of Employees</option>
+                                        <option value="0">Number of Employees</option>                          
                                                 <option value="1 (Just Me)">1 (Just Me)</option>
-                                                <option value="2-3">2-3</option>
-                                                <option value="4-10">4-10</option>
-                                                <option value="11-15">11-15</option>
-                                                <option value="16-20">16-20</option>
-                                                <option value="20+">20+</option>
+                                                <option value="2-10">2-10</option>
+                                                <option value="11-50">11-50</option>
+                                                <option value="51-100">51-100</option>
+                                                <option value="101-500">101-500</option>
+                                                <option value="1000+<">1000+<</option>
                                         </select>
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">

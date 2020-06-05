@@ -17,15 +17,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <?php echo form_open('job/saveJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                             <h2 class="page-title text-left">Create Job</h2>
                             <div class="row">
-                                <div class="col-md-2" style="margin-top:10px;">
+                                <div class="col-md-2 text-left" style="margin-top:10px;">
                                     <label for="job_number">Job Number: 1000-01</label>
                                     <input type="hidden" name="jobNumber" value="1000-01">
                                 </div>
-                                <div class="col-md-2" style="margin-top:10px;">
+                                <div class="col-md-2 text-left" style="margin-top:10px;">
                                     <label for="createdBy">Added By: <?php echo getLoggedFullName(0); ?></label>
                                     <input type="hidden" name="createdBy" value="<?php echo getLoggedUserID(); ?>">
                                 </div>
-                                <div class="col-md-2" style="margin-top:10px;">
+                                <div class="col-md-2 text-left" style="margin-top:10px;">
                                     <label for="job_name">Added Date:</label>
                                     <label for="job_name"><?php echo date('Y-m-d'); ?></label>
                                 </div>
@@ -36,18 +36,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 text-left form-group">
                                     <label for="job_name">Job Title</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name" required/>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 text-left form-group">
                                     <label for="invoice_customer">Customer</label>
                                     <select id="invoice_customer" name="customer_id"
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select customer">
                                     </select>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 text-left form-group">
                                     <p>&nbsp;</p>
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewCustomer"><span
@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-3 form-group">
                                 </div>
-                                <div class="col-md-2 form-group">
+                                <div class="col-md-2 text-left form-group">
                                     <label for="exampleFormControlSelect1">Job Type</label>
                                     <select class="form-control" name="job_type" id="exampleFormControlSelect1" required>
                                     <option value="2" selected>New Installation</option>
@@ -69,14 +69,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-1 form-group">
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 text-left form-group">
                                     <label for="invoice_job_location">Job Location</label>
                                     <select id="invoice_job_location" name="invoice_job_location_id"
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select Address">
                                     </select>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 text-left form-group">
                                     <p>&nbsp;</p>
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewLocationAddress"><span
@@ -84,7 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-3 form-group">
                                 </div>
-                                <div class="col-md-2 form-group">
+                                <div class="col-md-2 text-left form-group">
                                     <label for="exampleFormControlSelect1">Priority</label>
                                     <select class="form-control" id="exampleFormControlSelect1">
                                         <option value="" selected>Low Priority</option>
@@ -94,7 +94,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-1 form-group">
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-3 text-left form-group">
                                     <label for="exampleFormControlSelect1">Status</label>
                                     <select class="form-control" id="exampleFormControlSelect1">
                                         <option value="" selected>Status</option>
@@ -123,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button class="btn btn-primary col-md-12">Survey</button>
                                     </div>
                                 </div>
-                                <div class="col-md-10" id="currentForms">
+                                <div class="col-md-10 text-left" id="currentForms">
                                     <h4 for="exampleFormControlSelect1">Current Forms</h4>
                                     <table class="table table-hover">
                                         <thead>
@@ -314,7 +314,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
                                         </li>
                                     </ul>
-                                    <div class="tab-content" id="myTabContent">
+                                    <div class="tab-content text-left" id="myTabContent">
                                         <div class="tab-pane fade show active margin-top" id="items" role="tabpanel" aria-labelledby="items-tab">
                                             <h4>Items</h4>
                                             <button class="btn btn-primary margin-bottom" id="addItems">Add Items</button>

@@ -17,12 +17,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
+                                <?php //if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Employee
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
@@ -72,8 +72,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $data['user_id'] = $row->id;
                                                     // clockin array for each user
                                                     $clockin_arr = $this->timesheet_model->getClockIn($data);
-                                                    $clockout_arr = $this->timesheet_model->getClockIn($data);
+                                                    $clockout_arr = $this->timesheet_model->getClockOut($data);
                                                     //echo "<pre>";print_r($clockin_arr);echo "</pre>";
+
+
                                                 ?>
                                                 <tr class="timesheet_row">
                                                     <td width="60"><?php echo $row->id ?></td>
@@ -113,8 +115,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?php 
                                                                 // clock in for each user; temporarily specifying the first data in the array
                                                                 if( !empty($clockin_arr) ){
-                                                                    $user_clock_in = $clockin_arr[0]->timestamp;
-                                                                    echo date('h:i a', strtotime($user_clock_in))." Manual Clock In";    
+                                                                    if( $clockin_arr[0]->action == 'Clock In' ){
+                                                                        $user_clock_in = $clockin_arr[0]->timestamp;
+                                                                        echo date('h:i a', strtotime($user_clock_in))." Manual Clock In";    
+                                                                    }
+                                                                    elseif( $clockin_arr[0]->action == 'Clock Out' ){
+                                                                        $user_clock_in = $clockin_arr[0]->timestamp;
+                                                                        echo date('h:i a', strtotime($user_clock_in))." Manual Clock Out";
+                                                                    }
+                                                                    
                                                                 }
                                                                                                                                 
                                                             ?>
@@ -143,16 +152,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <input type="hidden" name="clockin_status" value="1" />
                                                                 <input type="hidden" name="clockin_sess" value="<?php echo $clockin_sess; ?>" />
                                                                 
+                                                                
+
                                                                 <?php if( !empty($clockin_arr) ):?>
-                                                                <a id="clockin" style="display: none;" href="#"
+                                                                    <?php if( $clockin_arr[0]->action == 'Clock In' ):?>
+                                                                    <a id="clockin" style="display: none;" href="#"
+                                                                       class="btn btn-sm btn-primary" title="Clock In"
+                                                                       data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In</a>
+                                                                    <a id="clockout" style="display: inline-block;" href="#"
+                                                                       class="btn btn-sm btn-danger" title="Clock Out"
+                                                                       data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out</a>
+                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                                        Manual
+                                                                    </button>
+                                                                    <?php elseif( $clockin_arr[0]->action == 'Clock Out' ):?>
+                                                                    <a id="clockin" style="" href="#"
                                                                    class="btn btn-sm btn-primary" title="Clock In"
                                                                    data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In</a>
-                                                                <a id="clockout" style="display: inline-block;" href="#"
+                                                                    <a id="clockout" style="display: none;" href="#"
                                                                    class="btn btn-sm btn-danger" title="Clock Out"
                                                                    data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out</a>
                                                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                                     Manual
                                                                 </button>
+                                                                    <?php endif;?>
                                                                 <?php else: ?>
                                                                     <a id="clockin" style="" href="#"
                                                                    class="btn btn-sm btn-primary" title="Clock In"
@@ -185,35 +208,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body" style="text-align: left;">
-                                                                <div style="width: 100px; float: left;"> <label>Entry Type</label> </div>
-                                                                <div style="float: left;">
-                                                                    <input type="radio" name="workhours"><span>Work Hours</span>
-                                                                    <input type="radio" name="pto"><span>PTO</span>
+                                                                
+                                                                <div style="float: left; width: 500px;">
+                                                                    <span style="margin-right: 25px;"><label>Entry Type</label> </span>
+                                                                    <input id="workhours" type="radio" name="workhours"><span>Work Hours</span>
+                                                                    <input id="pto" type="radio" name="pto"><span>PTO</span>
+                                                                </div>
+
+                                                                
+                                                                <div style="float: left; width: 380px;">
+
+                                                                    <span style="margin-right: 62px;"><label>Date</label> </span>
+                                                                    <input class="entry_date" type="text" placeholder="Select Date" name="date" autocomplete="off" />
                                                                 </div>
 
                                                                 <br>
-                                                                <div style="width: 100px; float: left;"> <label>Date</label> </div>
-                                                                <div style="float: left;">
-                                                                    <input type="text" placeholder="Select Date" name="date">
+                                                                
+                                                                <div style="float: left; width: 500px;">
+                                                                    <span style="margin-right: 15px;"><label>Clock In/Out</label> </span>
+                                                                    <input type="text" placeholder="h:mm a" name="clockin" autocomplete="off" /> ->
+                                                                    <input type="text" placeholder="h:mm a" name="clockout" autocomplete="off" />
+                                                                </div>
+                                                                
+                                                                <div style="float: left; width: 500px;">
+                                                                    <span style="margin-right: 52px;"> <label>Breaks</label> </span>
+                                                                    <input type="text" placeholder="h:mm a" name="breakin" autocomplete="off" /> ->
+                                                                    <input type="text" placeholder="h:mm a" name="breakout" autocomplete="off" />
                                                                 </div>
 
                                                                 <br>
-                                                                <div style="width: 100px; float: left;"> <label>Clock In/Out</label> </div>
-                                                                <div style="float: left;">
-                                                                    <input type="text" placeholder="h:mm a" name="clockin"> ->
-                                                                    <input type="text" placeholder="h:mm a" name="clockout">
-                                                                </div>
-
-                                                                <br>
-                                                                <div style="width: 100px; float: left;"> <label>Breaks</label> </div>
-                                                                <div style="float: left;">
-                                                                    <input type="text" placeholder="h:mm a" name="breakin"> ->
-                                                                    <input type="text" placeholder="h:mm a" name="breakout">
-                                                                </div>
-
-                                                                <br>
-                                                                <div style="width: 100px; float: left;"> <label>Job Code</label> </div>
-                                                                <div style="float: left;">
+                                                                
+                                                                <div style="float: left; width: 500px;">
+                                                                    <span style="margin-right: 36px;"><label>Job Code</label> </span>
                                                                     <select name="jobcode">
                                                                         <option>Select Job Code</option>
                                                                         <option>Job Code 1</option>
@@ -222,15 +248,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     </select>
                                                                 </div>
 
-                                                                <br>
-                                                                <div style="width: 100px; float: left;"> <label>Notes</label> </div>
-                                                                <div style="float: left;">
-                                                                    <textarea name="notes" placeholder="Type your notes here..."></textarea>
+                                                                <div style="float: left; width: 500px;">
+                                                                    <span style="margin-right: 56px;"> <label>Notes</label> </span>
+                                                                    <textarea name="notes" placeholder="Type your notes here..." oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="width: 400px;"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-                                                                <button type="button" class="btn btn-primary">ADD ENTRY</button>
+                                                                <button type="button" class="btn btn-primary" style="color: #45a73c;">ADD ENTRY</button>
                                                             </div>
                                                         </div>
                                                       </div>
@@ -263,6 +288,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(document).ready(function () {
         $('#dataTable1').DataTable();
 
+
+        /* Modal */
+        $('#workhours').on('click', function(e){
+            $("#pto").prop("checked", false);
+        })
+        $('#pto').on('click', function(e){
+            $("#workhours").prop("checked", false);
+        })
+
+        $(".entry_date").datepicker();
+        /* eol Modal */
 
         /*$('#dataTable1').on('click', 'tbody td', function() {
 
@@ -315,7 +351,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 },*/
                 success: function(result) {
                     alert('User has Clocked In');
-                    updateClockIn();
+                    //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
                     //console.log(this);
@@ -360,6 +396,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 },*/
                 success: function(result) {
                     alert('User has Clocked Out');
+                    window.location.reload();
                     //console.log('okay');
                     //console.log(this);
                     //var last_login = result['current_time_in'];

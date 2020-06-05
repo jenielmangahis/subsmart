@@ -12,19 +12,19 @@ class Items_model extends MY_Model
         parent::__construct();
     }
 
-    public function filterBy($filters = array(), $company_id = 0)
+    public function filterBy($filters = array(), $company_id, $type)
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('type', $type);
 
         if (!empty($filters)) {
 
-            if (isset($filters['search'])) {
+            if (isset($filters['category'])) {
                 $this->db->group_start();
-                $this->db->or_like('title', $filters['search']);
-                $this->db->or_like('price', $filters['search']);
-                $this->db->or_like('discount', $filters['search']);
+                $this->db->where('item_categories_id', $filters['category']);
                 $this->db->group_end();
             }
         }

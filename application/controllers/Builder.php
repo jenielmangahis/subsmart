@@ -6,6 +6,8 @@ class Builder extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+
+        $this->checkLogin();
 		$this->page_data['page']->title = 'Builder';
 		$this->page_data['page']->menu = 'roles';
 		$this->load->model('Builder_model', 'builder_model');
@@ -77,6 +79,93 @@ class Builder extends MY_Controller {
 			foreach($questions as $key => $value)
 			{
 				if($value['q_type'] == 'group') {
+
+					$data = array (
+						'question'=> $value['question'],
+						'q_type'=> $value['q_type'],
+						'description'=> $value['description'],
+						'forms_id'=> $form_id,
+						'question_order'=> $value['question_order'],
+						'parent_question'=> ((isset($value['parent_question']) && $value['parent_question'] !='' && $value['parent_question'] > 0)?$value['parent_question']:'null'),
+						'parameter'=> (isset($value['parameter']))?json_encode($value['parameter']):"",
+						'conditions'=> $value['conditions'],
+						'style'=> $value['style'],
+						'company_id'=> logged('company_id'),
+					);
+					$parentQuestionId = 0;
+					if($value['Questions_id'] > 0) {
+						$this->db->where('Questions_id', $value['Questions_id']);
+						$this->db->update( $this->builder_model->table_questions, $data);
+						$parentQuestionId = $value['Questions_id'];
+					} else {
+						$this->db->insert( $this->builder_model->table_questions, $data);
+						$parentQuestionId = $this->db->insert_id();
+					}
+					if(isset($value['questions']))
+					{
+						foreach($value['questions'] as $keySubQuestions => $valueSubQuestions)
+						{
+							$data = array (
+								'question'=> $valueSubQuestions['question'],
+								'q_type'=> $valueSubQuestions['q_type'],
+								'description'=> $valueSubQuestions['description'],
+								'forms_id'=> $form_id,
+								'question_order'=> $valueSubQuestions['question_order'],
+								'parent_question'=> $parentQuestionId,
+								'parameter'=> (isset($valueSubQuestions['parameter']))?json_encode($valueSubQuestions['parameter']):'',
+								'conditions'=> $valueSubQuestions['conditions'],
+								'style'=> $valueSubQuestions['style'],
+								'company_id'=> logged('company_id'),
+							);
+							$lastQuestionId = 0;
+							if($valueSubQuestions['Questions_id'] > 0)
+							{
+								$this->db->where('Questions_id', $valueSubQuestions['Questions_id']);
+								$this->db->update( $this->builder_model->table_questions, $data);
+								$lastQuestionId = $valueSubQuestions['Questions_id'];
+							} else {
+								$this->db->insert( $this->builder_model->table_questions, $data);
+								$lastQuestionId = $this->db->insert_id();
+							}
+
+							if(isset($valueSubQuestions['options']))
+							{	
+								
+								foreach($valueSubQuestions['options'] as $keySubQuestionsOptions => $valueSubQuestionsOptions)
+								{
+									
+									$dataOptions = array (
+										'options_id'=> $valueSubQuestionsOptions['options_id'],
+										'question_id'=> $lastQuestionId,
+										'options'=> $valueSubQuestionsOptions['options'],
+										'option_value'=> $valueSubQuestionsOptions['option_value'],
+										'option_order'=> $valueSubQuestionsOptions['option_order'],
+										'create_date'=> date('Y-m-d'),
+									);
+									if($valueSubQuestionsOptions['options_id'] > 0)
+									{
+										$this->db->where('options_id', $valueSubQuestionsOptions['options_id']);
+										$this->db->update( $this->builder_model->table_options,$dataOptions);
+									} else {
+										$this->db->insert( $this->builder_model->table_options,$dataOptions);
+									}
+								}
+							}
+
+							if(isset($valueSubQuestions['deletedOptions']) && $valueSubQuestions['deletedOptions'] !='')
+							{
+								$deletedOptions = explode(",",$valueSubQuestions['deletedOptions']);
+								if (!empty($deletedOptions)) {
+									$this->db->where_in('options_id', $deletedOptions);
+		        					$this->db->delete($this->builder_model->table_options);
+		    					}
+							}
+						}
+					}
+
+
+
+				} else if($value['q_type'] == 'reperator') {
 
 					$data = array (
 						'question'=> $value['question'],
@@ -306,6 +395,26 @@ class Builder extends MY_Controller {
 			{
 				$formdetail->questions[$key]->options = $this->builder_model->get_forms_questions_options($value->Questions_id);
 			} elseif ($value->q_type == 'group') {
+		        $this->db->select('*');
+		        $this->db->from($this->builder_model->table_questions);
+		        $this->db->order_by("question_order", "asc");
+		        $this->db->where('company_id', $company_id);
+		        $this->db->where('parent_question', $value->Questions_id);
+		        $this->db->where('forms_id', $id);
+		        $query = $this->db->get();
+		        $formdetail->questions[$key]->questions = $query->result();
+
+		        foreach ($formdetail->questions[$key]->questions as $keySubQuestions => $valueSubQuestions) {
+		        	if($valueSubQuestions->parameter != '') {
+						$formdetail->questions[$key]->questions[$keySubQuestions]->parameter = json_decode($valueSubQuestions->parameter);
+					}
+
+					if($valueSubQuestions->q_type == 'selection')
+					{
+						$formdetail->questions[$key]->questions[$keySubQuestions]->options = $this->builder_model->get_forms_questions_options($valueSubQuestions->Questions_id);
+					}
+		        }
+			} elseif ($value->q_type == 'reperator') {
 		        $this->db->select('*');
 		        $this->db->from($this->builder_model->table_questions);
 		        $this->db->order_by("question_order", "asc");

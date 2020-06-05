@@ -1530,6 +1530,12 @@ ul.footer-list li a:hover {
    display: inline-block;
  }
 
+ .contact-spacing {
+   padding-top: 100px;
+   padding-bottom: 120px;
+   background: url(../images/headline_bg.png) repeat-x right bottom;
+ }
+
  .footer-menu li a {
    display: block;
    padding: 21px 17px;
@@ -2632,6 +2638,119 @@ div.testimonial-card img {
     position: absolute;
     left: -10vw;
     bottom: -14px;
+ }
+ /* Contact Page */
+ .uppercase {
+   text-transform: uppercase;
+ }
+ .social-cc {
+   margin-top:12px;
+ }
+ .twitter-color {
+   background: #1da1f1;
+   color: #ffffff;
+ }
+ .bg-contact-phone {
+    position: relative;
+    display: block;
+    width: 240px;
+    margin-left: 120px;
+    height: 500px;
+    background: url(../images/phone-vec.png) center right / cover no-repeat;
+}
+ .contact-social {
+   padding: 5px;
+   display: block;
+   width: 40px;
+   float: left;
+   text-align: center;
+   font-size: 18px;
+   margin-right: 10px;
+ }
+ .fb-color:hover, .twitter-color:hover {
+   background: #694a85;
+   color: white;
+ }
+ .fb-color {
+   background: #037afe;
+   color: white;
+ }
+ .phone-header {
+   text-transform: uppercase;
+   color: white;
+   font-size: 17px;
+   text-align: center;
+   font-weight: 700;
+ }
+ .btn-phone {
+   background: #860df3;
+   border: 0px;
+   color: white;
+   width: 90px;
+   margin: 0 auto;
+   display: block;
+   border-radius: 20px;
+   padding: 4px;
+   font-size: 15px;
+   margin-top: 19px;
+   text-transform: uppercase;
+ }
+ .phone-input {
+   color: black;
+   border: 0px;
+   width: 95%;
+   margin: 0 auto;
+   display: block;
+   background: white;
+   margin-bottom: 10px;
+   font-size: 17px;
+   padding-left: 6px;
+ }
+ .inquiry-container {
+   background: #2c2c2c; /* Old browsers */
+   background: -moz-linear-gradient(top, #2c2c2c 0%, #383838 100%); /* FF3.6-15 */
+   background: -webkit-linear-gradient(top, #2c2c2c 0%,#383838 100%); /* Chrome10-25,Safari5.1-6 */
+   background: linear-gradient(to bottom, #2c2c2c 0%,#383838 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c2c2c', endColorstr='#383838',GradientType=0 );
+   position: relative;
+   top: 65px;
+   left: 13px;
+   width: 215px;
+   padding-top: 15px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-bottom: 15px;
+   height: 367px;
+ }
+ .mb-15 {
+   margin-bottom: 15px;
+ }
+ .contact-email {
+  margin-left: 17px;
+  color: #8452b1;
+ }
+ .ml-20 {
+   margin-left: 20px;
+ }
+ .container-contact {
+    width: 920px;
+    margin: 0 auto;
+ }
+ .contact-txt {
+   font-size: 23px;
+ }
+ .cn-tn {
+   font-size: 33px;
+ }
+ .cn-address {
+   font-size: 20px;
+ }
+ .contact-header {
+   color: #694a85;
+   font-size: 43px;
+   font-weight: 800;
+   text-transform: uppercase;
+   margin-bottom: 5px;
  }
  /* Register Page */
  .side-image--regular {

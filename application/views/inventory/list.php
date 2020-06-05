@@ -16,13 +16,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addOnHandInventory">On Hand</button>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addOnHandInventory" href="<?php echo base_url('inventory?type=material') ?>">On Hand</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addServicesInventory">Services</button>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" href="<?php echo base_url('inventory?type=service') ?>">Services</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addFeesInventory">Fees</button>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" href="<?php echo base_url('inventory?type=fees') ?>">Fees</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
                                         <button class="btn btn-primary col-md-12" id="orderInventory">Order</button>
@@ -34,12 +34,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button class="btn btn-primary col-md-12" id="reportsInventory">Reports</button>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addItemGroups">Item Groups</button>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" href="<?php echo base_url('inventory?type=itemgroup') ?>">Item Groups</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
                                         <button class="btn btn-primary col-md-12">Plans</button>
                                     </div>
                                 </div>
+                                <?php if ($type == 'material') : ?>
                                 <div class="col-md-10" id="onHandInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-10 text-left">Inventory On Hand</h4>
@@ -49,12 +50,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     <div class="row col-md-6 pt-2 pb-4">
                                             <label class="pt-2 pr-5" for="">Select</label>
-                                            <select class="form-control col-md-10" id="exampleFormControlSelect1">
-                                                <option value="draft" selected>Show All</option>
-                                                <?php foreach($items_categories as $cat) : ?>
-                                                    <option value="<?php echo $cat->item_categories_id; ?>"><?php echo $cat->name; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
+                                            <div class="dropdown dropdown-inline margin-right-sec"><a
+                                                    class="btn btn-default dropdown-toggle" style="text-align: left;" data-toggle="dropdown"
+                                                    aria-expanded="true" href="<?php echo base_url('customer') ?>"><span style="margin-right:130px;"><?php echo getItemCategoryName($items_categories, $active_category); ?></span>
+                                                <span class="caret"></span></a>
+                                                <ul class="dropdown-menu btn-block" role="menu">
+                                                    <?php foreach($items_categories as $cat) : ?>
+                                                        <li role="presentation">
+                                                            <a style="color:black;" role="menuitem" tabindex="-1" href="<?php echo base_url('inventory?category='.$cat->item_categories_id) ?>"><?php echo $cat->name; ?></a>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                    <?php if($active_category != "Show All") : ?>
+                                                        <li role="presentation">
+                                                            <a style="color:black;" role="menuitem" tabindex="-1" href="<?php echo base_url('inventory') ?>">Show All</a>
+                                                        </li>
+                                                    <?php endif;?>
+                                                </ul>
+                                            </div>
                                         </div>
                                     <table class="table table-hover"> 
                                         <thead>
@@ -72,7 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
                                                 <td><?php echo $item->description; ?></td>
-                                                <td>&nbsp;</td>
+                                                <td><?php echo $item->brand; ?></td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
@@ -81,7 +93,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tbody>
                                     </table> 
                                 </div>
-                                <div class="col-md-10" id="servicesInventory" style="display:none;">
+                                <?php elseif ($type == 'service') : ?>
+                                <div class="col-md-10" id="servicesInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-10 text-left">Services</h4>
                                         <div style="margin-bottom:10px;" class="col-md-2 text-right">
@@ -98,10 +111,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <?php foreach($items as $item) : ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><?php echo $item->estimated_time; ?></td>
+                                                <td><?php echo $item->frequency; ?></td>
+                                            </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table> 
                                 </div>
-                                <div class="col-md-10" id="feesInventory" style="display:none;">
+                                <?php elseif ($type == 'fees') : ?>
+                                <div class="col-md-10" id="feesInventory">
                                     <div class="row pt-4">
                                         <h4 class="col-md-10 text-left" for="exampleFormControlSelect1">Fees</h4>
                                         <div class="col-md-2 text-right" style="margin-bottom:10px;">
@@ -117,176 +139,194 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <?php foreach($items as $item) : ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><?php echo $item->frequency; ?></td>
+                                            </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table> 
                                 </div>
-                                <div class="col-md-10" id="itemGroups" style="display:none;">
+                                <?php elseif ($type == 'itemgroup') : ?>
+                                <div class="col-md-10" id="itemGroups">
                                     <div class="row col-md-12 pt-4 pl-0">
-                                        <h4 class="col-md-10 pl-0" for="exampleFormControlSelect1">Create Item Groups</h4>
+                                        <h4 class="col-md-10 pl-0 text-left" for="exampleFormControlSelect1">Create Item Groups</h4>
                                     </div>
                                     <?php echo form_open('inventory/saveItemsCategories', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
-                                    <div class="row pl-2 pt-2 pb-2">
-                                        <div class="row col-md-12">
-                                            <label class="pt-2 pr-3">Group Name</label>
-                                            <input type="text" id="groupNameField" name="groupName" required class="form-control col-md-5">
+                                        <div class="row pl-2 pt-2 pb-2">
+                                            <div class="row col-md-12">
+                                                <label class="pt-2 pr-3">Group Name</label>
+                                                <input type="text" id="groupNameField" name="groupName" required class="form-control col-md-5">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row pl-2 pt-2 pb-2">
-                                        <div style="margin-top:10px;" class="row col-md-12 pl-3">
-                                            <label class="pt-2 pr-4">Description</label>
-                                            <textarea rows="3" style="height:150px !important;" id="descriptionItemCat"  name="descriptionItemCat" class="form-control col-md-5"></textarea>
+                                        <div class="row pl-2 pt-2 pb-2">
+                                            <div style="margin-top:10px;" class="row col-md-12 pl-3">
+                                                <label class="pt-2 pr-4">Description</label>
+                                                <textarea rows="3" style="height:150px !important;" id="descriptionItemCat"  name="descriptionItemCat" class="form-control col-md-5"></textarea>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div style="margin-top:10px;" class="row pl-3">
-                                        <div class="col-md-6 text-right pr-5">
-                                            <button type="button" class="btn btn-default" id="cancelAddItemGroups">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        <div style="margin-top:10px;" class="row pl-3">
+                                            <div class="col-md-6 text-right pr-5">
+                                                <button type="button" class="btn btn-default" id="cancelAddItemGroups">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
                                         </div>
-                                    </div>
                                     <?php echo form_close(); ?>
                                 </div>
+                                <?php endif; ?>
                                 <div class="col-md-10" id="newItemInventory" style="display:none;">
                                     <div class="row pt-4">
-                                        <h4 for="exampleFormControlSelect1" class="col-md-10 pl-0 text-left">Create Item Groups</h4>
+                                        <h4 for="exampleFormControlSelect1" class="col-md-10 pl-0 text-left">New Item</h4>
                                     </div>
                                     <?php echo form_open('inventory/saveItems', ['class' => 'form-validate require-validation', 'id' => 'new_item_form', 'autocomplete' => 'off']); ?>
-                                    <div class="row col-md-12">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Item Name</label>
-                                        <input type="text" id="groupNameField" name="item_name" class="form-control col-md-5" required>
-                                        <input type="hidden" name="item_type" value="material">
-                                        <input type="hidden" name="event_type" id="event_type" value="save_another">
-                                        <button type="submit" class="btn btn-primary col-md-2 ml-3">Save & Add Another</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
-                                        <textarea rows="3" id="exampleFormControlTextarea1" name="description" class="form-control col-md-5"  required></textarea>
-                                        <button type="submit" class="btn btn-primary col-md-2 ml-3" id="save_close_item">Save & Close</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
-                                        <input type="text" id="groupNameField" name="cost" class="form-control col-md-5" required>
-                                        <button type="button" class="btn btn-default col-md-2 ml-3" id="closeAddNewItem">Close</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Cost Per</label>
-                                        <select class="form-control col-md-5" name="cost_per" id="cost_per" required>
-                                            <option value="each" selected>Each</option>
-                                            <option>Weight</option>
-                                            <option>Lenght</option>
-                                            <option>Area</option>
-                                            <option>Volume</option>
-                                            <option>Other</option>
-                                        </select>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Unit</label>
-                                        <input type="text" id="groupNameField" name="unit" class="form-control col-md-5">
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Vendor</label>
-                                        <select class="form-control col-md-5" name="vendor" id="exampleFormControlSelect1" required>
-                                            <option disabled>Select</option>
-                                            <option value="1">Vendor A</option>
-                                            <option value="2">Vendor B</option>
-                                        </select>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Product URL</label>
-                                        <input type="text" id="groupNameField" name="product_url" class="form-control col-md-5" required>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Costs of Goods</label>
-                                        <input type="text" id="groupNameField" name="cost_of_goods" class="form-control col-md-5" required>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Model Number</label>
-                                        <input type="text" id="groupNameField" name="model_number" class="form-control col-md-5" required>
-                                    </div>
-                                    <div class="row col-md-12 pt-4">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Item Category</label>
-                                        <select class="form-control col-md-5" name="item_category" id="exampleFormControlSelect1" required>
-                                            <option value="1" selected>Cameras</option>
-                                            <option value="2">Locks</option>
-                                            <option value="3">DVR</option>
-                                            <option value="4">Add New</option>
-                                        </select>
-                                    </div>
-                                    <div class="row col-md-12 pt-4">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Attach Image</label>
-                                        <select class="form-control col-md-3" name="attach_img_item" id="attach_img_item">
-                                            <option value="upload" selected>Upload</option>
-                                            <option value="file_vault">Choose From File Vault</option>
-                                        </select>
-                                        <label class="col-md-1 pt-2 pl-0 text-left"></label>
-                                        <button type="button" class="btn btn-primary col-md-1" id="goUpload">Go</button>
-                                        <input type="file" onchange="readURL(this);" name="attach_photo" id="attach_photo" style="display:none;">
-                                    </div>
-                                    <div class="row col-md-12 pt-4">
-                                        <label class="col-md-2 pt-2 pl-0 text-left"></label>
-                                        <img id="img_profile" src="<?php echo $url->assets ?>img/img_default.png" alt="">
-                                    </div>
+                                        <div class="row col-md-12">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Item Name</label>
+                                            <input type="text" id="groupNameField" name="item_name" class="form-control col-md-5" required>
+                                            <input type="hidden" name="item_type" value="material">
+                                            <input type="hidden" name="event_type" id="event_type" value="save_another">
+                                            <button type="submit" class="btn btn-primary col-md-2 ml-3">Save & Add Another</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
+                                            <textarea rows="3" id="exampleFormControlTextarea1" name="description" class="form-control col-md-5"  required></textarea>
+                                            <button type="submit" class="btn btn-primary col-md-2 ml-3" id="save_close_item">Save & Close</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Brand</label>
+                                            <input type="text" id="brandField" name="brand" class="form-control col-md-5" required>
+                                            <button type="button" class="btn btn-default col-md-2 ml-3" id="closeAddNewItem">Close</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
+                                            <input type="text" id="costField" name="cost" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Cost Per</label>
+                                            <select class="form-control col-md-5" name="cost_per" id="cost_per" required>
+                                                <option value="each" selected>Each</option>
+                                                <option>Weight</option>
+                                                <option>Lenght</option>
+                                                <option>Area</option>
+                                                <option>Volume</option>
+                                                <option>Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Unit</label>
+                                            <input type="text" id="groupNameField" name="unit" class="form-control col-md-5">
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Vendor</label>
+                                            <select class="form-control col-md-5" name="vendor" id="exampleFormControlSelect1" required>
+                                                <option disabled>Select</option>
+                                                <option value="1">Vendor A</option>
+                                                <option value="2">Vendor B</option>
+                                            </select>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Product URL</label>
+                                            <input type="text" id="groupNameField" name="product_url" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Costs of Goods</label>
+                                            <input type="text" id="groupNameField" name="cost_of_goods" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Model Number</label>
+                                            <input type="text" id="groupNameField" name="model_number" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-4">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Item Category</label>
+                                            <select class="form-control col-md-5" name="item_category" id="exampleFormControlSelect1" required>
+                                                <?php foreach($items_categories as $cat) : ?>
+                                                    <option value="<?php echo $cat->item_categories_id; ?>"><?php echo $cat->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="row col-md-12 pt-4">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Attach Image</label>
+                                            <select class="form-control col-md-3" name="attach_img_item" id="attach_img_item">
+                                                <option value="upload" selected>Upload</option>
+                                                <option value="file_vault">Choose From File Vault</option>
+                                            </select>
+                                            <label class="col-md-1 pt-2 pl-0 text-left"></label>
+                                            <button type="button" class="btn btn-primary col-md-1" id="goUpload">Go</button>
+                                            <input type="file" onchange="readURL(this);" name="attach_photo" id="attach_photo" style="display:none;">
+                                        </div>
+                                        <div class="row col-md-12 pt-4">
+                                            <label class="col-md-2 pt-2 pl-0 text-left"></label>
+                                            <img id="img_profile" src="<?php echo $url->assets ?>img/img_default.png" alt="">
+                                        </div>
                                     <?php echo form_close(); ?>
                                 </div>
                                 <div class="col-md-10" id="newServiceInventory" style="display:none;">
                                     <div class="row col-md-12 pt-4 pl-0">
                                         <h4 class="col-md-10 pl-0 text-left" for="exampleFormControlSelect1">New Service</h4>
                                     </div>
-                                    <div class="row col-md-12">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Service Name</label>
-                                        <input type="text" id="groupNameField" class="form-control col-md-5">
-                                        <button class="btn btn-primary col-md-2 ml-3">Submit</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
-                                        <textarea rows="3" id="exampleFormControlTextarea1" class="form-control col-md-5"></textarea>
-                                        <button class="btn btn-default col-md-2 ml-3" id="cancelAddNewService">Cancel</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
-                                        <input type="text" id="groupNameField" class="form-control col-md-5">
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Frequency</label>
-                                        <select class="form-control col-md-5" id="exampleFormControlSelect1">
-                                            <option selected>One Time</option>
-                                            <option>Daily</option>
-                                            <option>Monthly</option>
-                                            <option>Yearly</option>
-                                        </select>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Time Estimate</label>
-                                        <input type="text" id="groupNameField" class="form-control col-md-5">
-                                    </div>
+                                    <?php echo form_open('inventory/saveServiceItems', ['class' => 'form-validate require-validation', 'id' => 'service_item_form', 'autocomplete' => 'off']); ?>
+                                        <div class="row col-md-12">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Service Name</label>
+                                            <input type="text" id="groupNameField" name="service_name" class="form-control col-md-5" required>
+                                            <input type="hidden" name="service_item_type" value="service">
+                                            <button type="submit" class="btn btn-primary col-md-2 ml-3">Submit</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
+                                            <textarea rows="3" id="exampleFormControlTextarea1" name="service_description" class="form-control col-md-5" required></textarea>
+                                            <button type="button" class="btn btn-default col-md-2 ml-3" id="cancelAddNewService">Cancel</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
+                                            <input type="text" id="groupNameField" name="service_cost" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Frequency</label>
+                                            <select class="form-control col-md-5" name="service_frequency" id="exampleFormControlSelect1">
+                                                <option selected>One Time</option>
+                                                <option>Daily</option>
+                                                <option>Monthly</option>
+                                                <option>Yearly</option>
+                                            </select>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Time Estimate</label>
+                                            <input type="text" name="serviceTimeEstimate" class="form-control col-md-5">
+                                        </div>
+                                    <?php echo form_close(); ?>
                                 </div>
                                 <div class="col-md-10" id="newFeesInventory" style="display:none;">
                                     <div class="row col-md-12 pt-4 pl-0">
                                         <h4 class="col-md-10 pl-0 text-left" for="exampleFormControlSelect1">New Fee</h4>
                                     </div>
-                                    <div class="row col-md-12">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Fee Name</label>
-                                        <input type="text" id="groupNameField" class="form-control col-md-5">
-                                        <button class="btn btn-primary col-md-2 ml-3">Submit</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
-                                        <textarea rows="3" id="exampleFormControlTextarea1" class="form-control col-md-5"></textarea>
-                                        <button class="btn btn-default col-md-2 ml-3" id="cancelAddNewFee">Cancel</button>
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
-                                        <input type="text" id="groupNameField" class="form-control col-md-5">
-                                    </div>
-                                    <div class="row col-md-12 pt-2">
-                                        <label class="col-md-2 pt-2 pl-0 text-left">Frequency</label>
-                                        <select class="form-control col-md-5" id="exampleFormControlSelect1">
-                                            <option selected>One Time</option>
-                                            <option>Daily</option>
-                                            <option>Monthly</option>
-                                            <option>Yearly</option>
-                                        </select>
-                                    </div>
+                                    <?php echo form_open('inventory/saveFeeItems', ['class' => 'form-validate require-validation', 'id' => 'fees_item_form', 'autocomplete' => 'off']); ?>
+                                        <div class="row col-md-12">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Fee Name</label>
+                                            <input type="text" id="groupNameField" name="fee_name" class="form-control col-md-5" required>
+                                            <input type="hidden" name="fee_item_type" value="fees">
+                                            <button type="submit" class="btn btn-primary col-md-2 ml-3">Submit</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
+                                            <textarea rows="3" id="exampleFormControlTextarea1" name="fee_desc" class="form-control col-md-5" required></textarea>
+                                            <button type="button" class="btn btn-default col-md-2 ml-3" id="cancelAddNewFee">Cancel</button>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
+                                            <input type="text" id="groupNameField" name="fee_cost" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Frequency</label>
+                                            <select class="form-control col-md-5" name="fee_frequency" id="exampleFormControlSelect1">
+                                                <option selected>One Time</option>
+                                                <option>Daily</option>
+                                                <option>Monthly</option>
+                                                <option>Yearly</option>
+                                            </select>
+                                        </div>
+                                    <?php echo form_close(); ?>
                                 </div>
                                 <div class="col-md-10" id="newServiceInventory" style="display:none;">
                                     <div class="row col-md-12 pt-4 pl-0">
@@ -429,4 +469,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <script src="<?php echo $url->assets ?>frontend/js/inventory/main.js"></script>

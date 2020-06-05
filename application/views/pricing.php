@@ -945,7 +945,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <br /><br /><br /><br />
+                    <br /><br /><br />
+                    <section class="addon" style="">
+                        <div class="container">
+                            <div class="addon__box">
+                                <div class="addon__list-cnt">
+                                    <div class="addon__list-row">
+                                        <div class="addon__price">
+                                            <div class="addon__price-base"><span class="addon__price-currency">$</span>5</div>
+                                            <div class="addon__price-label">Add-Ons</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <ul class="addon__list">
+                                                    <li><span class="fa fa-plus"></span> Ask Customer for Review</li>
+                                                    <li><span class="fa fa-plus"></span> Online Booking</li>
+                                                    <li><span class="fa fa-plus"></span> Lead Contact Form</li>
+                                                    <li><span class="fa fa-plus"></span> Email Blast</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <ul class="addon__list">
+                                                    <li><span class="fa fa-plus"></span> Employee Access</li>
+                                                    <li><span class="fa fa-plus"></span> Virtual Number</li>
+                                                    <li><span class="fa fa-plus"></span> SMS Blast</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="addon__list-row">
+                                        <div class="addon__price">
+                                            <div class="addon__price-base"><span class="addon__price-currency">$</span>10</div>
+                                            <div class="addon__price-label">Add-Ons</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <ul class="addon__list">
+                                                    <li><span class="fa fa-plus"></span> NiceJob Connector</li>
+                                                    <li><span class="fa fa-plus"></span> Deals &amp; Steals</li>
+                                                    <li><span class="fa fa-plus"></span> Proposal Kit</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="addon__btn">
+                                    <a class="btn btn-primary btn-xl" href="#">Try nSmarTrac Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--
                     <div class="payroll--wrapper add-ons col-md-12">
                         <ul>
                             <li class="core-add-on payroll--section section--core" data-popup="14">
@@ -992,6 +1042,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </li>
                         </ul>
                     </div>
+                    -->
                     <div style="clear:both"></div>
                 </div>
                 <div class="cpricing-card-layout right-pricing group_w_1_3">

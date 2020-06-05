@@ -271,7 +271,7 @@ class Users_model extends MY_Model {
 
 		$data['user_id'] = $user->id;
 
-		$data['user_name'] = $user->name;
+		$data['user_name'] = $user->FName;
 
 		$data['user_email'] = $user->email;
 

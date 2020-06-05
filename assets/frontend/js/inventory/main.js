@@ -120,6 +120,10 @@ $(document).ready(function () {
   $("#expiryDateEstimate, #billingDate, #billingExpDate").datetimepicker({
     format: "L",
   });
+
+  $("#serviceTimeEstimate").datetimepicker({
+    format: "LT",
+  });
 });
 
 function readURL(input) {

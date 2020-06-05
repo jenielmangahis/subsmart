@@ -77,18 +77,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<nav class="site-nav-menu1 ml-auto d-none d-md-block">
 							<ul class="">
 								<li class="active"><a href="<?php echo url('/login') ?>">Login</a></li>
-								<li><a class="m-0" href="<?php echo url('/home/signup') ?>">Sign Up</a></li>
+								<li><a class="m-0" href="<?php echo url('/registration') ?>">Sign Up</a></li>
 							</ul>
 						</nav>
 						<nav class="site-nav-menu ml-auto">
 							<ul class="over-write-menu" style="margin-top:8px;">
-								<li class="active"><a href="<?php echo url('/') ?>">Home</a></li>
+								<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
 								<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 								<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<!--<ul class="sub-menu">
 										<li><a href="">Elements</a></li>
 									</ul>-->
-								<li><a href="">CONTACT</a></li>
+								<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
 								<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
 								<!-- <li class="active d-block d-md-none"><a href="<?php //echo url('/login') ?>">Login</a></li>
 								<li class="d-block d-md-none"><a href="<?php //echo url('/home/signup') ?>">Sign Up</a></li> -->

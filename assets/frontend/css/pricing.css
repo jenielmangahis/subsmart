@@ -20,11 +20,22 @@ button::-moz-focus-inner,input::-moz-focus-inner{
 input{
    line-height:normal
 }
+.sp-ui {
+  margin-bottom: 12px;
+}
 .container-fluid{
    margin-right:auto;
    margin-left:auto;
    padding-left:10px;
    padding-right:10px
+}
+.sp-r {
+  margin-bottom: 10px;
+  color: #694a85;
+  font-weight: 600;
+}
+.sp-txt {
+  padding-left: 12px;
 }
 .row{
    margin-left:-10px;
@@ -122,8 +133,107 @@ label{
   padding-left: 10px !important;
 }
 .hidden{
-   display:none!important;
-   visibility:hidden!important
+  display: none !important;
+  visibility:hidden!important
+}
+/* Add on CSS */
+.addon {
+  padding-bottom: 85px;
+}
+.addon__box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 0px;
+  margin-left: 0px;
+  box-shadow: 6px 6px 29px 0px rgba(0,0,0,0.08);
+  position: relative;
+  right: 17px;
+}
+.addon__list-row {
+  position: relative;
+  margin-bottom: 60px;
+}
+.addon__price {
+  background: #fff;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  box-shadow: 6px 6px 29px 0px rgba(0,0,0,0.08);
+  position: absolute;
+  top: 70px;
+  left: -220px;
+  margin-top: -90px;
+  text-align: center;
+  font-weight: 500;
+  color: #8f69b1;
+}
+.addon__price-currency {
+  font-size: 40px;
+  line-height: 70px;
+  text-align: right;
+  vertical-align: top;
+}
+.addon__price-label {
+  font-size: 18px;
+  text-transform: uppercase;
+}
+.addon__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 120px;
+}
+.addon__list li {
+  margin-bottom: 25px;
+  text-align: left;
+  font-size: 22px;
+  color: #7d7d7d;
+}
+.addon__list li span {
+  font-size: 16px;
+  font-weight: normal;
+  color: #fff;
+  background: #835ba7;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  padding-top: 7px;
+  margin-right: 20px;
+  margin-top: -5px;
+  vertical-align: middle;
+  text-align: center;
+}
+.addon__list-row:last-child {
+  margin-bottom: 40px;
+}
+.addon__btn {
+  position: absolute;
+  bottom: -40px;
+  text-align: center;
+  width: 100%;
+}
+.btn-xl {
+  padding: 23px 65px;
+  border-radius: 40px;
+  font-size: 24px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: white !important;
+  background: #8855b6;
+  border: none;
+}
+.btn-xl:hover {
+  background: #a65de8;
+}
+.addon__price-base {
+  font-size: 60px;
+  line-height: 70px;
+  position: relative;
+  padding-top: 20px;
+  text-align: center;
+}
+.addon__list-cnt {
+  padding: 90px 60px 70px 135px;
 }
 @media (max-width:767px){
    .hidden-xs{
