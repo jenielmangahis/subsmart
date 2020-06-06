@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
+                                class="card-img-top" alt="Questionnaire/Survey"
                                 src="<?php echo base_url('/assets/dashboard/images/voicemail_campaign.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
                         <div class="card-body align-left">
@@ -66,7 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
+                                class="card-img-top" alt="Email Automation"
                                 src="<?php echo base_url('/assets/dashboard/images/email_auto.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
                         <div class="card-body align-left">
@@ -76,7 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
+                                class="card-img-top" alt="Deals & Steals"
                                 src="<?php echo base_url('/assets/dashboard/images/deals.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
                         <div class="card-body align-left">
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
+                                class="card-img-top" alt="Postcard on Demand"
                                 src="<?php echo base_url('/assets/dashboard/images/postcard.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
                         <div class="card-body align-left">
@@ -96,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
+                                class="card-img-top" alt="Postcard Automation"
                                 src="<?php echo base_url('/assets/dashboard/images/postcard_automation.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
                         <div class="card-body align-left">
@@ -107,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
+                                class="card-img-top" alt="Customer Finder 360"
                                 src="<?php echo base_url('/assets/dashboard/images/find.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
                         <div class="card-body align-left">
