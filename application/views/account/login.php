@@ -76,7 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <a href="#" class="login-social fb-color"><i class="fa fa-facebook"></i> &nbsp; Signin Facebook</a>
       </div>
       <div class="col-xs-6">
-        <a href="#" class="login-social google-color"><i class="fa fa-google"></i> Signin Gmail</a>
+        <a href="#" class="login-social google-color"><i class="fa fa-google"></i> &nbsp; Signin Gmail</a>
       </div>
     </div>
     <a href="<?php echo url('login/forget?username='.post('username')) ?>">Forgot your password ?</a><br>
