@@ -463,10 +463,10 @@ dt {
 
 /*!
  * Waves v0.7.6
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE */
 .waves-effect {
     position: relative;
@@ -533,6 +533,26 @@ dt {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     -webkit-mask-image: -webkit-radial-gradient(circle, #fff 100%, #000 100%);
+}
+
+.align-left {
+  text-align: left;
+}
+
+.border-gr {
+  border: 2px solid #d6d6d6 !important;
+}
+
+.pb-100 {
+  padding-bottom: 100px;
+}
+
+.mt-txt {
+  margin-top: 5px;
+}
+
+.border-gr:hover {
+  border: 2px solid #16ce0a !important;
 }
 
 .waves-button,
@@ -1890,6 +1910,10 @@ button:focus {
     color: #333;
     white-space: nowrap;
 
+}
+
+.pl-50 {
+  padding-left: 50px;
 }
 
 .note-btn-group .dropdown-menu>li>a:hover {
@@ -5247,6 +5271,12 @@ label {
     text-align: center;
 }
 
+.bottom-txt {
+    position: absolute;
+    bottom: 20px;
+    color: #36c12a;
+}
+
 .customer-wrapper .customer-border {
     border-bottom: 3px solid #d3d3d3;
     margin: 0px 0px 2px 0px
@@ -5277,7 +5307,7 @@ label {
 @media (min-width: 576px) {
     .card-deck .card {
         display: flex;
-        flex: 0 1 28%;
+        flex: 0 1 29%;
         flex-direction: column;
         margin-right: 30px;
         margin-bottom: 0;
@@ -5581,7 +5611,8 @@ fieldset[disabled] .btn.focus {
 /* btn-primary - green flat */
 .btn-primary {
     color: #fff;
-    background-color: #2ab363;
+    /*background-color: #2ab363;*/
+    background-color: #32243d;
 }
 
 .btn-primary:hover {
@@ -5594,7 +5625,8 @@ fieldset[disabled] .btn.focus {
 .btn-primary:active:hover,
 .btn-primary:active:focus {
     color: #fff;
-    background-color: #2ab363;
+    /*background-color: #2ab363;*/
+    background-color: #32243d;
 }
 
 .btn-primary.active,
@@ -5602,7 +5634,8 @@ fieldset[disabled] .btn.focus {
 .btn-primary:hover,
 .open>.dropdown-toggle.btn-primary {
     color: #fff;
-    background-color: #2ab363;
+    /*background-color: #2ab363;*/
+    background-color: #32243d;
     border: 1px solid transparent;
 }
 
