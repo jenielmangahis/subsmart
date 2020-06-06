@@ -14,43 +14,106 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
 
-                <div class="marketing-card-deck card-deck">
-                    <a href="#" class="card"> <img
+                <div class="marketing-card-deck card-deck pl-50 pb-100">
+                    <a href="#" class="card border-gr"> <img
                                 class="card-img-top" alt="SMS Blast" src="<?php echo base_url('/assets/dashboard/images/sms.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
-                        <div class="card-body">
-                            <h5 class="card-title">SMS Blast</h5>
-                            <p class="card-text">Send sms marketing campaigns to all your customers or just a specific
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">SMS Blast</h5>
+                            <p class="card-text mt-txt">Send sms marketing campaigns to all your customers or just a specific
                                 group with our professional and personalized marketing platforms.</p>
-                            <div class="card-price">$0.05/SMS + $5.00 service fee</div>
+                            <div class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
                         </div>
                     </a>
-                    <a href="#" class="card"> <img
+                    <a href="#" class="card border-gr"> <img
                                 class="card-img-top" alt="SMS Automation"
                                 src="<?php echo base_url('/assets/dashboard/images/sms_automation.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
-                        <div class="card-body">
-                            <h5 class="card-title">SMS Automation</h5>
-                            <p class="card-text">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">SMS Automation</h5>
+                            <p class="card-text mt-txt">
                                 Send automatic text messages to customers after a certain event, example texts: thank
                                 you, service reminders, keep in touch, review estimate, invoice due, invoice paid, work
                                 order completed
                             </p>
-                            <div class="card-price">$0.10/SMS</div>
+                            <div class="card-price bottom-txt">$0.10/SMS</div>
                         </div>
                     </a>
-                    <a href="#" class="card"> <img
-                                class="card-img-top" alt="SMS Automation"
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="Questionnaire/Survey"
                                 src="<?php echo base_url('/assets/dashboard/images/voicemail_campaign.svg') ?>"
                                 data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
-                        <div class="card-body">
-                            <h5 class="card-title">Questionnaire/Survey</h5>
-                            <p class="card-text">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Questionnaire/Survey</h5>
+                            <p class="card-text mt-txt">
                                 Engage your customers directly and personally by delivering a message directly to their
                                 phone. No other form of direct marketing is as time efficient as our ringless voicemail
                                 blast feature.
                             </p>
-                            <div class="card-price">$0.20/voicemail + $10.00 service fee</div>
+                            <div class="card-price bottom-txt">$0.20/voicemail + $10.00 service fee</div>
+                        </div>
+                    </a>
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="SMS Automation"
+                                src="<?php echo base_url('/assets/dashboard/images/mail.svg') ?>"
+                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Email Blast</h5>
+                            <p class="card-text mt-txt">
+                                Send email marketing campaigns to all your customers or just a specific customer group or with our professional and personalized marketing platform.
+                            </p>
+                            <div class="card-price bottom-txt">$5.00/1000 emails</div>
+                        </div>
+                    </a>
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="Email Automation"
+                                src="<?php echo base_url('/assets/dashboard/images/email_auto.svg') ?>"
+                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Email Automation</h5>
+                            <p class="card-text mt-txt">Send automatic emails to customers after a certain event, for example: thank you email, service reminders, keep in touch, invoice due reminder</p>
+                            <div class="card-price bottom-txt">Free</div>
+                        </div>
+                    </a>
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="Deals & Steals"
+                                src="<?php echo base_url('/assets/dashboard/images/deals.svg') ?>"
+                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Deals & Steals</h5>
+                            <p class="card-text mt-txt">Promote your business by creating exciting deals to email or post the URL on social media sites. Schedule these deals to run on specific dates or send out immediately.</p>
+                            <div class="card-price bottom-txt">$10.00/1 Month</div>
+                        </div>
+                    </a>
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="Postcard on Demand"
+                                src="<?php echo base_url('/assets/dashboard/images/postcard.svg') ?>"
+                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Postcard on Demand</h5>
+                            <p class="card-text mt-txt">Send out jumbo postcards (8.3" x 5.8") to your customers to notify them of a promotion you’re running. Select all your customers, a customer group or just specific customers on your list.</p>
+                            <div class="card-price bottom-txt">$0.90/postcard</div>
+                        </div>
+                    </a>
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="Postcard Automation"
+                                src="<?php echo base_url('/assets/dashboard/images/postcard_automation.svg') ?>"
+                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Postcard Automation</h5>
+                            <p class="card-text mt-txt">Let automation do all your follow-up needs for you by sending out jumbo sized postcards (8.3" x 5.8") to your customers to say thank you for using you for their service needs or to remind them they are due for service 6 months after their service date.
+            </p>
+                            <div class="card-price bottom-txt">$0.90/postcard</div>
+                        </div>
+                    </a>
+                    <a href="#" class="card border-gr"> <img
+                                class="card-img-top" alt="Customer Finder 360"
+                                src="<?php echo base_url('/assets/dashboard/images/find.svg') ?>"
+                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                        <div class="card-body align-left">
+                            <h5 class="card-title mb-0">Customer Finder 360</h5>
+                            <p class="card-text mt-txt">Send our jumbo postcards (8.3" x 5.8") to your next potential customer by choosing specific areas and using our numerous filters to ensure you are targeting to the right market for your business.</p>
+                            <div class="card-price bottom-txt">$10.00/1 Month</div>
                         </div>
                     </a>
                 </div>

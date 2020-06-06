@@ -8,7 +8,7 @@
 }
 
 .login-box-body, .register-box-body{
-  padding: 50px 20px;
+  padding: 22px 20px 30px 20px;
   color: #303030;
   box-shadow: 0 0 80px rgba(0,0,0,.05);
 }
@@ -18,6 +18,40 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
+}
+
+.mr-top-6 {
+  margin-top: 6px !important;
+}
+
+.mr-bottom-10 {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.icheckbox_square-blue {
+  margin-right: 6px !important;
+}
+
+a.login-social {
+  padding: 7px 10px;
+  font-size: 14px;
+  color: white;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+a.login-social:hover {
+  color: white;
+}
+.fb-color {
+  background: #037afe;
+  color: white;
+}
+
+.google-color {
+  background: #d44a3d;
+  color: white;
 }
 
 .login-background:after{
