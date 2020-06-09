@@ -26,9 +26,9 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'marketing' || $this->uri->uri_string() == 'customer') ? "active" : "";  ?>"><a href="<?php echo base_url('customer') ?>" title="Marketing"><span class="fa fa-user"></span>&nbsp;&nbsp;My Customers</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'sms_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('sms_campaigns'); ?>" title="SMS Blast"><span class="fa fa-users"></span>SMS Blast</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'survey') { echo 'active'; }?>"><a href="<?= base_url('survey') ?>" title="Survey"><span class="fa fa-cube"></span>Survey</a></li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'sms_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('sms_automation'); ?>" title="Credentials"><span class="fa fa-cube"></span>SMS Automation</a></li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'voicemail_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('voicemail_campaigns'); ?>" title="Credentials"><span class="fa fa-cube"></span>Voicemail Blast</a></li>
-        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Email Blast</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'sms_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('sms_automation'); ?>" title="SMS Automation"><span class="fa fa-cube"></span>SMS Automation</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'voicemail_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('voicemail_campaigns'); ?>" title="Voicemail Blast"><span class="fa fa-cube"></span>Voicemail Blast</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'email_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('email_campaigns'); ?>" title="Email Blast"><span class="fa fa-cube"></span>Email Blast</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Email Automation</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Offers</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Campaign Templates</a></li>
