@@ -224,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-md-7">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><a href="#">Customizable Industry Templates</a></h5>
-                                                    <p class="card-text">Lorem</p>
+                                                    <p class="card-text">No matter what kind of industry, our fully customizable and optimized templates are designed to increase your work flow production</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-md-7">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><a href="#">Finance Management</a></h5>
-                                                    <p class="card-text">Lorem</p>
+                                                    <p class="card-text">Our Accounting System will help to streamline your operation from start to finish. This will help you never miss a payment again.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -269,7 +269,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-md-7">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><a href="#">Time & GPS Location</a></h5>
-                                                    <p class="card-text">Lorem</p>
+                                                    <p class="card-text"> With our CRM you will know exactly who’s on the clock and where they are.   This will help you save time & make more money. Spend less time tracking hours. Automate timesheets and focus on growing your business.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -329,8 +329,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </li>
                                 </ul>
                                 <div class="actionBtn">
-                                    <p>Dive deeper into the product and see what Atto can do for you and your team.</p>
-                                    <button class="btn btn-red btn-block">Take a Product Tour</button>
+                                    <p>Dive deeper into the product and see what we can do for you and your team.</p>
+                                    <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button>
                                 </div>
                             </div>
                         </div>
