@@ -39,6 +39,7 @@ class Timesheet_model extends MY_Model {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('employees_id', $user_id);
+        //$this->db->where('action', "Clock In");
         $this->db->order_by('timestamp', 'DESC');
         $this->db->limit(1);
         $query = $this->db->get();
@@ -51,6 +52,8 @@ class Timesheet_model extends MY_Model {
         // $query = $this->db->get();
 
         return $query->result();
+
+        // dd($query->result());die;
         
     }
 
@@ -63,12 +66,20 @@ class Timesheet_model extends MY_Model {
         //$sql = "SELECT * FROM timesheet WHERE id = ? LIMIT 1";
         //$query = $db->query($sql, [$user_id]);
 
-       $this->db->select('*');
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock Out");
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+       /*$this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $user_id);
         $this->db->order_by('clock_in', 'DESC');
         $this->db->limit(1);
-        $query = $this->db->get();
+        $query = $this->db->get();*/
         
 
         return $query->result();

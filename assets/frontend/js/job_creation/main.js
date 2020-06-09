@@ -1,4 +1,18 @@
 $(document).ready(function () {
+  $("#job_customer").autocomplete({
+    source: getCustomers(),
+    change: function (event, ui) {
+      $("#job_customer_id").val(ui.item.id);
+    },
+  });
+
+  $("#job_location").autocomplete({
+    source: getAddresses(),
+    change: function (event, ui) {
+      $("#job_location_id").val(ui.item.id);
+    },
+  });
+
   $("#addInvoice").click(function () {
     $("#currentForms").hide();
     $("#estimateForms").hide();
@@ -36,3 +50,51 @@ $(document).ready(function () {
     format: "L",
   });
 });
+
+function getCustomers() {
+  var customers = [];
+  $.ajax({
+    type: "GET",
+    url: base_url + "job/getCustomers",
+    success: function (data) {
+      var result = jQuery.parseJSON(data);
+      $.each(result, function (key, val) {
+        customers.push({
+          id: val.id,
+          label:
+            capitalizeFirstLetter(val.FName) + capitalizeFirstLetter(val.LName),
+        });
+      });
+    },
+  });
+  return customers;
+}
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getAddresses() {
+  var location = [];
+  $.ajax({
+    type: "GET",
+    url: base_url + "job/getAddresses",
+    success: function (data) {
+      var result = jQuery.parseJSON(data);
+      $.each(result, function (key, val) {
+        location.push({
+          id: val.address_id,
+          label:
+            capitalizeFirstLetter(val.address1) +
+            " " +
+            capitalizeFirstLetter(val.city) +
+            " " +
+            capitalizeFirstLetter(val.state) +
+            " " +
+            val.zip,
+        });
+      });
+    },
+  });
+  return location;
+}

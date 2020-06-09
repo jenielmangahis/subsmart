@@ -65,16 +65,19 @@ class Survey extends MY_Controller
       'success' => 1,
       'data' => $data
     );
-    echo json_encode($result);
     redirect('/survey', 'refresh');
+    echo json_encode($result);
     exit;
   }
 
   public function delete($id){
     $delete = $this->survey_model->delete($id);
     $result = array(
-      'success' => 1
+      'success' => 1,
+
     );
+    
+    redirect('/survey', 'refresh');
     echo json_encode($result);
     exit;
   }
@@ -91,9 +94,9 @@ class Survey extends MY_Controller
       'success' => 1,
       'data' => $data,
     );
-    add_footer_js(array(
-        'assets/js/survey.js',
-    ));
+    // add_footer_js(array(
+    //     'assets/js/survey.js',
+    // ));
     echo json_encode($result);
     exit;
   }

@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<nav class="site-nav-menu1 ml-auto d-none d-md-block">
 							<ul class="">
 								<li class="active"><a href="<?php echo url('/login') ?>">Login</a></li>
-								<li><a class="m-0" href="<?php echo url('/home/signup') ?>">Sign Up</a></li>
+								<li><a class="m-0" href="<?php echo url('/registration') ?>">Sign Up</a></li>
 							</ul>
 						</nav>
 						<nav class="site-nav-menu ml-auto">

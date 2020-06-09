@@ -9,7 +9,6 @@ class Builder_model extends MY_Model {
     public $table_form_responses_rows = 'form_responses_rows';
 	public $table_options = 'options';
 	public $table_questions = 'questions';
-    public $table_form_groups = 'form_groups';
 
 	public function __construct(){
 		parent::__construct();

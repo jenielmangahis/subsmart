@@ -162,8 +162,8 @@ class Reports extends MY_Controller {
         $endDate = $this->input->get('endDate');    
 
         $data['monthly'] = $this->setFiterByMonths($startDate, $endDate); 
-        echo json_encode($data);
-    }
+        
+    }echo json_encode($data);
 
     public function getDateInterval($startDate, $endDate) {
         $start    = (new DateTime($startDate))->modify('first day of this month');

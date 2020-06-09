@@ -46,7 +46,6 @@
   font-size: 14px;
 }
 
-
   .gu-mirror {
   position: fixed !important;
   margin: 0 !important;
@@ -95,7 +94,7 @@
                         </div>
                         <div class="col-auto">
                            <div class="h1-spacer">
-                             <a href="<?= base_url() ?>survey/preview/<?= $this->uri->segment(2) ?>" target="_blank" class="btn btn-primary btn-md text-light" type="button" name="button">Preview</a>
+                             <a href="<?= base_url() ?>survey/preview/<?= $this->uri->segment(2) ?>?mode=preview" target="_blank" class="btn btn-primary btn-md text-light" type="button" name="button">Preview</a>
                               <button class="btn btn-primary btn-md text-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Add New Question
                               </button>
@@ -121,36 +120,6 @@
                            <div class="card">
                               <div class="card-body p-0">
                                 <?= form_open("survey/update/question/".$question->id."", array('id'=>'frm-update-question')); ?>
-                                <div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
-                                  <div class="d-flex bg-white py-4 align-items-center">
-                                      <div class="custom-control custom-checkbox mr-3">
-                                        <input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
-                                        <label class="custom-control-label" for="required<?= $question->id ?>">Required</label>
-                                      </div>
-                                      <div class="custom-control custom-checkbox">
-                                        <input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
-                                        <label class="custom-control-label" for="description<?= $question->id ?>">Description</label>
-                                      </div>
-
-
-                                      <div class="input-group w-25 ml-2">
-                                        <div class="custom-file">
-                                          <input name="image_background" type="file" class="custom-file-input" data-id="<?= $question->id ?>" id="image_background<?= $question->id ?>"  value="<?= ($question->image_background) ? $question->image_background : "";  ?>">
-                                          <label class="custom-file-label" for="image_background<?= $question->id ?>"><?= ($question->image_background) ? $question->image_background : "";  ?></label>
-                                        </div>
-                                      </div>
-                                      <div class="option-position">
-                                      <label for="image">Choose a Image Postion:</label>
-
-                                      <select name="image_position" class="form-control">
-                                        <option value="1">Background</option>
-                                        <option value="2">Top</option>
-                                        <option value="3">Right</option>
-                                        <option value="4">Bottom</option>
-                                      </select>
-                                      </div>
-                                  </div>
-                                </div>
                                   <div class="d-flex justify-content-between">
                                     <h5 class="card-title d-flex">
                                       <i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"></i> <?= $question->template_title ?>
@@ -162,8 +131,10 @@
                                       <button  class="btn dropdown-toggle" type="button"  id="dropdownMenuButton" name="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="text-dark fa fa-ellipsis-h"></i>
                                       </button>
+
+                                      <!-- settings -->
                                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation">Settings</a>
+                                        <a class="dropdown-item" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation">More Options</a>
                                         <a class="dropdown-item" href="#" id="btn-question-delete"  data-id="<?= $question->id ?>">Delete</a>
                                       </div>
                                     </div>
@@ -197,6 +168,45 @@
                                      <!-- <button class="btn btn-success ml-2 btn-sm" type="submit" name="button">Save Changes</button> -->
                                    </div>
                                   <?= form_close(); ?>
+
+                                  <!-- More options Drawer -->
+                                  <div class="btn-group justify-content-right">
+                                    <a class="dropdown-item btn " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><span class="text-info">More Options</span></a>
+                                    <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
+                                  </div>
+
+                                  <div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
+                                    <div class="d-flex bg-white py-2 align-items-center">
+                                      <div class="custom-control custom-checkbox mr-3">
+                                        <input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
+                                        <label class="custom-control-label" for="required<?= $question->id ?>">Required</label>
+                                      </div>
+                                      <div class="custom-control custom-checkbox">
+                                        <input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
+                                        <label class="custom-control-label" for="description<?= $question->id ?>">Description</label>
+                                      </div>
+
+
+                                      <div class="input-group w-25 ml-2">
+                                        <div class="custom-file">
+                                          <input name="image_background" type="file" class="custom-file-input" data-id="<?= $question->id ?>" id="image_background<?= $question->id ?>"  value="<?= ($question->image_background) ? $question->image_background : "";  ?>">
+                                          <label class="custom-file-label" for="image_background<?= $question->id ?>"><?= ($question->image_background) ? $question->image_background : "";  ?></label>
+                                        </div>
+                                      </div>
+                                      <div class="option-position">
+                                      <label for="image">Choose a Image Postion:</label>
+
+                                      <select name="image_position" class="form-control">
+                                        <option value="1">Background</option>
+                                        <option value="2">Top</option>
+                                        <option value="3">Right</option>
+                                        <option value="4">Bottom</option>
+                                      </select>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- End of More Options Drawer -->
+                                  
                                   <div class="dropdown btn-add-question-bottom">
                                     <button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     +
@@ -230,4 +240,6 @@
       <!-- end row -->
 
    </div>
+
 <?php include viewPath('includes/footer'); ?>
+   <script type="text/javascript" src="http://localhost/nsmartrac/assets/js/survey.js"></script>

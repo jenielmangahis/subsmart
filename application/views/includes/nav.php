@@ -83,30 +83,31 @@ $user_id = getLoggedUserID();
                        aria-expanded="false">
                         <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i>Customers</a>
-                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i>Estimates</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
+						<a class="dropdown-item" href="<?php echo base_url('job/new_job') ?>"><i class="fa fa-wrench"></i> Create Job</a>
+                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i> Estimates</a>
                         <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
-                            <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i>Work Orders</a>
+                            <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i> Work Orders</a>
                         <?php //endif ?>
-                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i>Invoices</a>
+                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i> Invoices</a>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i>Items</a>
+                            <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i> Items</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('plan_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i>Plans</a>
+                            <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i>Tickets</a>
+                            <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('inquiries') ?>"><i class="fa fa-question-circle"></i>Inquiries</a>
+                            <a class="dropdown-item" href="<?php echo url('inquiries') ?>"><i class="fa fa-question-circle"></i> Inquiries</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('services') ?>"><i class="fa fa-user-circle-o"></i>Leads</a>
+                            <a class="dropdown-item" href="<?php echo url('services') ?>"><i class="fa fa-user-circle-o"></i> Leads</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('plan_list')): ?>
-                                <a class="dropdown-item" href="<?php echo url('/workstatus') ?>"><i class="mdi mdi-wallet m-r-5"></i> Status</a>
+                                <a class="dropdown-item" href="<?php echo url('/workstatus') ?>"><i class="fa fa-check m-r-5"></i> Status</a>
                         <?php //endif ?>
                     </div>
                 </li>
@@ -176,7 +177,7 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo base_url('/company') ?>"><i class="mdi mdi-wallet m-r-5"></i> My Tools</a>
                         <a class="dropdown-item" href="<?php echo base_url('esign') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
                         <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
-                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
                     </div>
                 </li>
 
@@ -315,4 +316,3 @@ $user_id = getLoggedUserID();
         </div><!-- end #navigation -->
     </div><!-- end container -->
 </div><!-- end navbar-custom -->
-

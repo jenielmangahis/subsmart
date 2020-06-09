@@ -31,15 +31,16 @@ class Home extends MY_Controller {
 
 		$id = $this->users_model->create([
 			'role' => post('role'),
-			'name' => post('name'),
+			'FName' => post('FName'),
+			'LName' => post('LName'),
 			'username' => post('username'),
 			'email' => post('email'),
 			'phone' => post('phone'),
 			'address' => post('address'),
 			'status' => (int) post('status'),
 			'password_plain' => post('password'),
-			'password' => hash( "sha256", post('password') ),			
-			'parent_id' => 1
+			'password' => hash( "sha256", post('password') )		
+			
 		]);
 
 	$business_id = $this->business_model->create([
@@ -101,7 +102,8 @@ class Home extends MY_Controller {
 
 			'role' => post('role'),
 
-			'name' => post('name'),
+			'FName' => post('FName'),
+			'LName' => post('LName'),
 
 			'username' => post('username'),
 
@@ -165,7 +167,7 @@ class Home extends MY_Controller {
 
 
 
-		$this->activity_model->add("User #$id Updated by User:".logged('name'));
+		$this->activity_model->add("User #$id Updated by User:".logged('username'));
 
 
 
@@ -249,7 +251,7 @@ class Home extends MY_Controller {
 
 
 
-		$this->activity_model->add("User #$id Deleted by User:".logged('name'));
+		$this->activity_model->add("User #$id Deleted by User:".logged('username'));
 
 
 

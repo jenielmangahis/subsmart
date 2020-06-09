@@ -34,6 +34,11 @@ class Esign extends MY_Controller {
 		// }
 		redirect('esign');
 	}
+
+	public function esignMain(){
+		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->load->view('esignMain/esignMain', $this->page_data);
+	}
 }
 
 /* End of file Dashboard.php */

@@ -9,9 +9,15 @@
   }
   #survey-card:hover {
     transform: none;
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+    cursor: pointer;
+  }
+
+  .survey-title{
+    border-left: 5px solid #028B81;
+    padding: 0 10px;
   }
 </style>
-
 
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -26,22 +32,19 @@
                <div class="card">
                   <div class="container-fluid" style="font-size:14px;">
                      <div class="row">
-                        <div class="col">
-                           <h1 class="m-0">Survey List</h1>
+                        <div class="col text-left">
+                           <h1 class="m-0 text-left">Survey List</h1>
+                           <p class="m-0">Here are the list of surveys created. You can also create a new set of questions here.  </p>
                         </div>
                         <div class="col-auto">
                            <div class="h1-spacer">
-                              <a class="btn btn-primary btn-md text-light" data-toggle="modal" data-target="#exampleModal">
+                              <a class="btn btn-success btn-md text-light" data-toggle="modal" data-target="#exampleModal">
                               <span class="fa fa-plus text-light"></span> New Survey
                               </a>
                            </div>
                         </div>
                      </div>
-                     <div class="row align-items-center mb-4 margin-bottom-ter">
-                        <div class="col">
-                           <p class="m-0">List or Add new survey. </p>
-                        </div>
-                     </div>
+                     
                      <div class="tabs">
                         <ul class="clearfix work__order" id="myTab" role="tablist">
                         </ul>
@@ -51,28 +54,47 @@
                        <?php foreach ($surveys as $key => $survey): ?>
                          <div class="col-sm-3">
 
-                         <div id="survey-card" data-id="<?= $survey->id ?>" class="card pt-0 2 border-0 shadow">
+                        <!-- Card content for each survey -->
+                        <div id="survey-card" data-id="<?= $survey->id ?>" class="card pt-0 border-0 shadow">
+                          <a class="text-left" href="survey/result/<?= $survey->id ?>">
                             <div class="card-body">
-                              <h5 class="card-title text-secondary font-weight-light"><?= $survey->title ?></h5>
-                              </div>
-                            <ul class="list-group list-group-flush">
-                              <li class="list-group-item p-0 pt-2 d-flex justify-content-between align-items-center flex-row">
-                               <span><?= $survey->count ?> response(s)</span>
-                               <div class="btn-group ">
-                                  <button class="btn btn-success btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-h"></i>
+                              <h5 class="card-title survey-title text font-weight-bold"><?= $survey->title ?></h5>
+                              <small><?= count($this->survey_model->getQuestions($survey->id))?> Questions</small><br/>
+                              <small><?= $survey->count ?> Response(s)</small><br/>
+                              <small class="text-info">Click for more info</small>
+                            </div>
+                          </a>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item p-0 pt-2 d-flex justify-content-between align-items-center flex-row">
+                              
+                              <div class="text-right">
+                                <div class="btn-group">
+                                  <a href="survey/preview/<?= $survey->id ?>">
+                                    <button class="btn btn-success btn-sm" type="button" aria-haspopup="true" aria-expanded="false">
+                                    <!-- @L@ -->
+                                      <!-- <i class="fas fa-ellipsis-v"></i> -->
+                                      <span class="material-icons">assessment</span> Preview
+                                    </button>
+                                  </a>
+                                  <button class="btn btn-outline-info btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <!-- @L@ -->
+                                    <!-- <i class="fas fa-ellipsis-v"></i> -->
+                                    <span class="material-icons">menu</span> Options
                                   </button>
                                   <div class="dropdown-menu">
-                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/<?= $survey->id ?>">Edit</a>
-                                    <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>">Delete</a>
-                                    <a id="btn-preview-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/preview/<?= $survey->id ?>">View</a>
-                                    <a id="btn-result-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/result/<?= $survey->id ?>">Results</a>
-                                    <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"> Share</a>
+                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/<?= $survey->id ?>"><span class="material-icons">edit</span> Edit Survey</a>
+                                    <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"><span class="material-icons">share</span> Share</a>
+                                    <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>"><span class="material-icons">delete</span> Delete</a>
+                                    <!-- @L@ -->
+                                    <!-- <a id="btn-result-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/result/<?= $survey->id ?>">Results</a> -->
+                                    <!-- @L@ -->
+                                    <!-- <a id="btn-preview-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/preview/<?= $survey->id ?>"><span class="material-icons">assessment</span> Answer this survey</a> -->
                                   </div>
                                 </div>
-                              </li>
-                            </ul>
-                          </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
 
                         </div>
                       <?php endforeach; ?>
@@ -116,12 +138,7 @@
     </div>
   </div>
 
-<style>
-  #survey-card:hover{
-    box-shadow: 0 0 11px rgba(33,33,33,.2);
-    cursor: pointer;
-  }
-</style>
+
 <?php echo put_footer_assets(); ?>
 <?php include viewPath('includes/footer'); ?>
 

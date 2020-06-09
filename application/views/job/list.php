@@ -48,28 +48,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
-                            <hr>                           
                                 <?php if (!empty($jobs)) { ?>
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th scope="col"><strong>Job Number</strong></th>
-                                            <th scope="col"><strong>Date</strong></th>
-                                            <th scope="col"><strong>Job & Customer</strong></th>
-                                            <th scope="col"><strong>Status</strong></th>
-                                            <th scope="col"><strong>Amount</strong></th>
-                                            <th scope="col"><strong>Manage</strong></th>
+                                            <th scope="col" class="text-center"><strong>Job Number</strong></th>
+                                            <th scope="col" class="text-center"><strong>Date</strong></th>
+                                            <th scope="col" class="text-center"><strong>Job & Customer</strong></th>
+                                            <th scope="col" class="text-center"><strong>Status</strong></th>
+                                            <th scope="col" class="text-center"><strong>Amount</strong></th>
+                                            <th scope="col" class="text-center"><strong>Manage</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                      <?php foreach($jobs as $job) : ?>
                                         <tr>
-                                            <td><?php echo $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
-                                            <td><?php echo $job->job_name; ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td class="text-center"><?php echo $job->job_number; ?></td>
+                                            <td class="text-center"><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
+                                            <td class="text-center"><?php echo $job->job_name; ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
+                                            <td class="text-center"></td>
+                                            <td class="text-center"></td>
+                                            <td class="text-center"></td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
