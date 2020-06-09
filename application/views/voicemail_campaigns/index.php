@@ -15,11 +15,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- Content Header (Page header) -->
             <section class="content-header">
               <div class="pull-left">
-                <h1 style="text-align: left;">SMS Blast</h1>              
+                <h1 style="text-align: left;">Voicemail Blast</h1>              
                 <p>Listing the campaigns that are currently running.</p>
               </div>
               <div class="pull-right">
-                <a href="<?php echo url('company/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Create SMS Blast</a><br />
+                <a href="<?php echo url('company/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Create Voicemail Blast</a><br />
                 <div style="margin-top: 30px;">                
                   <a href="#" style="color:#259e57 !important;margin-right: 10px;"><i class="fa fa-bar-chart"></i> Stats</a>
                   <a href="#" style="color:#259e57 !important;"><i class="fa fa-file-text-o fa-margin-right"></i> Orders & Payments</a>
@@ -41,6 +41,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </li>
                       <li class="nav-item">
                           <a class="nav-link" id="c-scheduled-tab" data-toggle="tab" href="#scheduled-campaigns" role="tab" aria-controls="Two" aria-selected="false">Scheduled (0)</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" id="c-completed-tab" data-toggle="tab" href="#completed-campaigns" role="tab" aria-controls="Two" aria-selected="false">Completed (0)</a>
                       </li>
                       <li class="nav-item">
                           <a class="nav-link" id="c-closed-tab" data-toggle="tab" href="#closed-campaigns" role="tab" aria-controls="Three" aria-selected="false">Closed (1)</a>
@@ -75,6 +78,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <th>Campaign</th>
                             <th>Send To</th>
                             <th>Scheduled for</th>
+                            <th>Status</th>                            
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+
+                    </div>
+                    <div class="tab-pane fade p-3" id="completed-campaigns" role="tabpanel" aria-labelledby="two-tab">
+                      
+                      <table class="table table-bordered table-striped dataTableCampaign">
+                        <thead>
+                          <tr>
+                            <th>Campaign</th>
+                            <th>Send To</th>
                             <th>Status</th>                            
                           </tr>
                         </thead>
