@@ -1261,13 +1261,13 @@ ul.footer-list li a:hover {
 
 @media(max-width:991px) {
     .sectionHeader h2 {
-        font-size: 40px;
+        font-size: 27px;
     }
     .sectionHeader p {
         font-size: 14px;
     }
     .sectionHeader h2 span {
-        font-size: 28px;
+        font-size: 22px;
     }
     .actionBtn {
         margin-top: 20%;
@@ -1280,12 +1280,21 @@ ul.footer-list li a:hover {
     }
     .systemInfo h3 {
         font-size: 40px;
+        text-align: center;
     }
     .systemInfo p {
         font-size: 14px;
+        text-align: left;
+        margin-bottom: 40px;
     }
     .systemInfo h4 {
         font-size: 19px;
+        text-align: center;
+    }
+    .systemImg img {
+        width: 100%;
+        display: block;
+        margin-bottom: 70px;
     }
     .systemInfo ul li {
         font-size: 14px;
@@ -1297,10 +1306,10 @@ ul.footer-list li a:hover {
         font-size: 20px;
     }
     section.customBuz .sectionHeader h2 {
-        font-size: 28px;
+        font-size: 22px;
     }
     section.customBuz .sectionHeader h3 {
-        font-size: 20px;
+        font-size: 17px;
     }
     .flex-col2 {
         width: 16%;
@@ -1319,6 +1328,78 @@ ul.footer-list li a:hover {
     }
     .testimonial1 {
         margin-bottom: 20px;
+    }
+    .slicknav_menu {
+      padding: 0px;
+    }
+    .slicknav_nav {
+      padding-bottom: 15px;
+    }
+    img.card-features {
+      height: 180px;
+    }
+    .mobile-esc {
+      display: none !important;
+    }
+    .timeTracking.mt-8 {
+      margin-top: 0px !important;
+    }
+    .mt-8 {
+      margin-top: 40px;
+    }
+    .sectionHeader h4 {
+      font-size: 22px;
+    }
+    .sectionHeader p {
+      margin-top: 20px;
+    }
+    .footer-section {
+      text-align: center;
+    }
+    .footer-social.text-left {
+        width: 15vw;
+        margin: 0 auto;
+    }
+    button.btn-red {
+      margin-bottom: 0px;
+    }
+    .b-43 {
+      position: relative;
+      bottom: 0px;
+      top: 42px;
+    }
+    .imgHolderList > div img {
+      height: 265px;
+      object-fit: cover;
+    }
+    h2.mobile-banner-header {
+      font-size: 22px !important;
+      width: 82% !important;
+      margin: 0 auto !important;
+    }
+    .hero-item.set-bg {
+      background-position: left;
+    }
+    .mobile-quotes {
+      display: none !important;
+    }
+    .pt-110 {
+      padding: 30px 55px 45px 55px !important;
+    }
+    h2.font-weight-bold.text-white.f-28 {
+      font-size: 17px !important;
+    }
+    .row-margin-top {
+      margin-top: 7px;
+    }
+    .form-control {
+      font-size: 12px;
+    }
+    .mobile-only {
+      display: block !important;
+    }
+    .desktop-only {
+      display: none !important;
     }
 }
 
@@ -3107,7 +3188,7 @@ font-size: 12px;
      background: #081624;
      text-align: left;
      padding: 8px 5px;
-     margin-bottom: 15px;
+     padding-bottom: 15px;
    }
    .slicknav_nav a:hover,
    .slicknav_nav .slicknav_row:hover {
@@ -3207,6 +3288,11 @@ font-size: 12px;
     font-size: 12px;
     z-index: 999999;
 }
+@media(max-width:390px) {
+  .footer-social.text-left {
+      width: 20vw;
+      margin: 0 auto;
+  }
  }
 
 .no-break {

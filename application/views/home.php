@@ -5,14 +5,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <!-- Hero section  -->
     <section class="hero-section">
-        <div class="hero-slider owl-carousel">
+        <div class="hero-slider home-slider owl-carousel">
             <div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner.png">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 text-center">
-                            <h2>COMING SOON! <br />THE COMPLETE
+                            <h2 class="mobile-banner-header">COMING SOON! <br />THE COMPLETE
                             Field Service Management System For Your Business Needs</h2>
-                            <p style="display:block !important;">Sales & Marketing Automation, It’s All Right Here!</p>
                         </div>
                     </div>
                 </div>
@@ -21,8 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner-registration.jpg">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12 col-lg-4 col-xl-5 text-center">
-
+                        <div class="col-md-12 col-lg-4 col-xl-5 mobile-quotes text-center">
                             <div class="hero-slider-signup owl-carousel">
                                 <div class="hero-item" >
                                     <div class="testimonial-card">
@@ -44,7 +42,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-md-12 col-lg-7 col-xl-7 text-center pt-110">
                             <div class="row justify-content-center">
-                                    <h2 class="font-weight-bold text-white f-28">Signup Today for a Free 30-Day Trial</h2>
+                                    <h2 class="font-weight-bold text-white f-28 mobile-only">Signup Today Free 30-Day Trial</h2>
+                                    <h2 class="font-weight-bold text-white f-28 desktop-only">Signup Today for a Free 30-Day Trial</h2>
                             </div>
                             <div class="row row-margin-top">
                                 <div class="col-md-12 col-lg-6 row-margin-top">
@@ -64,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
-                                        <option value="0">Number of Employees</option>                          
+                                        <option value="0">Number of Employees</option>
                                                 <option value="1 (Just Me)">1 (Just Me)</option>
                                                 <option value="2-10">2-10</option>
                                                 <option value="11-50">11-50</option>
@@ -91,11 +90,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="row row-margin-top">
-                                <div class="col-md-12 col-lg-6">
+                                <div class="col-md-12 col-lg-6 col-sm-12 mobile-only">
+                                  <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
+                                </div>
+                                <div class="col-md-12 col-lg-6 col-sm-12">
                                         <button type="button" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
                                         <label class="font-weight-bold text-white">No credit card required</label>
                                 </div>
-                                <div class="col-md-12 col-lg-6">
+                                <div class="col-md-12 col-lg-6 col-sm-12 desktop-only">
                                         <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
                                 </div>
                             </div>
@@ -124,7 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <img src="<?php echo $url->assets ?>frontend/images/collect-and-track-payments-online.jpg" class="card-img" alt="card 1">
+                                                <img src="<?php echo $url->assets ?>frontend/images/collect-and-track-payments-online.jpg" class="card-img card-features" alt="card 1">
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -136,11 +138,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-6 mobile-esc">
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-2-v2.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-2-v2.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -156,7 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/booking-made-easy.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/booking-made-easy.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -172,7 +174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-4.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-4.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -188,7 +190,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/business-insight.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/business-insight.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -204,7 +206,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-6-v2.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-6-v2.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -219,7 +221,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/customizable-industry-templates.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/customizable-industry-templates.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -249,7 +251,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-1-v2.png" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-1-v2.png" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -264,7 +266,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/time-and-gps-location.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/time-and-gps-location.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
