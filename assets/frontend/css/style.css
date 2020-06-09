@@ -92,6 +92,14 @@
    background-position: top center;
  }
 
+ .desktop-only {
+   display: block;
+ }
+
+ .mobile-only {
+    display: none;
+ }
+
  .spad {
    padding-top: 103px;
    padding-bottom: 103px;
@@ -1279,7 +1287,7 @@ ul.footer-list li a:hover {
         margin-top: 50px;
     }
     .systemInfo h3 {
-        font-size: 40px;
+        font-size: 30px;
         text-align: center;
     }
     .systemInfo p {
@@ -1290,6 +1298,62 @@ ul.footer-list li a:hover {
     .systemInfo h4 {
         font-size: 19px;
         text-align: center;
+    }
+    .feature {
+      padding-top: 19px !important;
+      padding-bottom: 80px !important;
+    }
+    .group-title {
+      margin-top: 30px !important;
+      margin-bottom: 40px !important;
+    }
+    .headline {
+      padding-top: 75px !important;
+    }
+    .spacing-ft {
+      padding: 0px 0px !important;
+    }
+    .eff-title {
+        font-size: 40px;
+        line-height: 46px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .group {
+        padding-top: 25px;
+        height: 280px;
+        transition: 0.20s all ease;
+        cursor: pointer;
+    }
+    ol.feature__list > li {
+        text-align: left;
+    }
+    .features-group {
+        margin-bottom: 40px;
+        padding: 0px 15px;
+    }
+    .group__box {
+        height: 190px;
+        margin-bottom: 20px;
+    }
+    .w-120, .w-110 {
+        width: 90%;
+        max-width: 90%;
+        margin: 0 auto;
+        display: block;
+    }
+    a.btn.btn-violet {
+        margin: 0 auto;
+        display: block;
+        width: 81%;
+        font-size: 19px;
+    }
+    .btn-xl {
+        padding: 18px 37px !important;
+        border-radius: 40px;
+        font-size: 24px;
+        font-weight: 500;
+        text-transform: uppercase;
     }
     .systemImg img {
         width: 100%;
