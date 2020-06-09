@@ -4,5 +4,10 @@
         <?php $uri = $_SERVER['REQUEST_URI']; //print_r($uri);?>
         <li class="<?php if( $uri == '/users' ){ echo 'active';}?>"><a href="#" title="Add New"><span
                         class="fa fa-user"></span>Add New</a></li>
+        <li class="<?php if( $uri == '/users' ){ echo 'active';}?>">
+        	<a href="#" title="Add New">
+        		<span class="fa fa-user"></span>Add Document
+        	</a>
+        </li>
     </ul>
 </nav>

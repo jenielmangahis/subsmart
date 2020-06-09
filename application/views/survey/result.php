@@ -3,6 +3,13 @@
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
   <style>
+  .survey-kpi-card {
+    transition:0.3s;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+  }
+    
   .share-icon.d-flex i {
    width: 45px;
    height: 45px;
@@ -61,7 +68,11 @@
        
    <?php endforeach;?>
    <?php
+   if($total_score === 0){
+     $survey_completion_rate = 0;
+  }else{
     $survey_completion_rate = $total_score / count($questions);
+   }
    
    ?>
    <?php // echo $survey_completion_rate; ?>
@@ -75,58 +86,67 @@
               <div class="card">
                 <div class="row mb-5">
                   <div class="col-sm-12">
+                    
                     <div class="d-flex flex-row">
+                      
                       <p class="flex-fill text-left">
-                        <h4 class="font-weight-normal text-gray text-left">Survey Title: <span class="font-weight-bold"><?= $survey->title ?></span> </h4>
+                        <h4 class="font-weight-normal text-gray">Survey Title: <span class="font-weight-bold"><?= $survey->title ?></span> </h4>
                       </p>
                       <p class="flex-fill text-right">
                         <a class="text-info block" href="<?php echo base_url()?>survey"> << Back to list</a>
                       </p>
                     </div>
-                    <!-- @L@ -->
+
                     <div class="row">
-                      <div class="col-xs-12 col-sm-6 col-md-4">
-                        <div class="card">
+                      <div class="col-xs-12 col-sm-6 col-md-2">
+                        
+                        <div class="card survey-kpi-card">
                           <div class="card-content">
-                          <h2 class="card-title font-weight-normal mt-0 pt-0"><?= $survey->count; ?></h2>
-                          <small>Responses</small>
+                          <h2 class="card-title text-dark font-weight-normal mt-0 pt-0"><?= $survey->count; ?></h2>
+                          <p class="mb-0">Responses</p>
                           </div>
                         </div>
-                        <div class="card">
+                        <div class="card survey-kpi-card">
                           <div class="card-content">
-                            <h2 class="card-title font-weight-normal mt-0 pt-0"><?= number_format($survey_completion_rate, 2) ?>%</h2>
+                            <h2 class="card-title text-dark font-weight-normal mt-0 pt-0"><?= number_format($survey_completion_rate, 2) ?>%</h2>
                             <p class="mb-0">Completion rate</p>
                           </div>
                         </div>
-                        <div class="card">
+                        <div class="card survey-kpi-card">
                           <div class="card-content">
-                            <h2 class="card-title font-weight-normal mt-0 pt-0"><?php if($survey->count_timer === ""){ echo gmdate("H:i:s", 0); }else{ echo gmdate("H:i:s", $survey->count_timer);} ?></h2>
+                            <h2 class="card-title text-dark font-weight-normal mt-0 pt-0"><?php if($survey->count_timer === ""){ echo gmdate("H:i:s", 0); }else{ echo gmdate("H:i:s", $survey->count_timer);} ?></h2>
                             <p class="mb-0">Average time to complete</p>
-                          </div>
+                          </div>  
                         </div>
                       </div>
-                      <div class="col-xs-12 col-sm-6 col-md-8">
+                      <div class="col-xs-12 col-sm-6 col-md-10">
                         
+                        <div class="btn-group btn-block py-3">
+                          <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class=" mr-3 btn btn-warning">Preview</a>
+                          <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class=" mx-3 btn btn-info">Share</a>
+                          <a href="<?php echo base_url()?>survey/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
+                          <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-danger">Delete</a>
+                          <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-info">Select Theme</a>
+                        </div>
 
-                        <!-- @L@: Edited by Alexis Pineda -->
                         <!-- show when questions are not loaded -->
                         <?php
                           if(!$questions){
                             ?>
-                              <div class="card" style="background-color: rgb(240, 240, 240);">
+                              <div class="card survey-kpi-card" style="background-color: rgb(240, 240, 240);">
                                 <h6 class="mb-0 text-dark">We couldn't load your question data</h6>
-                                <p class="font-weight-normal text-dark">Sorry, this is embarrassing—but your data is safe. Refresh the page or come back later</p>
+                                <p class="font-weight-normal text-dark">Sorry, this is embarrassing—but your data is safe. Either refresh the page, or you haven't added any question(s) yet.</p>
                               </div>
                             <?php
                           }else{
                             ?>
                               <!-- show when questions are loaded -->
-                              <div class="row">
-                                <div class="col-sm-12">
-                                  <ul class="list-group">
+                              <div class="row ">
+                                <div class="col-sm-12 ">
+                                  <ul class="list-group survey-kpi-card">
                                     <li class="list-group-item d-flex justify-content-between">
                                       <h5 >Question</h5>
-                                      <h5 class="font-weight-normal">Percentage</h5>
+                                      <h5>Percentage</h5>
                                     </li>
                                     <?php foreach ($questions as $key => $question): ?>
 
@@ -146,23 +166,13 @@
                                                 $percentage = $token_result / $total_count * 100; // need to update
                                               }
                                         ?>
-
-
-                                        <!-- original code -->
-                                        <?php  //$token_result = 0; ?>
-                                        <?php 
-                                            // foreach ($question->survey_answer as $key => $survey_answers){
-                                            //   if(!empty($survey_answers->answer) || $survey_answers->answer != ""){
-                                            //       $token_result++;
-                                            //   }
-                                            // }
-                                            // $total_count = count($question->survey_answer);
-                                            // $percentage = $token_result / $total_count * 100; // need to update
-                                        ?>
-
-
                                         <li class="list-group-item d-flex justify-content-between">
-                                        <p class="mb-0 d-flex align-items-center"> <i class="icon-design <?= $question->template_icon ?>" style="background-color: <?= $question->template_color ?>;"></i> <?= $question->question ?></p>
+                                        <p class="mb-0 d-flex align-items-center"> 
+                                          <i class="icon-design <?= $question->template_icon ?>" style="background-color: <?= $question->template_color ?>;" data-toggle="tooltip" data-placement="top" title="<?= $question->template_title?>"></i>
+                                          <?= $question->question ?> 
+                                          <?php if($question->required === '1'){ echo '<span class="badge badge-alert text-white m-2">Required</span> ';}
+                                            ?>
+                                        </p>
                                         <h5 class="font-weight-normal"><?= number_format($percentage, 2) ?>%</h5>
                                       </li>
                                     <?php endforeach; ?>
@@ -176,35 +186,7 @@
                         ?>
 
                       </div>
-                    </div>
-
-                    <!-- original code -->
-                      <!-- <div class="w-100 d-flex py-4"> -->
-                        <!-- <div class="mr-5">
-                          <p class="mb-0">Stats</p>
-                          <h1 class="card-title font-weight-normal mt-0 pt-0">0</h1>
-                        </div> -->
-                        <!-- <div class="mr-5"> -->
-                          <!-- <p class="mb-0">Responses</p> -->
-                          <!-- @L@: Edited by Alexis Pineda -->
-                          <!-- <h1 class="card-title font-weight-normal mt-0 pt-0"><?= $survey->count; ?></h1> -->
-
-
-                          <!-- original code -->
-                          <!-- <h1 class="card-title font-weight-normal mt-0 pt-0"><?= $total_count; ?></h1> -->
-                        <!-- </div>
-                        <div class="mr-5">
-                          <p class="mb-0">Completion rate</p>
-                          <h1 class="card-title font-weight-normal mt-0 pt-0"><?= number_format($survey_completion_rate, 2) ?>%</h1>
-                        </div>
-                        <div class="mr-5"> -->
-                          <!-- <p class="mb-0">Average time to complete</p> -->
-                          <!-- <h1 class="card-title font-weight-normal mt-0 pt-0"><?= gmdate("H:i:s", $survey->count_timer) ?></h1> -->
-                          <!-- <h1 class="card-title font-weight-normal mt-0 pt-0"><?php if($survey->count_timer === ""){ echo gmdate("H:i:s", 0); }else{ echo gmdate("H:i:s", $survey->count_timer);} ?></h1> -->
-                        <!-- </div> -->
-                      <!-- </div> -->
-
-                      
+                    </div>                      
                     </div>
                   </div>
 

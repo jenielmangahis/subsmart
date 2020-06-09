@@ -57,11 +57,19 @@ class Job extends MY_Controller
 
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
-
+        
         $comp = array(
             'company_id' => $comp_id
         );
+        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, $comp)->result();
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
+        if ($job_num_query) {
+            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row()->job_number) + 1;
+        } else {
+           $this->page_data['job_number'] = 1; 
+        }
+        
         $this->load->view('job/job', $this->page_data);
     }
 
@@ -74,10 +82,25 @@ class Job extends MY_Controller
             'job_number' => $this->input->post('jobNumber'),
             'job_name' => $this->input->post('job_name'),
             'job_type' => $this->input->post('job_type'),
+            'priority' => $this->input->post('job_priority'),
+            'status' => $this->input->post('job_status'),
             'created_by' => $this->input->post('createdBy'),
             'created_date' => date('Y-m-d H:i:s')
         );
         $this->db->insert($this->jobs_model->table, $data);
+        $jobs_id = $this->db->insert_id();
+
+        $address_data = array(
+            'jobs_id' => $jobs_id,
+            'address_id' => $this->input->post('job_location_id')
+        );
+        $this->db->insert($this->jobs_model->table_jobs_has_address, $address_data);
+
+        $customers_data = array(
+            'jobs_id' => $jobs_id,
+            'id' => $this->input->post('job_customer_id')
+        );
+        $this->db->insert($this->jobs_model->table_jobs_has_customers, $customers_data);
 
         $this->activity_model->add("New Job #$categories Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
@@ -85,9 +108,28 @@ class Job extends MY_Controller
 
         redirect('job');
     }
+
+    public function getCustomers() {
+
+        $comp_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from('customers');
+        $this->db->where('customers.company_id', $comp_id);
+        $this->db->join('users', 'users.id = customers.user_id');
+        $query = $this->db->get()->result_array();
+
+        echo json_encode($query);
+    }
+    
+    public function getAddresses() {
+
+        $this->db->select('*');
+        $this->db->from('address');
+        $query = $this->db->get()->result_array();
+
+        echo json_encode($query);
+    }
 }
-
-
 
 /* End of file Job.php */
 

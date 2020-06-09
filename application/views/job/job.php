@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -18,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h2 class="page-title text-left">Create Job</h2>
                             <div class="row">
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
-                                    <label for="job_number">Job Number: 1000-01</label>
+                                    <label for="job_number">Job Number: <?php echo $job_number; ?></label>
                                     <input type="hidden" name="jobNumber" value="1000-01">
                                 </div>
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
@@ -35,22 +36,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <a class="btn btn-default" href="<?php echo url('job') ?>">Cancel</a>
                                 </div>
                             </div>
-                            <div class="row">
+                            <hr>
+                            <div class="row mt-5">
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_name">Job Title</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name" required/>
                                 </div>
                                 <div class="col-md-3 text-left form-group">
-                                    <label for="invoice_customer">Customer</label>
-                                    <select id="invoice_customer" name="customer_id"
-                                            data-inquiry-source="dropdown" class="form-control searchable-dropdown"
-                                            placeholder="Select customer">
-                                    </select>
+                                    <label for="job_customer">Customer</label>
+                                    <input id="job_customer" class="form-control" type="text" placeholder="Customer">
+                                    <input type="hidden" id="job_customer_id" name="job_customer_id">
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <p>&nbsp;</p>
-                                    <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                       data-target="#modalNewCustomer"><span
+                                    <a href="<?php echo url('customer') ?>"><span
                                                 class="fa fa-plus fa-margin-right"></span>New Customer</a>
                                 </div>
                                 <div class="col-md-3 form-group">
@@ -58,58 +57,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-2 text-left form-group">
                                     <label for="exampleFormControlSelect1">Job Type</label>
                                     <select class="form-control" name="job_type" id="exampleFormControlSelect1" required>
-                                    <option value="2" selected>New Installation</option>
-                                    <option value="3">System Upgrade</option>
-                                    <option value="4">Maintenance</option>
-                                    <option value="5">Monitoring</option>
-                                    <option value="6">Repair</option>
-                                    <option value="7">Warranty Call</option>
-                                    <option value="8">Design</option>
+                                    <?php foreach($job_settings as $job_set) : ?>
+                                        <option value="<?php echo $job_set->job_settings_id; ?>"><?php echo $job_set->value; ?></option>
+                                    <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="col-md-1 form-group">
                                 </div>
                                 <div class="col-md-3 text-left form-group">
-                                    <label for="invoice_job_location">Job Location</label>
-                                    <select id="invoice_job_location" name="invoice_job_location_id"
-                                            data-inquiry-source="dropdown" class="form-control searchable-dropdown"
-                                            placeholder="Select Address">
-                                    </select>
+                                    <label for="job_location">Job Location</label>
+                                    <input id="job_location" class="form-control" type="text" placeholder="Location">
+                                    <input type="hidden" id="job_location_id" name="job_location_id">
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <p>&nbsp;</p>
-                                    <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                       data-target="#modalNewLocationAddress"><span
-                                                class="fa fa-plus fa-margin-right"></span>New Location Address</a>
+                                    <a href="#">
+                                        <span class="fa fa-plus fa-margin-right"></span>New Location
+                                    </a>
                                 </div>
                                 <div class="col-md-3 form-group">
                                 </div>
                                 <div class="col-md-2 text-left form-group">
                                     <label for="exampleFormControlSelect1">Priority</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                        <option value="" selected>Low Priority</option>
-                                        <option>Medium Priority</option>
-                                        <option>High Priority</option>
+                                    <select class="form-control" id="job_priority" name="job_priority">
+                                        <option value="low" selected>Low Priority</option>
+                                        <option value="medium">Medium Priority</option>
+                                        <option value="high">High Priority</option>
                                     </select>
                                 </div>
                                 <div class="col-md-1 form-group">
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <label for="exampleFormControlSelect1">Status</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                        <option value="" selected>Status</option>
-                                        <option>Scheduled</option>
-                                        <option>Waiting on Customer</option>
-                                        <option>In Progress</option>
-                                        <option>Completed</option>
-                                        <option>Invoiced</option>
-                                        <option>Canceled</option>   
-                                        <option>Closed</option>
+                                    <select class="form-control" id="job_status" name="job_status">
+                                        <option value="New" selected>New</option>
+                                        <option value="Scheduled">Scheduled</option>
+                                        <option value="Waiting on Customer">Waiting on Customer</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Invoiced">Invoiced</option>
+                                        <option value="Canceled">Canceled</option>   
+                                        <option value="Closed">Closed</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-2">
+                            <hr>
+                            <div class="row mb-5" style="background: none;">
+                                <div class="pt-5">
                                     <div class="col-md-12" style="margin-bottom:10px;">
                                         <button class="btn btn-primary col-md-12" id="addEstimate">Estimate</button>
                                     </div>
@@ -123,25 +117,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button class="btn btn-primary col-md-12">Survey</button>
                                     </div>
                                 </div>
-                                <div class="col-md-10 text-left" id="currentForms">
+                                <div class="col-md-10 pt-5 text-left" id="currentForms">
                                     <h4 for="exampleFormControlSelect1">Current Forms</h4>
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th scope="col"><strong>Form Number</strong></th>
-                                                <th scope="col"><strong>Type</strong></th>
-                                                <th scope="col"><strong>Description</strong></th>
-                                                <th scope="col"><strong>Status</strong></th>
-                                                <th scope="col"><strong>Created</strong></th>
-                                                <th scope="col"><strong>Completed</strong></th>
-                                                <th scope="col"><strong>Created By</strong></th>
+                                                <th scope="col" class="text-center"><strong>Form Number</strong></th>
+                                                <th scope="col" class="text-center"><strong>Type</strong></th>
+                                                <th scope="col" class="text-center"><strong>Description</strong></th>
+                                                <th scope="col" class="text-center"><strong>Status</strong></th>
+                                                <th scope="col" class="text-center"><strong>Created</strong></th>
+                                                <th scope="col" class="text-center"><strong>Completed</strong></th>
+                                                <th scope="col" class="text-center"><strong>Created By</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         </tbody>
                                     </table> 
                                 </div>
-                                <div class="col-md-10" id="estimateForms" style="display:none;">
+                                <div class="col-md-10 pt-5 text-left" id="estimateForms" style="display:none;">
                                     <div class="row">
                                         <div class="row col-md-8">
                                             <h4 class="pl-2" for="exampleFormControlSelect1">Estimate</h4>
@@ -194,7 +188,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-10" id="workOrderForms" style="display:none;">
+                                <div class="col-md-10 pt-5 text-left" id="workOrderForms" style="display:none;">
                                     <div class="row">
                                         <div class="row col-md-8">
                                             <h4 class="pl-2" for="exampleFormControlSelect1">Work Order</h4>
@@ -244,7 +238,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-10" id="invoiceForms" style="display:none;">
+                                <div class="col-md-10 pt-5 text-left" id="invoiceForms" style="display:none;">
                                     <div class="row">
                                         <div class="row col-md-8">
                                             <h4 class="pl-2" for="exampleFormControlSelect1">Invoice</h4>
@@ -289,7 +283,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-5" style="background: none;">
                                 <div class="col-md-12">
                                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                                         <li class="nav-item">
@@ -321,15 +315,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <table class="table table-hover" id="itemsTable">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col"><strong>Item</strong></th>
-                                                        <th scope="col"><strong>Type</strong></th>
-                                                        <th scope="col"><strong>Category</strong></th>
-                                                        <th scope="col"><strong>Quantity</strong></th>
-                                                        <th scope="col"><strong>Location</strong></th>
-                                                        <th scope="col"><strong>Cost Per</strong></th>
-                                                        <th scope="col"><strong>Discount</strong></th>
-                                                        <th scope="col"><strong>Tax</strong></th>
-                                                        <th scope="col"><strong>Total Cost</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Item</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Type</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Category</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Quantity</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Location</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Cost Per</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Discount</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Tax</strong></th>
+                                                        <th scope="col" class="text-center"><strong>Total Cost</strong></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -340,40 +334,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 &nbsp;
                                                 </div>
                                                 <div class="col-md-5 row pr-0">
-                                                    <div class="col-sm-5">
-                                                        <label style="padding: 0 .75rem;">Subtotal</label>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-3">
+                                                        <label style="padding: 0 .75rem;"><strong>Subtotal</strong></label>
                                                     </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_sub_total">0.00</label>
+                                                    <div class="col-sm-3 text-left pr-3">
+                                                        <label id="invoice_sub_total">$0.00</label>
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                     </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <input type="text" name="adjustment_name" value="" placeholder="Adjustment" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
-                                                    </div>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-6"><hr></div>
+                                                    <div class="col-sm-6"></div>
                                                     <div class="col-sm-3">
+                                                        <label style="padding: 0 .75rem;"><strong>Adjustment</strong></label>
+                                                    </div>
+                                                    <div class="col-sm-3 text-left">
                                                         <input type="text" name="adjustment_total" id="adjustment_input" value="0" class="form-control" style="width:100px; display:inline-block">
                                                         <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                                     </div>
-                                                    <div class="col-sm-3 text-right pt-2">
-                                                        <label id="adjustment_amount">0.00</label>
-                                                        <input type="hidden" name="adjustment_amount" id="adjustment_amount_form_input" value='0'>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-6"><hr></div>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-3">
+                                                        <label style="padding: .375rem .75rem;"><strong>Tax</strong></label>
                                                     </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <label style="padding: .375rem .75rem;">Grand Total ($)</label>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_grand_total">0.00</label>
+                                                    <div class="col-sm-3 text-left pr-3">
+                                                        <label id="invoice_grand_total">$0.00</label>
                                                         <input type="hidden" name="grand_total" id="grand_total_form_input" value='0'>
                                                     </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-6"><hr></div>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-3">
+                                                        <label style="padding: .375rem .75rem;"><strong>Grand Total</strong></label>
                                                     </div>
+                                                    <div class="col-sm-3 text-left pr-3">
+                                                        <label id="invoice_grand_total">$0.00</label>
+                                                        <input type="hidden" name="grand_total" id="grand_total_form_input" value='0'>
+                                                    </div>
+                                                    <div class="col-sm-6"></div>
+                                                    <div class="col-sm-6"><hr></div>
                                                 </div>
                                             </div>
                                             <div id="addItemsForms" style="display:none;">
@@ -641,4 +641,5 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="<?php echo $url->assets ?>frontend/js/job_creation/main.js"></script>

@@ -42,6 +42,11 @@ function getInputHtml($valueQuestions){
 
 
   $questionParameterRequire = (isset($valueQuestions->parameter->required) && $valueQuestions->parameter->required == true) ? 'required' : '' ;
+
+  $questionParameterClass = (isset($valueQuestions->parameter->question_styling_class) && $valueQuestions->parameter->question_styling_class != '') ? $valueQuestions->parameter->question_styling_class : '' ;
+  $questionParameterMaxLength = (isset($valueQuestions->parameter->question_styling_maxlength) && $valueQuestions->parameter->question_styling_maxlength != '') ? $valueQuestions->parameter->question_styling_maxlength : '' ;
+  $questionParameterBackground = (isset($valueQuestions->parameter->question_styling_background_color) && $valueQuestions->parameter->question_styling_background_color != '') ? $valueQuestions->parameter->question_styling_background_color : '' ;
+  $questionParameterColor = (isset($valueQuestions->parameter->question_styling_font_color) && $valueQuestions->parameter->question_styling_font_color != '') ? $valueQuestions->parameter->question_styling_font_color : '' ;
   
   $questionId = 'question_'.$valueQuestions->Questions_id;
   $questionName = 'question['.$valueQuestions->Questions_id.']';
@@ -50,14 +55,14 @@ function getInputHtml($valueQuestions){
 
 
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' autofocus/>';
+          echo '<input type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' autofocus/>';
         
           break;
       
       case "textarea":
        
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          echo '<textarea name="'.$questionName.'" cols="40" rows="3" class="form-control" autocomplete="off" '.$questionParameterRequire.'></textarea>';
+          echo '<textarea name="'.$questionName.'" cols="40" rows="3" class="form-control '.$questionParameterClass.'" autocomplete="off" '.$questionParameterRequire.'></textarea>';
         
           break;
       
@@ -67,7 +72,7 @@ function getInputHtml($valueQuestions){
           
           if($valueQuestions->parameter->selection_type == 'dropdown')
           {
-            echo '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control" '.$questionParameterRequire.'>';
+            echo '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.'>';
               if(isset($valueQuestions->options))
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
@@ -112,32 +117,32 @@ function getInputHtml($valueQuestions){
       case "file-upload":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo ' <input type="file" class="form-control" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" >';
+          echo ' <input type="file" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" >';
 
           break;
       case "phone":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.'/>';
+          echo '<input type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.'/>';
 
           break;
       case "email":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="email" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          echo '<input type="email" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
 
           break;
 
       case "address":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="text" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          echo '<input type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
 
           break;
       case "date-picker":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="date" class="form-control" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          echo '<input type="date" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
 
           break;
       default:
@@ -273,13 +278,13 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
 
                                 if(isset($formdetail->questions)) {
 
-
                                     foreach($formdetail->questions as $keyQuestions => $valueQuestions)
                                     {
 
-                                      
+                                    
+
                                         if( $valueQuestions->q_type != 'group' && $valueQuestions->q_type != 'reperator' ) {
-                                
+                                      
                                         echo '<div class="col-md-6 form-group">';
                                 
                                           getInputHtml ($valueQuestions);
@@ -310,16 +315,17 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
                                         
                                           $dummyHtml = '';
                                         
-                                          $dummyHtml .= '<div class="col-md-12 form-group">';
-                                            $dummyHtml .= '<div class="col-md-12 reperator_tab_div_'.$valueQuestions->Questions_id.'" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
-                                              $dummyHtml .= "<div class='reperator'>";
+                                          $dummyHtml .= '<div class="col-md-12 form-group float-left">';
+                                            $dummyHtml .= '<div class="col-md-12 float-left reperator_tab_div_'.$valueQuestions->Questions_id.'" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+                                              $dummyHtml .= "<div class='reperator float-left'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
-                                            $dummyHtml .= '<div class="col-md-6 ">';
+                                            $dummyHtml .= '<div class="col-md-6 float-left">';
+
                                               $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           
-                                          $dummyHtml .= '<div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this,\'reperator_tab_div_'.$valueQuestions->Questions_id.'\')" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
+                                          $dummyHtml .= '<div class="col-sm-1 text-left actions float-left mt-2"><label>&nbsp;</label><a class=" col-form-label add_action" onClick="addOptions(this,\'reperator_tab_div_'.$valueQuestions->Questions_id.'\')" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
                                               $dummyHtml .= "</div>";
 
                                           echo $dummyHtml;

@@ -12,6 +12,7 @@
       <style>
          html, body {
          height: 100%;
+         overflow: hidden;
          }
 
            .gu-mirror {
@@ -40,9 +41,9 @@
              margin-top: -10px;
              margin-bottom: 10px;
          }
-         /* .image_background{
-
-         } */
+         .image_background{
+           display: none;
+         }
 
         .form-main {
               width: 50%;
@@ -51,17 +52,37 @@
               /* border: solid 1px black; */
         }
 
-        .image_background{
-          display:none;
-        }
         .d-flex.h-100.justify-content-center.align-items-center 
         form#form-survey .form-main div.col-sm-3 {
               max-width: 100%;
-       }
+        }
+
+        .preview-notification-bar{
+          position: fixed;
+          color: white;
+          background-color: #333333;
+          width: 100%;
+          padding: 5px 0;
+          text-align: center;
+          font-weight: bold;
+          z-index: 1;
+        }
+
+        .preview-notification-bar a{
+          color: white;
+          text-decoration: underline;
+        }
+
       </style>
    </head>
    <body>
-     
+      <?php
+        if(isset($_GET['mode']) && $_GET['mode'] === 'preview'){
+          ?>
+            <div class="preview-notification-bar">You are currently in Preview mode. <a type="button" href="<?php echo base_url()?>survey/result/<?php echo $survey->id?>">Go back</a></div>
+          <?php
+        }
+      ?>
       <div class="d-flex h-100 justify-content-center align-items-center">
         <form href="/nsmartrac/survey/answer/<?= $this->uri->segment(3) ?>" enctype="multipart/form-data" id="form-survey" class="h-100 col-sm-12 d-flex justify-content-center align-items-center require-validation" data-cc-on-file="false"
                                                     data-stripe-publishable-key="pk_test_wuRSMY1bhccBD6nNwKiMNG7t006YIzNwM8"
@@ -112,13 +133,16 @@
             $('#question-<?= $key ?> .input-content [name="answer[]"]').attr('name','answer-<?= $quest->survey_template_id ?>');
           </script>
            <?php endforeach; ?>
-           <div id="question-<?= count($questions) ?>" class="col-sm-6 d-none">
-             <div class="result-survey">
-               <h1>Thank You For Taking Our Survey!</h1>
-             </div>
-             <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-lg btn-primary" type="submit">From the Top</button>
-             <button id="btn-submit" type="submit" class="btn btn-lg btn-primary">Submit</button>
-          </div>
+
+            <div id="question-<?= count($questions) ?>" class="col-sm-6 d-none">
+              <div class="result-survey">
+                <h1>Survey completed!</h1>
+                <p>Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
+              </div>
+              <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-lg btn-outline-primary" type="submit">Back to Top</button>
+              <button id="btn-submit" type="submit" class="btn btn-lg btn-primary">Submit Answers</button>
+            </div>
+
           </div>
         </form>
       </div>
@@ -133,7 +157,6 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js"></script>
     <script type="text/javascript" src="http://localhost/nsmartrac/assets/js/survey.js"></script>
     <script type="text/javascript" src="http://localhost/nsmartrac/assets/js/social.js"></script>
-
 
     <script>
     $(document).ready(function(){

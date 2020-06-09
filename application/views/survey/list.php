@@ -14,11 +14,10 @@
   }
 
   .survey-title{
-    border-left: 5px solid #ff8282;
+    border-left: 5px solid #028B81;
     padding: 0 10px;
   }
 </style>
-
 
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -39,7 +38,7 @@
                         </div>
                         <div class="col-auto">
                            <div class="h1-spacer">
-                              <a class="btn btn-primary btn-md text-light" data-toggle="modal" data-target="#exampleModal">
+                              <a class="btn btn-success btn-md text-light" data-toggle="modal" data-target="#exampleModal">
                               <span class="fa fa-plus text-light"></span> New Survey
                               </a>
                            </div>
