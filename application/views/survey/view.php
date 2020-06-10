@@ -88,6 +88,7 @@
             <div class="col-xl-12">
                <div class="card">
                   <div class="container-fluid mb-3">
+                        <a href="<?= base_url()?>survey">Back to survey list</a>
                      <div class="row">
                         <div class="col">
                            <h1 class="m-0"><?= $survey->title ?></h1>
@@ -106,13 +107,17 @@
                                 <?php endforeach; ?>
                               </div>
                             </div>
-                           </div>
+                          </div>
                         </div>
                      </div>
-                     <div class="tabs">
+                     <!-- <div class="tabs">
                         <ul class="clearfix work__order" id="myTab" role="tablist">
                         </ul>
-                     </div>
+                     </div> -->
+                        <div class="alert alert-info">
+                          <i class="fa fa-info-circle"></i>
+                          Every changes you make are automatically saved, so there's no need to look for a save button for now. 
+                        </div>
                      <div class="row" id="card-list">
                        <?php foreach($questions as $key =>  $question): ?>
 
@@ -242,4 +247,5 @@
    </div>
 
 <?php include viewPath('includes/footer'); ?>
-   <script type="text/javascript" src="http://localhost/nsmartrac/assets/js/survey.js"></script>
+<script type="text/javascript" src="http://localhost/nsmartrac/assets/js/survey.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

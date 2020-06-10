@@ -3,35 +3,51 @@
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
   <style>
-  .survey-kpi-card {
-    transition:0.3s;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 0 11px rgba(33,33,33,.2);
-  }
-    
-  .share-icon.d-flex i {
-   width: 45px;
-   height: 45px;
-   align-items: center;
-   display: flex;
-   justify-content: center;
-   color: rgb(76, 76, 76);
-   background-color: #f0f0f0;
-   border-radius: 50%;
-   margin-right: .5rem;
- }
- .icon-design{
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  width: 45px;
-  height: 25px;
-  color: white;
-  border-radius: 5px;
-  margin-right: .5rem;
-  font-size: 14px;
-}
+      .survey-kpi-card {
+        transition:0.3s;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 11px rgba(33,33,33,.2);
+      }
+
+      .survey-kpi-card-theme-image {
+        width: 100%;
+        max-height: 100px;
+        height: auto;
+        object-fit: cover;
+      }
+
+      .survey-kpi-card-theme{
+        padding: 0;
+      }        
+
+      .survey-kpi-card-theme-content{
+        position: absolute;
+        padding: 10px;
+      }
+        
+      .share-icon.d-flex i {
+      width: 45px;
+      height: 45px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: rgb(76, 76, 76);
+      background-color: #f0f0f0;
+      border-radius: 50%;
+      margin-right: .5rem;
+    }
+    .icon-design{
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      width: 45px;
+      height: 25px;
+      color: white;
+      border-radius: 5px;
+      margin-right: .5rem;
+      font-size: 14px;
+    }
 
   </style>
    <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -98,7 +114,23 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-xs-12 col-sm-6 col-md-2">
+                      <div class="col-xs-12 col-sm-6 col-md-3">
+                        <?php
+                          if(!empty($survey_theme)){
+                            ?>
+                           
+                              <div class="card survey-kpi-card survey-kpi-card-theme">
+                                <img class="survey-kpi-card-theme-image" src="<?=base_url()?>uploads/survey/themes/<?=$survey_theme->sth_primary_image?>" alt="image">
+                                <div class="card-content survey-kpi-card-theme-content">
+                                <small style="color: <?php if($survey_theme->sth_text_color){ echo $survey_theme->sth_text_color; } ?>">Current Theme:</small>
+                                <h3 style="color: <?php if($survey_theme->sth_text_color){ echo $survey_theme->sth_text_color; } ?>"><?php if($survey_theme->sth_theme_name){ echo $survey_theme->sth_theme_name; }?></h3>
+                                </div>
+                              </div>
+                            <?php
+                          }else{
+                            echo '';
+                          }
+                        ?>
                         
                         <div class="card survey-kpi-card">
                           <div class="card-content">
@@ -119,15 +151,27 @@
                           </div>  
                         </div>
                       </div>
-                      <div class="col-xs-12 col-sm-6 col-md-10">
+                      <div class="col-xs-12 col-sm-6 col-md-9">
                         
-                        <div class="btn-group btn-block py-3">
-                          <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class=" mr-3 btn btn-warning">Preview</a>
-                          <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class=" mx-3 btn btn-info">Share</a>
-                          <a href="<?php echo base_url()?>survey/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
-                          <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-danger">Delete</a>
-                          <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-info">Select Theme</a>
-                        </div>
+                          <div class="btn-group btn-block py-3">
+                            <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class=" mr-3 btn btn-warning">Preview</a>
+                            <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class=" mx-3 btn btn-info">Share</a>
+                            <a href="<?php echo base_url()?>survey/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
+                            <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-danger">Delete</a>
+                            <a href="#" class=" ml-3 btn btn-info">Select Theme</a>
+                          </div>
+
+                          <div class="card">
+                            <!-- <div class="card-body"> -->
+                              Sharable Link
+                              <div class="form-group">
+                                <div class="input-group">
+                                  <input type="text" name="txtLink" id="txtLink" readonly class="form-control" value="<?=base_url()?>survey/preview/<?=$survey->id?>">
+                                  <button onclick="copyLink()" id="btnCopyLink" class="btn btn-info">Copy Link</button>
+                                </div>
+                              </div>
+                            <!-- </div> -->
+                          </div>
 
                         <!-- show when questions are not loaded -->
                         <?php
@@ -202,6 +246,26 @@
 </div>
 </div>
 <!-- page wrapper end -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script type="text/javascript" src="https://nsmartrac.com/assets/js/survey.js"></script>
+<script>
+
+  copyLink = () => {
+    document.querySelector("#txtLink").select();
+    document.querySelector("#txtLink").setSelectionRange(0,99999);
+    
+    document.execCommand('copy');
+    
+    setTimeout(()=>{
+      document.querySelector("#btnCopyLink").innerHTML = "Copy Link";
+      document.querySelector("#btnCopyLink").disabled = false;
+    },2000)
+    document.querySelector("#btnCopyLink").innerHTML = "Link Copied!";
+    document.querySelector("#btnCopyLink").disabled = true;
+
+  }
+
+</script>
 <?php echo put_footer_assets(); ?>
 <?php include viewPath('includes/footer'); ?>

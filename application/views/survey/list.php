@@ -38,6 +38,9 @@
                         </div>
                         <div class="col-auto">
                            <div class="h1-spacer">
+                              <a class="btn btn-primary btn-md text-light" href="<?php echo base_url()?>survey/themes">
+                                <span class="fa fa-th text-light"></span> Themes
+                              </a>
                               <a class="btn btn-success btn-md text-light" data-toggle="modal" data-target="#exampleModal">
                               <span class="fa fa-plus text-light"></span> New Survey
                               </a>

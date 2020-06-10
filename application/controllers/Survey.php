@@ -139,6 +139,7 @@ class Survey extends MY_Controller
     echo json_encode($result);
     exit;
   }
+
   public function addQuestionUpload($id){
     $path = 'uploads/survey';
     $config = [
@@ -171,9 +172,9 @@ class Survey extends MY_Controller
 
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['questions'] = $this->survey_model->getQuestionsPreview($id);
+    $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->load->view('survey/preview', $this->page_data);
   }
-
 
   public function answer($id){
     
@@ -222,6 +223,7 @@ class Survey extends MY_Controller
   public function result($id){
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
+    $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->load->view('survey/result', $this->page_data);
   }
   public function share($id){
@@ -240,4 +242,54 @@ class Survey extends MY_Controller
     echo json_encode($data);
     exit;
   }
+
+  // survey themes
+  public function themeIndex(){
+    
+    $this->page_data['themes'] = $this->survey_model->getThemes();
+    $this->load->view('survey/themes/list', $this->page_data);
+  }
+  
+
+  public function themeView($id){
+    
+    $this->page_data['theme'] = $this->survey_model->getThemes($id);
+    $this->load->view('survey/themes/view', $this->page_data);
+  }
+
+  public function themeCreate(){
+    // $this->page_data[""]
+    $this->load->view('survey/themes/create', $this->page_data);
+  }
+
+  public function themeAddImage(){
+    $path = 'uploads/survey/themes';
+    $config = [
+      'upload_path' 		=> $path,
+      'allowed_types' 	=> '*',
+      'overwrite' 		=> false
+    ];
+    $test = $this->upload->initialize($config);
+    // if ( ! $this->upload->do_upload('image_background') ){
+
+    // }else{
+    //   $upload_data = $this->upload->data();
+    // }
+
+    // $data = array(
+    //   'image_background' => $_FILES['image_background']['name'],
+    // );
+
+    // $this->survey_model->addThemeImage($id, $data);
+    // echo json_encode(array(
+    //   'success' => 1
+    // ));
+    // exit;
+  }
+  
+  
+
+
+
+
 }
