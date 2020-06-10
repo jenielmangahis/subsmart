@@ -235,19 +235,62 @@ label{
 .addon__list-cnt {
   padding: 90px 60px 70px 135px;
 }
+
 @media (max-width:767px){
-   .hidden-xs{
-       display:none!important
+   h3.chart-headline {
+       display: block;
+       width: 90% !important;
+       text-align: center;
+       font-size: 32px !important;
+       line-height: 44px!important;
+       margin: 0 auto !important;
    }
-}
-@media (min-width:768px) and (max-width:1023px){
-   .hidden-sm{
-       display:none!important
+   .pr-5 {
+     padding: 20px 0px !important;
    }
-}
-@media (min-width:1024px){
-   .hidden-lg,.hidden-md{
-       display:none!important
+   .testimonial-desc-pricing {
+       font-size: 17px;
+       padding: 20px 0px;
+       text-align: center !important;
+       margin-bottom: 20px;
+   }
+   .lineup-container .pricing-card-layout .group_w_3_1 {
+       width: 100% !important;
+   }
+   .lineup-container .content-container {
+       width: 100% !important;
+   }
+   div#header_left {
+       width: 100% !important;
+   }
+   .pricing-card-layout .pcolumns_w3 {
+       width: 100% !important;
+   }
+   .payroll--horizontal .pricing-card-layout-qb #content_left {
+     width: 100% !important;
+   }
+   span.scrolltoqblive.scrolltopaysec {
+       width: 80%;
+       display: block;
+       text-align: center;
+       margin: 0 auto;
+       font-size: 20px;
+   }
+   .grid-image-text.g_vertical_align_image {
+       padding: 0px 0px !important;
+   }
+   h3.testimonial-name-pricing {
+       font-weight: 600;
+       font-size: 23px !important;
+       text-align: center !important;
+       font-style: italic;
+   }
+   p.color-purple {
+       color: #694a85 !important;
+       text-align: center;
+       display: block;
+       width: 100%;
+       margin-bottom: 40px;
    }
 }
 [class*=span][class*=col]:not([class*=offset]){

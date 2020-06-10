@@ -4,11 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('frontcommon/header'); ?>
 <section page="register" message="" class="ng-isolate-scope">
 	<div class="f-height">
-		<div>
-			<div class="col-md-5 col-sm-5 float-left pl-0">
+		<div class="row">
+			<div class="col-md-5 col-sm-5 float-left pl-0 desktop-only">
 				<div id="side-image" class="side-image--regular image-fader left"></div>
 			</div>
-			<div class="col-md-7 col-sm-7 float-left pr-0 container-signup pt-5">
+			<div class="col-sm-7 col-md-7 float-left pr-0 container-signup pt-5">
 				<form action="#">
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
 					<span class="text-center block mt-3">Already signed up? <a href="#" class="reg-color">Log in</a></span>
@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 						</div> -->
 
-						<div class="col-md-6 pr-0 float-left z-100">
+						<div class="col-md-6 float-left z-100">
 							<div class="input-group z-100">
 								<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name">
 							</div>
@@ -45,7 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 						</div>
 
-						<div class="col-md-6 pr-0 float-left">
+						<div class="col-md-6 float-left">
 							<div class="input-group z-100">
 								<input autocomplete="off" type="text" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address">
 							</div>
@@ -57,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 						</div>
 
-						<div class="col-md-6 pr-0 float-left">
+						<div class="col-md-6 float-left">
 							<div class="input-group z-100">
 								<input autocomplete="off" type="text" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Business Name">
 							</div>
@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 						</div>
 
-						<div class="col-md-6 pr-0 float-left">
+						<div class="col-md-6 float-left">
 							<div class="input-group">
 								<select class="reg-select z-100 cmb-industry" id="sel2">
 									<option>--Select your Industry--</option>
@@ -89,7 +89,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	                                <?php } ?>
 								</select>
 							</div>
-						</div>		
+						</div>
 
 						<div class="col-md-6 float-left z-100">
 							<div class="input-group z-100">
@@ -113,6 +113,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</form>
 			</div>
+
+
 		</div>
 	</div>
 </div>
