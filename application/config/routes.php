@@ -72,6 +72,9 @@ $route['survey/(:num)'] = 'survey/view/$1';
 $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
 $route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
+$route['survey/themes'] = 'survey/themeIndex'; //new
+$route['survey/themes/(:num)'] = 'survey/themeView/$1'; //new
+$route['survey/themes/create'] = 'survey/themeCreate'; //new
 //question module
 $route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';

@@ -111,10 +111,10 @@ class Reports extends MY_Controller {
     public function setAction($type, $startDate, $endDate) {
         switch($type) {
             case "monthly_closeout":
-                return $this->setFiterByMonths($startDate, $endDate);
+                return $this->setFilterByMonths($startDate, $endDate);
 
             case "yearly_closeout":
-                return $this->setFiterByMonths($startDate, $endDate);
+                return $this->setFilterByMonths($startDate, $endDate);
 
             case "profit_loss":
                 return $this->setProfitLoss($startDate, $endDate);
@@ -161,9 +161,10 @@ class Reports extends MY_Controller {
         $startDate = $this->input->get('startDate');
         $endDate = $this->input->get('endDate');    
 
-        $data['monthly'] = $this->setFiterByMonths($startDate, $endDate); 
-        
-    }echo json_encode($data);
+        $data['monthly'] = $this->setFilterByMonths($startDate, $endDate); 
+        echo json_encode($data);
+    }
+    
 
     public function getDateInterval($startDate, $endDate) {
         $start    = (new DateTime($startDate))->modify('first day of this month');
@@ -174,7 +175,7 @@ class Reports extends MY_Controller {
         return $period;
     }
 
-    public function setFiterByMonths($startDate, $endDate) {
+    public function setFilterByMonths($startDate, $endDate) {
         $months = [];
         $period = $this->getDateInterval($startDate, $endDate);
 

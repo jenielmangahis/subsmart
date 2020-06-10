@@ -4,14 +4,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Survey_model extends MY_Model {
 
 
-	public function __construct()
-	{
+	public function __construct(){
 		parent::__construct();
 	}
 
-	public function add($data)
-	{
-    $this->db->insert('survey', $data);
+	public function add($data){
+    	$this->db->insert('survey', $data);
 		$insert_id = $this->db->insert_id();
 
 		$this->db->select('*');
@@ -25,209 +23,210 @@ class Survey_model extends MY_Model {
 		return $this->db->delete('survey');
 	}
 
-  public function list(){
-    $this->db->select('*');
-    $query = $this->db->get('survey');
-    return $query->result();
-  }
+	public function list(){
+		$this->db->select('*');
+		$query = $this->db->get('survey');
+		return $query->result();
+	}
 
-  public function view($id){
-    $this->db->select('*');
-    $this->db->where('id', $id);
-    $query = $this->db->get('survey');
+	public function view($id){
+		$this->db->select('*');
+		$this->db->where('id', $id);
+		$query = $this->db->get('survey');
 
-    return $query->row();
-  }
+		return $query->row();
+	}
 
-  public function addQuestion($id, $tid){
+	public function addQuestion($id, $tid){
 
-    $this->db->select('*');
-    $this->db->where('id', $tid);
-    $query = $this->db->get('survey_template_questions');
-    $template = $query->row();
-		$data = array(
-      'survey_id' => $id,
-      'question' => $template->question,
-      'template_id' => $tid
-    );
-
-		$this->db->insert('survey_questions', $data);
-		$insert_id = $this->db->insert_id();
-
-		$data_option = array(
-			'survey_template_choice' => $template->answer,
-			'survey_template_id' => $insert_id,
+		$this->db->select('*');
+		$this->db->where('id', $tid);
+		$query = $this->db->get('survey_template_questions');
+		$template = $query->row();
+			$data = array(
+		'survey_id' => $id,
+		'question' => $template->question,
+		'template_id' => $tid
 		);
-		$this->db->insert('survey_template_answer', $data_option);
-		$tinsert_id = $this->db->insert_id();
 
-		if($tid == 4){
-			$test = '<div class="input-group input-content mb-3">
-					<div class="input-group-prepend">
-						<div class="input-group-text">
-							<input type="checkbox" aria-label="Checkbox for following text input">
+			$this->db->insert('survey_questions', $data);
+			$insert_id = $this->db->insert_id();
+
+			$data_option = array(
+				'survey_template_choice' => $template->answer,
+				'survey_template_id' => $insert_id,
+			);
+			$this->db->insert('survey_template_answer', $data_option);
+			$tinsert_id = $this->db->insert_id();
+
+			if($tid == 4){
+				$test = '<div class="input-group input-content mb-3">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" aria-label="Checkbox for following text input">
+							</div>
 						</div>
-					</div>
-					<input name="choices_label_'.$tinsert_id.'" type="text" class="form-control"  value="">
-				</div>';
-		}elseif($tid == 3) {
-			$test = '<div class="input-group input-content mb-2">
-					 <div class="input-group-prepend">
-						<div class="input-group-text">
-						<input name="options" type="radio" aria-label="Radio button for following text input">
-						</div>
-					</div>
-					<input name="choices_label_'.$tinsert_id.'" type="text" class="form-control">
-				</div>';
-		}elseif($tid == 15) {
-			$test = '<div class="form-group input-content">
-			 		<input type="text" class="form-control" name="choices_label_'.$tinsert_id.'" value="" placeholder="Enter your answer">
-			   </div>';
-		}else{
-			$test = '';
-		}
-
-		$data = array(
-			'id'=> $insert_id,
-			'tid' => $tid,
-			'data' => $template->answer,
-			'test' => $test,
-			'question' => $template->question,
-			'template_title' => $template->type
-		);
-    return $data;
-  }
-
-  public function getQuestions($id){
-    $this->db->select('*');
-    $this->db->where('survey_id', $id);
-		$this->db->order_by('order', 'ASC');
-    $query = $this->db->get('survey_questions');
-
-		$check = array_map( function($data){
-			$this->db->select('*');
-			$this->db->where('survey_template_id', $data->id);
-			$query = $this->db->get('survey_template_answer');
-			$data->questions = $query->result();
-
-			$this->db->select('*');
-			$this->db->where('id', $data->template_id);
-			$template = $this->db->get('survey_template_questions');
-
-			$data->template_title = $template->row()->type;
-			$data->template_icon = $template->row()->icon;
-			$data->template_color = $template->row()->color;
-
-			$this->db->select('*');
-			$this->db->where('question_id', $data->id);
-			$survey_answer = $this->db->get('survey_answer');
-			$data->survey_answer = $survey_answer->result();
-			if($data->template_id == 3){
-				foreach ($data->questions as $key => $value) {
-					$token = array_map(function($data){
-						$test = '<div class="input-group input-content mb-2">
-                         <div class="input-group-prepend">
-                          <div class="input-group-text">
-                          <input name="options" type="radio" aria-label="Radio button for following text input">
-                          </div>
-                        </div>
-                        <input name="choices_label_'.$data->id.'" type="text" class="form-control" value="'.$data->choices_label.'">
-                      </div>';
-						$data->questions = "";
-						$data->survey_template_choice = $test;
-						return $data;
-					},$data->questions);
-
-				}
-			}elseif($data->template_id == 4){
-				$token = array_map(function($data){
-					$test = '<div class="input-group input-content mb-3">
-					    <div class="input-group-prepend">
-					      <div class="input-group-text">
-					        <input type="checkbox" aria-label="Checkbox for following text input">
-					      </div>
-					    </div>
-					    <input name="choices_label_'.$data->id.'" type="text" class="form-control"  value="'.$data->choices_label.'">
-					  </div>';
-					$data->questions = "";
-					$data->survey_template_choice = $test;
-					return $data;
-				},$data->questions);
-		}elseif($data->template_id == 15){
-				$token = array_map(function($data){
-					$test = '<div class="form-group">
-							<input name="choices_label_'.$data->id.'" type="text" class="form-control"  value="'.$data->choices_label.'">
-						 </div>';
-					$data->questions = "";
-					$data->survey_template_choice = $test;
-					return $data;
-				},$data->questions);
-			}
-			return $data;
-		}, $query->result());
-		// echo '<pre>';
-		// var_dump($check);
-		// exit;
-    return $check;
-  }
-  public function getQuestionsPreview($id){
-    $this->db->select('*');
-    $this->db->where('survey_id', $id);
-		$this->db->order_by('order', 'ASC');
-    $query = $this->db->get('survey_questions');
-
-		$check = array_map( function($data){
-			$this->db->select('*');
-			$this->db->where('survey_template_id', $data->id);
-			$query = $this->db->get('survey_template_answer');
-			$data->questions = $query->result();
-
-			$this->db->select('*');
-			$this->db->where('id', $data->template_id);
-			$template = $this->db->get('survey_template_questions');
-
-			$data->template_title = $template->row()->type;
-				if($data->template_id == 3){
-				foreach ($data->questions as $key => $value) {
-					$token = array_map(function($data){
-						$test = '<div class="form-check input-content">
-			          <input name="answer[]" value="'. $data->choices_label .'" class="form-check-input" type="radio" id="gridRadios'. $data->id .'">
-			          <label class="form-check-label" for="gridRadios'. $data->id .'">
-			            '.$data->choices_label.'
-			          </label>
-			        </div>';
-						$data->questions = "";
-						$data->survey_template_choice = $test;
-						return $data;
-					},$data->questions);
-
-				}
-			}elseif($data->template_id == 15){
-				$token = array_map(function($data){
-					$test = '<option value="'.$data->choices_label.'">'.$data->choices_label.'</option>';
-					$data->questions = "";
-					$data->survey_template_choice = $test;
-					return $data;
-				},$data->questions);
-
-			}elseif($data->template_id == 4){
-				$token = array_map(function($data){
-						$test = '<div class="form-check input-content">
-						<input name="answer[]" value="'. $data->choices_label .'" class="form-check-input" type="checkbox" id="gridCheck'. $data->id .'">
-						<label class="form-check-label" for="gridCheck'.  $data->id  .'">
-						'.$data->choices_label.'
-						</label>
+						<input name="choices_label_'.$tinsert_id.'" type="text" class="form-control"  value="">
 					</div>';
-					$data->questions = "";
-					$data->survey_template_choice = $test;
-					return $data;
-				},$data->questions);
+			}elseif($tid == 3) {
+				$test = '<div class="input-group input-content mb-2">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+							<input name="options" type="radio" aria-label="Radio button for following text input">
+							</div>
+						</div>
+						<input name="choices_label_'.$tinsert_id.'" type="text" class="form-control">
+					</div>';
+			}elseif($tid == 15) {
+				$test = '<div class="form-group input-content">
+						<input type="text" class="form-control" name="choices_label_'.$tinsert_id.'" value="" placeholder="Enter your answer">
+				</div>';
+			}else{
+				$test = '';
 			}
-			return $data;
-		}, $query->result());
 
-    return $check;
-  }
+			$data = array(
+				'id'=> $insert_id,
+				'tid' => $tid,
+				'data' => $template->answer,
+				'test' => $test,
+				'question' => $template->question,
+				'template_title' => $template->type
+			);
+		return $data;
+	}
+
+	public function getQuestions($id){
+		$this->db->select('*');
+		$this->db->where('survey_id', $id);
+			$this->db->order_by('order', 'ASC');
+		$query = $this->db->get('survey_questions');
+
+			$check = array_map( function($data){
+				$this->db->select('*');
+				$this->db->where('survey_template_id', $data->id);
+				$query = $this->db->get('survey_template_answer');
+				$data->questions = $query->result();
+
+				$this->db->select('*');
+				$this->db->where('id', $data->template_id);
+				$template = $this->db->get('survey_template_questions');
+
+				$data->template_title = $template->row()->type;
+				$data->template_icon = $template->row()->icon;
+				$data->template_color = $template->row()->color;
+
+				$this->db->select('*');
+				$this->db->where('question_id', $data->id);
+				$survey_answer = $this->db->get('survey_answer');
+				$data->survey_answer = $survey_answer->result();
+				if($data->template_id == 3){
+					foreach ($data->questions as $key => $value) {
+						$token = array_map(function($data){
+							$test = '<div class="input-group input-content mb-2">
+							<div class="input-group-prepend">
+							<div class="input-group-text">
+							<input name="options" type="radio" aria-label="Radio button for following text input">
+							</div>
+							</div>
+							<input name="choices_label_'.$data->id.'" type="text" class="form-control" value="'.$data->choices_label.'">
+						</div>';
+							$data->questions = "";
+							$data->survey_template_choice = $test;
+							return $data;
+						},$data->questions);
+
+					}
+				}elseif($data->template_id == 4){
+					$token = array_map(function($data){
+						$test = '<div class="input-group input-content mb-3">
+							<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" aria-label="Checkbox for following text input">
+							</div>
+							</div>
+							<input name="choices_label_'.$data->id.'" type="text" class="form-control"  value="'.$data->choices_label.'">
+						</div>';
+						$data->questions = "";
+						$data->survey_template_choice = $test;
+						return $data;
+					},$data->questions);
+			}elseif($data->template_id == 15){
+					$token = array_map(function($data){
+						$test = '<div class="form-group">
+								<input name="choices_label_'.$data->id.'" type="text" class="form-control"  value="'.$data->choices_label.'">
+							</div>';
+						$data->questions = "";
+						$data->survey_template_choice = $test;
+						return $data;
+					},$data->questions);
+				}
+				return $data;
+			}, $query->result());
+			// echo '<pre>';
+			// var_dump($check);
+			// exit;
+		return $check;
+	}
+	public function getQuestionsPreview($id){
+		$this->db->select('*');
+		$this->db->where('survey_id', $id);
+			$this->db->order_by('order', 'ASC');
+		$query = $this->db->get('survey_questions');
+
+			$check = array_map( function($data){
+				$this->db->select('*');
+				$this->db->where('survey_template_id', $data->id);
+				$query = $this->db->get('survey_template_answer');
+				$data->questions = $query->result();
+
+				$this->db->select('*');
+				$this->db->where('id', $data->template_id);
+				$template = $this->db->get('survey_template_questions');
+
+				$data->template_title = $template->row()->type;
+					if($data->template_id == 3){
+					foreach ($data->questions as $key => $value) {
+						$token = array_map(function($data){
+							$test = '<div class="form-check input-content">
+						<input name="answer[]" value="'. $data->choices_label .'" class="form-check-input" type="radio" id="gridRadios'. $data->id .'">
+						<label class="form-check-label" for="gridRadios'. $data->id .'">
+							'.$data->choices_label.'
+						</label>
+						</div>';
+							$data->questions = "";
+							$data->survey_template_choice = $test;
+							return $data;
+						},$data->questions);
+
+					}
+				}elseif($data->template_id == 15){
+					$token = array_map(function($data){
+						$test = '<option value="'.$data->choices_label.'">'.$data->choices_label.'</option>';
+						$data->questions = "";
+						$data->survey_template_choice = $test;
+						return $data;
+					},$data->questions);
+
+				}elseif($data->template_id == 4){
+					$token = array_map(function($data){
+							$test = '<div class="form-check input-content">
+							<input name="answer[]" value="'. $data->choices_label .'" class="form-check-input" type="checkbox" id="gridCheck'. $data->id .'">
+							<label class="form-check-label" for="gridCheck'.  $data->id  .'">
+							'.$data->choices_label.'
+							</label>
+						</div>';
+						$data->questions = "";
+						$data->survey_template_choice = $test;
+						return $data;
+					},$data->questions);
+				}
+				return $data;
+			}, $query->result());
+
+		return $check;
+	}
+
 	public function saveAnswer($post, $files, $id){
 		$this->load->helper('file');
 		$this->load->library('upload');
@@ -258,17 +257,17 @@ class Survey_model extends MY_Model {
 			foreach ($files as $key => $value) {
 				$question_id = explode('-', $key)[1];
 				$path = 'uploads/survey';
-		    $config = [
-		      'upload_path' 		=> $path,
-		      'allowed_types' 	=> '*',
-		      'overwrite' 		=> false
-		    ];
-		    $test = $this->upload->initialize($config);
-		    if ( ! $this->upload->do_upload('answer-'.$question_id.'') ){
+			$config = [
+				'upload_path' 		=> $path,
+				'allowed_types' 	=> '*',
+				'overwrite' 		=> false
+			];
+			$test = $this->upload->initialize($config);
+			if ( ! $this->upload->do_upload('answer-'.$question_id.'') ){
 
 				}else{
-		      $upload_data = $this->upload->data();
-		    }
+				$upload_data = $this->upload->data();
+			}
 				$datas = array(
 					'answer' => $value['name'],
 					'survey_id' => $id,
@@ -279,33 +278,35 @@ class Survey_model extends MY_Model {
 		}
 		return TRUE;
 	}
+
 	public function addQuestionImage($id, $data){
 		$this->db->where('id', $id);
 		$this->db->update('survey_questions', $data);
 		return TRUE;
 	}
-  public function updateQuestion($id, $data, $all_data){
-		$this->db->select('*');
-		$this->db->where('id', $all_data['survey_id']);
-		$survey = $this->db->get('survey_questions');
-
-		if($survey->row()->template_id == 4 || $survey->row()->template_id == 3  || $survey->row()->template_id == 15){
+	
+	public function updateQuestion($id, $data, $all_data){
 			$this->db->select('*');
-			$this->db->where('survey_template_id', $all_data['survey_id']);
-			$templates = $this->db->get('survey_template_answer');
-			foreach ($templates->result() as $template) {
-				$ids = $template->id;
-				$datas = array(
-					'choices_label' => $_POST['choices_label_'.$ids.'']
-				);
-				$this->db->where('id', $ids);
-				$this->db->update('survey_template_answer', $datas);
-			}
-		}
+			$this->db->where('id', $all_data['survey_id']);
+			$survey = $this->db->get('survey_questions');
 
-    $this->db->where('id', $id);
-    return $this->db->update('survey_questions', $data);
-  }
+			if($survey->row()->template_id == 4 || $survey->row()->template_id == 3  || $survey->row()->template_id == 15){
+				$this->db->select('*');
+				$this->db->where('survey_template_id', $all_data['survey_id']);
+				$templates = $this->db->get('survey_template_answer');
+				foreach ($templates->result() as $template) {
+					$ids = $template->id;
+					$datas = array(
+						'choices_label' => $_POST['choices_label_'.$ids.'']
+					);
+					$this->db->where('id', $ids);
+					$this->db->update('survey_template_answer', $datas);
+				}
+			}
+
+		$this->db->where('id', $id);
+		return $this->db->update('survey_questions', $data);
+	}
 
 	public function getTemplateQuestions(){
 		$this->db->select('*');
@@ -370,4 +371,29 @@ class Survey_model extends MY_Model {
 		$this->db->where('id', $id);
 		return $this->db->update('survey_questions', $data);
 	}
+
+	public function getThemes($id = null){
+		$this->db->select("*");		
+
+		if($id !== null){
+			
+			$this->db->where('sth_rec_no', $id);
+			return $this->db->get('survey_themes')->row();
+			exit;
+		}else{	
+			return $this->db->get('survey_themes')->result(); 
+		}
+	}
+
+	public function addTheme($data){
+		$this->db->insert('survey_themes', $data);
+		$insert_id = $this->db->insert_id();
+
+		$this->db->select('*');
+		$this->db->where('id', $insert_id);
+		$query = $this->db->get('survey');
+		return $query->row();
+	}
+
+
 }
