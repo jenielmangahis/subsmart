@@ -67,13 +67,20 @@ $(window).on('load', function() {
 		nav: true,
 		dots: false,
 		loop: true,
-		navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
+		navText: ['<i class="fa fa-angle-left play"></i>','<i class="fa fa-angle-right play"></i>'],
 		autoplay: true,
 		items: 1,
 		animateOut: 'fadeOut',
     	animateIn: 'fadeIn',
 	});
 
+	$('.play').on('click',function(){
+	    $('.hero-slider').trigger('play.autoplay',[1000])
+	})
+
+	$('.stop').on('click',function(){
+	    $('.hero-slider').trigger('stop.autoplay')
+	})
 	/*------------------
 		Hero Slider homepage signup
 	--------------------*/

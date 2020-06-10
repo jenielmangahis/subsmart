@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           </div>
       </section>
   </section>
-  <section class="ccontainer bg-grey ss_ccmph_4 lineup-container hidden-sm hidden-xs" style="padding-top: 0px; height:auto; ">
+  <section class="ccontainer bg-grey ss_ccmph_4 lineup-container hidden-sm hidden-xs desktop-only" style="padding-top: 0px; height:auto; ">
     <div class="content-container">
         <div class="ctext">
             <div class="_buyNow _freeTrial">
@@ -946,7 +946,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <br /><br /><br />
-                    <section class="addon" style="">
+                    <section class="addon desktop-only" style="">
                         <div class="container">
                             <div class="addon__box">
                                 <div class="addon__list-cnt">
