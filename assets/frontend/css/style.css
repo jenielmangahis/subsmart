@@ -3209,6 +3209,7 @@ label.reg-def {
    }
    .header-top p {
      line-height: 1.5;
+     font-size: 15px;
    }
    .site-navbar {
      text-align: center;
@@ -3377,9 +3378,16 @@ font-size: 12px;
 	 .slicknav_btn {
     position: absolute;
     right: 10px;
-    top: 100px;
+    top: 105px;
     font-size: 12px;
     z-index: 999999;
+  }
+  .sc-33 {
+    display: block;
+    width: 74%;
+    text-align: center;
+    margin: 0 auto;
+  }
 }
 @media(max-width:390px) {
   .footer-social.text-left {
