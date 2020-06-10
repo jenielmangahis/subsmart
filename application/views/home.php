@@ -25,15 +25,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="hero-item" >
                                     <div class="testimonial-card">
                                         <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
-                                        <h3 class="testimonial-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h3>
-                                        <h3 class="testimonial-name">John Doe</h3>
+                                        <h3 class="testimonial-desc">I have used several business CRM, but this one product does everything from providing me a report card to my business and creating automated campaigns to grow my business.  I Love this product.</h3>
+                                        <h3 class="testimonial-name">Tom Fico, Pensacola, Florida.</h3>
                                     </div>
                                 </div>
                                 <div class="hero-item" >
                                     <div class="testimonial-card">
                                         <img src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
-                                        <h3 class="testimonial-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</h3>
-                                        <h3 class="testimonial-name">John Wayne</h3>
+                                        <h3 class="testimonial-desc">This CRM help me grow my business and I can  provide customer with real time estimates and sign them up minutes afterward.  Customer for Life.</h3>
+                                        <h3 class="testimonial-name">Josh Cook,  Biloxi, Mississippi.</h3>
                                     </div>
                                 </div>
                             </div>

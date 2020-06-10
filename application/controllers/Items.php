@@ -79,10 +79,10 @@ class Items extends MY_Controller
             'cost' => $this->input->post('cost'),
             'url' => $this->input->post('url'),
             'model' => $this->input->post('model'),
-            'price1' => $this->input->post('price1'),
-            'price2' => $this->input->post('price2'),
-            'price3' => $this->input->post('price3'),
-            'price4' => $this->input->post('price4'),
+            // 'price1' => $this->input->post('price1'),
+            // 'price2' => $this->input->post('price2'),
+            // 'price3' => $this->input->post('price3'),
+            // 'price4' => $this->input->post('price4'),
             'notes' => $this->input->post('notes')
 
         ]);
@@ -111,10 +111,10 @@ class Items extends MY_Controller
             'cost' => $this->input->post('cost'),
             'url' => $this->input->post('url'),
             'model' => $this->input->post('model'),
-            'price1' => $this->input->post('price1'),
-            'price2' => $this->input->post('price2'),
-            'price3' => $this->input->post('price3'),
-            'price4' => $this->input->post('price4'),
+            // 'price1' => $this->input->post('price1'),
+            // 'price2' => $this->input->post('price2'),
+            // 'price3' => $this->input->post('price3'),
+            // 'price4' => $this->input->post('price4'),
             'notes' => $this->input->post('notes')
 
         ];

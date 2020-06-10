@@ -73,9 +73,28 @@
           text-decoration: underline;
         }
 
+        .theme-image{
+          position: absolute; 
+          width: 100%;
+          height: auto;
+          z-index: 0;
+        }
+    
+        .line-separator{
+          padding: 3px 10px;
+          background-color: #fff;
+          width: 100px;
+          margin: 10px 0;
+        }
+
       </style>
    </head>
    <body>
+   <style>
+    body{
+      color: <?= $survey_theme->sth_text_color?>
+    }
+   </style>
       <?php
         if(isset($_GET['mode']) && $_GET['mode'] === 'preview'){
           ?>
@@ -84,6 +103,13 @@
         }
       ?>
       <div class="d-flex h-100 justify-content-center align-items-center">
+      <?php
+        if($survey_theme !== null){
+          ?>
+            <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
+          <?php
+        }
+      ?>
         <form href="/nsmartrac/survey/answer/<?= $this->uri->segment(3) ?>" enctype="multipart/form-data" id="form-survey" class="h-100 col-sm-12 d-flex justify-content-center align-items-center require-validation" data-cc-on-file="false"
                                                     data-stripe-publishable-key="pk_test_wuRSMY1bhccBD6nNwKiMNG7t006YIzNwM8"
                                                     id="payment-form" >
@@ -91,27 +117,20 @@
           <div id="t" class="badge d-none">00:00</div>
            <?php foreach($questions as $key => $question): ?>
              <?php if ($key == 0): ?>
-               <img src="<?= base_url() ?>uploads/survey/<?= $question->image_background ?>"  
-               <?php
-               $pimg = $question->image_position;
                
-               if ( $pimg == 1 ){ echo "class='image_background position-absolute w-100 h-100'";  }
-                      elseif( $pimg == 2 ){ echo "class='image_background  w-25 h-20' style='top:76px'"; }
-                      elseif( $pimg == 3 ){ echo "class='image_background position-absolute w-0 h-25' style='right: 237px'"; }
-                    else{ echo "class='image_background position-absolute w-0 h-25' style='top:400px'" ; }
-               ?> 
-               alt="<?= $question->image_background ?>">
              <?php endif; ?>
            <div id="question-<?= $key ?>" class="col-sm-3 <?= ($key != 0) ? "d-none" : "" ?>">
                   <div class="mb-4">
-                     <h1 id="question" class="h3 mb-3 font-weight-normal">
+                     <h1 id="question" class="h3 mb-3 font-weight-bold" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">
                        <?php if($question->required == 1): ?>
-                         <label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
+                         <label class="text-danger" id="required-asterisk-<?= $question->id ?>"  style="color: <?= $survey_theme->sth_text_color?>">*</label>
                        <?php endif; ?>
                        <?= $question->question ?>
                       </h1>
-                     <p><?= ($question->description == 1) ? $question->description_label : ""; ?></p>
+                     <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ''?>"><?= ($question->description == 1) ? $question->description_label : ""; ?></p>
+                     
                   </div>
+                  <div class="line-separator" style="background-color: <?=  $survey_theme !== null ? $survey_theme->sth_secondary_color : "" ?>"></div>
                   <?php if($question->template_id == 15): ?>
                     <select name="answer[]" class="form-control input-content" id="exampleFormControlSelect1">
                   <?php endif; ?>
@@ -127,7 +146,7 @@
                   <?php if($question->template_id == 15): ?>
                   </select>
                   <?php endif; ?>
-                  <button id="btn-next" data-id="<?= $key ?>"  class="btn btn-lg btn-primary mt-3">Next</button>
+                  <button id="btn-next" data-id="<?= $key ?>"  class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Next</button>
           </div>
           <script>
             $('#question-<?= $key ?> .input-content [name="answer[]"]').attr('name','answer-<?= $quest->survey_template_id ?>');
@@ -136,11 +155,13 @@
 
             <div id="question-<?= count($questions) ?>" class="col-sm-6 d-none">
               <div class="result-survey">
-                <h1>Survey completed!</h1>
-                <p>Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
+                <h1 class="font-weight-bold" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Survey completed!</h1>
+                <div class="line-separator" style="background-color: <?=  $survey_theme !== null ? $survey_theme->sth_secondary_color : "" ?>"></div>
+                <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
               </div>
-              <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-lg btn-outline-primary" type="submit">Back to Top</button>
-              <button id="btn-submit" type="submit" class="btn btn-lg btn-primary">Submit Answers</button>
+              <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
+              <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button>
+              <a href="<?= base_url()?>survey/result/<?= $survey->id?>" style="color: <?=  $survey_theme !== null ? $survey_theme->sth_text_color : "" ?>"> No thanks.</a>
             </div>
 
           </div>
