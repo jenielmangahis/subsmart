@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-
 <?php include viewPath('includes/header'); ?>
 <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
 <style>
@@ -22,11 +20,11 @@
   div[wrapper__section] .container-fluid .page-title-box .breadcrumb .breadcrumb-item {
     color: #fff;
   }
-  
+
 </style>
 
 <div class="wrapper" role="wrapper">
-    
+
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -57,8 +55,8 @@
 
 
 
-            
-            
+
+
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
@@ -68,13 +66,13 @@
                                 ("Customer") as the address shown below (the "Premise/Monitored Location") </p>
 
                               <?php $this->form_builder->create_form($form); ?>
-                              
+
 
                             <?php /* ?>
                             <!-- ====== CUSTOMER ====== -->
                             <div class="row">
 
-                              
+
                               <hr style="margin-bottom: 500px !important;">
                                 <div class="col-md-12">
                                     <div class="row">
@@ -501,7 +499,7 @@
                             </div>
 
                             <!-- ====== CUSTOMER ACCOUNT INFORMATION ====== -->
-                          
+
 
                             <!-- ====== EQUIPMENT ====== -->
                             <div class="row">
@@ -1409,7 +1407,7 @@
 
 
                                 <div class="col-md-12 float-left custom-signaturepad">
-                                   
+
                                     <div class="col-md-4 float-left">
                                           <h6>Company Representative Approval</h6>
                                           <div class="sigPad" id="smoothed" > <!-- style="width:404px;" -->
@@ -1445,7 +1443,7 @@
                                           <input type="hidden" id="savePrimaryAccountSignatureDB" name="primary_account_holder_signature">
                                           <!-- <br>-->
                                           <label for="comp_rep_approval">Printed Name</label>
-                                          <input type="text6" class="form-control mb-3" name="primary_account_holder_name" id="comp_rep_approval" placeholder=""/> 
+                                          <input type="text6" class="form-control mb-3" name="primary_account_holder_name" id="comp_rep_approval" placeholder=""/>
 
                                     </div>
 
@@ -1466,7 +1464,7 @@
                                           <input type="hidden" id="saveSecondaryAccountSignatureDB" name="secondery_account_holder_signature">
                                           <!-- <br> -->
                                           <label for="comp_rep_approval">Printed Name</label>
-                                          <input type="text6" class="form-control mb-3" name="secondery_account_holder_name" id="comp_rep_approval" placeholder=""/> 
+                                          <input type="text6" class="form-control mb-3" name="secondery_account_holder_name" id="comp_rep_approval" placeholder=""/>
 
                                     </div>
                                 </div>
@@ -1733,7 +1731,7 @@
                 </div>
                 <?php echo form_close(); ?>
                 <!-- end row -->
-            </div> 
+            </div>
             <!-- end container-fluid -->
         </div>
         <!-- page wrapper end -->
@@ -1785,4 +1783,3 @@
 </script>
 =======
 <?php $this->form_builder->create_form($form); ?>
->>>>>>> Stashed changes
