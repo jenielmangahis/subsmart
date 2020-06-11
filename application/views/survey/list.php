@@ -123,24 +123,34 @@
       <?= form_open('survey/add', array('id'=>'frm-add-survey')) ?>
       <div class="modal-content">
         <div class="modal-header">
-         <h5 class="modal-title" id="exampleModalLongTitle">Add Survey</h5>
+         <h5 class="modal-title" id="exampleModalLongTitle">Add New Survey</h5>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
            <span aria-hidden="true">&times;</span>
          </button>
        </div>
        <div class="modal-body">
-          <label for="title">Title</label>
+          <label for="title">What would you like to name your survey?</label>
           <input type="text" class="form-control" id="title" name="title">
        </div>
        <div class="modal-footer">
-         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-         <button type="submit" class="btn btn-primary">Save changes</button>
+         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+         <button disabled id="btnSubmitTitle" type="submit" class="btn btn-primary">Add New Survey</button>
        </div>
       </div>
       <?= form_close() ?>
     </div>
   </div>
 
+  <script>
+    document.querySelector('#title').addEventListener('keyup', event => {
+      console.log(event.target.value);
+      if(event.target.value === ''){
+        document.querySelector('#btnSubmitTitle').disabled = true;
+      }else{ 
+        document.querySelector('#btnSubmitTitle').disabled = false;
+      }
+    })
+  </script>
 
 <?php echo put_footer_assets(); ?>
 <?php include viewPath('includes/footer'); ?>

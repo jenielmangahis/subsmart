@@ -55,14 +55,14 @@ function getInputHtml($valueQuestions){
 
 
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          echo '<input type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' autofocus/>';
+          echo '<input  maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'" autofocus/>';
         
           break;
       
       case "textarea":
        
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          echo '<textarea name="'.$questionName.'" cols="40" rows="3" class="form-control '.$questionParameterClass.'" autocomplete="off" '.$questionParameterRequire.'></textarea>';
+          echo '<textarea maxlength="'.$questionParameterMaxLength.'" name="'.$questionName.'" cols="40" rows="3" class="form-control '.$questionParameterClass.'" style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'" autocomplete="off" '.$questionParameterRequire.'></textarea>';
         
           break;
       
@@ -72,7 +72,7 @@ function getInputHtml($valueQuestions){
           
           if($valueQuestions->parameter->selection_type == 'dropdown')
           {
-            echo '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.'>';
+            echo '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
               if(isset($valueQuestions->options))
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
@@ -89,7 +89,7 @@ function getInputHtml($valueQuestions){
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
                   echo '<div class="radio radio-sec margin-right my-0 mr-3 float-left">
-                            <input type="radio" name="'.$questionName.'" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.'>
+                            <input type="radio" name="'.$questionName.'" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">
                             <label for="'.$questionId.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
                         </div>';
                 }
@@ -104,7 +104,7 @@ function getInputHtml($valueQuestions){
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
                   echo '<div class="checkbox checkbox-sec margin-right my-0 mr-3 float-left">
-                            <input type="checkbox" name="'.$questionName.'[]" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.'>
+                            <input type="checkbox" name="'.$questionName.'[]" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">
                             <label for="'.$questionId.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
                         </div>';
                 }
@@ -117,36 +117,36 @@ function getInputHtml($valueQuestions){
       case "file-upload":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo ' <input type="file" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" >';
+          echo ' <input type="file" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'" >';
 
           break;
       case "phone":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.'/>';
+          echo '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       case "email":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="email" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          echo '<input maxlength="'.$questionParameterMaxLength.'" type="email" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
 
       case "address":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          echo '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       case "date-picker":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input type="date" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          echo '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       default:
-          echo "Your favorite color is neither red, blue, nor green!";
+          echo "";
     }
 }
 
@@ -155,6 +155,11 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
   $html = '';
   $questionParameterRequire = (isset($valueQuestions->parameter->required) && $valueQuestions->parameter->required == true) ? 'required' : '' ;
   
+  $questionParameterClass = (isset($valueQuestions->parameter->question_styling_class) && $valueQuestions->parameter->question_styling_class != '') ? $valueQuestions->parameter->question_styling_class : '' ;
+  $questionParameterMaxLength = (isset($valueQuestions->parameter->question_styling_maxlength) && $valueQuestions->parameter->question_styling_maxlength != '') ? $valueQuestions->parameter->question_styling_maxlength : '' ;
+  $questionParameterBackground = (isset($valueQuestions->parameter->question_styling_background_color) && $valueQuestions->parameter->question_styling_background_color != '') ? $valueQuestions->parameter->question_styling_background_color : '' ;
+  $questionParameterColor = (isset($valueQuestions->parameter->question_styling_font_color) && $valueQuestions->parameter->question_styling_font_color != '') ? $valueQuestions->parameter->question_styling_font_color : '' ;
+  
   $questionId = 'question_'.$valueQuestions->Questions_id.'_'.$keySubQuestions;
   $questionName = 'question['.$valueQuestions->Questions_id.'][]';
   switch ($valueQuestions->q_type) {
@@ -162,14 +167,14 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
 
 
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          $html .= '<input type="text" class="form-control reperator-input" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' autofocus/>';
+          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'" autofocus/>';
         
           break;
       
       case "textarea":
        
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          $html .= '<textarea name="'.$questionName.'" cols="40" rows="3" class="form-control reperator-input" autocomplete="off" '.$questionParameterRequire.'></textarea>';
+          $html .= '<textarea maxlength="'.$questionParameterMaxLength.'" name="'.$questionName.'" cols="40" rows="3" class="form-control reperator-input '.$questionParameterClass.'" autocomplete="off" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"></textarea>';
         
           break;
       
@@ -179,7 +184,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
           
           if($valueQuestions->parameter->selection_type == 'dropdown')
           {
-            $html .= '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control reperator-input" '.$questionParameterRequire.'>';
+            $html .= '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control reperator-input '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
               if(isset($valueQuestions->options))
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
@@ -196,7 +201,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
                   $html .= '<div class="radio radio-sec margin-right my-0 mr-3 float-left">
-                            <input type="radio" class="reperator-input" name="'.$questionName.'" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.'>
+                            <input type="radio" class="reperator-input '.$questionParameterClass.'" name="'.$questionName.'" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">
                             <label for="'.$questionId.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
                         </div>';
                 }
@@ -211,7 +216,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
                   $html .= '<div class="checkbox checkbox-sec margin-right my-0 mr-3 float-left">
-                            <input type="checkbox" class="reperator-input" name="'.$questionName.'[]" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.'>
+                            <input type="checkbox" class="reperator-input '.$questionParameterClass.'" name="'.$questionName.'[]" value="'.$valueOptions->options_id.'" id="'.$questionId.'-option-'.$valueOptions->options_id.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">
                             <label for="'.$questionId.'-option-'.$valueOptions->options_id.'"><span>'.$valueOptions->option_value.'</span></label>
                         </div>';
                 }
@@ -224,36 +229,36 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
       case "file-upload":
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          $html .= ' <input type="file" class="form-control reperator-input" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" >';
+          $html .= ' <input type="file" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" placeholder="Upload Image" '.$questionParameterRequire.' accept="image/*" style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'" >';
 
           break;
       case "phone":
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          $html .= '<input type="text" class="form-control reperator-input" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.'/>';
+          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       case "email":
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          $html .= '<input type="email" class="form-control reperator-input" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="email" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
 
       case "address":
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          $html .= '<input type="text" class="form-control reperator-input" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       case "date-picker":
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          $html .= '<input type="date" class="form-control reperator-input" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.'/>';
+          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       default:
-          $html .= "Your favorite color is neither red, blue, nor green!";
+          $html .= "";
     }
 
     return $html;
@@ -317,15 +322,15 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
                                         
                                           $dummyHtml .= '<div class="col-md-12 form-group float-left">';
                                             $dummyHtml .= '<div class="col-md-12 float-left reperator_tab_div_'.$valueQuestions->Questions_id.'" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
-                                              $dummyHtml .= "<div class='reperator float-left'>";
+                                              $dummyHtml .= "<div class='reperator float-left w-100 mb-3' style='clear:both;'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
-                                            $dummyHtml .= '<div class="col-md-6 float-left">';
+                                            $dummyHtml .= '<div class="col-md-3 float-left">';
 
                                               $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           
-                                          $dummyHtml .= '<div class="col-sm-1 text-left actions float-left mt-2"><label>&nbsp;</label><a class=" col-form-label add_action" onClick="addOptions(this,\'reperator_tab_div_'.$valueQuestions->Questions_id.'\')" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
+                                          $dummyHtml .= '<div class="col-sm-1 text-left actions float-left mt-4 pt-2 pb-2"><label style="clear:both;">&nbsp;</label><a class=" col-form-label add_action" onClick="addOptions(this,\'reperator_tab_div_'.$valueQuestions->Questions_id.'\')" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
                                               $dummyHtml .= "</div>";
 
                                           echo $dummyHtml;
@@ -366,7 +371,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
 
     function addOptions (e,id)  {
       var dummy_html = $(e).parents('.reperator').html();
-      $('.'+id).append("<div class='reperator'>"+dummy_html+"</div>");
+      $('.'+id).append("<div class='reperator float-left w-100 mb-3'>"+dummy_html+"</div>");
     }
     
     function removeOptions (e)  {

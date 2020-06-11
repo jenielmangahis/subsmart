@@ -65,7 +65,7 @@
                     
 
                     <div class="row">
-                        <?php foreach($themes as $key => $theme):?>
+                        <?php foreach($themes as $key => $theme){?>
                         <div data-id="<?php $theme->sth_rec_no?>" class="col-xs-12 col-sm-6 col-md-4 col-xl-3">
                             <a href="<?= base_url()?>survey/themes/<?= $theme->sth_rec_no ?>">
                                 <div class="card theme-card">
@@ -84,7 +84,7 @@
                                 </div>
                             </a>
                         </div>
-                        <?php endforeach;?>
+                        <?php }?>
                     </div>
 
                 </div>

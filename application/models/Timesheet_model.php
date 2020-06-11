@@ -30,6 +30,16 @@ class Timesheet_model extends MY_Model {
     /**
      * @return mixed
      */
+    public function manualClockIn($data)
+    {
+        //dd($data);die;
+        $this->db->insert($this->table, $data);
+    }
+
+
+    /**
+     * @return mixed
+     */
     public function getClockIn($data)
     {
         $user_id = $data['user_id'];
