@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  	<meta name="description" content="Industry.INC HTML Template">
 	<meta name="keywords" content="industry, html">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+
 	<!-- Favicon -->
 	<link href="<?php echo $url->assets ?>frontend/img/favicon.ico" rel="shortcut icon"/>
 
@@ -38,17 +38,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </head>
 <body>
- 
+
 
 	<!-- Header section  -->
 	<header class="header-section clearfix">
 		<div class="header-top">
 			<div class="container">
 				<div class="row align-items-center">
-					<div class="col-md-7"> 
-						<p>HELP GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5">CALL US AT <span>(844) 406-7286</span></b></p>
+					<div class="col-md-7">
+						<p>HELP GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span>(844) 406-7286</span></b></p>
 					</div>
-					<div class="col-md-5 text-md-right">
+					<div class="col-md-5 text-md-right desktop-only">
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
@@ -61,11 +61,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="container">
 				<div class="row">
 					<div class="col-12 d-flex align-items-center site-logo-holder">
-						<!-- Logo --> 
+						<!-- Logo -->
 						<a href="http://nsmartrac.com/" class="site-logo">
 							<img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">
 						</a>
-						
+
 						<div style="margin-left: auto; text-align: right;">
 							<!-- <nav class="site-nav-menu1 ml-auto d-none d-md-block">
 								<ul class="">
@@ -84,6 +84,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
 									<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
+                  <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
+                  <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -93,7 +95,3 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</header>
 	<!-- Header section end  -->
-
-
-
-
