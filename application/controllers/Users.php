@@ -116,6 +116,12 @@ class Users extends MY_Controller {
 
 	}
 
+	public function add_timesheet_entry()
+	{
+		//ifPermissions('users_add');
+		$this->load->view('users/add_timesheet_entry', $this->page_data);
+	}
+
 	public function tracklocation()
 	{	
 		ifPermissions('users_list');
@@ -152,7 +158,7 @@ class Users extends MY_Controller {
 
 	{
 
-		ifPermissions('users_add');
+		//ifPermissions('users_add');
 
 		$this->load->view('users/add', $this->page_data);
 
@@ -490,6 +496,43 @@ class Users extends MY_Controller {
 		);
 
 		$this->timesheet_model->clockOut($data);
+
+	}
+
+	public function manual_clock_in()
+	{
+		$this->load->model('timesheet_model');
+		//$data = $this->input->post();
+		//dd($data);die;
+		$data = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Clock In',
+			'entry_type' => $this->input->post('entry_type'),
+			'timestamp' => $this->input->post('entry_date'),
+			'clock_in_from' => $this->input->post('clock_in_from'),
+			'clock_in_to' => $this->input->post('clock_in_to'),
+			'break_from' => $this->input->post('break_from'),
+			'break_to' => $this->input->post('break_to'),
+			'job_code' => $this->input->post('job_code'),
+			'notes' => $this->input->post('notes')
+		);
+		//dd($data);die;
+		$this->timesheet_model->manualClockIn($data);
+
+		/*$this->load->model('timesheet_model');
+		$data = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Clock In',
+			'timestamp' => $this->input->post('current_time_in'),
+			'entry_type' => 'Manual'
+		);
+
+		$this->timesheet_model->checkClockIn($data);*/
+
+		$this->session->set_flashdata('alert-type', 'success');
+		$this->session->set_flashdata('alert', 'New User Created Successfully');	
+
+		redirect('users/timesheet');
 
 	}
 

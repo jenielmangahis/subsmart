@@ -11,16 +11,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">Employees</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage Employees</li>
+                            <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add') ?>" class="btn btn-primary"
+                                    <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> New Employee
+                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
                                     </a>
                                 <?php //endif ?>
                             </div>
@@ -162,9 +162,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a id="clockout" style="display: inline-block;" href="#"
                                                                        class="btn btn-sm btn-danger" title="Clock Out"
                                                                        data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out</a>
-                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                                         Manual
-                                                                    </button>
+                                                                    </button> -->
                                                                     <?php elseif( $clockin_arr[0]->action == 'Clock Out' ):?>
                                                                     <a id="clockin" style="" href="#"
                                                                    class="btn btn-sm btn-primary" title="Clock In"
@@ -172,9 +172,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a id="clockout" style="display: none;" href="#"
                                                                    class="btn btn-sm btn-danger" title="Clock Out"
                                                                    data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out</a>
-                                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                                     Manual
-                                                                </button>
+                                                                </button> -->
                                                                     <?php endif;?>
                                                                 <?php else: ?>
                                                                     <a id="clockin" style="" href="#"
@@ -183,9 +183,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a id="clockout" style="display: none;" href="#"
                                                                    class="btn btn-sm btn-danger" title="Clock Out"
                                                                    data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out</a>
-                                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                                                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                                     Manual
-                                                                </button>
+                                                                </button> -->
                                                                 <?php endif;?>
                                                             </form>
                                                         <?php //endif ?>
@@ -198,68 +198,70 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </button> -->
 
                                                     <!-- Modal -->
-                                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                      <div class="modal-dialog" role="document">
-                                                        <div class="modal-content" style="width: 130%;">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">New Time Entry</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                  <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                    <form name="manual_clockin_form" method="post">
+                                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                          <div class="modal-dialog" role="document">
+                                                            <div class="modal-content" style="width: 130%;">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">New Time Entry</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                      <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body" style="text-align: left;">
+                                                                    
+                                                                    <div style="float: left; width: 500px;">
+                                                                        <span style="margin-right: 25px;"><label>Entry Type</label> </span>
+                                                                        <input id="workhours" type="radio" name="workhours"><span>Work Hours</span>
+                                                                        <input id="pto" type="radio" name="pto"><span>PTO</span>
+                                                                    </div>
+
+                                                                    
+                                                                    <div style="float: left; width: 380px;">
+
+                                                                        <span style="margin-right: 62px;"><label>Date</label> </span>
+                                                                        <input class="entry_date" type="text" placeholder="Select Date" name="date" autocomplete="off" />
+                                                                    </div>
+
+                                                                    <br>
+                                                                    
+                                                                    <div style="float: left; width: 500px;">
+                                                                        <span style="margin-right: 15px;"><label>Clock In/Out</label> </span>
+                                                                        <input type="text" placeholder="h:mm a" name="clockin" autocomplete="off" /> ->
+                                                                        <input type="text" placeholder="h:mm a" name="clockout" autocomplete="off" />
+                                                                    </div>
+                                                                    
+                                                                    <div style="float: left; width: 500px;">
+                                                                        <span style="margin-right: 52px;"> <label>Breaks</label> </span>
+                                                                        <input type="text" placeholder="h:mm a" name="breakin" autocomplete="off" /> ->
+                                                                        <input type="text" placeholder="h:mm a" name="breakout" autocomplete="off" />
+                                                                    </div>
+
+                                                                    <br>
+                                                                    
+                                                                    <div style="float: left; width: 500px;">
+                                                                        <span style="margin-right: 36px;"><label>Job Code</label> </span>
+                                                                        <select name="jobcode">
+                                                                            <option>Select Job Code</option>
+                                                                            <option>Job Code 1</option>
+                                                                            <option>Job Code 2</option>
+                                                                            <option>Job Code 3</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div style="float: left; width: 500px;">
+                                                                        <span style="margin-right: 56px;"> <label>Notes</label> </span>
+                                                                        <textarea name="notes" placeholder="Type your notes here..." oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="width: 400px;"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+                                                                    <button id="manual_add" type="submit" class="btn btn-primary" style="color: #45a73c;">ADD ENTRY</button>
+                                                                </div>
                                                             </div>
-                                                            <div class="modal-body" style="text-align: left;">
-                                                                
-                                                                <div style="float: left; width: 500px;">
-                                                                    <span style="margin-right: 25px;"><label>Entry Type</label> </span>
-                                                                    <input id="workhours" type="radio" name="workhours"><span>Work Hours</span>
-                                                                    <input id="pto" type="radio" name="pto"><span>PTO</span>
-                                                                </div>
-
-                                                                
-                                                                <div style="float: left; width: 380px;">
-
-                                                                    <span style="margin-right: 62px;"><label>Date</label> </span>
-                                                                    <input class="entry_date" type="text" placeholder="Select Date" name="date" autocomplete="off" />
-                                                                </div>
-
-                                                                <br>
-                                                                
-                                                                <div style="float: left; width: 500px;">
-                                                                    <span style="margin-right: 15px;"><label>Clock In/Out</label> </span>
-                                                                    <input type="text" placeholder="h:mm a" name="clockin" autocomplete="off" /> ->
-                                                                    <input type="text" placeholder="h:mm a" name="clockout" autocomplete="off" />
-                                                                </div>
-                                                                
-                                                                <div style="float: left; width: 500px;">
-                                                                    <span style="margin-right: 52px;"> <label>Breaks</label> </span>
-                                                                    <input type="text" placeholder="h:mm a" name="breakin" autocomplete="off" /> ->
-                                                                    <input type="text" placeholder="h:mm a" name="breakout" autocomplete="off" />
-                                                                </div>
-
-                                                                <br>
-                                                                
-                                                                <div style="float: left; width: 500px;">
-                                                                    <span style="margin-right: 36px;"><label>Job Code</label> </span>
-                                                                    <select name="jobcode">
-                                                                        <option>Select Job Code</option>
-                                                                        <option>Job Code 1</option>
-                                                                        <option>Job Code 2</option>
-                                                                        <option>Job Code 3</option>
-                                                                    </select>
-                                                                </div>
-
-                                                                <div style="float: left; width: 500px;">
-                                                                    <span style="margin-right: 56px;"> <label>Notes</label> </span>
-                                                                    <textarea name="notes" placeholder="Type your notes here..." oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="width: 400px;"></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-                                                                <button type="button" class="btn btn-primary" style="color: #45a73c;">ADD ENTRY</button>
-                                                            </div>
+                                                          </div>
                                                         </div>
-                                                      </div>
-                                                    </div>
+                                                    </form>
                                                     <!-- end of Modal -->
 
                                                 </tr>
@@ -408,6 +410,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             });
         })
+
+        $('#manual_add').on('click', function(e){
+            /*var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };*/
+
+            var $inputs = $(this).parent('form :input');
+
+            // not sure if you wanted this, but I thought I'd add it.
+            // get an associative array of just the values.
+            var values = {};
+            $inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
+
+            var values = $(this).parent('form.manual_clockin_form').serialize();
+
+            console.log(values);
+            //var clockin_user_id = getValue('clockin_user_id');
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/manual_clock_in') ?>",
+                data: values,
+                success: function(result) {
+                    //alert('Manual Entry Success');
+                    //window.location.reload();
+                },
+                error: function(result) {
+                    //console.log(data);
+                    //alert('error');
+                }
+            });
+        });
     });
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));

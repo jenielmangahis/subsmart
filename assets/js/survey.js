@@ -13,7 +13,7 @@ $(document).ready(function(){
         toastr["success"]("Successfully Added!");
         var content = `<div class="col-sm-2">
            <div id="survey-card" data-id="${res.data['id']}" class="card pt-0 2">
-              <div class="card-body">
+              <div class="card-body"><i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"></i> <?= $question->template_title ?>
                 <h5 class="card-title">${res.data['title']}</h5>
                 </div>
               <ul class="list-group list-group-flush">
@@ -148,8 +148,6 @@ $(document).ready(function(){
                       </div>
                        <div class="d-flex justify-content-end">
                           ${choice_btn}
-                         <button class="btn btn-success ml-2 btn-sm" type="submit" name="button">Save Changes</button>
-                         <button class="btn btn-success ml-2 btn-sm d-none" type="submit" name="button">Save Changes</button>
                        </div>
                       </form>
                       <div class="dropdown btn-add-question-bottom">
@@ -240,12 +238,13 @@ $(document).ready(function(){
                     </div>
                      <div class="d-flex justify-content-end">
                         ${choice_btn}
-                       <button class="btn btn-success ml-2 btn-sm" type="submit" name="button">Save Changes</button>
-                       <button class="btn btn-success ml-2 btn-sm d-none" type="submit" name="button">Save Changes</button>
                      </div>
+                     <div class="btn-group justify-content-right">
+                        <a class="dropdown-item btn " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><span class="text-info">More Options</span></a>
+                        <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
+                      </div>
                     </form>
-                    <div class="dropdown btn-add-question-bottom">
-                      <button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="dropdown btn-add-question-bottom"><i class="<?= $template->icon ?>" style="background-color: <?= $template->color; ?>"></i> on" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       +
                       </button>
                       <div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">

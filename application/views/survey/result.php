@@ -158,7 +158,6 @@
                             <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class=" mx-3 btn btn-info">Share</a>
                             <a href="<?php echo base_url()?>survey/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
                             <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-danger">Delete</a>
-                            <a href="#" class=" ml-3 btn btn-info">Select Theme</a>
                           </div>
 
                           <div class="card">
@@ -212,9 +211,9 @@
                                         ?>
                                         <li class="list-group-item d-flex justify-content-between">
                                         <p class="mb-0 d-flex align-items-center"> 
-                                          <i class="icon-design <?= $question->template_icon ?>" style="background-color: <?= $question->template_color ?>;" data-toggle="tooltip" data-placement="top" title="<?= $question->template_title?>"></i>
-                                          <?= $question->question ?> 
-                                          <?php if($question->required === '1'){ echo '<span class="badge badge-alert text-white m-2">Required</span> ';}
+                                            <i class="icon-design <?= $question->template_icon ?>" style="background-color: <?= $question->template_color ?>;" data-toggle="tooltip" data-placement="top" title="<?= $question->template_title?>"></i>
+                                            <?= $question->question ?> 
+                                            <?php if($question->required === '1'){ echo '<span class="badge badge-alert text-white m-2">Required</span> ';}
                                             ?>
                                         </p>
                                         <h5 class="font-weight-normal"><?= number_format($percentage, 2) ?>%</h5>

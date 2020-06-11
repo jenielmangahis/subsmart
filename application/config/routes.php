@@ -75,6 +75,7 @@ $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/
 $route['survey/themes'] = 'survey/themeIndex'; //new
 $route['survey/themes/(:num)'] = 'survey/themeView/$1'; //new
 $route['survey/themes/create'] = 'survey/themeCreate'; //new
+$route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
 //question module
 $route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';

@@ -9,21 +9,21 @@
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/basscss.css"> -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>formbuilder/seconds-part/css/form_builder.css"/>
 <style>
-  .form-control { height: 34px !important; }
-  .input-main-box:not(:first-child) {  margin-top:9px; }  
-  #main-drag-and-drop-area { font-size: 1.1em !important; }
-  .column { width: 100%; float: left; padding-bottom: 30px; }
-  .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; }
-  .portlet-content { padding: 0.4em; /* border: 1px solid #cccccc; */ }
-  .input-draggable-parent-div { padding-top: 20px; padding-bottom: 20px; }
-  .col-form-label { line-height: 26px; font-weight: normal; font-size: 15px; }
-  .portlet-toggle {position: absolute; top: 20%; right: 10px; margin-top: -8px; }
-  .portlet-header { padding: 0.2em 0.3em; /* margin-bottom: 0.5em; */ position: relative; }
-  .input-main-box { width:100%; border: 1px solid #cccccc; padding:3px; background:white; }
-  .input-draggable-parent-child-div { padding-top:25px; min-height: 50px; padding-bottom:25px; }
-  .portlet-placeholder { border: 1px dotted black; margin: 1em 1em 1em 0; height: 90px; width:100%; background: #cccccc; }
-  .option_div .option .actions .add_action{ padding: 3px 6px; background: green; border-radius: 50px; }
-  .option_div .option .actions .remove_action{ padding: 3px 6px; background: red; border-radius: 50px; }
+    .form-control { height: 34px !important; }
+    .input-main-box:not(:first-child) {  margin-top:9px; }  
+    #main-drag-and-drop-area { font-size: 1.1em !important; }
+    .column { width: 100%; float: left; padding-bottom: 30px; }
+    .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; }
+    .portlet-content { padding: 0.4em; /* border: 1px solid #cccccc; */ }
+    .input-draggable-parent-div { padding-top: 20px; padding-bottom: 20px; }
+    .col-form-label { line-height: 26px; font-weight: normal; font-size: 15px; }
+    .portlet-toggle {position: absolute; top: 20%; right: 10px; margin-top: -8px; }
+    .portlet-header { padding: 0.2em 0.3em; /* margin-bottom: 0.5em; */ position: relative; }
+    .input-main-box { width:100%; border: 1px solid #cccccc; padding:3px; background:white; }
+    .input-draggable-parent-child-div { padding-top:25px; min-height: 50px; padding-bottom:25px; }
+    .portlet-placeholder { border: 1px dotted black; margin: 1em 1em 1em 0; height: 90px; width:100%; background: #cccccc; }
+    .option_div .option .actions .add_action{ padding: 3px 6px; background: green; border-radius: 50px; }
+    .option_div .option .actions .remove_action{ padding: 3px 6px; background: red; border-radius: 50px; }
 </style>
 <!-- page wrapper start -->
 <div class="wrapper">
@@ -107,9 +107,9 @@
 
            
           </div>
-          <button onclick="addGroup()" class="pull-left">Add Group</button>
-          <button onclick="addGroupRepeater()" class="pull-left">Add Repeater</button>
-          <button onclick="saveForm()" class="pull-left ml-2">Save Form</button>
+          <button onclick="addGroup()" class="pull-left btn btn-default">Add Group</button>
+          <button onclick="addGroupRepeater()" class="pull-left ml-2 btn btn-default">Add Repeater</button>
+          <button onclick="saveForm()" class="pull-right ml-2 btn btn-success">Save Form</button>
       </div>
     </div>
   </div>  
@@ -183,21 +183,37 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
                 }
 
                 if(value.q_type == 'text') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getTextFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getTextFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'textarea') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getTextAreaFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['limit'],value.parameter['limit_range'],value.parameter['reachtextboxformatting'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getTextAreaFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['encrypt'],value.parameter['limit'],value.parameter['limit_range'],value.parameter['reachtextboxformatting'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'selection') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getSelectionFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['allow_other'],value.parameter['selection_type'],value.options,value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getSelectionFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['allow_other'],value.parameter['selection_type'],value.options,value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'file-upload') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getFileUploadFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getFileUploadFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'phone') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getPhoneFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['extension'],value.parameter['phone_type_selector'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getPhoneFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['extension'],value.parameter['phone_type_selector'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'email') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getEmailFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getEmailFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'address') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getAddressFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['country_input'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getAddressFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['country_input'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'date-picker') {
-                  $('#main-drag-and-drop-area ' + question_sub).append(getDatePickerFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],value.parameter['question_styling_background_color'],value.parameter['question_styling_font_color']));
+                  var question_styling_background_color = value.parameter['question_styling_background_color'];
+                  var question_styling_font_color = value.parameter['question_styling_font_color'];
+                  $('#main-drag-and-drop-area ' + question_sub).append(getDatePickerFieldHTML(value.Questions_id,value.question,value.description,value.parameter['required'],value.parameter['question_styling_class'],value.parameter['question_styling_maxlength'],question_styling_background_color,question_styling_font_color));
                 } else if(value.q_type == 'group') {
                   addGroup(value.Questions_id,value.question,value.description);
                 } else if(value.q_type == 'reperator') {
@@ -552,8 +568,6 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
                 'options':options
               };
 
-
-
               if( question_input_type == 'selection' ) {
                 var removed_options_ids = $(childrenValue).find('.option_div').attr('data-removed-options');
                 temp_questions_temp['deletedOptions'] = removed_options_ids;
@@ -566,7 +580,6 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
           formData.questions.push(temp_questions);
         }
       });
-      
       
       if(formSubmitted == true) {
           
@@ -731,18 +744,17 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
     });
 
 
-    function getTextFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,question_encrypt = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getTextFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,question_encrypt = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
 
         var required = question_required == 'true' ? 'checked' : '';
         var encryptData = question_encrypt == 'true' ? 'checked' : '';
 
-        
         var field = generateField();
         var html = '<div data-question-id="'+question_id+'" data-input-type="text" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_encrypt" '+encryptData+'> Encrypt Data </div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="number" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div> </div>';
         return html;
     }
 
-    function getEmailFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getEmailFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
 
@@ -750,7 +762,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
         return html;
     }
 
-    function getPhoneFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,extension = false,phone_type_selector = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getPhoneFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,extension = false,phone_type_selector = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
         var extension = extension == 'true' ? 'checked' : '';
@@ -761,7 +773,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
         return html;
     }
 
-    function getAddressFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,country_input = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getAddressFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false,country_input = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
         var country_input = country_input == 'true' ? 'checked' : '';
@@ -771,7 +783,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
     }
     
 
-    function getTextAreaFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_encrypt = false,limit = false,limit_range = '',reachTextBoxFormatting = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getTextAreaFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_encrypt = false,limit = false,limit_range = '',reachTextBoxFormatting = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
         var encryptData = question_encrypt == 'true' ? 'checked' : '';
@@ -784,7 +796,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
     }
 
 
-    function getSelectionFieldHTML(question_id = '0', question_label = '', question_description = '', question_required = false, allow_other = false, selection_type = 'radio', options = [], question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getSelectionFieldHTML(question_id = '0', question_label = '', question_description = '', question_required = false, allow_other = false, selection_type = 'radio', options = [], question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
       var field = generateField();
       var required = question_required == 'true' ? 'checked' : '';
       var allow_other = allow_other == 'true' ? 'checked' : '';
@@ -807,7 +819,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
       return html;
     }
 
-    function getFileUploadFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getFileUploadFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
         var field = generateField();
         var required = question_required == 'true' ? 'checked' : '';
 
@@ -816,7 +828,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
         return html;
     }
 
-    function getDatePickerFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '' , question_styling_font_color = '') {
+    function getDatePickerFieldHTML(question_id = '0',question_label = '',question_description = '',question_required = false, question_styling_class = '' , question_styling_maxlength = '' , question_styling_background_color = '#ffffff' , question_styling_font_color = '#000000') {
       var field = generateField();
       var required = question_required == 'true' ? 'checked' : '';
 
@@ -863,7 +875,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
 
     }
 
-    function addGroupRepeater(question_id = '0',question_label = '',question_description = '') {
+    function addGroupRepeater ( question_id = '0', question_label = '', question_description = '' ) {
 
       var generateField = randomKey();
 
@@ -892,7 +904,6 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
         connectWith: ".connectedSortable",
         placeholder: "portlet-placeholder"
       }).disableSelection();
-
     }
   </script>
 <style type="text/css">
@@ -925,4 +936,5 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
     border:0px
   } .form_builder ul li { padding: 0px; }
   .nav-sidebar ul i{ margin-top: 0.3rem; }
+  .form-control { font-size: 16px !important; }
 </style>
