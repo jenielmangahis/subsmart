@@ -47,19 +47,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row row-margin-top">
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control" id="inputFirstname" placeholder="First Name">
+                                        <input type="text" class="form-control stop" id="inputFirstname" placeholder="First Name">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control" id="inputLastname" placeholder="Last Name">
+                                        <input type="text" class="form-control stop" id="inputLastname" placeholder="Last Name">
+                                </div>
+                                <div class="col-md-12 col-lg-6 row-margin-top" >
+                                        <input type="text" class="form-control stop" id="inputEmailAddress" placeholder="Email Address">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control" id="inputEmailAddress" placeholder="Email Address">
+                                        <input type="text" class="form-control stop" id="inputPhoneNumber" placeholder="Phone Number">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control" id="inputPhoneNumber" placeholder="Phone Number">
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control" id="inputBusinessName" placeholder="Business Name">
+                                        <input type="text" class="form-control stop" id="inputBusinessName" placeholder="Business Name">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
@@ -226,7 +226,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-md-7">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><a href="#">Customizable Industry Templates</a></h5>
-                                                    <p class="card-text">No matter what kind of industry, our fully customizable and optimized templates are designed to increase your work flow production</p>
+                                                    <p class="card-text">No matter what kind of industry, our fully customizable and optimized templates are designed to increase your work flow production.</p>
                                                 </div>
                                             </div>
                                         </div>

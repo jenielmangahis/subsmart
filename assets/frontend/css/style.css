@@ -93,11 +93,11 @@
  }
 
  .desktop-only {
-   display: block;
+   display: block !important;
  }
 
  .mobile-only {
-    display: none;
+    display: none !important;
  }
 
  .spad {
@@ -1436,6 +1436,15 @@ ul.footer-list li a:hover {
       height: 265px;
       object-fit: cover;
     }
+    .mobile-header-p {
+      font-size: 14px !important;
+    }
+    .mobile-call-us {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin: 0px !important;
+    }
     h2.mobile-banner-header {
       font-size: 22px !important;
       width: 82% !important;
@@ -1459,15 +1468,35 @@ ul.footer-list li a:hover {
     .form-control {
       font-size: 12px;
     }
+}
+
+@media(max-width:767px) {
+    .container-signup {
+      width: 100% !important;
+      padding: 30px !important;
+      display: block !important;
+    }
+    .reg-header {
+      font-size: 21px !important;
+      font-weight: 600;
+      color: #403f3f;
+      width: 100% !important;
+      margin: 0 auto;
+    }
+    .f-height {
+      height: auto !important;
+    }
+    .form-container-reg {
+      width: 100% !important;
+      margin: 0 auto;
+      padding-top: 40px;
+    }
     .mobile-only {
       display: block !important;
     }
     .desktop-only {
       display: none !important;
     }
-}
-
-@media(max-width:767px) {
     .customContainer{padding: 0 30px;}
      .sectionHolder {
         padding: 20px;
@@ -3180,6 +3209,7 @@ label.reg-def {
    }
    .header-top p {
      line-height: 1.5;
+     font-size: 15px;
    }
    .site-navbar {
      text-align: center;
@@ -3348,9 +3378,16 @@ font-size: 12px;
 	 .slicknav_btn {
     position: absolute;
     right: 10px;
-    top: 100px;
+    top: 105px;
     font-size: 12px;
     z-index: 999999;
+  }
+  .sc-33 {
+    display: block;
+    width: 74%;
+    text-align: center;
+    margin: 0 auto;
+  }
 }
 @media(max-width:390px) {
   .footer-social.text-left {

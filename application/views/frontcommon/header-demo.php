@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="container">
 				<div class="row align-items-center">
 					<div class="col-md-7">
-						<p>TAKE CONTROL OF YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5">CALL US AT <span>(844) 406-7286</span></b></p>
+						<p>HELP GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5">CALL US AT <span>(844) 406-7286</span></b></p>
 					</div>
 					<div class="col-md-5 text-md-right">
 						<div class="footer-social text-right">
