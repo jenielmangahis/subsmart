@@ -36,8 +36,8 @@
             </a>
         </li>
         <?php // additional menus for Schedule ?>
-        <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
-            <a href="#" title="Taskhub">
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
                 <span class="fa fa-gear"></span>
                 Taskhub
             </a>

@@ -1,6 +1,12 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+
+<!-- facebook javascript SDK -->
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0" nonce="9OYwetXG"></script>
+
+
 <div class="wrapper" role="wrapper">
   <style media="screen">
   .share-icon.d-flex i {
@@ -43,7 +49,13 @@
                   </div>
                   <div class=" col-sm-3">
                     <h5 class="font-weight-normal">More Ways to Share</h5>
-                    <div id="shared" class=" d-flex"></div>
+                    <div id="shared" class=" d-flex">
+
+                      <!-- Facebook share button -->
+                      <div class="fb-share-button" data-href="<?=base_url()?>survey/<?=$survey->id?>" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+
+
+                    </div>
                   </div>
                 </div>
 

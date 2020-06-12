@@ -710,63 +710,69 @@ if (!function_exists('obfuscate_email')) {
     }
 }
 
-if (!function_exists('getFoldersByRole')) {
+if (!function_exists('getCompany')){
+    function getCompany(){
+        $CI = &get_instance();
+        $company_id = logged('id');
 
-    function getFoldersByRole($getallparent = false, $getallchild = false)
+        return $CI->business_model->getById($company_id);
+    }
+}
+
+if (!function_exists('getCompanyFolder')){
+    function getCompanyFolder(){
+        $CI = &get_instance();
+        $company = getCompany();
+        $company_folder = '';
+
+        if(!file_exists('./uploads/')){
+            mkdir('./uploads/');
+        }
+
+        if(empty($company->folder_name)){
+            $folder_name = generateRandomString();
+            while(file_exists('./uploads/' . $folder_name . '/')){
+                $folder_name = generateRandomString();  
+            }
+
+            $data = array('folder_name' => $folder_name);
+
+            if($CI->business_model->trans_update($data, array('id' => $company->id))){
+                mkdir('./uploads/' . $folder_name . '/');
+
+                $company_folder = $folder_name;
+            }
+        } else {
+            $company_folder = $company->folder_name;
+        }
+
+        return $company_folder;
+    }
+}
+
+if (!function_exists('getFolders')) {
+
+    function getFolders($getallparent = false, $getallchild = false)
     {
         $CI = &get_instance();
         $uid = logged('id');
         $role_id = logged('role');
         $company_id = logged('company_id');
 
-        $lowest_rank = 0;
-        $users_rank = 0;
-
-        $ranks = $CI->db->query(
-            'select max(rank) as `ranks` from roles '.
-            'union all '.
-            'select rank from roles where id = ' . $role_id)->result();
-
-        foreach ($ranks as $key => $value) {
-            if($lowest_rank == 0){
-                $lowest_rank = $value->ranks;
-            } else {
-                $users_rank = $value->ranks;
-            }
-        }
-
-        $user_where = '';
-        if($lowest_rank == $users_rank){
-            $user_where = 'and a.uid = ' . $uid . ' ';
-        }
-
-        $and = '';
-
+        $parent_filter = '';
         if($getallparent){
-            $and = 'and a.parent = 0 ';
+            $parent_filter = 'and (a.parent_id = 0 or a.parent_id is null) ';
         } else if($getallchild){
-            $and = 'and a.parent <> 0 ';
+            $parent_filter = 'and (a.parent_id <> 0 and a.parent_id is not null) ';
         }
 
         $sql = 'select ' . 
 
                'a.* '.
 
-               'from folders a '.
+               'from file_folders a '.
 
-               'left join users b on b.id = a.uid '.
-               'left join roles c on c.id = b.role '.
-               'inner join ('.
-                'select '.
-
-                'rank '.
-
-                'from roles '.
-
-                'where id = ' . $role_id .
-               ') d on c.rank >= d.rank '.
-
-               'where a.company_id = ' . $company_id . ' ' . $user_where . $and . 
+               'where a.company_id = ' . $company_id . ' ' . $parent_filter . 
 
                'order by folder_order ASC';
 
@@ -775,32 +781,10 @@ if (!function_exists('getFoldersByRole')) {
 
 }
 
-if (!function_exists('getRolesForFolderPermission')){
-    function getRolesForFolderPermission(){
-        $CI = &get_instance();
-        $uid = logged('id');
-        $role_id = logged('role');
-        
-        $sql = 'select '.
-
-               'a.id, '.
-               'a.title '.
-
-               'from roles a '.
-               'where (select b.rank from users a left join roles b on b.id = a.role where a.id = ' . $uid . ') <= a.rank '.
-                 'and a.id <> ' . $role_id;
-
-        return $CI->db->query($sql);    
-    }
-}
-
-function getFolderManagerView(){
+function getFolderManagerView($isMain = true){
     $CI = &get_instance();
 
-    $rolesForFolderPermission = getRolesForFolderPermission();
-    $rolesForFolderPermission = $rolesForFolderPermission->result();
-
-    return $CI->load->view('modals/folder_manager', array('permissions' => $rolesForFolderPermission), TRUE);
+    return $CI->load->view('modals/folder_manager', array('isMain' => $isMain), TRUE);
 }
 
 function get_event_color($work_status)
@@ -2470,4 +2454,14 @@ function getRegistrationRoles(){
     ];
 
     return $roles;
+}
+
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
 }

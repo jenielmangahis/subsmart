@@ -147,6 +147,11 @@
                   </select>
                   <?php endif; ?>
                   <button id="btn-next" data-id="<?= $key ?>"  class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Next</button>
+                  <?php if($key === 1){
+                    ?>
+                      <button id="btn-back" data-id="<?= $key ?>"  class="btn btn-md btn-outline-light mt-3">Go back</button>
+                    <?php
+                  }?>
           </div>
           <script>
             $('#question-<?= $key ?> .input-content [name="answer[]"]').attr('name','answer-<?= $quest->survey_template_id ?>');
@@ -214,6 +219,40 @@
         $('#question-'+ next_id +'').removeClass('d-none');
         $('.result-survey').html('');
       });
+      
+      $(document).on('click', '#btn-back', function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+        var prev_id = id-1;
+        // var data =  $(this).serializeArray();
+        var regex = /\[[^\]]*\]/g;
+        // var str = $('#question-'+next_id+' #question').html();
+        if($('#question-'+prev_id+' #question').html() != undefined){
+          var str = $('#question-'+prev_id+' #question').html().trim();
+        }else{
+          var str = ``;
+        }
+
+        if(str.match(regex) == null){
+
+        }else{
+
+          var question = ``;
+          $.each( str.split(regex), function(key, value){
+            if(str.match(regex)[key] != undefined){
+              var question_id = str.match(regex)[key].slice(0, -1).split("-")[1];
+              var question_answer = $('#question-'+id+' [name*="answer"]').val();
+              question += value + question_answer;
+            }else{
+              question += value;
+            }
+          });
+          $('#question-'+prev_id+' #question').html(question);
+        }
+        $('#question-'+id+'').addClass('d-none');
+        $('#question-'+ prev_id +'').removeClass('d-none');
+      });
+
       $(document).on('click', '#btn-next', function(e){
         e.preventDefault();
         var id = $(this).data('id');

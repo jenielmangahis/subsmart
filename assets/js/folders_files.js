@@ -1,358 +1,379 @@
 $(document).ready(function(){
+// Document ready start ----------------------------------------------------------------------------------------
+
   selected_folder = {};
   selected_file = {};
 
-  isUpdatePermissions = false;
+  current_process = '';
+  current_alert_theme = '';
 
-// -------------------------------------------------------------------------------------------------------------
-// Francis scripts 4/14/2020 ph date
-// -------------------------------------------------------------------------------------------------------------
-  //open folder manager
-  $("#btn-folder-manager").click(function() {
-    var folder_selected = { selected_folder: 0 };
+  $('#btn-add-new-folder').click(function(e){
+    e.preventDefault();
 
-    if ($("#current_selected_folder_id").length) {
-      folder_selected.selected_folder = $("#current_selected_folder_id").val();
-    }
+    selected_folder = {};
 
-    $.ajax({
-      type: "GET",
-      url: base_url + "folders/getfolders",
-      data: folder_selected,
-      success: function(data) {
-        var result = jQuery.parseJSON(data);
-        setFoldersTreeview(result);
-
-        if (folderSelectedIsNotEmpty()) {
-          $("#folders_treeview").treeview("selectNode", [
-            selected_folder.nodeId
-          ]);
-          $("#folders_treeview").treeview("revealNode", [
-            selected_folder.nodeId
-          ]);
-          $("#folders_treeview").treeview("expandNode", [
-            selected_folder.nodeId
-          ]);
-        } else {
-          selected_folder = $("#folders_treeview").treeview("getSelected");
-          if (folderSelectedIsNotEmpty()) {
-            selected_folder = selected_folder[0];
-
-            $(".modal-folder-manager-selected").html(
-              "Selected : " + selected_folder.path
-            );
-
-            $("#folders_treeview").treeview("revealNode", [
-              selected_folder.nodeId
-            ]);
-            $("#folders_treeview").treeview("expandNode", [
-              selected_folder.nodeId
-            ]);
-          }
-        }
-
-        $("#modal-folder-manager").modal("show");
-      }
-    });
+    openEntry('create_folder');
   });
 
-  //click create folder
-  $("#btn-create-folder-manager").click(function() {
-    $("#text-folder-manager").val("");
-    $("#text-folder-manager").prop("disabled", false);
-
-    $(".fm_role_access_permissions").each(function(i, obj) {
-      $(this).prop("checked", false);
-    });
-
-    isUpdatePermissions = false;
-
-    $("#modal-folder-manager-form").modal("show");
+  $.initialize('li.node-folders_treeview', function(){
+    setNodesButtons($(this)); 
   });
 
-  //click save new folder
-  $("#btn-save-folder-manager").click(function() {
-    var folder_name = $("#text-folder-manager").val();
-    var parent_folder_id = 0;
-    var permissions = [{}];
+// -------------------------------------------------------------------------------------------------------------
+// Folder entry controls
+// -------------------------------------------------------------------------------------------------------------
 
-    if (selected_folder.length != 0) {
-      parent_folder_id = selected_folder.id;
-    }
+  $('#btn-modal-folder-manager-entry-save').click(function(){
+    if(current_process == 'create_folder'){
 
-    $(".fm_role_access_permissions").each(function(i, obj) {
-      var role_id = $(this).val();
-      if ($(this).is(":checked")) {
-        permissions.push({ role_id: role_id });
+      var folder_name = $('#folder_name').val();
+      var folder_desc = $('#folder_desc').val();
+
+      folder_name = folder_name.trim();
+      folder_desc = folder_desc.trim();
+
+      var parent_id = 0;
+
+      if(folderSelectedIsNotEmpty()){
+        parent_id = selected_folder.id;
       }
-    });
 
-    if (isFolderNameValid(folder_name)) {
-      if (!isUpdatePermissions) {
+      if(isFolderNameValid(folder_name)){
         $.ajax({
-          type: "POST",
-          url: base_url + "folders/save",
-          data: {
-            folder_name: folder_name,
-            parent_folder_id: parent_folder_id,
-            roles: permissions
+          type: 'POST',
+          url: base_url + "folders/create",
+          data: {folder_name:folder_name,parent_id:parent_id,folder_desc:folder_desc},
+          beforeSend: function(){
+            showProcessLoading();
           },
-          success: function(data) {
+          success: function(data){
             var result = jQuery.parseJSON(data);
-            if (result.error == "") {
-              setFoldersTreeview(result.folders);
-
-              if (folderSelectedIsNotEmpty()) {
-                $("#folders_treeview").treeview("selectNode", [
-                  selected_folder.nodeId
-                ]);
-                $("#folders_treeview").treeview("revealNode", [
-                  selected_folder.nodeId
-                ]);
-                $("#folders_treeview").treeview("expandNode", [
-                  selected_folder.nodeId
-                ]);
-              }
-
-              $("#modal-folder-manager-form").modal("hide");
+            if(result.error != ''){
+              showFolderManagerNotif('Error', result.error, 'error');
             } else {
-              showFolderManagerNotif("Error", result.error);
+              setFoldersTreeview(result.file_folders);
+
+              closeEntry();
             }
+
+            hideProcessLoading();
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            hideProcessLoading();
+            
+            showFolderManagerNotif(textStatus, errorThrown, 'error');  
           }
         });
       } else {
-        $.ajax({
-          type: "POST",
-          url: base_url + "folders/update_permissions",
-          data: { folder_id: parent_folder_id, roles: permissions },
-          success: function(data) {
-            var result = jQuery.parseJSON(data);
-            if (result.error == "") {
-              showFolderManagerNotif(
-                "Information",
-                "Permissions successfully updated"
-              );
-            } else {
-              showFolderManagerNotif("Error", result.error);
-            }
+        showFolderManagerNotif('Error', 'Invalid folder name', 'error');
+      }                   
+    } else if(current_process == 'add_file'){
+      var formdata = new FormData();
+      var file = $('#fullfile').prop('files')[0];
+      var desc = $('#file_desc').val();
+      var folder_id = selected_folder.id;
+
+      formdata.append('fullfile', file);
+      formdata.append('file_desc', desc.trim());
+      formdata.append('folder_id', folder_id);
+
+      $.ajax({
+        type: 'POST',
+        url: base_url + "vault/add",
+        data: formdata,
+        contentType: false,
+        processData: false,
+        beforeSend: function(){
+          showProcessLoading();
+        }, 
+        success: function(data){
+          var result = jQuery.parseJSON(data);
+          if(result.error != ""){
+            hideProcessLoading();
+
+            showFolderManagerNotif('Error', result.error, 'error');  
+          } else {
+            hideProcessLoading();
+            closeEntry();
+
+            var params = {selected_folder:selected_folder.id};
+
+            getFoldersAndFiles(params);
           }
-        });
-      }
-    } else {
-      showFolderManagerNotif("Error", "Folder name is invalid");
-    }
-  });
-
-  //click delete folder
-  $("#btn-delete-folder-manager").click(function() {
-    if (!folderSelectedIsNotEmpty()) {
-      showFolderManagerNotif("Information", "No folder selected");
-    } else {
-      showFolderManagerNotif(
-        "Confirm",
-        "Are you sure you want to delete folder",
-        true
-      );
-    }
-  });
-
-  //click confirm delete folder
-  $("#btn-modal-folder-manager-confirm-delete").click(function() {
-    var folder_id = selected_folder.id;
-    var parent_node = $("#folders_treeview").treeview(
-      "getParent",
-      selected_folder
-    );
-    if (parent_node == null) {
-      parent_node = {};
-    }
-
-    $.ajax({
-      type: "POST",
-      url: base_url + "folders/delete",
-      data: { folder_id: folder_id },
-      success: function(data) {
-        var result = jQuery.parseJSON(data);
-        if (result.error == "") {
-          setFoldersTreeview(result.folders);
-
-          selected_folder = {};
-
-          if (
-            !jQuery.isEmptyObject(parent_node) &&
-            parent_node.hasOwnProperty("parentId")
-          ) {
-            $("#folders_treeview").treeview("revealNode", [parent_node.nodeId]);
-            $("#folders_treeview").treeview("expandNode", [parent_node.nodeId]);
-          }
-
-          $(".modal-folder-manager-selected").html("Selected : None");
-          $("#modal-folder-manager-alert").modal("hide");
-        } else {
-          showFolderManagerNotif("Error", result.error, false);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          hideProcessLoading();
+            
+          showFolderManagerNotif(textStatus, errorThrown, 'error'); 
         }
-      }
-    });
+      });  
+    }
   });
 
-  //click edit permission of a folder
-  $("#btn-edit-permissions-folder-manager").click(function() {
-    if (!folderSelectedIsNotEmpty()) {
-      showFolderManagerNotif("Information", "No folder selected");
-    } else {
-      $(".fm_role_access_permissions").each(function(i, obj) {
-        $(this).prop("checked", false);
-      });
+  $('#btn-modal-folder-manager-entry-cancel').click(function(){
+    closeEntry();
+  });
 
+// -------------------------------------------------------------------------------------------------------------
+// Confirm alert type controls
+// -------------------------------------------------------------------------------------------------------------
+
+  $('#btn-modal-folder-manager-alert-confirm').click(function(){
+    if(current_process == 'delete_folder'){
       var folder_id = selected_folder.id;
 
       $.ajax({
-        type: "GET",
-        url: base_url + "folders/getFolderPermissions",
-        data: { folder_id: folder_id },
-        success: function(data) {
+        type: 'POST',
+        url: base_url + "folders/delete",
+        data: {folder_id:folder_id},
+        beforeSend: function(){
+          hideFolderManagerNotif();
+          showProcessLoading();
+        },
+        success: function(data){
           var result = jQuery.parseJSON(data);
-          $.each(result, function(key, val) {
-            $(
-              'input.fm_role_access_permissions[value="' + val.role_id + '"]'
-            ).prop("checked", true);
-          });
+          if(result.error != ''){
+            showFolderManagerNotif('Error', result.error, 'error');      
+          } else {
+            setFoldersTreeview(result.file_folders); 
+          }
 
-          isUpdatePermissions = true;
-
-          $("#text-folder-manager").val(selected_folder.text);
-          $("#text-folder-manager").prop("disabled", true);
-
-          $("#modal-folder-manager-form").modal("show");
+          hideProcessLoading();
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          hideProcessLoading();
+            
+          showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });
+    } else if(current_process == 'delete_file'){
+      var file_id = selected_file.id;
+      
+      $.ajax({
+        type: 'POST',
+        url: base_url + "vault/delete",
+        data: {file_id:file_id},
+        beforeSend: function(){
+          hideFolderManagerNotif();
+          showProcessLoading();
+        },
+        success: function(data){
+          var result = jQuery.parseJSON(data);
+          if(result.error != ''){
+            showFolderManagerNotif('Error', result.error, 'error');      
+          } else {
+            hideProcessLoading();
+
+            var params = {selected_folder:result.folder_id};
+
+            getFoldersAndFiles(params); 
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          hideProcessLoading();
+            
+          showFolderManagerNotif(textStatus, errorThrown, 'error');  
+        } 
+      });   
     }
   });
 
-  //event handler for on close of folder manager alert modal
-  $("#modal-folder-manager-alert").on("hidden.bs.modal", function() {
-    $("#modal-folder-manager-alert-title-div").removeClass();
-    $("#modal-folder-manager-alert-title-div").addClass("modal-header");
-    $("#btn-modal-folder-manager-confirm-delete").hide();
+  $('#btn-modal-folder-manager-alert-cancel,#btn-modal-folder-manager-alert-ok').click(function(){
+    hideFolderManagerNotif();
+    
+    current_process = '';
   });
 
 // -------------------------------------------------------------------------------------------------------------
-
-
+// Load folders initially
 // -------------------------------------------------------------------------------------------------------------
-// Francis intercept form submit for creating new file in filevault 4/27/2020
-// -------------------------------------------------------------------------------------------------------------
-
-  $("#savefilevault").click(function(){
-  	var type = $(this).attr('button_for');
-  	var vault_id = $('#vault_id').val();
-  	var folder = $('#fm_selected_folder').val();
-  	var filename = $('#fullfile').val();
-
-  	$.ajax({
-  		type: 'GET',
-  		url: base_url + "vault/file_exists",
-  		data: {type:type,vault_id:vault_id,filename:filename,folder:folder},
-  		success: function(data){
-  			if(data){
-  				showFolderManagerNotif('Error', 'Filename already exists.<br>Please rename your file.');
-  			} else {
-  				$('#filevaultform').submit();	
-  			}
-  		}
-  	});
-  });
-
+  getFoldersAndFiles();  
 // -------------------------------------------------------------------------------------------------------------
 
-
-// -------------------------------------------------------------------------------------------------------------
-// Francis file selection scripts 4/28/2020 6:51PM ph time
-// -------------------------------------------------------------------------------------------------------------
-
-  $("#btn-fileVault-SelectFile").click(function(){
-    $.ajax({
-      type: "GET",
-      url: base_url + "folders/getfiles",
-      success: function(data) {
-        var result = jQuery.parseJSON(data);
-        setFilesTreeview(result);
-
-        if (fileSelectedIsNotEmpty()) {
-          $("#fileVault_SelectFile_treeview").treeview("selectNode", [
-            selected_file.nodeId
-          ]);
-          $("#fileVault_SelectFile_treeview").treeview("revealNode", [
-            selected_file.nodeId
-          ]);
-          $("#fileVault_SelectFile_treeview").treeview("expandNode", [
-            selected_file.nodeId
-          ]);
-        }
-
-        $("#modal-fileVault-SelectFile").modal("show");
-      }
-    }); 	
-  });
-
-  $("#btn-select-fileVault-SelectFile").click(function(){
-    if (fileSelectedIsNotEmpty()) {
-      $('#fs_selected_file_text').val(selected_file.path);
-      $('#fs_selected_file').val(selected_file.id);
-    } else {
-      $('#fs_selected_file_text').val('');
-      $('#fs_selected_file').val(0);  
-    }
-
-    $("#modal-fileVault-SelectFile").modal("hide");
-  });
-
-// -------------------------------------------------------------------------------------------------------------	
+// Document ready end ------------------------------------------------------------------------------------------
 });
+
+// Functions below ---------------------------------------------------------------------------------------------
+
+function getFoldersAndFiles(params = {}){
+  $.ajax({
+    type: "GET",
+    url: base_url + "folders/getfolders/0/1",
+    data: params,
+    beforeSend: function(){
+      showProcessLoading();
+    },
+    success: function(data) {
+      var result = jQuery.parseJSON(data);
+      setFoldersTreeview(result);
+
+      hideProcessLoading();
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      hideProcessLoading();
+            
+      showFolderManagerNotif(textStatus, errorThrown, 'error'); 
+    }
+  });
+}
 
 function setFoldersTreeview(folders_data) {
   $("#folders_treeview").treeview({
     expandIcon: "fa fa-folder-o",
     collapseIcon: "fa fa-folder-open-o",
-    data: folders_data,
-    onNodeSelected: function(event, data) {
-      selected_folder = data;
-      $(".modal-folder-manager-selected").html(
-        "Selected : " + selected_folder.path
-      );
-    },
-    onNodeUnselected: function(event, data) {
-      selected_folder = {};
-      $(".modal-folder-manager-selected").html("Selected : None");
-    }
+    highlightSelected: false,
+    data: folders_data
   });
+
+  selected_folder = $("#folders_treeview").treeview('getExpanded');
+  selected_folder = selected_folder[0];
+
+  if(folderSelectedIsNotEmpty()){
+    $("#folders_treeview").treeview('revealNode', [selected_folder.nodeId]);
+  }
 }
 
-function setFilesTreeview(files_data){
-  $("#fileVault_SelectFile_treeview").treeview({
-    expandIcon: "fa fa-folder-o",
-    collapseIcon: "fa fa-folder-open-o",
-    data: files_data,
-    onNodeSelected: function(event, data) {
-      if(data.isFile){
-        selected_file = data;
-        $(".modal-fileVault-SelectFile-selected").html(
-          "Selected : " + selected_file.path
-        );
-      } else {
-        selected_file = {};
-      }
-    },
-    onNodeUnselected: function(event, data) {
+function setNodesButtons(liObject){
+  var nodeId = liObject.attr('data-nodeid');
+  var element = $('#folders_treeview').treeview('getNode', nodeId);
+
+  if(!$('a.nodecontrol[href="'+ element.nodeId +'"][control="edit_permission"]').length){
+    var btnEditPermission = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit_permission" title="Edit Permission" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>';
+    var btnDelete = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="@title" data-toggle="tooltip"><i class="fa fa-trash"></i></a>';
+    var btnAddFile = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File" data-toggle="tooltip"><i class="fa fa-file"></i></a>';
+    var btnCreateFolder = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right" control="create_folder" title="Create Folder" data-toggle="tooltip"><i class="fa fa-plus"></i></a>';
+
+    data = $('#folders_treeview').treeview('getEnabled');
+
+    var liObject = $('li[data-nodeid="'+ element.nodeId +'"]');
+    var nBEP = btnEditPermission.replace('@href', element.nodeId);
+    var nBD = btnDelete.replace('@href', element.nodeId);
+    var nBCF = btnCreateFolder.replace('@href', element.nodeId);
+    var nBAF = btnAddFile.replace('@href', element.nodeId);
+
+    liObject.append(nBEP);
+
+    if(element.isFile){
+      nBD = nBD.replace('@title', 'Delete File');
+
+      liObject.append(nBD);
+    } else {
+      nBD = nBD.replace('@title', 'Delete Folder');
+      
+      liObject.append(nBD);
+      liObject.append(nBAF);
+      liObject.append(nBCF);
+    }
+
+    $('a[control="create_folder"][href="'+ element.nodeId +'"]').click(function(e){
+      e.preventDefault();
+
+      var nodeId = $(this).attr('href');
+
+      selected_folder = $('#folders_treeview').treeview('getNode', nodeId);
+
+      openEntry('create_folder');
+    });
+
+    $('a[control="delete"][href="'+ element.nodeId +'"]').click(function(e){
+      e.preventDefault();
+      
+      var nodeId = $(this).attr('href');
+      var confirm_text = '';
+      var selected = {};
+
+      current_process = '';
+      selected_file = {};
       selected_folder = {};
-      $(".modal-fileVault-SelectFile-selected").html("Selected : None");
-    }  
-  });
+
+      selected = $('#folders_treeview').treeview('getNode', nodeId);
+      if(selected.isFile){
+        selected_file = selected;
+      } else {
+        selected_folder = selected;
+      }
+
+      if(folderSelectedIsNotEmpty()){
+        current_process = 'delete_folder';
+        confirm_text = ' folder ';
+      } else if(fileSelectedIsNotEmpty()){
+        current_process = 'delete_file';
+        confirm_text = ' file ';
+      }
+
+      if(current_process != ''){
+        showFolderManagerNotif('Confirm Delete',
+                               'Delete' + confirm_text + selected.text + '?<br>' + selected.path, 'confirm');
+      }
+    });
+
+    if(!element.isFile){
+      $('a[control="add_file"][href="'+ element.nodeId +'"]').click(function(){
+        current_process = 'add_file';
+
+        var nodeId = $(this).attr('href');
+        
+        selected_folder = $('#folders_treeview').treeview('getNode', nodeId);
+
+        openEntry('add_file'); 
+      });
+    }
+  }
+}
+
+function openEntry(type){
+  var vTitle = '';
+
+  current_process = type;
+
+  if(type == 'create_folder'){
+    vTitle = 'Create Folder';
+
+    $('#folder_name').val("");
+    $('#folder_desc').val("");
+
+    $('div#folder_entry').removeClass('d-none');
+  } else if(type == 'add_file'){
+    vTitle = 'Add File';
+
+    $('#fullfile').val("");
+    $('#file_desc').val("");
+
+    $('div#file_entry').removeClass('d-none');
+  }
+
+  $('#modal-folder-manager-entry-title').text(vTitle);
+  $('#modal-folder-manager-entry').modal('show'); 
+}
+
+function closeEntry(){
+  if(current_process == 'create_folder'){
+    $('div#folder_entry').addClass('d-none');
+  } else if(current_process == 'add_file'){
+    $('div#file_entry').addClass('d-none');  
+  }
+
+  current_process = '';
+
+  $('#modal-folder-manager-entry-title').text('');
+  $('#modal-folder-manager-entry').modal('hide');
+}
+
+function showProcessLoading(){
+  if(!modalIsOpen('#modal-folder-manager-preloader')){
+    $('#modal-folder-manager-preloader').modal('show');
+  }
+}
+
+function hideProcessLoading(){
+  if(modalIsOpen('#modal-folder-manager-preloader')){
+    $('#modal-folder-manager-preloader').modal('hide');  
+  }
 }
 
 function isFolderNameValid(folder_name) {
   var isValid = true;
-  var invalid_chars = ["\\", "/", ":", "*", "?", '"', "<", ">", "|"];
+  var invalid_chars = ["\\", "/", ":", "*", "?", '"', "<", ">", "|", " "];
   var invalid_names = [
     "CON",
     "PRN",
@@ -401,28 +422,50 @@ function isFolderNameValid(folder_name) {
   return isValid;
 }
 
-function showFolderManagerNotif(title, text, showyesbuttonfordelete = false) {
+function showFolderManagerNotif(title, text, theme) {
+  current_alert_theme = theme;
+
   var title_class = "bg-info";
-  if (title == "Error") {
-    title_class = "bg-danger";
-  } else if (title == "Confirm") {
-    title = "Confirm?";
+
+  if ((theme == "error") || (theme == "info")) {
+
+    if(theme == "error"){
+      title_class = "bg-danger";
+    }
+
+    $('#btn-modal-folder-manager-alert-ok').removeClass('d-none');
+  } else if (theme == "confirm") {
     title_class = "bg-warning";
+
+    $('#btn-modal-folder-manager-alert-confirm').removeClass('d-none');
+    $('#btn-modal-folder-manager-alert-cancel').removeClass('d-none');
   }
 
   $("#modal-folder-manager-alert-title-div").addClass(title_class);
   $("#modal-folder-manager-alert-title").html(title);
   $("#modal-folder-manager-alert-text").html(text);
 
-  if (showyesbuttonfordelete) {
-    $("#btn-modal-folder-manager-confirm-delete").show();
+  $("#modal-folder-manager-alert").modal("show");
+}
+
+function hideFolderManagerNotif(){
+  if(current_alert_theme == 'confirm'){
+    $('#btn-modal-folder-manager-alert-confirm').addClass('d-none');
+    $('#btn-modal-folder-manager-alert-cancel').addClass('d-none');
+
+    $("#modal-folder-manager-alert-title-div").removeClass('bg-warning');
   } else {
-    $("#btn-modal-folder-manager-confirm-delete").hide();
+    if(current_alert_theme == 'error'){
+      $("#modal-folder-manager-alert-title-div").removeClass('bg-danger');  
+    } else {
+      $("#modal-folder-manager-alert-title-div").removeClass('bg-info');  
+    }
+
+    $('#btn-modal-folder-manager-alert-ok').addClass('d-none');  
   }
 
-  if (!($("#modal-folder-manager-alert").data("bs.modal") || {}).isShown) {
-    $("#modal-folder-manager-alert").modal("show");
-  }
+  current_alert_theme = '';
+  $('#modal-folder-manager-alert').modal('hide');
 }
 
 function folderSelectedIsNotEmpty() {
@@ -435,4 +478,8 @@ function fileSelectedIsNotEmpty() {
   return (
     !jQuery.isEmptyObject(selected_file) && selected_file !== undefined
   );
+}
+
+function modalIsOpen(modal_id){
+  return ($(modal_id).data('bs.modal') || {})._isShown;
 }

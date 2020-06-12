@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
   selected_folder = {};
   isUpdatePermissions = false;
 
@@ -8,7 +8,7 @@ $(document).ready(function() {
 
   //Francis scripts 4/14/2020 ph date
   //open folder manager
-  $("#btn-folder-manager").click(function() {
+  $("#btn-folder-manager").click(function () {
     var folder_selected = { selected_folder: 0 };
 
     if ($("#current_selected_folder_id").length) {
@@ -19,19 +19,19 @@ $(document).ready(function() {
       type: "GET",
       url: base_url + "folders/getfolders",
       data: folder_selected,
-      success: function(data) {
+      success: function (data) {
         var result = jQuery.parseJSON(data);
         setFoldersTreeview(result);
 
         if (folderSelectedIsNotEmpty()) {
           $("#folders_treeview").treeview("selectNode", [
-            selected_folder.nodeId
+            selected_folder.nodeId,
           ]);
           $("#folders_treeview").treeview("revealNode", [
-            selected_folder.nodeId
+            selected_folder.nodeId,
           ]);
           $("#folders_treeview").treeview("expandNode", [
-            selected_folder.nodeId
+            selected_folder.nodeId,
           ]);
         } else {
           selected_folder = $("#folders_treeview").treeview("getSelected");
@@ -43,25 +43,25 @@ $(document).ready(function() {
             );
 
             $("#folders_treeview").treeview("revealNode", [
-              selected_folder.nodeId
+              selected_folder.nodeId,
             ]);
             $("#folders_treeview").treeview("expandNode", [
-              selected_folder.nodeId
+              selected_folder.nodeId,
             ]);
           }
         }
 
         $("#modal-folder-manager").modal("show");
-      }
+      },
     });
   });
 
   //click create folder
-  $("#btn-create-folder-manager").click(function() {
+  $("#btn-create-folder-manager").click(function () {
     $("#text-folder-manager").val("");
     $("#text-folder-manager").prop("disabled", false);
 
-    $(".fm_role_access_permissions").each(function(i, obj) {
+    $(".fm_role_access_permissions").each(function (i, obj) {
       $(this).prop("checked", false);
     });
 
@@ -71,7 +71,7 @@ $(document).ready(function() {
   });
 
   //click save new folder
-  $("#btn-save-folder-manager").click(function() {
+  $("#btn-save-folder-manager").click(function () {
     var folder_name = $("#text-folder-manager").val();
     var parent_folder_id = 0;
     var permissions = [{}];
@@ -80,7 +80,7 @@ $(document).ready(function() {
       parent_folder_id = selected_folder.id;
     }
 
-    $(".fm_role_access_permissions").each(function(i, obj) {
+    $(".fm_role_access_permissions").each(function (i, obj) {
       var role_id = $(this).val();
       if ($(this).is(":checked")) {
         permissions.push({ role_id: role_id });
@@ -95,22 +95,22 @@ $(document).ready(function() {
           data: {
             folder_name: folder_name,
             parent_folder_id: parent_folder_id,
-            roles: permissions
+            roles: permissions,
           },
-          success: function(data) {
+          success: function (data) {
             var result = jQuery.parseJSON(data);
             if (result.error == "") {
               setFoldersTreeview(result.folders);
 
               if (folderSelectedIsNotEmpty()) {
                 $("#folders_treeview").treeview("selectNode", [
-                  selected_folder.nodeId
+                  selected_folder.nodeId,
                 ]);
                 $("#folders_treeview").treeview("revealNode", [
-                  selected_folder.nodeId
+                  selected_folder.nodeId,
                 ]);
                 $("#folders_treeview").treeview("expandNode", [
-                  selected_folder.nodeId
+                  selected_folder.nodeId,
                 ]);
               }
 
@@ -118,14 +118,14 @@ $(document).ready(function() {
             } else {
               showFolderManagerNotif("Error", result.error);
             }
-          }
+          },
         });
       } else {
         $.ajax({
           type: "POST",
           url: base_url + "folders/update_permissions",
           data: { folder_id: parent_folder_id, roles: permissions },
-          success: function(data) {
+          success: function (data) {
             var result = jQuery.parseJSON(data);
             if (result.error == "") {
               showFolderManagerNotif(
@@ -135,7 +135,7 @@ $(document).ready(function() {
             } else {
               showFolderManagerNotif("Error", result.error);
             }
-          }
+          },
         });
       }
     } else {
@@ -144,7 +144,7 @@ $(document).ready(function() {
   });
 
   //click delete folder
-  $("#btn-delete-folder-manager").click(function() {
+  $("#btn-delete-folder-manager").click(function () {
     if (!folderSelectedIsNotEmpty()) {
       showFolderManagerNotif("Information", "No folder selected");
     } else {
@@ -157,7 +157,7 @@ $(document).ready(function() {
   });
 
   //click confirm delete folder
-  $("#btn-modal-folder-manager-confirm-delete").click(function() {
+  $("#btn-modal-folder-manager-confirm-delete").click(function () {
     var folder_id = selected_folder.id;
     var parent_node = $("#folders_treeview").treeview(
       "getParent",
@@ -171,7 +171,7 @@ $(document).ready(function() {
       type: "POST",
       url: base_url + "folders/delete",
       data: { folder_id: folder_id },
-      success: function(data) {
+      success: function (data) {
         var result = jQuery.parseJSON(data);
         if (result.error == "") {
           setFoldersTreeview(result.folders);
@@ -191,16 +191,16 @@ $(document).ready(function() {
         } else {
           showFolderManagerNotif("Error", result.error, false);
         }
-      }
+      },
     });
   });
 
   //click edit permission of a folder
-  $("#btn-edit-permissions-folder-manager").click(function() {
+  $("#btn-edit-permissions-folder-manager").click(function () {
     if (!folderSelectedIsNotEmpty()) {
       showFolderManagerNotif("Information", "No folder selected");
     } else {
-      $(".fm_role_access_permissions").each(function(i, obj) {
+      $(".fm_role_access_permissions").each(function (i, obj) {
         $(this).prop("checked", false);
       });
 
@@ -210,9 +210,9 @@ $(document).ready(function() {
         type: "GET",
         url: base_url + "folders/getFolderPermissions",
         data: { folder_id: folder_id },
-        success: function(data) {
+        success: function (data) {
           var result = jQuery.parseJSON(data);
-          $.each(result, function(key, val) {
+          $.each(result, function (key, val) {
             $(
               'input.fm_role_access_permissions[value="' + val.role_id + '"]'
             ).prop("checked", true);
@@ -224,16 +224,23 @@ $(document).ready(function() {
           $("#text-folder-manager").prop("disabled", true);
 
           $("#modal-folder-manager-form").modal("show");
-        }
+        },
       });
     }
   });
 
   //event handler for on close of folder manager alert modal
-  $("#modal-folder-manager-alert").on("hidden.bs.modal", function() {
+  $("#modal-folder-manager-alert").on("hidden.bs.modal", function () {
     $("#modal-folder-manager-alert-title-div").removeClass();
     $("#modal-folder-manager-alert-title-div").addClass("modal-header");
     $("#btn-modal-folder-manager-confirm-delete").hide();
+  });
+
+  $("#btnExistingJob").click(function () {
+    if ($("#selectExistingJob").val()) {
+      window.location.href =
+        base_url + "/job/new_job?job_num=" + $("#selectExistingJob").val();
+    }
   });
 
   //---------------------------------
@@ -244,16 +251,16 @@ function setFoldersTreeview(folders_data) {
     expandIcon: "fa fa-folder-o",
     collapseIcon: "fa fa-folder-open-o",
     data: folders_data,
-    onNodeSelected: function(event, data) {
+    onNodeSelected: function (event, data) {
       selected_folder = data;
       $(".modal-folder-manager-selected").html(
         "Selected : " + selected_folder.path
       );
     },
-    onNodeUnselected: function(event, data) {
+    onNodeUnselected: function (event, data) {
       selected_folder = {};
       $(".modal-folder-manager-selected").html("Selected : None");
-    }
+    },
   });
 }
 
@@ -282,7 +289,7 @@ function isFolderNameValid(folder_name) {
     "LPT6",
     "LPT7",
     "LPT8",
-    "LPT9"
+    "LPT9",
   ];
 
   if (!folder_name) {
@@ -290,14 +297,14 @@ function isFolderNameValid(folder_name) {
   }
 
   if (isValid) {
-    $.each(invalid_chars, function(key, value) {
+    $.each(invalid_chars, function (key, value) {
       if (folder_name.includes(value)) {
         isValid = false;
         return isValid;
       }
     });
 
-    $.each(invalid_names, function(key, value) {
+    $.each(invalid_names, function (key, value) {
       if (folder_name.toLowerCase() == value.toLowerCase()) {
         isValid = false;
         return isValid;
@@ -344,18 +351,16 @@ function getplanItems(pid) {
     url: site_url + "plans/getitems",
     data: { pid: pid },
     type: "GET",
-    success: function(data) {
-      jQuery("#plansItemDiv")
-        .empty()
-        .html(data);
+    success: function (data) {
+      jQuery("#plansItemDiv").empty().html(data);
     },
-    error: function() {
+    error: function () {
       alert("An error has occurred");
-    }
+    },
   });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   $(".form-validate").validate();
   //Initialize Select2 Elements
   $(".select2").select2();
@@ -367,14 +372,12 @@ function getplanItems(pid) {
     url: site_url + "plans/getitems",
     data: { pid: pid },
     type: "GET",
-    success: function(data) {
-      jQuery("#plansItemDiv")
-        .empty()
-        .html(data);
+    success: function (data) {
+      jQuery("#plansItemDiv").empty().html(data);
     },
-    error: function() {
+    error: function () {
       alert("An error has occurred");
-    }
+    },
   });
 }
 function getItems(obj) {
@@ -384,46 +387,26 @@ function getItems(obj) {
     url: site_url + "items/getitems",
     data: { sk: sk },
     type: "GET",
-    success: function(data) {
+    success: function (data) {
       /* alert(data); */
-      jQuery(obj)
-        .parent()
-        .find(".suggestions")
-        .empty()
-        .html(data);
+      jQuery(obj).parent().find(".suggestions").empty().html(data);
     },
-    error: function() {
+    error: function () {
       alert("An error has occurred");
-    }
+    },
   });
 }
 function setitem(obj, title, price, discount) {
-  jQuery(obj)
-    .parent()
-    .parent()
-    .find(".getItems")
-    .val(title);
-  jQuery(obj)
-    .parent()
-    .parent()
-    .parent()
-    .find(".price")
-    .val(price);
-  jQuery(obj)
-    .parent()
-    .parent()
-    .parent()
-    .find(".discount")
-    .val(discount);
+  jQuery(obj).parent().parent().find(".getItems").val(title);
+  jQuery(obj).parent().parent().parent().find(".price").val(price);
+  jQuery(obj).parent().parent().parent().find(".discount").val(discount);
   var counter = jQuery(obj)
     .parent()
     .parent()
     .parent()
     .find(".price")
     .data("counter");
-  jQuery(obj)
-    .parent()
-    .empty();
+  jQuery(obj).parent().empty();
   calculation(counter);
 }
 
@@ -431,10 +414,8 @@ function previewImage(input, previewDom) {
   if (input.files && input.files[0]) {
     $(previewDom).show();
     var reader = new FileReader();
-    reader.onload = function(e) {
-      $(previewDom)
-        .find("img")
-        .attr("src", e.target.result);
+    reader.onload = function (e) {
+      $(previewDom).find("img").attr("src", e.target.result);
     };
     reader.readAsDataURL(input.files[0]);
   } else {
@@ -449,16 +430,16 @@ function createUsername(name) {
     .replace(/[^\w-]+/g, "");
 }
 
-$(document).on("focusout", ".price", function() {
+$(document).on("focusout", ".price", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
 
-$(document).on("focusout", ".quantity", function() {
+$(document).on("focusout", ".quantity", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
-$(document).on("focusout", ".discount", function() {
+$(document).on("focusout", ".discount", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
@@ -490,13 +471,9 @@ function calculation(counter) {
 
   if (
     $("#adjustment_input").val() &&
-    $("#adjustment_input")
-      .val()
-      .toString().length > 1
+    $("#adjustment_input").val().toString().length > 1
   ) {
-    adjustment_amount = $("#adjustment_input")
-      .val()
-      .substr(1);
+    adjustment_amount = $("#adjustment_input").val().substr(1);
   }
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price_" + p).val();
@@ -532,14 +509,12 @@ function getplanItems(pid) {
     url: site_url + "plans/getitems",
     data: { pid: pid },
     type: "GET",
-    success: function(data) {
-      jQuery("#plansItemDiv")
-        .empty()
-        .html(data);
+    success: function (data) {
+      jQuery("#plansItemDiv").empty().html(data);
     },
-    error: function() {
+    error: function () {
       alert("An error has occurred");
-    }
+    },
   });
 }
 function getItems(obj) {
@@ -549,46 +524,26 @@ function getItems(obj) {
     url: site_url + "items/getitems",
     data: { sk: sk },
     type: "GET",
-    success: function(data) {
+    success: function (data) {
       /* alert(data); */
-      jQuery(obj)
-        .parent()
-        .find(".suggestions")
-        .empty()
-        .html(data);
+      jQuery(obj).parent().find(".suggestions").empty().html(data);
     },
-    error: function() {
+    error: function () {
       alert("An error has occurred");
-    }
+    },
   });
 }
 function setitem(obj, title, price, discount) {
-  jQuery(obj)
-    .parent()
-    .parent()
-    .find(".getItems")
-    .val(title);
-  jQuery(obj)
-    .parent()
-    .parent()
-    .parent()
-    .find(".price")
-    .val(price);
-  jQuery(obj)
-    .parent()
-    .parent()
-    .parent()
-    .find(".discount")
-    .val(discount);
+  jQuery(obj).parent().parent().find(".getItems").val(title);
+  jQuery(obj).parent().parent().parent().find(".price").val(price);
+  jQuery(obj).parent().parent().parent().find(".discount").val(discount);
   var counter = jQuery(obj)
     .parent()
     .parent()
     .parent()
     .find(".price")
     .data("counter");
-  jQuery(obj)
-    .parent()
-    .empty();
+  jQuery(obj).parent().empty();
   calculation(counter);
 }
 
@@ -596,10 +551,8 @@ function previewImage(input, previewDom) {
   if (input.files && input.files[0]) {
     $(previewDom).show();
     var reader = new FileReader();
-    reader.onload = function(e) {
-      $(previewDom)
-        .find("img")
-        .attr("src", e.target.result);
+    reader.onload = function (e) {
+      $(previewDom).find("img").attr("src", e.target.result);
     };
     reader.readAsDataURL(input.files[0]);
   } else {
@@ -614,16 +567,16 @@ function createUsername(name) {
     .replace(/[^\w-]+/g, "");
 }
 
-$(document).on("focusout", ".price", function() {
+$(document).on("focusout", ".price", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
 
-$(document).on("focusout", ".quantity", function() {
+$(document).on("focusout", ".quantity", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
-$(document).on("focusout", ".discount", function() {
+$(document).on("focusout", ".discount", function () {
   var counter = $(this).data("counter");
   calculation(counter);
 });
@@ -655,13 +608,9 @@ function calculation(counter) {
 
   if (
     $("#adjustment_input").val() &&
-    $("#adjustment_input")
-      .val()
-      .toString().length > 1
+    $("#adjustment_input").val().toString().length > 1
   ) {
-    adjustment_amount = $("#adjustment_input")
-      .val()
-      .substr(1);
+    adjustment_amount = $("#adjustment_input").val().substr(1);
   }
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price_" + p).val();
@@ -692,7 +641,7 @@ function calculation(counter) {
   cal_total_due();
 }
 
-$(document).on("click", "#add_another", function(e) {
+$(document).on("click", "#add_another", function (e) {
   e.preventDefault();
   var count = parseInt($("#count").val()) + 1;
   $("#count").val(count);
@@ -745,7 +694,7 @@ $(document).on("click", "#add_another", function(e) {
   $("#table_body").append(html);
 });
 
-$(document).on("click", "#add_another_invoice", function(e) {
+$(document).on("click", "#add_another_invoice", function (e) {
   e.preventDefault();
   var count = parseInt($("#count").val()) + 1;
   $("#count").val(count);
@@ -808,19 +757,16 @@ $(document).on("click", "#add_another_invoice", function(e) {
   $("#table_body").append(html);
 });
 
-$(document).on("click", ".remove", function(e) {
+$(document).on("click", ".remove", function (e) {
   e.preventDefault();
-  $(this)
-    .parent()
-    .parent()
-    .remove();
+  $(this).parent().parent().remove();
 
   var count = parseInt($("#count").val()) - 1;
   $("#count").val(count);
   calculation(count);
 });
 
-$(document).on("change", "#adjustment_input", function(e) {
+$(document).on("change", "#adjustment_input", function (e) {
   e.preventDefault();
 
   var adjustment_amount = 0;
@@ -829,9 +775,7 @@ $(document).on("change", "#adjustment_input", function(e) {
   );
 
   if ($("#adjustment_input").val()) {
-    adjustment_amount = $("#adjustment_input")
-      .val()
-      .substr(1);
+    adjustment_amount = $("#adjustment_input").val().substr(1);
   }
 
   $("#adjustment_amount").text(parseFloat(adjustment_amount));
@@ -854,7 +798,7 @@ function cal_total_due() {
   $("#total_due").text(total_due);
 }
 
-$(document).on("click", "#add_another_zone", function(e) {
+$(document).on("click", "#add_another_zone", function (e) {
   e.preventDefault();
   var count = parseInt($("#count").val()) + 1;
   $("#count").val(count);
@@ -886,18 +830,15 @@ $(document).on("click", "#add_another_zone", function(e) {
   $("#table_body_zone").append(html);
 });
 
-$(document).on("click", ".remove", function(e) {
+$(document).on("click", ".remove", function (e) {
   e.preventDefault();
-  $(this)
-    .parent()
-    .parent()
-    .remove();
+  $(this).parent().parent().remove();
   var count = parseInt($("#count").val()) - 1;
   $("#count").val(count);
   calculation(count);
 });
 
-$(function() {
+$(function () {
   $("#date_issued").datepicker();
   $("#date_of_trans").datepicker();
   $("#date_later_midnight").datepicker();
@@ -911,9 +852,9 @@ $(function() {
   $("#inst_date").datepicker();
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
   var cookie = {
-    create: function(name, value, days) {
+    create: function (name, value, days) {
       var expires;
       if (days) {
         var date = new Date();
@@ -929,7 +870,7 @@ $(document).ready(function() {
         expires +
         "; path=/";
     },
-    read: function(name) {
+    read: function (name) {
       var nameEQ = encodeURIComponent(name) + "=";
       var ca = document.cookie.split(";");
       for (var i = 0; i < ca.length; i++) {
@@ -939,9 +880,9 @@ $(document).ready(function() {
           return JSON.parse(c.substring(nameEQ.length, c.length));
       }
       return null;
-    }
+    },
   };
-  $(".nav-close").on("click", function() {
+  $(".nav-close").on("click", function () {
     $(".navbar-side").toggleClass("closed");
 
     if (cookie.read("navsidebar") === "closed") {
@@ -955,15 +896,15 @@ $(document).ready(function() {
     $(".navbar-side").addClass("closed");
   }
 
-  $(".bcc-toggle").on("click", function() {
+  $(".bcc-toggle").on("click", function () {
     $("#bcc-cnt").fadeToggle();
   });
 
   $(".send-to-email, .send-cc-email, .send-bcc-email").select2({
     ajax: {
       url: "http://example.org/api/test",
-      cache: false
-    }
+      cache: false,
+    },
   });
 
   tinymce.init({
@@ -973,13 +914,13 @@ $(document).ready(function() {
     plugins: [
       "advlist autolink lists link image charmap print preview anchor",
       "searchreplace visualblocks code fullscreen",
-      "insertdatetime media table paste code help wordcount"
+      "insertdatetime media table paste code help wordcount",
     ],
     toolbar:
       "undo redo | formatselect | " +
       "bold italic backcolor | alignleft aligncenter " +
       "alignright alignjustify | bullist numlist outdent indent | " +
       "removeformat | help",
-    content_css: "//www.tiny.cloud/css/codepen.min.css"
+    content_css: "//www.tiny.cloud/css/codepen.min.css",
   });
 });

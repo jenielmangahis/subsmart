@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </form>
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <a class="btn btn-primary btn-md" href="<?php echo url('job/new_job') ?>">
+                                            <a class="btn btn-primary btn-md" id="newJobBtn" href="<?php echo url('job/new_job') ?>">
                                             <span class="fa fa-plus"></span> New</a>
                                         </div>
                                     </div>
@@ -49,26 +49,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
                                 <?php if (!empty($jobs)) { ?>
-                                <table class="table table-hover">
+                                <table class="table table-hover" style="width:100%;" id="jobListTable">
                                     <thead>
                                         <tr>
-                                            <th scope="col" class="text-center"><strong>Job Number</strong></th>
-                                            <th scope="col" class="text-center"><strong>Date</strong></th>
-                                            <th scope="col" class="text-center"><strong>Job & Customer</strong></th>
-                                            <th scope="col" class="text-center"><strong>Status</strong></th>
-                                            <th scope="col" class="text-center"><strong>Amount</strong></th>
-                                            <th scope="col" class="text-center"><strong>Manage</strong></th>
+                                            <th scope="col"><strong>Job Number</strong></th>
+                                            <th scope="col"><strong>Date</strong></th>
+                                            <th scope="col"><strong>Job & Customer</strong></th>
+                                            <th scope="col"><strong>Status</strong></th>
+                                            <th scope="col"><strong>Amount</strong></th>
+                                            <th scope="col"><strong>Manage</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                      <?php foreach($jobs as $job) : ?>
                                         <tr>
-                                            <td class="text-center"><?php echo $job->job_number; ?></td>
-                                            <td class="text-center"><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
-                                            <td class="text-center"><?php echo $job->job_name; ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
-                                            <td class="text-center"></td>
-                                            <td class="text-center"></td>
-                                            <td class="text-center"></td>
+                                            <td><?php echo $job->job_number; ?></td>
+                                            <td><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
+                                            <td><?php echo $job->job_name; ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
@@ -108,27 +108,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<script>
-    $('#dataTable1').DataTable({
-
-        columnDefs: [{
-            orderable: true,
-            className: 'select-checkbox',
-            targets: 0,
-            checkboxes: {
-                selectRow: true
-            }
-        }],
-        select: {
-            'style': 'multi'
-        },
-        order: [[1, 'asc']],
-    });
-
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-
-    elems.forEach(function (html) {
-        var switchery = new Switchery(html, {size: 'small'});
-    });
-
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script src="<?php echo $url->assets ?>frontend/js/job_creation/main.js"></script>

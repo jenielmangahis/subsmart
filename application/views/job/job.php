@@ -19,8 +19,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h2 class="page-title text-left">Create Job</h2>
                             <div class="row">
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
-                                    <label for="job_number">Job Number: <?php echo $job_number; ?></label>
-                                    <input type="hidden" name="jobNumber" value="1000-01">
+                                    <label for="job_number">Job Number: <?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?></label>
+                                    <input type="hidden" name="jobNumber" value="<?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?>">
                                 </div>
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
                                     <label for="createdBy">Added By: <?php echo getLoggedFullName(0); ?></label>
@@ -28,19 +28,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
                                     <label for="job_name">Added Date:</label>
-                                    <label for="job_name"><?php echo date('Y-m-d'); ?></label>
+                                    <label for="job_name"><?php echo (!empty($job_data)) ? date_format(date_create($job_data->created_date),"Y-m-d") : date('Y-m-d'); ?></label>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                     <button type="submit" class="btn btn-primary">Edit</button>
-                                    <a class="btn btn-default" href="<?php echo url('job') ?>">Cancel</a>
+                                    <a class="btn btn-default" id="cancelJobBtn" href="<?php echo url('job') ?>">Cancel</a>
                                 </div>
                             </div>
                             <hr>
                             <div class="row mt-5">
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_name">Job Title</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" required/>
+                                    <?php if(!empty($job_data)) : ?>
+                                        <label for="">: <?php echo $job_data->job_name; ?></label>
+                                        <input type="hidden" class="form-control" name="job_name" id="job_name" value="<?php echo $job_data->job_name; ?>" required/>
+                                    <?php else: ?>
+                                        <input type="text" class="form-control" name="job_name" id="job_name" required/>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_customer">Customer</label>
@@ -119,16 +124,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-10 pt-5 text-left" id="currentForms">
                                     <h4 for="exampleFormControlSelect1">Current Forms</h4>
-                                    <table class="table table-hover">
+                                    <table class="table table-hover" style="width:100%;" id="currentFormsTable">
                                         <thead>
                                             <tr>
-                                                <th scope="col" class="text-center"><strong>Form Number</strong></th>
-                                                <th scope="col" class="text-center"><strong>Type</strong></th>
-                                                <th scope="col" class="text-center"><strong>Description</strong></th>
-                                                <th scope="col" class="text-center"><strong>Status</strong></th>
-                                                <th scope="col" class="text-center"><strong>Created</strong></th>
-                                                <th scope="col" class="text-center"><strong>Completed</strong></th>
-                                                <th scope="col" class="text-center"><strong>Created By</strong></th>
+                                                <th scope="col"><strong>Form Number</strong></th>
+                                                <th scope="col"><strong>Type</strong></th>
+                                                <th scope="col"><strong>Description</strong></th>
+                                                <th scope="col"><strong>Status</strong></th>
+                                                <th scope="col"><strong>Created</strong></th>
+                                                <th scope="col"><strong>Completed</strong></th>
+                                                <th scope="col"><strong>Created By</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -311,19 +316,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="tab-content text-left" id="myTabContent">
                                         <div class="tab-pane fade show active margin-top" id="items" role="tabpanel" aria-labelledby="items-tab">
                                             <h4>Items</h4>
-                                            <button class="btn btn-primary margin-bottom" id="addItems">Add Items</button>
-                                            <table class="table table-hover" id="itemsTable">
+                                            <button type="button" class="btn btn-primary margin-bottom" id="addItems">Add Items</button>
+                                            <table class="table table-hover" style="width:100%;" id="itemsTable">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col" class="text-center"><strong>Item</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Type</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Category</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Quantity</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Location</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Cost Per</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Discount</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Tax</strong></th>
-                                                        <th scope="col" class="text-center"><strong>Total Cost</strong></th>
+                                                        <th scope="col"><strong>Item</strong></th>
+                                                        <th scope="col"><strong>Type</strong></th>
+                                                        <th scope="col"><strong>Category</strong></th>
+                                                        <th scope="col"><strong>Quantity</strong></th>
+                                                        <th scope="col"><strong>Location</strong></th>
+                                                        <th scope="col"><strong>Cost Per</strong></th>
+                                                        <th scope="col"><strong>Discount</strong></th>
+                                                        <th scope="col"><strong>Tax</strong></th>
+                                                        <th scope="col"><strong>Total Cost</strong></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -383,9 +388,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <label for="invoice_job_location">Item Groups</label>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <select class="form-control" id="exampleFormControlSelect1">
-                                                            <option value="" selected>Service</option>
-                                                            <option>Material</option>
+                                                        <select class="form-control" id="jobPickItems">
+                                                            <option value="service" selected>Service</option>
+                                                            <option value="material">Material</option>
                                                             <?php foreach($items_categories as $cat) : ?>
                                                                 <option value="<?php echo $cat->item_categories_id; ?>"><?php echo $cat->name; ?></option>
                                                             <?php endforeach; ?>
@@ -397,7 +402,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <div class="col-md-1" style="margin-top:10px;">
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <table class="table table-hover" id="itemsTable">
+                                                        <table class="table table-hover" style="width:100%;" id="itemsTable">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col"><strong>Item</strong></th>
@@ -542,7 +547,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="tab-pane fade pa-10 margin-left margin-top" id="history" role="tabpanel" aria-labelledby="history-tab">
                                             <h4>History</h4>
-                                            <table class="table table-hover">
+                                            <table class="table table-hover" style="width:100%;" id="jobHistoryTable">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col"><strong>Action</strong></th>
@@ -642,4 +647,5 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script src="<?php echo $url->assets ?>frontend/js/job_creation/main.js"></script>

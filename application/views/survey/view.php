@@ -126,7 +126,17 @@ div.color-slot{
                      <div class="row">
                         <div class="col">
                           <h1 class="m-0"><?= $survey->title ?></h1>
-                          <p>Current theme: <span class="font-weight-bold"><?= $survey_theme->sth_theme_name?></span> <a href="#" data-toggle="modal" data-target="#selectThemeModal">Change theme</a></p>
+                          <?php
+                            if($survey_theme !== null){
+                              ?>
+                                <p>Current theme: <span class="font-weight-bold"><?= $survey_theme->sth_theme_name?></span> <a href="#" data-toggle="modal" data-target="#selectThemeModal">Change theme</a></p>
+                              <?php
+                            }else{
+                              ?>
+                                <p>No themes selected <a href="#" data-toggle="modal" data-target="#selectThemeModal">Add theme</a></p>
+                              <?php
+                            }
+                          ?>
 
                           <!-- select theme modal -->
                           <div class="modal fade" id="selectThemeModal">
@@ -168,7 +178,11 @@ div.color-slot{
                         </div>
                         <div class="col-auto">
                            <div class="h1-spacer">
-                             <a href="<?= base_url() ?>survey/preview/<?= $this->uri->segment(2) ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a>
+                           <?php if(count($questions) !== 0){
+                             ?>
+                              <a href="<?= base_url() ?>survey/preview/<?= $this->uri->segment(2) ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a>
+                             <?php
+                           } ?>
                               <button class="btn btn-primary btn-md text-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Add New Question
                               </button>
@@ -189,107 +203,114 @@ div.color-slot{
                         Every changes you make are automatically saved, so there's no need to look for a save button for now. 
                       </div>
 
-                    <div class="row" id="card-list">
-                      <?php foreach($questions as $key =>  $question): ?>
-                       
-                        <!-- main container -->
-                        <div id="container-<?= $question->id ?>" class="col-sm-12">
-                          <div class="card">
-                            <div class="card-body p-0">
-                            
-                              <!-- main question -->
-                              <?= form_open("survey/update/question/".$question->id."", array('id'=>'frm-update-question')); ?>
-
-                                <div class="d-flex justify-content-between">
-                                  <!-- title -->
-                                  <h5 class="card-title d-flex">
-                                    <i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"></i> <?= $question->template_title ?>
-                                    <?php if($question->required == 1): ?>
-                                      <label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
-                                    <?php endif; ?>
-                                  </h5>
-                                </div>
-
-                                <input type="hidden" name="survey_id" value="<?= $question->id ?>">
-
-                                <div class="form-group">
-                                  <input type="text" class="form-control questions" name="question" value="<?= $question->question ?>" data-id="<?= $question->id ?>" placeholder="Enter your question">
-                                </div>
-
-                                <div id="description-container">
-                                  <?php if($question->description == 1){ ?>
-                                    <div class="form-group">
-                                      <input type="text" class="form-control questions" name="description_label" placeholder="Description here" value="<?= $question->description_label ?>">
-                                    </div>
-                                  <?php } ?>
-                                </div>
-
-                                <div id="choices">
-                                  <?php if($question->template_id == 3 || $question->template_id == 4 || $question->template_id == 15){
-                                    foreach($question->questions as $option){ 
-                                      echo $option->survey_template_choice;
-                                    }
-                                  }else{ ?>
-
-                                  <!-- <?= $question->questions[0]->survey_template_choice ?> -->
-                                  <?php } ?>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                  <?php if($question->template_id == 3 || $question->template_id == 4 ||$question->template_id == 15){ ?>
-                                    <button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-success btn-sm" type="button" name="button">Add Choice</button>
-                                  <?php } ?>
-                                  <!-- <button class="btn btn-success ml-2 btn-sm" type="submit" name="button">Save Changes</button> -->
-                                </div>
-                                
-                              <?= form_close(); ?>
-
-                              <!-- More options Drawer -->
-                              <div class="btn-group justify-content-right">
-                                <a class="dropdown-item btn " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><span class="text-info">More Options</span></a>
-                                <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
-                              </div>
-
-                              <div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
-                                <div class="d-flex bg-white py-2 align-items-center">
-                                  <div class="custom-control custom-checkbox mr-3">
-                                    <input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
-                                    <label class="custom-control-label" for="required<?= $question->id ?>">Required</label>
-                                  </div>
-                                  <div class="custom-control custom-checkbox">
-                                    <input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
-                                    <label class="custom-control-label" for="description<?= $question->id ?>">Description</label>
-                                  </div>
-
-                                </div>
-                              </div>
-                              <!-- End of More Options Drawer -->
-                                
-                              <div class="dropdown btn-add-question-bottom">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                +
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/9" class="dropdown-item" id="add-question-bottom">Welcome Screen</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/1" class="dropdown-item" id="add-question-bottom">Short Text</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/2" class="dropdown-item" id="add-question-bottom">Long Text</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/3" class="dropdown-item" id="add-question-bottom">Single Choice Answer</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/4" class="dropdown-item" id="add-question-bottom">Multiple Choice Answer</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/5" class="dropdown-item" id="add-question-bottom">Email Type</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/6" class="dropdown-item" id="add-question-bottom">Number Type</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/7" class="dropdown-item" id="add-question-bottom">Image Type</a>
-                                  <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/8" class="dropdown-item" id="add-question-bottom">Phone Number Type</a>
-                                </div>
-                              </div>
-
-
+                      <?php
+                        if(count($questions) === 0){
+                          ?>
+                            <div class="alert alert-dark">
+                              There are no questions listed for now. 
                             </div>
-                          </div>
-                        </div>
-                        <!-- end of container -->
+                          <?php
+                        }else{
+                          foreach($questions as $key =>  $question){ ?>
+                            <div class="row" id="card-list">
+                              <!-- main container -->
+                              <div id="container-<?= $question->id ?>" class="col-sm-12">
+                                <div class="card">
+                                  <div class="card-body p-0">
+                                  
+                                    <!-- main question -->
+                                    <?= form_open("survey/update/question/".$question->id."", array('id'=>'frm-update-question')); ?>
 
-                      <?php endforeach; ?>
+                                      <div class="d-flex justify-content-between">
+                                        <!-- title -->
+                                        <h5 class="card-title d-flex">
+                                          <i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"></i> <?= $question->template_title ?>
+                                          <?php if($question->required == 1): ?>
+                                            <label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
+                                          <?php endif; ?>
+                                        </h5>
+                                      </div>
 
-                    </div>
+                                      <input type="hidden" name="survey_id" value="<?= $question->id ?>">
+
+                                      <div class="form-group">
+                                        <input type="text" class="form-control questions" name="question" value="<?= $question->question ?>" data-id="<?= $question->id ?>" placeholder="Enter your question">
+                                      </div>
+
+                                      <div id="description-container">
+                                        <?php if($question->description == 1){ ?>
+                                          <div class="form-group">
+                                            <input type="text" class="form-control questions" name="description_label" placeholder="Description here" value="<?= $question->description_label ?>">
+                                          </div>
+                                        <?php } ?>
+                                      </div>
+
+                                      <div id="choices">
+                                        <?php if($question->template_id == 3 || $question->template_id == 4 || $question->template_id == 15){
+                                          foreach($question->questions as $option){ 
+                                            echo $option->survey_template_choice;
+                                          }
+                                        }else{ ?>
+
+                                        <!-- <?= $question->questions[0]->survey_template_choice ?> -->
+                                        <?php } ?>
+                                      </div>
+                                      <div class="d-flex justify-content-end">
+                                        <?php if($question->template_id == 3 || $question->template_id == 4 ||$question->template_id == 15){ ?>
+                                          <button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-success btn-sm" type="button" name="button">Add Choice</button>
+                                        <?php } ?>
+                                        <!-- <button class="btn btn-success ml-2 btn-sm" type="submit" name="button">Save Changes</button> -->
+                                      </div>
+                                      
+                                    <?= form_close(); ?>
+
+                                    <!-- More options Drawer -->
+                                    <div class="btn-group justify-content-right">
+                                      <a class="dropdown-item btn " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><span class="text-info">More Options</span></a>
+                                      <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
+                                    </div>
+
+                                    <div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
+                                      <div class="d-flex bg-white py-2 align-items-center">
+                                        <div class="custom-control custom-checkbox mr-3">
+                                          <input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
+                                          <label class="custom-control-label" for="required<?= $question->id ?>">Required</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                          <input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
+                                          <label class="custom-control-label" for="description<?= $question->id ?>">Description</label>
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                    <!-- End of More Options Drawer -->
+                                      
+                                    <div class="dropdown btn-add-question-bottom">
+                                      <button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i class="fa fa-plus"></i>
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/9" class="dropdown-item" id="add-question-bottom">Welcome Screen</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/1" class="dropdown-item" id="add-question-bottom">Short Text</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/2" class="dropdown-item" id="add-question-bottom">Long Text</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/3" class="dropdown-item" id="add-question-bottom">Single Choice Answer</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/4" class="dropdown-item" id="add-question-bottom">Multiple Choice Answer</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/5" class="dropdown-item" id="add-question-bottom">Email Type</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/6" class="dropdown-item" id="add-question-bottom">Number Type</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/7" class="dropdown-item" id="add-question-bottom">Image Type</a>
+                                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/8" class="dropdown-item" id="add-question-bottom">Phone Number Type</a>
+                                      </div>
+                                    </div>
+
+
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- end of container -->
+                            </div>
+                          <?php };
+                        }?>
+
                   </div>
                </div>
             </div>
@@ -303,5 +324,6 @@ div.color-slot{
    </div>
 
 <?php include viewPath('includes/footer'); ?>
-<script type="text/javascript" src="http://localhost/nsmartrac/assets/js/survey.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script type="text/javascript" src="<?=base_url()?>/assets/js/survey.js"></script>

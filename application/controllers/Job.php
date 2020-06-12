@@ -58,16 +58,24 @@ class Job extends MY_Controller
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         
-        $comp = array(
-            'company_id' => $comp_id
-        );
-        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, $comp)->result();
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
-        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
-        if ($job_num_query) {
-            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row()->job_number) + 1;
+        if (empty($get['job_num'])) {
+            $comp = array(
+                'company_id' => $comp_id
+            );
         } else {
-           $this->page_data['job_number'] = 1; 
+            $comp = array(
+                'company_id' => $comp_id,
+                'job_number' => $get['job_num']
+            );
+        }
+        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, array('company_id' => $comp_id))->result();
+        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, array('company_id' => $comp_id))->result();
+        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
+        if ($job_num_query && empty($get['job_num'])) {
+            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
+        } else {
+           $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
+           $this->page_data['job_data'] = $job_num_query;
         }
         
         $this->load->view('job/job', $this->page_data);
@@ -111,23 +119,24 @@ class Job extends MY_Controller
 
     public function getCustomers() {
 
-        $comp_id = logged('company_id');
-        $this->db->select('*');
-        $this->db->from('customers');
-        $this->db->where('customers.company_id', $comp_id);
-        $this->db->join('users', 'users.id = customers.user_id');
-        $query = $this->db->get()->result_array();
+        $result = $this->jobs_model->getCustomers();
 
-        echo json_encode($query);
+        echo json_encode($result);
     }
     
     public function getAddresses() {
 
-        $this->db->select('*');
-        $this->db->from('address');
-        $query = $this->db->get()->result_array();
+        $result = $this->jobs_model->getAddresses();
 
-        echo json_encode($query);
+        echo json_encode($result);
+    }
+
+    public function getItems() {
+        $get = $this->input->get();
+
+        $result = $this->jobs_model->getItems($get['index']);
+
+        echo json_encode($result);
     }
 }
 
