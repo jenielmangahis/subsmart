@@ -1,4 +1,10 @@
 $(document).ready(function () {
+  $(
+    "#jobListTable, #itemsTable, #currentFormsTable, #jobHistoryTable"
+  ).DataTable({
+    scrollX: true,
+  });
+
   $("#job_customer").autocomplete({
     source: getCustomers(),
     change: function (event, ui) {
@@ -38,6 +44,14 @@ $(document).ready(function () {
     $("#itemsTable").hide();
     $("#itemsTableSubTotal").hide();
     $("#addItemsForms").fadeIn();
+  });
+
+  $("#newJobBtn, #cancelJobBtn").click(function () {
+    $.LoadingOverlay("show");
+  });
+
+  $("#jobPickItems").change(function () {
+    getItems($("#jobPickItems").val());
   });
 
   $("#invoiceCreatedDate, #workOrderCreatedDate, #estimateDate").datetimepicker(
@@ -94,6 +108,20 @@ function getAddresses() {
             val.zip,
         });
       });
+    },
+  });
+  return location;
+}
+
+function getItems(param) {
+  var location = [];
+  $.ajax({
+    type: "GET",
+    url: base_url + "job/getItems",
+    data: { index: param },
+    success: function (data) {
+      var result = jQuery.parseJSON(data);
+      console.log(result);
     },
   });
   return location;

@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-sm-6 pt-5 mt-3">
                 <h1 class="eff-title">Effortlessly run<br> your business</h1>
 								<div class="startTrialBtn m-auto pt-5">
-                  <a href="#" class="btn btn-violet">Get Started Now</a>
+                  <a href="<?php echo url('registration') ?>" class="btn btn-violet">Get Started Now</a>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -243,7 +243,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </p>
     </div>
     <div class="dyk__btn">
-        <a class="btn btn-violet btn-xl" href="#">Try it now for free</a>
+        <a class="btn btn-violet btn-xl" href="<?php echo url('registration') ?>">Try it now for free</a>
     </div>
 </section>
 <section class="group-section-3" id="group-insights">
@@ -434,7 +434,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <p>nSmarTrac is designed with small businesses in mind.<br>Manage on the go, save some time and make more money.</p>
     </div>
     <div class="cta__btn">
-        <a class="btn btn-primary btn-xl" href="#">Get started now</a>
+        <a class="btn btn-primary btn-xl" href="<?php echo url('registration') ?>">Get started now</a>
     </div>
 </section>
 <?php include viewPath('frontcommon/footer'); ?>

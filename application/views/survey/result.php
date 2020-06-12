@@ -1,6 +1,8 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <div class="wrapper" role="wrapper">
   <style>
       .survey-kpi-card {
@@ -191,25 +193,24 @@
                                       <h5 >Question</h5>
                                       <h5>Percentage</h5>
                                     </li>
-                                    <?php foreach ($questions as $key => $question): ?>
+                                    <?php foreach ($questions as $key => $question){ ?>
 
-                                        <!-- @L@: new code edited by: Alexis Pienda -->
-                                        <?php  $token_result = 0; ?>
-                                        <?php foreach ($question->survey_answer as $key => $survey_answers){
-                                                if(!empty($survey_answers->answer) || $survey_answers->answer != ""){
-                                                    $token_result++;
-                                                }
+                                      <?php  $token_result = 0; ?>
+                                      <?php foreach ($question->survey_answer as $key => $survey_answers){
+                                              if(!empty($survey_answers->answer) || $survey_answers->answer != ""){
+                                                  $token_result++;
                                               }
+                                            }
 
-                                              if($token_result === 0){
-                                                $total_count = count($question->survey_answer);
-                                                $percentage = 0; // need to update
-                                              }else{
-                                                $total_count = count($question->survey_answer);
-                                                $percentage = $token_result / $total_count * 100; // need to update
-                                              }
-                                        ?>
-                                        <li class="list-group-item d-flex justify-content-between">
+                                            if($token_result === 0){
+                                              $total_count = count($question->survey_answer);
+                                              $percentage = 0; // need to update
+                                            }else{
+                                              $total_count = count($question->survey_answer);
+                                              $percentage = $token_result / $total_count * 100; // need to update
+                                            }
+                                      ?>
+                                      <li class="list-group-item d-flex justify-content-between">
                                         <p class="mb-0 d-flex align-items-center"> 
                                             <i class="icon-design <?= $question->template_icon ?>" style="background-color: <?= $question->template_color ?>;" data-toggle="tooltip" data-placement="top" title="<?= $question->template_title?>"></i>
                                             <?= $question->question ?> 
@@ -218,7 +219,374 @@
                                         </p>
                                         <h5 class="font-weight-normal"><?= number_format($percentage, 2) ?>%</h5>
                                       </li>
-                                    <?php endforeach; ?>
+
+                                      <!-- chart/data  -->
+                                      <li class="list-group-item d-flex-justify-content-between">
+                                        <?php
+                                          switch($question->template_id){
+                                            case 1:
+                                            break;
+                                            case 2: // long text
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 3: //radial
+                                              ?>
+                                                <canvas id="radial-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                <script>
+                                                  let ctx = document.querySelector('#radial-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData = {
+                                                    labels: [],
+                                                    datasets: [
+                                                      {
+                                                        label: ['Question: <?= $question->question?>'],
+                                                        data: [],
+                                                        
+                                                        borderWidth: 1
+                                                      }
+                                                    ]
+                                                  }
+                                                  let chartOptions = {
+                                                    scales: {
+                                                      yAxes: [{
+                                                          ticks: {
+                                                              beginAtZero: true
+                                                          }
+                                                      }]
+                                                    }
+                                                  }
+                                                  const checkboxChart = new Chart(ctx,{
+                                                    type: 'bar',
+                                                    data: chartData,
+                                                    options: chartOptions
+                                                  });
+                                                  <?php
+                                                    foreach($question->questions as $choices){
+                                                      ?>
+                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                      <?php
+                                                      $count = 0;
+                                                      foreach($question->survey_answer as $answers){
+                                                        
+                                                        if($answers->answer == $choices->choices_label){
+                                                          $count++;
+                                                        }
+                                                      }
+                                                      ?>
+                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                      <?php
+                                                    }
+                                                    ?>
+                                                    checkboxChart.update();
+                                                </script>
+                                              <?php
+                                            break;
+                                            case 4: //checkboxes
+                                              ?>
+                                                <canvas id="checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                <script>
+                                                  let ctx = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData = {
+                                                    labels: [],
+                                                    datasets: [
+                                                      {
+                                                        label: ['Question: <?= $question->question?>'],
+                                                        data: [],
+                                                        
+                                                        borderWidth: 1
+                                                      }
+                                                    ]
+                                                  }
+                                                  let chartOptions = {
+                                                    scales: {
+                                                      yAxes: [{
+                                                          ticks: {
+                                                              beginAtZero: true
+                                                          }
+                                                      }]
+                                                    }
+                                                  }
+                                                  const checkboxChart = new Chart(ctx,{
+                                                    type: 'bar',
+                                                    data: chartData,
+                                                    options: chartOptions
+                                                  });
+                                                  <?php
+                                                    foreach($question->questions as $choices){
+                                                      ?>
+                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                      <?php
+                                                      $count = 0;
+                                                      foreach($question->survey_answer as $answers){
+                                                        
+                                                        if($answers->answer == $choices->choices_label){
+                                                          $count++;
+                                                        }
+                                                      }
+                                                      ?>
+                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                      <?php
+                                                    }
+                                                    ?>
+                                            
+                                                    checkboxChart.update();
+                                                </script>
+                                              <?php
+                                            break;
+                                            case 5: //email
+                                            break;
+                                            case 6: // number
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 7: //images
+                                            break;
+                                            case 8: // phone number
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 9: // short text
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 11: // yes/no
+                                              ?>
+                                                <canvas id="checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                <script>
+                                                  let ctx = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData = {
+                                                    labels: [],
+                                                    datasets: [
+                                                      {
+                                                        label: ['Question: <?= $question->question?>'],
+                                                        data: [],
+                                                        
+                                                        borderWidth: 1
+                                                      }
+                                                    ]
+                                                  }
+                                                  let chartOptions = {
+                                                    scales: {
+                                                      yAxes: [{
+                                                          ticks: {
+                                                              beginAtZero: true
+                                                          }
+                                                      }]
+                                                    }
+                                                  }
+                                                  const checkboxChart = new Chart(ctx,{
+                                                    type: 'bar',
+                                                    data: chartData,
+                                                    options: chartOptions
+                                                  });
+                                                  <?php
+                                                    foreach($question->questions as $choices){
+                                                      ?>
+                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                      <?php
+                                                      $count = 0;
+                                                      foreach($question->survey_answer as $answers){
+                                                        
+                                                        if($answers->answer == $choices->choices_label){
+                                                          $count++;
+                                                        }
+                                                      }
+                                                      ?>
+                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                      <?php
+                                                    }
+                                                    ?>
+                                                    checkboxChart.update();
+                                                </script>
+                                              <?php
+                                            break;
+                                            case 12: //rating //to be checked
+                                              ?>
+                                                <canvas id="rating-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                <script>
+                                                  let ctx = document.querySelector('#rating-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData = {
+                                                    labels: [],
+                                                    datasets: [
+                                                      {
+                                                        label: ['Question: <?= $question->question?>'],
+                                                        data: [],
+                                                        
+                                                        borderWidth: 1
+                                                      }
+                                                    ]
+                                                  }
+                                                  let chartOptions = {
+                                                    scales: {
+                                                      yAxes: [{
+                                                          ticks: {
+                                                              beginAtZero: true
+                                                          }
+                                                      }]
+                                                    }
+                                                  }
+                                                  const checkboxChart = new Chart(ctx,{
+                                                    type: 'bar',
+                                                    data: chartData,
+                                                    options: chartOptions
+                                                  });
+                                                  <?php
+                                                    foreach($question->questions as $choices){
+                                                      ?>
+                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                      <?php
+                                                      $count = 0;
+                                                      foreach($question->survey_answer as $answers){
+                                                        
+                                                        if($answers->answer == $choices->choices_label){
+                                                          $count++;
+                                                        }
+                                                      }
+                                                      ?>
+                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                      <?php
+                                                    }
+                                                    ?>
+                                                    checkboxChart.update();
+                                                </script>
+                                              <?php
+                                            break;
+                                            case 13: // statement
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 14: // websites
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 15: //radial
+                                              ?>
+                                                <canvas id="radial-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                <script>
+                                                  let ctx = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData = {
+                                                    labels: [],
+                                                    datasets: [
+                                                      {
+                                                        label: ['Question: <?= $question->question?>'],
+                                                        data: [],
+                                                        
+                                                        borderWidth: 1
+                                                      }
+                                                    ]
+                                                  }
+                                                  let chartOptions = {
+                                                    scales: {
+                                                      yAxes: [{
+                                                          ticks: {
+                                                              beginAtZero: true
+                                                          }
+                                                      }]
+                                                    }
+                                                  }
+                                                  const checkboxChart = new Chart(ctx,{
+                                                    type: 'bar',
+                                                    data: chartData,
+                                                    options: chartOptions
+                                                  });
+                                                  <?php
+                                                    foreach($question->questions as $choices){
+                                                      ?>
+                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                      <?php
+                                                      $count = 0;
+                                                      foreach($question->survey_answer as $answers){
+                                                        
+                                                        if($answers->answer == $choices->choices_label){
+                                                          $count++;
+                                                        }
+                                                      }
+                                                      ?>
+                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                      <?php
+                                                    }
+                                                    ?>
+                                                    checkboxChart.update();
+                                                </script>
+                                              <?php
+                                            break;
+                                            case 16: // payment // to be checked
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 17: //date
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
+                                            break;
+                                            case 18:
+                                            break;
+                                            case 19:
+                                            break;
+                                            default:
+                                              ?>
+                                                <small>place a chart or list of answers here</small>
+                                              <?php
+                                            break;
+                                          }
+                                        ?>
+                                      </li>
+                                    <?php }; ?>
 
                                   </ul>
                                 </div>

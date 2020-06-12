@@ -300,11 +300,11 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
 
                                         if( $valueQuestions->q_type == 'group' ) {
                                           echo '<div class="col-md-12 form-group">';
-                                            echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+                                            echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
                                 
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions)
                                           {
-                                            echo '<div class="col-md-6 form-group">';
+                                            echo '<div class="col-md-6 form-group float-left">';
                                             // echo "<pre>";
                                             // print_r($valueSubQuestions);
                                            // echo "</pre>";

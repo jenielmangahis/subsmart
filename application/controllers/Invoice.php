@@ -15,6 +15,7 @@ class Invoice extends MY_Controller {
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'invoice';
         $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->model('Payment_records_model', 'payment_records_model');
 
@@ -47,7 +48,7 @@ class Invoice extends MY_Controller {
         $type = 0;
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
-
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
                 $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $company_id, $type);

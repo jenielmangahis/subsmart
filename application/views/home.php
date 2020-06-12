@@ -385,9 +385,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-sm-12 b-43">
                     <div class="startTrialBtn mb-5 text-center">
-                        <a href="<?php echo url('/home/signup') ?>" class="btn btn-green rounded-xl">
+                        <!-- <a href="<?php //echo url('/home/signup') ?>" class="btn btn-green rounded-xl">
+                            START YOUR <span class="yColor">FREE TRIAL</span>
+                        </a> -->
+                        <a href="<?php echo url('registration') ?>" class="btn btn-green rounded-xl">
                             START YOUR <span class="yColor">FREE TRIAL</span>
                         </a>
+                        
                     </div>
                 </div>
             </div>
@@ -439,7 +443,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="startTrialBtn my-5 text-center"> <button class="btn btn-green yColor rounded-xl"> See MORE FEATURES </button> </div>
+                    <div class="startTrialBtn my-5 text-center"> 
+                        <!-- <button class="btn btn-green yColor rounded-xl"> See MORE FEATURES </button>  -->
+                        <a class="btn btn-green yColor rounded-xl" href="<?php echo base_url('features') ?>"> See MORE FEATURES </a>
+                    </div>
                 </div>
             </div>
         </div>

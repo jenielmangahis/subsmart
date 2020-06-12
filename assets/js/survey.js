@@ -1,3 +1,8 @@
+// @@@@@
+// global settings
+const surveyBaseUrl = "/nsmartrac/"; // local
+// const surveyBaseUrl = window.location.origin; // online
+
 $(document).ready(function(){
 
   $(document).on('submit', '#frm-add-survey', function(e){
@@ -43,7 +48,7 @@ $(document).ready(function(){
     console.log($(this));
     var id = $(this).data('id');
     $.ajax({
-      url: '/nsmartrac/survey/delete/'+id,
+      url: surveyBaseUrl + '/survey/delete/'+id,
       type: 'GET',
       dataType: 'json',
       success: function(res){
@@ -70,7 +75,7 @@ $(document).ready(function(){
     e.stopPropagation();
     var id = $(this).data('id');
     $.ajax({
-      url: '/nsmartrac/survey/delete/'+id,
+      url: surveyBaseUrl + '/survey/delete/'+id,
       type: 'GET',
       dataType: 'json',
       success: function(res){
@@ -82,7 +87,7 @@ $(document).ready(function(){
 
   $(document).on('click', '#survey-card', function(e){
     e.preventDefault();
-    window.location.href = "/nsmartrac/survey/" + $(this).data('id');
+    window.location.href = surveyBaseUrl + "/survey/" + $(this).data('id');
   });
 
   $(document).on('click', '#btn-question-delete', function(e){
@@ -90,7 +95,7 @@ $(document).ready(function(){
 
     var id = $(this).data('id');
     $.ajax({
-      url: '/nsmartrac/survey/delete/question/' +id,
+      url: surveyBaseUrl + '/survey/delete/question/' +id,
       type: 'GET',
       dataType: 'json',
       success: function(res){
@@ -152,7 +157,7 @@ $(document).ready(function(){
                       </form>
                       <div class="dropdown btn-add-question-bottom">
                         <button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        +
+                        <i class="fa fa-plus"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">
                           <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/9" class="dropdown-item" id="add-question-bottom">Welcome Screen</a>
@@ -181,7 +186,7 @@ $(document).ready(function(){
             number.push(value.id.split("-")[1]);
           });
           $.ajax({
-            url: '/nsmartrac/survey/order/question',
+            url: surveyBaseUrl + '/survey/order/question',
             data: { 'id': number },
             dataType: 'json',
             type: 'POST',
@@ -216,6 +221,7 @@ $(document).ready(function(){
                 <div class="card-body p-0">
                 <form action="/nsmartrac/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
                     <div class="d-flex justify-content-between">
+                      
                       <h5 class="card-title">
                       ${res.data.template_title}
                       </h5>
@@ -231,7 +237,7 @@ $(document).ready(function(){
                         </div>
                     <input type="hidden" name="survey_id" value="${res.data.id}">
                     <div class="form-group">
-                       <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question">
+                       <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question"/>
                      </div>
                      <div id="choices">
                      ${data}
@@ -244,8 +250,8 @@ $(document).ready(function(){
                         <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
                       </div>
                     </form>
-                    <div class="dropdown btn-add-question-bottom"><i class="<?= $template->icon ?>" style="background-color: <?= $template->color; ?>"></i> on" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      +
+                    <div class="dropdown btn-add-question-bottom"><button id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-plus"></i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">
                         <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/9" class="dropdown-item" id="add-question-bottom">Welcome Screen</a>
@@ -273,7 +279,7 @@ $(document).ready(function(){
           number.push(value.id.split("-")[1]);
         });
         $.ajax({
-          url: '/nsmartrac/survey/order/question',
+          url: surveyBaseUrl + '/survey/order/question',
           data: { 'id': number },
           dataType: 'json',
           type: 'POST',
@@ -301,7 +307,7 @@ $(document).ready(function(){
       });
     });
     $.ajax({
-      url: '/nsmartrac/survey/update/question',
+      url: surveyBaseUrl + '/survey/update/question',
       type: 'POST',
       data: data,
       dataType: 'json',
@@ -324,7 +330,7 @@ $(document).ready(function(){
     var id = $(this).data('id');
     var template_id = $(this).data('template-id');
     $.ajax({
-      url: '/nsmartrac/survey/add/question/choice/'+id+'/'+template_id,
+      url: surveyBaseUrl + '/survey/add/question/choice/'+id+'/'+template_id,
       type: 'GET',
       dataType: 'json',
       success: function(res){
@@ -344,7 +350,7 @@ $(document).ready(function(){
 
     if($(this).is(":checked")){
       $.ajax({
-        url: '/nsmartrac/survey/question/'+value+'/'+id+'/1',
+        url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/1',
         type:'GET',
         dataType: 'json',
         success: function(res){
@@ -362,7 +368,7 @@ $(document).ready(function(){
       });
     }else{
       $.ajax({
-        url: '/nsmartrac/survey/question/'+value+'/'+id+'/0',
+        url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/0',
         type:'GET',
         dataType: 'json',
         success: function(res){
@@ -386,7 +392,7 @@ $(document).ready(function(){
        var fileName = e.target.files[0].name;
        $('.custom-file-label').html(fileName);
        $.ajax({
-         url: '/nsmartrac/survey/question/upload/'+ id,
+         url: surveyBaseUrl + '/survey/question/upload/'+ id,
          type:'POST',
          data: data,
          dataType: 'json',
@@ -415,7 +421,7 @@ $(document).ready(function(){
       number.push(value.id.split("-")[1]);
     });
     $.ajax({
-      url: '/nsmartrac/survey/order/question',
+      url: surveyBaseUrl + '/survey/order/question',
       data: { 'id': number },
       dataType: 'json',
       type: 'POST',
@@ -506,7 +512,7 @@ $(document).ready(function(){
         }
       }
     };
-    xhr.open("GET", "/nsmartrac/survey/tribue?id="+id, true);
+    xhr.open("GET", surveyBaseUrl + "/survey/tribue?id="+id, true);
     xhr.send();
   }
 
