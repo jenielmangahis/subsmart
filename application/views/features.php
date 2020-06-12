@@ -239,7 +239,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <h2>Fact</h2>
         <p>
-            Companies using nSmarTrac realized a <br><span>3.5x increase</span> in productivity alone.
+            <!-- Companies using nSmarTrac realized a <br><span>3.5x increase</span> in productivity alone. -->
+            Business that use our proud platform realized a <br><span>10x increase</span> in productivity.
         </p>
     </div>
     <div class="dyk__btn">
