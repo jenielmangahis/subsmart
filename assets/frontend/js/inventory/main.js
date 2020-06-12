@@ -1,6 +1,11 @@
+var options = {
+  urlGetAllCategory: base_url + "inventory/customer/json_list",
+};
+
 $(document).ready(function () {
   $("#addOnHandInventory, #closeAddNewItem, #cancelAddItemGroups").click(
     function () {
+      $.LoadingOverlay("show");
       $("#servicesInventory").hide();
       $("#feesInventory").hide();
       $("#itemGroups").hide();
@@ -12,6 +17,7 @@ $(document).ready(function () {
   );
 
   $("#addServicesInventory, #cancelAddNewService").click(function () {
+    $.LoadingOverlay("show");
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
     $("#itemGroups").hide();
@@ -22,6 +28,7 @@ $(document).ready(function () {
   });
 
   $("#addFeesInventory, #cancelAddNewFee").click(function () {
+    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#itemGroups").hide();
@@ -62,6 +69,7 @@ $(document).ready(function () {
   });
 
   $("#addItemGroups").click(function () {
+    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -72,6 +80,7 @@ $(document).ready(function () {
   });
 
   $("#addNewItemInventory").click(function () {
+    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -82,6 +91,7 @@ $(document).ready(function () {
   });
 
   $("#addNewServiceInventory").click(function () {
+    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -92,6 +102,7 @@ $(document).ready(function () {
   });
 
   $("#addNewFeesInventory").click(function () {
+    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -124,12 +135,19 @@ $(document).ready(function () {
   $("#serviceTimeEstimate").datetimepicker({
     format: "LT",
   });
+
+  $("#selectInventoryCat").change(function () {
+    console.log($("#selectInventoryCat").val());
+  });
+
+  $("#inventoryOnHandItems, #serviceItemsTable, #feesItemsTable").DataTable({
+    scrollX: true,
+  });
 });
 
 function readURL(input) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
-    console.log("sdf");
     reader.onload = function (e) {
       $("#img_profile").attr("src", e.target.result).width(100).height(100);
     };

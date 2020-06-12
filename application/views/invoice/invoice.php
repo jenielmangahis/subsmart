@@ -95,18 +95,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="col-md-12 row">
             <div class="col-md-9 form-group" style="z-index:2;">
                 <label for="exampleFormControlSelect1">Select Job</label>
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select class="form-control" id="selectExistingJob">
                 <option value="" selected disabled hidden>Select</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                <?php foreach($jobs as $job) : ?>
+                    <option value="<?php echo $job->job_number; ?>">Job <?php echo $job->job_number; ?></option>
+                <?php endforeach; ?>
                 </select>
             </div>
             <div class="col-md-3 form-group" style="margin-top: 6px;">
                 <label for="exampleFormControlSelect1"></label><br>
-                <a class="btn btn-primary" href="<?php echo base_url('job/new_job') ?>">
+                <a class="btn btn-primary" id="btnExistingJob" href="javascript:void(0)">
                     GO
                 </a>
             </div>
@@ -141,27 +139,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<script>
-    $('#dataTable1').DataTable({
-
-        columnDefs: [{
-            orderable: true,
-            className: 'select-checkbox',
-            targets: 0,
-            checkboxes: {
-                selectRow: true
-            }
-        }],
-        select: {
-            'style': 'multi'
-        },
-        order: [[1, 'asc']],
-    });
-
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-
-    elems.forEach(function (html) {
-        var switchery = new Switchery(html, {size: 'small'});
-    });
-
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script src="<?php echo $url->assets ?>js/invoice.js"></script>

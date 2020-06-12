@@ -19,10 +19,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addOnHandInventory" href="<?php echo base_url('inventory?type=material') ?>">On Hand</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" href="<?php echo base_url('inventory?type=service') ?>">Services</a>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addServicesInventory" href="<?php echo base_url('inventory?type=service') ?>">Services</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" href="<?php echo base_url('inventory?type=fees') ?>">Fees</a>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addFeesInventory" href="<?php echo base_url('inventory?type=fees') ?>">Fees</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
                                         <button class="btn btn-primary col-md-12" id="orderInventory">Order</button>
@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button class="btn btn-primary col-md-12" id="reportsInventory">Reports</button>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" href="<?php echo base_url('inventory?type=itemgroup') ?>">Item Groups</a>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addItemGroups" href="<?php echo base_url('inventory?type=itemgroup') ?>">Item Groups</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
                                         <button class="btn btn-primary col-md-12">Plans</button>
@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </ul>
                                             </div>
                                         </div>
-                                    <table class="table table-hover"> 
+                                    <table class="table table-hover" style="width:100%;" id="inventoryOnHandItems"> 
                                         <thead>
                                             <tr>
                                                 <th scope="col"><strong>Item</strong></th>
@@ -101,7 +101,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <button class="btn btn-primary" id="addNewServiceInventory">Add Services</button>
                                         </div>
                                     </div>
-                                    <table class="table table-hover">
+                                    <table class="table table-hover" style="width:100%;" id="serviceItemsTable">
                                         <thead>
                                             <tr>
                                                 <th scope="col"><strong>Item</strong></th>
@@ -130,7 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <button class="btn btn-primary" id="addNewFeesInventory">Add Fee</button>
                                         </div>
                                     </div>
-                                    <table class="table table-hover">
+                                    <table class="table table-hover"  style="width:100%;" id="feesItemsTable">
                                         <thead>
                                             <tr>
                                                 <th scope="col"><strong>Item</strong></th>
@@ -472,4 +472,5 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script src="<?php echo $url->assets ?>frontend/js/inventory/main.js"></script>

@@ -4,38 +4,46 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Folders extends MY_Controller {
 
 	private $folders_with_files;
+	private $selected_folder;
+	private $company_folder = '';
 
 	public function __construct(){
 		parent::__construct();
 
 		$this->folders_with_files = array();
+		$this->selected_folder = 0;
+		$this->company_folder = getCompanyFolder();
 	}
 
 	public function getfolders($use_internal = false, $load_files = false){
 		$selected_folder = 0;
-		if(isset($_GET['selected_folder'])){
-			$selected_folder = $_GET['selected_folder'];
+		if($this->selected_folder == 0){
+			if(isset($_GET['selected_folder'])){
+				$selected_folder = $_GET['selected_folder'];
+			}
+		} else {
+			$selected_folder = $this->selected_folder;
 		}
 
 		$result = array();
-		$parents = getFoldersByRole(true);
+		$parents = getFolders(true);
 		$parents = $parents->result();
 
 		$isSelected = false;
 		if(!empty($parents)){
 			foreach ($parents as $key => $value) {
 				$files = array();
-				if(($load_files) && (!in_array($value->id, $this->folders_with_files))){
-					$files = $this->getfolderfiles($value->id, $value->path);
+				if(($load_files) && (!in_array($value->folder_id, $this->folders_with_files))){
+					$files = $this->getfolderfiles($value->folder_id, $value->path);
 				}
 
-				$isSelected = ($value->id == $selected_folder);
+				$isSelected = ($value->folder_id == $selected_folder);
 				$folder = array(
-					'id' => $value->id,
+					'id' => $value->folder_id,
 					'path' => $value->path,
 					'isFile' => false,
 					'text' => $value->folder_name,
-					'state' => array('expanded' => false, 'selected' => $isSelected)
+					'state' => array('expanded' => $isSelected, 'selected' => false)
 				);
 
 				if(!empty($files)){
@@ -46,7 +54,7 @@ class Folders extends MY_Controller {
 			}
 		}
 		
-		$children = getFoldersByRole(false, true);
+		$children = getFolders(false, true);
 		$children = $children->result();
 
 		foreach ($children as $c => $child) {
@@ -75,19 +83,19 @@ class Folders extends MY_Controller {
 	}
 
 	private function findandupdatefolder(&$parent, $child, $selected_folder, $load_files){
-		if($parent['id'] == $child->parent){
+		if($parent['id'] == $child->parent_id){
 			$files = array();
-			if(($load_files) && (!in_array($child->id, $this->folders_with_files))){
-				$files = $this->getfolderfiles($child->id, $child->path);
+			if(($load_files) && (!in_array($child->folder_id, $this->folders_with_files))){
+				$files = $this->getfolderfiles($child->folder_id, $child->path);
 			}
 
-			$isSelected = ($child->id == $selected_folder);
+			$isSelected = ($child->folder_id == $selected_folder);
 			$folder = array(
-				'id' => $child->id,
+				'id' => $child->folder_id,
 				'path' => $child->path,
 				'isFile' => false,
 				'text' => $child->folder_name,
-				'state' => array('expanded' => false, 'selected' => $isSelected)
+				'state' => array('expanded' => $isSelected, 'selected' => false)
 			);
 
 			if(!empty($files)){
@@ -122,14 +130,14 @@ class Folders extends MY_Controller {
 
 	private function getfolderfiles($folder_id, $folder_path){
 		$return = array();
-		$files = $this->vault_model->getByWhere(array('folder' => $folder_id));
+		$files = $this->vault_model->getByWhere(array('folder_id' => $folder_id));
 		foreach ($files as $key => $value) {
 			$file = array(
-				'id' => $value->id,
-				'path' => $folder_path . $value->fullfile,
+				'id' => $value->file_id,
+				'path' => $value->file_path,
 				'isFile' => true,
-				'text' => $value->fullfile,
-				'icon' => $this->getfileicon($value->fullfile)
+				'text' => $value->title,
+				'icon' => $this->getfileicon($value->file_path)
 			);
 
 			array_push($return, $file);
@@ -165,150 +173,107 @@ class Folders extends MY_Controller {
 		return $return;
 	}
 
-	public function save(){
-		$return = array(
-			'folders' => array(),
-			'error' => ''
-		);
-
+	public function create(){
 		$uid = logged('id');
-		$role_id = logged('role');
 		$company_id = logged('company_id');
-		$parent = 0;
 
-		if(isset($_POST['roles'])){
-			$roles = $_POST['roles'];
-		} else {
-			$roles = array();
-		}
-
-		$folder_name = $_POST['folder_name'];
-		if(isset($_POST['parent_folder_id'])){
-			$parent = $_POST['parent_folder_id'];	
-		}
-
-		$sql = 'select count(*) as `count` from folders where folder_name = "'. $folder_name .'" and parent = ' . $parent;
-		$folder = $this->db->query($sql)->row();
-		if($folder->count <= 0){
-	
-			if($parent != 0){
-				$parent_folder = $this->db->get_where('folders', array('id' => $parent))->row();
-
-				$path = $parent_folder->path . $folder_name . '/';
-			} else {
-				$path = '/' . $folder_name . '/';
-			}
-
-			$sql = 'select '.
-
-				   'folder_order '.
-
-				   'from folders '.
-
-				   'where company_id = ' . $company_id . ' ' .
-
-				   'order by folder_order DESC ' .
-
-				   'limit 1';
-
-
-			$folder_order = $this->db->query($sql);
-			if($folder_order->num_rows() <= 0){
-				$folder_order = 1;
-			} else {
-				$folder_order = $folder_order->row();
-				$folder_order = $folder_order->folder_order + 1;
-			}
-
-			$data = array(
-				'uid' => $uid,
-				'folder_name' => $folder_name,
-				'path' => $path,
-				'parent' => $parent,
-				'company_id' => $company_id,
-				'folder_order' => $folder_order 
+		if($this->company_folder != ''){
+			$return = array(
+				'file_folders' => array(),
+				'error' => ''
 			);
 
-			if($this->folders_model->trans_create($data)){
-
-				$sql = 'select id from folders where uid = ' . $uid . ' order by folder_order DESC limit 1';
-				$last_record = $this->db->query($sql)->row();
-
-				$data_batch = array();
-				$new_data = array(
-					'folder_id' => $last_record->id,
-					'role_id' => $role_id
-				);
-
-				array_push($data_batch, $new_data);
-
-				foreach ($roles as $key => $value) {
-					$new_data = array(
-						'folder_id' => $last_record->id,
-						'role_id' => $value['role_id']
-					);
-
-					array_push($data_batch, $new_data);
-				}
-
-
-				if($this->folders_permissions_model->trans_create($data_batch, true)){
-					if(!file_exists('./uploads/')){
-						mkdir('./uploads/');
-					}
-
-					if(!file_exists('./uploads' . $path)){
-						mkdir('./uploads' . $path);
-					}
-
-					$return['folders'] = $this->getfolders(true);
-				} else {
-					$return['error'] = 'Error creating folder';	
-				}
-			} else {
-				$return['error'] = 'Error creating folder';
+			$folder_name = $_POST['folder_name'];
+			$parent_id = 0;
+			if(isset($_POST['parent_id'])){
+				$parent_id = $_POST['parent_id'];
 			}
 
-		} else {
+			$description = '';
+			$path = '';
+			$folder_order = 0;
 
-			$return['error'] = 'Folder name already exists';
-				
+			$record = $this->db->query('select count(*) as `existing` from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id)->row();
+			$record = $record->existing;
+
+			if($record > 0){
+				$return['error'] = 'Folder already exists';
+			} else {
+				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
+				if($parent_folder->num_rows() > 0){
+					$parent_folder = $parent_folder->row();
+
+					$path = $parent_folder->path . $folder_name . '/';
+				} else {
+					$path = '/' . $folder_name . '/';
+				}
+
+				$folder_order = $this->db->query('select max(folder_order) as `last_order` from file_folders where company_id = ' . $company_id);
+				if($folder_order->num_rows() > 0){
+					$folder_order = $folder_order->row();
+					$folder_order = $folder_order->last_order; 
+				}
+
+				if(isset($_POST['folder_desc'])){
+					$description = $_POST['folder_desc'];
+				}
+
+				$folder_order += 1;
+				$data = array(
+					'folder_name' => $folder_name,
+					'parent_id' => $parent_id,
+					'description' => $description,
+					'path' => $path,
+					'created_by' => $uid,
+					'create_date' => date('Y-m-d h:i:s'),
+					'company_id' => $company_id,
+					'folder_order' => $folder_order
+				);
+
+				if($this->folders_model->trans_create($data)){
+					mkdir('./uploads/' . $this->company_folder . $path, 0777);
+
+					$latest_folder_id = $this->db->query('select max(folder_id) as `latest_folder_id` from file_folders where company_id = ' . $company_id)->row();
+					$latest_folder_id = $latest_folder_id->latest_folder_id;
+
+					$this->selected_folder = $latest_folder_id;
+
+					$return['file_folders'] = $this->getfolders(true, true);
+				} else {
+					$return['error'] = 'Error in creating folder. Please contact our support';
+				}
+			}
+		} else {
+			$return['error'] = 'Error in initializing root folder';
 		}
 
 		echo json_encode($return);
 	}
 
-	public function delete(){
+	public function delete(){ 
 		$return = array(
-			'folders' => array(),
+			'file_folders' => array(),
 			'error' => ''
 		);
 
 		$folder_id = $_POST['folder_id'];
-		
-		$sql = 'select count(*) as `count` from filevault where folder = ' . $folder_id;
-		$fcount = $this->db->query($sql)->row();
-		$fcount = $fcount->count;
+		$parent_id = 0;
 
-		$sql = 'select count(*) as `count` from folders where parent = ' . $folder_id;
-		$scount = $this->db->query($sql)->row();
-		$scount = $scount->count;
-
-		$folder = $this->folders_model->getById($folder_id);
-
-		if($fcount > 0){
-			$return['error'] = 'Folder has files in it';
-		} else if($scount > 0){
-			$return['error'] = 'Folder has sub folders in it';
+		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id)->row();
+		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id)->row();
+		if(($files->filescount > 0) || ($folders->folderscount > 0)){
+			$return['error'] = 'Cannot delete folder. Folder is not empty.';
 		} else {
+			$folder = $this->folders_model->getById($folder_id);
+			$delete_result = $this->folders_model->trans_delete(array(), array('folder_id' => $folder_id));
+			if($delete_result['status']){
+				rmdir('./uploads/' . $this->company_folder . $folder->path);
 
-			if(($this->folders_permissions_model->trans_delete(array(), array('folder_id' => $folder_id))) &&
-			   ($this->folders_model->trans_delete(array(), array('id' => $folder_id)))){
-				if(file_exists('./uploads' . $folder->path)){
-					rmdir('./uploads' . $folder->path);
+				$this->selected_folder = $folder->parent_id;
 
-					$return['folders'] = $this->getfolders(true);
-				}
+				$return['file_folders'] = $this->getFolders(true, true);
+			} else {
+				$return['error'] = $delete_result['message'];
 			}
 		}
 
@@ -316,46 +281,9 @@ class Folders extends MY_Controller {
 	}
 
 	public function update_permissions(){
-		$return = array(
-			'error' => ''
-		);
-
-		$role_id = logged('role');
-		$folder_id = $_POST['folder_id'];
-		if(isset($_POST['roles'])){
-			$roles = $_POST['roles'];
-		} else {
-			$roles = array();
-		}
-
-		if($this->db->query('delete from folders_permissions where folder_id = ' . $folder_id . ' and role_id <> ' . $role_id)){
-			$data_batch = array();
-
-			foreach ($roles as $key => $value) {
-				$new_data = array(
-					'folder_id' => $folder_id,
-					'role_id' => $value['role_id']
-				);
-
-				array_push($data_batch, $new_data);
-			}
-
-			if(!$this->folders_permissions_model->trans_create($data_batch, true)){
-				$return['error'] = 'Error in recreate folder permissions';
-			}
-		} else {
-			$return['error'] = 'Error in reset folder permissions';
-		}
-		
-		echo json_encode($return);
 	}
 
 	public function getFolderPermissions(){
-		$folder_id = $_GET['folder_id'];
-
-		$return = $this->db->get_where('folders_permissions', array('folder_id' => $folder_id))->result_array();
-
-		echo json_encode($return);
 	}
 }
 

@@ -32,11 +32,11 @@
                <div class="card">
                   <div class="container-fluid" style="font-size:14px;">
                      <div class="row">
-                        <div class="col text-left">
+                        <div class="col-xs-12 col text-left">
                            <h1 class="m-0 text-left">Survey List</h1>
                            <p class="m-0">Here are the list of surveys created. You can also create a new set of questions here.  </p>
                         </div>
-                        <div class="col-auto">
+                        <div class="col-xs-12 col-auto">
                            <div class="h1-spacer">
                               <a class="btn btn-primary btn-md text-light" href="<?php echo base_url()?>survey/themes">
                                 <span class="fa fa-th text-light"></span> Themes
@@ -55,7 +55,7 @@
                      <div id="survey-content" class="row">
                        <?php if($surveys){ ?>
                        <?php foreach ($surveys as $key => $survey): ?>
-                         <div class="col-sm-3">
+                         <div class="col-xs-12 col-sm-6 col-md-3">
 
                         <!-- Card content for each survey -->
                         <div id="survey-card" data-id="<?= $survey->id ?>" class="card pt-0 border-0 shadow">
@@ -143,7 +143,6 @@
 
   <script>
     document.querySelector('#title').addEventListener('keyup', event => {
-      console.log(event.target.value);
       if(event.target.value === ''){
         document.querySelector('#btnSubmitTitle').disabled = true;
       }else{ 

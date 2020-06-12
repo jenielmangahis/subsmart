@@ -146,6 +146,5 @@ $autoload['model'] = array(
 	'plans_model',
 	'business_model',
 	'templates_model',
-	'folders_model',
-	'folders_permissions_model'
+	'folders_model'
 );
