@@ -336,7 +336,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-sm-6 systemInfo pt-5 mt-4">
                     <h3>
-                        Customer Finder 360
+                        Change to Campaign Blast
                     </h3>
                     <p>
                         In business, you should always strive to be at least one step ahead of your competition. With custom finder 360 you can narrow your target audience and connect with new customers better than ever before.
