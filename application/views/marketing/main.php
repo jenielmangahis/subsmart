@@ -16,8 +16,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                 <div class="marketing-card-deck card-deck pl-50 pb-100">
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Blast" src="<?php echo base_url('/assets/dashboard/images/sms.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/sms.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">SMS Blast</h5>
                             <p class="card-text mt-txt">Send sms marketing campaigns to all your customers or just a specific
@@ -26,9 +26,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
-                                src="<?php echo base_url('/assets/dashboard/images/sms_automation.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="SMS Automation - Flaticons"
+                                src="<?php echo base_url('/assets/dashboard/images/mail.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">SMS Automation</h5>
                             <p class="card-text mt-txt">
@@ -40,9 +40,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="Questionnaire/Survey"
-                                src="<?php echo base_url('/assets/dashboard/images/voicemail_campaign.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Questionnaire/Survey - Flaticons"
+                                src="<?php echo base_url('/assets/dashboard/images/document.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Questionnaire/Survey</h5>
                             <p class="card-text mt-txt">
@@ -54,9 +54,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="SMS Automation"
-                                src="<?php echo base_url('/assets/dashboard/images/mail.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Email Blast - Flaticons"
+                                src="<?php echo base_url('/assets/dashboard/images/email-blast.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Email Blast</h5>
                             <p class="card-text mt-txt">
@@ -66,9 +66,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="Email Automation"
-                                src="<?php echo base_url('/assets/dashboard/images/email_auto.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Email Automation - Flaticons"
+                                src="<?php echo base_url('/assets/dashboard/images/email-automation.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Email Automation</h5>
                             <p class="card-text mt-txt">Send automatic emails to customers after a certain event, for example: thank you email, service reminders, keep in touch, invoice due reminder</p>
@@ -76,9 +76,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="Deals & Steals"
-                                src="<?php echo base_url('/assets/dashboard/images/deals.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Deals & Steals - Flaticons"
+                                src="<?php echo base_url('/assets/dashboard/images/deal.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Deals & Steals</h5>
                             <p class="card-text mt-txt">Promote your business by creating exciting deals to email or post the URL on social media sites. Schedule these deals to run on specific dates or send out immediately.</p>
@@ -86,9 +86,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="Postcard on Demand"
-                                src="<?php echo base_url('/assets/dashboard/images/postcard.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Postcard on Demand"
+                                src="<?php echo base_url('/assets/dashboard/images/postcard.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Postcard on Demand</h5>
                             <p class="card-text mt-txt">Send out jumbo postcards (8.3" x 5.8") to your customers to notify them of a promotion you’re running. Select all your customers, a customer group or just specific customers on your list.</p>
@@ -96,9 +96,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="Postcard Automation"
-                                src="<?php echo base_url('/assets/dashboard/images/postcard_automation.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Postcard Automation"
+                                src="<?php echo base_url('/assets/dashboard/images/postcard-automation.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Postcard Automation</h5>
                             <p class="card-text mt-txt">Let automation do all your follow-up needs for you by sending out jumbo sized postcards (8.3" x 5.8") to your customers to say thank you for using you for their service needs or to remind them they are due for service 6 months after their service date.
@@ -107,9 +107,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </a>
                     <a href="#" class="card border-gr"> <img
-                                class="card-img-top" alt="Customer Finder 360"
-                                src="<?php echo base_url('/assets/dashboard/images/find.svg') ?>"
-                                data-holder-rendered="true" style="height: 100px; width: 100%; display: block;">
+                                class="marketing-img" alt="Customer Finder 360"
+                                src="<?php echo base_url('/assets/dashboard/images/finder.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Customer Finder 360</h5>
                             <p class="card-text mt-txt">Send our jumbo postcards (8.3" x 5.8") to your next potential customer by choosing specific areas and using our numerous filters to ensure you are targeting to the right market for your business.</p>

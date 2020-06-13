@@ -847,6 +847,12 @@ body .navigation-menu {
     font-size: 24px;
     vertical-align: middle;
 }
+.marketing-img {
+    width: 95px;
+    display: block;
+    margin: 0 auto;
+}
+
 
 .notification-list .noti-icon-badge {
     display: inline-block;

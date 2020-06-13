@@ -13,6 +13,31 @@ button,input[type=submit]{
    -webkit-appearance:button;
    cursor:pointer
 }
+.text-center {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.cd-fs:after {
+  content: '';
+  width: 39px;
+  height: 2px;
+  background-color: #694a86;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -58px;
+  border-radius: 4px;
+}
+.cd-fs-2:after {
+  content: '';
+  width: 39px;
+  height: 2px;
+  background-color: #694a86;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -43px;
+  border-radius: 4px;
+}
 button::-moz-focus-inner,input::-moz-focus-inner{
    border:0;
    padding:0
@@ -237,6 +262,25 @@ label{
 }
 
 @media (max-width:767px){
+  .mobile-pricing-banner {
+    padding: 10px 11px;
+    border-top: 3px solid #34144c;
+    position: relative;
+    left: 45px;
+    border-right: 1px solid #dedede;
+    border-left: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    margin-right: 20px;
+    width: 75% !important;
+    box-shadow: rgba(177, 162, 162, 0.3) 1px -2px 4px;
+    height: 400px;
+  }
+  .toggle-container .bn {
+    font-weight: 500;
+    line-height: 1.33;
+    color: #393a3d;
+    margin-left: 0px !important;
+  }
    h3.chart-headline {
        display: block;
        width: 90% !important;
@@ -558,7 +602,7 @@ p{
    margin:4px auto 0;
    display:table
 }
-.eCommerce-product-div .image-price-container .price-container .pricing-section .price{
+.eCommerce-product-div .image-price-container .price-container .pricing-section .price, .cls-price .price{
    color:#202020;
    font-weight:400;
    letter-spacing:-2px;
@@ -567,7 +611,7 @@ p{
    float:left;
    margin-left:-2px
 }
-.eCommerce-product-div .image-price-container .price-container .pricing-section .price .line-through{
+.eCommerce-product-div .image-price-container .price-container .pricing-section .price .line-through, .cls-price .price .line-through{
    border-top:1px solid #202020;
    margin:0 auto;
    position:relative;
@@ -685,6 +729,13 @@ p{
    height:100%;
    margin:0 auto
 }
+.mobile-only {
+  display: none;
+}
+.mobile-pricing {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
 .pricing-card-layout .pricing-card-layout-header .ctext h4,.pricing-card-layout .pricing-card-layout-header .ctext span{
    display:table-cell;
    vertical-align:middle;
@@ -716,12 +767,12 @@ p{
    font:600 19px "Avenir Next LT Pro","Avenir Next",Futura,sans-serif;
    line-height:24px
 }
-.pricing-card-layout .eCommerce-product-div .pricing-section .price .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .price .ct,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ct{
+.pricing-card-layout .eCommerce-product-div .pricing-section .price .ac,.cls-price .price.ac,.pricing-card-layout .eCommerce-product-div .pricing-section .price .ct,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ct{
    font:500 14px AvenirNextforINTUIT,Calibri,"Trebuchet MS",sans-serif;
    line-height:32px;
    top:-10px
 }
-.pricing-card-layout .eCommerce-product-div .pricing-section .price .as,.pricing-card-layout .eCommerce-product-div .pricing-section .price .aw,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .as,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .aw{
+.pricing-card-layout .eCommerce-product-div .pricing-section .price .as,.cls-price .price.as,.pricing-card-layout .eCommerce-product-div .pricing-section .price .aw,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .as,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .aw{
    font:500 28px AvenirNextforINTUIT,Calibri,"Trebuchet MS",sans-serif;
    line-height:32px
 }
@@ -1583,12 +1634,12 @@ h4,h5{
 .pricing-card-layout .eCommerce-product-div>div:nth-child(3) br{
    display:none
 }
-.pricing-card-layout .eCommerce-product-div .pricing-section .price .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .price .ct,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ct{
+.pricing-card-layout .eCommerce-product-div .pricing-section .price .ac,.cls-price .price .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .price .ct,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ac,.pricing-card-layout .eCommerce-product-div .pricing-section .red-price-text .ct{
    font:500 16px AvenirNextforINTUIT,Calibri,"Trebuchet MS",sans-serif;
    line-height:23px;
    top:-8px
 }
-.pricing-card-layout .eCommerce-product-div .pricing-section .price .aw{
+.pricing-card-layout .eCommerce-product-div .pricing-section .price .aw, .cls-price .price .aw{
    font-size:28px!important;
    line-height:32px!important
 }
@@ -1755,6 +1806,16 @@ body{
        margin-bottom:-20px!important
    }
 }
+.gray-price {
+  float: left;
+  position: relative;
+  top: 5px;
+}
+.center-pricing {
+  width: 70%;
+  display: block;
+  margin: 0 auto;
+}
 .horizontal-image-text.image-text-1x1-horizontal{
    padding-top:20px;
    margin-bottom:20px!important
@@ -1773,7 +1834,19 @@ body{
 .horizontal-image-text.image-text-1x1-horizontal .row img{
    padding:0
 }
+.gray {
+  color: gray;
+}
 @media only screen and (max-width:767px){
+    span.ad {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    span.aw {
+      font-size: 28px!important;
+      line-height: 32px!important;
+      color: gray;
+    }
    .horizontal-image-text.image-text-1x1-horizontal{
        margin-bottom:0!important
    }
