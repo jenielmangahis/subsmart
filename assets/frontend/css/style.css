@@ -403,9 +403,22 @@
    line-height: 1;
    margin: 0px !important;
  }
-  .header-top p  span{
+ .header-top p  span{
 	  color:#fada97
   }
+
+ .header-top .blink {
+   animation:blinkingText 1.9s infinite;
+ }
+
+ @keyframes blinkingText{
+    0%{     color: #fada97;    }
+    49%{    color: #fada97; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #fada97;    }
+ }
+
  .site-logo-holder:after{
 	content: "";
     position: absolute;

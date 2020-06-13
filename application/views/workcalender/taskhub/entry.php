@@ -6,20 +6,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
     $participants_selected_ids = '';
     $participants_selected_names = '';
     $selected_participants_ids = array();
+    $assigned_to = 0;
     if(isset($selected_participants)){
         foreach ($selected_participants as $row) {
-            array_push($selected_participants_ids, $row->user_id);
+            if($row->is_assigned == 0){
+                array_push($selected_participants_ids, $row->user_id);
 
-            if($participants_selected_ids == ''){
-                $participants_selected_ids .= $row->user_id;
-            } else {
-                $participants_selected_ids .= ',' . $row->user_id;
-            }
+                if($participants_selected_ids == ''){
+                    $participants_selected_ids .= $row->user_id;
+                } else {
+                    $participants_selected_ids .= ',' . $row->user_id;
+                }
 
-            if($participants_selected_names == ''){
-                $participants_selected_names .= $row->name;
+                if($participants_selected_names == ''){
+                    $participants_selected_names .= $row->name;
+                } else {
+                    $participants_selected_names .= ',' . $row->name;
+                }
             } else {
-                $participants_selected_names .= ',' . $row->name;
+                $assigned_to = $row->user_id;
             }   
         }
     }
@@ -97,22 +102,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <select class="form-control" name="assigned_to" id="assigned_to">
                                                 <option value="">Myself</option>
                                                 <?php
-                                                  if((set_value('assigned_to') == '') && (isset($task))){
-                                                    $sel_assigned_to = $task->assigned_to;
-                                                  } else {
+                                                  if(set_value('assigned_to') != ''){
                                                     $sel_assigned_to = set_value('assigned_to');
                                                   }
 
                                                   foreach ($users_selection as $row) {
                                                     $tag = '';
-                                                    if($row->id == $sel_assigned_to){
+                                                    if(($row->id == $sel_assigned_to) || ($row->id == $assigned_to)){
                                                       $tag = ' selected';
                                                     }
 
                                                     $hidden = '';
-                                                    if(in_array($row->id, $selected_participants_ids)){
-                                                        $hidden = ' hidden';
-                                                    }
+                                                    // if(in_array($row->id, $selected_participants_ids)){
+                                                    //     $hidden = ' hidden';
+                                                    // }
 
                                                     echo '<option value="'. $row->id .'"'. $tag . $hidden . '>' . $row->name .'</option>';
                                                   }
@@ -137,7 +140,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <select class="form-control" name="status" id="status">
                                                 <?php
                                                   if((empty(set_value('status'))) && (isset($task))){
-                                                    $sel_status = $task->status;
+                                                    $sel_status = $task->status_id;
                                                   } else {
                                                     $sel_status = set_value('status');  
                                                   }
@@ -165,16 +168,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php echo $participants_selected_names; ?>
                                             </option>
                                             <?php
-                                                $assigned_to = 0;
-                                                $created_by = 0;
-
-                                              if(isset($task)){
-                                                $assigned_to = $task->assigned_to;
-                                                $created_by = $task->assigned_to;
-                                              }
-
-                                              foreach ($participants as $row) {
-                                                if(($row->id != $assigned_to) && ($row->id != $created_by)){
+                                              foreach ($users_selection as $row) {
+                                                if($row->id != $assigned_to){
                                                     if(in_array($row->id, $selected_participants_ids)){
                                                         echo '<option value="'. $row->id .'" class="bg-success">' . $row->name . '</option>';
                                                     } else {
@@ -214,8 +209,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header bg-danger">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Error</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         <p id="modal-taskhub-entry-error-alert-message"><?php if(isset($error)){ echo trim($error); } ?></p>  

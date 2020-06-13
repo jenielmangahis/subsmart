@@ -62,7 +62,7 @@ class Job extends MY_Controller
             $comp = array(
                 'company_id' => $comp_id
             );
-        } else {
+        } else { 
             $comp = array(
                 'company_id' => $comp_id,
                 'job_number' => $get['job_num']
@@ -74,6 +74,7 @@ class Job extends MY_Controller
         if ($job_num_query && empty($get['job_num'])) {
             $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
         } else {
+           $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
         }
@@ -113,6 +114,30 @@ class Job extends MY_Controller
         $this->activity_model->add("New Job #$categories Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Job Created Successfully');
+
+        redirect('job');
+    }
+
+    public function updateJob() {
+        postAllowed();
+        $comp_id = logged('company_id');
+        $id = $this->input->post('jobId');
+
+        $data = array(
+            'company_id' => $comp_id,
+            'job_number' => $this->input->post('jobNumber'),
+            'job_name' => $this->input->post('job_name'),
+            'job_type' => $this->input->post('job_type'),
+            'priority' => $this->input->post('job_priority'),
+            'status' => $this->input->post('job_status'),
+            'created_by' => $this->input->post('createdBy'),
+            'created_date' => date('Y-m-d H:i:s')
+        );
+        $this->jobs_model->updateJob($id, $data);
+
+        $this->activity_model->add("Updated Job #$categories Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Job Updated Successfully');
 
         redirect('job');
     }

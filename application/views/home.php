@@ -350,7 +350,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </ul>
                                 <div class="actionBtn">
                                     <p>Dive deeper into the product and see what we can do for you and your team.</p>
-                                    <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button>
+                                    <!-- <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button> -->
+                                    <a href="<?php echo url('demo') ?>" class="btn btn-red btn-block rounded-xl">
+                                        Take a Product Tour
+                                    </a>                                    
                                 </div>
                             </div>
                         </div>
@@ -409,7 +412,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('registration') ?>" class="btn btn-green rounded-xl">
                             START YOUR <span class="yColor">FREE TRIAL</span>
                         </a>
-
                     </div>
                 </div>
             </div>

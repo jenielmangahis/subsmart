@@ -159,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6 systemInfo text-right pt-5">
-                    <h3>Seamless appointment scheduling</h3>
+                    <h3>Automate appointment scheduling</h3>
                     <p>
                         Now you can schedule appointments for both your customers and employees, without barely lifting a finger.
                     </p>

@@ -66,19 +66,30 @@ class Jobs_model extends MY_Model
         return $query->result_array();
     }
 
-        /**
+    /**
      * @return mixed
      */
-    public function getJobDetails()
+    public function getJobDetails($job_num)
     {
         $comp_id = logged('company_id');
         $this->db->select('*');
         $this->db->from('jobs');
         $this->db->where('jobs.company_id', $comp_id);
-        $this->db->join('users', 'users.id = customers.user_id');
+        $this->db->where('jobs.job_number', $job_num);
+        $this->db->join('jobs_has_customers', 'jobs.jobs_id = jobs_has_customers.jobs_id');
+        $this->db->join('jobs_has_address', 'jobs.jobs_id = jobs_has_address.jobs_id');
         $query = $this->db->get();
 
-        return $query->result_array();
+        return $query->row();
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function updateJob($id, $data)
+    {
+        $this->db->where('jobs_id',$id);
+        $this->db->update('jobs',$data);
     }
 }
 

@@ -155,7 +155,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 
 
                                                                 <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Clock In' ):?>
+                                                                    <?php if( $clockin_arr[0]->action == 'Clock In' && $clockin_arr[0]->timestamp != 0 ):?>
                                                                     <a id="clockin" style="display: none;" href="#"
                                                                        class="btn btn-sm btn-primary" title="Clock In"
                                                                        data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In</a>
@@ -165,7 +165,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                                         Manual
                                                                     </button> -->
-                                                                    <?php elseif( $clockin_arr[0]->action == 'Clock Out' ):?>
+                                                                    <?php elseif( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 ):?>
                                                                     <a id="clockin" style="" href="#"
                                                                    class="btn btn-sm btn-primary" title="Clock In"
                                                                    data-toggle="tooltip"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In</a>
