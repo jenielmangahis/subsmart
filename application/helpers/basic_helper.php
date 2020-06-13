@@ -612,7 +612,6 @@ if (!function_exists('hasPermissions')) {
 
 if (!function_exists('getLoggedFullName')) {
 
-
     function getLoggedFullName($userId)
     {
         $finalUserId = ($userId) ? $userId : logged('id');
@@ -621,6 +620,20 @@ if (!function_exists('getLoggedFullName')) {
         $result = $CI->user_model->getByWhere(array('id' => $finalUserId));
 
         return ucwords($result[0]->FName) . ' ' . ucwords($result[0]->LName);
+    }
+}
+
+if (!function_exists('getJobAddress')) {
+
+    function getJobAddress($addressId)
+    {
+        $CI =& get_instance();
+        $CI->db->select('*');
+        $CI->db->from('address');
+        $CI->db->where('address_id', $addressId);
+        $address = $CI->db->get()->row();
+
+        return ucwords($address->address1) . ' ' .ucwords($address->address2) . ' ' . ucwords($address->city . ' ' . ucwords($address->state));
     }
 }
 

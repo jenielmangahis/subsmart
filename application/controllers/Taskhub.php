@@ -5,7 +5,7 @@ class Taskhub extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 
-		$this->load->model(array('taskhub_model','taskhub_updates_model','taskhub_status_model','taskhub_participants_model','taskhub_comments_model'));
+		$this->load->model(array('taskhub_model','taskhub_updates_model','taskhub_status_model','taskhub_participants_model'));
 		
 		$this->page_data['page']->menu = 'taskhub';
 	}
@@ -31,8 +31,6 @@ class Taskhub extends MY_Controller {
 			  	'where user_id = '. $uid . 
 			') c on c.task_id = a.task_id '.
 			'where a.created_by = ' . $uid . ' ' .
-			   'or a.assigned_to = ' . $uid . ' ' .
-			   'or a.assigned_by = ' . $uid . ' ' .
 			   'or not ISNULL(c.task_id) '.
 
 			'group by a.task_id '.
@@ -50,24 +48,27 @@ class Taskhub extends MY_Controller {
 		$company_id = logged('company_id');
 
 		$users_selection = $this->db->query(
-			'select id, concat(FName, " ", LName) as `name` from users'
+			'select '.
+
+			'a.id, '.
+			'concat(a.FName, " ", a.LName) as `name` '.
+
+			'from users a '.
+
+			'where a.id <> ' . $uid . ' ' .
+			  'and a.company_id = ' . $company_id
 		);
 
 		if($users_selection->num_rows() > 0){
 			$this->page_data['users_selection'] = $users_selection->result();
 		}
 
-		$participants_add_filter = '';
 		$taskid = trim($this->input->post('taskid'));
 		if(($id > 0) || ($taskid > 0)){
 			if($id > 0){
 				$taskid = $id;
 			}
 			$this->page_data['task'] = $this->taskhub_model->getById($taskid);
-			if($this->page_data['task']->created_by != $uid){
-				$participants_add_filter = ' and user_id <> ' . $this->page_data['task']->created_by;
-			}
-
 			$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 			$this->page_data['selected_participants'] = $this->db->query(
 															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
@@ -75,8 +76,6 @@ class Taskhub extends MY_Controller {
 															'where a.task_id = ' . $taskid
 														)->result();
 		}
-
-		$this->page_data['participants'] = $this->db->query('select id, concat(FName, " ", LName) as `name` from users where id <> ' . $uid . $participants_add_filter)->result();
 
 		$this->form_validation->set_rules('subject', 'Subject', 'trim|required');
 		$this->form_validation->set_rules('description', 'Description', 'trim|required');
@@ -100,8 +99,6 @@ class Taskhub extends MY_Controller {
 				$data = array(
 					'subject' => $this->input->post('subject'),
 					'description' => $this->input->post('description'),
-					'assigned_to' => $assigned_to,
-					'assigned_by' => $uid,
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
 					'status_id' => $status
 				);
@@ -114,8 +111,6 @@ class Taskhub extends MY_Controller {
 					'created_by' => $uid,
 					'date_created' => date('Y-m-d'),
 					'time_created' => date('h:m:s'),
-					'assigned_to' => $assigned_to,
-					'assigned_by' => $uid,
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
 					'status_id' => 1,
 					'company_id' => $company_id
@@ -127,7 +122,7 @@ class Taskhub extends MY_Controller {
 						'select task_id from tasks where created_by = ' . $uid . ' and date_created = "' . date('Y-m-d') . '" order by time_created DESC limit 1'
 					)->row();
 
-					$taskid = $task->id;
+					$taskid = $task->task_id;
 					$status = 1;
 				}
 			}
@@ -141,11 +136,20 @@ class Taskhub extends MY_Controller {
 						foreach ($participants as $participant) {
 							$data_participant = array(
 								'task_id' => trim($taskid),
-								'user_id' => $participant
+								'user_id' => $participant,
+								'is_assigned' => 0
 							);	
 
 							array_push($data_participants, $data_participant);
 						}
+
+						$data_participant = array(
+							'task_id' => trim($taskid),
+							'user_id' => $assigned_to,
+							'is_assigned' => 1
+						);
+
+						array_push($data_participants, $data_participant);
 
 						$this->taskhub_participants_model->trans_create($data_participants, true);
 					}
@@ -166,15 +170,13 @@ class Taskhub extends MY_Controller {
 			'a.*, '.
 			'b.status_text, '.
 			'b.status_color, '.
-			'concat(c.FName, " ", c.LName) as `created_by_name`, '.
-			'concat(d.FName, " ", d.LName) as `assigned_to_name` '.
+			'concat(c.FName, " ", c.LName) as `created_by_name` '.
 
 			'from tasks a '.
-			'left join tasks_status b on b.id = a.status '.
+			'left join tasks_status b on b.status_id = a.status_id '.
 			'left join users c on c.id = a.created_by '.
-			'left join users d on d.id = a.assigned_to '.
 
-			'where a.id = '. $id
+			'where a.task_id = '. $id
 		)->row();
 
 		$this->page_data['participants'] = $this->db->query(
@@ -184,7 +186,7 @@ class Taskhub extends MY_Controller {
 			'concat(b.FName, " ", b.LName) as `participant_name` '.
 
 			'from tasks_participants a '.
-			'left join users b on b.id = a.uid '.
+			'left join users b on b.id = a.user_id '.
 
 			'where a.task_id = ' . $id
 		)->result();
@@ -192,51 +194,30 @@ class Taskhub extends MY_Controller {
 		$this->page_data['updates_and_comments'] = $this->db->query(
 			'select '.
 
-			'a.status_id, '.
-			'a.assigned_to, '.
-			'a.assigned_by, '.
-			'a.last_updated_by, '.
-
-			'b.status_text as `status`, '.
-			'c.`username` as `assigned_to_name`, '.
-			'd.`username` as `assigned_by_name`, '.
-			'e.`username` as `last_updated_by_name`, '.
-
-			'"" as `comment`, '.
-
+			'a.notes as `text`, '.
 			'a.date_updated as `update_date`, '.
+			'concat(b.FName, " ", b.LName) as `user`, '.
 
 			'1 as `is_update` '.
 
 			'from tasks_updates a '.
-			'left join tasks_status b on b.id = a.status_id '.
-			'left join users c on c.id = a.assigned_to '.
-			'left join users d on d.id = a.assigned_by '.
-			'left join users e on e.id = a.last_updated_by '.
+			'left join users b on b.id = a.performed_by '.
 			'where a.task_id = '. $id . ' ' .
 			'union all '.
+
 			'select '.
 
-			'0 as `status_id`, '.
-			'0 as `assigned_to`, '.
-			'0 as `assigned_by`, '.
-
-			'a.uid as `last_updated_by`, '.
-
-			'"" as `status`, '.
-			'"" as `assigned_to_name`, '.
-			'"" as `assigned_by_name`, '.
-
-			'b.`username` as `last_updated_by_name`, '.
-
-			'a.`comment`, '.
+			'a.comment as `text`, '.
 			'a.comment_date as `update_date`, '.
+			'concat(b.FName, " ", b.LName) as `user`, '.
 
 			'0 as `is_update` '.
 
-			'from tasks_comments a '.
-			'left join users b on b.id = a.uid '.
-			'where a.task_id = '. $id . ' ' .
+			'from comments a '.
+			'left join users b on b.id = a.user_id '.
+			'where a.relation_id = '. $id . ' ' .
+			  'and a.type = "task" '.
+
 			'order by `update_date` ASC '	
 		)->result();
 
@@ -244,21 +225,28 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function comment($id){
-
 		$uid = logged('id');
+		$company_id = logged('company_id');
+
 		$comment = $_POST['comment'];
 
 		$data = array(
-			'task_id' => $id,
-			'uid' => $uid,
+			'type' => 'task',
+			'user_id' => $uid,			
 			'comment' => $comment,
-			'comment_date' => date('Y-m-d h:m:s')
+			'comment_date' => date('Y-m-d h:m:s'),
+			'company_id' => $company_id,
+			'relation_id' => $id
 		);
 
-		if($this->taskhub_comments_model->trans_create($data)){
-			$data['error'] = "";
-			$data['username'] = logged('username');
+		if($this->comments_model->trans_create($data)){
+			$user = logged();
+
+			$commenter = $user->FName . ' ' . $user->LName;
 			$comment_date = date_create($data['comment_date']);
+
+			$data['error'] = '';
+			$data['commenter'] = $commenter;
 			$data['comment_date'] = date_format($comment_date, 'F d, Y h:i:s');
 
 		} else {
@@ -267,6 +255,32 @@ class Taskhub extends MY_Controller {
 
 		echo json_encode($data);
 
+	}
+
+	public function addupdate($id){
+		$uid = logged('id');
+
+		$this->page_data['task'] = $this->taskhub_model->getById($id);
+
+		$this->form_validation->set_rules('notes', 'Notes', 'trim|required');
+		if($this->form_validation->run() == false){
+			$this->load->view('workcalender/taskhub/add_update', $this->page_data);
+		} else {
+			$data = array(
+				'task_id' => $id,
+				'notes' => $this->input->post('notes'),
+				'date_updated' => date('Y-m-d h:i:s'),
+				'performed_by' => $uid
+			);
+
+			if($this->taskhub_updates_model->trans_create($data)){
+				redirect('taskhub/view/' . $id);
+			} else {
+				$this->page_data['error'] = 'Error in creating task update';
+
+				$this->load->view('workcalender/taskhub/add_update', $this->page_data);
+			}
+		}	
 	}
 }
 

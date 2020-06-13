@@ -2,6 +2,10 @@ $(document).ready(function () {
   selected_folder = {};
   isUpdatePermissions = false;
 
+  $("#btnExistingJob").click(function () {
+    if ($("#selectExistingJob").val()) $.LoadingOverlay("show");
+  });
+
   $(".form-validate").validate();
   //Initialize Select2 Elements
   $(".select2").select2();

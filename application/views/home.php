@@ -295,6 +295,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="card mt-5 border-0">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-5">
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/eSign.jpg" class="card-img card-features" alt="card 1"></div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><a href="#">eSign</a></h5>
+                                                    <p class="card-text"> Easily get all the signatures you need without ever leaving nSmarTrac. Legally Signatures Empower You to Sign Documents Online. Create an eSignature, Format Documents, Store Signed Documents. Start Signing Today. eSign From Any Device. Clean And Paperless.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -350,7 +365,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </ul>
                                 <div class="actionBtn">
                                     <p>Dive deeper into the product and see what we can do for you and your team.</p>
-                                    <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button>
+                                    <!-- <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button> -->
+                                    <a href="<?php echo url('demo') ?>" class="btn btn-red btn-block rounded-xl">
+                                        Take a Product Tour
+                                    </a>                                    
                                 </div>
                             </div>
                         </div>
@@ -409,7 +427,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('registration') ?>" class="btn btn-green rounded-xl">
                             START YOUR <span class="yColor">FREE TRIAL</span>
                         </a>
-
                     </div>
                 </div>
             </div>

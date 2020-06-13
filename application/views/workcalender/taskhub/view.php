@@ -55,17 +55,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		                    <div class="box">
 		                    	<div class="box-header with-border">
 		                            <h5 class="box-title"><?php echo $task->subject; ?>
-		                            	<span class="font-weight-lighter">&ensp;#<?php echo $task->id; ?></span>
+		                            	<span class="font-weight-lighter">&ensp;#<?php echo $task->task_id; ?></span>
 		                            	&ensp;<span class="font-weight-lighter border border-dark px-2 rounded" style='background-color: <?php echo $task->status_color; ?>'><?php echo $task->status_text; ?></span>
 		                        	</h5>
 		                        </div>
 		                        <div class="box-body">
-		                        	<p style="text-indent: 30px; white-space: pre-wrap;" class="text-justify"><?php echo $task->description; ?></p>
+		                        	<p style="white-space: pre-wrap;" class="text-justify"><?php echo $task->description; ?></p>
 		                        </div>
 		                    	<div class="box-footer">
 									<?php foreach ($updates_and_comments as $key => $value) { ?>
-										<div class="card my_card" style="<?php if($value->is_update == 0){ echo 'border-color: #c0d3eb !important'; } else{ echo ''; } ?>">
-											<div class="card-header" style="<?php if($value->is_update == 0){ echo 'background-color: #f1f8ff; border-bottom-color: #c0d3eb !important'; } else{ echo ''; } ?>">
+										<div class="card my_card" style="<?php if($value->is_update == 0){ echo 'border-color: #c0d3eb !important'; } else{ echo 'border-color: #BDADDD !important'; } ?>">
+											<div class="card-header" style="<?php if($value->is_update == 0){ echo 'background-color: #f1f8ff; border-bottom-color: #c0d3eb !important'; } else{ echo 'background-color: #F1EEF7; border-bottom-color: #BDADDD'; } ?>">
 												<?php 
 													$date_updated = date_create($value->update_date);
 													$date_updated = date_format($date_updated, "F d, Y h:i:s");
@@ -77,32 +77,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 													} 
 												?>
 												
-												<p style="margin-bottom: 0 !important"><strong><?php echo $value->last_updated_by_name; ?></strong><?php echo ' ' . $update_type . ' ' . $date_updated;?></p>
+												<p style="margin-bottom: 0 !important"><strong><?php echo $value->user; ?></strong><?php echo ' ' . $update_type . ' ' . $date_updated;?></p>
 											</div>
 											<div class="card-body" style="padding-bottom: 0 !important">
-												<?php if($value->is_update == 1){ ?>
-													<div class="table-responsive">
-														<table class="table table-borderless table-sm">
-															<tbody>
-																<tr>
-																	<td class="font-italic"><strong>Status:</strong><?php echo ' ' . $value->status; ?></td>
-																</tr>
-																<tr>
-																	<td class="font-italic"><strong>Assignee:</strong><?php echo ' ' . $value->assigned_to_name; ?></td>
-																</tr>
-															</tbody>
-														</table>
-													</div>		
-												<?php } else { ?>
-													<p style="white-space: pre-wrap;" class="text-justify"><?php echo $value->comment; ?></p>							
-												<?php } ?>
+												<p style="white-space: pre-wrap;" class="text-justify"><?php echo $value->text; ?></p>							
 											</div>
 										</div>
 									<?php } ?>
 
 									<div class="card my_card" id="card_add_comment">
 										<div class="card-header">
-											<h4>Add Comment</h4>
+											<h4><i class="fa fa-comment-o"></i>&ensp;Add Comment</h4>
 										</div>
 										<div class="card-body" style="padding-bottom: 1.25rem !important">
 											<div class="form-group" style="margin-bottom: 1rem !important">
@@ -127,7 +112,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			                			</tr>
 			                			<tr>
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Assigned To :</td>
-			                				<td class="taskhub_sidebar_details_values"><?php echo $task->assigned_to_name; ?></td>
+			                				<td class="taskhub_sidebar_details_values"><?php
+			                					$assigned_to_name = '';
+
+			                					foreach ($participants as $key => $value) {
+			    									if($value->is_assigned == 1){
+			    										$assigned_to_name = $value->participant_name;
+
+			    										break;
+			    									}
+			                					}		
+
+			                					echo $assigned_to_name;
+			                				?></td>
 			                			</tr>
 			                			<tr>
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Participants :</td>
@@ -166,47 +163,97 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 </div>
 
-<div id="modal-taskhub-comment-error-alert" class="modal fade" role="dialog">
+<div id="modal-taskhub-alert" class="modal" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header bg-primary">
+      <div class="modal-header" id="modal-taskhub-alert-header">
+      	<h4 class="modal-title" id="modal-taskhub-alert-title"></h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="comment_modal_header"></h4>
       </div>
       <div class="modal-body">
-      	<p id="comment_modal_text"></p>  
+      	<p id="modal-taskhub-alert-text"></p>  
       </div>
     </div>
 
   </div>
 </div>
 
+<div id="modal-taskhub-preloader" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-9">
+            <h4>Processing. Please Wait...</h4>
+            <span><small>Please don't close your browser to avoid system conflicts</small></span>
+          </div>
+          <div class="col-md-3">
+            <div class="spinner-border text-secondary pull-right"></div> 
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- page wrapper end -->
+<?php include viewPath('includes/footer'); ?>
 <script type="text/javascript">
 	$(document).ready(function(){
+		var bg_header = '';
+
 		$('#btnAddComment').click(function(){
 			if($('#comment').val() == ""){
-				$('#comment_modal_header').text('Information');
-				$('#comment_modal_text').text('Please write your comment');
-				$('#modal-taskhub-comment-error-alert').modal("show");
+				showTaskHubAlert('Warning', 'Please write your comment', 'warning');	
 			} else {
 				$.ajax({
 					type: 'POST',
-					url: base_url + "taskhub/comment" + <?php echo $task->id; ?>,
+					url: base_url + "taskhub/comment/" + <?php echo $task->task_id; ?>,
 					data: {comment:$('#comment').val()},
+					beforeSend: function(){
+						$('#modal-taskhub-preloader').modal('show');
+					},
 					success: function(data){
 						var result = jQuery.parseJSON(data);
 						if(result.error == ""){
-
+							location.reload();	
 						} else {
-							$('#comment_modal_header').text('Error');
-							$('#comment_modal_text').text(result.error);
-							$('#modal-taskhub-comment-error-alert').modal("show");
+							showTaskHubAlert('Error', result.error, 'error');
 						}
+
+						$('#modal-taskhub-preloader').modal('hide');
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						$('#modal-taskhub-preloader').modal('hide');
+						
+						showTaskHubAlert(textStatus, errorThrown, 'error');	
 					}
 				});
 			}
+		});
+
+		$('#modal-taskhub-alert').on('hidden.bs.modal', function(){
+			$('#modal-taskhub-alert-header').removeClass(bg_header);	
 		});	
 	});
+
+	function showTaskHubAlert(title, text, theme){
+		if(theme == 'info'){
+			bg_header = 'bg-info'; 
+		} else if(theme == 'error'){
+			bg_header = 'bg-danger';
+		} else if(theme == 'warning'){
+			bg_header = 'bg-warning';
+		}
+
+		$('#modal-taskhub-alert-header').addClass(bg_header);
+		$('#modal-taskhub-alert-header').text(title);
+		$('#modal-taskhub-alert-text').text(text);
+		$('#modal-taskhub-alert').modal("show");
+	}
 </script>
