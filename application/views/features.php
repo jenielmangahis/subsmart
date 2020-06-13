@@ -7,13 +7,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="headline">
     <div class="container spacing-ft">
         <div class="row">
+            <div class="col-sm-6 mobile-only">
+                <img class="img-responsive w-120" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_dashboard.png">
+            </div>
             <div class="col-sm-6 pt-5 mt-3">
                 <h1 class="eff-title">Effortlessly run<br> your business</h1>
 								<div class="startTrialBtn m-auto pt-5">
                   <a href="<?php echo url('registration') ?>" class="btn btn-violet">Get Started Now</a>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 desktop-only">
                 <img class="img-responsive w-120" alt="dashboard" src="<?php echo $url->assets ?>frontend/images/feature_dashboard.png">
             </div>
         </div>
@@ -156,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6 systemInfo text-right pt-5">
-                    <h3>Seamless appointment scheduling</h3>
+                    <h3>Automate appointment scheduling</h3>
                     <p>
                         Now you can schedule appointments for both your customers and employees, without barely lifting a finger.
                     </p>

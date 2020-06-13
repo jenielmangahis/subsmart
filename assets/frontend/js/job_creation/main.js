@@ -41,9 +41,15 @@ $(document).ready(function () {
   });
 
   $("#addItems").click(function () {
-    $("#itemsTable").hide();
+    $("#addItemsTable").hide();
     $("#itemsTableSubTotal").hide();
     $("#addItemsForms").fadeIn();
+  });
+
+  $("#finishedItemForm").click(function () {
+    $("#addItemsForms").hide();
+    $("#addItemsTable").fadeIn();
+    $("#itemsTableSubTotal").fadeIn();
   });
 
   $("#newJobBtn, #cancelJobBtn").click(function () {

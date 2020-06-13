@@ -6,11 +6,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- Hero section  -->
     <section class="hero-section">
         <div class="hero-slider home-slider owl-carousel">
+
+            <div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner-1-try-app.jpg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 text-center padding-mobile">
+                            <h2 class="mobile-banner-header">Try our new App! <br/>
+                            nSmartTrac now on Mobile</h2>
+                            <br style="clear:both;"/>
+                            <div class="col-download row-margin-top float-left">
+                              <img src="<?php echo $url->assets ?>frontend/images/ios-download.png" class="card-img card-features img-download" alt="card 1">
+                            </div>
+                            <div class="col-download row-margin-top float-left">
+                              <img src="<?php echo $url->assets ?>frontend/images/google-download.png" class="card-img card-features img-download">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner.png">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 text-center">
-                            <h2 class="mobile-banner-header">COMING SOON! <br />THE COMPLETE
+                            <h2 class="no-uppercase mobile-banner-header">COMING SOON! <br />THE COMPLETE
                             Field Service Management System For Your Business Needs</h2>
                         </div>
                     </div>
@@ -332,7 +350,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </ul>
                                 <div class="actionBtn">
                                     <p>Dive deeper into the product and see what we can do for you and your team.</p>
-                                    <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button>
+                                    <!-- <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button> -->
+                                    <a href="<?php echo url('demo') ?>" class="btn btn-red btn-block rounded-xl">
+                                        Take a Product Tour
+                                    </a>                                    
                                 </div>
                             </div>
                         </div>
@@ -391,7 +412,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('registration') ?>" class="btn btn-green rounded-xl">
                             START YOUR <span class="yColor">FREE TRIAL</span>
                         </a>
-                        
                     </div>
                 </div>
             </div>
@@ -443,7 +463,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="startTrialBtn my-5 text-center"> 
+                    <div class="startTrialBtn my-5 text-center">
                         <!-- <button class="btn btn-green yColor rounded-xl"> See MORE FEATURES </button>  -->
                         <a class="btn btn-green yColor rounded-xl" href="<?php echo base_url('features') ?>"> See MORE FEATURES </a>
                     </div>

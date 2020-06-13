@@ -150,8 +150,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<div class="qUickStart">
 								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">C</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/workorder/add') ?>">Add a New Event</a></h4>
-									<span>At vero eos et accusamus et iusto odio dignissimos ducimus qui deleniti atque..</span>
+									<h4><a id="shortcut_link" href="<?php //echo url('/workorder/add') ?>">Add a New Event</a></h4>
+									<span>Choose from a various quick shortcuts</span>
 								</div>
 							</div>
 						</div>
@@ -465,10 +465,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div> 
 </div>
  
- 
+<a href="#" class="float">
+<i class="fa fa-plus my-float"></i>
+</a>
+<style type="text/css">
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#0C9;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
 
-<style>
-	/* Important stuff */
+.my-float{
+	margin-top:22px;
+}
+
+/* Important stuff */
 .mdc-bottom-navigation {
   height: 56px;
   background-color: var(--mdc-theme-background, #fff);

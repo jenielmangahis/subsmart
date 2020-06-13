@@ -82,6 +82,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
 
 
+                                <!-- Job code hidden for now -->
+                                <input type="hidden" name="job_code" value="workhours" /> 
+                                <?php /*<div class="col-md-12">
                                 <div class="col-md-12">
                                     <h3>Job Code</h3>
                                 </div>
@@ -92,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <option value="workhours">Work Hours</option>
                                         <option value="pto">PTO</option>
                                     </select>
-                                </div>
+                                </div>*/ ?>
 
                                 <div class="col-md-12">
                                     <h3>Notes</h3>
@@ -132,6 +135,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
         $(".entry_date").datepicker();
+
+        /*$("select").change(function(){
+            $(this).find("option:selected").each(function(){
+                var optionValue = $(this).attr("value");
+                if(optionValue){
+                    $(".box").not("." + optionValue).hide();
+                    $("." + optionValue).show();
+                } else{
+                    $(".box").hide();
+                }
+            });
+        }).change();*/
 
 
     })

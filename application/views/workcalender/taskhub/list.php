@@ -63,10 +63,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 					                        	?>
 					                        </td>
 					                        <td>
-					                           <?php if($row->is_participant == 'no'){ ?>
-					                           	<a href="<?php echo url('taskhub/entry/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-					                           <?php } ?>
+					                           <a href="<?php echo url('taskhub/entry/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+
 					                           <a href="<?php echo url('taskhub/view/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="View Task" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+
+                                               <a href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa fa-sticky-note-o"></i></a>
 					                        </td>
 					                     </tr>
 					                <?php } ?>

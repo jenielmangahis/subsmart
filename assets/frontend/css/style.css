@@ -206,6 +206,10 @@
    border-radius:2px;
  }
 
+ .no-uppercase {
+  text-transform: initial !important;
+ }
+
  .accordion-area .panel {
    margin-bottom: 8px;
  }
@@ -399,9 +403,22 @@
    line-height: 1;
    margin: 0px !important;
  }
-  .header-top p  span{
+ .header-top p  span{
 	  color:#fada97
   }
+
+ .header-top .blink {
+   animation:blinkingText 1.9s infinite;
+ }
+
+ @keyframes blinkingText{
+    0%{     color: #fada97;    }
+    49%{    color: #fada97; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #fada97;    }
+ }
+
  .site-logo-holder:after{
 	content: "";
     position: absolute;
@@ -413,6 +430,9 @@
     background-size: cover;
     margin-left: -130px;
     z-index: -1;
+ }
+ .col-download {
+   width: 50%;
  }
  .site-logo {
    display: inline-block;
@@ -643,9 +663,13 @@
     position: relative;
     font-family: "Open Sans", sans-serif;
     text-align: center;
-    text-transform: uppercase;
  }
 
+.img-download {
+  margin: 0 auto;
+  display: block;
+  max-width: 200px !important;
+}
 
 
 
@@ -1393,6 +1417,57 @@ ul.footer-list li a:hover {
     .testimonial1 {
         margin-bottom: 20px;
     }
+    .mobile-width-100 {
+      width: 100% !important;
+      padding: 0px 30px !important;
+    }
+    .contact-header {
+      color: #694a85;
+      font-size: 35px !important;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+    .cn-tn {
+      font-size: 27px;
+      text-align: center;
+    }
+    .cn-address {
+      font-size: 22px;
+      text-align: center;
+    }
+    .social-cc {
+      width: fit-content;
+      margin: 0 auto;
+      display: block;
+      height: 50px;
+      margin-top: 20px;
+    }
+    .sp-r.contact-txt {
+      padding-left: 28px;
+    }
+    .bg-contact-phone {
+      position: relative;
+      display: block;
+      width: 262px;
+      margin-left: 20px !important;
+      height: 540px !important;
+      margin-top: 68px;
+    }
+    .contact-spacing {
+      padding-top: 55px;
+    }
+    .contact-email {
+      margin-left: 15px;
+      color: #8452b1;
+      font-size: 17px;
+      position: relative;
+      bottom: 3px;
+    }
+    span.sp-txt.ml-20 {
+      font-size: 17px;
+    }
     .slicknav_menu {
       padding: 0px;
     }
@@ -1471,6 +1546,17 @@ ul.footer-list li a:hover {
 }
 
 @media(max-width:767px) {
+    .container-contact {
+        width: 100% !important;
+        margin: 0px !important;
+    }
+    .padding-mobile {
+        padding: 0px 25px;
+    }
+    img.img-download {
+        width: 143px !important;
+        height: auto !important;
+    }
     .container-signup {
       width: 100% !important;
       padding: 30px !important;
@@ -2825,12 +2911,12 @@ div.testimonial-card img {
    color: #ffffff;
  }
  .bg-contact-phone {
-    position: relative;
-    display: block;
-    width: 240px;
-    margin-left: 120px;
-    height: 500px;
-    background: url(../images/phone-vec.png) center right / cover no-repeat;
+   position: relative;
+   display: block;
+   width: 262px;
+   margin-left: 120px;
+   height: 540px;
+    background: url(../images/phone-vec.png) center / cover no-repeat;
 }
  .contact-social {
    padding: 5px;
@@ -2880,6 +2966,17 @@ div.testimonial-card img {
    font-size: 17px;
    padding-left: 6px;
  }
+ .phone-input-contact {
+   color: black;
+   border: 0px;
+   width: 95%;
+   margin: 0 auto;
+   display: block;
+   background: white;
+   margin-bottom: 10px;
+   font-size: 17px;
+   padding: 5px 10px;
+ }
  .inquiry-container {
    background: #2c2c2c; /* Old browsers */
    background: -moz-linear-gradient(top, #2c2c2c 0%, #383838 100%); /* FF3.6-15 */
@@ -2887,14 +2984,14 @@ div.testimonial-card img {
    background: linear-gradient(to bottom, #2c2c2c 0%,#383838 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c2c2c', endColorstr='#383838',GradientType=0 );
    position: relative;
-   top: 65px;
+   top: 69px;
    left: 13px;
-   width: 215px;
+   width: 235px;
    padding-top: 15px;
    padding-left: 10px;
    padding-right: 10px;
    padding-bottom: 15px;
-   height: 367px;
+   height: 400px;
  }
  .mb-15 {
    margin-bottom: 15px;

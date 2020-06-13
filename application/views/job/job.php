@@ -15,7 +15,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                        <?php echo form_open('job/saveJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+                        <?php if (empty($job_data)) : ?>
+                            <?php echo form_open('job/saveJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+                        <?php else :?>
+                            <?php echo form_open('job/updateJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+                        <?php endif;?>
                             <h2 class="page-title text-left">Create Job</h2>
                             <div class="row">
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
@@ -31,6 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="job_name"><?php echo (!empty($job_data)) ? date_format(date_create($job_data->created_date),"Y-m-d") : date('Y-m-d'); ?></label>
                                 </div>
                                 <div class="col-md-6 text-right">
+                                    <input type="hidden" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->jobs_id : 0; ?>">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                     <button type="submit" class="btn btn-primary">Edit</button>
                                     <a class="btn btn-default" id="cancelJobBtn" href="<?php echo url('job') ?>">Cancel</a>
@@ -49,13 +54,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_customer">Customer</label>
-                                    <input id="job_customer" class="form-control" type="text" placeholder="Customer">
-                                    <input type="hidden" id="job_customer_id" name="job_customer_id">
+                                    <?php if(!empty($job_other_info)) : ?>
+                                        <label for="">: <?php echo getLoggedFullName($job_other_info->id); ?></label>
+                                        <input type="hidden" id="job_customer_id" name="job_customer_id" value="<?php echo getLoggedFullName($job_other_info->id); ?>">
+                                    <?php else: ?>
+                                        <input id="job_customer" class="form-control" type="text" placeholder="Customer">
+                                        <input type="hidden" id="job_customer_id" name="job_customer_id">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <p>&nbsp;</p>
+                                    <?php if(empty($job_other_info)) : ?>
                                     <a href="<?php echo url('customer') ?>"><span
                                                 class="fa fa-plus fa-margin-right"></span>New Customer</a>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-md-3 form-group">
                                 </div>
@@ -71,11 +83,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_location">Job Location</label>
-                                    <input id="job_location" class="form-control" type="text" placeholder="Location">
-                                    <input type="hidden" id="job_location_id" name="job_location_id">
+                                    <?php if(!empty($job_other_info)) : ?>
+                                        <label for="">: <?php echo getJobAddress($job_other_info->address_id); ?></label>
+                                        <input type="hidden" id="job_location_id" name="job_location_id" value="<?php echo $job_other_info->address_id; ?>">
+                                    <?php else: ?>
+                                        <input id="job_location" class="form-control" type="text" placeholder="Location">
+                                        <input type="hidden" id="job_location_id" name="job_location_id">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-md-3 text-left form-group">
-                                    <p>&nbsp;</p>
+                                    <?php if(empty($job_other_info)) : ?>
+                                        <p>&nbsp;</p>
+                                    <?php endif; ?>
                                     <a href="#">
                                         <span class="fa fa-plus fa-margin-right"></span>New Location
                                     </a>
@@ -110,16 +129,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row mb-5" style="background: none;">
                                 <div class="pt-5">
                                     <div class="col-md-12" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addEstimate">Estimate</button>
+                                        <button type="button" class="btn btn-primary col-md-12" id="addEstimate">Estimate</button>
                                     </div>
                                     <div class="col-md-12" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addWorkOrder">Work Order</button>
+                                        <button type="button" class="btn btn-primary col-md-12" id="addWorkOrder">Work Order</button>
                                     </div>
                                     <div class="col-md-12" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="addInvoice">Invoice</button>
+                                        <button type="button" class="btn btn-primary col-md-12" id="addInvoice">Invoice</button>
                                     </div>
                                     <div class="col-md-12" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12">Survey</button>
+                                        <button type="button" class="btn btn-primary col-md-12">Survey</button>
                                     </div>
                                 </div>
                                 <div class="col-md-10 pt-5 text-left" id="currentForms">
@@ -317,7 +336,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="tab-pane fade show active margin-top" id="items" role="tabpanel" aria-labelledby="items-tab">
                                             <h4>Items</h4>
                                             <button type="button" class="btn btn-primary margin-bottom" id="addItems">Add Items</button>
-                                            <table class="table table-hover" style="width:100%;" id="itemsTable">
+                                            <table class="table table-hover" style="width:100%;" id="addItemsTable">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col"><strong>Item</strong></th>
@@ -414,7 +433,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </table>
                                                     </div>
                                                     <div class="col-md-9 text-right">
-                                                        <button class="btn btn-primary" data-action="update">Finished</button>
+                                                        <button class="btn btn-primary" id="finishedItemForm">Finished</button>
                                                     </div>
                                                 </div>
                                             </div>
