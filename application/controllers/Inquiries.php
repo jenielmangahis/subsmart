@@ -11,7 +11,7 @@ class Inquiries extends MY_Controller {
 
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
-        $this->load->model('Inquiry_model', 'inquiry_model');
+        // $this->load->model('Inquiry_model', 'inquiry_model');
 
         $this->checkLogin();
 
@@ -66,38 +66,38 @@ class Inquiries extends MY_Controller {
             if (!empty($status_index)) {
 
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('status' => $status_index), $company_id);
+                // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('status' => $status_index), $company_id);
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('search' => get('search')), $company_id);
+                    // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('type'))) {
 
                     $this->page_data['type'] = get('type');
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
+                        // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $company_id);
+                        // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $company_id);
                     }
                 } else {
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
+                        // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
                     } else {
 //                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')), $company_id);
-                        $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($company_id);
+                        // $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($company_id);
                     }
 
 //                    $this->page_data['inquiries'] = $this->inquiry_model->getAllByCompany($company_id);
                 }
             }
 
-            $this->page_data['statusCount'] = $this->inquiry_model->getStatusWithCount($company_id);
+            // $this->page_data['statusCount'] = $this->inquiry_model->getStatusWithCount($company_id);
 
         }
 
@@ -106,38 +106,38 @@ class Inquiries extends MY_Controller {
             if (!empty($status_index)) {
 
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('status' => $status_index));
+                // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('status' => $status_index));
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('search' => get('search')));
+                    // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('search' => get('search')));
                 } elseif (!empty(get('type'))) {
 
                     $this->page_data['type'] = get('type');
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
+                        // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
                     } else {
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')));
+                        // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')));
                     }
                 } else {
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
+                        // $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
                     } else {
 //                        $this->page_data['inquiries'] = $this->inquiry_model->filterBy(array('type' => get('type')));
-                        $this->page_data['inquiries'] = $this->inquiry_model->getAllByUserId();
+                        // $this->page_data['inquiries'] = $this->inquiry_model->getAllByUserId();
                     }
 
 //                    $this->page_data['inquiries'] = $this->inquiry_model->getAllByUserId();
                 }
             }
 
-            $this->page_data['statusCount'] = $this->inquiry_model->getStatusWithCount();
+            // $this->page_data['statusCount'] = $this->inquiry_model->getStatusWithCount();
         }
 
 //        print_r($this->page_data['statusCount']); die;

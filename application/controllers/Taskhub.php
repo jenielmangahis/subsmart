@@ -34,7 +34,7 @@ class Taskhub extends MY_Controller {
 			   'or not ISNULL(c.task_id) '.
 
 			'group by a.task_id '.
-			'order by a.date_created DESC, a.time_created DESC'
+			'order by a.date_created DESC'
 		)->result();
 
 		$this->page_data['tasks'] = $tasks;
@@ -90,10 +90,65 @@ class Taskhub extends MY_Controller {
 			}
 
 			$process_successful = false;
+			
 			if($taskid > 0){
+				$task = $this->page_data['task'];
+
+				$update_text = '';
+				if(trim($task->subject) != trim($this->input->post('subject'))){
+					$update_text = 'Modified:' . "\n".
+								   '- Subject' . "\n";
+				}
+
+				if(trim($task->description) != trim($this->input->post('description'))){
+					if(!empty($update_text)){
+						$update_text .= '- Description' . "\n";
+					} else {
+						$update_text = 'Modified:' . "\n".
+								       '- Description' . "\n";
+					}
+				}
+
+				if($task->estimated_date_complete != $this->input->post('estimated_date_complete')){
+					if(!empty($update_text)){
+						$update_text .= '- Estimated Date of Completion' . "\n";
+					} else {
+						$update_text = 'Modified:' . "\n".
+								       '- Estimated Date of Completion' . "\n";
+					}
+				}
+
 				$status = $this->input->post('status');
 				if(empty($status)){
 					$status = 1;
+				}
+
+				if($task->status_id != $status){
+					if(!empty($update_text)){
+						$update_text .= '- Status' . "\n";
+					} else {
+						$update_text = 'Modified:' . "\n".
+								       '- Status' . "\n";
+					}
+				}
+
+				$assigned_to_old = $assigned_to;
+				$selected_participants = $this->page_data['selected_participants'];
+				foreach ($selected_participants as $key => $value) {
+					if($value->is_assigned == 1){
+						$assigned_to_old = $value->user_id;
+						break;
+					}
+				}
+
+
+				if($assigned_to != $assigned_to_old){
+					if(!empty($update_text)){
+						$update_text .= '- Assignee' . "\n";
+					} else {
+						$update_text = 'Modified:' . "\n".
+								       '- Assignee' . "\n";
+					}
 				}
 
 				$data = array(
@@ -104,13 +159,22 @@ class Taskhub extends MY_Controller {
 				);
 
 				$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
+				if(($process_successful) && (!empty($update_text))){
+					$data = array(
+						'task_id' => trim($taskid),
+						'notes' => $update_text,
+						'date_updated' => date('Y-m-d h:i:s'),
+						'performed_by' => $uid
+					);
+
+					$this->taskhub_updates_model->trans_create($data);
+				}
 			} else {
 				$data = array(
 					'subject' => $this->input->post('subject'),
 					'description' => $this->input->post('description'),
 					'created_by' => $uid,
-					'date_created' => date('Y-m-d'),
-					'time_created' => date('h:m:s'),
+					'date_created' => date('Y-m-d h:i:s'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
 					'status_id' => 1,
 					'company_id' => $company_id
@@ -119,7 +183,7 @@ class Taskhub extends MY_Controller {
 				$process_successful = $this->taskhub_model->trans_create($data);
 				if($process_successful){
 					$task = $this->db->query(
-						'select task_id from tasks where created_by = ' . $uid . ' and date_created = "' . date('Y-m-d') . '" order by time_created DESC limit 1'
+						'select task_id from tasks where created_by = ' . $uid . ' order by date_created DESC limit 1'
 					)->row();
 
 					$taskid = $task->task_id;
@@ -234,7 +298,7 @@ class Taskhub extends MY_Controller {
 			'type' => 'task',
 			'user_id' => $uid,			
 			'comment' => $comment,
-			'comment_date' => date('Y-m-d h:m:s'),
+			'comment_date' => date('Y-m-d h:i:s'),
 			'company_id' => $company_id,
 			'relation_id' => $id
 		);

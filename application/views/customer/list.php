@@ -195,7 +195,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </thead>
 
                                         <tbody>
-
                                         <?php foreach ($customers as $customer) { ?>
                                             <tr>
                                                 <td>

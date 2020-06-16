@@ -336,14 +336,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-sm-6 systemInfo pt-5 mt-4">
                     <h3>
-                        Customer Finder 360
+                        Campaign Blast
                     </h3>
                     <p>
-                        In business, you should always strive to be at least one step ahead of your competition. With custom finder 360 you can narrow your target audience and connect with new customers better than ever before.
+                        In business, you should always strive to be at least one step ahead of your competition. With campaign blast you can narrow your target audience and connect with new customers better than ever before.
                     </p>
                 </div>
                 <div class="col-sm-6">
-                    <img class="img-responsive w-120" alt="customer finder 360" src="<?php echo $url->assets ?>frontend/images/feature_360.png">
+                    <img class="img-responsive w-120" alt="campaign blast" src="<?php echo $url->assets ?>frontend/images/feature_360.png">
                 </div>
             </div>
         </div>

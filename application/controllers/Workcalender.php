@@ -11,7 +11,7 @@ class Workcalender extends MY_Controller
         $this->page_data['page']->title = 'Work calender';
         $this->page_data['page']->menu = 'Workcalender';
 
-        $this->load->model('Workorder_model', 'workorder_model');
+        // $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Workzone_model', 'workzone_model');
 
         $user_id = getLoggedUserID();
@@ -41,15 +41,15 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
-        $this->load->model('Event_model', 'event_model');
+        // $this->load->model('Event_model', 'event_model');
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
-            $events = $this->event_model->getAllByCompany($company_id);
+            // $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
-            $events = $this->event_model->getAllByUserId();
+            // $events = $this->event_model->getAllByUserId();
         }
 
         $this->page_data['events'] = array();
@@ -151,7 +151,8 @@ class Workcalender extends MY_Controller
         $this->page_data['wordorders'] = array();
 
         // workorders
-        $workorders = $this->workorder_model->getAllByUserId('', '', 0, logged('id'), array());
+        // $workorders = $this->workorder_model->getAllByUserId('', '', 0, logged('id'), array());
+        $workorders = array();
 
 
 

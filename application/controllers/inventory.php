@@ -35,7 +35,7 @@ class Inventory extends MY_Controller
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['active_category'] = "Show All";
-        $type = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "material";
+        $type = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
 
 
         if (!empty($get['category'])) {

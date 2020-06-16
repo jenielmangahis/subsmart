@@ -7,6 +7,8 @@ $(document).ready(function(){
   current_process = '';
   current_alert_theme = '';
 
+  clear_process = true;
+
   $('#btn-add-new-folder').click(function(e){
     e.preventDefault();
 
@@ -180,8 +182,6 @@ $(document).ready(function(){
 
   $('#btn-modal-folder-manager-alert-cancel,#btn-modal-folder-manager-alert-ok').click(function(){
     hideFolderManagerNotif();
-    
-    current_process = '';
   });
 
 // -------------------------------------------------------------------------------------------------------------
@@ -373,7 +373,7 @@ function hideProcessLoading(){
 
 function isFolderNameValid(folder_name) {
   var isValid = true;
-  var invalid_chars = ["\\", "/", ":", "*", "?", '"', "<", ">", "|", " "];
+  var invalid_chars = ["\\", "/", ":", "*", "?", '"', "<", ">", "|"];
   var invalid_names = [
     "CON",
     "PRN",

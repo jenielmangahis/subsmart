@@ -156,8 +156,14 @@ $user_id = getLoggedUserID();
                         </a>
                     </div>
                 </li>
-                <li class="has-submenu"><a href="<?php echo base_url('vault') ?>"><i class="fa fa-industry"
-                                                                                     aria-hidden="true"></i> <span>Files Vault</span></a>
+                <li class="has-submenu">
+                    <a class="dropdown-toggle" href="<?php //echo base_url('vault') ?>" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-industry" aria-hidden="true"></i> <span>Files Vault</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown" style="width: auto;">
+                        <a class="dropdown-item" href="<?php echo base_url('vault') ?>"><i class="mdi mdi-wallet m-r-5"></i>Files Vault</a>
+                        <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> My Gallery (Before and After)</a>
+                    </div>
                 </li>
                 <?php //if (hasPermissions('report')): ?>
                     <li class="has-submenu">
@@ -175,10 +181,13 @@ $user_id = getLoggedUserID();
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo base_url('/company') ?>"><i class="mdi mdi-wallet m-r-5"></i> My Tools</a>
+                        <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Header Mobile Tools</a>
                         <a class="dropdown-item" href="<?php echo base_url('esign') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
                         <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
                         <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
                         <a class="dropdown-item" href="<?php echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Builder</a>
+                        <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> API Connectors</a>
+                        
                     </div>
                 </li>
 
@@ -208,7 +217,11 @@ $user_id = getLoggedUserID();
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
-                                <i class="mdi mdi-wallet m-r-5"></i> Upgrades</a>
+                            <i class="mdi mdi-wallet m-r-5"></i> Upgrades
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo url('/more/upgrades') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> Video Estimate
+                        </a>
                     </div>
                     <?php /*<div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <?php if (hasPermissions('businessdetail')): ?><a class="dropdown-item"

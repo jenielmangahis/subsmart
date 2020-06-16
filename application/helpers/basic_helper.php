@@ -787,7 +787,7 @@ if (!function_exists('getFolders')) {
 
                'where a.company_id = ' . $company_id . ' ' . $parent_filter . 
 
-               'order by folder_order ASC';
+               'order by create_date ASC';
 
         return $CI->db->query($sql);
     }
@@ -1487,10 +1487,11 @@ function count_equipment_items($equipment_id) {
 function get_inquiries_count()
 {
     $CI =& get_instance();
-    $CI->load->model('Inquiry_model', 'inquiry_model');
+    // $CI->load->model('Inquiry_model', 'inquiry_model');
     $today = date("Y-m-d");
 
-    return count($CI->inquiry_model->getByWhere(array('user_id' => logged('id'), 'created_at' => $today)));
+    // return count($CI->inquiry_model->getByWhere(array('user_id' => logged('id'), 'created_at' => $today)));
+    return 0;
 }
 
 /**

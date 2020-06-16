@@ -19,7 +19,7 @@ class Workorder extends MY_Controller
         $this->page_data['page']->title = 'Workorder Management';
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
-        $this->load->model('Workorder_model', 'workorder_model');
+        // $this->load->model('Workorder_model', 'workorder_model');
 
         $user_id = getLoggedUserID();
 
@@ -51,51 +51,51 @@ class Workorder extends MY_Controller
 
             if (!empty($tab_index)) {
                 $this->page_data['tab_index'] = $tab_index;
-                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
+                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
             } else {
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
                 } else {
 
-                    $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
+                    // $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
                 }
             }
 
-            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
+            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
         }
         if ($role == 4) {
 
             if (!empty($tab_index)) {
 
                 $this->page_data['tab_index'] = $tab_index;
-                $this->page_data['workorders'] = $this->workorder_model->filterBy();
+                // $this->page_data['workorders'] = $this->workorder_model->filterBy();
 
             } elseif (!empty(get('order'))) {
 
                 $this->page_data['order'] = get('order');
-                $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } else {
-                    $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
+                    // $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
                 }
             }
 
-            $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
+            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
         // unserialized the value
@@ -120,13 +120,13 @@ class Workorder extends MY_Controller
         $get = $this->input->get();
 
         $user_id = logged('id');
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
-
-        if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        } else {
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        }
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
 
         // conversation request from estimate to workorder
         if (!empty($get['estimate_id'])) {
@@ -147,7 +147,7 @@ class Workorder extends MY_Controller
         }
 
         $company_id = logged('company_id');
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);

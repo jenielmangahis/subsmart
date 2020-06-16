@@ -14,7 +14,7 @@ class Uploadlib
         $config['upload_path'] = './uploads/';
 		$config['allowed_types'] = 'gif|jpg|png|jpeg|doc|pdf|rtf|docx';
 		$config['overwrite'] = true;
-		$config['remove_spaces'] = TRUE;
+		$config['remove_spaces'] = FALSE;
 
 		$this->Config = $config;
 		$this->ci->load->library('upload', $config);

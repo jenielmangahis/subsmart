@@ -91,6 +91,16 @@ class Jobs_model extends MY_Model
         $this->db->where('jobs_id',$id);
         $this->db->update('jobs',$data);
     }
+
+    /**
+     * @return mixed
+     */
+    public function deleteJob($id)
+    {
+        $this->db->delete('jobs', array("jobs_id" => $id));
+        $this->db->delete('jobs_has_address', array("jobs_id" => $id));
+        $this->db->delete('jobs_has_customers', array("jobs_id" => $id));
+    }
 }
 
 /* End of file JobType_model.php */

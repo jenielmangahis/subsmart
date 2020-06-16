@@ -11,7 +11,7 @@ class CustomerTicket
         $sub_method = $this->app->uri->segment(3);
         $id = $this->app->uri->segment(4); // parameters
 
-        $app->load->model('CustomerTicket_model', 'customerTicket_model');
+        // $app->load->model('CustomerTicket_model', 'customerTicket_model');
 
         if (!empty($sub_method)) {
 
@@ -47,7 +47,8 @@ class CustomerTicket
      */
     private function index()
     {
-        $this->app->page_data['customerTickets'] = $this->app->customerTicket_model->getAll();
+        // $this->app->page_data['customerTickets'] = $this->app->customerTicket_model->getAll();
+        $this->app->page_data['customerTickets'] = array();
         $this->app->load->view('customer/ticket/list', $this->app->page_data);
     }
 

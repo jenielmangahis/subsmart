@@ -29,7 +29,7 @@ class Items extends MY_Controller
     public function index()
     {
 
-        ifPermissions('items_list');
+        // ifPermissions('items_list');
 
         $get = $this->input->get();
 
@@ -40,9 +40,9 @@ class Items extends MY_Controller
 
         if (!empty($get['search'])) {
             $this->page_data['search'] = $get['search'];
-            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
+            // $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
+            // $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
         }
 
         $this->load->view('items/list', $this->page_data);

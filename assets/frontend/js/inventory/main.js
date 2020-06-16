@@ -5,7 +5,6 @@ var options = {
 $(document).ready(function () {
   $("#addOnHandInventory, #closeAddNewItem, #cancelAddItemGroups").click(
     function () {
-      $.LoadingOverlay("show");
       $("#servicesInventory").hide();
       $("#feesInventory").hide();
       $("#itemGroups").hide();
@@ -17,7 +16,6 @@ $(document).ready(function () {
   );
 
   $("#addServicesInventory, #cancelAddNewService").click(function () {
-    $.LoadingOverlay("show");
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
     $("#itemGroups").hide();
@@ -28,7 +26,6 @@ $(document).ready(function () {
   });
 
   $("#addFeesInventory, #cancelAddNewFee").click(function () {
-    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#itemGroups").hide();
@@ -69,7 +66,6 @@ $(document).ready(function () {
   });
 
   $("#addItemGroups").click(function () {
-    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -80,7 +76,6 @@ $(document).ready(function () {
   });
 
   $("#addNewItemInventory").click(function () {
-    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -91,7 +86,6 @@ $(document).ready(function () {
   });
 
   $("#addNewServiceInventory").click(function () {
-    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -102,7 +96,6 @@ $(document).ready(function () {
   });
 
   $("#addNewFeesInventory").click(function () {
-    $.LoadingOverlay("show");
     $("#servicesInventory").hide();
     $("#onHandInventory").hide();
     $("#feesInventory").hide();
@@ -110,6 +103,12 @@ $(document).ready(function () {
     $("#newServiceInventory").hide();
     $("#newItemInventory").hide();
     $("#newFeesInventory").fadeIn();
+  });
+
+  $(
+    "#addOnHandInventory, #addServicesInventory, #addFeesInventory, #addItemGroups, #addNewFeesInventory"
+  ).click(function () {
+    $.LoadingOverlay("show");
   });
 
   $("#goUpload").click(function () {

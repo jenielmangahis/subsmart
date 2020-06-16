@@ -30,8 +30,7 @@ class Job extends MY_Controller
         ));
     }
 
-    public function index()
-    {
+    public function index() {
         $get = $this->input->get();
 
         $this->page_data['items'] = $this->items_model->get();
@@ -114,6 +113,14 @@ class Job extends MY_Controller
         $this->activity_model->add("New Job #$categories Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Job Created Successfully');
+
+        redirect('job');
+    }
+
+    public function delete () {
+        $get = $this->input->get();
+        
+        $this->jobs_model->deleteJob($get['id']);
 
         redirect('job');
     }

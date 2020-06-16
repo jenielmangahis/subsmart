@@ -13,10 +13,11 @@ class Workstatus extends MY_Controller {
 	 
 	public function index()
 	{ 
-		ifPermissions('plan_list');
+		// ifPermissions('plan_list');
 		
 		$company_id =  logged('company_id');
-		$this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+		// $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+		$this->page_data['workstatus'] = array();
 		$this->load->view('workstatus/list', $this->page_data);
 	}
 	

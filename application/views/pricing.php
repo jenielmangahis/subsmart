@@ -15,8 +15,74 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           </div>
       </section>
   </section>
-  <section class="ccontainer bg-grey ss_ccmph_4 lineup-container hidden-sm hidden-xs desktop-only" style="padding-top: 0px; height:auto; ">
+  <section class="ccontainer mobile-only" style="padding-top: 0px; height:auto;">
     <div class="content-container">
+      <div class="toggle-container">
+          <span class="bn" data-wa-link="toggle_fiftyper-diy" data-di-id="#toggle_fiftyper-diy">Buy now for 50% off for 3 months*</span>
+          <br style="clear:both;"/>
+          <br/>
+          <label class="switch pricing-switch">
+            <input type="checkbox" class="pricing-trial">
+            <span class="slider round"></span>
+          </label>
+          <!-- <div class="_toggleButton" data-wa-link="toggle_zeroper-diy" role="switch" tabindex="0" aria-label="Buy now for 50% off for 3 months*" aria-checked="false" data-object="sku" data-object-detail="Trial toggle" data-action="trial started" data-ui-object="toggle" data-ui-object-detail="Free trial for 30 days" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#toggle_zeroper-diy"> </div> -->
+          <span class="ft" data-wa-link="toggle_zeroper-diy" data-di-id="#toggle_zeroper-diy" style="position: relative;top: 4px !important;">Free trial for 30 days</span>
+      </div>
+    </div>
+    <br style="clear:both;"/>
+    <br/>
+    <br/>
+</section>
+
+<section class="hero-section mobile-pricing mobile-only">
+    <div class="hero-slider home-slider owl-carousel">
+      <div class="mobile-pricing-banner hero-item-pricing">
+        <div class="container">
+            <div class="row cls-price">
+              <h3 class="text-center cd-fs">Essential</h3>
+              <br style="clear:both;"/>
+              <br/>
+              <div class="center-pricing">
+                <div class="price gray-price">
+                    <span class="line-through"></span><span class="ct gray">$</span><span class="aw">39.99</span>
+                    <span class="as"></span><span class="ac"></span>
+                </div>
+                <div class="red-price-text">
+                    <span class="ad"> &nbsp; </span>
+                    <span class="ct">$</span><span class="ad">19.99</span>
+                    <span class="as"></span><span class="ac"></span>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="mobile-pricing-banner hero-item-pricing">
+        <div class="container">
+            <div class="row cls-price">
+              <h3 class="text-center cd-fs-2">Extra</h3>
+              <br style="clear:both;"/>
+              <br/>
+              <div class="center-pricing">
+                <div class="price gray-price">
+                    <span class="line-through"></span><span class="ct gray">$</span><span class="aw">99.98</span>
+                    <span class="as"></span><span class="ac"></span>
+                </div>
+                <div class="red-price-text">
+                    <span class="ad"> &nbsp; </span>
+                    <span class="ct">$</span><span class="ad">49.99</span>
+                    <span class="as"></span><span class="ac"></span>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+
+<section class="ccontainer bg-grey ss_ccmph_4 lineup-container hidden-sm hidden-xs desktop-only" style="padding-top: 0px; height:auto; ">
+    <div class="content-container desktop-only">
         <div class="ctext">
             <div class="_buyNow _freeTrial">
                 <div class="toggle-container">
@@ -50,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-        <div class="pricing-card-layout pricing-card-layout-qb">
+        <div class="pricing-card-layout pricing-card-layout-qb desktop-only">
             <div class="pcard-cols-3-1">
                 <div class="cpricing-card-layout left-pricing group_w_3_1 ">
                     <div class="pricing-card-layout-header pricing-card-header-green" id="header_left">

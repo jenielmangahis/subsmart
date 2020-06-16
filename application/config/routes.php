@@ -68,7 +68,8 @@ $route['services'] = 'service';
 
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
-$route['survey/(:num)'] = 'survey/view/$1';
+$route['survey/(:num)']['GET'] = 'survey/preview/$1';
+$route['survey/edit/(:num)'] = 'survey/view/$1';
 $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
 $route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';

@@ -142,7 +142,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Date Created :</td>
 			                				<td class="taskhub_sidebar_details_values"><?php 
 			                						$date_created = date_create($task->date_created);
-													echo date_format($date_created, "F d, Y") . ' at ' . $task->time_created; ?></td>
+													echo date_format($date_created, "F d, Y h:i:s"); ?></td>
 			                			</tr>
 			                			<tr>
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Estimated Date of Completion :</td>

@@ -39,7 +39,6 @@ class Vault extends MY_Controller {
 			$filesize = $_FILES['fullfile']['size'];
 
 			$ext = pathinfo($filename, PATHINFO_EXTENSION);
-			$filename = str_replace(' ','_',$filename);
 
 			$record = $this->db->query(
 				'select count(*) as `existing` from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '"'
