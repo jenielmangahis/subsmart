@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <div class="ctext cp-margin">
               <h3 class="chart-headline">Get a Personalized Demo</h3>
               <div class="chart-headline-sub">
-                  <p>Get 30 minutes with an expert and learn how you can grow your business in 2020 with Nsmartrac platform</p>
+                  <p>Get 30 minutes with an expert and learn how you can grow your business in 2020 with nSmarTrac platform</p>
               </div>
           </div>
       </section>
@@ -77,10 +77,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <br />
                 <br />
                 <h3 style="padding:20px 0px;">Schedule Demo</h3>
-                <p>Demo agenda: Understand your questions and requirements and show you how Nsmartrac can help your business needs.</p>
-                <p>We’d like to take this moment to thank you for your interest in Nsmartrac. We hope you will find this platform valuable and make your business unique in the competitive landscape.</p>
+                <p>Demo agenda: Understand your questions and requirements and show you how nSmarTrac can help your business needs.</p>
+                <p>We’d like to take this moment to thank you for your interest in nSmarTrac. We hope you will find this platform valuable and make your business unique in the competitive landscape.</p>
                 <br />
-                <p>Thank you,<br /><b>Team nSmartTrac</b></p>
+                <p>Thank you,<br /><b>Team nSmarTrac</b></p>
           </div>
 
           <div class="col-md-7">

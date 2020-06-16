@@ -2383,6 +2383,7 @@ function getIndustryBusiness(){
             'Tree Services' => 'Tree Services'
         ],
         'Financial Services' => [
+            'Accounting' => 'Accounting',
             'Appraisal' => 'Appraisal',
             'Credit Counselor' => 'Credit Counselor',
             'Financial Planner' => 'Financial Planner',
@@ -2435,6 +2436,10 @@ function getIndustryBusiness(){
             'Graphics & Printing' => 'Graphics & Printing'
         ],
         'Other' => [
+            'Arts/Antiques' => 'Arts/Antiques',
+            'Athletics/GYM' => 'Athletics/GYM',
+            'Childcare' => 'Childcare',
+            'Car Washes' => 'Car Washes',
             'Environmental Services' => 'Environmental Services',
             'Locksmith' => 'Locksmith',
             'Movers' => 'Movers',
@@ -2445,7 +2450,6 @@ function getIndustryBusiness(){
             'Real Estate' => 'Real Estate',
             'Sales' => 'Sales',
             'Tutoring' => 'Tutoring',
-
             'Notary' => 'Notary',
             'Laundry' => 'Laundry',
             'Install & Assemble' => 'Install & Assemble',
