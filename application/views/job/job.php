@@ -36,8 +36,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <input type="hidden" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->jobs_id : 0; ?>">
+                                    <?php if(empty($job_data)) : ?>
                                     <button type="submit" class="btn btn-primary">Save</button>
+                                    <?php else : ?>
                                     <button type="submit" class="btn btn-primary">Edit</button>
+                                    <?php endif;?>
                                     <a class="btn btn-default" id="cancelJobBtn" href="<?php echo url('job') ?>">Cancel</a>
                                 </div>
                             </div>
@@ -104,7 +107,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-2 text-left form-group">
                                     <label for="exampleFormControlSelect1">Priority</label>
                                     <select class="form-control" id="job_priority" name="job_priority">
-                                        <option value="low" selected>Low Priority</option>
+                                        <?php if(!empty($job_other_info)) : ?>
+                                            <option value="<?php echo $job_other_info->priority; ?>" selected><?php echo ucwords($job_other_info->priority) . ' Priority'; ?></option>
+                                        <?php endif; ?>
+                                        <option value="low">Low Priority</option>
                                         <option value="medium">Medium Priority</option>
                                         <option value="high">High Priority</option>
                                     </select>
@@ -114,7 +120,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 text-left form-group">
                                     <label for="exampleFormControlSelect1">Status</label>
                                     <select class="form-control" id="job_status" name="job_status">
-                                        <option value="New" selected>New</option>
+                                        <?php if(!empty($job_other_info)) : ?>
+                                            <option value="<?php echo $job_other_info->status; ?>" selected><?php echo ucwords($job_other_info->status); ?></option>
+                                        <?php endif; ?>
+                                        <option value="New">New</option>
                                         <option value="Scheduled">Scheduled</option>
                                         <option value="Waiting on Customer">Waiting on Customer</option>
                                         <option value="In Progress">In Progress</option>

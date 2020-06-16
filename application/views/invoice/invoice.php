@@ -121,22 +121,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
   </div>
 </div>
-<style>
-    .hid-deskx {
-        display: none !important;
-    }
-
-
-    @media only screen and (max-width: 600px) {
-        .hid-desk {
-            display: none !important;
-        }
-
-        .hid-deskx {
-            display: block !important;
-        }
-    }
-</style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>

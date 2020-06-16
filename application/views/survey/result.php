@@ -158,7 +158,7 @@
                           <div class="btn-group btn-block py-3">
                             <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class=" mr-3 btn btn-warning">Preview</a>
                             <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class=" mx-3 btn btn-info">Share</a>
-                            <a href="<?php echo base_url()?>survey/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
+                            <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
                             <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-danger">Delete</a>
                           </div>
 
@@ -167,7 +167,7 @@
                               Sharable Link
                               <div class="form-group">
                                 <div class="input-group">
-                                  <input type="text" name="txtLink" id="txtLink" readonly class="form-control" value="<?=base_url()?>survey/preview/<?=$survey->id?>">
+                                  <input type="text" name="txtLink" id="txtLink" readonly class="form-control" value="<?=base_url()?>survey/<?=$survey->id?>?st=<?= url_title(strtolower($survey->title))?>">
                                   <button onclick="copyLink()" id="btnCopyLink" class="btn btn-info">Copy Link</button>
                                 </div>
                               </div>
@@ -341,6 +341,15 @@
                                               <?php
                                             break;
                                             case 5: //email
+                                              foreach($question->survey_answer as $answers){
+                                                if($answers->answer !== ''){
+                                                  ?>
+                                                    <div class="alert alert-dark">
+                                                      <?=$answers->answer?>
+                                                    </div>
+                                                  <?php
+                                                }
+                                              }
                                             break;
                                             case 6: // number
                                               foreach($question->survey_answer as $answers){

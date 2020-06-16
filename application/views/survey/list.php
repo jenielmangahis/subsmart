@@ -85,7 +85,7 @@
                                     <span class="material-icons">menu</span> Options
                                   </button>
                                   <div class="dropdown-menu">
-                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/<?= $survey->id ?>"><span class="material-icons">edit</span> Edit Survey</a>
+                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/edit/<?= $survey->id ?>"><span class="material-icons">edit</span> Edit Survey</a>
                                     <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"><span class="material-icons">share</span> Share</a>
                                     <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>"><span class="material-icons">delete</span> Delete</a>
                                     <!-- @L@ -->

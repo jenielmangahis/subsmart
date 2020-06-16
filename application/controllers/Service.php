@@ -12,13 +12,13 @@ class Service extends MY_Controller {
 		$this->page_data['page']->title = 'Service';
         $this->page_data['page']->menu = 'service';
         
-        $this->load->model('Service_model', 'service_model');
+        // $this->load->model('Service_model', 'service_model');
 	}
 
 	public function index()
 	{
 		// ifPermissions('roles_list');
-		$this->page_data['services'] = $this->service_model->getByWhere(['user_id' => logged('id')], ['order' => array('title', 'asc')]);
+		// $this->page_data['services'] = $this->service_model->getByWhere(['user_id' => logged('id')], ['order' => array('title', 'asc')]);
 		$this->load->view('service/list', $this->page_data);
     }
 

@@ -40,7 +40,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <button class="btn btn-primary col-md-12">Plans</button>
                                     </div>
                                 </div>
-                                <?php if ($type == 'material') : ?>
                                 <div class="col-md-10" id="onHandInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-10 text-left">Inventory On Hand</h4>
@@ -93,7 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tbody>
                                     </table> 
                                 </div>
-                                <?php elseif ($type == 'service') : ?>
+                                <?php if ($type == 'service') : ?>
                                 <div class="col-md-10" id="servicesInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-10 text-left">Services</h4>

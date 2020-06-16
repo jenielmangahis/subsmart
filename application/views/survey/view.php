@@ -180,7 +180,7 @@ div.color-slot{
                            <div class="h1-spacer">
                            <?php if(count($questions) !== 0){
                              ?>
-                              <a href="<?= base_url() ?>survey/preview/<?= $this->uri->segment(2) ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a>
+                              <a href="<?= base_url() ?>survey/preview/<?= $survey->id ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a>
                              <?php
                            } ?>
                               <button class="btn btn-primary btn-md text-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -30,9 +30,14 @@ class Survey extends MY_Controller
         'assets/js/social.js',
       ));
 
-      $this->checkLogin();
-      $this->load->library('session');
-      $user_id = getLoggedUserID();
+      if(!isset($_GET['st'])){
+        $this->checkLogin();
+        $this->load->library('session');
+        $user_id = getLoggedUserID();
+      }
+      // $this->checkLogin();
+      // $this->load->library('session');
+      // $user_id = getLoggedUserID();
 
       // concept
       $uid = $this->session->userdata('uid');
@@ -228,6 +233,7 @@ class Survey extends MY_Controller
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->load->view('survey/result', $this->page_data);
   }
+  
   public function share($id){
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->load->view('survey/shared_preview', $this->page_data);
@@ -268,7 +274,7 @@ class Survey extends MY_Controller
     $this->db->set('theme_id', $theme_id);
     $this->db->where('id', $survey_id);
     $this->db->update('survey');
-    redirect('survey/'.$survey_id);
+    redirect('survey/edit/'.$survey_id);
   }
 
   // public function themeAddImage(){

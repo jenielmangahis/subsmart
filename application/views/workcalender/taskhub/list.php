@@ -51,7 +51,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 	                                	<tr>
 					                        <td width="60"><?php echo $row->task_id ?></td>
 					                        <td>
-					                           <?php echo $row->subject; ?>
+					                           <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
 					                        </td>
 					                        <td>
 					                           <?php echo $row->status_text; ?>
@@ -64,8 +64,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 					                        </td>
 					                        <td>
 					                           <a href="<?php echo url('taskhub/entry/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-
-					                           <a href="<?php echo url('taskhub/view/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="View Task" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
 
                                                <a href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa fa-sticky-note-o"></i></a>
 					                        </td>

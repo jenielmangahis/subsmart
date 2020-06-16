@@ -191,7 +191,6 @@ class Folders extends MY_Controller {
 
 			$description = '';
 			$path = '';
-			$folder_order = 0;
 
 			$record = $this->db->query('select count(*) as `existing` from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id)->row();
 			$record = $record->existing;
@@ -208,17 +207,10 @@ class Folders extends MY_Controller {
 					$path = '/' . $folder_name . '/';
 				}
 
-				$folder_order = $this->db->query('select max(folder_order) as `last_order` from file_folders where company_id = ' . $company_id);
-				if($folder_order->num_rows() > 0){
-					$folder_order = $folder_order->row();
-					$folder_order = $folder_order->last_order; 
-				}
-
 				if(isset($_POST['folder_desc'])){
 					$description = $_POST['folder_desc'];
 				}
 
-				$folder_order += 1;
 				$data = array(
 					'folder_name' => $folder_name,
 					'parent_id' => $parent_id,
@@ -226,8 +218,7 @@ class Folders extends MY_Controller {
 					'path' => $path,
 					'created_by' => $uid,
 					'create_date' => date('Y-m-d h:i:s'),
-					'company_id' => $company_id,
-					'folder_order' => $folder_order
+					'company_id' => $company_id
 				);
 
 				if($this->folders_model->trans_create($data)){

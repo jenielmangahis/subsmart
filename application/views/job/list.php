@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <form style="display: inline-flex;" class="form-inline form-search"
                                           name="form-search"
-                                          action="<?php echo base_url('invoice') ?>"
+                                          action="<?php echo base_url('job') ?>"
                                           method="get">
                                         <div class="form-group" style="margin:0 !important;">
                                             <input style="height:auto !important; font-size: 14px; margin-right:10px;"
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                    value="<?php echo (!empty($search)) ? $search : '' ?>"
                                                    type="text"
                                                    placeholder="Search...">
-                                            <button class="btn btn-primary btn-md" style="margin-right:10px;" type="submit"><span
+                                            <button class="btn btn-default btn-md" style="margin-right:10px;" type="submit"><span
                                                         class="fa fa-search"></span> Search</button>
                                         </div>
                                     </form>
@@ -63,12 +63,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                      <?php foreach($jobs as $job) : ?>
                                         <tr>
-                                            <td><?php echo $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
-                                            <td><?php echo $job->job_name; ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td class="pl-3"><?php echo $job->job_number; ?></td>
+                                            <td class="pl-3"><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
+                                            <td class="pl-3"><?php echo ucwords($job->job_name); ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
+                                            <td class="pl-3"><?php echo $job->status; ?></td>
+                                            <td class="pl-3">$0.00</td>
+                                            <td class="pl-3">
+                                                <a href="<?php echo base_url() .'job/new_job?job_num=' . $job->job_number ?>" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                <a href="<?php echo base_url() .'job/delete?id=' . $job->jobs_id ?>" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

@@ -150,7 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<div class="qUickStart">
 								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">C</span>
 								<div class="qUickStartde">
-									<h4><a id="shortcut_link" href="<?php //echo url('/workorder/add') ?>">Add a New Event</a></h4>
+									<h4><a id="shortcut_link" href="#<?php //echo url('/workorder/add') ?>">Add a New Event</a></h4>
 									<span>Choose from a various quick shortcuts</span>
 								</div>
 							</div>
@@ -465,26 +465,317 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div> 
 </div>
  
-<a href="#" class="float">
-<i class="fa fa-plus my-float"></i>
+<div style="" class="floating-btn-div div1">
+	<label class="label"><a href="#">Notes</a></label>
+	<a href="#" class="float1">
+	<i class="fa fa-file my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div2">
+	<label class="label"><a href="#">Log Time</a></label>
+	<a href="#" class="float2">
+	<i class="fa fa-clock-o my-float"></i>
 </a>
+</div>
+<div style="" class="floating-btn-div div3">
+	<label class="label"><a href="#">Reschedule</a></label>
+	<a href="#" class="float3">
+	<i class="fa fa-calendar my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div4">
+	<label class="label"><a href="#">Change Order</a></label>
+	<a href="#" class="float4">
+	<i class="fa fa-edit my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div5">
+	<label class="label"><a href="#">Attach Photo</a></label>
+	<a href="#" class="float5">
+	<i class="fa fa-picture-o my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div6">
+	<label class="label"><a href="#">Change Status</a></label>
+	<a href="#" class="float6">
+	<i class="fa fa-flag my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div7">
+	<label class="label"><a href="#">Cancel Schedule</a></label>
+	<a href="#" class="float7">
+	<i class="fa fa-stop-circle my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div8">
+	<label class="label"><a href="#">Request Signature</a></label>
+	<a href="#" class="float8">
+	<i class="fa fa-external-link my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div9">
+	<label class="label"><a href="#">Convert To Invoice</a></label>
+	<a href="#" class="float9">
+	<i class="fa fa-money my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div10">
+	<label class="label"><a href="#">Convert To Estimate</a></label>
+	<a href="#" class="float10">
+	<i class="fa fa-calculator my-float"></i>
+	</a>
+</div>
 <style type="text/css">
-.float{
+.float1, .float2, .float3, .float4, .float5, .float6, .float7, .float8, .float9, .float10 {
+	color: #2d1a3e;
+    background-color: #fff;
+    border-radius: 25px;
+    margin-bottom: 5px;
+}
+.float1{
 	position:fixed;
-	width:60px;
-	height:60px;
+	width:40px;
+	height:40px;
 	bottom:40px;
-	right:40px;
-	background-color:#0C9;
-	color:#FFF;
-	border-radius:50px;
+	right:20px;
+	/*background-color:#0C9;*/
+	/*color:#FFF;*/
+	/*border-radius:50px;*/
 	text-align:center;
 	box-shadow: 2px 2px 3px #999;
 }
-
-.my-float{
-	margin-top:22px;
+.div1 {
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 40px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
 }
+.float2{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:110px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div2 {
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 110px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+.float3{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:180px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div3 {
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 180px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+
+.float4{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:250px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div4{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 250px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+
+.float5{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:320px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div5{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 320px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+
+.float6{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:390px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div6{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 390px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+.float7{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:460px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div7{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 460px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+.float8{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:530px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div8{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 530px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+.float9{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:600px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div9{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 600px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+
+.float10{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:670px;
+	right:20px;
+	/*background-color:transparent;*/
+	/*color:#2d1a3e;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div10{
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 670px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
+
+.label{
+	margin-top: 15px;
+}
+.my-float{
+	/*margin-top:22px;*/
+	/*margin-top:20px;*/
+	margin-top: 15px;
+}
+
 
 /* Important stuff */
 .mdc-bottom-navigation {
@@ -507,4 +798,20 @@ display: block !important;
 </style>
 
     <?php include viewPath('includes/footer'); ?>
-  
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.floating-btn-div').hide();
+		$('#shortcut_link').on('click', function(e){
+			if ( $('.float1').is(':hidden') && $('.float2').is(':hidden') && $('.float3').is(':hidden') ){
+				$('.floating-btn-div ').show('slow')
+				$('.floating-btn-div ').show('slow')
+				$('.floating-btn-div ').show('slow')
+			}
+			else{
+				$('.floating-btn-div ').hide('slow')
+				$('.floating-btn-div ').hide('slow')
+				$('.floating-btn-div ').hide('slow')
+			}
+		})
+	})
+</script>
