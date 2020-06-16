@@ -35,49 +35,1197 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </section>
 
 <section class="hero-section mobile-pricing mobile-only">
-    <div class="hero-slider home-slider owl-carousel">
+    <div class="pricing-mobile-slider home-slider owl-carousel">
       <div class="mobile-pricing-banner hero-item-pricing">
         <div class="container">
             <div class="row cls-price">
-              <h3 class="text-center cd-fs">Essential</h3>
+              <h3 class="text-center cd-fs-start">Simple Start</h3>
               <br style="clear:both;"/>
               <br/>
-              <div class="center-pricing">
-                <div class="price gray-price">
-                    <span class="line-through"></span><span class="ct gray">$</span><span class="aw">39.99</span>
-                    <span class="as"></span><span class="ac"></span>
+              <div class="row eCommerce-product-div">
+                <div class="blue-button">
+                  <div class="center-pricing">
+                      <div class="price gray-price">
+                          <span class="line-through"></span><span class="ct gray">$</span><span class="aw">24.99</span>
+                          <span class="as"></span><span class="ac"></span>
+                      </div>
+                      <div class="red-price-text sc-3">
+                          <span class="ad"> &nbsp; </span>
+                          <span class="ct">$</span><span class="ad">19.99</span>
+                          <span class="as"></span><span class="ac"></span>
+                      </div>
+                  </div>
                 </div>
-                <div class="red-price-text">
-                    <span class="ad"> &nbsp; </span>
-                    <span class="ct">$</span><span class="ad">19.99</span>
-                    <span class="as"></span><span class="ac"></span>
+
+
+                <div class="tryit-free-link-url">
+                  <div class="center-pricing-free">
+                      <div class="red-price-text">
+                          <span class="ct">$</span><span class="ad">FREE</span>
+                          <span class="as"></span><span class="ac"></span>
+                      </div>
+                  </div>
                 </div>
+
               </div>
             </div>
+            <br class="clear"/>
+            <div class="row eCommerce-product-div">
+              <div class="blue-button default-product">
+                <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+              </div>
+            </div>
+            <div class="row eCommerce-product-div">
+              <div class="tryit-free-link-url default-product">
+                <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+              </div>
+            </div>
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Management</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Manage customers & employees</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Seamlessly assign work orders</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Create reminders</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Implement before and after photos</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Finances</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Integrate online payments</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Insights</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Intuitive dashboard</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Monitor expenses and profits</span>
+                  </li>
+              </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-pricing-banner hero-item-pricing">
+      <div class="container">
+          <div class="row cls-price">
+            <h3 class="text-center cd-fs">Essential</h3>
+            <br style="clear:both;"/>
+            <br/>
+            <div class="row eCommerce-product-div">
+              <div class="blue-button">
+                <div class="center-pricing">
+                    <div class="price gray-price">
+                        <span class="line-through"></span><span class="ct gray">$</span><span class="aw">59.99</span>
+                        <span class="as"></span><span class="ac"></span>
+                    </div>
+                    <div class="red-price-text sc-3">
+                        <span class="ad"> &nbsp; </span>
+                        <span class="ct">$</span><span class="ad">49.99</span>
+                        <span class="as"></span><span class="ac"></span>
+                    </div>
+                </div>
+              </div>
+
+
+              <div class="tryit-free-link-url">
+                <div class="center-pricing-free">
+                    <div class="red-price-text">
+                        <span class="ct">$</span><span class="ad">FREE</span>
+                        <span class="as"></span><span class="ac"></span>
+                    </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <br class="clear"/>
+          <div class="row eCommerce-product-div">
+            <div class="blue-button default-product">
+              <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+            </div>
+          </div>
+          <div class="row eCommerce-product-div">
+            <div class="tryit-free-link-url default-product">
+              <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+            </div>
+          </div>
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Management</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Manage customers & employees</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Create reminders</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Implement before and after photos</span>
+                </li>
+            </ul>
+          </div>
+
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Finances</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Integrate online payments</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                </li>
+            </ul>
+          </div>
+
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Insights</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Intuitive dashboard</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                </li>
+            </ul>
+          </div>
+
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Time Sheets</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Track employee hours</span>
+                </li>
+            </ul>
+          </div>
+
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Reports</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Real time reports and analytics</span>
+                </li>
+            </ul>
+          </div>
+
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Marketing</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                </li>
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Create a customized digital store</span>
+                </li>
+            </ul>
+          </div>
+
+          <br class="clear"/>
+          <div class="ctext">
+            <ul data-list="1">
+                <li>
+                    <span class=""><strong>Taskhub</strong></span>
+                </li>
+            </ul>
+            <ul data-list="1">
+                <li>
+                    <i class="arrow-down" aria-hidden="true"></i>
+                    <span class="p3 open-popup">Manage & assign multiple projects</span>
+                </li>
+            </ul>
+          </div>
         </div>
       </div>
+
+
+
 
       <div class="mobile-pricing-banner hero-item-pricing">
         <div class="container">
             <div class="row cls-price">
-              <h3 class="text-center cd-fs-2">Extra</h3>
+              <h3 class="text-center cd-fs-plus">Plus</h3>
               <br style="clear:both;"/>
               <br/>
-              <div class="center-pricing">
-                <div class="price gray-price">
-                    <span class="line-through"></span><span class="ct gray">$</span><span class="aw">99.98</span>
-                    <span class="as"></span><span class="ac"></span>
+              <div class="row eCommerce-product-div">
+                <div class="blue-button">
+                  <div class="center-pricing">
+                      <div class="price gray-price">
+                          <span class="line-through"></span><span class="ct gray">$</span><span class="aw">79.99</span>
+                          <span class="as"></span><span class="ac"></span>
+                      </div>
+                      <div class="red-price-text sc-3">
+                          <span class="ad"> &nbsp; </span>
+                          <span class="ct">$</span><span class="ad">69.99</span>
+                          <span class="as"></span><span class="ac"></span>
+                      </div>
+                  </div>
                 </div>
-                <div class="red-price-text">
-                    <span class="ad"> &nbsp; </span>
-                    <span class="ct">$</span><span class="ad">49.99</span>
-                    <span class="as"></span><span class="ac"></span>
+
+
+                <div class="tryit-free-link-url">
+                  <div class="center-pricing-free">
+                      <div class="red-price-text">
+                          <span class="ct">$</span><span class="ad">FREE</span>
+                          <span class="as"></span><span class="ac"></span>
+                      </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <br class="clear"/>
+            <div class="row eCommerce-product-div">
+              <div class="blue-button default-product">
+                <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+              </div>
+            </div>
+            <div class="row eCommerce-product-div">
+              <div class="tryit-free-link-url default-product">
+                <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+              </div>
+            </div>
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Management</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Manage customers & employees</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Seamlessly assign work orders</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Create reminders</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Implement before and after photos</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Finances</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Integrate online payments</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Insights</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Intuitive dashboard</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Monitor expenses and profits</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Time Sheets</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Track employee hours</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Reports</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Real time reports and analytics</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Marketing</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Automate email marketing campaigns</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                  </li>
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Create a customized digital store</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Taskhub</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Manage & assign multiple projects</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>API Connectors</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Link up with your favorite software</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>Campaign Builder</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Create some great designs emails</span>
+                  </li>
+              </ul>
+            </div>
+
+            <br class="clear"/>
+            <div class="ctext">
+              <ul data-list="1">
+                  <li>
+                      <span class=""><strong>GPS Tracking</strong></span>
+                  </li>
+              </ul>
+              <ul data-list="1">
+                  <li>
+                      <i class="arrow-down" aria-hidden="true"></i>
+                      <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                  </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="mobile-pricing-banner hero-item-pricing">
+          <div class="container">
+              <div class="row cls-price">
+                <h3 class="text-center cd-fs-premier">PremierPro</h3>
+                <br style="clear:both;"/>
+                <br/>
+                <div class="row eCommerce-product-div">
+                  <div class="blue-button">
+                    <div class="center-pricing">
+                        <div class="price gray-price">
+                            <span class="line-through"></span><span class="ct gray">$</span><span class="aw">99.99</span>
+                            <span class="as"></span><span class="ac"></span>
+                        </div>
+                        <div class="red-price-text sc-3">
+                            <span class="ad"> &nbsp; </span>
+                            <span class="ct">$</span><span class="ad">89.99</span>
+                            <span class="as"></span><span class="ac"></span>
+                        </div>
+                    </div>
+                  </div>
+
+
+                  <div class="tryit-free-link-url">
+                    <div class="center-pricing-free">
+                        <div class="red-price-text">
+                            <span class="ct">$</span><span class="ad">FREE</span>
+                            <span class="as"></span><span class="ac"></span>
+                        </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <br class="clear"/>
+              <div class="row eCommerce-product-div">
+                <div class="blue-button default-product">
+                  <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+                </div>
+              </div>
+              <div class="row eCommerce-product-div">
+                <div class="tryit-free-link-url default-product">
+                  <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                </div>
+              </div>
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Management</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Manage customers & employees</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Seamlessly assign work orders</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Create reminders</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Implement before and after photos</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Finances</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Integrate online payments</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Insights</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Intuitive dashboard</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Monitor expenses and profits</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Time Sheets</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Track employee hours</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Reports</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Real time reports and analytics</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Marketing</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Automate email marketing campaigns</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                    </li>
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Create a customized digital store</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Taskhub</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Manage & assign multiple projects</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>API Connectors</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Link up with your favorite software</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Campaign Builder</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Create some great designs emails</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>GPS Tracking</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Mobile Tools</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Simple tools that come handy</span>
+                    </li>
+                </ul>
+              </div>
+
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Survey Builder</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Feedbacks and reviews</span>
+                    </li>
+                </ul>
+              </div>
+              <br class="clear"/>
+              <div class="ctext">
+                <ul data-list="1">
+                    <li>
+                        <span class=""><strong>Inventory Management</strong></span>
+                    </li>
+                </ul>
+                <ul data-list="1">
+                    <li>
+                        <i class="arrow-down" aria-hidden="true"></i>
+                        <span class="p3 open-popup">Keep track of all the your items</span>
+                    </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="mobile-pricing-banner hero-item-pricing">
+            <div class="container">
+                <div class="row cls-price">
+                  <h3 class="text-center cd-fs-enterprise">Enterprise</h3>
+                  <br style="clear:both;"/>
+                  <br/>
+                  <div class="row eCommerce-product-div">
+                    <div class="blue-button">
+                      <div class="center-pricing">
+                          <div class="price gray-price">
+                              <span class="line-through"></span><span class="ct gray">$</span><span class="aw">179.99</span>
+                              <span class="as"></span><span class="ac"></span>
+                          </div>
+                          <div class="red-price-text sc-3">
+                              <span class="ad"> &nbsp; </span>
+                              <span class="ct">$</span><span class="ad">149.99</span>
+                              <span class="as"></span><span class="ac"></span>
+                          </div>
+                      </div>
+                    </div>
+
+
+                    <div class="tryit-free-link-url">
+                      <div class="center-pricing-free">
+                          <div class="red-price-text">
+                              <span class="ct">$</span><span class="ad">FREE</span>
+                              <span class="as"></span><span class="ac"></span>
+                          </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <br class="clear"/>
+                <div class="row eCommerce-product-div">
+                  <div class="blue-button default-product">
+                    <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+                  </div>
+                </div>
+                <div class="row eCommerce-product-div">
+                  <div class="tryit-free-link-url default-product">
+                    <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                  </div>
+                </div>
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Management</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Manage customers & employees</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Seamlessly assign work orders</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Create reminders</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Implement before and after photos</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Finances</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Integrate online payments</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Insights</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Intuitive dashboard</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Monitor expenses and profits</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Time Sheets</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Track employee hours</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Reports</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Real time reports and analytics</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Marketing</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Automate email marketing campaigns</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                      </li>
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Create a customized digital store</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Taskhub</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Manage & assign multiple projects</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>API Connectors</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Link up with your favorite software</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Campaign Builder</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Create some great designs emails</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>GPS Tracking</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Mobile Tools</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Simple tools that come handy</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Survey Builder</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Feedbacks and reviews</span>
+                      </li>
+                  </ul>
+                </div>
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Inventory Management</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Keep track of all the your items</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Credit Score</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Get the credit worthiness of your prospect</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Form Builder</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Customize & save your forms</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Accounting</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">A lite accounting software to keep you on the right track</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>eSign</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Easily customize any templates to create personal or business signage</span>
+                      </li>
+                  </ul>
+                </div>
+
+                <br class="clear"/>
+                <div class="ctext">
+                  <ul data-list="1">
+                      <li>
+                          <span class=""><strong>Campaign Blast</strong></span>
+                      </li>
+                  </ul>
+                  <ul data-list="1">
+                      <li>
+                          <i class="arrow-down" aria-hidden="true"></i>
+                          <span class="p3 open-popup">Narrow down your target demographics & connect</span>
+                      </li>
+                  </ul>
                 </div>
               </div>
             </div>
-        </div>
-      </div>
-    </div>
+  </div>
 </section>
 
 
@@ -286,7 +1434,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
@@ -502,7 +1650,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
@@ -717,7 +1865,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
@@ -935,7 +2083,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
@@ -1189,7 +2337,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
@@ -1276,8 +2424,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </section>
 <section class="ccontainer ss-section all-plans-include" style="margin-bottom: 20px; " id="section-2">
     <div class="content-container">
-        <div class="grid-image-text container-fluid g_vertical_align_image pl-4">
-            <div class="row grid-container-960 pl-4">
+        <div class="grid-image-text container-fluid g_vertical_align_image mb-pl-4">
+            <div class="row grid-container-960 mb-pl-4">
                 <div class="hero-slider-signup owl-carousel">
                     <div class="hero-item" >
                         <div class="testimonial-card-pricing">
