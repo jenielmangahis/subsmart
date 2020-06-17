@@ -160,6 +160,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="mobile-pricing-banner hero-item-pricing">
+
       <div class="container">
           <div class="row cls-price">
             <h3 class="text-center cd-fs">Essential</h3>
@@ -348,7 +349,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </ul>
           </div>
         </div>
-      </div>
+    </div>
 
 
 
