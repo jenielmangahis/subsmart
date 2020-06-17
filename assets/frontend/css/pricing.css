@@ -51,6 +51,39 @@ button,input[type=submit]{
   margin-left: -67px;
   border-radius: 4px;
 }
+.owl-auto-height {
+  height: auto !important;
+}
+.show-more {
+  font-size: 19px;
+  position: relative;
+  top: 4px;
+  right: 5px;
+}
+.prc-description {
+  font-size: 19px;
+  position: relative;
+  bottom: 12px;
+  margin-left: 25px;
+  font-weight: 600;
+  color: #575567;
+}
+.desc-ul {
+  padding-left: 7px;
+}
+.hide-button {
+  display: none !important;
+}
+.show-less {
+  font-size: 19px;
+  position: relative;
+  top: 4px;
+  right: 5px;
+}
+.banner-hide {
+  height: 280px;
+  overflow-y: hidden;
+}
 .cd-fs-plus:after {
   content: '';
   width: 39px;
@@ -360,8 +393,13 @@ label{
 }
 
 @media (max-width:767px){
+  ul.desc-ul {
+    padding-top: 20px !important;
+    padding-bottom: 5px !important;
+  }
   div.ctext ul {
     margin: 0px;
+    padding-top: 0px;
   }
   .p3 {
     font-size: 12px;
@@ -375,7 +413,7 @@ label{
     list-style-type: none;
   }
   .mobile-pricing-banner {
-    padding: 10px 11px 30px 11px;
+    padding: 25px 11px 30px 11px;
     border-top: 3px solid #34144c;
     position: relative;
     left: 45px;
@@ -385,7 +423,6 @@ label{
     margin-right: 20px;
     width: 79% !important;
     box-shadow: rgba(177, 162, 162, 0.3) 1px -2px 4px;
-    min-height: 400px;
   }
   .toggle-container .bn {
     font-weight: 500;
@@ -1924,7 +1961,7 @@ body{
   top: 5px;
 }
 .center-pricing {
-  width: 70%;
+  width: 75%;
   display: block;
   margin: 0 auto;
 }
@@ -5832,7 +5869,7 @@ span.tooltip-icon {
 }
 /* Payroll Section Start */
 .payroll--horizontal .pricing-card-layout-qb .pcolumns_w3 .pricing-card-layout-content-wrapper,.payroll--horizontal.pricing-card-layout-qb .pcolumns_w1 .pricing-card-layout-content-wrapper{
-   height:880px!important
+   height:2068px!important;
 }
 .payroll--wrapper .elite-add-on:after{
    content:"Get QuickBooks set up with a Live Bookkeeping expert";
