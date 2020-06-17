@@ -86,13 +86,13 @@ $user_id = getLoggedUserID();
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
 						<a class="dropdown-item" href="<?php echo base_url('job/new_job') ?>"><i class="fa fa-wrench"></i> Create Job</a>
-                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i> Estimates</a>
+                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i><b> Estimates</b></a>
                         <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
-                            <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i> Work Orders</a>
+                            <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
                         <?php //endif ?>
-                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i> Invoices</a>
+                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i><b> Invoices</b></a>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i> Items</a>
+                            <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('plan_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a>
@@ -101,10 +101,10 @@ $user_id = getLoggedUserID();
                             <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('inquiries') ?>"><i class="fa fa-question-circle"></i> Inquiries</a>
+                            <a class="dropdown-item" href="<?php echo url('inquiries') ?>"><i class="fa fa-question-circle"></i> Leads</a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('services') ?>"><i class="fa fa-user-circle-o"></i> Leads</a>
+                            <?php /*<a class="dropdown-item" href="<?php //echo url('services') ?>"><i class="fa fa-user-circle-o"></i> Leads</a>*/?>
                         <?php //endif ?>
                         <?php //if (hasPermissions('plan_list')): ?>
                                 <a class="dropdown-item" href="<?php echo url('/workstatus') ?>"><i class="fa fa-check m-r-5"></i> Status</a>
@@ -161,8 +161,10 @@ $user_id = getLoggedUserID();
                         <i class="fa fa-industry" aria-hidden="true"></i> <span>Files Vault</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown" style="width: auto;">
-                        <a class="dropdown-item" href="<?php echo base_url('vault') ?>"><i class="mdi mdi-wallet m-r-5"></i>Files Vault</a>
-                        <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> My Gallery (Before and After)</a>
+                        <a class="dropdown-item" href="<?php echo base_url('vault') ?>"><i class="mdi mdi-wallet m-r-5"></i><b>Files Vault</b></a>
+                        <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> Shared Library</a>
+                        <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> My Library</a>
+                        <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> Before and After Photos</a>
                     </div>
                 </li>
                 <?php //if (hasPermissions('report')): ?>
@@ -171,7 +173,15 @@ $user_id = getLoggedUserID();
                     </li>
                 <?php //endif ?>
                 <li class="has-submenu">
-                    <a href="<?php echo base_url('marketing') ?>"><i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span></a>
+                    <!-- <a href="<?php echo base_url('marketing') ?>"><i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span></a> -->
+                    <a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
+                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cog" aria-hidden="true"></i> <span>Marketing</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">
+                        <a class="dropdown-item" href="<?php echo base_url('marketing') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>Marketing</b></a>
+                        <a class="dropdown-item" href="<?php //echo base_url('marketing') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>API Connectors</b></a>
+                    </div>
                 </li>
                 <li class="has-submenu">
                     <!-- <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span></a> -->
@@ -180,13 +190,13 @@ $user_id = getLoggedUserID();
                         <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php echo base_url('/company') ?>"><i class="mdi mdi-wallet m-r-5"></i> My Tools</a>
-                        <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Header Mobile Tools</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/company') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>My Tools</b></a>
                         <a class="dropdown-item" href="<?php echo base_url('esign') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
                         <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
                         <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
-                        <a class="dropdown-item" href="<?php echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Builder</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Form Builder</a>
                         <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> API Connectors</a>
+                        <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i><b>Mobile Tools</b></a>
                         
                     </div>
                 </li>
@@ -198,14 +208,18 @@ $user_id = getLoggedUserID();
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         
-                        <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>"><i
-                                    class="mdi mdi-wallet m-r-5"></i> My Business</a>
-                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>"><i
-                                    class="mdi mdi-wallet m-r-5"></i> Settings</a>
-                        <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i
-                                    class="mdi mdi-wallet m-r-5"></i> Employees</a>
-                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>"><i
-                                    class="mdi mdi-wallet m-r-5"></i> My CRM</a>
+                        <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i><b> My Business </b>
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i><b> Settings </b>
+                        </a>
+                        <a class="dropdown-item" href="<?php echo base_url('/users') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i><b> Employees </b>
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo base_url('dashboard/blank/?page=Add-ons') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i><b> My CRM </b>
+                        </a>
                     </div>
                 </li>
 

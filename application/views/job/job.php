@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="job_name"><?php echo (!empty($job_data)) ? date_format(date_create($job_data->created_date),"Y-m-d") : date('Y-m-d'); ?></label>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <input type="hidden" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->jobs_id : 0; ?>">
+                                    <input type="hidden" id="jobId" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->jobs_id : 0; ?>">
                                     <?php if(empty($job_data)) : ?>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                     <?php else : ?>
@@ -60,9 +60,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php if(!empty($job_other_info)) : ?>
                                         <label for="">: <?php echo getLoggedFullName($job_other_info->id); ?></label>
                                         <input type="hidden" id="job_customer_id" name="job_customer_id" value="<?php echo getLoggedFullName($job_other_info->id); ?>">
+                                        <input type="hidden" id="customer_id" name="customer_id" value="<?php echo $job_other_info->id; ?>">
                                     <?php else: ?>
                                         <input id="job_customer" class="form-control" type="text" placeholder="Customer">
                                         <input type="hidden" id="job_customer_id" name="job_customer_id">
+                                        <input type="hidden" id="customer_id" name="customer_id" value="">
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-3 text-left form-group">
@@ -165,6 +167,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <?php foreach($invoices as $invoice) : ?>
+                                            <tr>
+                                                <td class="pl-3"><?php echo 'Inv-' . $invoice->invoice_number; ?></td>
+                                                <td class="pl-3">Invoice</td>
+                                                <td class="pl-3"><?php echo $invoice->description; ?></td>
+                                                <td class="pl-3"><?php echo $invoice->status; ?></td>
+                                                <td class="pl-3"><?php echo date_format(date_create($invoice->created_date),"d/m/Y"); ?></td>
+                                                <td class="pl-3">&nbsp;</td>
+                                                <td class="pl-3"><?php echo getLoggedFullName($invoice->created_by)?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                         </tbody>
                                     </table> 
                                 </div>
@@ -283,34 +296,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
                                             <label class="pt-2 pr-2" for="">Created Date</label>
-                                            <input type="text" class="form-control col-md-2" id="invoiceCreatedDate">
+                                            <input type="text" class="form-control col-md-2" name="invoiceCreatedDate" id="invoiceCreatedDate">
+                                            <input type="hidden" id="invoiceNumber" name="invoiceNumber" value="<?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?>-01">
                                         </div>
                                         <div class="row col-md-4">
                                             <label class="pt-2 pr-2" for="">Status</label>
-                                            <select class="form-control col-md-7" id="exampleFormControlSelect1">
+                                            <select class="form-control col-md-7" id="invoiceStatus">
                                                 <option value="draft" selected>Draft</option>
-                                                <option>Scheduled</option>
-                                                <option>In progress</option>
-                                                <option>Completed</option>
-                                                <option>Canceled</option>
-                                                <option>Postponed</option>
+                                                <option value="scheduled">Scheduled</option>
+                                                <option value="in progress">In progress</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="canceled">Canceled</option>
+                                                <option value="postponed">Postponed</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
                                             <label class="pt-2 pr-4" for="">Description</label>
-                                            <input type="text" class="form-control col-md-6" id="inlineFormInputName" placeholder="">
+                                            <input type="text" class="form-control col-md-6" name="invoiceDescription" id="invoiceDescription" placeholder="">
                                         </div>
                                         <div class="row col-md-4">
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Save</button>
+                                                <button type="button" id="saveJobInvoice" class="btn btn-primary col-md-12">Save</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Preview</button>
+                                                <button type="button" class="btn btn-default col-md-12">Preview</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Edit</button>
+                                                <button type="button" class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                         </div>
                                     </div>

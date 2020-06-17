@@ -13,6 +13,9 @@ button,input[type=submit]{
    -webkit-appearance:button;
    cursor:pointer
 }
+.mb-pl-4 {
+  padding-left: 1.5rem;
+}
 .text-center {
   display: block;
   width: 100%;
@@ -26,6 +29,46 @@ button,input[type=submit]{
   position: absolute;
   margin-top: 33px;
   margin-left: -58px;
+  border-radius: 4px;
+}
+.cd-fs-premier:after {
+  content: '';
+  width: 39px;
+  height: 2px;
+  background-color: #694a86;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -74px;
+  border-radius: 4px;
+}
+.cd-fs-enterprise:after {
+  content: '';
+  width: 39px;
+  height: 2px;
+  background-color: #694a86;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -67px;
+  border-radius: 4px;
+}
+.cd-fs-plus:after {
+  content: '';
+  width: 39px;
+  height: 2px;
+  background-color: #694a86;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -39px;
+  border-radius: 4px;
+}
+.cd-fs-start:after {
+  content: '';
+  width: 39px;
+  height: 2px;
+  background-color: #694a86;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -78px;
   border-radius: 4px;
 }
 .cd-fs-2:after {
@@ -88,6 +131,9 @@ input{
    width:41.66666667%
 }
 @media (min-width:768px){
+    .mb-pl-4 {
+      padding-left: 0px !important;
+    }
    .col-sm-1,.col-sm-12,.col-sm-3,.col-sm-4,.col-sm-5,.col-sm-8{
        float:left
    }
@@ -112,6 +158,58 @@ input{
    .col-sm-offset-4{
        margin-left:33.33333333%
    }
+}
+.pricing-mobile-slider .owl-nav button.owl-prev,
+.pricing-mobile-slider .owl-nav button.owl-next {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  top: calc( 50% - 42px);
+  left: 0;
+  font-size: 30px;
+  color: #081624;
+  background: #fff;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+.pricing-mobile-slider .owl-nav button.owl-prev:hover,
+.pricing-mobile-slider.owl-nav button.owl-next:hover {
+  color: #fff;
+  background: #ffc000;
+}
+
+.pricing-mobile-slider .owl-nav button.owl-next {
+  left: auto;
+  right: 0;
+}
+.pricing-mobile-slider .owl-item.active .hero-item h2,
+.pricing-mobile-slider .owl-item.active .hero-item .site-btn {
+  top: 0;
+  opacity: 1;
+}
+
+.pricing-mobile-slider .owl-item.active .hero-item h2 {
+  -webkit-transition: all 0.5s ease 0.2s;
+  transition: all 0.5s ease 0.2s;
+}
+
+.pricing-mobile-slider .owl-item.active .hero-item .site-btn {
+  -webkit-transition: all 0.5s ease 0.4s;
+  transition: all 0.5s ease 0.4s;
+}
+
+.pricing-mobile-slider .owl-item.active .hero-item .site-btn:last-child {
+  -webkit-transition: all 0.5s ease 0.6s;
+  transition: all 0.5s ease 0.6s;
+}
+.pricing-mobile-slider .owl-nav button.owl-prev,
+.pricing-mobile-slider .owl-nav button.owl-next {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: calc( 25% - 30px);
+  font-size: 18px;
 }
 @media (min-width:1024px){
    .col-md-1,.col-md-12,.col-md-3,.col-md-4,.col-md-6,.col-md-8,.col-md-9{
@@ -262,8 +360,22 @@ label{
 }
 
 @media (max-width:767px){
+  div.ctext ul {
+    margin: 0px;
+  }
+  .p3 {
+    font-size: 12px;
+    margin-left: 6px;
+  }
+  .ctext ul li {
+    line-height: 20px;
+    padding-bottom: 12px;
+  }
+  div.ctext ul li {
+    list-style-type: none;
+  }
   .mobile-pricing-banner {
-    padding: 10px 11px;
+    padding: 10px 11px 30px 11px;
     border-top: 3px solid #34144c;
     position: relative;
     left: 45px;
@@ -271,9 +383,9 @@ label{
     border-left: 1px solid #dedede;
     border-bottom: 1px solid #dedede;
     margin-right: 20px;
-    width: 75% !important;
+    width: 79% !important;
     box-shadow: rgba(177, 162, 162, 0.3) 1px -2px 4px;
-    height: 400px;
+    min-height: 400px;
   }
   .toggle-container .bn {
     font-weight: 500;
@@ -7064,5 +7176,40 @@ h3.testimonial-name {
   font-size: 24px;
   text-align: right;
   font-style: italic;
+}
+@media (max-width:767px) {
+  .eCommerce-product-div .tryit-free-link-url a.ctasecondary {
+    margin-left: -6% !important;
+  }
+  .center-pricing-free {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    right: 8px;
+  }
+  .sc-3 {
+    position: relative;
+    top: 3px;
+  }
+  .eCommerce-product-div .blue-button .red-price-text {
+    text-align: center;
+    line-height: 37px;
+    margin-top: 4px;
+    margin-bottom: 15px;
+  }
+  .eCommerce-product-div .blue-button {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    line-height: 0px !important;
+    padding: 0px !important;
+  }
+  .try-it-free .eCommerce-product-div .tryit-free-link-url {
+    text-align: center !important;
+    margin: 0 auto !important;
+    padding-bottom: 0px;
+  }
 }
 /*Magic Carpet End*/

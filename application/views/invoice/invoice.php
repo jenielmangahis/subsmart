@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
                             <hr>                           
                                 <?php if (!empty($invoices)) { ?>
-                                <table class="table table-hover">
+                                <table class="table table-hover" style="width:100%;" id="invoiceTable">
                                     <thead>
                                         <tr>
                                             <th scope="col"><strong>Invoice Number</strong></th>
@@ -63,6 +63,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php foreach($invoices as $invoice) : ?>
+                                            <tr>
+                                                <td class="pl-3"><?php echo $invoice->invoice_number?></td>
+                                                <td class="pl-3"><?php echo date_format(date_create($invoice->created_date),"d/m/Y"); ?></td>
+                                                <td class="pl-3"><?php echo getLoggedFullName($invoice->customer_id)?></td>
+                                                <td class="pl-3"><?php echo ucwords($invoice->status); ?></td>
+                                                <td class="pl-3">$0.00</td>
+                                                <td class="pl-3">
+                                                    <a href="<?php echo base_url() .'job/new_job?job_num=' . $invoice->invoice_id ?>" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                <a href="<?php echo base_url() .'job/delete?id=' . $invoice->invoice_id ?>" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>  
                                 <?php } else { ?>

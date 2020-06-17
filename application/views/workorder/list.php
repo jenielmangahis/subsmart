@@ -17,8 +17,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
+                             <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
+                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                            </a>
                             <a class="btn btn-primary btn-md" href="<?php echo base_url('workorder/add') ?>">
-                                <span class="fa fa-plus"></span> New Work Order
+                                <span class="fa fa-plus"></span> &nbsp; New Work Order
                             </a>
                         </div>
                     </div>

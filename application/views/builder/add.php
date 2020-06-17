@@ -35,7 +35,7 @@
         <select class="form-control" name="custome_forms">
           <option value="new">New Form</option>
           <?php foreach($forms as $job) { ?>
-            <option value="<?php echo $job->forms_id; ?>" <?php echo (isset($selected_form_id) && $selected_form_id > 0)?'selected="selected"':''; ?>><?php echo $job->form_title; ?></option>
+            <option value="<?php echo $job->forms_id; ?>" <?php echo (isset($selected_form_id) && $selected_form_id > 0 && $selected_form_id == $job->forms_id)?'selected="selected"':''; ?>><?php echo $job->form_title; ?></option>
           <?php } ?>
         </select>
       </div>
@@ -138,11 +138,16 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
 
   function showHide(e) {
     
-    if($(e).parent('div').parent('div').find('.styling').hasClass('d-none') == false) {
-      $(e).parent('div').parent('div').find('.styling').addClass('d-none');
+    if($(e).parents('.input-main-box').find('.styling').hasClass('d-none') == false) {
+      $(e).parents('.input-main-box').find('.styling').addClass('d-none');
     } else {
-      $(e).parent('div').parent('div').find('.styling').removeClass('d-none');
+      $(e).parents('.input-main-box').find('.styling').removeClass('d-none');
     }
+    // if($(e).parent('div').parent('div').find('.styling').hasClass('d-none') == false) {
+    //   $(e).parent('div').parent('div').find('.styling').addClass('d-none');
+    // } else {
+    //   $(e).parent('div').parent('div').find('.styling').removeClass('d-none');
+    // }
     // if($(e).parent('div').parent('div').find('.styling').css('display') == 'none')
     //   $(e).parent('div').parent('div').find('.styling').show();
     // else 
@@ -171,6 +176,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
           success: function(data) {
             var result = jQuery.parseJSON(data);
             if(data != '') {
+              console.log();
               $('input[name="custom_forms_title"]').val(result.form_title); 
 
               $.each(result.questions, function( index, value ) {
@@ -628,9 +634,7 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
   function removeOptions(e) {
 
     var option_id = parseInt($(e).parents('.option').attr('data-option-id'));
-    // 
-    if(option_id > 0)
-    {
+    if(option_id > 0) {
       var removed_options_ids = $(e).parents('.option_div').attr('data-removed-options');
       if(removed_options_ids == '')
       {
@@ -639,6 +643,8 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
         removed_options_ids = removed_options_ids + ',' + option_id;
       }
       $(e).parents('.option_div').attr('data-removed-options',removed_options_ids);
+      $(e).parents('.option').remove();
+    } else {
       $(e).parents('.option').remove();
     }
   }
@@ -667,7 +673,6 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
           connectWith: ".connectedSortable",
           placeholder: "portlet-placeholder"
         }).disableSelection();
-
 
         $(".form_bal_textfield").draggable({
             helper: function () {
@@ -739,8 +744,6 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
           connectToSortable: ".connectedSortable"
         });
         
-        
-
     });
 
 
@@ -812,9 +815,9 @@ var styling_var = '<div class="col-sm-2 text-right"> <a href="#" onclick="showHi
           option_text = '<div class="col-sm-12 option" data-option-id="0"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>';
       }
 
-      var html = '<div data-field-id="selection_type-'+field+'" data-question-id="'+question_id+'" data-input-type="selection" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Selection</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="allow_other" '+allow_other+'> Allow Other</div>';
+      var html = '<div data-field-id="selection_type-'+field+'" data-question-id="'+question_id+'" data-input-type="selection" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <label class="text-right mb-0 pt-1">Selection Type</label> <div class="col-sm-3 text-left"> <input name="selection_type-'+field+'" value="radio" type="radio" '+((selection_type == 'radio')?'checked':'')+'> Radio Button &nbsp;<input name="selection_type-'+field+'" value="checkbox" type="radio" '+((selection_type == 'checkbox')?'checked':'')+'> Checkbox &nbsp;<input name="selection_type-'+field+'" value="dropdown" type="radio" '+((selection_type == 'dropdown')?'checked':'')+'> Drop Down </div> <div class="col-sm-12 text-right">Selection</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="allow_other" '+allow_other+'> Allow Other</div>';
 
-      html = html + '<label class="text-right mb-0 pt-1">Selection Type</label> <div class="col-sm-4 text-left"> <input name="selection_type-'+field+'" value="radio" type="radio" '+((selection_type == 'radio')?'checked':'')+'> Radio Button &nbsp;<input name="selection_type-'+field+'" value="checkbox" type="radio" '+((selection_type == 'checkbox')?'checked':'')+'> Checkbox &nbsp;<input name="selection_type-'+field+'" value="dropdown" type="radio" '+((selection_type == 'dropdown')?'checked':'')+'> Drop Down </div> </div> <br><div class="row option_div" data-removed-options="">'+option_text+'</div><div class="col-sm-2 text-right"><a href="#" onclick="showHide(this)">Styling</a></div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="number" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div>';
+      html = html + '<div class="col-sm-1 text-right"><a href="#" onclick="showHide(this)">Styling</a></div> </div> <br><div class="row option_div "  data-removed-options="">'+option_text+'</div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="number" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div>';
       // <div class="col-sm-12 option"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>
       return html;
     }

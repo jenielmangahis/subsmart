@@ -69,14 +69,15 @@ function getInputHtml($valueQuestions){
       case "selection":
 
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          
+            
           if($valueQuestions->parameter->selection_type == 'dropdown')
           {
             echo '<select name="'.$questionName.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
               if(isset($valueQuestions->options))
               {
+
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
-                  echo '<option value="'.$valueOptions->options_id.'" >'.$valueOptions->options.'</option>';
+                  echo '<option value="'.$valueOptions->options_id.'" >'.$valueOptions->option_value.'</option>';
                 }
               }
             echo '</select>';
@@ -172,9 +173,9 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
           break;
       
       case "textarea":
-       
+
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
-          $html .= '<textarea maxlength="'.$questionParameterMaxLength.'" name="'.$questionName.'" cols="40" rows="3" class="form-control reperator-input '.$questionParameterClass.'" autocomplete="off" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"></textarea>';
+          $html .= '<textarea maxlength="'.$questionParameterMaxLength.'" name="'.$questionName.'" cols="40" rows="3" class="form-control reperator-input '.$questionParameterClass.'" autocomplete="off" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.';height:auto !important;"></textarea>';
         
           break;
       
@@ -188,7 +189,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
               if(isset($valueQuestions->options))
               {
                 foreach($valueQuestions->options as $keyOptions=>$valueOptions)  {
-                  $html .= '<option value="'.$valueOptions->options_id.'" >'.$valueOptions->options.'</option>';
+                  $html .= '<option value="'.$valueOptions->options_id.'" >'.$valueOptions->option_value.'</option>';
                 }
               }
             $html .= '</select>';
@@ -235,7 +236,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
       case "phone":
           $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+          $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="contact_phone form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
       case "email":
@@ -289,17 +290,13 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
                                     
 
                                         if( $valueQuestions->q_type != 'group' && $valueQuestions->q_type != 'reperator' ) {
-                                      
-                                        echo '<div class="col-md-6 form-group">';
-                                
-                                          getInputHtml ($valueQuestions);
-                                
-                                        echo '</div>';
-                                  
+                                            echo '<div class="col-md-6 form-group">';
+                                            getInputHtml ($valueQuestions);
+                                            echo '</div>';
                                         }
 
                                         if( $valueQuestions->q_type == 'group' ) {
-                                          echo '<div class="col-md-12 form-group">';
+                                            echo '<div class="col-md-12 form-group">';
                                             echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
                                 
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions)
@@ -308,36 +305,32 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
                                             // echo "<pre>";
                                             // print_r($valueSubQuestions);
                                            // echo "</pre>";
-                                            getInputHtml ($valueSubQuestions);
-                                          
+                                            getInputHtml ($valueSubQuestions);                                          
                                             echo '</div>';
                                           }
                                             echo "</div>";
-                                          echo "</div>";
+                                            echo "</div>";
                                         }
 
                                         if( $valueQuestions->q_type == 'reperator' ) {
                                         
-                                          $dummyHtml = '';
-                                        
-                                          $dummyHtml .= '<div class="col-md-12 form-group float-left">';
+                                            $dummyHtml = '';
+                                            $dummyHtml .= '<div class="col-md-12 form-group float-left">';
                                             $dummyHtml .= '<div class="col-md-12 float-left reperator_tab_div_'.$valueQuestions->Questions_id.'" style="border:2px solid #16478a;border-radius:5px;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
-                                              $dummyHtml .= "<div class='reperator float-left w-100 mb-3' style='clear:both;'>";
+                                            $dummyHtml .= "<div class='reperator float-left w-100 mb-3' style='clear:both;'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
-                                            $dummyHtml .= '<div class="col-md-3 float-left">';
+                                            $dummyHtml .= '<div class="col-md-5 float-left" style="width:47%">';
 
-                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                            $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           
-                                          $dummyHtml .= '<div class="col-sm-1 text-left actions float-left mt-4 pt-2 pb-2"><label style="clear:both;">&nbsp;</label><a class=" col-form-label add_action" onClick="addOptions(this,\'reperator_tab_div_'.$valueQuestions->Questions_id.'\')" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
-                                              $dummyHtml .= "</div>";
+                                            $dummyHtml .= '<div class="col-sm-1 text-left actions float-left mt-4 pt-2 pb-2 pull-right" style="width:5%"><label style="clear:both;">&nbsp;</label><a class=" col-form-label add_action" onClick="addOptions(this,\'reperator_tab_div_'.$valueQuestions->Questions_id.'\')" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div>';
+                                            $dummyHtml .= "</div>";
 
-                                          echo $dummyHtml;
-
+                                            echo $dummyHtml;
                                             echo "</div>";
-                                          echo "</div>";
-
+                                            echo "</div>";
                                         }
                                     }
                                 }
@@ -412,12 +405,18 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
             $(this).val($(this).val() + "/");
         }
     });
-    
 });
+
+function phoneMask(e){
+    var s=e.val();
+    var s=s.replace(/[_\W]+/g,'');
+    var n=s.length;
+    if(n<11){var m='(00) 0000-00000';}else{var m='(00) 00000-00000';}
+    $(e).mask(m);
+}
 </script>
 <style>
- .select2-container--open{       z-index: 0;}
- span.select2-selection.select2-selection--single {
-    font-size: 16px;
-}
+.select2-container--open { z-index: 0; }
+span.select2-selection.select2-selection--single { font-size: 16px; }
+.form-group { margin-bottom: 20px !important; }
 </style>

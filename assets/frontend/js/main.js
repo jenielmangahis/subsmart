@@ -77,6 +77,22 @@ $(window).on('load', function() {
     	animateIn: 'fadeIn',
 	});
 
+	$('.pricing-mobile-slider').owlCarousel({
+		autoHeight: true,
+		autoplayHoverPause: false,
+		nav: true,
+		dots: false,
+		loop: false,
+		slideSpeed : 12000,
+		autoplaySpeed:1200000,
+		autoplayTimeout:9000000,
+		navText: ['<i class="fa fa-angle-left play"></i>','<i class="fa fa-angle-right play"></i>'],
+		autoplay: false,
+		items: 1,
+		animateOut: 'fadeOut',
+    	animateIn: 'fadeIn',
+	});
+
 	$('.play').on('click',function(){
 	    $('.hero-slider').trigger('play.autoplay',[1000])
 	})

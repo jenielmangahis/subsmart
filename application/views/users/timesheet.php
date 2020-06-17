@@ -47,6 +47,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Role</th>*/ ?>
                                             <th>Recorded Clock In/Clock Out</th>
                                             <th>Status</th>
+                                            <th>In</th>
+                                            <th>Out</th>
+                                            <th>Lunch In</th>
+                                            <th>Lunch Out</th>
+                                            <th>Comments/Schedule</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -139,6 +144,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php if (logged('id') !== $row->id): ?>
                                                             <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                        <?php endif ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if (logged('id') !== $row->id): ?>
+                                                            <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                            <span>00:00PM </span>
+                                                        <?php endif ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if (logged('id') !== $row->id): ?>
+                                                            <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                            <span>00:00PM </span>
+                                                        <?php endif ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if (logged('id') !== $row->id): ?>
+                                                            <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                            <span>00:00PM </span>
+                                                        <?php endif ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if (logged('id') !== $row->id): ?>
+                                                            <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                            <span>00:00PM </span>
+                                                        <?php endif ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if (logged('id') !== $row->id): ?>
+                                                            <!-- <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php //echo $row->id ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="text" name="comments" placeholder="Comments">
                                                         <?php endif ?>
                                                     </td>
                                                     <td id="">

@@ -11,6 +11,7 @@ class Job extends MY_Controller
         $this->page_data['page']->title = 'Job Management';
         $this->page_data['page']->menu = 'job';
         $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('Invoice_model', 'invoice_model');
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -56,6 +57,7 @@ class Job extends MY_Controller
 
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
+        $this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
         
         if (empty($get['job_num'])) {
             $comp = array(
@@ -169,6 +171,29 @@ class Job extends MY_Controller
         $result = $this->jobs_model->getItems($get['index']);
 
         echo json_encode($result);
+    }
+
+    public function saveInvoice() {
+        postAllowed();
+
+        $comp_id = logged('company_id');
+        $date_created = date_format(date_create($this->input->post('createdDate')),"Y-m-d H:i:s");
+
+        $data = array(
+            'company_id' => $comp_id,
+            'customer_id' => $this->input->post('customer_id'),
+            'created_date' => $date_created,
+            'total_due' => $this->input->post('totalDue'),
+            'balance' => $this->input->post('balance'),
+            'due_date' => date('Y-m-d H:i:s'),
+            'billing_type' => $this->input->post('billingType'),
+            'job_id' => $this->input->post('jobId'),
+            'created_by' => logged('id'),
+            'status' => $this->input->post('status'),
+            'invoice_number' => $this->input->post('invoiceNumber')
+        );
+        $this->db->insert($this->invoice_model->table, $data);
+        echo json_encode($data);
     }
 }
 

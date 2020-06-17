@@ -2,6 +2,10 @@ $(document).ready(function () {
   selected_folder = {};
   isUpdatePermissions = false;
 
+  $("#invoiceTable").DataTable({
+    scrollX: true,
+  });
+
   $("#btnExistingJob").click(function () {
     if ($("#selectExistingJob").val()) $.LoadingOverlay("show");
   });
