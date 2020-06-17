@@ -15,18 +15,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-
-
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
                                     <h3 class="page-title">My Customers</h3>
-
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-
+                                            <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
+                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                                            </a>
                                             <?php if (isset($customers) && count($customers) > 0) { ?>
                                                 <a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
                                                     <span class="fa fa-print "></span> Print

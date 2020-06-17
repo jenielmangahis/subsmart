@@ -39,6 +39,7 @@ class Builder_model extends MY_Model {
             $this->db->select('*');
             $this->db->from($this->table_custom_forms);
             $this->db->where('company_id', $company_id);
+            $this->db->where('forms_id', $id);
             $query=$this->db->get();
             $row=$query->row();
             return $row;

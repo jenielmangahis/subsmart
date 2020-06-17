@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <div class="ctext cp-margin">
               <h3 class="chart-headline">Save 50% or try it free for 30 days<sup>*</sup></h3>
               <div class="chart-headline-sub">
-                  <p><span class="scrolltoqblive scrolltopaysec" style="cursor:pointer; padding-left:10px" aria-expanded="false" role="button" tabindex="0" aria-label="Set up Nsmartrac" data-wa-link="new-pyrl-anchortxt" data-di-id="#new-pyrl-anchortxt">Easily pay your team and have your payroll taxes done for you</span></p>
+                  <p><span class="scrolltoqblive scrolltopaysec" style="cursor:pointer; padding-left:10px" aria-expanded="false" role="button" tabindex="0" aria-label="Set up nSmarTrac" data-wa-link="new-pyrl-anchortxt" data-di-id="#new-pyrl-anchortxt">Easily pay your team and have your payroll taxes done for you</span></p>
               </div>
           </div>
       </section>
@@ -133,7 +133,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </li>
                   <li>
                       <i class="arrow-down" aria-hidden="true"></i>
-                      <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                      <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                   </li>
               </ul>
             </div>
@@ -257,7 +257,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </li>
                 <li>
                     <i class="arrow-down" aria-hidden="true"></i>
-                    <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                 </li>
             </ul>
           </div>
@@ -451,7 +451,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </li>
                   <li>
                       <i class="arrow-down" aria-hidden="true"></i>
-                      <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                      <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                   </li>
               </ul>
             </div>
@@ -688,7 +688,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </li>
                     <li>
                         <i class="arrow-down" aria-hidden="true"></i>
-                        <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                        <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                     </li>
                 </ul>
               </div>
@@ -969,7 +969,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </li>
                       <li>
                           <i class="arrow-down" aria-hidden="true"></i>
-                          <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                          <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                       </li>
                   </ul>
                 </div>
@@ -1295,7 +1295,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- <div class="ctext expert--anchor">Now set up QuickBooks with a Live Bookkeeping expert<sup>6</sup></div> -->
                     </div>
                     <div class="table-row" id="content_left">
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 900px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 1950px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
@@ -1361,18 +1361,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">39.99</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">59.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">19.99</span>
+                                                        <span class="ct">$</span><span class="aw">49.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
-                                                <p class="payroll_text">+$8/employee/mo</p>
+                                                <p class="payroll_text">+2 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
                                         </div>
@@ -1463,7 +1463,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                                             </li>
                                         </ul>
 
@@ -1475,15 +1475,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <ul data-list="1">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Monitor expenses and profits</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Time Sheets</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Track employee hours</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Reports</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Real time reports and analytics</span>
                                             </li>
                                         </ul>
 
@@ -1506,16 +1550,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
                                         </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Taskhub</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                            </li>
+                                        </ul>
+
                                     </div>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 900px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 1950px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ess">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extra</div>
+                                            <div class="price-container-title">Plus</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1544,7 +1601,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extra</div>
+                                            <div class="price-container-title">Plus</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1573,22 +1630,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extra</div>
+                                            <div class="price-container-title">Plus</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">99.98</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">79.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">49.99</span>
+                                                        <span class="ct">$</span><span class="aw">69.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
-                                                <p class="payroll_text">+$8/employee/mo</p>
+                                                <p class="payroll_text">+3 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
                                         </div>
@@ -1602,7 +1659,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extra</div>
+                                            <div class="price-container-title">Plus</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1679,7 +1736,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                                             </li>
                                         </ul>
 
@@ -1691,15 +1748,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <ul data-list="1">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Monitor expenses and profits</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Time Sheets</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Track employee hours</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Reports</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Real time reports and analytics</span>
                                             </li>
                                         </ul>
 
@@ -1722,16 +1823,65 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
                                         </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Taskhub</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>API Connectors</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Link up with your favorite software</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Campaign Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create some great designs emails</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>GPS Tracking</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                            </li>
+                                        </ul>
+
                                     </div>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 900px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 1950px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-plus">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extreme</div>
+                                            <div class="price-container-title">PremierPro</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1760,7 +1910,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extreme</div>
+                                            <div class="price-container-title">PremierPro</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1789,22 +1939,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extreme</div>
+                                            <div class="price-container-title">PremierPro</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">139.98</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">99.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">69.99</span>
+                                                        <span class="ct">$</span><span class="aw">89.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
-                                                <p class="payroll_text">+$8/employee/mo</p>
+                                                <p class="payroll_text">+4 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
                                         </div>
@@ -1818,7 +1968,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Extreme</div>
+                                            <div class="price-container-title">PremierPro</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1846,6 +1996,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                     <div class="ctext">
+
                                         <ul data-list="1">
                                             <li>
                                                 <span class=""><strong>Management</strong></span>
@@ -1894,7 +2045,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                                             </li>
                                         </ul>
 
@@ -1906,15 +2057,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <ul data-list="1">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Monitor expenses and profits</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Time Sheets</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Track employee hours</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Reports</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Real time reports and analytics</span>
                                             </li>
                                         </ul>
 
@@ -1937,16 +2132,101 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
                                         </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Taskhub</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>API Connectors</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Link up with your favorite software</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Campaign Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create some great designs emails</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>GPS Tracking</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Mobile Tools</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Simple tools that come handy.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Survey Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Feedbacks and reviews.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Inventory Management</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Keep track of all the your items.</span>
+                                            </li>
+                                        </ul>
+
                                     </div>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 900px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 1950px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 1075px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Elite</div>
+                                            <div class="price-container-title">Enterprise</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -1976,7 +2256,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Elite</div>
+                                            <div class="price-container-title">Enterprise</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
@@ -2005,22 +2285,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Elite</div>
+                                            <div class="price-container-title">Enterprise</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">179.98</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">89.99</span>
+                                                        <span class="ct">$</span><span class="aw">149.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
-                                                <p class="payroll_text">+$8/employee/mo</p>
+                                                <p class="payroll_text">+5 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
                                         </div>
@@ -2028,29 +2308,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a href="#" data-wa-link="advbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#advbuynow_prem-diy"><span>Buy now</span></a>
                                         </div>
                                         <p class="or-text default-product">,,</p>
-                                        <div class="tryit-free-link-url default-product">
+                                        <!-- <div class="tryit-free-link-url default-product">
                                             <span class="free-trial-text">Call for a product
                                                 demo<br>1-844-324-8623</span>
-                                        </div>
+                                        </div> -->
+                                        <div class="tryit-free-link-url default-product">
+                                            <a href="#" data-wa-link="pltrial_core-diy" class="ctasecondary" data-di-id="#pltrial_core-diy"><span class="free-trial-text">Try it free</span></a>
+                                        </div>                                        
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Elite</div>
+                                            <div class="price-container-title">Enterprise</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">275</span>
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">138</span>
+                                                        <span class="ct">$</span><span class="aw">149.99</span>
                                                         <span class="as"></span><span class="ac"></span>
                                                     </div>
                                                     <span class="per red-price-month">/mo</span>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
-                                                <p class="payroll_text">+$10/employee/mo</p>
+                                                <p class="payroll_text">+5 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
                                         </div>
@@ -2064,6 +2347,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                     <div class="ctext">
+
                                         <ul data-list="1">
                                             <li>
                                                 <span class=""><strong>Management</strong></span>
@@ -2112,7 +2396,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                                             </li>
                                         </ul>
 
@@ -2124,15 +2408,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <ul data-list="1">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Monitor expenses and profits</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Time Sheets</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Track employee hours</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Reports</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Real time reports and analytics</span>
                                             </li>
                                         </ul>
 
@@ -2155,6 +2483,151 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
                                         </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Taskhub</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>API Connectors</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Link up with your favorite software</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Campaign Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create some great designs emails</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>GPS Tracking</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Mobile Tools</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Simple tools that come handy.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Survey Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Feedbacks and reviews.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Inventory Management</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Keep track of all the your items.</span>
+                                            </li>
+                                        </ul>
+                              
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Credit Score</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Form Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Customize & save your forms.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>eSign</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Campaign Blast</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
+                                            </li>
+                                        </ul>
+
                                     </div>
                                 </section>
                             </div>
@@ -2173,7 +2646,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <ul class="addon__list">
-                                                    <li><span class="fa fa-plus"></span> Ask Customer for Review</li>
+                                                    <li><span class="fa fa-plus"></span> Survey Builder</li>
                                                     <li><span class="fa fa-plus"></span> Online Booking</li>
                                                     <li><span class="fa fa-plus"></span> Lead Contact Form</li>
                                                     <li><span class="fa fa-plus"></span> Email Blast</li>
@@ -2196,9 +2669,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <ul class="addon__list">
-                                                    <li><span class="fa fa-plus"></span> NiceJob Connector</li>
-                                                    <li><span class="fa fa-plus"></span> Deals &amp; Steals</li>
-                                                    <li><span class="fa fa-plus"></span> Proposal Kit</li>
+                                                    <li><span class="fa fa-plus"></span> API Connectors</li>
+                                                    <li><span class="fa fa-plus"></span> Rewards & Offers</li>
+                                                    <li><span class="fa fa-plus"></span> Campaign Builder</li>
+                                                    <li><span class="fa fa-plus"></span> Time Sheet & Tracking</li>
+                                                    <li><span class="fa fa-plus"></span> Inventory Management</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -2287,22 +2762,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="table-row" id="content_right">
                         <div class="pricing-card-layout-content none pcolumns_w1 col-md-12 col-sm-4 col-sm-offset-4 col-xs-12 pccol_1">
-                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 882px;">
+                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 2150px;">
                                 <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
-                                            <div class="price-container-title">Enterprise</div>
+                                            <div class="price-container-title">Industry Specific</div>
                                             <div class="price-container">
                                                 <div class="pricing-section">
                                                     <div class="price">
-                                                        <span class="line-through" style="width:23% !important;"></span><span class="ct">$</span><span class="aw">299.98<span class="buy-disc-dura-for-se">*</span></span>
-                                                        <span class="as"></span><span class="ac"></span>
+                                                      <p>Contact Us</p>
                                                     </div>
                                                     <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">149.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
+                                                        <p>for a Demo</p>
                                                     </div>
-                                                    <span class="per red-price-month">/mo</span>
+                                        
                                                 </div>
                                                 <p class="offer-text"><span class="high-attention-text">Save 50%
                                                         for 3 months</span></p>
@@ -2318,6 +2791,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                     <div class="ctext">
+
                                         <ul data-list="1">
                                             <li>
                                                 <span class=""><strong>Management</strong></span>
@@ -2366,7 +2840,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Nsmartrac, Google & iCal integration</span>
+                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
                                             </li>
                                         </ul>
 
@@ -2378,15 +2852,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <ul data-list="1">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
                                             </li>
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Monitor expenses and profits</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Time Sheets</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Track employee hours</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Reports</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Real time reports and analytics</span>
                                             </li>
                                         </ul>
 
@@ -2409,7 +2927,183 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <span class="p3 open-popup">Create a customized digital store</span>
                                             </li>
                                         </ul>
-                                        <p class="info-text" style="display: flex;"></p>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Taskhub</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>API Connectors</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Link up with your favorite software</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Campaign Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create some great designs emails</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>GPS Tracking</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Mobile Tools</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Simple tools that come handy.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Survey Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Feedbacks and reviews.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Inventory Management</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Keep track of all the your items.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Credit Score</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Form Builder</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Customize & save your forms.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>eSign</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Campaign Blast</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Wizard</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Turns multiple steps process in to a one-click automated function.</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1">
+                                            <li>
+                                                <span class=""><strong>Branding</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">A strategy that get customer to identify your business with your product & services.</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Video Estimates.</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Improve your rate of acceptance.</span>
+                                            </li>
+                                        </ul>
+
                                     </div>
                                 </section>
                             </div>
@@ -2434,9 +3128,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <img class="img-pricing-testimonial" src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
                             </div>
                             <div class="col-sm-10 float-left pr-5">
-                                <h3 class="testimonial-desc-pricing">"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"</h3>
-                                <h3 class="testimonial-name-pricing pr-4 color-purple">John Doe</h3>
-                                <p class="float-right pr-4 color-purple">Business Owner</p>
+                                <h3 class="testimonial-desc-pricing">"With nSmartrac it takes me minutes versus hours to create new estimates." 
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </h3>
+                                <h3 class="testimonial-name-pricing pr-4 color-purple">Lauren W.</h3>
+                                <p class="float-right pr-4 color-purple">General Manager, Daytona, FL</p>
                             </div>
                         </div>
                     </div>
@@ -2446,9 +3142,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <img class="img-pricing-testimonial" src="<?php echo $url->assets ?>frontend/images/profile-pic.jpeg" />
                             </div>
                             <div class="col-sm-10 float-left pr-5">
-                                <h3 class="testimonial-desc-pricing">"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.""</h3>
-                                <h3 class="testimonial-name-pricing pr-4 color-purple">John Wayne</h3>
-                                <p class="float-right pr-4 color-purple">Business Owner</p>
+                                <h3 class="testimonial-desc-pricing">"I am not very techie but their support team are very patient and knowledgeable." 
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </h3>
+                                <h3 class="testimonial-name-pricing pr-4 color-purple">Susan Keen</h3>
+                                <p class="float-right pr-4 color-purple">Business Owner, Slidell, LA</p>
                             </div>
                         </div>
                     </div>

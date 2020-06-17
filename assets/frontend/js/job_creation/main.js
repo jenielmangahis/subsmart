@@ -69,6 +69,23 @@ $(document).ready(function () {
   $("#expiryDateEstimate, #billingDate, #billingExpDate").datetimepicker({
     format: "L",
   });
+
+  $("#saveJobInvoice").click(function () {
+    $.LoadingOverlay("show");
+    var param = {
+      createdDate: $("#invoiceCreatedDate").val(),
+      dueDate: "",
+      status: $("#invoiceStatus").val(),
+      description: $("#invoiceDescription").val(),
+      totalDue: 0,
+      balance: 0,
+      billingType: "payment plan",
+      jobId: $("#jobId").val(),
+      customerId: $("#customer_id").val(),
+      invoiceNumber: $("#invoiceNumber").val(),
+    };
+    saveJobInvoice(param);
+  });
 });
 
 function getCustomers() {
@@ -128,6 +145,19 @@ function getItems(param) {
     success: function (data) {
       var result = jQuery.parseJSON(data);
       console.log(result);
+    },
+  });
+  return location;
+}
+
+function saveJobInvoice(param) {
+  var location = [];
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/saveInvoice",
+    data: param,
+    success: function (data) {
+      window.location.reload();
     },
   });
   return location;
