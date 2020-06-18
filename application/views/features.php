@@ -354,7 +354,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <img class="img-responsive w-110" alt="Email automation" src="<?php echo $url->assets ?>frontend/images/feature_proposal.png">
                 </div>
                 <div class="col-sm-6 systemInfo pl-5 pt-5">
-                    <h3>Proposal Kit</h3>
+                    <h3>Campaign Builder</h3>
                     <ol class="feature__list">
                         <li>
                             Create proposals using a library of fully customizable templates.

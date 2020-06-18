@@ -83,6 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<nav class="site-nav-menu ml-auto">
 							<ul class="over-write-menu" style="margin-top:8px;">
 								<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
+								<li class=""><a href="<?php echo url('/about') ?>">ABOUT</a></li>
 								<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 								<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<!--<ul class="sub-menu">
