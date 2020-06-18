@@ -149,7 +149,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td>
                                                         <?php if (logged('id') !== $row->id): ?>
                                                             <input type="checkbox" class="js-switch"
-                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                                   onchange="updateClockIn('<?php echo $row->id ?>', '<?php echo $current_time_now; ?>' )" <?php echo ($row->status) ? 'checked' : '' ?> />
+                                                            
                                                             <span>00:00PM </span>
                                                         <?php endif ?>
                                                     </td>
@@ -515,6 +516,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             } else {
 
                 alert('Unable to change Status ! Try Again');
+
+            }
+
+        })
+
+    }
+
+    window.updateClockIn = (id, clockIn) => {
+        console.log(clockIn);
+        $.get('<?php echo url('users/update_clockin') ?>/' + id, {
+
+            clock_in_from: clockIn
+
+        }, (data, clockIn) => {
+
+
+            if (data == 'done') {
+
+                // code
+
+            } else {
+
+                alert('Clock In Unsuccessful ! Try Again');
 
             }
 

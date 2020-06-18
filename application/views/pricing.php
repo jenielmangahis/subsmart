@@ -2684,7 +2684,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <div class="addon__btn">
-                                    <a class="btn btn-primary btn-xl" href="#">Try nSmarTrac Now</a>
+                                    <a class="btn btn-primary btn-xl" href="<?php echo url('registration') ?>">Try nSmarTrac Now</a>
                                 </div>
                             </div>
                         </div>
