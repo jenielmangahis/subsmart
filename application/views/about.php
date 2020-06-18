@@ -8,9 +8,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="container spacing-ft">
         <div class="row">
             <div class="col-sm-12 pt-5 mt-3 text-center">
-                <h1 class="about-title">We are nSmartTrac</h1>
+                <h1 class="about-title">We Are nSMART, LLC. USA.</h1>
                 <br/>
-                <span class="about-desc">A hybrid business model with a holistic approach to online business <br/> With eCommerce and Mobile App Development.
+                <span class="about-desc">A business model with real experience approach to build a better software experience. <br/> Web. eCommerce. Mobile App Development. CRM. </span>
                 <br class="clear"/><br/>
                 <div class="startTrialBtn m-auto pt-5">
                   <a href="<?php echo url('registration') ?>" class="about-btn">Enquire</a>
@@ -58,9 +58,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="container spacing-ft">
         <div class="row">
             <div class="col-sm-12 pt-5 mt-3 text-center">
-                <h1 class="about-title-2">Beauty happpens with code not by chance. We employ creative tools, code and solid online branding knowledge to build an elegant solutions for our clients.</h1>
+                <h1 class="about-title-2">It is a truely beautiful when code is guide by the needs and dreams of users' imagination.</h1>
                 <br/>
-                <span class="about-desc-2">We're fundamentally technology people. As part of nSmartTrac, we're laying the groundwork for web and mobile development innovation through laser-focused solutions.</span>
+                <span class="about-desc-2">We employ creative tools, code and solid online product/services knowledge to build an powerful solutions for our clients.</span>
                 <br class="clear"/><br/>
                 <div class="startTrialBtn m-auto pt-5">
                   <a href="<?php echo url('registration') ?>" class="about-btn">Meet our Team</a>
