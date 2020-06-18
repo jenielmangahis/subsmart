@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/magnific-popup.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/slicknav.min.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/owl.carousel.min.css"/>
-
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
