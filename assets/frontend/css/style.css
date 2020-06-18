@@ -2399,7 +2399,109 @@ ul.footer-list li a:hover {
 }
 .about-section-a {
   margin-top: 80px;
+  margin-bottom: 0px;
+}
+.about-section-b {
+  margin-top: 80px;
+  margin-bottom: 0px;
+  padding-top: 50px;
+  padding-bottom: 55px;
+  background: #e4e4e4;
+  border-bottom: 1px solid #d2d2d2;
+}
+.about-section-c {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 95px;
+  background: #dae1e2;
+}
+.about-section-d {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 55px;
+  background: white;
+}
+.about-section-e {
+  margin-top: 80px;
   margin-bottom: 120px;
+}
+.about-section-f {
+  margin-top: 30px;
+  margin-bottom: 100px;
+  background: white;
+}
+span.icon-about {
+  font-size: 57px;
+  background: #fff;
+  border-radius: 100px;
+  padding: 25px;
+  color: #7c589c;
+}
+span.icon-process {
+  font-size: 57px;
+  background: #ffc800;
+  border-radius: 15px;
+  padding: 25px;
+  color: white;
+}
+span.about-icon-txt {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: #7c52a0;
+}
+span.about-icon-txt-b {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: black;
+}
+span.about-icon-description {
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  padding: 0px 9px;
+  text-align: center;
+  color: #562b79;
+}
+span.about-icon-description-b {
+  font-size: 18px;
+  line-height: 24px;
+  display: block;
+  text-align: center;
+  color: black;
+  padding: 0 2vw;
+}
+.dv-f {
+  margin-bottom: 45px;
+}
+h1.about-title-f {
+  font-size: 40px;
+  font-weight: 100;
+}
+span.about-project-subtle {
+  font-size: 17px;
+  display: block;
+}
+.about-desc-3 {
+  font-size: 19px;
+  text-align: justify;
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+}
+span.about-project-title {
+  color: #ccc;
+  display: block;
+  font-size: 65px;
 }
 h1.about-title {
   font-size: 70px;
@@ -2424,43 +2526,11 @@ hr.about-hr {
   border: 1px solid white;
   width: 60px;
 }
-span.about-icon-description {
-  font-size: 14px;
-  line-height: 22px;
-  display: block;
-  padding: 0px 9px;
-  text-align: center;
-  color: #562b79;
-}
-.about-section-b {
-  margin-top: 80px;
-  margin-bottom: 0px;
-  padding-top: 50px;
-  padding-bottom: 55px;
-  background: #e4e4e4;
-  border-bottom: 1px solid #d2d2d2;
-}
-span.icon-about {
-  font-size: 57px;
-  background: #fff;
-  border-radius: 100px;
-  padding: 25px;
-  color: #7c589c;
-}
 a.about-btn {
   background: #694a85;
   padding: 10px 50px;
   color: white;
   text-transform: uppercase;
-}
-span.about-icon-txt {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 20px;
-  margin-top: 12px;
-  text-transform: uppercase;
-  color: #7c52a0;
 }
  /* ----------------
   Contact Page
