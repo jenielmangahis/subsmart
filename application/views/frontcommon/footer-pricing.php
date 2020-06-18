@@ -20,7 +20,7 @@
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Legal</h5></li>
-							<li><a href="#">Terms & Condition</a></li>
+							<li><a href="<?php echo url('/terms_and_condition') ?>">Terms & Condition</a></li>
 							<li><a href="#">Privacy Policy</a></li>
 							<li><a href="#">Anti-spam Policy</a></li>
 						</ul>
@@ -85,6 +85,29 @@
 	?>
 	<script>
 	    $(document).ready(function(){
+				$('span.show-more').click(function(){
+					// $(this).parent().find("span.prc-description").addClass('hidden');
+					var height = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().height();
+					height +=  $(this).data('height-value');
+					$(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().css("height",height+'px');
+					$(this).parent().parent().parent().parent().find("ul.desc-ul").removeClass('hidden');
+					$(this).parent().find("span.show-less").removeClass('hidden');
+					$(this).addClass('hidden');
+				});
+				$('span.prc-description').click(function(){
+					$(this).parent().find("span.show-more").addClass('hide-button');
+					$(this).parent().parent().parent().parent().parent().css("height",$(this).data('height-value'));
+					$(this).parent().parent().removeClass('banner-hide');
+					$(this).addClass('hide-button');
+				});
+				$('span.show-less').click(function(){
+					var height = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().height();
+					height -=  $(this).data('height-value');
+					$(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().css("height",height+'px');
+					$(this).parent().parent().parent().parent().find("ul.desc-ul").addClass('hidden');
+					$(this).parent().find("span.show-more").removeClass('hidden');
+					$(this).addClass('hidden');
+				});
         $('input[type="checkbox"].pricing-trial').click(function(){
             if($(this).prop("checked") == true){
                $(document.body).addClass('try-it-free');

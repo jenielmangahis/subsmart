@@ -536,6 +536,16 @@ class Users extends MY_Controller {
 
 	}
 
+	public function update_clockin($id){
+		$this->load->model('timesheet_model');
+
+		//$this->timesheet_model->updateClockin($id, ['clockin' => get('clockIn') == 'true' ? 1 : 0 ]);
+
+		//echo 'done';
+
+	}
+
+
 	public function getClockIn(){
 		$this->load->model('timesheet_model');
 		$data = array(

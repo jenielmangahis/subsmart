@@ -147,6 +147,26 @@ class Timesheet_model extends MY_Model {
         // echo $this->db->last_query(); die;
         return $query->result();
     }
+
+    
+    /**
+     * @return mixed
+     */
+    public function updateClockin($id)
+    {
+        $parent_id = getLoggedUserID();
+        $cid=logged('company_id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $parent_id);
+        $this->db->or_where('id', $parent_id);
+        $this->db->or_where('company_id',$cid );
+        // $this->db->where('role !=', 1);
+        $query = $this->db->get();
+        // echo $this->db->last_query(); die;
+        return $query->result();
+    }    
 }
 
 
