@@ -3475,6 +3475,59 @@ label.reg-def {
    span.about-desc-2 {
      width: 100%;
    }
+   h1.about-title-2 {
+     font-size: 29px;
+     font-weight: 100;
+     line-height: 42px;
+   }
+   span.about-icon-description {
+     margin-bottom: 50px;
+   }
+   .map-bg {
+     height: 300px;
+     background-size: contain;
+   }
+   .about-desc-3 {
+     font-size: 17px;
+     text-align: justify;
+     display: block;
+     width: 80%;
+     margin: 0 auto;
+   }
+   h1.about-title-2 {
+     font-size: 26px;
+     font-weight: 100;
+     line-height: 37px;
+   }
+   .about-section-c div div div {
+     padding-left: 0px !important;
+   }
+   .about-section-f div.container div.row div {
+     padding-left: 0px !important;
+     padding-right: 0px !important;
+   }
+   .about-section-f {
+     margin-top: 0px;
+     margin-bottom: 20px;
+     background: white;
+     position: relative;
+     bottom: 40px;
+   }
+   h1.about-title-f {
+     font-size: 36px;
+     font-weight: 100;
+     line-height: 50px;
+     display: block;
+     text-align: center;
+     width: 100%;
+     padding: 0px;
+     position: relative;
+     right: 9px;
+   }
+   .about-section-e {
+     margin-top: 15px;
+     margin-bottom: 10px;
+   }
    span.about-project-subtle {
      font-size: 17px;
      display: block;
