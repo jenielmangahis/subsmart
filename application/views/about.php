@@ -19,47 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 </section>
-<section class="about-section-d">
-  <div class="container spacing-ft">
-      <div class="row">
-          <div class="col-sm-3 text-center">
-            <span class="about-project-title">100+</span>
-            <span class="about-project-subtle">BUSINESS</span>
-          </div>
-          <div class="col-sm-3 text-center">
-            <span class="about-project-title">7+</span>
-            <span class="about-project-subtle">INDUSTRY</span>
-          </div>
-          <div class="col-sm-3 text-center">
-            <span class="about-project-title">2000+</span>
-            <span class="about-project-subtle">SERVICE AREAS</span>
-          </div>
-          <div class="col-sm-3 text-center">
-            <span class="about-project-title">2500+</span>
-            <span class="about-project-subtle">HAPPY CLIENTS</span>
-          </div>
-      </div>
-  </div>
-</section>
-<section class="group-section-c" id="group-management">
-    <div class="office-bg">
-    </div>
-</section>
-<section class="about-section-e">
-    <div class="container spacing-ft">
-        <div class="row">
-            <div class="col-sm-12 pt-5 mt-3 text-center">
-                <h1 class="about-title-2">It is a truely beautiful when code is guide by the needs and dreams of users' imagination.</h1>
-                <br/>
-                <span class="about-desc-2">We employ creative tools, code and solid online product/services knowledge to build an powerful solutions for our clients.</span>
-                <br class="clear"/><br/>
-                <div class="startTrialBtn m-auto pt-5">
-                  <a href="<?php echo url('registration') ?>" class="about-btn">Meet our Team</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 <section class="about-section-b">
   <div class="container spacing-ft">
       <div class="row">
@@ -90,39 +50,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
   </div>
 </section>
-<section class="about-section-f">
-    <div class="container spacing-ft">
-        <div class="row">
-          <div class="col-sm-12 pt-5 mt-3 text-center dv-f">
-              <h1 class="about-title-f">We deliver quickly & efficient based on 3 factors:</h1>
-          </div>
-          <div class="row">
-            <div class="col-sm-4 text-center">
-              <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-process">bar_chart</span>
-              <hr class="about-hr"/>
-              <span class="about-icon-description-b">Quality of services and support is unmatch.</span>
-            </div>
-            <div class="col-sm-4 text-center">
-              <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-process">emoji_objects</span>
-              <hr class="about-hr"/>
-              <span class="about-icon-description-b">We are train to actively listen to what you need.</span>
-            </div>
-            <div class="col-sm-4 text-center">
-              <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-process">construction</span>
-              <hr class="about-hr"/>
-              <span class="about-icon-description-b">Our software will always be evolving around your business needs.</span>
-            </div>
-          </div>
-        </div>
+<section class="group-section-c" id="group-management">
+    <div class="office-bg">
     </div>
 </section>
-<section class="about-section-c">
+<section class="about-section-a">
     <div class="container spacing-ft">
         <div class="row">
             <div class="col-sm-12 pt-5 mt-3 text-center">
-                <h1 class="about-title-2">What's different when you work with us?</h1>
+                <h1 class="about-title-2">It is a truely beautiful when code is guide by the needs and dreams of users' imagination.</h1>
                 <br/>
-                <span class="about-desc-3">When you engage our digital agency for your personal experience, you get access to a team including, strategist, designers, developers, quality project managers. All working together together for a common end goal:  save you time and make you more money. Having been in the field industry for over 25 years, we know what it takes to turn prospects into long- term business partners.</span>
+                <span class="about-desc-2">We employ creative tools, code and solid online product/services knowledge to build an powerful solutions for our clients.</span>
+                <br class="clear"/><br/>
+                <div class="startTrialBtn m-auto pt-5">
+                  <a href="<?php echo url('registration') ?>" class="about-btn">Meet our Team</a>
+                </div>
             </div>
         </div>
     </div>

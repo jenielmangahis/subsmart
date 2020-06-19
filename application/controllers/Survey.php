@@ -5,8 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Survey extends MY_Controller
 {
-  public function __construct()
-  {
+  public function __construct(){
       parent::__construct();
 
       $this->page_data['page']->title = 'Survey Features';
@@ -56,6 +55,9 @@ class Survey extends MY_Controller
 
   public function index(){
     $this->page_data['surveys'] = $this->survey_model->list();
+    foreach($this->page_data['surveys'] as $key => $survey){
+      $survey->survey_theme = $this->survey_model->getThemes($survey->theme_id);
+    };
     $this->load->view('survey/list', $this->page_data);
   }
 
@@ -87,14 +89,44 @@ class Survey extends MY_Controller
     exit;
   }
 
-  public function view($id){
+  public function edit($id){
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
     $this->page_data['qTemplate'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['themes'] = $this->survey_model->getThemes();
-    $this->load->view('survey/view', $this->page_data);
+    $this->load->view('survey/edit', $this->page_data);
   }
+
+  public function updateSurvey($id, $settings = null, $value = null){
+    $error = false;
+    
+    if($settings == null && $value == null){
+      foreach($_POST as $key => $value){
+        $data = array($key => $value);
+        $this->survey_model->update($id, $data);
+      }
+    }else{
+      $data = array($settings => $value);
+      $this->survey_model->update($id, $data);
+    }
+
+
+    
+    if($error === true){
+      $result = array(
+        'success' => 0
+      );
+      echo json_encode($result);
+    }else{
+      $result = array(
+        'success' => 1
+      );
+      echo json_encode($result);
+    }
+    exit;
+  }
+
   public function addQuestion($id, $tid){
     $data = $this->survey_model->addQuestion($id, $tid);
     $result = array(
@@ -118,7 +150,8 @@ class Survey extends MY_Controller
     $data = array(
       'question' => $this->input->post('question'),
       'description_label' => $description_label,
-      'image_position' =>$this->input->post('image_position')
+      'image_position' =>$this->input->post('image_position'),
+      'custom_button_text' => $this->input->post('txtCustomButtonText')
     );
     $data = $this->survey_model->updateQuestion($id,$data, $_POST);
     $result = array(
@@ -148,12 +181,19 @@ class Survey extends MY_Controller
   }
 
   public function addQuestionUpload($id){
-    $path = 'uploads/survey';
+    $path = 'uploads/survey/image_db/';
+    if(file_exists($path."image_".$id.".". explode('.', $_FILES['image_background']['name'])[1])){
+      echo unlink($path."image_".$id.".". explode('.', $_FILES['image_background']['name'])[1]);
+    }
     $config = [
       'upload_path' 		=> $path,
       'allowed_types' 	=> '*',
       'overwrite' 		=> false
     ];
+
+    
+    $_FILES['image_background']["name"] = "image_".$id.".". explode('.', $_FILES['image_background']['name'])[1];
+
     $test = $this->upload->initialize($config);
     if ( ! $this->upload->do_upload('image_background') ){
 
