@@ -2398,8 +2398,124 @@ ul.footer-list li a:hover {
   text-align: center;
 }
 .about-section-a {
+  margin-top: 50px;
+  margin-bottom: 0px;
+}
+.about-section-b {
+  margin-top: 80px;
+  margin-bottom: 0px;
+  padding-top: 35px;
+  padding-bottom: 45px;
+  background: #e4e4e4;
+  border-bottom: 1px solid #d2d2d2;
+}
+.about-section-c {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 95px;
+  background: #dae1e2;
+}
+.map-bg {
+  background: url(../images/office-map.jpg) no-repeat center;
+  height: 700px;
+  background-size: contain;
+}
+.about-section-d {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 55px;
+  background: white;
+}
+.about-section-e {
   margin-top: 80px;
   margin-bottom: 120px;
+}
+.about-section-f {
+  margin-top: 0px;
+  margin-bottom: 100px;
+  background: white;
+  position: relative;
+  bottom: 40px;
+}
+span.icon-about {
+  font-size: 57px;
+  background: #fff;
+  border-radius: 100px;
+  padding: 25px;
+  color: #7c589c;
+}
+span.icon-process {
+  font-size: 57px;
+  background: #ffc800;
+  border-radius: 115px;
+  padding: 25px;
+  color: white;
+  position: relative;
+  top: 52px;
+}
+span.about-icon-txt {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: #7c52a0;
+}
+span.about-icon-txt-b {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: black;
+}
+span.about-icon-description {
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  padding: 0px 9px;
+  text-align: center;
+  color: #562b79;
+}
+span.about-icon-description-b {
+  font-size: 18px;
+  line-height: 24px;
+  display: block;
+  text-align: center;
+  color: black;
+  background: #f4f3f1;
+  padding: 77px 2vw 30px 2vw;
+}
+.dv-f {
+  margin-bottom: 30px;
+}
+h1.about-title-f {
+  font-size: 40px;
+  font-weight: 100;
+}
+span.about-project-subtle {
+  font-size: 17px;
+  display: block;
+}
+.btn-learn-about {
+  margin: 0 auto;
+  margin-top: 90px;
+}
+.about-desc-3 {
+  font-size: 19px;
+  text-align: justify;
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+}
+span.about-project-title {
+  color: #ccc;
+  display: block;
+  font-size: 65px;
 }
 h1.about-title {
   font-size: 70px;
@@ -2424,43 +2540,11 @@ hr.about-hr {
   border: 1px solid white;
   width: 60px;
 }
-span.about-icon-description {
-  font-size: 14px;
-  line-height: 22px;
-  display: block;
-  padding: 0px 9px;
-  text-align: center;
-  color: #562b79;
-}
-.about-section-b {
-  margin-top: 80px;
-  margin-bottom: 0px;
-  padding-top: 50px;
-  padding-bottom: 55px;
-  background: #e4e4e4;
-  border-bottom: 1px solid #d2d2d2;
-}
-span.icon-about {
-  font-size: 57px;
-  background: #fff;
-  border-radius: 100px;
-  padding: 25px;
-  color: #7c589c;
-}
 a.about-btn {
   background: #694a85;
   padding: 10px 50px;
   color: white;
   text-transform: uppercase;
-}
-span.about-icon-txt {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 20px;
-  margin-top: 12px;
-  text-transform: uppercase;
-  color: #7c52a0;
 }
  /* ----------------
   Contact Page
@@ -3388,6 +3472,42 @@ label.reg-def {
  /* Large Mobile :480px. */
 
  @media only screen and (max-width: 767px) {
+   span.about-desc-2 {
+     width: 100%;
+   }
+   span.about-project-subtle {
+     font-size: 17px;
+     display: block;
+     margin-bottom: 40px;
+   }
+   .office-bg {
+     height: 350px;
+     background-size: cover;
+   }
+   .about-section-d {
+     margin-top: 80px;
+     margin-bottom: 40px;
+     padding-top: 0px;
+     padding-bottom: 55px;
+     background: white;
+   }
+   .about-section-a {
+     margin-top: 0px;
+     margin-bottom: 0px;
+   }
+   h1.about-title {
+     font-size: 38px;
+     font-weight: 100;
+     line-height: 45px;
+   }
+   span.about-desc {
+     font-size: 15px;
+     padding: 0 2vw;
+   }
+   .row {
+     margin-right: 0px !important;
+     margin-left: 0px !important;
+   }
    .header-top {
      padding: 14px 0;
      text-align: center;
