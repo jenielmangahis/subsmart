@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/magnific-popup.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/slicknav.min.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/owl.carousel.min.css"/>
-
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
@@ -80,6 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								</ul>
 								<ul class="over-write-menu" style="margin-top:8px;">
 									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
+									<li class=""><a href="<?php echo url('/about') ?>">ABOUT</a></li>
 									<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>

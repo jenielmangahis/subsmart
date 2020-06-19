@@ -296,6 +296,7 @@ $(document).ready(function(){
 
   $(document).on('submit', '#frm-update-question', function(e){
     e.preventDefault();
+    console.log("ajsdfhasjkdf");
     var id = $(this).data('id');
     var action = $(this).attr('action');
     var choices_data = $("[action='"+action+"'] #choices .input-group");
@@ -307,7 +308,7 @@ $(document).ready(function(){
       });
     });
     $.ajax({
-      url: surveyBaseUrl + '/survey/update/question',
+      url: surveyBaseUrl + 'survey/update/question',
       type: 'POST',
       data: data,
       dataType: 'json',
@@ -343,93 +344,378 @@ $(document).ready(function(){
     });
   });
 
-
-  $(document).on('click', 'input[type="checkbox"]', function(e){
+  // input date functions
+  $(document).on('change', 'input[type="date"]', function(e){
     var value = $(this).val();
     var id = $(this).data('id');
 
-    if($(this).is(":checked")){
-      $.ajax({
-        url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/1',
-        type:'GET',
-        dataType: 'json',
-        success: function(res){
-          if(value == "description"){
-            var input = `<div class="form-group">
-               <input type="text" class="form-control questions" name="description_label" placeholder="Description here">
-             </div>`;
-            $('#container-'+id+' #description-container').append(input);
-            toastr["success"]("Settings Successfully Update!");
-          }else{
-            $('#container-'+id+' .card-title').append('<label class="text-danger" id="required-asterisk-'+id+'">*</label>');
-            toastr["success"]("Settings Successfully Update!");
+    console.log(value);
+    switch(e.target.name){
+      case "txtSchedDate":
+        var data = {"closingDate":value}
+        $.ajax({
+          url: surveyBaseUrl + 'survey/update/'+id,
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          success: function(res){
+    
+            if(res.success == 1){
+              toastr["success"]("Closing Date Changed");
+            }
           }
-        }
-      });
-    }else{
-      $.ajax({
-        url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/0',
-        type:'GET',
-        dataType: 'json',
-        success: function(res){
-          if(value == "description"){
-            var input = ``;
-            $('#container-'+id+' #description-container').html(input);
-            toastr["success"]("Settings Successfully Removed");
-          }else{
-            $('#required-asterisk-'+id+'').remove();
-            toastr["success"]("Settings Successfully Removed!");
-          }
-        }
-      });
+        });
+        break;
+      default:
+        break;
     }
+  })
+
+  // input text functions
+  $(document).on('change', 'input[type="text"]', function(e){
+    var id = $(this).data('id');
+    var value = $(this).val();
+    var name = e.target.name;
+    switch(name){
+      case "txtSurveyTitle":
+        var data = {"title":value}
+        $.ajax({
+          url: surveyBaseUrl + 'survey/update/'+id,
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          success: function(res){
+    
+            if(res.success == 1){
+              $('#survey-title').html(value);
+              toastr["success"]("Survey name changed");
+            }
+          }
+        });
+        break;
+      case "txtRedirectionLink":
+        var data = {"redirectionLink":value}
+        $.ajax({
+          url: surveyBaseUrl + 'survey/update/'+id,
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          success: function(res){
+    
+            if(res.success == 1){
+              $('#redirection-link-text').html("Redirection Link: <a href=" + value + "> " + value + " </a>");
+              toastr["success"]("Redirection name changed");
+            }
+          }
+        });
+        break;
+      default:
+        break;
+    }
+
+  })
+
+  $(document).on('change', 'textarea', function(e){
+    var id = $(this).data('id');
+    var value = $(this).val();
+    var name = e.target.name;
+
+    switch(name){
+      case "txtClosingMessage":
+        var data = {"closingMessage":value}
+        $.ajax({
+          url: surveyBaseUrl + 'survey/update/'+id,
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          success: function(res){
+            if(res.success == 1){
+              toastr["success"]("Closing Message changed");
+            }
+          }
+        });
+        break;
+      default: 
+        break;
+    }
+
+  })
+  
+  // input number functions
+  $(document).on('change', 'input[type="number"]', function(e){
+    e.preventDefault();
+    var value = $(this).val();
+    var id = $(this).data("id");
+
+    if(e.target.value <= 0){
+      e.target.value = 0;
+    }
+
+    switch(e.target.name){
+      case "maxcharacters":
+        $.ajax({
+          url: surveyBaseUrl + '/survey/question/maxcharacters/'+id+'/'+value,
+          type:'PATCH',
+          dataType: 'json',
+          success: function(res){
+            toastr["success"]("Maximum characters changed");
+          }
+        });
+        break;
+      case "mincharacters":
+        $.ajax({
+          url: surveyBaseUrl + '/survey/question/mincharacters/'+id+'/'+value,
+          type:'PATCH',
+          dataType: 'json',
+          success: function(res){
+            toastr["success"]("Minimum characters changed");
+          }
+        });
+        break;
+      case "txtResponseLimit":
+        var data = {"responseLimit":value}
+        $.ajax({
+          url: surveyBaseUrl + 'survey/update/'+id,
+          type: 'POST',
+          data: data,
+          dataType: 'json',
+          success: function(res){
+    
+            if(res.success == 1){
+              toastr["success"]("Response Limit changed");
+            }
+          }
+        });
+        break;
+      default:
+        break;
+    }
+  })
+
+  // input checkbox functions
+  $(document).on('click', 'input[type="checkbox"]', function(e){
+    var value = $(this).val();
+    var id = $(this).data('id');
+    
+    switch(value){
+      case "description":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              var input = `<div class="form-group">
+                  <input type="text" class="form-control questions" name="description_label" placeholder="Description here">
+                </div>`;
+              $('#container-'+id+' #description-container').append(input);
+              toastr["success"]("Added a description!");
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              var input = ``;
+              $('#container-'+id+' #description-container').html(input);
+              toastr["success"]("Description Removed!");
+            }
+          });
+        }
+        break;
+      case "required":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#container-'+id+' .card-title').append('<label class="text-danger" id="required-asterisk-'+id+'">*</label>');
+              toastr["success"]("Settings Successfully Update!");
+            
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + '/survey/question/'+value+'/'+id+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#required-asterisk-'+id+'').remove();
+              toastr["success"]("Settings Successfully Removed!");
+            }
+          });
+        }
+        break;
+      case "hasProgressBar":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              toastr["success"]("Progress bar Set!");
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              toastr["success"]("Progress bar Removed!");
+            }
+          });
+        }
+        break;
+      case "canRedirectOnComplete":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#txtRedirectionLink').prop('disabled', false);
+              toastr["success"]("Redirection Link Set!");
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#redirection-link-text').html("");
+              $('#txtRedirectionLink').prop('disabled', true);
+              toastr["success"]("Redirection Link Removed!");
+            }
+          });
+        }
+        break;
+      case "isNewRespondentsClosed":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              toastr["success"]("New respondents closed!");
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              toastr["success"]("New respondents closed!");
+            }
+          });
+        }
+        break;
+      case "hasClosedDate":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#txtSchedDate').prop('disabled', false);
+              toastr["success"]("Closed Date Set!");
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#txtSchedDate').prop('disabled', true);
+              toastr["success"]("Closed Date Unset!");
+            }
+          });
+        }
+        break;
+      case "hasResponseLimit":
+        if($(this).is(":checked")){
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#txtResponseLimit').prop('disabled', false);
+              toastr["success"]("Response Limit Set!");
+            }
+          });
+        }else{
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+            type:'GET',
+            dataType: 'json',
+            success: function(res){
+              $('#txtResponseLimit').prop('disabled', true);
+              toastr["success"]("Response Limit Unset!");
+            }
+          });
+        }
+        break;
+      default:
+        break;
+    }    
+    return;
+      
   });
 
+  // input file functions
   $('input[type="file"]').change(function(e){
        var value = $(this).val();
        var id = $(this).data('id');
        var data = new FormData($(this).parent().parent().parent().parent().parent()[0]);
        var fileName = e.target.files[0].name;
-       $('.custom-file-label').html(fileName);
-       $.ajax({
-         url: surveyBaseUrl + '/survey/question/upload/'+ id,
-         type:'POST',
-         data: data,
-         dataType: 'json',
-         cache:false,
-         contentType: false,
-         processData: false,
-         success: function(res){
-           if(value == "description"){
-             var input = ``;
-             $('#container-'+id+' #description-container').html(input);
-             toastr["success"]("Settings Successfully Removed");
-           }else{
-             $('#required-asterisk-'+id+'').remove();
-             toastr["success"]("Settings Successfully Removed!");
-           }
-         }
-       });
+
+       switch(e.target.name){
+         case "welcomeImageUpload":
+          $.ajax({
+            url: surveyBaseUrl + 'survey/question/upload/'+ id,
+            type:'POST',
+            data: data,
+            dataType: 'json',
+            cache:false,
+            contentType: false,
+            processData: false,
+            success: function(res){
+              toastr["success"]("File uploaded for welcome message");
+            }
+          });
+          break;
+        default:
+          $('.custom-file-label').html(fileName);
+          $.ajax({
+            url: surveyBaseUrl + 'survey/question/upload/'+ id,
+            type:'POST',
+            data: data,
+            dataType: 'json',
+            cache:false,
+            contentType: false,
+            processData: false,
+            success: function(res){
+              if(value == "description"){
+                var input = ``;
+                $('#container-'+id+' #description-container').html(input);
+                toastr["success"]("Settings Successfully Removed");
+              }else{
+                $('#required-asterisk-'+id+'').remove();
+                toastr["success"]("Settings Successfully Removed!");
+              }
+            }
+          });
+          break;
+       }
+
    });
 
-
-  dragula([document.getElementById('card-list')])
-  .on('drag', function (el, target,source,sibling) {
-  }).on('drop', function (el, target,source,sibling) {
-    var number = [];
-    $.each($('#card-list .col-sm-12'), function(key, value){
-      number.push(value.id.split("-")[1]);
-    });
-    $.ajax({
-      url: surveyBaseUrl + '/survey/order/question',
-      data: { 'id': number },
-      dataType: 'json',
-      type: 'POST',
-      success: function(res){
-        toastr["success"]("Order Successfully Update!");
-      }
-    })
-  });
 
   // function remoteSearch() {
   //   var return_first = function () {

@@ -44,7 +44,7 @@
                       <div class="input-group-prepend">
                         <button id="btn-copy-link" class="btn btn-outline-dark border-1 px-3" style="border-color: #e0e0e0 !important;">Copy</button>
                       </div>
-                      <input id="value-link" type="text" class="form-control" value="<?= base_url() ?>survey/preview/<?= $survey->id ?>">
+                      <input id="value-link" type="text" class="form-control" value="<?=base_url()?>survey/<?=$survey->id?>?st=<?= url_title(strtolower($survey->title))?>">
                     </div>
                   </div>
                   <div class=" col-sm-3">
@@ -54,6 +54,8 @@
                       <!-- Facebook share button -->
                       <div class="fb-share-button" data-href="<?=base_url()?>survey/<?=$survey->id?>?st=<?= url_title(strtolower($survey->title))?>" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
 
+                      <!-- Twitter share button -->
+                      <a class="twitter-share-button" href="https://twitter.com/intent/tweet" data-size="large">Tweet</a>
 
                     </div>
                   </div>

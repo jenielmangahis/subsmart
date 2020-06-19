@@ -6,6 +6,7 @@
   #survey-card {
     transition:0.3s;
     border-radius:10px;
+    background-size: cover;
   }
   #survey-card:hover {
     transform: none;
@@ -14,8 +15,13 @@
   }
 
   .survey-title{
-    border-left: 5px solid #028B81;
     padding: 0 10px;
+  }
+
+  img.theme-image{
+    position: absolute;
+    z-index: 0;
+    width: 100%;
   }
 </style>
 
@@ -58,45 +64,48 @@
                          <div class="col-xs-12 col-sm-6 col-md-3">
 
                         <!-- Card content for each survey -->
-                        <div id="survey-card" data-id="<?= $survey->id ?>" class="card pt-0 border-0 shadow">
+                        <div id="survey-card" data-id="<?= $survey->id ?>" class="card border-0 shadow" style="background-image: url('<?= base_url()?>uploads/survey/themes/<?=$survey->survey_theme->sth_primary_image?>')">
                           <a class="text-left" href="survey/result/<?= $survey->id ?>">
                             <div class="card-body">
-                              <h5 class="card-title survey-title text font-weight-bold"><?= $survey->title ?></h5>
-                              <small><?= count($this->survey_model->getQuestions($survey->id))?> Questions</small><br/>
-                              <small><?= $survey->count ?> Response(s)</small><br/>
-                              <small class="text-info">Click for more info</small>
+                              <h5 class="card-title survey-title font-weight-bold" style="color: <?= $survey->survey_theme->sth_text_color?>; border-left: 5px solid <?= $survey->survey_theme->sth_primary_color?>;"><?= $survey->title ?></h5>
+                              <small style="color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_text_color: ""?>"><?= count($this->survey_model->getQuestions($survey->id))?> Questions</small><br/>
+                              <small style="color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_text_color: ""?>"><?= $survey->count ?><?=($survey->hasResponseLimit == true && $survey->responseLimit > 0) ?"/".$survey->responseLimit : ""?> Response(s)</small><br/>
+                              <small class="text-info" style="color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_secondary_color : ""?>">Click for more info</small>
                             </div>
                           </a>
-                          <ul class="list-group list-group-flush">
+                          <div class="d-flex w-100 justify-content-center">
+                            <a href="survey/preview/<?= $survey->id ?>">
+                              <button class="btn btn-primary btn-sm" type="button" aria-haspopup="true" aria-expanded="false" style="background-color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_primary_color : ""?>; color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_text_color : ""?>">
+                              <!-- @L@ -->
+                                <!-- <i class="fas fa-ellipsis-v"></i> -->
+                                <span class="material-icons">assessment</span> Preview
+                              </button>
+                            </a>
+                            <button class="btn btn-outline-info btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <!-- @L@ -->
+                              <!-- <i class="fas fa-ellipsis-v"></i> -->
+                              <span class="material-icons">menu</span> Options
+                            </button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/edit/<?= $survey->id ?>"><span class="material-icons">edit</span> Edit Survey</a>
+                              <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"><span class="material-icons">share</span> Share</a>
+                              <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>"><span class="material-icons">delete</span> Delete</a>
+                              <!-- @L@ -->
+                              <!-- <a id="btn-result-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/result/<?= $survey->id ?>">Results</a> -->
+                              <!-- @L@ -->
+                              <!-- <a id="btn-preview-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/preview/<?= $survey->id ?>"><span class="material-icons">assessment</span> Answer this survey</a> -->
+                            </div>
+                          
+                          </div>
+                          <!-- <ul class="list-group">
                             <li class="list-group-item p-0 pt-2 d-flex justify-content-between align-items-center flex-row">
                               
                               <div class="text-right">
                                 <div class="btn-group">
-                                  <a href="survey/preview/<?= $survey->id ?>">
-                                    <button class="btn btn-success btn-sm" type="button" aria-haspopup="true" aria-expanded="false">
-                                    <!-- @L@ -->
-                                      <!-- <i class="fas fa-ellipsis-v"></i> -->
-                                      <span class="material-icons">assessment</span> Preview
-                                    </button>
-                                  </a>
-                                  <button class="btn btn-outline-info btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <!-- @L@ -->
-                                    <!-- <i class="fas fa-ellipsis-v"></i> -->
-                                    <span class="material-icons">menu</span> Options
-                                  </button>
-                                  <div class="dropdown-menu">
-                                    <a class="dropdown-item" data-id="<?= $survey->id; ?>" href="survey/edit/<?= $survey->id ?>"><span class="material-icons">edit</span> Edit Survey</a>
-                                    <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"><span class="material-icons">share</span> Share</a>
-                                    <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>"><span class="material-icons">delete</span> Delete</a>
-                                    <!-- @L@ -->
-                                    <!-- <a id="btn-result-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/result/<?= $survey->id ?>">Results</a> -->
-                                    <!-- @L@ -->
-                                    <!-- <a id="btn-preview-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/preview/<?= $survey->id ?>"><span class="material-icons">assessment</span> Answer this survey</a> -->
-                                  </div>
                                 </div>
                               </div>
                             </li>
-                          </ul>
+                          </ul> -->
                         </div>
 
                         </div>

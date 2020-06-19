@@ -37,6 +37,13 @@ class Survey_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function update($id, $data){
+		// $this->db->select('*');
+		$this->db->set($data);
+		$this->db->where('id', $id);
+		$this->db->update('survey', $data);
+	}
+
 	public function addQuestion($id, $tid){
 
 		$this->db->select('*');
@@ -244,12 +251,12 @@ class Survey_model extends MY_Model {
 					$this->db->where('id', $id);
 					$this->db->update('survey', $timer);
 				}else{
-					$question_id = explode('-', $key)[1];
 					$datas = array(
 						'answer' => $value,
 						'survey_id' => $id,
-						'question_id' => $question_id
+						'question_id' => explode('-', $key)[1]
 					);
+					
 					$this->db->insert('survey_answer',$datas);
 				}
 		}

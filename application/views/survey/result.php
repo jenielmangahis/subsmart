@@ -197,18 +197,18 @@
 
                                       <?php  $token_result = 0; ?>
                                       <?php foreach ($question->survey_answer as $key => $survey_answers){
-                                              if(!empty($survey_answers->answer) || $survey_answers->answer != ""){
-                                                  $token_result++;
-                                              }
-                                            }
+                                          if(!empty($survey_answers->answer) || $survey_answers->answer != ""){
+                                              $token_result++;
+                                          }
+                                        }
 
-                                            if($token_result === 0){
-                                              $total_count = count($question->survey_answer);
-                                              $percentage = 0; // need to update
-                                            }else{
-                                              $total_count = count($question->survey_answer);
-                                              $percentage = $token_result / $total_count * 100; // need to update
-                                            }
+                                        if($token_result === 0){
+                                          $total_count = count($question->survey_answer);
+                                          $percentage = 0; // need to update
+                                        }else{
+                                          $total_count = count($question->survey_answer);
+                                          $percentage = $token_result / $total_count * 100; // need to update
+                                        }
                                       ?>
                                       <li class="list-group-item d-flex justify-content-between">
                                         <p class="mb-0 d-flex align-items-center"> 
@@ -241,8 +241,8 @@
                                               ?>
                                                 <canvas id="radial-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
                                                 <script>
-                                                  let ctx = document.querySelector('#radial-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                  let chartData = {
+                                                  let ctx_<?=$question->id?> = document.querySelector('#radial-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData_<?=$question->id?> = {
                                                     labels: [],
                                                     datasets: [
                                                       {
@@ -253,7 +253,7 @@
                                                       }
                                                     ]
                                                   }
-                                                  let chartOptions = {
+                                                  let chartOptions_<?=$question->id?> = {
                                                     scales: {
                                                       yAxes: [{
                                                           ticks: {
@@ -262,15 +262,15 @@
                                                       }]
                                                     }
                                                   }
-                                                  const checkboxChart = new Chart(ctx,{
+                                                  const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
                                                     type: 'bar',
-                                                    data: chartData,
-                                                    options: chartOptions
+                                                    data: chartData_<?=$question->id?>,
+                                                    options: chartOptions_<?=$question->id?>
                                                   });
                                                   <?php
                                                     foreach($question->questions as $choices){
                                                       ?>
-                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                        chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
                                                       <?php
                                                       $count = 0;
                                                       foreach($question->survey_answer as $answers){
@@ -280,11 +280,11 @@
                                                         }
                                                       }
                                                       ?>
-                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                        chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
                                                       <?php
                                                     }
                                                     ?>
-                                                    checkboxChart.update();
+                                                    checkboxChart_<?=$question->id?>.update();
                                                 </script>
                                               <?php
                                             break;
@@ -292,8 +292,8 @@
                                               ?>
                                                 <canvas id="checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
                                                 <script>
-                                                  let ctx = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                  let chartData = {
+                                                  let ctx_<?=$question->id?> = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData_<?=$question->id?> = {
                                                     labels: [],
                                                     datasets: [
                                                       {
@@ -304,7 +304,7 @@
                                                       }
                                                     ]
                                                   }
-                                                  let chartOptions = {
+                                                  let chartOptions_<?=$question->id?> = {
                                                     scales: {
                                                       yAxes: [{
                                                           ticks: {
@@ -313,15 +313,15 @@
                                                       }]
                                                     }
                                                   }
-                                                  const checkboxChart = new Chart(ctx,{
+                                                  const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
                                                     type: 'bar',
-                                                    data: chartData,
-                                                    options: chartOptions
+                                                    data: chartData_<?=$question->id?>,
+                                                    options: chartOptions_<?=$question->id?>
                                                   });
                                                   <?php
                                                     foreach($question->questions as $choices){
                                                       ?>
-                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                        chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
                                                       <?php
                                                       $count = 0;
                                                       foreach($question->survey_answer as $answers){
@@ -331,12 +331,12 @@
                                                         }
                                                       }
                                                       ?>
-                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                        chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
                                                       <?php
                                                     }
                                                     ?>
                                             
-                                                    checkboxChart.update();
+                                                    checkboxChart_<?=$question->id?>.update();
                                                 </script>
                                               <?php
                                             break;
@@ -390,8 +390,8 @@
                                               ?>
                                                 <canvas id="checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
                                                 <script>
-                                                  let ctx = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                  let chartData = {
+                                                  let ctx_<?=$question->id?> = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData_<?=$question->id?> = {
                                                     labels: [],
                                                     datasets: [
                                                       {
@@ -402,7 +402,7 @@
                                                       }
                                                     ]
                                                   }
-                                                  let chartOptions = {
+                                                  let chartOptions_<?=$question->id?> = {
                                                     scales: {
                                                       yAxes: [{
                                                           ticks: {
@@ -411,15 +411,15 @@
                                                       }]
                                                     }
                                                   }
-                                                  const checkboxChart = new Chart(ctx,{
+                                                  const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
                                                     type: 'bar',
-                                                    data: chartData,
-                                                    options: chartOptions
+                                                    data: chartData_<?=$question->id?>,
+                                                    options: chartOptions_<?=$question->id?>
                                                   });
                                                   <?php
                                                     foreach($question->questions as $choices){
                                                       ?>
-                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                        chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
                                                       <?php
                                                       $count = 0;
                                                       foreach($question->survey_answer as $answers){
@@ -429,11 +429,11 @@
                                                         }
                                                       }
                                                       ?>
-                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                        chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
                                                       <?php
                                                     }
                                                     ?>
-                                                    checkboxChart.update();
+                                                    checkboxChart_<?=$question->id?>.update();
                                                 </script>
                                               <?php
                                             break;
@@ -441,8 +441,8 @@
                                               ?>
                                                 <canvas id="rating-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
                                                 <script>
-                                                  let ctx = document.querySelector('#rating-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                  let chartData = {
+                                                  let ctx_<?=$question->id?> = document.querySelector('#rating-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData_<?=$question->id?> = {
                                                     labels: [],
                                                     datasets: [
                                                       {
@@ -453,7 +453,7 @@
                                                       }
                                                     ]
                                                   }
-                                                  let chartOptions = {
+                                                  let chartOptions_<?=$question->id?> = {
                                                     scales: {
                                                       yAxes: [{
                                                           ticks: {
@@ -462,15 +462,15 @@
                                                       }]
                                                     }
                                                   }
-                                                  const checkboxChart = new Chart(ctx,{
+                                                  const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
                                                     type: 'bar',
-                                                    data: chartData,
-                                                    options: chartOptions
+                                                    data: chartData_<?=$question->id?>,
+                                                    options: chartOptions_<?=$question->id?>
                                                   });
                                                   <?php
                                                     foreach($question->questions as $choices){
                                                       ?>
-                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                        chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
                                                       <?php
                                                       $count = 0;
                                                       foreach($question->survey_answer as $answers){
@@ -480,11 +480,11 @@
                                                         }
                                                       }
                                                       ?>
-                                                        chartData.datasets[0].data.push(<?= $count ?>);
+                                                        chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
                                                       <?php
                                                     }
                                                     ?>
-                                                    checkboxChart.update();
+                                                    checkboxChart_<?=$question->id?>.update();
                                                 </script>
                                               <?php
                                             break;
@@ -514,8 +514,8 @@
                                               ?>
                                                 <canvas id="radial-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
                                                 <script>
-                                                  let ctx = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                  let chartData = {
+                                                  let ctx_<?=$question->id?> = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                  let chartData_<?=$question->id?> = {
                                                     labels: [],
                                                     datasets: [
                                                       {
@@ -526,7 +526,7 @@
                                                       }
                                                     ]
                                                   }
-                                                  let chartOptions = {
+                                                  let chartOptions_<?=$question->id?> = {
                                                     scales: {
                                                       yAxes: [{
                                                           ticks: {
@@ -535,15 +535,15 @@
                                                       }]
                                                     }
                                                   }
-                                                  const checkboxChart = new Chart(ctx,{
+                                                  const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
                                                     type: 'bar',
-                                                    data: chartData,
-                                                    options: chartOptions
+                                                    data: chartData_<?=$question->id?>,
+                                                    options: chartOptions_<?=$question->id?>
                                                   });
                                                   <?php
                                                     foreach($question->questions as $choices){
                                                       ?>
-                                                        chartData.labels.push('<?= $choices->choices_label?>');
+                                                        chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
                                                       <?php
                                                       $count = 0;
                                                       foreach($question->survey_answer as $answers){

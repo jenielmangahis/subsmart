@@ -419,6 +419,18 @@
     100%{   color: #fada97;    }
  }
 
+ .sectionHeaderBlink .blink {
+    animation:blinkingTextH 2s infinite;
+ }
+
+  @keyframes blinkingTextH{
+    0%{     color: #e05656;    }
+    49%{    color: #e05656; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #e05656;    }
+ }
+
  .site-logo-holder:after{
 	content: "";
     position: absolute;
@@ -1796,6 +1808,12 @@ ul.footer-list li a:hover {
    background: url(../images/headline_bg.png) repeat-x right bottom;
  }
 
+ .office-bg {
+   background: url(../images/office-bg.jpg) no-repeat center;
+   height: 850px;
+   background-size: cover;
+ }
+
  .footer-menu li a {
    display: block;
    padding: 21px 17px;
@@ -2373,7 +2391,77 @@ ul.footer-list li a:hover {
  .site-pagination a.next {
    color: #718090;
  }
-
+ /* ----------------
+  About us Page
+ ---------------------*/
+.text-center {
+  text-align: center;
+}
+.about-section-a {
+  margin-top: 80px;
+  margin-bottom: 120px;
+}
+h1.about-title {
+  font-size: 70px;
+  font-weight: 100;
+}
+span.about-desc {
+  font-size: 18px;
+  padding: 0 2vw;
+}
+h1.about-title-2 {
+  font-size: 47px;
+  font-weight: 100;
+  line-height: 50px;
+}
+span.about-desc-2 {
+  font-size: 18px;
+  width: 900px;
+  display: block;
+  margin: 0 auto;
+}
+hr.about-hr {
+  border: 1px solid white;
+  width: 60px;
+}
+span.about-icon-description {
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  padding: 0px 9px;
+  text-align: center;
+  color: #562b79;
+}
+.about-section-b {
+  margin-top: 80px;
+  margin-bottom: 0px;
+  padding-top: 50px;
+  padding-bottom: 55px;
+  background: #e4e4e4;
+  border-bottom: 1px solid #d2d2d2;
+}
+span.icon-about {
+  font-size: 57px;
+  background: #fff;
+  border-radius: 100px;
+  padding: 25px;
+  color: #7c589c;
+}
+a.about-btn {
+  background: #694a85;
+  padding: 10px 50px;
+  color: white;
+  text-transform: uppercase;
+}
+span.about-icon-txt {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: #7c52a0;
+}
  /* ----------------
   Contact Page
  ---------------------*/

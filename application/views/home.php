@@ -310,6 +310,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="card mt-5 border-0">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-5">
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/file-vault.jpg" class="card-img card-features" alt="card 1"></div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><a href="#">File Vault</a></h5>
+                                                    <p class="card-text"> File Vault allows you to store your personal library and create multiple folders and locations.  With your personalize tags you can perform a quick search with in it.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -321,8 +336,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="customContainer">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="sectionHeader pb-5 w-75 m-auto">
-                        <h2 class="hl-purple">Discover Why nSmarTrac is So IMPORTANT for Your Business</h2>
+                    <div class="sectionHeader pb-5 w-75 m-auto sectionHeaderBlink">
+                        <h2 style="color: #e05656;" class="hl-purple blink">Discover Why nSmarTrac is So IMPORTANT for Your Business</h2>
                     </div>
                     <!-- <div class="videoHolder">
                         <a href="#"><img src="<?php echo $url->assets ?>frontend/images/videoIcon.png" alt="img icon"></a>
