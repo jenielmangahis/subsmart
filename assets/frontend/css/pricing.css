@@ -467,11 +467,12 @@ label{
      width: 100% !important;
    }
    span.scrolltoqblive.scrolltopaysec {
-       width: 80%;
-       display: block;
-       text-align: center;
-       margin: 0 auto;
-       font-size: 20px;
+     width: 90%;
+     display: block;
+     text-align: center;
+     margin: 0 auto;
+     font-size: 18px;
+     font-weight: 500;
    }
    .grid-image-text.g_vertical_align_image {
        padding: 0px 0px !important;
@@ -3411,7 +3412,7 @@ ul#mobile-menu>li:first-child{
    width:32%!important
 }
 .eCommerce-product-div .image-price-container .price-container .pricing-section .red-price-text .aw,.eCommerce-product-div .image-price-container .price-container .pricing-section .red-price-text .ct{
-   font-size:36px!important;
+   font-size:25px!important;
    line-height:40px!important;
    vertical-align:baseline!important;
    color:#393a3d!important;
@@ -3738,7 +3739,7 @@ span.ft:before{
    cursor:default;
 }
 .lineup-container .content-container{
-   width:1132px
+   width:1180px
 }
 .lineup-container .pricing-card-layout .cpricing-card-layout{
    background-color:#f4f5f8
@@ -3787,8 +3788,8 @@ span.ft:before{
 }
 .lineup-container .mt-features-single-row-text-only .ctext ul li span.p3.open-popup{
    padding-left:17px;
-   font-size:12px;
-   line-height:2.14
+   font-size:11px;
+   line-height:1.90
 }
 .lineup-container .pcard-layout-additional-text .info-text{
    margin-bottom:0;
@@ -3936,7 +3937,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-76px;
+   left: 25px;
    border-radius:4px
 }
 .lineup-container .pricing-card-layout .qb-ess .price-container-title:after{
@@ -3956,7 +3957,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-67px;
+   left: 24px;
    border-radius:4px
 }
 .lineup-container .pricing-card-layout .qb-se .price-container-title:after{
@@ -3966,7 +3967,7 @@ span.ft:before{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-87px;
+   left: 25px;
    border-radius:4px
 }
 .all-plans-include .g_vertical_align_image.footer .col-md-12{
@@ -5164,7 +5165,7 @@ section.r-site-footer.resp-site-footer.gs-footer a.gs-a-bold:focus{
    width:19.8%
 }
 .pricing-card-layout .pcolumns_w3{
-   width:25%
+   width:20%
 }
 .pricing-card-layout{
    padding:32px 0 60px 0
@@ -5176,7 +5177,7 @@ section.r-site-footer.resp-site-footer.gs-footer a.gs-a-bold:focus{
    background-color:#694a86;
    position:absolute;
    margin-top:33px;
-   margin-left:-40px;
+   left: 25px;
    border-radius:4px
 }
 .video-overlay-novideo{
@@ -6496,7 +6497,7 @@ body.try-it-free .pricing-card-layout .price-container .pricing-section{
 }
 .try-it-free .eCommerce-product-div .image-price-container .price-container .pricing-section .price .aw,.try-it-free .eCommerce-product-div .image-price-container .price-container .pricing-section .price .ct{
    color:#393a3d!important;
-   font-size:36px!important;
+   font-size:25px!important;
    line-height:1.11!important;
    font-weight:600
 }

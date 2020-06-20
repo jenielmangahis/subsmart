@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/inventory-management-2.jpg" class="card-img" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/inventory-management-2.jpg" class="card-img card-features" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -383,7 +383,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <!-- <button class="btn btn-red btn-block rounded-xl">Take a Product Tour</button> -->
                                     <a href="<?php echo url('demo') ?>" class="btn btn-red btn-block rounded-xl">
                                         Take a Product Tour
-                                    </a>                                    
+                                    </a>
                                 </div>
                             </div>
                         </div>

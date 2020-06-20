@@ -1280,6 +1280,10 @@ ul.footer-list li a {
 ul.footer-list li a:hover {
   color:#ffe2a7;
 }
+img.card-features {
+  height: 150px;
+  object-fit: cover;
+}
 /* Home Signup */
 .signupForm {
     margin-top: -80px;
