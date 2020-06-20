@@ -8,6 +8,15 @@ class Esign extends MY_Controller {
 	{
 		$this->load->model('Users_sign_model', 'Users_sign_model');
 		$this->page_data['users'] = $this->Users_sign_model->getUser(logged('id'));
+
+		$parent_id = getLoggedUserID();
+		$cid=logged('company_id');
+		$user_id = logged('id');
+		$this->db->select('*');
+		$this->db->from($this->Users_sign_model->table);
+		$this->db->where('user_id', $user_id);
+		$query = $this->db->get();
+		$this->page_data['users_sign'] = $query->row();
 		$this->load->view('esign/esign', $this->page_data);
 	}
 
@@ -19,13 +28,29 @@ class Esign extends MY_Controller {
 	}
 
 	public function saveSign(){
+		echo json_encode($_POST);
 		$data = $_POST;
 		$id = logged('id');
 		$this->load->model('Users_sign_model', 'Users_sign_model');
-		$id = $this->Users_sign_model->create([
-			'user_id' => $id,
-			'esignImage' => $data['base64']
-		]);
+
+		if(empty($this->Users_sign_model->fetch($id)))
+		{
+			$id = $this->Users_sign_model->create([
+				'user_id' => $id,
+				'esignImage' => $data['base64']
+			]);
+		} else {
+			// $id = $this->Users_sign_model->where("user_id" , $id)->update([
+			// 	'user_id' => $id,
+			// 	'esignImage' => $data['base64']
+			// ]);
+			$this->db->where('user_id', $id);
+        	$this->db->update($this->Users_sign_model->table, [
+				'user_id' => $id,
+				'esignImage' => $data['base64']
+			]);
+		}
+
 		redirect('esign');
 	}
 

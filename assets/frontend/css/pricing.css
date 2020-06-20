@@ -393,6 +393,10 @@ label{
 }
 
 @media (max-width:767px){
+  .row {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+  }
   ul.desc-ul {
     padding-top: 20px !important;
     padding-bottom: 5px !important;

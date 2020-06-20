@@ -112,8 +112,24 @@ class Users extends MY_Controller {
 		
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		
-		$this->load->view('users/timesheet', $this->page_data);
+		//$this->load->view('users/timesheet', $this->page_data);
+		$this->load->view('users/timesheet-admin', $this->page_data);
+	}
 
+	// added for tracking Timesheet of employees
+	public function timesheet_user()
+	{	
+		$this->load->model('timesheet_model');
+		//ifPermissions('users_list');
+
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		
+		$this->page_data['users'] = $this->users_model->getUsers();
+		
+		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+		
+		//$this->load->view('users/timesheet', $this->page_data);
+		$this->load->view('users/timesheet-user', $this->page_data);
 	}
 
 	public function add_timesheet_entry()

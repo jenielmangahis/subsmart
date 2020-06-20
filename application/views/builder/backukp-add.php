@@ -51,7 +51,9 @@
     padding:3px;
     background:white;
   }
-
+  .select2-container--open { z-index: 0; }
+span.select2-selection.select2-selection--single { font-size: 16px; }
+.form-group { margin-bottom: 20px !important; }
   .input-main-box:not(:first-child) { 
       margin-top:5px;
   }  
@@ -347,7 +349,9 @@
         var html = '<div class="input-main-box input-main-box-'+field+' h-auto w-auto"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input class="form-control" type="text"> </div> <div class="col-sm-4 text-right">Text Field</div></div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true"> Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" value="true"> Encrypt Data </div> </div> </div>';
         return html;
     }
-
+    function removeOptions(e) {
+    $(e).parents('.option').remove();
+  }
     function getTextAreaFieldHTML(label = '', placeholder = '', name = '', required = false) {
         var field = generateField();
 

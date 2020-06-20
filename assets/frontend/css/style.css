@@ -404,7 +404,7 @@
    margin: 0px !important;
  }
  .header-top p  span{
-	  color:#fada97
+    color:#fada97
   }
 
  .header-top .blink {
@@ -432,7 +432,7 @@
  }
 
  .site-logo-holder:after{
-	content: "";
+  content: "";
     position: absolute;
     left: 0px;
     width: 100%;
@@ -719,9 +719,9 @@
 }
 
 .manageBusiness{
-	margin-top:-80px;
-	position:relative;
-	z-index:1
+  margin-top:-80px;
+  position:relative;
+  z-index:1
 }
 
 .customContainer {
@@ -777,7 +777,7 @@
 .cardHolder h5.card-title a {
     color: #61376f;
     text-decoration: none;
-	font-weight:bold;
+  font-weight:bold;
 }
 
 .cardHolder p {
@@ -851,7 +851,7 @@
     color: #e05656;
     margin: 0;
     font-size: 24px;
-	font-weight:bold;
+  font-weight:bold;
 }
 
 .timeTrackingList ul li p {
@@ -1664,7 +1664,7 @@ ul.footer-list li a:hover {
    color:#c3c3c3
  }
  .footer-widget.about-widget p strong{
-	 color:#fff
+   color:#fff
  }
 
  .footer-widget .fw-title {
@@ -1775,14 +1775,14 @@ ul.footer-list li a:hover {
    padding-top: 25px;
  }
  .footer-widget-right{
-	     display: flex;
+       display: flex;
     flex-direction: column;
     height: 100%;
     padding-bottom: 50px;
-	margin-bottom:0px;
+  margin-bottom:0px;
  }
  .footer-widget-right .footer-search{
-	 margin-top: auto;
+   margin-top: auto;
  }
  .copyright a {
    color: #646470;
@@ -2398,8 +2398,124 @@ ul.footer-list li a:hover {
   text-align: center;
 }
 .about-section-a {
+  margin-top: 50px;
+  margin-bottom: 0px;
+}
+.about-section-b {
+  margin-top: 80px;
+  margin-bottom: 0px;
+  padding-top: 35px;
+  padding-bottom: 45px;
+  background: #e4e4e4;
+  border-bottom: 1px solid #d2d2d2;
+}
+.about-section-c {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 95px;
+  background: #dae1e2;
+}
+.map-bg {
+  background: url(../images/office-map.jpg) no-repeat center;
+  height: 700px;
+  background-size: contain;
+}
+.about-section-d {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 55px;
+  background: white;
+}
+.about-section-e {
   margin-top: 80px;
   margin-bottom: 120px;
+}
+.about-section-f {
+  margin-top: 0px;
+  margin-bottom: 100px;
+  background: white;
+  position: relative;
+  bottom: 40px;
+}
+span.icon-about {
+  font-size: 57px;
+  background: #fff;
+  border-radius: 100px;
+  padding: 25px;
+  color: #7c589c;
+}
+span.icon-process {
+  font-size: 57px;
+  background: #ffc800;
+  border-radius: 115px;
+  padding: 25px;
+  color: white;
+  position: relative;
+  top: 52px;
+}
+span.about-icon-txt {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: #7c52a0;
+}
+span.about-icon-txt-b {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: black;
+}
+span.about-icon-description {
+  font-size: 14px;
+  line-height: 22px;
+  display: block;
+  padding: 0px 9px;
+  text-align: center;
+  color: #562b79;
+}
+span.about-icon-description-b {
+  font-size: 18px;
+  line-height: 24px;
+  display: block;
+  text-align: center;
+  color: black;
+  background: #f4f3f1;
+  padding: 77px 2vw 30px 2vw;
+}
+.dv-f {
+  margin-bottom: 30px;
+}
+h1.about-title-f {
+  font-size: 40px;
+  font-weight: 100;
+}
+span.about-project-subtle {
+  font-size: 17px;
+  display: block;
+}
+.btn-learn-about {
+  margin: 0 auto;
+  margin-top: 90px;
+}
+.about-desc-3 {
+  font-size: 19px;
+  text-align: justify;
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+}
+span.about-project-title {
+  color: #ccc;
+  display: block;
+  font-size: 65px;
 }
 h1.about-title {
   font-size: 70px;
@@ -2424,43 +2540,11 @@ hr.about-hr {
   border: 1px solid white;
   width: 60px;
 }
-span.about-icon-description {
-  font-size: 14px;
-  line-height: 22px;
-  display: block;
-  padding: 0px 9px;
-  text-align: center;
-  color: #562b79;
-}
-.about-section-b {
-  margin-top: 80px;
-  margin-bottom: 0px;
-  padding-top: 50px;
-  padding-bottom: 55px;
-  background: #e4e4e4;
-  border-bottom: 1px solid #d2d2d2;
-}
-span.icon-about {
-  font-size: 57px;
-  background: #fff;
-  border-radius: 100px;
-  padding: 25px;
-  color: #7c589c;
-}
 a.about-btn {
   background: #694a85;
   padding: 10px 50px;
   color: white;
   text-transform: uppercase;
-}
-span.about-icon-txt {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 20px;
-  margin-top: 12px;
-  text-transform: uppercase;
-  color: #7c52a0;
 }
  /* ----------------
   Contact Page
@@ -2950,7 +3034,7 @@ div.testimonial-card img {
    }
  }
  .header-section .footer-social a{
-	 margin-bottom: 0px;
+   margin-bottom: 0px;
     font-size: 11px;
     width: 22px;
     height: 22px;
@@ -2975,11 +3059,11 @@ div.testimonial-card img {
    }
  }
  .site-navbar{
-	 position:relative;
-	 z-index:9;
+   position:relative;
+   z-index:9;
  }
  .site-navbar:after{
-	 content: "";
+   content: "";
     height: 70px;
     background: #fff;
     width: 20vw;
@@ -3388,6 +3472,95 @@ label.reg-def {
  /* Large Mobile :480px. */
 
  @media only screen and (max-width: 767px) {
+   span.about-desc-2 {
+     width: 100%;
+   }
+   h1.about-title-2 {
+     font-size: 29px;
+     font-weight: 100;
+     line-height: 42px;
+   }
+   span.about-icon-description {
+     margin-bottom: 50px;
+   }
+   .map-bg {
+     height: 300px;
+     background-size: contain;
+   }
+   .about-desc-3 {
+     font-size: 17px;
+     text-align: justify;
+     display: block;
+     width: 80%;
+     margin: 0 auto;
+   }
+   h1.about-title-2 {
+     font-size: 26px;
+     font-weight: 100;
+     line-height: 37px;
+   }
+   .about-section-c div div div {
+     padding-left: 0px !important;
+   }
+   .about-section-f div.container div.row div {
+     padding-left: 0px !important;
+     padding-right: 0px !important;
+   }
+   .about-section-f {
+     margin-top: 0px;
+     margin-bottom: 20px;
+     background: white;
+     position: relative;
+     bottom: 40px;
+   }
+   h1.about-title-f {
+     font-size: 36px;
+     font-weight: 100;
+     line-height: 50px;
+     display: block;
+     text-align: center;
+     width: 100%;
+     padding: 0px;
+     position: relative;
+     right: 9px;
+   }
+   .about-section-e {
+     margin-top: 15px;
+     margin-bottom: 10px;
+   }
+   span.about-project-subtle {
+     font-size: 17px;
+     display: block;
+     margin-bottom: 40px;
+   }
+   .office-bg {
+     height: 350px;
+     background-size: cover;
+   }
+   .about-section-d {
+     margin-top: 80px;
+     margin-bottom: 40px;
+     padding-top: 0px;
+     padding-bottom: 55px;
+     background: white;
+   }
+   .about-section-a {
+     margin-top: 0px;
+     margin-bottom: 0px;
+   }
+   h1.about-title {
+     font-size: 38px;
+     font-weight: 100;
+     line-height: 45px;
+   }
+   span.about-desc {
+     font-size: 15px;
+     padding: 0 2vw;
+   }
+   .row {
+     margin-right: 0px !important;
+     margin-left: 0px !important;
+   }
    .header-top {
      padding: 14px 0;
      text-align: center;
@@ -3425,10 +3598,10 @@ margin-bottom: 10px;
    .site-logo-holder:after,
   .site-navbar::after,
    .site-logo-holder:before{
-	   display:none !important
+     display:none !important
    }
    .slicknav_btn{
-	   position: absolute;
+     position: absolute;
 
 right: 10px;
 
@@ -3560,7 +3733,7 @@ font-size: 12px;
  }
 
  @media(max-width:767px){
-	 .slicknav_btn {
+   .slicknav_btn {
     position: absolute;
     right: 10px;
     top: 105px;

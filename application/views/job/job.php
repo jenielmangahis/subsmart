@@ -359,23 +359,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="tab-pane fade show active margin-top" id="items" role="tabpanel" aria-labelledby="items-tab">
                                             <h4>Items</h4>
                                             <button type="button" class="btn btn-primary margin-bottom" id="addItems">Add Items</button>
-                                            <table class="table table-hover" style="width:100%;" id="addItemsTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col"><strong>Item</strong></th>
-                                                        <th scope="col"><strong>Type</strong></th>
-                                                        <th scope="col"><strong>Category</strong></th>
-                                                        <th scope="col"><strong>Quantity</strong></th>
-                                                        <th scope="col"><strong>Location</strong></th>
-                                                        <th scope="col"><strong>Cost Per</strong></th>
-                                                        <th scope="col"><strong>Discount</strong></th>
-                                                        <th scope="col"><strong>Tax</strong></th>
-                                                        <th scope="col"><strong>Total Cost</strong></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
+                                            <div id="addItemsTableDiv">
+                                                <table class="table table-hover" style="width:100%;" id="addItemsTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col"><strong>Item</strong></th>
+                                                            <th scope="col"><strong>Type</strong></th>
+                                                            <th scope="col"><strong>Category</strong></th>
+                                                            <th scope="col"><strong>Quantity</strong></th>
+                                                            <th scope="col"><strong>Location</strong></th>
+                                                            <th scope="col"><strong>Cost Per</strong></th>
+                                                            <th scope="col"><strong>Discount</strong></th>
+                                                            <th scope="col"><strong>Tax</strong></th>
+                                                            <th scope="col"><strong>Total Cost</strong></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             <div class="row" id="itemsTableSubTotal">
                                                 <div class="col-md-7">
                                                 &nbsp;
@@ -444,19 +446,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <div class="col-md-1" style="margin-top:10px;">
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <table class="table table-hover" style="width:100%;" id="itemsTable">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col"><strong>Item</strong></th>
-                                                                    <th scope="col"><strong>Cost</strong></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
+                                                        <div id="itemsFeesDiv">
+                                                            <table class="table table-hover" style="width:100%;" id="itemsFeesTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>&nbsp;</th>
+                                                                        <th scope="col"><strong>Item</strong></th>
+                                                                        <th scope="col"><strong>Cost</strong></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div style="display:none;" id="addOnsItemsDiv">
+                                                            <table class="table table-hover" style="width:100%;" id="addOnsItemTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>&nbsp;</th>
+                                                                        <th><strong>Item</strong></th>
+                                                                        <th><strong>Vendor</strong></th>
+                                                                        <th><strong>Cost</strong></th>
+                                                                        <th><strong>On-Hand</strong></th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-9 text-right">
-                                                        <button class="btn btn-primary" id="finishedItemForm">Finished</button>
+                                                    <div class="col-md-9 pt-3 text-right">
+                                                        <button type="button" class="btn btn-primary" id="finishedItemForm">Finished</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -549,42 +567,61 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="row pt-2 pl-2">
                                                 <label for="" style="margin-right:105px;">Choose payment method</label>
                                                 <div class="form-check form-check-inline pr-4">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="creditcard">
+                                                    <input class="form-check-input payment_method" checked type="radio" name="payment_method" id="inlineRadio1" value="creditcard">
                                                     <label class="form-check-label" for="inlineRadio1">Credit Cards</label>
                                                 </div>
                                                 <div class="form-check form-check-inline pr-4">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="check">
+                                                    <input class="form-check-input payment_method" type="radio" name="payment_method" id="inlineRadio2" value="check">
                                                     <label class="form-check-label" for="inlineRadio2">Check</label>
                                                 </div>
                                                 <div class="form-check form-check-inline pr-4">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="cash">
+                                                    <input class="form-check-input payment_method" type="radio" name="payment_method" id="inlineRadio3" value="cash">
                                                     <label class="form-check-label" for="inlineRadio3">Cash</label>
                                                 </div>
                                                 <div class="form-check form-check-inline pr-4">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="paypal">
+                                                    <input class="form-check-input payment_method" type="radio" name="payment_method" id="inlineRadio4" value="paypal">
                                                     <label class="form-check-label" for="inlineRadio4">Paypal</label>
                                                 </div>
                                             </div>
-                                            <div class="row pt-4 pl-4">
-                                                <label class="pt-2 pr-2" for="">Card Type</label>
-                                                <select name="card_type[]" id="show_card_type" class="form-control mb-2" style="display:inline-block; width: 170px;">
-                                                    <option value="Visa">Visa</option>
-                                                    <option value="Mastercard">Mastercard</option>
-                                                    <option value="Discover">Discover</option>
-                                                    <option value="American Express">American Express</option>
-                                                </select>
-                                                <label class="pt-2 pl-4 pr-2" for="">Card Number</label>
-                                                <input type="text" class="form-control col-md-3" id="inlineFormInputName" placeholder="">
+                                            <div id="creditcarddiv">                                            
+                                                <div class="row pt-4 pl-4">
+                                                    <label class="pt-2 pr-2" for="">Card Type</label>
+                                                    <select name="card_type[]" id="show_card_type" class="form-control mb-2" style="display:inline-block; width: 170px;">
+                                                        <option value="Visa">Visa</option>
+                                                        <option value="Mastercard">Mastercard</option>
+                                                        <option value="Discover">Discover</option>
+                                                        <option value="American Express">American Express</option>
+                                                    </select>
+                                                    <label class="pt-2 pl-4 pr-2" for="">Card Number</label>
+                                                    <input type="text" class="form-control col-md-3" id="inlineFormInputName" placeholder="">
+                                                </div>
+                                                <div class="row pt-2 pl-4">
+                                                    <div class="row col-md-2">
+                                                        <label class="pt-2 pr-2" for="">CVV #</label>
+                                                        <input type="text" class="form-control col-md-8" id="inlineFormInputName" placeholder="">
+                                                    </div>
+                                                    <div class="row col-md-6">
+                                                        <label class="pt-2 pl-4 pr-2" for="">Exp Date</label>
+                                                        <input type="text" class="form-control col-md-3" id="billingExpDate" placeholder="">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="row pt-2 pl-4">
-                                                <div class="row col-md-2">
-                                                    <label class="pt-2 pr-2" for="">CVV #</label>
-                                                    <input type="text" class="form-control col-md-8" id="inlineFormInputName" placeholder="">
+                                            <div id="checkdiv" style="display:none;">    
+                                                <h4>Billing</h4>     
+                                                <label for="" style="margin-right:105px;">Check Payment Information</label>
+                                            </div>
+                                            <div id="cashdiv" style="display:none;">    
+                                                <h4>Cash</h4>     
+                                                <div class="row pl-2 pt-2 pb-2">
+                                                    <div class="row col-md-12">
+                                                        <label class="pt-2 pr-2">Amount in Cash</label>
+                                                        <input type="text" class="form-control col-md-2" id="amountInCash">
+                                                    </div>
                                                 </div>
-                                                <div class="row col-md-6">
-                                                    <label class="pt-2 pl-4 pr-2" for="">Exp Date</label>
-                                                    <input type="text" class="form-control col-md-3" id="billingExpDate" placeholder="">
-                                                </div>
+                                            </div>
+                                            <div id="paypaldiv" style="display:none;">    
+                                                <h4>PayPal</h4>     
+                                                <a href="<?php echo base_url('job/buy/1'); ?>" class="btn btn-primary col-md-2">Connect with PayPal</a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade pa-10 margin-left margin-top" id="history" role="tabpanel" aria-labelledby="history-tab">

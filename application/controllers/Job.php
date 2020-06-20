@@ -10,8 +10,10 @@ class Job extends MY_Controller
         parent::__construct();
         $this->page_data['page']->title = 'Job Management';
         $this->page_data['page']->menu = 'job';
+        $this->load->library('paypal_lib');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Invoice_model', 'invoice_model');
+
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -194,6 +196,31 @@ class Job extends MY_Controller
         );
         $this->db->insert($this->invoice_model->table, $data);
         echo json_encode($data);
+    }
+
+    public function buy($id){
+        // Set variables for paypal form
+        $returnURL = base_url().'paypal/success';
+        $cancelURL = base_url().'paypal/cancel';
+        $notifyURL = base_url().'paypal/ipn';
+        
+        // Get product data from the database
+        $product = $this->invoice_model->getRows($id);
+        
+        // Get current user ID from the session
+        $userID = logged('id');
+        
+        // Add fields to paypal form
+        $this->paypal_lib->add_field('return', $returnURL);
+        $this->paypal_lib->add_field('cancel_return', $cancelURL);
+        $this->paypal_lib->add_field('notify_url', $notifyURL);
+        $this->paypal_lib->add_field('item_name', $product['title']);
+        $this->paypal_lib->add_field('custom', $userID);
+        $this->paypal_lib->add_field('item_number',  $product['invoice_id']);
+        $this->paypal_lib->add_field('amount',  $product['total_value']);
+        
+        // Render paypal form
+        $this->paypal_lib->paypal_auto_form();
     }
 }
 

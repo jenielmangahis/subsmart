@@ -205,7 +205,7 @@
 											<div class="d-flex w-100 justify-content-between">
 												<h2>Builder</h2>
 												<div>
-													<button id="btn-change-view" class="btn btn-sm btn-dark"><i class="fa fa-th"></i> Expand List</button>
+													<button id="btn-change-view" class="btn btn-sm btn-dark"><i class="fa fa-th"></i> Shrink List</button>
 												</div>
 												
 												<!-- <button class="btn btn-sm btn-dark"><i class="fa fa-th"></i></button> -->
@@ -285,44 +285,65 @@
 																						</div>
 
 																						<div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
-																							<div class="d-flex bg-white py-2 ">
-																							
-																								<!-- custom button text field -->
-																								<div class="form-group w-100">
-																								<label for="txtCustomButtonText">Custom button text:</label>
-																									<input class="form-control" type="text" name="txtCustomButtonText" id="txtCustomButtonText" placeholder="Enter custom button text" data-id="<?=$question->id?>" value="<?= ($question->custom_button_text == null || $question->custom_button_text == "") ? "" : $question->custom_button_text ?>">
-																								</div>
-
+																							<ul class="list-group">
 																								<!-- image upload field -->
-																								<div class="custom-file">
-																									<input type="file" class="custom-file-input" id="image_background" name="image_background" data-id="<?=$question->id?>">
-																									<label class="custom-file-label" for="imageUpload">
-																										<?=($question->image_background == "" || $question->image_background == null)?"Upload an image here":"Current Image: ". $question->image_background?>
-																									</label>
-																								</div>
-																								
+																								<li class="list-group-item d-flex-justify-content-between">
+																									<div class="d-flex w-100 justify-content-between">
+																										<div class="custom-file">
+																											<input type="file" class="custom-file-input" id="image_background" name="image_background" data-id="<?=$question->id?>">
+																											<label class="custom-file-label" for="imageUpload">
+																												<?=($question->image_background == "" || $question->image_background == null)?"Upload an image here":"Current Image: ". $question->image_background?>
+																											</label>
+																										</div>
+																									</div>
+																								</li>
+																								<!-- custom button text field -->
+																								<li class="list-group-item">
+																									<div class="d-flex w-100 justify-content-between">
+																										<span>Custom button text:</span>
+																										<input class="form-control" type="text" name="txtCustomButtonText" id="txtCustomButtonText" placeholder="Enter custom button text" data-id="<?=$question->id?>" value="<?= ($question->custom_button_text == null || $question->custom_button_text == "") ? "" : $question->custom_button_text ?>">
+																									</div>
+																								</li>
+
 																								<!-- character limits -->
-																								<?php if($question->template_id == 6 || $question->template_id == 8 ||$question->template_id == 9 || $question->template_id == 13){ ?>
-																									<!-- <button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-dark btn-block" type="button" name="button">Add Choice</button> -->
-																									<label for="maxcharacters"> Max. characters</label>
-																									<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="maxcharacters" name="maxcharacters" value="<?= $question->maxcharacters?>">
-																									<label for="mincharacters"> Min. characters</label>
-																									<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="mincharacters" name="mincharacters" value="<?= $question->mincharacters?>">
-																								<?php } ?>
+																								<li class="list-group-item d-flex-justify-content-between">
+																									<div class="d-flex w-100 justify-content-between">
+																										<?php if($question->template_id == 6 || $question->template_id == 8 ||$question->template_id == 9 || $question->template_id == 13){ ?>
+																											<!-- <button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-dark btn-block" type="button" name="button">Add Choice</button> -->
+																											<div>
+																												<label for="maxcharacters"> Max. characters</label>
+																												<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="maxcharacters" name="maxcharacters" value="<?= $question->maxcharacters?>">
+																											</div>
+																											<div>
+																												<label for="mincharacters"> Min. characters</label>
+																												<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="mincharacters" name="mincharacters" value="<?= $question->mincharacters?>">
+																											</div>
+																										<?php } ?>
+																									</div>
+																								</li>
 																								
-																								<!-- Required Checkbox -->
-																								<div class="custom-control custom-checkbox mr-3">
-																									<input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
-																									<label class="custom-control-label" for="required<?= $question->id ?>">Required</label>
-																								</div>
+																								<!-- custom button text field -->
+																								<li class="list-group-item">
+																									<div class="d-flex w-100 justify-content-between">
+																										<span>Required</span>
+																										<div class="form-check">
+																											<input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
+																										</div>
+																									</div>
+																								</li>
+																								
+																								<!-- custom button text field -->
+																								<li class="list-group-item">
+																									<div class="d-flex w-100 justify-content-between">
+																										<span>Description</span>
+																										<div class="form-check">
+																											<input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
+																										</div>
+																									</div>
+																								</li>
 
-																								<!-- set a description -->
-																								<div class="custom-control custom-checkbox">
-																									<input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="custom-control-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
-																									<label class="custom-control-label" for="description<?= $question->id ?>">Description</label>
-																								</div>
-
-																							</div>
+																							</ul>
+																							
 																						</div>
 																						<!-- End of More Options Drawer -->
 
@@ -374,9 +395,11 @@
 																			<div class="card-body">
 																				<h4 style="color: <?= $theme->sth_text_color?>">
 																					<?= $theme->sth_theme_name?>
-																					<?php if($theme->sth_rec_no === $survey_theme->sth_rec_no){
-																						?><i class="fa fa-check-circle"></i><?php
-																					}?>
+																					<?php
+																						if($survey_theme != null){
+																							if($theme->sth_rec_no === $survey_theme->sth_rec_no){echo'<i class="fa fa-check-circle"></i>';};
+																						}
+																					?>
 																				</h4>
 																				<div class="color-slots">
 																					<div class="color-slot" style="background-color: <?= $theme->sth_primary_color ?>"></div>
@@ -454,7 +477,7 @@
 													<li class="list-group-item">
 														<div class="d-flex w-100 justify-content-between">
 															<span>Closing date</span>
-															<input type="date" <?= ($survey->hasClosedDate == 0) ? "disabled" : "" ?> name="txtSchedDate" id="txtSchedDate" data-id="<?= $survey->id ?>" value="<?= date($survey->closingDate)?>" class="form-control">
+															<input type="date" <?= ($survey->hasClosedDate == 0) ? "disabled" : "" ?> name="txtSchedDate" id="txtSchedDate" data-id="<?= $survey->id ?>" value="<?= (date($survey->closingDate) == -62170005208) ? "":date($survey->closingDate) ?>" class="form-control">
 														</div>
 													</li>
 													<li class="list-group-item">

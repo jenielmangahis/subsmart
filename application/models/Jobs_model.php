@@ -52,11 +52,11 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function getItems($params, $id)
+    public function getItems($params)
     {
-        $col = ($params == "material") ? 'item_categories_id' : 'type';
+        $col = ($params != "material" && $params != "service" && $params != "Fees") ? 'item_categories_id' : 'type';
         $comp_id = logged('company_id');
-        $array = array('company_id' => $comp_id, $col => $id);
+        $array = array('company_id' => $comp_id, $col => $params);
 
         $this->db->select('*');
         $this->db->from('items');

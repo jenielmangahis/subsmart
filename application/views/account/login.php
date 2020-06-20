@@ -73,10 +73,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php echo form_close(); ?>
     <div class="row mr-bottom-10">
       <div class="col-xs-6">
-        <a href="#" class="login-social fb-color"><i class="fa fa-facebook"></i> &nbsp; Signin Facebook</a>
+        <a href="#" class="login-social fb-color"><i class="fa fa-facebook"></i> Sign In Facebook</a>
       </div>
       <div class="col-xs-6">
-        <a href="#" class="login-social google-color"><i class="fa fa-google"></i> &nbsp; Signin Gmail</a>
+        <a href="#" class="login-social google-color"><i class="fa fa-google"></i>Sign In Gmail</a>
       </div>
     </div>
     <a href="<?php echo url('login/forget?username='.post('username')) ?>">Forgot your password ?</a><br>

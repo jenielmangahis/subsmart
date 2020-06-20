@@ -157,7 +157,10 @@ $user_id = getLoggedUserID();
                     </div>
                 </li>
                 <li class="has-submenu">
-                    <a class="dropdown-toggle" href="<?php //echo base_url('vault') ?>" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <li class="has-submenu">
+                        <a href="<?php echo base_url('vault') ?>"><i class="fa fa-industry" aria-hidden="true"></i><span>Files Vault</span></a>
+                    </li>
+                    <?php /*<a class="dropdown-toggle" href="<?php //echo base_url('vault') ?>" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-industry" aria-hidden="true"></i> <span>Files Vault</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown" style="width: auto;">
@@ -165,7 +168,7 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> Shared Library</a>
                         <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> My Library</a>
                         <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> Before and After Photos</a>
-                    </div>
+                    </div>*/ ?>
                 </li>
                 <?php //if (hasPermissions('report')): ?>
                     <li class="has-submenu">
@@ -173,15 +176,15 @@ $user_id = getLoggedUserID();
                     </li>
                 <?php //endif ?>
                 <li class="has-submenu">
-                    <!-- <a href="<?php echo base_url('marketing') ?>"><i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span></a> -->
-                    <a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
+                    <a href="<?php echo base_url('marketing') ?>"><i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span></a>
+                    <?php /*<a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-cog" aria-hidden="true"></i> <span>Marketing</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo base_url('marketing') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>Marketing</b></a>
                         <a class="dropdown-item" href="<?php //echo base_url('marketing') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>API Connectors</b></a>
-                    </div>
+                    </div>*/ ?>
                 </li>
                 <li class="has-submenu">
                     <!-- <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span></a> -->
@@ -191,7 +194,7 @@ $user_id = getLoggedUserID();
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo base_url('/company') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>My Tools</b></a>
-                        <a class="dropdown-item" href="<?php echo base_url('esign') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/esignmain') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
                         <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
                         <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
                         <a class="dropdown-item" href="<?php echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Form Builder</a>

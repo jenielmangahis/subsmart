@@ -132,7 +132,7 @@
     
       if(strpos(uri_string(),'preview')){
         ?>
-          <div class="preview-notification-bar" style="background-color: <?= $survey_theme->sth_secondary_color?>; color: <?= $survey_theme->sth_text_color?>">You are currently in Preview mode. <a type="button" href="<?php echo base_url()?>survey/result/<?php echo $survey->id?>">Go back</a></div>
+          <div class="preview-notification-bar" style="background-color: <?=($survey_theme != null)? $survey_theme->sth_secondary_color : "#fff"?>; color: <?= ($survey_theme != null)? $survey_theme->sth_text_color: "#000"?>">You are currently in Preview mode. <a type="button" href="<?php echo base_url()?>survey/result/<?php echo $survey->id?>">Go back</a></div>
         <?php
       }
     ?>
@@ -176,7 +176,7 @@
                   <h1>This survey has received enough respondents already. Thank you!</h1>
                 <?php
               }else{
-                if(strtotime(date('Y-m-d')) >  strtotime(date($survey->closingDate)) && strtotime(date($survey->closingDate)) !== -62170005208 ) {
+                if($survey->hasClosedDate == true && strtotime(date('Y-m-d')) >  strtotime(date($survey->closingDate)) && strtotime(date($survey->closingDate)) != -62170005208 ) {
                   ?>
                     <h1>Survey has already reached it's deadline. Thank you!</h1>
                   <?php
@@ -332,10 +332,10 @@
           var timer = $('#t').html();
           data.append('timer', parseInt(timer));
           for (var pair of data.entries()) {
-              console.log(pair[0]+ ', ' + pair[1]); 
+              // console.log(pair[0]+ ', ' + pair[1]); 
           }
           var url = $('#form-survey').attr('href');
-          
+          console.log("success?")
           $.ajax({
             url: url,
             data: data,
@@ -344,7 +344,13 @@
             cache:false,
             contentType: false,
             processData: false,
+            error: function(xhttp, texterr, err){
+              console.log(err)
+              console.log(texterr)
+              console.log(err)
+            },
             success: function(res){
+              console.log(res);
               <?php
                 if($survey->redirectionLink != '' && $survey->canRedirectOnComplete == true){
                   ?>
@@ -362,8 +368,7 @@
                   } 
                 }
               ?>
-              window.location="google.com";
-              // <?= ($survey->canRedirectOnComplete == true && $survey->redirectionLink != "") ? "window.location=`".($survey->redirectionLink)."`" : "window.location.close();" ?>;
+              
             }
           });
         });
@@ -419,7 +424,7 @@
 
           var id = $(this).data('id');
           var next_id = id+1;
-          // var data =  $(this).serializeArray();
+          var data =  $(this).serializeArray();
           var regex = /\[[^\]]*\]/g;
           // var str = $('#question-'+next_id+' #question').html();
 

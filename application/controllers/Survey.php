@@ -239,8 +239,7 @@ class Survey extends MY_Controller
       unset($_POST['answer']);
       unset($_POST['stripeToken']);
     }
-   
-   
+    
     $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
     echo json_encode($answered);
     exit;
@@ -305,10 +304,10 @@ class Survey extends MY_Controller
     $this->load->view('survey/themes/view', $this->page_data);
   }
 
-  // public function themeCreate(){
-  //   // $this->page_data[""]
-  //   $this->load->view('survey/themes/create', $this->page_data);
-  // }
+  public function themeCreate(){
+    // $this->page_data[""]
+    $this->load->view('survey/themes/create', $this->page_data);
+  }
 
   public function selectTheme($survey_id, $theme_id){
     $this->db->set('theme_id', $theme_id);

@@ -143,7 +143,7 @@
                                 Image has not yet been set. Add an image to see the design.
                             </div>
                             
-                            <button id="btnPreview" class="btn btn-secondary btn-block" type="button">Preview</button>
+                            <!-- <button id="btnPreview" class="btn btn-secondary btn-block" type="button">Preview</button> -->
                             <button id="btnSubmit" class="btn btn-success btn-block" type="submit">Submit</button>
                         </>
 

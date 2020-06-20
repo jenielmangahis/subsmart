@@ -12,10 +12,11 @@ ini_set('max_input_vars', 30000);
 	}
 </style>
 <div class="wrapper" role="wrapper">
-		<?php include viewPath('includes/sidebars/signature'); ?>
-		<?php include viewPath('includes/notifications'); ?>
-		<div wrapper__section>
-				<?php include viewPath('includes/notifications'); ?>
+		<?php  /* include viewPath('includes/sidebars/signature'); */ ?>
+		<?php /* include viewPath('includes/notifications'); */ ?>
+		<div >
+		<!-- wrapper__section -->
+				<?php /* include viewPath('includes/notifications'); */?>
 				<div class="card">
 
 
@@ -38,7 +39,7 @@ ini_set('max_input_vars', 30000);
 													<div class="col-md-12">
 													 <div class="signature-holder">
 															<div class="signature-body">
-																	<?php if ( empty( $users->esignImage ) ){ ?>
+																	<?php if ( empty( $users_sign->esignImage ) ){ ?>
 																		<img src="<?=url("");?>uploads/signatures/demo.png" class="img-responsive">
 																	<?php }else{ ?>
 																		<img src="<?=$users->esignImage?>" class="img-responsive">
@@ -95,7 +96,7 @@ ini_set('max_input_vars', 30000);
 
 			$.ajax({url: url, type: "POST", data:{base64: data}})
 			  	.done(function(e){
-			    location.reload();
+			   location.reload();
 			});
 		})
 	}) 

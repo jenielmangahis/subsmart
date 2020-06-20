@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			<?php foreach ( $users as $key => $value ) { ?>
 				<div class="col-md-2">
 				
-					<div class="shadow" style="background-color: white;">
+					<div class="shadow" style="background-color: white;text-align:center;">
 						<img src="<?=url("");?>uploads/docPhoto/<?php echo $value->docphoto; ?>" height="170" width="180">
 					</div>
 				</div>
