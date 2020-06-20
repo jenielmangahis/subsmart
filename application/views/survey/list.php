@@ -64,10 +64,10 @@
                          <div class="col-xs-12 col-sm-6 col-md-3">
 
                         <!-- Card content for each survey -->
-                        <div id="survey-card" data-id="<?= $survey->id ?>" class="card border-0 shadow" style="background-image: url('<?= base_url()?>uploads/survey/themes/<?=$survey->survey_theme->sth_primary_image?>')">
+                        <div id="survey-card" data-id="<?= $survey->id ?>" class="card border-0 shadow" style="<?=($survey->survey_theme != null)? "background-image: url('".base_url()."uploads/survey/themes/".$survey->survey_theme->sth_primary_image."')  " : ""?>">
                           <a class="text-left" href="survey/result/<?= $survey->id ?>">
                             <div class="card-body">
-                              <h5 class="card-title survey-title font-weight-bold" style="color: <?= $survey->survey_theme->sth_text_color?>; border-left: 5px solid <?= $survey->survey_theme->sth_primary_color?>;"><?= $survey->title ?></h5>
+                              <h5 class="card-title survey-title font-weight-bold" style="color: <?= ($survey->survey_theme != null)?$survey->survey_theme->sth_text_color:"black"?>; border-left: 5px solid <?= ($survey->survey_theme != null) ? $survey->survey_theme->sth_primary_color : "#ffffff"?>;"><?= $survey->title ?></h5>
                               <small style="color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_text_color: ""?>"><?= count($this->survey_model->getQuestions($survey->id))?> Questions</small><br/>
                               <small style="color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_text_color: ""?>"><?= $survey->count ?><?=($survey->hasResponseLimit == true && $survey->responseLimit > 0) ?"/".$survey->responseLimit : ""?> Response(s)</small><br/>
                               <small class="text-info" style="color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_secondary_color : ""?>">Click for more info</small>

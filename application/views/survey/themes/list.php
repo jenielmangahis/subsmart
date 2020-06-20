@@ -55,11 +55,11 @@
                             <h2>Survey Themes</h2>                
                             <p>Here are some themes to help you get more people attracted to your survey.</p>
                         </div>
-                        <!-- <div class="col-6 text-right">
+                        <div class="col-6 text-right">
                             <a href="<?= base_url()?>survey/themes/create" class="btn btn-success">
                                 <i class="fa fa-plus"></i> Add New Theme
                             </a>
-                        </div> -->
+                        </div>
                     </div>
                     <hr/>
                     

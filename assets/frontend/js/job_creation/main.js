@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $(
-    "#jobListTable, #itemsTable, #currentFormsTable, #jobHistoryTable"
+    "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable"
   ).DataTable({
     scrollX: true,
   });
@@ -41,23 +41,19 @@ $(document).ready(function () {
   });
 
   $("#addItems").click(function () {
-    $("#addItemsTable").hide();
+    $("#addItemsTableDiv").hide();
     $("#itemsTableSubTotal").hide();
     $("#addItemsForms").fadeIn();
   });
 
   $("#finishedItemForm").click(function () {
     $("#addItemsForms").hide();
-    $("#addItemsTable").fadeIn();
+    $("#addItemsTableDiv").fadeIn();
     $("#itemsTableSubTotal").fadeIn();
   });
 
   $("#newJobBtn, #cancelJobBtn").click(function () {
     $.LoadingOverlay("show");
-  });
-
-  $("#jobPickItems").change(function () {
-    getItems($("#jobPickItems").val());
   });
 
   $("#invoiceCreatedDate, #workOrderCreatedDate, #estimateDate").datetimepicker(
@@ -85,6 +81,65 @@ $(document).ready(function () {
       invoiceNumber: $("#invoiceNumber").val(),
     };
     saveJobInvoice(param);
+  });
+
+  $("#jobPickItems").change(function () {
+    var table = "";
+    if (
+      $("#jobPickItems").val() == "service" ||
+      $("#jobPickItems").val() == "Fees"
+    ) {
+      $("#itemsFeesDiv").fadeIn();
+      $("#addOnsItemsDiv").hide();
+      table = "itemsFeesTable";
+    } else {
+      if ($("#jobPickItems").val() == "material") {
+        $("#addOnsItemsDiv").hide();
+        $("#itemsFeesDiv").hide();
+        table = "";
+      } else {
+        $("#addOnsItemsDiv").fadeIn();
+        $("#itemsFeesDiv").hide();
+        table = "addOnsItemTable";
+      }
+    }
+    getItems($("#jobPickItems").val(), table);
+  });
+
+  $(".payment_method").click(function () {
+    switch ($("input[name='payment_method']:checked").val()) {
+      case "creditcard":
+        $("#creditcarddiv").fadeIn();
+        $("#checkdiv").hide();
+        $("#cashdiv").hide();
+        $("#paypaldiv").hide();
+        break;
+
+      case "check":
+        $("#checkdiv").fadeIn();
+        $("#creditcarddiv").hide();
+        $("#cashdiv").hide();
+        $("#paypaldiv").hide();
+        break;
+
+      case "cash":
+        $("#cashdiv").fadeIn();
+        $("#checkdiv").hide();
+        $("#creditcarddiv").hide();
+        $("#paypaldiv").hide();
+        break;
+
+      case "paypal":
+        $("#paypaldiv").fadeIn();
+        $("#cashdiv").hide();
+        $("#checkdiv").hide();
+        $("#creditcarddiv").hide();
+        break;
+    }
+  });
+
+  $(".addInvoiceItem").click(function () {
+    console.log("tset");
   });
 });
 
@@ -136,18 +191,31 @@ function getAddresses() {
   return location;
 }
 
-function getItems(param) {
-  var location = [];
+function getItems(param, table) {
+  var items = [];
   $.ajax({
     type: "GET",
     url: base_url + "job/getItems",
     data: { index: param },
     success: function (data) {
       var result = jQuery.parseJSON(data);
-      console.log(result);
+      for (var i = 0; i < result.length; i++) {
+        var item = [
+          '<button type="button" id="" class="addInvoiceItem btn btn-primary btn-sm"><span class="fa fa-plus"></span> Add</button>',
+          result[i].title,
+          result[i].vendor_id,
+          result[i].price,
+          "",
+        ];
+        items.push(item);
+      }
+      $("#" + table).DataTable({
+        scrollX: true,
+        destroy: true,
+        data: items,
+      });
     },
   });
-  return location;
 }
 
 function saveJobInvoice(param) {

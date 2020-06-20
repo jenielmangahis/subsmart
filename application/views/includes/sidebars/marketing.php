@@ -44,5 +44,6 @@
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Mailchimp</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Active Campaign</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>API Integration</a></li>
+        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>API Connectors</a></li>
     </ul>
 </nav>

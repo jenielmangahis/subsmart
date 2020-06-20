@@ -5,6 +5,7 @@ class Invoice_model extends MY_Model
 {
 
     public $table = 'invoice';
+    public $table_item = 'invoice_has_items';
 
 
     public function getAll()
@@ -21,6 +22,19 @@ class Invoice_model extends MY_Model
 
             return $this->getAllByUserId();
         }
+    }
+
+    public function getRows($id){
+        $this->db->select('*');
+        $this->db->from($this->table_item);
+        $this->db->where('invoice_has_items.company_id', $id);
+        $this->db->join('items', 'items.id = invoice_has_items.item_id', 'left');
+        $this->db->order_by('title', 'asc');
+        $query  = $this->db->get();
+        $result = $query->row_array();
+        
+        // return fetched data
+        return !empty($result)?$result:false;
     }
 
     public function getAllByCompany($company_id, $type, $filter = array())
