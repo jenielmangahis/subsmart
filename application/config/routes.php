@@ -109,4 +109,4 @@ $route['sms_campaigns'] = 'Sms_Campaigns';
 $route['voicemail_campaigns'] = 'Voicemail_Campaigns';
 $route['email_campaigns'] = 'Email_Campaigns';
 $route['email_automation'] = 'Email_Automation';
-$route['terms_and_condition'] = 'Terms_And_Condition';
+$route['terms-and-condition'] = 'pages/terms_and_condition';
