@@ -1376,6 +1376,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
+                                                <p class="payroll_text">$8/employees</p>
                                                 <p class="payroll_text">+1 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
@@ -1595,6 +1596,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
+                                                <p class="payroll_text">$8/employees</p>
                                                 <p class="payroll_text">+2 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
@@ -1870,6 +1872,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
+                                                <p class="payroll_text">$8/employees</p>
                                                 <p class="payroll_text">+3 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
@@ -2179,6 +2182,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
+                                                <p class="payroll_text">$8/employees</p>
                                                 <p class="payroll_text">+4 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
@@ -2525,6 +2529,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                                 </p>
+                                                <p class="payroll_text">$8/employees</p>
                                                 <p class="payroll_text">+5 License</p>
                                                 <div class="text--payroll">+$50/one-time setup session</div>
                                             </div>
