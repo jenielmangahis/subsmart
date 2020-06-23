@@ -3474,7 +3474,12 @@ label.reg-def {
  }
 
  /* Large Mobile :480px. */
-
+ @media only screen and (max-width: 1480px) {
+   .w-120 {
+     width: 105%;
+     max-width: 105%;
+   }
+ }
  @media only screen and (max-width: 767px) {
    span.about-desc-2 {
      width: 100%;
