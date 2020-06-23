@@ -16,4 +16,9 @@ class Pages extends MY_Controller {
 		$this->page_data['page']->title = 'nSmart - Terms and Condition';	
 		$this->load->view('pages/terms_and_condition', $this->page_data);
 	}
+
+	public function privacy_policy(){
+		$this->page_data['page']->title = 'nSmart - Terms and Condition';	
+		$this->load->view('pages/privacy_policy', $this->page_data);
+	}
 }
