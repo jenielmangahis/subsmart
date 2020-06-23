@@ -48,8 +48,8 @@ $(document).ready(function () {
 
   $("#finishedItemForm").click(function () {
     $("#addItemsForms").hide();
+    $("#itemsTableSubTotal").hide();
     $("#addItemsTableDiv").fadeIn();
-    $("#itemsTableSubTotal").fadeIn();
   });
 
   $("#newJobBtn, #cancelJobBtn").click(function () {
@@ -62,9 +62,15 @@ $(document).ready(function () {
     }
   );
 
-  $("#expiryDateEstimate, #billingDate, #billingExpDate").datetimepicker({
+  $("#expiryDateEstimate, #billingDate").datetimepicker({
     format: "L",
   });
+
+  $("#billingExpDate").datetimepicker({
+    format: "YYYY/MM",
+  });
+
+  $("#cvv").attr("maxlength", 4);
 
   $("#saveJobInvoice").click(function () {
     $.LoadingOverlay("show");
@@ -138,8 +144,41 @@ $(document).ready(function () {
     }
   });
 
-  $(".addInvoiceItem").click(function () {
-    console.log("tset");
+  $(document).on("click", ".addInvoiceItem", function () {
+    console.log($(this).data("id"));
+    var param = {
+      invoice_id: $("#invoiceCreatedDate").val(),
+      item_id: $(this).data("id"),
+      status: $("#invoiceStatus").val(),
+      description: $("#invoiceDescription").val(),
+      totalDue: 0,
+      balance: 0,
+      billingType: "payment plan",
+      jobId: $("#jobId").val(),
+      customerId: $("#customer_id").val(),
+      invoiceNumber: $("#invoiceNumber").val(),
+    };
+    // saveInvoiceItems(param);
+  });
+
+  $("#dialog").dialog({
+    autoOpen: false,
+    show: {
+      effect: "fadeIn",
+      duration: 100,
+    },
+    hide: {
+      effect: "fadeOut",
+      duration: 100,
+    },
+  });
+
+  $("#cardNumber").change(function () {
+    cardNumber($("#cardNumber").val());
+  });
+
+  $("#cvv").change(function () {
+    validateCVV($("#cardNumber").val(), $("#cvv").val());
   });
 });
 
@@ -201,7 +240,9 @@ function getItems(param, table) {
       var result = jQuery.parseJSON(data);
       for (var i = 0; i < result.length; i++) {
         var item = [
-          '<button type="button" id="" class="addInvoiceItem btn btn-primary btn-sm"><span class="fa fa-plus"></span> Add</button>',
+          '<button type="button" data-id="' +
+            result[i].id +
+            '" class="addInvoiceItem btn btn-primary btn-sm"><span class="fa fa-plus"></span> Add</button>',
           result[i].title,
           result[i].vendor_id,
           result[i].price,
@@ -209,11 +250,15 @@ function getItems(param, table) {
         ];
         items.push(item);
       }
-      $("#" + table).DataTable({
-        scrollX: true,
-        destroy: true,
-        data: items,
-      });
+      if (table) {
+      }
+      if (table) {
+        $("#" + table).DataTable({
+          scrollX: true,
+          destroy: true,
+          data: items,
+        });
+      }
     },
   });
 }
@@ -229,4 +274,57 @@ function saveJobInvoice(param) {
     },
   });
   return location;
+}
+
+function saveInvoiceItems(param) {
+  var location = [];
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/saveInvoice",
+    data: param,
+    success: function (data) {
+      window.location.reload();
+    },
+  });
+  return location;
+}
+
+function cardNumber(inputTxt) {
+  var discover = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+  var master = /^(?:5[1-5][0-9]{14})$/;
+  var visa = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+  var amex = /^(?:3[47][0-9]{13})$/;
+
+  if (
+    !inputTxt.match(discover) &&
+    !inputTxt.match(master) &&
+    !inputTxt.match(visa) &&
+    !inputTxt.match(amex)
+  ) {
+    $("#dialog").dialog("open");
+    $("#dialogMsg").text("Not a valid a number!");
+    $("#cardNumber").val("");
+  }
+}
+
+function validateCVV(creditCard, cvv) {
+  var acceptedCreditCards = {
+    visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
+    mastercard: /^5[1-5][0-9]{14}$|^2(?:2(?:2[1-9]|[3-9][0-9])|[3-6][0-9][0-9]|7(?:[01][0-9]|20))[0-9]{12}$/,
+    amex: /^3[47][0-9]{13}$/,
+    discover: /^65[4-9][0-9]{13}|64[4-9][0-9]{13}|6011[0-9]{12}|(622(?:12[6-9]|1[3-9][0-9]|[2-8][0-9][0-9]|9[01][0-9]|92[0-5])[0-9]{10})$/,
+    diners_club: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
+    jcb: /^(?:2131|1800|35[0-9]{3})[0-9]{11}$/,
+  };
+
+  var creditCard = creditCard.replace(/\D/g, "");
+  var cvv = cvv.replace(/\D/g, "");
+  if (acceptedCreditCards.amex.test(creditCard)) {
+    if (/^\d{4}$/.test(cvv)) return true;
+  } else if (/^\d{3}$/.test(cvv)) {
+    return true;
+  }
+  $("#dialog").dialog("open");
+  $("#dialogMsg").text("Not a valid CVV number!");
+  $("#cvv").val("");
 }

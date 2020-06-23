@@ -20,7 +20,7 @@
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Legal</h5></li>
-							<li><a href="<?php echo url('/Terms_And_Condition') ?>">Terms & Condition</a></li>
+							<li><a href="<?php echo url('/terms-and-condition') ?>">Terms & Condition</a></li>
 							<li><a href="#">Privacy Policy</a></li>
 							<li><a href="#">Anti-spam Policy</a></li>
 						</ul>

@@ -7,6 +7,7 @@ class Jobs_model extends MY_Model
     public $table_job_settings = 'job_settings';
     public $table_jobs_has_address = 'jobs_has_address';
     public $table_jobs_has_customers = 'jobs_has_customers';
+    public $table_credit_cards = 'credit_cards';
 
 
     /**
