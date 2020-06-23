@@ -144,7 +144,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <img src="<?php echo $url->assets ?>frontend/images/collect-and-track-payments-online.jpg" class="card-img card-features" alt="card 1">
+                                                <img src="<?php echo $url->assets ?>frontend/images/collect-and-track-payments-online.jpg" class="card-img card-features-home" alt="card 1">
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -160,7 +160,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-2-v2.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-2-v2.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -176,7 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/booking-made-easy.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/booking-made-easy.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -192,7 +192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-4.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-4.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -208,7 +208,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/business-insight.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/business-insight.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -224,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-6-v2.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-6-v2.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -239,7 +239,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/customizable-industry-templates.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/customizable-industry-templates.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/inventory-management-2.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/inventory-management-2.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -269,7 +269,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-1-v2.png" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/card-1-v2.png" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -284,7 +284,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/file-vault.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/file-vault.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -299,7 +299,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/eSign.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/eSign.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
@@ -314,7 +314,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="card mt-5 border-0">
                                         <div class="row no-gutters">
                                             <div class="col-md-5">
-                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/time-and-gps-location.jpg" class="card-img card-features" alt="card 1"></div>
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/time-and-gps-location.jpg" class="card-img card-features-home" alt="card 1"></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="card-body">
