@@ -53,9 +53,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <br/>
                 <span class="about-desc-2">We employ creative tools, code and solid online product/services knowledge to build an powerful solutions for our clients.</span>
                 <br class="clear"/><br/>
-                <div class="startTrialBtn m-auto pt-5">
+                <!-- <div class="startTrialBtn m-auto pt-5">
                   <a href="<?php echo url('registration') ?>" class="about-btn">Meet our Team</a>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

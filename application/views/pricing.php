@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <div class="ctext cp-margin">
               <h3 class="chart-headline">Save 50% or try it free for 30 days<sup>*</sup></h3>
               <div class="chart-headline-sub">
-                  <p><span class="scrolltoqblive scrolltopaysec" style="cursor:pointer; padding-left:10px" aria-expanded="false" role="button" tabindex="0" aria-label="Set up nSmarTrac" data-wa-link="new-pyrl-anchortxt" data-di-id="#new-pyrl-anchortxt">Easily pay your team and have your payroll taxes done for you</span></p>
+                  <p><span class="scrolltoqblive scrolltopaysec" style="cursor:pointer; padding-left:10px" aria-expanded="false" role="button" tabindex="0" aria-label="Set up nSmarTrac" data-wa-link="new-pyrl-anchortxt" data-di-id="#new-pyrl-anchortxt">Easily manage your team with our various plan type to fit your business needs.</span></p>
               </div>
           </div>
       </section>
@@ -1361,6 +1361,225 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
+                                            <div class="price-container-title">Simple Start</div>
+                                            <div class="price-container default-product">
+                                                <div class="pricing-section">
+                                                    <div class="price">
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">24.99</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <div class="red-price-text">
+                                                        <span class="ct">$</span><span class="aw">19.99</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <span class="per red-price-month">/mo</span>
+                                                </div>
+                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                                </p>
+                                                <p class="payroll_text">+1 License</p>
+                                                <div class="text--payroll">+$50/one-time setup session</div>
+                                            </div>
+                                        </div>
+                                        <div class="blue-button default-product">
+                                            <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
+                                        </div>
+                                        <p class="or-text default-product">or</p>
+                                        <div class="tryit-free-link-url default-product">
+                                            <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="eCommerce-product-div">
+                                        <div class="image-price-container">
+                                            <div class="price-container-title">Essential</div>
+                                            <div class="price-container default-product">
+                                                <div class="pricing-section">
+                                                    <div class="price">
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">150</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <div class="red-price-text">
+                                                        <span class="ct">$</span><span class="aw">75</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <span class="per red-price-month">/mo</span>
+                                                </div>
+                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                                </p>
+                                                <p class="payroll_text">+$10/employee/mo</p>
+                                                <div class="text--payroll">+$50/one-time setup session</div>
+                                            </div>
+                                        </div>
+                                        <div class="blue-button default-product">
+                                            <a href="#" data-wa-link="ssbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_elite-diy"><span>Buy now</span></a>
+                                        </div>
+                                        <p class="or-text default-product">or</p>
+                                        <div class="tryit-free-link-url default-product">
+                                            <a href="#" data-wa-link="sstrial_elite-diy" class="ctasecondary" data-di-id="#sstrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="ctext">
+
+                                        <ul data-list="1" class="header-ul">
+                                            <li>
+                                                <span class=""><strong>Management</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1" class="desc-ul">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1" class="header-ul">
+                                            <li>
+                                                <span class=""><strong>Finances</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1" class="desc-ul">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Integrate online payments</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1" class="header-ul">
+                                            <li>
+                                                <span class=""><strong>Insights</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1" class="desc-ul">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Intuitive dashboard</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Monitor expenses and profits</span>
+                                            </li>
+                                        </ul>
+
+                                        <ul data-list="1" class="header-ul">
+                                            <li>
+                                                <span class=""><strong>Accounting</strong></span>
+                                            </li>
+                                        </ul>
+                                        <ul data-list="1" class="desc-ul">
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Manage customers & employees</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Create reminders</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                            </li>
+                                            <li>
+                                                <i class="arrow-down" aria-hidden="true"></i>
+                                                <span class="p3 open-popup">Implement before and after photos</span>
+                                            </li>
+                                        </ul>
+
+
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 2085px;">
+                            <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
+                                <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
+                                    <div class="eCommerce-product-div">
+                                        <div class="image-price-container">
+                                            <div class="price-container-title">Simple Start</div>
+                                            <div class="price-container default-product">
+                                                <div class="pricing-section">
+                                                    <div class="price">
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">25</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <div class="red-price-text">
+                                                        <span class="ct">$</span><span class="aw">12</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <span class="per red-price-month">/mo</span>
+                                                </div>
+                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                                </p>
+                                                <div class="text--payroll">+$50/one-time setup session</div>
+                                            </div>
+                                        </div>
+                                        <div class="blue-button default-product">
+                                            <a href="#" data-wa-link="ssbuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Simple Start" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#ssbuynow-diy"><span>Buy
+                                                    now</span></a>
+                                        </div>
+                                        <div class="tryit-free-link-url default-product">
+                                            <a href="#" data-wa-link="sstrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Simple Start" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sstrial-diy"><span class="free-trial-text">Try it free</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="eCommerce-product-div">
+                                        <div class="image-price-container">
+                                            <div class="price-container-title">Simple Start</div>
+                                            <div class="price-container default-product">
+                                                <div class="pricing-section">
+                                                    <div class="price">
+                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">70</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <div class="red-price-text">
+                                                        <span class="ct">$</span><span class="aw">35</span>
+                                                        <span class="as"></span><span class="ac"></span>
+                                                    </div>
+                                                    <span class="per red-price-month">/mo</span>
+                                                </div>
+                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                                </p>
+                                                <p class="payroll_text">+$4/employee/mo</p>
+                                                <div class="text--payroll">+$50/one-time setup session</div>
+                                            </div>
+                                        </div>
+                                        <div class="blue-button default-product">
+                                            <a href="#" data-wa-link="ssbuynow_core-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_core-diy"><span>Buy now</span></a>
+                                        </div>
+                                        <p class="or-text default-product">or</p>
+                                        <div class="tryit-free-link-url default-product">
+                                            <a href="#" data-wa-link="sstrial_core-diy" class="ctasecondary" data-di-id="#sstrial_core-diy"><span class="free-trial-text">Try it free</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="eCommerce-product-div">
+                                        <div class="image-price-container">
                                             <div class="price-container-title">Essential</div>
                                             <div class="price-container default-product">
                                                 <div class="pricing-section">
@@ -1571,6 +1790,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </section>
                             </div>
                         </div>
+
+
                         <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 2085px;">
                             <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ess">
@@ -2766,7 +2987,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="table-row" id="content_right">
                         <div class="pricing-card-layout-content none pcolumns_w1 col-md-12 col-sm-4 col-sm-offset-4 col-xs-12 pccol_1">
-                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 2300px;">
+                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 2068px;">
                                 <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">

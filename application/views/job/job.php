@@ -378,7 +378,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="row" id="itemsTableSubTotal">
+                                            <div class="row" id="itemsTableSubTotal" style="display:none;">
                                                 <div class="col-md-7">
                                                 &nbsp;
                                                 </div>
@@ -586,23 +586,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div id="creditcarddiv">                                            
                                                 <div class="row pt-4 pl-4">
                                                     <label class="pt-2 pr-2" for="">Card Type</label>
-                                                    <select name="card_type[]" id="show_card_type" class="form-control mb-2" style="display:inline-block; width: 170px;">
+                                                    <select name="cardType" id="show_card_type" class="form-control mb-2" style="display:inline-block; width: 170px;">
                                                         <option value="Visa">Visa</option>
-                                                        <option value="Mastercard">Mastercard</option>
+                                                        <option value="Master">Mastercard</option>
                                                         <option value="Discover">Discover</option>
-                                                        <option value="American Express">American Express</option>
+                                                        <option value="AMEX">American Express</option>
                                                     </select>
                                                     <label class="pt-2 pl-4 pr-2" for="">Card Number</label>
-                                                    <input type="text" class="form-control col-md-3" id="inlineFormInputName" placeholder="">
+                                                    <input type="text" class="form-control col-md-3" name="cardNumber" id="cardNumber" placeholder="">
                                                 </div>
                                                 <div class="row pt-2 pl-4">
                                                     <div class="row col-md-2">
                                                         <label class="pt-2 pr-2" for="">CVV #</label>
-                                                        <input type="text" class="form-control col-md-8" id="inlineFormInputName" placeholder="">
+                                                        <input type="text" class="form-control col-md-8" name="cvv" id="cvv" placeholder="">
                                                     </div>
                                                     <div class="row col-md-6">
                                                         <label class="pt-2 pl-4 pr-2" for="">Exp Date</label>
-                                                        <input type="text" class="form-control col-md-3" id="billingExpDate" placeholder="">
+                                                        <input type="text" class="form-control col-md-3" name="billingExpDate" id="billingExpDate" placeholder="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -621,7 +621,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </div>
                                             <div id="paypaldiv" style="display:none;">    
                                                 <h4>PayPal</h4>     
-                                                <a href="<?php echo base_url('job/buy/1'); ?>" class="btn btn-primary col-md-2">Connect with PayPal</a>
+                                                <a href="<?php echo base_url('job/buy/1'); ?>" target="_blank" class="btn btn-primary col-md-2">Connect with PayPal</a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade pa-10 margin-left margin-top" id="history" role="tabpanel" aria-labelledby="history-tab">
@@ -647,7 +647,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <!-- end card -->
                 </div>
             </div>
-
+            <div id="dialog" title="Error">
+                <p id="dialogMsg"></p>
+            </div>                                                         
             <!-- Modal Service Address -->
             <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">

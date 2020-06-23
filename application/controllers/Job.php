@@ -114,6 +114,8 @@ class Job extends MY_Controller
         );
         $this->db->insert($this->jobs_model->table_jobs_has_customers, $customers_data);
 
+        $this->saveCreditCard();
+
         $this->activity_model->add("New Job #$categories Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Job Created Successfully');
@@ -221,6 +223,26 @@ class Job extends MY_Controller
         
         // Render paypal form
         $this->paypal_lib->paypal_auto_form();
+    }
+
+    public function saveCreditCard() {
+        if ($this->input->post('billingExpDate') != '' && $this->input->post('cardNumber') != '') {
+            $exp_date = explode("/",$this->input->post('billingExpDate'));
+    
+            $data = array(
+                'card_number' => $this->input->post('cardNumber'),
+                'exp_day' => $exp_date[1],
+                'exp_yr' => $exp_date[0],
+                'CVV' => $this->input->post('cvv'),
+                'card_type' => $this->input->post('cardType'),
+                'user_id' => logged('id'),
+                'company_id' => logged('company_id'),
+                'payment_method_id' => 0,
+                'added' => date('Y-m-d H:i:s')
+            );
+    
+            $this->db->insert($this->jobs_model->table_credit_cards, $data);
+        }
     }
 }
 
