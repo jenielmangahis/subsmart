@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-sm-5 pt-1 mt-3 mobile-width-100">
               <div class="contact_container">
                 <h2 class="contact-header">Get in touch</h2>
-                <h2 class="uppercase cn-tn">nSmarTrac Pvt. Ltd.</h2>
+                <h2 class="uppercase cn-tn">nSmarTrac</h2>
                 <br/>
                 <h4 class="cn-address">6866 Pine Forest Road <br/> Florida Headquarters <br/> Pensacola, FL 32526</h4>
                 <br/>
