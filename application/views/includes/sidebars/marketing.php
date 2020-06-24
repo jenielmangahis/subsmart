@@ -31,11 +31,11 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'email_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('email_campaigns'); ?>" title="Email Blast"><span class="fa fa-cube"></span>Email Blast</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'email_automation') ? "active" : "";  ?>"><a href="email_automation" title="Email Automation"><span class="fa fa-cube"></span>Email Automation</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Offers</a></li>
-        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Campaign Templates</a></li>
+        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Campaign Blast</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Customer Finder 360</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>My Leads List</a></li>
 
-    <li class="nav-header">Connectors </li>
+        <?php /*<li class="nav-header">Connectors </li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Connectors</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>NiceJob</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Google Contacts</a></li>
@@ -44,6 +44,6 @@
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Mailchimp</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Active Campaign</a></li>
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>API Integration</a></li>
-        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>API Connectors</a></li>
+        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>API Connectors</a></li>*/ ?>
     </ul>
 </nav>

@@ -1,6 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style type="text/css">
+    .red{
+        background-color: red;
+    }
+</style>
+<?php
+    //dd(logged());die;
+?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
     <!-- page wrapper start -->
@@ -141,49 +149,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         ?>    
                                                     </td>
                                                     <td>
-                                                        <?php if (logged('id') !== $row->id): ?>
+                                                        <?php //if (logged('id') !== $row->id): ?>
                                                             <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                        <?php endif ?>
+                                                        <?php //endif ?>
+                                                    </td>
+                                                    <td class="clocked_in_<?php echo $row->id;?>">
+                                                        <?php //if (logged('id') !== $row->id): ?>
+                                                            <!-- <input type="checkbox" class="js-switch"
+                                                                   onchange="updateClockIn('<?php echo $row->id ?>', '<?php echo $current_time_now; ?>' )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="hidden" name="clocked_in" value="" />
+                                                            <span class="clocked_in_<?php echo $row->id;?>">00:00 </span>
+                                                        <?php //endif ?>
+                                                    </td>
+                                                    <td class="clocked_out_<?php echo $row->id;?>">
+                                                        <?php //if (logged('id') !== $row->id): ?>
+                                                            <!-- <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="hidden" name="clocked_out" value="" />
+                                                            <span class="clocked_out_<?php echo $row->id;?>">00:00 </span>
+                                                        <?php //endif ?>
+                                                    </td>
+                                                    <td class="lunched_in_<?php echo $row->id;?>">
+                                                        <?php //if (logged('id') !== $row->id): ?>
+                                                            <!-- <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="hidden" name="lunched_in" value="" />
+                                                            <span class="lunched_in_<?php echo $row->id;?>">00:00 </span>
+                                                        <?php //endif ?>
+                                                    </td>
+                                                    <td class="lunched_out_<?php echo $row->id;?>">
+                                                        <?php //if (logged('id') !== $row->id): ?>
+                                                            <!-- <input type="checkbox" class="js-switch"
+                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="hidden" name="lunched_out" value="" />
+                                                            <span class="lunched_out_<?php echo $row->id;?>">00:00 </span>
+                                                        <?php //endif ?>
                                                     </td>
                                                     <td>
-                                                        <?php if (logged('id') !== $row->id): ?>
-                                                            <input type="checkbox" class="js-switch"
-                                                                   onchange="updateClockIn('<?php echo $row->id ?>', '<?php echo $current_time_now; ?>' )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                            
-                                                            <span>00:00PM </span>
-                                                        <?php endif ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php if (logged('id') !== $row->id): ?>
-                                                            <input type="checkbox" class="js-switch"
-                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                            <span>00:00PM </span>
-                                                        <?php endif ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php if (logged('id') !== $row->id): ?>
-                                                            <input type="checkbox" class="js-switch"
-                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                            <span>00:00PM </span>
-                                                        <?php endif ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php if (logged('id') !== $row->id): ?>
-                                                            <input type="checkbox" class="js-switch"
-                                                                   onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                            <span>00:00PM </span>
-                                                        <?php endif ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php if (logged('id') !== $row->id): ?>
+                                                        <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php //echo $row->id ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' ?> /> -->
                                                             <input type="text" name="comments" placeholder="Comments">
-                                                        <?php endif ?>
+                                                        <?php //endif ?>
                                                     </td>
                                                     <td id="">
-                                                        
+                                                        <!-- Clock In-->
+                                                        <a id="clockin_btn" style="display:;" href="#" class="btn btn-sm btn-primary clockin_btn" title="Clock In" data-toggle="tooltip">
+                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In
+                                                        </a>
+                                                        <!-- Lunch In-->
+                                                        <a id="lunchin_btn" style="display: none; color: green;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
+                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
+                                                        </a>
+                                                        <!-- Lunch Out-->
+                                                        <a id="lunchout_btn" style="display: none; color: red;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
+                                                        </a>
+                                                        <!-- Clock Out-->
+                                                        <a id="clockout_btn" style="display: none; color: red;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
+                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
+                                                        </a>
 
                                                         <?php if (hasPermissions('users_edit')): ?>
                                                             <form name="clockin_form" method="post">
@@ -356,6 +382,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             //console.log('API row values : ', table.row(this).data());
             alert('asd');
         });*/
+
+        $('.clockin_btn').on('click', function(e){
+            var logged_in_id = "<?php echo logged('id');?>";
+            
+            $(this).hide();
+            $('.lunchin_btn').show();
+
+            // put indicator to show employee has clocked in
+            $('td.clocked_out_'+logged_in_id).removeClass('red');
+            $('td.clocked_in_'+logged_in_id).addClass('red');
+            console.log(logged_in_id);
+        });
+
+        $('.lunchin_btn').on('click', function(e){
+            var logged_in_id = "<?php echo logged('id');?>";
+            $(this).hide();
+            $('.lunchout_btn').show();
+
+            // put indicator to show employee has clocked in
+            $('td.clocked_in_'+logged_in_id).removeClass('red');
+            $('td.lunched_in_'+logged_in_id).addClass('red');
+            console.log(logged_in_id);
+        });
+
+        $('.lunchout_btn').on('click', function(e){
+            var logged_in_id = "<?php echo logged('id');?>";
+            $(this).hide();
+            $('.clockout_btn').show();
+
+            // put indicator to show employee has clocked in
+            $('td.lunched_in_'+logged_in_id).removeClass('red');
+            $('td.lunched_out_'+logged_in_id).addClass('red');
+            console.log(logged_in_id);
+        });
+
+        $('.clockout_btn').on('click', function(e){
+            var logged_in_id = "<?php echo logged('id');?>";
+            $(this).hide();
+            $('.clockin_btn').show();
+
+            // put indicator to show employee has clocked in
+            $('td.lunched_out_'+logged_in_id).removeClass('red');
+            $('td.clocked_out_'+logged_in_id).addClass('red');
+            console.log(logged_in_id);
+        });
 
         function updateClockIn(){
 

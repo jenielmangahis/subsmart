@@ -22,16 +22,19 @@
 </style>
 <nav class="navbar-side d-none d-md-block">
     <ul class="nav"><span class="nav-close">      	<svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%"><path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path></svg>        	</span>
-        <li class="nav-header">Employees</li>
+        <li class="nav-header">Business Tools</li>
         <?php $uri = $_SERVER['REQUEST_URI']; //print_r($uri);?>
-        <li class="submenus <?php if( $uri == '/users' ){ echo 'active';}?>"><a href="<?php echo base_url('users') ?>" title="Employees"><span
-                        class="fa fa-user"></span>Employees</a></li>
-        <?php //dd(logged()); ?>
-        <?php if( logged('role') == '3' ): ?>
-        <li class="submenus <?php if( strpos($uri,'timesheet') ){ echo 'active';}?>"><a href="<?php echo base_url('users/timesheet') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
-        <?php else: ?>
-            <li class="submenus <?php if( strpos($uri,'timesheet') ){ echo 'active';}?>"><a href="<?php echo base_url('users/timesheet_user') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
-        <?php endif; ?>
-        <li class="submenus <?php if( strpos($uri,'tracklocation') ){ echo 'active';}?>"><a href="<?php echo base_url('users/tracklocation') ?>" title="Track Location"><span class="fa fa-map-pin"></span>Track Location</a></li>
+        <li class="submenus <?php if( $uri == '/esignmain' ){ echo 'active';}?>">
+            <a href="<?php echo base_url('esignmain') ?>" title="Employees"><span class="fa fa-user"></span>eSign</a>
+        </li>
+        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
+            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>Affiliates</a>
+        </li>
+        <li class="submenus <?php if( $uri == '/inventory' ){ echo 'active';}?>">
+            <a href="<?php echo base_url('inventory') ?>" title="Employees"><span class="fa fa-user"></span>Inventory</a>
+        </li>
+        <li class="submenus <?php if( $uri == '/builder' ){ echo 'active';}?>">
+            <a href="<?php echo base_url('builder') ?>" title="Employees"><span class="fa fa-user"></span>Form Builder</a>
+        </li>
     </ul>
 </nav>
