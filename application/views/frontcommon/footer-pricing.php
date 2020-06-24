@@ -21,8 +21,8 @@
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Legal</h5></li>
 							<li><a href="<?php echo url('/terms-and-condition') ?>">Terms & Condition</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Anti-spam Policy</a></li>
+							<li><a href="<?php echo url('/privacy-policy') ?>">Privacy Policy</a></li>
+							<li><a href="<?php echo url('/anti-spam-policy') ?>">Anti-spam Policy</a></li>							
 						</ul>
 					</div>
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
@@ -46,7 +46,7 @@
 						<img src="<?php echo $url->assets ?>frontend/images/nsmar.jpg" alt="">
 					</div>
 					<div class="col-sm-8 float-left">
-						<span class="font-kanit footer-copyright">All rifghts reserved &copy; 2020 nSmartTrac Corporation Pensacola, FL, USA
+						<span class="font-kanit footer-copyright">All rifghts reserved &copy; <?php echo date('Y'); ?> nSmartTrac Corporation Pensacola, FL, USA
 					</div>
 				</div>
 				<!-- <div class="col-md-4">

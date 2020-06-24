@@ -3,10 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
 
-<section class="contact-spacing">
+<section class="contact-spacing privacy-policy">
     <div class="container spacing-ft">
         <div class="row container-contact">
-            <div class="col-sm-10 pt-1 mt-3 mobile-width-100">
+            <div class="col-sm-12 pt-1 mt-3 mobile-width-100">
               <div class="contact_container">
                 <h2 class="contact-header">Privacy Policy</h2>
                 
