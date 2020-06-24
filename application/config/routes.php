@@ -110,3 +110,4 @@ $route['voicemail_campaigns'] = 'Voicemail_Campaigns';
 $route['email_campaigns'] = 'Email_Campaigns';
 $route['email_automation'] = 'Email_Automation';
 $route['terms-and-condition'] = 'pages/terms_and_condition';
+$route['privacy-policy'] = 'pages/privacy_policy';

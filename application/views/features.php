@@ -275,7 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
-                    <img class="img-responsive w-110" alt="booking plugin" src="<?php echo $url->assets ?>frontend/images/booking.png">
+                    <img class="img-responsive w-110" alt="online store" src="<?php echo $url->assets ?>frontend/images/feature_online_store.png">
                 </div>
                 <div class="col-sm-6 systemInfo pl-5 pt-5 mt-3">
                     <h3>

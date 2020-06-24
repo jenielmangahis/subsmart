@@ -118,10 +118,10 @@ $user_id = getLoggedUserID();
                         <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span></a>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/banking') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Banking
                         </a>
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/expenses') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Expenses
                         </a>
                         <!-- <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
@@ -139,19 +139,19 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Expense Vendor
                         </a> -->
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/receivables') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Receivables
                         </a>
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/workers') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Workers
                         </a>
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/taxes') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Taxes
                         </a>
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/chart_of_accounts') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Chart of Accounts
                         </a>
-                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/accounting/my_accountant') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> My Accountant
                         </a>
                     </div>
@@ -193,12 +193,12 @@ $user_id = getLoggedUserID();
                         <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php echo base_url('/company') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>My Tools</b></a>
+                        <a class="dropdown-item" href="<?php echo base_url('/tools/business_tools') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>Business Tools</b></a>
                         <a class="dropdown-item" href="<?php echo base_url('/esignmain') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
                         <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
                         <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
                         <a class="dropdown-item" href="<?php echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Form Builder</a>
-                        <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i> API Connectors</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/tools/api_connectors') ?>"><i class="mdi mdi-wallet m-r-5"></i> API Connectors</a>
                         <a class="dropdown-item" href="<?php //echo base_url('/builder') ?>"><i class="mdi mdi-wallet m-r-5"></i><b>Mobile Tools</b></a>
                         
                     </div>
