@@ -28,8 +28,12 @@
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
 						<ul class="footer-list">
 							<li><h5 class="font-kanit text-white weight-600">Connect</h5></li>
-							<li><a href="#">***Social Media icons***</a></li>
+							<!-- <li><a href="#">***Social Media icons***</a></li> -->
 						</ul>
+						<div class="footer-social text-left">
+							<a href=""><i class="fa fa-facebook"></i></a>
+							<a href=""><i class="fa fa-twitter"></i></a>
+						</div>						
 					</div>
 					<!-- <div class="footer-widget about-widget">
 						<img src="<?php echo $url->assets ?>frontend/images/nsmar.jpg" alt="">

@@ -5,6 +5,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .red{
         background-color: red;
     }
+    input[type='radio']:after {
+        width: 25px;
+        height: 24px;
+        border-radius: 15px;
+        top: -9px;
+        left: -6px;
+        position: relative;
+        background-color: #d1d3d1;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
+
+    input[type='radio']:checked:after {
+        width: 25px;
+        height: 24px;
+        border-radius: 15px;
+        top: -9px;
+        left: -6px;
+        position: relative;
+        background-color: red;
+        content: '';
+        display: inline-block;
+        visibility: visible;
+        border: 2px solid white;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -155,34 +182,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
                                                         <?php //endif ?>
                                                     </td>
-                                                    <td class="clocked_in_<?php echo $row->id;?>">
+                                                    <td class="clocked_in_<?php echo $row->id;?>" style="text-align: center;">
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateClockIn('<?php echo $row->id ?>', '<?php echo $current_time_now; ?>' )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="radio" name="clocked_in_<?php echo $row->id;?>" /><br />
                                                             <input type="hidden" name="clocked_in" value="" />
                                                             <span class="clocked_in_<?php echo $row->id;?>">00:00 </span>
                                                         <?php //endif ?>
                                                     </td>
-                                                    <td class="clocked_out_<?php echo $row->id;?>">
+                                                    <td class="clocked_out_<?php echo $row->id;?>" style="text-align: center;">
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="radio" name="clocked_out_<?php echo $row->id;?>" /><br />
                                                             <input type="hidden" name="clocked_out" value="" />
                                                             <span class="clocked_out_<?php echo $row->id;?>">00:00 </span>
                                                         <?php //endif ?>
                                                     </td>
-                                                    <td class="lunched_in_<?php echo $row->id;?>">
+                                                    <td class="lunched_in_<?php echo $row->id;?>" style="text-align: center;">
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="radio" name="lunched_in_<?php echo $row->id;?>" /><br />
                                                             <input type="hidden" name="lunched_in" value="" />
                                                             <span class="lunched_in_<?php echo $row->id;?>">00:00 </span>
                                                         <?php //endif ?>
                                                     </td>
-                                                    <td class="lunched_out_<?php echo $row->id;?>">
+                                                    <td class="lunched_out_<?php echo $row->id;?>" style="text-align: center;">
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                            <input type="radio" name="lunched_out_<?php echo $row->id;?>" /><br />
                                                             <input type="hidden" name="lunched_out" value="" />
                                                             <span class="lunched_out_<?php echo $row->id;?>">00:00 </span>
                                                         <?php //endif ?>
@@ -385,13 +416,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         $('.clockin_btn').on('click', function(e){
             var logged_in_id = "<?php echo logged('id');?>";
-            
+
             $(this).hide();
             $('.lunchin_btn').show();
 
             // put indicator to show employee has clocked in
-            $('td.clocked_out_'+logged_in_id).removeClass('red');
-            $('td.clocked_in_'+logged_in_id).addClass('red');
+            /*$('td.clocked_out_'+logged_in_id).removeClass('red');
+            $('td.clocked_in_'+logged_in_id).addClass('red');*/
+            $('input[name=clocked_out_'+logged_in_id+']').prop("checked", false);
+            $('input[name=clocked_in_'+logged_in_id+']').prop("checked", true);
             console.log(logged_in_id);
         });
 
@@ -401,8 +434,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('.lunchout_btn').show();
 
             // put indicator to show employee has clocked in
-            $('td.clocked_in_'+logged_in_id).removeClass('red');
-            $('td.lunched_in_'+logged_in_id).addClass('red');
+            /*$('td.clocked_in_'+logged_in_id).removeClass('red');
+            $('td.lunched_in_'+logged_in_id).addClass('red');*/
+            $('input[name=clocked_in_'+logged_in_id+']').prop("checked", false);
+            $('input[name=lunched_in_'+logged_in_id+']').prop("checked", true);
             console.log(logged_in_id);
         });
 
@@ -412,8 +447,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('.clockout_btn').show();
 
             // put indicator to show employee has clocked in
-            $('td.lunched_in_'+logged_in_id).removeClass('red');
-            $('td.lunched_out_'+logged_in_id).addClass('red');
+            /*$('td.lunched_in_'+logged_in_id).removeClass('red');
+            $('td.lunched_out_'+logged_in_id).addClass('red');*/
+            $('input[name=lunched_in_'+logged_in_id+']').prop("checked", false);
+            $('input[name=lunched_out_'+logged_in_id+']').prop("checked", true);
             console.log(logged_in_id);
         });
 
@@ -423,8 +460,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('.clockin_btn').show();
 
             // put indicator to show employee has clocked in
-            $('td.lunched_out_'+logged_in_id).removeClass('red');
-            $('td.clocked_out_'+logged_in_id).addClass('red');
+            /*$('td.lunched_out_'+logged_in_id).removeClass('red');
+            $('td.clocked_out_'+logged_in_id).addClass('red');*/
+            $('input[name=lunched_out_'+logged_in_id+']').prop("checked", false);
+            $('input[name=clocked_out_'+logged_in_id+']').prop("checked", true);
             console.log(logged_in_id);
         });
 
