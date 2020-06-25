@@ -165,7 +165,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </p>
                 </div>
                 <div class="col-sm-6 pl-3">
-                    <img class="img-responsive" alt="schedule" src="<?php echo $url->assets ?>frontend/images/work-management.png">
+                    <img class="img-responsive" alt="schedule" src="<?php echo $url->assets ?>frontend/images/automate-appointment-scheduling.jpg">
                 </div>
             </div>
         </div>
