@@ -119,7 +119,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="ctext">
               <ul data-list="1" class="header-ul">
                   <li>
-                      <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more">add</span><strong>Finances</strong></span>
+                      <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more">add</span><strong>Finances</strong></span>
                   </li>
               </ul>
               <ul data-list="1" class="desc-ul hidden">
