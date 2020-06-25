@@ -2790,6 +2790,11 @@ a.about-btn {
     height: 610px;
   }
 
+  .dyk-find {
+    background: url(../images/office-find-pro.jpg) no-repeat center bottom;
+    height: 610px;
+  }
+
   .group-section {
     margin-top: -90px;
     padding-bottom: 160px;
@@ -3028,9 +3033,131 @@ div.testimonial-card img {
   height: 69px;
   margin: 0 auto;
 }
- /* ----------------
- Responsive
-  ---------------------*/
+/* ----------------
+Find Pro
+ ---------------------*/
+div.white-card {
+  background: white;
+  position: relative;
+  top: 13vw;
+  width: 85%;
+  margin: 0 auto;
+  padding: 35px;
+  border-radius: 12px;
+}
+section.find-pro-b {
+  background: #d0e1ec;
+  padding: 90px 30px;
+}
+span.text-find-white {
+  color: white;
+  text-align: center;
+  display: block;
+  font-weight: 600;
+  font-size: 23px;
+}
+div.card-accordion-find-default {
+  width: 650px;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  margin-top: 20px;
+}
+span.text-find-black {
+  color: black;
+  font-size: 18px;
+  font-weight: 700;
+}
+div.card-accordion-find {
+  width: 650px;
+  display: block;
+  margin: 0 auto;
+}
+div.accord-header-find-purple {
+  background: #8d5cb9;
+  padding: 20px;
+}
+div.accord-header-find-orange {
+  background: #f3941f;
+  padding: 20px;
+}
+div.accord-header-find-green {
+  background: #398e7a;
+  padding: 20px;
+}
+a.accord-quote {
+  font-size: 19px;
+  display: block;
+  margin: 0 auto;
+  color: white;
+  text-decoration: underline;
+  text-align: center;
+}
+span.icon-arrow-accord {
+  float: right;
+  position: relative;
+  top: 7px;
+  font-size: 22px;
+}
+span.icon-fp-accord {
+  position: relative;
+  top: 6px;
+  margin-right: 10px;
+  font-size: 25px;
+}
+div.accord-header-find-white {
+  background: white;
+  padding: 20px;
+  border-bottom: 1px solid #d0e0ec;
+}
+span.ft-purple {
+  color: #694a85;
+  font-weight: 600;
+  font-size: 30px;
+  width: 90%;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+input.no-border {
+  border: 0px !important;
+  position: relative;
+  top: 2px;
+  left: 8px;
+}
+div.find-container {
+  width: 350px;
+  height: 46px;
+  overflow: hidden;
+  border: 1px solid #bdbbbb;
+  padding: 2px 10px 0px 7px;
+  border-radius: 33px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+button.button-purple {
+  float: right;
+  background: #8d5cb9;
+  border: 0px;
+  color: white;
+  padding: 9px;
+  position: relative;
+  left: 14px;
+  bottom: 4px;
+  height: 46px;
+  padding-right: 20px;
+  padding-left: 14px;
+}
+span.material-icons.icon-find {
+  position: relative;
+  top: 9px;
+  left: 7px;
+  color: #868686;
+}
+/* ----------------
+Responsive
+---------------------*/
 
  @media (min-width: 1200px) {
    .container {
@@ -3480,6 +3607,18 @@ label.reg-def {
      max-width: 105%;
    }
  }
+ @media only screen and (max-width: 1320px) {
+    span.ft-purple {
+      color: #694a85;
+      font-weight: 600;
+      font-size: 26px;
+      width: 99%;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+  }
  @media only screen and (max-width: 767px) {
    span.about-desc-2 {
      width: 100%;
@@ -3804,7 +3943,7 @@ font-size: 12px;
   color: #8b45bf;
 }
 
-/* 
+/*
  * For pages terms, privacy & anti spam
 */
 .terms-condition .cn-tn {
