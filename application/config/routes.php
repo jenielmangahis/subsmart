@@ -111,3 +111,4 @@ $route['email_campaigns'] = 'Email_Campaigns';
 $route['email_automation'] = 'Email_Automation';
 $route['terms-and-condition'] = 'pages/terms_and_condition';
 $route['privacy-policy'] = 'pages/privacy_policy';
+$route['anti-spam-policy'] = 'pages/anti_spam_policy';

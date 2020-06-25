@@ -1468,7 +1468,7 @@ img.card-features-home {
       display: block;
       width: 262px;
       margin-left: 20px !important;
-      height: 540px !important;
+      height: 570px !important;
       margin-top: 68px;
     }
     .contact-spacing {
@@ -3091,7 +3091,7 @@ div.testimonial-card img {
    display: block;
    width: 262px;
    margin-left: 120px;
-   height: 540px;
+   height: 570px;
     background: url(../images/phone-vec.png) center / cover no-repeat;
 }
  .contact-social {
@@ -3167,7 +3167,7 @@ div.testimonial-card img {
    padding-left: 10px;
    padding-right: 10px;
    padding-bottom: 15px;
-   height: 400px;
+   height: 420px;
  }
  .mb-15 {
    margin-bottom: 15px;
@@ -3576,7 +3576,7 @@ label.reg-def {
    }
    .header-top p {
      line-height: 1.5;
-     font-size: 15px;
+     font-size: 11px;
    }
    .site-navbar {
      text-align: center;
@@ -3745,7 +3745,7 @@ font-size: 12px;
    .slicknav_btn {
     position: absolute;
     right: 10px;
-    top: 105px;
+    top: 76px;
     font-size: 12px;
     z-index: 999999;
   }
@@ -3802,4 +3802,31 @@ font-size: 12px;
   -webkit-transform: translateY(-8px);
   transform: translateY(-8px);
   color: #8b45bf;
+}
+
+/* 
+ * For pages terms, privacy & anti spam
+*/
+.terms-condition .cn-tn {
+  font-weight: bold !important;
+}
+
+.terms-condition p {
+  text-align: justify !important;
+}
+
+.privacy-policy .cn-tn {
+  font-weight: bold !important;
+}
+
+.privacy-policy p {
+  text-align: justify !important;
+}
+
+.anti-spam-policy .cn-tn {
+  font-weight: bold !important;
+}
+
+.anti-spam-policy p {
+  text-align: justify !important;
 }
