@@ -2791,7 +2791,9 @@ a.about-btn {
   }
 
   .dyk-find {
-    background: url(../images/office-find-pro.jpg) no-repeat center bottom;
+    /* background: url(../images/office-find-pro.jpg) no-repeat center bottom; */
+    background: url(../images/contractor-bg.jpg);
+    background-size: cover;
     height: 610px;
   }
 
@@ -3037,14 +3039,16 @@ div.testimonial-card img {
 Find Pro
  ---------------------*/
 div.white-card {
-  background: white;
+  background: #ffffffd6;
   position: relative;
   top: 13vw;
   width: 85%;
   margin: 0 auto;
   padding: 35px;
   border-radius: 12px;
+  box-shadow: 1px 4px 13px 0px rgba(0, 0, 0, 0.2);
 }
+
 section.find-pro-b {
   background: #d0e1ec;
   padding: 90px 30px;
@@ -3109,11 +3113,50 @@ div.accord-header-find-white {
   background: white;
   padding: 20px;
   border-bottom: 1px solid #d0e0ec;
+  cursor: pointer;
+}
+span.icon-arrow-down-accord {
+  float: right;
+  position: relative;
+  top: 0px;
+  font-size: 38px;
+}
+.display-hidden {
+  display: none;
+}
+span.icon-arrow-up-accord {
+  float: right;
+  position: relative;
+  top: 0px;
+  font-size: 38px;
+}
+.container-ft-footer {
+  margin-top: 65px;
+}
+.ft-accord-show {
+  height: auto;
+}
+.ft-accord-hide {
+  height: 73px;
+  overflow-y: hidden;
+}
+.fb-desc {
+  padding: 24px 0px 0px 0px;
 }
 span.ft-purple {
   color: #694a85;
   font-weight: 600;
   font-size: 30px;
+  width: 90%;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+span.ft-black {
+  color: black;
+  font-weight: 600;
+  font-size: 28px;
   width: 90%;
   display: block;
   text-align: center;
@@ -3135,6 +3178,7 @@ div.find-container {
   border-radius: 33px;
   margin: 0 auto;
   overflow-x: hidden;
+  background: white;
 }
 button.button-purple {
   float: right;

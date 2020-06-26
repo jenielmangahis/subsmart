@@ -26,25 +26,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <span class="text-find-white">Book now for top nSmart Projects</span>
         <a href="#" class="accord-quote">Get free quotes</a>
       </div>
-      <div class="accord-header-find-white">
+      <div class="accord-header-find-white ft-accord-hide">
         <span  data-height-value="150" class="material-icons icon-fp-accord">house</span>
         <span class="text-find-black">Book now for top nSmart Projects</span>
-        <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+        <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+        <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+        <div class="fb-desc">
+          <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+        </div>
       </div>
-      <div class="accord-header-find-white">
+      <div class="accord-header-find-white ft-accord-hide">
         <span  data-height-value="150" class="material-icons icon-fp-accord">switch_camera</span>
         <span class="text-find-black">Lorem Ipsum Dolor</span>
-        <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+        <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+        <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+        <div class="fb-desc">
+          <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+        </div>
       </div>
-      <div class="accord-header-find-white">
+      <div class="accord-header-find-white ft-accord-hide">
         <span  data-height-value="150" class="material-icons icon-fp-accord">directions</span>
         <span class="text-find-black">Lorem Ipsum Dolor</span>
-        <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+        <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+        <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+        <div class="fb-desc">
+          <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+        </div>
       </div>
-      <div class="accord-header-find-white">
+      <div class="accord-header-find-white ft-accord-hide">
         <span  data-height-value="150" class="material-icons icon-fp-accord">360</span>
         <span class="text-find-black">Lorem Ipsum Dolor</span>
-        <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+        <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+        <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+        <div class="fb-desc">
+          <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+        </div>
       </div>
     <div>
   </div>
@@ -54,25 +70,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <span class="text-find-white">Book now for top nSmart Projects</span>
       <a href="#" class="accord-quote">Get free quotes</a>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">house</span>
       <span class="text-find-black">Book now for top nSmart Projects</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">switch_camera</span>
       <span class="text-find-black">Lorem Ipsum Dolor</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">directions</span>
       <span class="text-find-black">Lorem Ipsum Dolor</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">360</span>
       <span class="text-find-black">Lorem Ipsum Dolor</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
   </div>
   <br style="clear:both;"/>
@@ -81,25 +113,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <span class="text-find-white">Book now for top nSmart Projects</span>
       <a href="#" class="accord-quote">Get free quotes</a>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">house</span>
       <span class="text-find-black">Book now for top nSmart Projects</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">switch_camera</span>
       <span class="text-find-black">Lorem Ipsum Dolor</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">directions</span>
       <span class="text-find-black">Lorem Ipsum Dolor</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
     </div>
-    <div class="accord-header-find-white">
+    <div class="accord-header-find-white ft-accord-hide">
       <span  data-height-value="150" class="material-icons icon-fp-accord">360</span>
       <span class="text-find-black">Lorem Ipsum Dolor</span>
-      <span  data-height-value="150" class="material-icons icon-arrow-accord">arrow_forward_ios</span>
+      <span class="material-icons icon-arrow-up-accord display-hidden">keyboard_arrow_up</span>
+      <span class="material-icons icon-arrow-down-accord">keyboard_arrow_down</span>
+      <div class="fb-desc">
+        <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="container-ft-footer">
+      <div>
+        <span class="ft-black">Have different project in mind?</span>
+      </div>
+      <div class="find-container">
+        <span  data-height-value="150" class="material-icons icon-find ">search</span>
+        <input type="text" placeholder="What service you need?" class="no-border"/>
+        <button class="button-purple">Find Pro</button>
+      </div>
     </div>
   </div>
 </section>
