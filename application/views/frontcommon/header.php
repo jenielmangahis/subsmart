@@ -83,11 +83,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								</ul>
 								<ul class="over-write-menu" style="margin-top:8px;">
 									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
-									<li class=""><a href="<?php echo url('/about') ?>">ABOUT</a></li>
+									<li class=""><a href="<?php echo url('/about') ?>">ABOUT US</a></li>
 									<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
-									<li><a href="<?php echo url('/find-pros') ?>">FIND</a></li>
+									<li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li>
 									<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
                   <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
                   <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>

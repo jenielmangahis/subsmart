@@ -325,6 +325,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="card mt-5 border-0">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-5">
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/weather-forecast.jpeg" class="card-img card-features-home" alt="card 1"></div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><a href="#">Weather Forecast</a></h5>
+                                                    <p class="card-text"> Be prepared with the most accurate 9-day forecast with highs, lows, chance of precipitation before you schedule.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
