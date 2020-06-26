@@ -486,7 +486,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-md-5">
                     <div class="systemImg">
-                        <img src="<?php echo $url->assets ?>frontend/images/work-management.png" class="img-fluid" alt="trial image">
+                        <img src="<?php echo $url->assets ?>frontend/images/my-invoice.png" class="img-fluid" alt="my invoice image">
                     </div>
                 </div>
 

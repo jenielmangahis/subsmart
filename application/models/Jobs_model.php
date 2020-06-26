@@ -38,6 +38,21 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
+    public function getJobType()
+    {
+        $comp_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from('job_settings');
+        $this->db->order_by('job_settings_id', 'desc');
+        $this->db->where('company_id', $comp_id);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCustomers()
     {
         $comp_id = logged('company_id');
@@ -101,6 +116,14 @@ class Jobs_model extends MY_Model
         $this->db->delete('jobs', array("jobs_id" => $id));
         $this->db->delete('jobs_has_address', array("jobs_id" => $id));
         $this->db->delete('jobs_has_customers', array("jobs_id" => $id));
+    }
+
+        /**
+     * @return mixed
+     */
+    public function deleteJobType($id)
+    {
+        $this->db->delete('job_settings', array("job_settings_id" => $id));
     }
 }
 

@@ -92,6 +92,9 @@ $user_id = getLoggedUserID();
                         <?php //endif ?>
                         <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i><b> Invoices</b></a>
                         <?php //if (hasPermissions('items_list')): ?>
+                            <a class="dropdown-item" href="<?php echo url('job/settings') ?>"><i class="fa fa-wrench"></i><b> Settings</b></a>
+                        <?php //endif ?>
+                        <?php //if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a>
                         <?php //endif ?>
                         <?php //if (hasPermissions('plan_list')): ?>

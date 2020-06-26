@@ -26,4 +26,9 @@ class Pages extends MY_Controller {
 		$this->page_data['page']->title = 'nSmartTrac - Anti Spam Policy';	
 		$this->load->view('pages/anti_spam_policy', $this->page_data);
 	}
+
+	public function find_pros(){
+		$this->page_data['page']->title = 'nSmartTrac - Find Pros';	
+		$this->load->view('pages/find_pros', $this->page_data);
+	}
 }

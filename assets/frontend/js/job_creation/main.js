@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $(
-    "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable"
+    "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable, #jobTypeTable"
   ).DataTable({
     scrollX: true,
   });
@@ -53,6 +53,10 @@ $(document).ready(function () {
   });
 
   $("#newJobBtn, #cancelJobBtn").click(function () {
+    $.LoadingOverlay("show");
+  });
+
+  $(".deleteJobTypeBtn").click(function () {
     $.LoadingOverlay("show");
   });
 
@@ -145,7 +149,6 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".addInvoiceItem", function () {
-    console.log($(this).data("id"));
     var param = {
       invoice_id: $("#invoiceCreatedDate").val(),
       item_id: $(this).data("id"),
@@ -179,6 +182,18 @@ $(document).ready(function () {
 
   $("#cvv").change(function () {
     validateCVV($("#cardNumber").val(), $("#cvv").val());
+  });
+
+  $("#jobTypeAddCloseBtn").click(function () {
+    var param = {
+      settingType: $("#settingType").val(),
+    };
+    saveJobType(param);
+  });
+
+  $(".editJobTypeBtn").click(function () {
+    $("#newJobTypeModal").modal("show");
+    $("#settingType").val($(this).data("jobtype"));
   });
 });
 
@@ -249,8 +264,6 @@ function getItems(param, table) {
           "",
         ];
         items.push(item);
-      }
-      if (table) {
       }
       if (table) {
         $("#" + table).DataTable({
@@ -327,4 +340,36 @@ function validateCVV(creditCard, cvv) {
   $("#dialog").dialog("open");
   $("#dialogMsg").text("Not a valid CVV number!");
   $("#cvv").val("");
+}
+
+function saveJobType(param) {
+  var items = [];
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/saveJobType",
+    data: param,
+    success: function (data) {
+      var result = jQuery.parseJSON(data);
+      for (var i = 0; i < result.length; i++) {
+        var item = [
+          result[i].setting_type,
+          '<button type="button" data-id="' +
+            result[i].id +
+            '" class="editJobTypeBtn btn btn-warning btn-sm"><span class="fa fa-plus"></span> Edit</button> ' +
+            '<button type="button" data-id="' +
+            result[i].id +
+            '" class="deleteJobTypeBtn btn btn-danger btn-sm"><span class="fa fa-plus"></span> Delete</button>',
+        ];
+        items.push(item);
+      }
+
+      $("#newJobTypeModal").modal("toggle");
+      $("#jobTypeTable").DataTable({
+        scrollX: true,
+        destroy: true,
+        data: items,
+      });
+    },
+  });
+  return location;
 }
