@@ -142,7 +142,15 @@
    font-size: 36px;
    margin-bottom: 50px;
  }
-
+ div.tradingview-widget-container > iframe {
+   width: 90% !important;
+   margin: 0 auto;
+   display: block;
+   margin-top: 20px;
+ }
+ .tradingview-widget-container {
+    z-index: 1 !important;
+ }
  /* buttons */
 
  .site-btn {
