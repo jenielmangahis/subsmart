@@ -58,8 +58,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
 
 						<div class="col-md-6 float-left">
-							<div class="input-group z-100">
-								<input autocomplete="off" type="text" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Business Name">
+							<div class="input-group z-100">.
+								<input id="searchTextField" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" />
 							</div>
 						</div>
 

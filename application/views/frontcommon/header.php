@@ -29,7 +29,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
-
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script>
+    <script>
+        function initialize() {
+          var input = document.getElementById('searchTextField');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();                
+                //$("#searchTextField").val(place.name); Use this if return business name only
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -83,12 +94,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								</ul>
 								<ul class="over-write-menu" style="margin-top:8px;">
 									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
-									<li class=""><a href="<?php echo url('/about') ?>">ABOUT US</a></li>
+									<li class=""><a href="<?php echo url('/about') ?>">ABOUT</a></li>
 									<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
-									<li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li>
-									<li class=""><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
+									<li><a href="<?php echo url('/find-pros') ?>">FIND</a></li>
+									<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
                   <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
                   <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
 								</ul>
