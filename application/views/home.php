@@ -5,7 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
 
-
+<style type="text/css">
+.pac-container{
+    z-index: 99999 !important;
+}
+</style>
 <!-- Hero section  -->
     <section class="hero-section">
         <div class="hero-slider home-slider owl-carousel">
@@ -80,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="text" class="form-control stop" id="inputPhoneNumber" placeholder="Phone Number">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control stop" id="inputBusinessName" placeholder="Business Name">
+                                        <input id="searchTextField" type="text" class="form-control stop searchTextField" placeholder="Business Name" autocomplete="on" runat="server" /> 
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">

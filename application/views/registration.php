@@ -58,8 +58,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
 
 						<div class="col-md-6 float-left">
-							<div class="input-group z-100">
-								<input autocomplete="off" type="text" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Business Name">
+							<div class="input-group z-100">.
+								<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" />
+							</div>
+						</div>
+
+						<div class="col-md-6 float-left">
+							<div class="input-group z-100">.
+								<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" />
 							</div>
 						</div>
 
@@ -103,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
 							</div> -->
 						</div>
-
+						<br /><br /><br />
 						<div class="col-sm-12">
 							<a href="<?php echo url('/home/signup') ?>" class="btn btn-green-2">
 								 Sign up
