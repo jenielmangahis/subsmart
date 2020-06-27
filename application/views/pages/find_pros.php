@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('frontcommon/header'); ?>
 
 <!-- Headline Section -->
-<section class="dyk-find">
+<section class="dyk-find desktop-only">
     <div class="container">
       <div class="white-card">
         <div>
@@ -18,6 +18,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
     </div>
 </section>
+<section class="dyk-find mobile-only">
+    <div class="container">
+      <div class="white-card">
+        <div>
+          <span class="ft-purple">Tom, we thought you'd be interested in these projects!</span>
+        </div>
+        <div class="find-container">
+          <span  data-height-value="150" class="material-icons icon-find ">search</span>
+          <input type="text" placeholder="What service you need?" class="no-border"/>
+        </div>
+        <div>
+          <button class="button-purple">Find Pro</button>
+        </div>
+      </div>
+    </div>
+</section>
+
 
 <section class="find-pro-b">
   <div class="container">
@@ -150,7 +167,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
     </div>
   </div>
-  <div class="container">
+  <div class="container desktop-only">
     <div class="container-ft-footer">
       <div>
         <span class="ft-black">Have different project in mind?</span>
@@ -158,6 +175,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="find-container">
         <span  data-height-value="150" class="material-icons icon-find ">search</span>
         <input type="text" placeholder="What service you need?" class="no-border"/>
+        <button class="button-purple">Find Pro</button>
+      </div>
+    </div>
+  </div>
+  <div class="container mobile-only">
+    <div class="container-ft-footer">
+      <div>
+        <span class="ft-black">Have different project in mind?</span>
+      </div>
+      <div class="find-container">
+        <span  data-height-value="150" class="material-icons icon-find ">search</span>
+        <input type="text" placeholder="What service you need?" class="no-border"/>
+      </div>
+      <div>
         <button class="button-purple">Find Pro</button>
       </div>
     </div>
