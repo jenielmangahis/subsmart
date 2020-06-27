@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php include viewPath('frontcommon/header'); ?>
+<?php include viewPath('frontcommon/header-home'); ?>
 
 
 
