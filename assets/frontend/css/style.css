@@ -546,7 +546,7 @@
 
  .site-nav-menu ul li a {
   display: block;
-  padding: 0 26px;
+  /*padding: 0 26px;*/
   margin-right: 0px;
   font-size: 12px;
   font-weight: 600;
