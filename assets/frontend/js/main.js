@@ -35,7 +35,23 @@ $(window).on('load', function() {
 
 	$('.slicknav_nav').append('<li class="search-switch-warp"><button class="search-switch"><i class="fa fa-search"></i></button></li>');
 
-
+	/*------------------
+		find pro model
+	--------------------*/
+	$('.accord-header-find-white').on('click', function() {
+		if ($(this).hasClass('ft-accord-hide')) {
+			$(this).removeClass('ft-accord-hide');
+			$(this).addClass('ft-accord-show');
+			$(this).find('span.icon-arrow-up-accord').removeClass('display-hidden');
+			$(this).find('span.icon-arrow-down-accord').addClass('display-hidden');
+		}
+		else if ($(this).hasClass('ft-accord-show')) {
+			$(this).removeClass('ft-accord-show');
+			$(this).addClass('ft-accord-hide');
+			$(this).find('span.icon-arrow-up-accord').addClass('display-hidden');
+			$(this).find('span.icon-arrow-down-accord').removeClass('display-hidden');
+		}
+	});
 	/*------------------
 		Search model
 	--------------------*/

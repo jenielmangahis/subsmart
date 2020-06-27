@@ -126,7 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-sm-12 pt-5 mt-3 text-center">
                 <h1 class="about-title-2">What's different when you work with us?</h1>
                 <br/>
-                <span class="about-desc-3">When you engage our digital agency for your personal experience, you get access to a team including, strategist, designers, developers, quality project managers. All working together together for a common end goal:  save you time and make you more money. Having been in the field industry for over 25 years, we know what it takes to turn prospects into long- term business partners.</span>
+                <span class="about-desc-3">When you engage our digital agency for your personal experience, you get access to a team including, strategist, designers, developers, quality project managers. All working together together for a common end goal:  save you time and make you more money. Having been in the field industry for over 25 years, we know what it takes to turn prospects into long-term business partners.</span>
             </div>
         </div>
     </div>

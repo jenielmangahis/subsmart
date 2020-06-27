@@ -69,6 +69,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<img width="300" src="<?php echo $url->assets ?>frontend/images/logo.png" alt="">
 						</a>
 
+							<!-- TradingView Widget BEGIN -->
+							<!-- <div class="tradingview-widget-container">
+							  <div class="tradingview-widget-container__widget"></div>
+							  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+							  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+							  {
+							  "symbols": [
+							    {
+							      "proName": "FOREXCOM:SPXUSD",
+							      "title": "S&P 500"
+							    },
+							    {
+							      "proName": "FOREXCOM:NSXUSD",
+							      "title": "Nasdaq 100"
+							    },
+							    {
+							      "proName": "FX_IDC:EURUSD",
+							      "title": "EUR/USD"
+							    },
+							    {
+							      "proName": "BITSTAMP:BTCUSD",
+							      "title": "BTC/USD"
+							    },
+							    {
+							      "proName": "BITSTAMP:ETHUSD",
+							      "title": "ETH/USD"
+							    }
+							  ],
+							  "colorTheme": "light",
+							  "isTransparent": false,
+							  "displayMode": "adaptive",
+							  "locale": "en"
+							}
+							  </script>
+							</div> -->
+							<!-- TradingView Widget END -->
+
 						<div style="margin-left: auto; text-align: right;">
 							<!-- <nav class="site-nav-menu1 ml-auto d-none d-md-block">
 								<ul class="">
@@ -89,11 +126,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
 									<li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li>
 									<li class=""><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
-                  <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
-                  <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
+					                <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
+					                <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
 								</ul>
 							</nav>
 						</div>
+					</div>
+					<div class="col-12 d-flex align-items-center site-logo-holder">
+						<!-- TradingView Widget BEGIN -->
+						<div class="tradingview-widget-container">
+							<div class="tradingview-widget-container__widget"></div>
+							<div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+							<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+							  {
+							  "symbols": [
+							    {
+							      "proName": "FOREXCOM:SPXUSD",
+							      "title": "S&P 500"
+							    },
+							    {
+							      "proName": "FOREXCOM:NSXUSD",
+							      "title": "Nasdaq 100"
+							    },
+							    {
+							      "proName": "FX_IDC:EURUSD",
+							      "title": "EUR/USD"
+							    },
+							    {
+							      "proName": "BITSTAMP:BTCUSD",
+							      "title": "BTC/USD"
+							    },
+							    {
+							      "proName": "BITSTAMP:ETHUSD",
+							      "title": "ETH/USD"
+							    }
+							  ],
+								  "colorTheme": "light",
+								  "isTransparent": false,
+								  "displayMode": "adaptive",
+								  "locale": "en"
+							  }
+							</script>
+						</div>
+						<!-- TradingView Widget END -->
 					</div>
 				</div>
 			</div>

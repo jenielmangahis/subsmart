@@ -1,7 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php include viewPath('frontcommon/header'); ?>
+<?php include viewPath('frontcommon/header-home'); ?>
+
+
+
 
 <!-- Hero section  -->
     <section class="hero-section">
@@ -325,6 +328,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="card mt-5 border-0">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-5">
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/weather-forecast.jpeg" class="card-img card-features-home" alt="card 1"></div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><a href="#">Weather Forecast</a></h5>
+                                                    <p class="card-text"> Be prepared with the most accurate 9-day forecast with highs, lows, chance of precipitation before you schedule.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -496,6 +514,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="startTrialBtn my-5 text-center">
                         <!-- <button class="btn btn-green yColor rounded-xl"> See MORE FEATURES </button>  -->
                         <a class="btn btn-green yColor rounded-xl" href="<?php echo base_url('features') ?>"> See MORE FEATURES </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="startTrialBtn my-5 text-center">
+                        <!-- Stock Ticker  -->
+                        <div id="sptw-container-af13d58b1eedbca664dfad1379c421a8">
+                          <div style="padding:2px 0px 0px 5px; font-size:11px; font-family: Arial,Helvetica,Sans-serif;"><a style="font-size:11px; color:#1065D3; text-decoration:none;" rel="nofollow" href="http://www.stockpricetoday.com/" title="www.stockpricetoday.com">www.stockpricetoday.com</a></div>
+                          <script type="text/javascript" src="http://www.stockpricetoday.com/wp-includes/ext/services.php?action=widget-stocks-scroller&func=js&width=140&symbols=RF%2CLOW%2CHD%2CAMZN%2CHON%2CGE%2CAAPL%2CWMT%2CDIS%2CFB&fontColor=1C1C1C&oddRowColor=FFFFFF&evenRowColor=F6F6F6&borderColor=ECEDE8&wid=af13d58b1eedbca664dfad1379c421a8"></script>
+                        </div>
                     </div>
                 </div>
             </div>
