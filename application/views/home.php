@@ -524,7 +524,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="startTrialBtn my-5 text-center">
+                    <div class="startTrialBtn my-5 text-center widget-footer-container">
                         <!-- TradingView Widget BEGIN -->
                         <div class="tradingview-widget-container">
                           <div class="tradingview-widget-container__widget"></div>

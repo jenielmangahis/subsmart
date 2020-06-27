@@ -4105,3 +4105,7 @@ font-size: 12px;
 .anti-spam-policy p {
   text-align: justify !important;
 }
+
+.widget-footer-container .tradingview-widget-container {
+  margin: auto !important;
+}
