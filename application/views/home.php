@@ -526,9 +526,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-sm-12">
                     <div class="startTrialBtn my-5 text-center widget-footer-container">
                         <!-- TradingView Widget BEGIN -->
+
                         <div class="tradingview-widget-container">
                           <div class="tradingview-widget-container__widget"></div>
                           <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Market Data</span></a> by TradingView</div>
+                          
                           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
                           {
                           "colorTheme": "light",
@@ -657,6 +659,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           ]
                         }
                           </script>
+                        </div>
+                        <!-- TradingView Widget END -->
+
+                        <!-- TradingView Widget BEGIN -->
+                         <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;padding-left: 57px;text-align: left !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+                           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                              {
+                              "symbols": [
+                                {
+                                  "proName": "FOREXCOM:SPXUSD",
+                                  "title": "S&P 500"
+                                },
+                                {
+                                  "proName": "FOREXCOM:NSXUSD",
+                                  "title": "Nasdaq 100"
+                                },
+                                {
+                                  "proName": "FX_IDC:EURUSD",
+                                  "title": "EUR/USD"
+                                },
+                                {
+                                  "proName": "BITSTAMP:BTCUSD",
+                                  "title": "BTC/USD"
+                                },
+                                {
+                                  "proName": "BITSTAMP:ETHUSD",
+                                  "title": "ETH/USD"
+                                }
+                              ],
+                                  "colorTheme": "light",
+                                  "isTransparent": false,
+                                  "displayMode": "adaptive",
+                                  "locale": "en"
+                              }
+                            </script>
                         </div>
                         <!-- TradingView Widget END -->
                     </div>
