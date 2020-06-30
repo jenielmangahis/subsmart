@@ -142,7 +142,15 @@
    font-size: 36px;
    margin-bottom: 50px;
  }
-
+ div.tradingview-widget-container > iframe {
+   width: 90% !important;
+   margin: 0 auto;
+   display: block;
+   margin-top: 20px;
+ }
+ .tradingview-widget-container {
+    z-index: 1 !important;
+ }
  /* buttons */
 
  .site-btn {
@@ -1562,6 +1570,90 @@ img.card-features-home {
 }
 
 @media(max-width:767px) {
+    div.card-accordion-find {
+      width: 100% !important;
+    }
+    a.accord-quote {
+      font-size: 15px !important;
+      display: block;
+      margin: 0 auto;
+      color: white;
+      text-decoration: underline;
+      text-align: center;
+    }
+    span.ft-purple {
+      font-size: 22px !important;
+    }
+    span.ft-black {
+      color: black;
+      font-weight: 600;
+      font-size: 24px !important;
+      width: 90%;
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+    span.icon-arrow-down-accord, span.icon-arrow-up-accord {
+      float: right;
+      position: relative;
+      top: 10px !important;
+      font-size: 26px !important;
+    }
+    .fb-desc {
+      font-size: 14px !important;
+    }
+    .dyk-find {
+      height: 450px !important;
+    }
+    span.text-find-white {
+      color: white;
+      text-align: center;
+      display: block;
+      font-weight: 600;
+      font-size: 17px !important;
+    }
+    span.text-find-black {
+      color: black;
+      font-size: 12px !important;
+      font-weight: 700;
+    }
+    section.find-pro-b {
+      background: #d0e1ec;
+      padding: 90px 10px !important;
+    }
+    button.button-purple {
+      float: none !important;
+      background: #8d5cb9;
+      border: 0px;
+      color: white;
+      padding: 9px;
+      position: relative;
+      left: 0px !important;
+      bottom: 4px !important;
+      height: 46px;
+      padding-right: 20px !important;
+      padding-left: 20px !important;
+      margin: 0 auto;
+      margin-top: 20px;
+      display: block;
+    }
+    div.white-card {
+      background: #ffffffd6;
+      position: relative;
+      top: 13vw;
+      width: 100%;
+      margin: 0 auto;
+      padding: 21px;
+      border-radius: 12px;
+      box-shadow: 1px 4px 13px 0px rgba(0, 0, 0, 0.2);
+    }
+    div.card-accordion-find-default {
+      width: 100% !important;
+    }
+    div.find-container {
+      width: 100% !important;
+    }
     .container-contact {
         width: 100% !important;
         margin: 0px !important;
@@ -4012,4 +4104,8 @@ font-size: 12px;
 
 .anti-spam-policy p {
   text-align: justify !important;
+}
+
+.widget-footer-container .tradingview-widget-container {
+  margin: auto !important;
 }

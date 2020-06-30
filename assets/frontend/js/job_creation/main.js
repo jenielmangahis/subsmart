@@ -150,18 +150,13 @@ $(document).ready(function () {
 
   $(document).on("click", ".addInvoiceItem", function () {
     var param = {
-      invoice_id: $("#invoiceCreatedDate").val(),
+      job_id: $("#jobId").val(),
       item_id: $(this).data("id"),
-      status: $("#invoiceStatus").val(),
-      description: $("#invoiceDescription").val(),
-      totalDue: 0,
-      balance: 0,
-      billingType: "payment plan",
-      jobId: $("#jobId").val(),
-      customerId: $("#customer_id").val(),
-      invoiceNumber: $("#invoiceNumber").val(),
+      qty: 1,
+      total_value: $(this).data("cost"),
     };
-    // saveInvoiceItems(param);
+    $.LoadingOverlay("show");
+    saveInvoiceItems(param);
   });
 
   $("#dialog").dialog({
@@ -174,6 +169,27 @@ $(document).ready(function () {
       effect: "fadeOut",
       duration: 100,
     },
+  });
+  $(document).on("click", ".deductItemQty", function () {
+    if (parseInt($(this).data("value")) > 1) {
+      var param = {
+        id: $(this).data("id"),
+        qty: $(this).data("value"),
+        type: "minus",
+        job_id: $("#jobId").val(),
+      };
+      updateItemQty(param);
+    }
+  });
+
+  $(document).on("click", ".addItemQty", function () {
+    var param = {
+      id: $(this).data("id"),
+      qty: $(this).data("value"),
+      type: "add",
+      job_id: $("#jobId").val(),
+    };
+    updateItemQty(param);
   });
 
   $("#cardNumber").change(function () {
@@ -257,6 +273,8 @@ function getItems(param, table) {
         var item = [
           '<button type="button" data-id="' +
             result[i].id +
+            '" data-cost="' +
+            result[i].price +
             '" class="addInvoiceItem btn btn-primary btn-sm"><span class="fa fa-plus"></span> Add</button>',
           result[i].title,
           result[i].vendor_id,
@@ -290,16 +308,37 @@ function saveJobInvoice(param) {
 }
 
 function saveInvoiceItems(param) {
-  var location = [];
+  var items = [];
   $.ajax({
     type: "POST",
-    url: base_url + "job/saveInvoice",
+    url: base_url + "job/saveInvoiceItems",
     data: param,
     success: function (data) {
-      window.location.reload();
+      $.LoadingOverlay("hide");
+      $("#addItemsTableDiv").fadeIn();
+      $("#addItemsForms").hide();
+      var result = jQuery.parseJSON(data);
+      for (var i = 0; i < result.length; i++) {
+        var item = [
+          result[i].title,
+          result[i].type,
+          "",
+          result[i].qty,
+          "<a>Set Location</a>",
+          result[i].price,
+          result[i].discount,
+          "",
+          "",
+        ];
+        items.push(item);
+      }
+      $("#addItemsTable").DataTable({
+        scrollX: true,
+        destroy: true,
+        data: items,
+      });
     },
   });
-  return location;
 }
 
 function cardNumber(inputTxt) {
@@ -371,5 +410,75 @@ function saveJobType(param) {
       });
     },
   });
-  return location;
+}
+
+function updateItemQty(param) {
+  var items = [];
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/updateJobItemQty",
+    data: param,
+    success: function (data) {
+      var result = jQuery.parseJSON(data);
+      var subTotal = 0;
+      for (var i = 0; i < result.length; i++) {
+        subTotal += parseFloat(result[i].price) * parseInt(result[i].qty);
+        var item = [
+          "<span class='pl-2'>" + result[i].title + "</span>",
+          "<span class='pl-2'>" + result[i].type + "</span>",
+          "",
+          "<span style='cursor:pointer;' data-id='" +
+            result[i].ihi_id +
+            "' data-value='" +
+            result[i].qty +
+            "' class='fa fa-lg fa-minus-circle pl-2 pr-3 deductItemQty'></span>" +
+            result[i].qty +
+            "<span style='cursor:pointer;' data-id='" +
+            result[i].ihi_id +
+            "' data-value='" +
+            result[i].qty +
+            "' class='fa fa-lg fa-plus-circle pl-3 addItemQty'></span>",
+          "<a href='javascript:void(0)' class='pl-2' data-toggle='modal' data-target='#modalItemLocation'>Set Location</a>",
+          "<span class='pl-3'>" +
+            new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+              parseFloat(result[i].price)
+            ) +
+            "</span>",
+          "<span class='pl-3'>" +
+            new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+              parseFloat(result[i].discount)
+            ) +
+            "</span>",
+          "<span class='pl-3'>" +
+            new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+              parseFloat(0)
+            ) +
+            "</span>",
+          "<span class='pl-3'>" +
+            new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+              parseFloat(result[i].price) * parseInt(result[i].qty)
+            ) +
+            "</span>",
+        ];
+        items.push(item);
+      }
+      $("#invoice_sub_total").text(
+        "$" +
+          new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+            subTotal
+          )
+      );
+      $("#invoice_grand_total").text(
+        "$" +
+          new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+            subTotal
+          )
+      );
+      $("#addItemsTable").DataTable({
+        scrollX: true,
+        destroy: true,
+        data: items,
+      });
+    },
+  });
 }

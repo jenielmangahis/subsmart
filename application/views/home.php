@@ -5,7 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
 
-
+<style type="text/css">
+.pac-container{
+    z-index: 99999 !important;
+}
+</style>
 <!-- Hero section  -->
     <section class="hero-section">
         <div class="hero-slider home-slider owl-carousel">
@@ -80,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="text" class="form-control stop" id="inputPhoneNumber" placeholder="Phone Number">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control stop" id="inputBusinessName" placeholder="Business Name">
+                                        <input id="searchTextField" type="text" class="form-control stop searchTextField" placeholder="Business Name" autocomplete="on" runat="server" /> 
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
@@ -520,12 +524,141 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="startTrialBtn my-5 text-center">
-                        <!-- Stock Ticker  -->
-                        <div id="sptw-container-af13d58b1eedbca664dfad1379c421a8">
-                          <div style="padding:2px 0px 0px 5px; font-size:11px; font-family: Arial,Helvetica,Sans-serif;"><a style="font-size:11px; color:#1065D3; text-decoration:none;" rel="nofollow" href="http://www.stockpricetoday.com/" title="www.stockpricetoday.com">www.stockpricetoday.com</a></div>
-                          <script type="text/javascript" src="http://www.stockpricetoday.com/wp-includes/ext/services.php?action=widget-stocks-scroller&func=js&width=140&symbols=RF%2CLOW%2CHD%2CAMZN%2CHON%2CGE%2CAAPL%2CWMT%2CDIS%2CFB&fontColor=1C1C1C&oddRowColor=FFFFFF&evenRowColor=F6F6F6&borderColor=ECEDE8&wid=af13d58b1eedbca664dfad1379c421a8"></script>
+                    <div class="startTrialBtn my-5 text-center widget-footer-container">
+                        <!-- TradingView Widget BEGIN -->
+                        <div class="tradingview-widget-container">
+                          <div class="tradingview-widget-container__widget"></div>
+                          <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Market Data</span></a> by TradingView</div>
+                          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                          {
+                          "colorTheme": "light",
+                          "dateRange": "12m",
+                          "showChart": false,
+                          "locale": "en",
+                          "largeChartUrl": "",
+                          "isTransparent": false,
+                          "width": "400",
+                          "height": "465",
+                          "tabs": [
+                            {
+                              "title": "Indices",
+                              "symbols": [
+                                {
+                                  "s": "FOREXCOM:SPXUSD",
+                                  "d": "S&P 500"
+                                },
+                                {
+                                  "s": "FOREXCOM:NSXUSD",
+                                  "d": "Nasdaq 100"
+                                },
+                                {
+                                  "s": "FOREXCOM:DJI",
+                                  "d": "Dow 30"
+                                },
+                                {
+                                  "s": "INDEX:NKY",
+                                  "d": "Nikkei 225"
+                                },
+                                {
+                                  "s": "INDEX:DEU30",
+                                  "d": "DAX Index"
+                                },
+                                {
+                                  "s": "FOREXCOM:UKXGBP",
+                                  "d": "FTSE 100"
+                                }
+                              ],
+                              "originalTitle": "Indices"
+                            },
+                            {
+                              "title": "Commodities",
+                              "symbols": [
+                                {
+                                  "s": "CME_MINI:ES1!",
+                                  "d": "E-Mini S&P"
+                                },
+                                {
+                                  "s": "CME:6E1!",
+                                  "d": "Euro"
+                                },
+                                {
+                                  "s": "COMEX:GC1!",
+                                  "d": "Gold"
+                                },
+                                {
+                                  "s": "NYMEX:CL1!",
+                                  "d": "Crude Oil"
+                                },
+                                {
+                                  "s": "NYMEX:NG1!",
+                                  "d": "Natural Gas"
+                                },
+                                {
+                                  "s": "CBOT:ZC1!",
+                                  "d": "Corn"
+                                }
+                              ],
+                              "originalTitle": "Commodities"
+                            },
+                            {
+                              "title": "Bonds",
+                              "symbols": [
+                                {
+                                  "s": "CME:GE1!",
+                                  "d": "Eurodollar"
+                                },
+                                {
+                                  "s": "CBOT:ZB1!",
+                                  "d": "T-Bond"
+                                },
+                                {
+                                  "s": "CBOT:UB1!",
+                                  "d": "Ultra T-Bond"
+                                },
+                                {
+                                  "s": "EUREX:FGBL1!",
+                                  "d": "Euro Bund"
+                                },
+                                {
+                                  "s": "EUREX:FBTP1!",
+                                  "d": "Euro BTP"
+                                },
+                                {
+                                  "s": "EUREX:FGBM1!",
+                                  "d": "Euro BOBL"
+                                }
+                              ],
+                              "originalTitle": "Bonds"
+                            },
+                            {
+                              "title": "Forex",
+                              "symbols": [
+                                {
+                                  "s": "FX:EURUSD"
+                                },
+                                {
+                                  "s": "FX:GBPUSD"
+                                },
+                                {
+                                  "s": "FX:USDJPY"
+                                },
+                                {
+                                  "s": "FX:USDCHF"
+                                },
+                                {
+                                  "s": "FX:AUDUSD"
+                                },
+                                {
+                                  "s": "FX:USDCAD"
+                                }
+                              ],
+                              "originalTitle": "Forex"
+                            }
+                          ]
+                        }
+                          </script>
                         </div>
+                        <!-- TradingView Widget END -->
                     </div>
                 </div>
             </div>

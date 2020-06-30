@@ -16,7 +16,7 @@ class Logout extends CI_Controller {
 	public function index()
 	{
 
-		$this->activity_model->add("User: ".logged('name').' Logged Out');
+		$this->activity_model->add("User: ".getLoggedFullName(logged('id')).' Logged Out'); 
 
 		$this->users_model->logout();
 

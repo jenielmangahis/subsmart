@@ -43,8 +43,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="box-body">
 
           <div class="form-group">
-            <label for="formClient-Name">Company Name</label>
-            <input type="text" class="form-control" name="name" id="formClient-Name" required placeholder="Enter Name" onkeyup="$('#formClient-Username').val(createUsername(this.value))" autofocus />
+            <label for="formClient-Name">First Name</label>
+            <input type="text" class="form-control" name="FName" id="formClient-FName" required placeholder="Enter First Name" onkeyup="$('#formClient-Username').val(createUsername(this.value))" autofocus />
+          </div>
+
+          <div class="form-group">
+            <label for="formClient-Name">Last Name</label>
+            <input type="text" class="form-control" name="LName" id="formClient-LName" required placeholder="Enter Last Name" onkeyup="$('#formClient-Username').val(createUsername(this.value))" autofocus />
           </div>
 
           <div class="form-group">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 29, 2020 at 11:47 AM
+-- Generation Time: Jun 23, 2020 at 01:04 PM
 -- Server version: 5.6.41-84.1
 -- PHP Version: 7.3.6
 
@@ -28,7 +28,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `activity_logs`
 --
 
-DROP TABLE IF EXISTS `activity_logs`;
 CREATE TABLE `activity_logs` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -217,50 +216,7 @@ INSERT INTO `activity_logs` (`id`, `title`, `user`, `ip_address`, `created_at`, 
 (172, 'User:  Logged Out', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (173, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (174, 'john  (admin) Logged in', 2, '203.189.118.93', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(175, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(176, 'Bart (bsimpson) Logged in', 3, '110.54.250.35', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(177, 'User:  Logged Out', 3, '110.54.250.35', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(178, 'john  (admin) Logged in', 2, '110.54.250.35', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(179, 'john  (admin) Logged in', 2, '110.54.250.35', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(180, 'john  (admin) Logged in', 2, '203.189.118.192', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(181, 'User:  Logged Out', 2, '203.189.118.192', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(182, 'john  (admin) Logged in', 2, '203.189.118.192', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(183, 'john  (admin) Logged in', 2, '110.54.250.35', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(184, 'john  (admin) Logged in', 2, '203.189.118.204', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(185, 'john  (admin) Logged in', 2, '203.189.118.8', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(186, 'john  (admin) Logged in', 2, '203.189.116.218', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(187, 'User:  Logged Out', 2, '203.189.116.218', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(188, 'john  (admin) Logged in', 2, '203.189.116.218', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(189, 'john  (admin) Logged in', 2, '112.198.73.171', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(190, 'john  (admin) Logged in', 2, '112.198.73.171', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(191, 'john  (admin) Logged in', 2, '112.198.73.171', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(192, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(193, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(194, 'john  (admin) Logged in', 2, '111.125.119.204', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(195, 'User #1 Deleted by User:', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(196, 'User #1 Deleted by User:', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(197, 'Tommy (tommy) Logged in', 5, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(198, 'User:  Logged Out', 5, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(199, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(200, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(201, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(202, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(203, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(204, 'New User $8 Created by User:john ', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(205, 'john  (admin) Logged in', 2, '110.54.248.84', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(206, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(207, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(208, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(209, 'User:  Logged Out', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(210, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(211, 'User:  Logged Out', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(212, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(213, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(214, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(215, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(216, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(217, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(218, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(175, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -268,7 +224,6 @@ INSERT INTO `activity_logs` (`id`, `title`, `user`, `ip_address`, `created_at`, 
 -- Table structure for table `address`
 --
 
-DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `address_id` int(11) NOT NULL,
   `address1` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -286,7 +241,6 @@ CREATE TABLE `address` (
 -- Table structure for table `appointments`
 --
 
-DROP TABLE IF EXISTS `appointments`;
 CREATE TABLE `appointments` (
   `appointments_id` int(11) NOT NULL,
   `job_id` int(11) DEFAULT NULL,
@@ -301,7 +255,6 @@ CREATE TABLE `appointments` (
 -- Table structure for table `banking_info`
 --
 
-DROP TABLE IF EXISTS `banking_info`;
 CREATE TABLE `banking_info` (
   `banking_info_id` int(11) NOT NULL,
   `bank_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -320,7 +273,6 @@ CREATE TABLE `banking_info` (
 -- Table structure for table `business_profile`
 --
 
-DROP TABLE IF EXISTS `business_profile`;
 CREATE TABLE `business_profile` (
   `id` int(11) NOT NULL,
   `b_name` varchar(255) NOT NULL,
@@ -355,7 +307,6 @@ INSERT INTO `business_profile` (`id`, `b_name`, `b_email`, `website`, `is_emerge
 -- Table structure for table `comments`
 --
 
-DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `comment_id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -372,7 +323,6 @@ CREATE TABLE `comments` (
 -- Table structure for table `companies_has_modules`
 --
 
-DROP TABLE IF EXISTS `companies_has_modules`;
 CREATE TABLE `companies_has_modules` (
   `company_id` int(11) NOT NULL,
   `modules_id` int(11) NOT NULL
@@ -384,7 +334,6 @@ CREATE TABLE `companies_has_modules` (
 -- Table structure for table `contracts`
 --
 
-DROP TABLE IF EXISTS `contracts`;
 CREATE TABLE `contracts` (
   `contracts_id` int(11) NOT NULL,
   `contract_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -399,7 +348,6 @@ CREATE TABLE `contracts` (
 -- Table structure for table `credit_cards`
 --
 
-DROP TABLE IF EXISTS `credit_cards`;
 CREATE TABLE `credit_cards` (
   `credit_cards_id` int(11) NOT NULL,
   `card_number` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'encrypt',
@@ -420,7 +368,6 @@ CREATE TABLE `credit_cards` (
 -- Table structure for table `customers`
 --
 
-DROP TABLE IF EXISTS `customers`;
 CREATE TABLE `customers` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -437,7 +384,6 @@ CREATE TABLE `customers` (
 -- Table structure for table `customers_has_customer_settings`
 --
 
-DROP TABLE IF EXISTS `customers_has_customer_settings`;
 CREATE TABLE `customers_has_customer_settings` (
   `customer_id` int(11) NOT NULL,
   `customer_settings_id` int(11) NOT NULL,
@@ -450,7 +396,6 @@ CREATE TABLE `customers_has_customer_settings` (
 -- Table structure for table `customer_settings`
 --
 
-DROP TABLE IF EXISTS `customer_settings`;
 CREATE TABLE `customer_settings` (
   `customer_settings_id` int(11) NOT NULL,
   `setting_type` varchar(75) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'contact_type, source, customer_group',
@@ -466,7 +411,6 @@ CREATE TABLE `customer_settings` (
 -- Table structure for table `custom_forms`
 --
 
-DROP TABLE IF EXISTS `custom_forms`;
 CREATE TABLE `custom_forms` (
   `forms_id` int(11) NOT NULL,
   `form_title` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -489,11 +433,9 @@ INSERT INTO `custom_forms` (`forms_id`, `form_title`, `created`, `created_by`, `
 -- Table structure for table `employees`
 --
 
-DROP TABLE IF EXISTS `employees`;
 CREATE TABLE `employees` (
   `employees_id` int(11) NOT NULL,
   `role_id` int(11) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
   `hire_date` date DEFAULT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `dob` date DEFAULT NULL,
@@ -507,12 +449,12 @@ CREATE TABLE `employees` (
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`employees_id`, `role_id`, `status`, `hire_date`, `title`, `dob`, `payrate`, `pay_type`, `user_id`, `company_id`) VALUES
-(1, 3, 1, '2020-04-09', 'Cool Company Owner', '1985-02-10', 55000.00, 'Salary', 2, 1),
-(2, 4, 1, '2020-05-07', 'cool company manager', '1958-05-14', 45000.00, 'Salary', 3, 1),
-(3, 7, 1, '2020-05-19', 'Cool Tech Guy', '1990-01-23', 15.37, 'hourly', 4, 1),
-(4, 1, 1, '2020-05-01', 'Owner', '1950-08-06', NULL, NULL, 5, 2),
-(5, 1, 1, '2020-03-01', 'Project Manager', '1986-02-11', 20.00, 'hourly', 6, 2);
+INSERT INTO `employees` (`employees_id`, `role_id`, `hire_date`, `title`, `dob`, `payrate`, `pay_type`, `user_id`, `company_id`) VALUES
+(1, 3, '2020-04-09', 'Cool Company Owner', '1985-02-10', 55000.00, 'Salary', 2, 1),
+(2, 4, '2020-05-07', 'cool company manager', '1958-05-14', 45000.00, 'Salary', 3, 1),
+(3, 7, '2020-05-19', 'Cool Tech Guy', '1990-01-23', 15.37, 'hourly', 4, 1),
+(4, 1, '2020-05-01', 'Owner', '1950-08-06', NULL, NULL, 5, 2),
+(5, 1, '2020-03-01', 'Project Manager', '1986-02-11', 20.00, 'hourly', 6, 2);
 
 -- --------------------------------------------------------
 
@@ -520,32 +462,28 @@ INSERT INTO `employees` (`employees_id`, `role_id`, `status`, `hire_date`, `titl
 -- Table structure for table `estimates`
 --
 
-DROP TABLE IF EXISTS `estimates`;
 CREATE TABLE `estimates` (
   `id` int(11) NOT NULL,
-  `employee_id` int(11) DEFAULT NULL,
-  `job_id` int(11) DEFAULT NULL,
-  `description` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `company_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `job_location` varchar(255) DEFAULT NULL,
+  `job_name` varchar(255) DEFAULT NULL,
   `estimate_date` date DEFAULT NULL,
   `expiry_date` date DEFAULT NULL,
-  `deposit_request` decimal(10,2) DEFAULT NULL,
+  `purchase_order_number` int(11) DEFAULT NULL,
+  `plan_id` int(11) DEFAULT NULL,
+  `estimate_items` text,
+  `estimate_eqpt_cost` text CHARACTER SET utf8mb4,
+  `deposit_request` mediumtext,
+  `customer_message` text,
+  `terms_conditions` text,
+  `attachments` text,
+  `instructions` text,
+  `template_id` int(11) DEFAULT NULL,
   `status` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `estimate_value` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `estimates_items`
---
-
-DROP TABLE IF EXISTS `estimates_items`;
-CREATE TABLE `estimates_items` (
-  `estimates_id` int(11) NOT NULL,
-  `items_id` int(11) NOT NULL,
-  `qty` int(11) DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -554,7 +492,6 @@ CREATE TABLE `estimates_items` (
 -- Table structure for table `events`
 --
 
-DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events` (
   `id` int(11) NOT NULL,
   `company_id` int(11) DEFAULT NULL,
@@ -581,7 +518,6 @@ CREATE TABLE `events` (
 -- Table structure for table `filevault`
 --
 
-DROP TABLE IF EXISTS `filevault`;
 CREATE TABLE `filevault` (
   `file_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -610,7 +546,6 @@ INSERT INTO `filevault` (`file_id`, `title`, `description`, `file_path`, `modifi
 -- Table structure for table `file_folders`
 --
 
-DROP TABLE IF EXISTS `file_folders`;
 CREATE TABLE `file_folders` (
   `folder_id` int(11) NOT NULL,
   `folder_name` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -644,7 +579,6 @@ INSERT INTO `file_folders` (`folder_id`, `folder_name`, `parent_id`, `descriptio
 -- Table structure for table `form_responses`
 --
 
-DROP TABLE IF EXISTS `form_responses`;
 CREATE TABLE `form_responses` (
   `id` int(11) NOT NULL,
   `key` int(11) NOT NULL COMMENT 'link to question',
@@ -661,7 +595,6 @@ CREATE TABLE `form_responses` (
 -- Table structure for table `gps_location`
 --
 
-DROP TABLE IF EXISTS `gps_location`;
 CREATE TABLE `gps_location` (
   `gps_location_id` int(11) NOT NULL,
   `timestamp` timestamp NULL DEFAULT NULL,
@@ -677,7 +610,6 @@ CREATE TABLE `gps_location` (
 -- Table structure for table `invoice`
 --
 
-DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `invoice_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
@@ -701,10 +633,8 @@ CREATE TABLE `invoice` (
 -- Table structure for table `invoice_has_items`
 --
 
-DROP TABLE IF EXISTS `invoice_has_items`;
 CREATE TABLE `invoice_has_items` (
-  `ihi_id` int(11) NOT NULL,
-  `job_id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `qty` int(11) DEFAULT NULL,
   `locations` text COLLATE utf8_unicode_ci,
@@ -720,7 +650,6 @@ CREATE TABLE `invoice_has_items` (
 -- Table structure for table `items`
 --
 
-DROP TABLE IF EXISTS `items`;
 CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `company_id` int(11) DEFAULT NULL,
@@ -748,7 +677,6 @@ CREATE TABLE `items` (
 -- Table structure for table `items_has_files`
 --
 
-DROP TABLE IF EXISTS `items_has_files`;
 CREATE TABLE `items_has_files` (
   `id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL
@@ -760,7 +688,6 @@ CREATE TABLE `items_has_files` (
 -- Table structure for table `items_has_storage_loc`
 --
 
-DROP TABLE IF EXISTS `items_has_storage_loc`;
 CREATE TABLE `items_has_storage_loc` (
   `id` int(11) NOT NULL,
   `loc_id` int(11) NOT NULL,
@@ -776,7 +703,6 @@ CREATE TABLE `items_has_storage_loc` (
 -- Table structure for table `item_categories`
 --
 
-DROP TABLE IF EXISTS `item_categories`;
 CREATE TABLE `item_categories` (
   `item_categories_id` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -791,7 +717,6 @@ CREATE TABLE `item_categories` (
 -- Table structure for table `jobs`
 --
 
-DROP TABLE IF EXISTS `jobs`;
 CREATE TABLE `jobs` (
   `jobs_id` int(11) NOT NULL,
   `job_number` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -808,7 +733,6 @@ CREATE TABLE `jobs` (
 -- Table structure for table `jobs_has_address`
 --
 
-DROP TABLE IF EXISTS `jobs_has_address`;
 CREATE TABLE `jobs_has_address` (
   `jobs_id` int(11) NOT NULL,
   `address_id` int(11) NOT NULL
@@ -820,7 +744,6 @@ CREATE TABLE `jobs_has_address` (
 -- Table structure for table `jobs_has_contracts`
 --
 
-DROP TABLE IF EXISTS `jobs_has_contracts`;
 CREATE TABLE `jobs_has_contracts` (
   `jobs_id` int(11) NOT NULL,
   `contracts_id` int(11) NOT NULL,
@@ -834,7 +757,6 @@ CREATE TABLE `jobs_has_contracts` (
 -- Table structure for table `jobs_has_customers`
 --
 
-DROP TABLE IF EXISTS `jobs_has_customers`;
 CREATE TABLE `jobs_has_customers` (
   `jobs_id` int(11) NOT NULL,
   `id` int(11) NOT NULL
@@ -846,7 +768,6 @@ CREATE TABLE `jobs_has_customers` (
 -- Table structure for table `jobs_has_employees`
 --
 
-DROP TABLE IF EXISTS `jobs_has_employees`;
 CREATE TABLE `jobs_has_employees` (
   `jobs_id` int(11) NOT NULL,
   `employees_id` int(11) NOT NULL,
@@ -859,7 +780,6 @@ CREATE TABLE `jobs_has_employees` (
 -- Table structure for table `jobs_has_files`
 --
 
-DROP TABLE IF EXISTS `jobs_has_files`;
 CREATE TABLE `jobs_has_files` (
   `jobs_id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL
@@ -871,7 +791,6 @@ CREATE TABLE `jobs_has_files` (
 -- Table structure for table `jobs_has_job_settings`
 --
 
-DROP TABLE IF EXISTS `jobs_has_job_settings`;
 CREATE TABLE `jobs_has_job_settings` (
   `jobs_id` int(11) NOT NULL,
   `job_settings_id` int(11) NOT NULL
@@ -883,7 +802,6 @@ CREATE TABLE `jobs_has_job_settings` (
 -- Table structure for table `jobs_has_time_record`
 --
 
-DROP TABLE IF EXISTS `jobs_has_time_record`;
 CREATE TABLE `jobs_has_time_record` (
   `jobs_id` int(11) NOT NULL,
   `timesheet_id` int(11) NOT NULL
@@ -895,7 +813,6 @@ CREATE TABLE `jobs_has_time_record` (
 -- Table structure for table `job_settings`
 --
 
-DROP TABLE IF EXISTS `job_settings`;
 CREATE TABLE `job_settings` (
   `job_settings_id` int(11) NOT NULL,
   `setting_type` varchar(75) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'job type\\npriority\\nstatus',
@@ -911,7 +828,6 @@ CREATE TABLE `job_settings` (
 -- Table structure for table `modules`
 --
 
-DROP TABLE IF EXISTS `modules`;
 CREATE TABLE `modules` (
   `modules_id` int(11) NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
@@ -923,7 +839,6 @@ CREATE TABLE `modules` (
 -- Table structure for table `nsmart_plans`
 --
 
-DROP TABLE IF EXISTS `nsmart_plans`;
 CREATE TABLE `nsmart_plans` (
   `nsmart_plans_id` int(11) NOT NULL,
   `plan_name` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -937,7 +852,6 @@ CREATE TABLE `nsmart_plans` (
 -- Table structure for table `nsmart_plans_has_modules`
 --
 
-DROP TABLE IF EXISTS `nsmart_plans_has_modules`;
 CREATE TABLE `nsmart_plans_has_modules` (
   `nsmart_plans_id` int(11) NOT NULL,
   `modules_id` int(11) NOT NULL
@@ -949,7 +863,6 @@ CREATE TABLE `nsmart_plans_has_modules` (
 -- Table structure for table `oauth_access_tokens`
 --
 
-DROP TABLE IF EXISTS `oauth_access_tokens`;
 CREATE TABLE `oauth_access_tokens` (
   `access_token` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `client_id` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
@@ -971,7 +884,6 @@ INSERT INTO `oauth_access_tokens` (`access_token`, `client_id`, `user_id`, `expi
 -- Table structure for table `oauth_authorization_codes`
 --
 
-DROP TABLE IF EXISTS `oauth_authorization_codes`;
 CREATE TABLE `oauth_authorization_codes` (
   `authorization_code` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `client_id` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
@@ -988,7 +900,6 @@ CREATE TABLE `oauth_authorization_codes` (
 -- Table structure for table `oauth_clients`
 --
 
-DROP TABLE IF EXISTS `oauth_clients`;
 CREATE TABLE `oauth_clients` (
   `client_id` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
   `client_secret` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1011,7 +922,6 @@ INSERT INTO `oauth_clients` (`client_id`, `client_secret`, `redirect_uri`, `gran
 -- Table structure for table `oauth_jwt`
 --
 
-DROP TABLE IF EXISTS `oauth_jwt`;
 CREATE TABLE `oauth_jwt` (
   `client_id` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
   `subject` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1024,7 +934,6 @@ CREATE TABLE `oauth_jwt` (
 -- Table structure for table `oauth_refresh_tokens`
 --
 
-DROP TABLE IF EXISTS `oauth_refresh_tokens`;
 CREATE TABLE `oauth_refresh_tokens` (
   `refresh_token` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `client_id` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
@@ -1046,7 +955,6 @@ INSERT INTO `oauth_refresh_tokens` (`refresh_token`, `client_id`, `user_id`, `ex
 -- Table structure for table `oauth_scopes`
 --
 
-DROP TABLE IF EXISTS `oauth_scopes`;
 CREATE TABLE `oauth_scopes` (
   `scope` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
   `is_default` tinyint(1) DEFAULT NULL
@@ -1058,7 +966,6 @@ CREATE TABLE `oauth_scopes` (
 -- Table structure for table `oauth_users`
 --
 
-DROP TABLE IF EXISTS `oauth_users`;
 CREATE TABLE `oauth_users` (
   `username` varchar(80) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `password` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1075,7 +982,6 @@ CREATE TABLE `oauth_users` (
 -- Table structure for table `options`
 --
 
-DROP TABLE IF EXISTS `options`;
 CREATE TABLE `options` (
   `options_id` int(11) NOT NULL,
   `question_id` int(11) NOT NULL,
@@ -1108,7 +1014,6 @@ INSERT INTO `options` (`options_id`, `question_id`, `options`, `option_value`, `
 -- Table structure for table `payments`
 --
 
-DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `payments_id` int(11) NOT NULL,
   `invoice_id` int(11) NOT NULL,
@@ -1125,7 +1030,6 @@ CREATE TABLE `payments` (
 -- Table structure for table `payment_method`
 --
 
-DROP TABLE IF EXISTS `payment_method`;
 CREATE TABLE `payment_method` (
   `payment_method_id` int(11) NOT NULL,
   `payment_method` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1140,7 +1044,6 @@ CREATE TABLE `payment_method` (
 -- Table structure for table `permissions`
 --
 
-DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
   `permissions_id` int(11) NOT NULL,
   `section_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
@@ -1191,7 +1094,6 @@ INSERT INTO `permissions` (`permissions_id`, `section_name`) VALUES
 -- Table structure for table `phone`
 --
 
-DROP TABLE IF EXISTS `phone`;
 CREATE TABLE `phone` (
   `phone_id` int(11) NOT NULL,
   `number` varchar(12) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1208,7 +1110,6 @@ CREATE TABLE `phone` (
 -- Table structure for table `plan_type`
 --
 
-DROP TABLE IF EXISTS `plan_type`;
 CREATE TABLE `plan_type` (
   `id` int(11) NOT NULL,
   `plan_name` varchar(255) NOT NULL,
@@ -1223,7 +1124,6 @@ CREATE TABLE `plan_type` (
 -- Table structure for table `plan_type_has_items`
 --
 
-DROP TABLE IF EXISTS `plan_type_has_items`;
 CREATE TABLE `plan_type_has_items` (
   `id` int(11) NOT NULL,
   `id1` int(11) NOT NULL,
@@ -1236,7 +1136,6 @@ CREATE TABLE `plan_type_has_items` (
 -- Table structure for table `questions`
 --
 
-DROP TABLE IF EXISTS `questions`;
 CREATE TABLE `questions` (
   `Questions_id` int(11) NOT NULL,
   `question` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1275,7 +1174,6 @@ INSERT INTO `questions` (`Questions_id`, `question`, `q_type`, `description`, `f
 -- Table structure for table `records`
 --
 
-DROP TABLE IF EXISTS `records`;
 CREATE TABLE `records` (
   `records_id` int(11) NOT NULL,
   `record_type` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1293,7 +1191,6 @@ CREATE TABLE `records` (
 -- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -1320,7 +1217,6 @@ INSERT INTO `roles` (`id`, `title`, `company_id`) VALUES
 -- Table structure for table `role_permissions`
 --
 
-DROP TABLE IF EXISTS `role_permissions`;
 CREATE TABLE `role_permissions` (
   `role_id` int(11) NOT NULL,
   `permissions_id` int(11) NOT NULL,
@@ -1337,7 +1233,6 @@ CREATE TABLE `role_permissions` (
 -- Table structure for table `settings`
 --
 
-DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL,
   `key` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1370,7 +1265,6 @@ INSERT INTO `settings` (`id`, `key`, `value`, `created_at`, `updated`, `updated_
 -- Table structure for table `signatures`
 --
 
-DROP TABLE IF EXISTS `signatures`;
 CREATE TABLE `signatures` (
   `signatures_id` int(11) NOT NULL,
   `signer_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1388,7 +1282,6 @@ CREATE TABLE `signatures` (
 -- Table structure for table `storage_loc`
 --
 
-DROP TABLE IF EXISTS `storage_loc`;
 CREATE TABLE `storage_loc` (
   `loc_id` int(11) NOT NULL,
   `location_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1401,7 +1294,6 @@ CREATE TABLE `storage_loc` (
 -- Table structure for table `survey`
 --
 
-DROP TABLE IF EXISTS `survey`;
 CREATE TABLE `survey` (
   `id` int(11) UNSIGNED NOT NULL,
   `count_timer` varchar(255) NOT NULL,
@@ -1434,8 +1326,7 @@ INSERT INTO `survey` (`id`, `count_timer`, `count`, `title`, `published`, `creat
 (72, '', 0, 'test', 0, 0, '2020-06-11 07:47:12', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0),
 (79, '', 0, 'A new survey', 0, 0, '2020-06-19 02:52:02', NULL, 0, 3, 0, 1, 'https://www.google.com', 0, 1, '2020-07-02', 1, 20, 0, '', 0),
 (80, '', 0, 'Another survey', 0, 0, '2020-06-19 03:44:49', NULL, 0, 3, 0, 1, 'https://reactjs.org/', 0, 1, '2020-10-02', 0, 0, 0, '', 0),
-(81, '', 0, 'Third survey', 0, 10, '2020-06-19 08:40:57', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0),
-(82, '', 0, 'ADI', 0, 0, '2020-06-29 02:59:32', NULL, 0, 0, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0);
+(81, '', 0, 'Third survey', 0, 10, '2020-06-19 08:40:57', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -1443,7 +1334,6 @@ INSERT INTO `survey` (`id`, `count_timer`, `count`, `title`, `published`, `creat
 -- Table structure for table `survey_answer`
 --
 
-DROP TABLE IF EXISTS `survey_answer`;
 CREATE TABLE `survey_answer` (
   `id` int(11) NOT NULL,
   `survey_id` int(11) NOT NULL,
@@ -1525,7 +1415,6 @@ INSERT INTO `survey_answer` (`id`, `survey_id`, `question_id`, `answer`) VALUES
 -- Table structure for table `survey_questions`
 --
 
-DROP TABLE IF EXISTS `survey_questions`;
 CREATE TABLE `survey_questions` (
   `id` int(11) UNSIGNED NOT NULL,
   `survey_id` int(11) DEFAULT NULL,
@@ -1634,7 +1523,6 @@ INSERT INTO `survey_questions` (`id`, `survey_id`, `question`, `template_id`, `o
 -- Table structure for table `survey_template_answer`
 --
 
-DROP TABLE IF EXISTS `survey_template_answer`;
 CREATE TABLE `survey_template_answer` (
   `id` int(11) NOT NULL,
   `survey_template_id` varchar(255) NOT NULL,
@@ -2032,7 +1920,6 @@ INSERT INTO `survey_template_answer` (`id`, `survey_template_id`, `survey_templa
 -- Table structure for table `survey_template_questions`
 --
 
-DROP TABLE IF EXISTS `survey_template_questions`;
 CREATE TABLE `survey_template_questions` (
   `id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -2072,7 +1959,6 @@ INSERT INTO `survey_template_questions` (`id`, `type`, `question`, `answer`, `ic
 -- Table structure for table `survey_themes`
 --
 
-DROP TABLE IF EXISTS `survey_themes`;
 CREATE TABLE `survey_themes` (
   `sth_rec_no` int(12) NOT NULL,
   `sth_theme_name` varchar(64) NOT NULL,
@@ -2108,7 +1994,6 @@ INSERT INTO `survey_themes` (`sth_rec_no`, `sth_theme_name`, `sth_primary_color`
 -- Table structure for table `tasks`
 --
 
-DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE `tasks` (
   `task_id` int(11) UNSIGNED NOT NULL,
   `subject` varchar(255) NOT NULL,
@@ -2136,7 +2021,6 @@ INSERT INTO `tasks` (`task_id`, `subject`, `description`, `created_by`, `date_cr
 -- Table structure for table `tasks_participants`
 --
 
-DROP TABLE IF EXISTS `tasks_participants`;
 CREATE TABLE `tasks_participants` (
   `id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL,
@@ -2165,7 +2049,6 @@ INSERT INTO `tasks_participants` (`id`, `task_id`, `user_id`, `is_assigned`) VAL
 -- Table structure for table `tasks_status`
 --
 
-DROP TABLE IF EXISTS `tasks_status`;
 CREATE TABLE `tasks_status` (
   `status_id` int(11) UNSIGNED NOT NULL,
   `status_text` varchar(255) NOT NULL,
@@ -2191,7 +2074,6 @@ INSERT INTO `tasks_status` (`status_id`, `status_text`, `status_color`) VALUES
 -- Table structure for table `tasks_updates`
 --
 
-DROP TABLE IF EXISTS `tasks_updates`;
 CREATE TABLE `tasks_updates` (
   `update_id` int(11) UNSIGNED NOT NULL,
   `task_id` int(11) NOT NULL,
@@ -2215,7 +2097,6 @@ INSERT INTO `tasks_updates` (`update_id`, `task_id`, `notes`, `performed_by`, `d
 -- Table structure for table `time_record`
 --
 
-DROP TABLE IF EXISTS `time_record`;
 CREATE TABLE `time_record` (
   `timesheet_id` int(11) NOT NULL,
   `employees_id` int(11) NOT NULL,
@@ -2251,9 +2132,7 @@ INSERT INTO `time_record` (`timesheet_id`, `employees_id`, `action`, `timestamp`
 (26, 4, 'Clock Out', '2020-06-16 07:17:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (27, 2, 'Clock In', '2020-06-17 22:32:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (28, 3, 'Clock In', '2020-06-17 22:33:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(29, 4, 'Clock In', '2020-06-18 00:15:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(30, 2, 'Clock Out', '2020-06-29 03:05:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(31, 2, 'Clock In', '2020-06-29 13:47:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(29, 4, 'Clock In', '2020-06-18 00:15:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2261,7 +2140,6 @@ INSERT INTO `time_record` (`timesheet_id`, `employees_id`, `action`, `timestamp`
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `FName` varchar(255) DEFAULT NULL,
@@ -2285,11 +2163,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `FName`, `LName`, `username`, `email`, `password`, `password_plain`, `last_login`, `role`, `reset_token`, `status`, `created_at`, `updated_at`, `profile_img`, `company_id`) VALUES
-(2, 'john ', 'smith', 'admin', 'support@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-30 02:06:48', 3, '$2y$10$QHAQRM8x5JmAkGg6lnXDlOXU9mjDyRKEwdA9XQ04OoRrCF15X4VTG', 1, '0000-00-00 00:00:00', '2020-06-29 16:18:12', 0, 1),
-(5, 'Tommy', 'n', 'tommy', 'tommy@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-29 23:06:29', 1, '', 1, '0000-00-00 00:00:00', '2020-06-29 12:59:05', NULL, 2),
-(6, 'Jon', 'c', 'jonc', 'jonc@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '0000-00-00 00:00:00', 1, '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, 2),
-(7, '0', '0', 'tyler_nguyen', 'moresecureadi@gmail.com', '66017edccc91ad05ab05dd631e687db03fe88eb2132073810fb3ea44505b6a70', 'nsmart@101', '2020-06-29 03:46:43', 7, '', 1, '2020-06-29 03:46:43', '0000-00-00 00:00:00', NULL, 1),
-(8, '0', '0', 'king', 'employee@test.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-29 13:46:07', 6, '', 1, '2020-06-29 13:46:07', '0000-00-00 00:00:00', NULL, 1);
+(2, 'john ', 'smith', 'admin', 'support@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-24 01:06:18', 3, '', 1, '0000-00-00 00:00:00', '2020-06-23 14:48:34', 0, 1),
+(3, 'Bart', 'Simpson', 'bsimpson', 'bsimpson@test.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-23 00:06:51', 4, '', 1, '0000-00-00 00:00:00', '2020-06-22 14:21:05', NULL, 1),
+(4, 'Tech', 'Guy', 'techguy1', 'techguy1@test.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '0000-00-00 00:00:00', 7, '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, 1),
+(5, 'Tommy', 'n', 'tommy', 'tommy@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '0000-00-00 00:00:00', 1, '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, 2),
+(6, 'Jon', 'c', 'jonc', 'jonc@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '0000-00-00 00:00:00', 1, '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -2297,7 +2175,6 @@ INSERT INTO `users` (`id`, `FName`, `LName`, `username`, `email`, `password`, `p
 -- Table structure for table `user_details`
 --
 
-DROP TABLE IF EXISTS `user_details`;
 CREATE TABLE `user_details` (
   `details_id` int(11) NOT NULL,
   `key` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -2312,7 +2189,6 @@ CREATE TABLE `user_details` (
 -- Table structure for table `user_docfile`
 --
 
-DROP TABLE IF EXISTS `user_docfile`;
 CREATE TABLE `user_docfile` (
   `id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -2338,7 +2214,6 @@ INSERT INTO `user_docfile` (`id`, `user_id`, `docFile`, `status`, `created_at`, 
 -- Table structure for table `user_docphoto`
 --
 
-DROP TABLE IF EXISTS `user_docphoto`;
 CREATE TABLE `user_docphoto` (
   `id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -2365,7 +2240,6 @@ INSERT INTO `user_docphoto` (`id`, `user_id`, `docphoto`, `status`, `created_at`
 -- Table structure for table `user_sign`
 --
 
-DROP TABLE IF EXISTS `user_sign`;
 CREATE TABLE `user_sign` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -2404,7 +2278,6 @@ INSERT INTO `user_sign` (`id`, `user_id`, `esignImage`, `status`, `created_at`, 
 -- Table structure for table `vendor`
 --
 
-DROP TABLE IF EXISTS `vendor`;
 CREATE TABLE `vendor` (
   `vendor_id` int(11) NOT NULL,
   `vendor_name` int(11) DEFAULT NULL,
@@ -2419,7 +2292,6 @@ CREATE TABLE `vendor` (
 -- Table structure for table `vendor_has_users`
 --
 
-DROP TABLE IF EXISTS `vendor_has_users`;
 CREATE TABLE `vendor_has_users` (
   `vendor_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -2433,7 +2305,6 @@ CREATE TABLE `vendor_has_users` (
 -- Table structure for table `workorders`
 --
 
-DROP TABLE IF EXISTS `workorders`;
 CREATE TABLE `workorders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -2595,12 +2466,6 @@ ALTER TABLE `estimates`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `estimates_items`
---
-ALTER TABLE `estimates_items`
-  ADD PRIMARY KEY (`estimates_id`,`items_id`);
-
---
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
@@ -2640,7 +2505,7 @@ ALTER TABLE `invoice`
 -- Indexes for table `invoice_has_items`
 --
 ALTER TABLE `invoice_has_items`
-  ADD PRIMARY KEY (`ihi_id`,`item_id`);
+  ADD PRIMARY KEY (`invoice_id`,`item_id`);
 
 --
 -- Indexes for table `items`
@@ -2980,7 +2845,7 @@ ALTER TABLE `workorders`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT for table `address`
@@ -3049,6 +2914,12 @@ ALTER TABLE `employees`
   MODIFY `employees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `estimates`
+--
+ALTER TABLE `estimates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
@@ -3083,12 +2954,6 @@ ALTER TABLE `gps_location`
 --
 ALTER TABLE `invoice`
   MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `invoice_has_items`
---
-ALTER TABLE `invoice_has_items`
-  MODIFY `ihi_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -3202,7 +3067,7 @@ ALTER TABLE `storage_loc`
 -- AUTO_INCREMENT for table `survey`
 --
 ALTER TABLE `survey`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `survey_answer`
@@ -3256,13 +3121,13 @@ ALTER TABLE `tasks_updates`
 -- AUTO_INCREMENT for table `time_record`
 --
 ALTER TABLE `time_record`
-  MODIFY `timesheet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `timesheet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user_details`

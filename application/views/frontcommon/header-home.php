@@ -30,7 +30,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
 
-
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script>
+    <script>
+        function initialize() {
+          var input = document.getElementById('google_search_place');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place 	= autocomplete.getPlace();       
+                var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
+                $("#business_address").val(address);                     
+                $("#google_search_place").val(place.name); //Use this if return business name only
+                console.log(place);   
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -136,7 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<!-- TradingView Widget BEGIN -->
 						<div class="tradingview-widget-container">
 							<div class="tradingview-widget-container__widget"></div>
-							<div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+							<div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;padding-left: 57px;text-align: left !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
 							<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
 							  {
 							  "symbols": [

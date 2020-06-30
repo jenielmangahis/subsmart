@@ -3,9 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -154,7 +151,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-10 pt-5 text-left" id="currentForms">
                                     <h4 for="exampleFormControlSelect1">Current Forms</h4>
-                                    <table class="table table-hover" style="width:100%;" id="currentFormsTable">
+                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="currentFormsTable">
                                         <thead>
                                             <tr>
                                                 <th scope="col"><strong>Form Number</strong></th>
@@ -360,7 +357,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <h4>Items</h4>
                                             <button type="button" class="btn btn-primary margin-bottom" id="addItems">Add Items</button>
                                             <div id="addItemsTableDiv">
-                                                <table class="table table-hover" style="width:100%;" id="addItemsTable">
+                                                <table class="table table-hover table-bordered table-striped" style="width:100%;" id="addItemsTable">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col"><strong>Item</strong></th>
@@ -375,10 +372,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        <?php if (!empty($jobItems)) : ?>
+                                                        <?php $subtotal=0;?>
+                                                        <?php foreach($jobItems as $jobItem) : ?>
+                                                            <tr>
+                                                                <td class="pl-3"><?php echo $jobItem['title']; ?></td>
+                                                                <td class="pl-3"><?php echo $jobItem['type']; ?></td>
+                                                                <td class="pl-3">&nbsp;</td>
+                                                                <td class="pl-3">
+                                                                    <span style="cursor:pointer" data-id="<?php echo $jobItem['ihi_id']; ?>" data-value="<?php echo $jobItem['qty']; ?>" class="fa fa-lg fa-minus-circle pr-2 deductItemQty"></span>
+                                                                    <span class="jobItemQty">
+                                                                        <?php echo $jobItem['qty']; ?>
+                                                                    </span>
+                                                                    <span style="cursor:pointer" data-id="<?php echo $jobItem['ihi_id']; ?>" data-value="<?php echo $jobItem['qty']; ?>" class="fa fa-lg fa-plus-circle pl-2 addItemQty"></span></td>
+                                                                <td class="pl-3"><a href="javascript:void(0)" data-toggle="modal" data-target="#modalItemLocation">Set Location</a></td>
+                                                                <td class="pl-3"><?php echo number_format(floatval($jobItem['price']), 2); ?></td>
+                                                                <td class="pl-3"><?php echo number_format(floatval($jobItem['discount']), 2); ?></td>
+                                                                <td class="pl-3"><?php echo number_format(0, 2); ?></td>
+                                                                <td class="pl-3"><?php echo number_format(floatval($jobItem['price'])*floatval($jobItem['qty']), 2); ?><?php $subtotal += floatval($jobItem['price'])*floatval($jobItem['qty']); ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                        <?php endif;?>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="row" id="itemsTableSubTotal" style="display:none;">
+                                            <?php if (!empty($jobItems)) : ?>
+                                            <div class="row pt-4" id="itemsTableSubTotal">
                                                 <div class="col-md-7">
                                                 &nbsp;
                                                 </div>
@@ -388,7 +407,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <label style="padding: 0 .75rem;"><strong>Subtotal</strong></label>
                                                     </div>
                                                     <div class="col-sm-3 text-left pr-3">
-                                                        <label id="invoice_sub_total">$0.00</label>
+                                                        <label id="invoice_sub_total">$<?php echo number_format(floatval($subtotal), 2); ?></label>
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-6"></div>
@@ -408,7 +427,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <label style="padding: .375rem .75rem;"><strong>Tax</strong></label>
                                                     </div>
                                                     <div class="col-sm-3 text-left pr-3">
-                                                        <label id="invoice_grand_total">$0.00</label>
+                                                        <label id="invoice_tax_total">$0.00</label>
                                                         <input type="hidden" name="grand_total" id="grand_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-6"></div>
@@ -418,13 +437,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <label style="padding: .375rem .75rem;"><strong>Grand Total</strong></label>
                                                     </div>
                                                     <div class="col-sm-3 text-left pr-3">
-                                                        <label id="invoice_grand_total">$0.00</label>
+                                                        <label id="invoice_grand_total">$<?php echo number_format(floatval($subtotal), 2); ?></label>
                                                         <input type="hidden" name="grand_total" id="grand_total_form_input" value='0'>
                                                     </div>
                                                     <div class="col-sm-6"></div>
                                                     <div class="col-sm-6"><hr></div>
                                                 </div>
                                             </div>
+                                            <?php endif;?>
                                             <div id="addItemsForms" style="display:none;">
                                                 <h5>Pick Items</h5>
                                                 <div class="row">
@@ -447,7 +467,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div id="itemsFeesDiv">
-                                                            <table class="table table-hover" style="width:100%;" id="itemsFeesTable">
+                                                            <table class="table table-hover table-bordered table-striped" style="width:100%;" id="itemsFeesTable">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>&nbsp;</th>
@@ -460,7 +480,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             </table>
                                                         </div>
                                                         <div style="display:none;" id="addOnsItemsDiv">
-                                                            <table class="table table-hover" style="width:100%;" id="addOnsItemTable">
+                                                            <table class="table table-hover table-bordered table-striped" style="width:100%;" id="addOnsItemTable">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>&nbsp;</th>
@@ -626,7 +646,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="tab-pane fade pa-10 margin-left margin-top" id="history" role="tabpanel" aria-labelledby="history-tab">
                                             <h4>History</h4>
-                                            <table class="table table-hover" style="width:100%;" id="jobHistoryTable">
+                                            <table class="table table-hover table-bordered table-striped" style="width:100%;" id="jobHistoryTable">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col"><strong>Action</strong></th>
@@ -651,20 +671,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <p id="dialogMsg"></p>
             </div>                                                         
             <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
+            <div class="modal fade" id="modalItemLocation" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Item Name</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body"></div>
+                        <div class="modal-body">
+                            <table class="table table-hover table-bordered table-striped" style="width:100%;" id="currentFormsTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><strong>Item</strong></th>
+                                        <th scope="col"><strong>Location</strong></th>
+                                        <th scope="col"><strong>Special Instruction</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>                                       
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
