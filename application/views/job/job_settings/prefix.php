@@ -33,6 +33,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="pt-2 pr-5">Invoice Prefix</label>
                                 <input type="text" class="form-control col-md-2" id="estimatePrefix" value="WO-">
                             </div>
+                            <div class="row col-md-12 pb-3">
+                                <label class="pt-2 pr-5">Survey Prefix</label>
+                                <input type="text" class="form-control col-md-2" id="surveyPrefix" value="SUR-">
+                            </div>
                         </div>
                         <?php echo form_close(); ?>
                     </div>

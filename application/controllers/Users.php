@@ -117,6 +117,23 @@ class Users extends MY_Controller {
 		$this->load->view('users/timesheet-user', $this->page_data);
 	}
 
+	// added for tracking Time Log of employees
+	public function timelog()
+	{	
+		$this->load->model('timesheet_model');
+		//ifPermissions('users_list');
+
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		
+		$this->page_data['users'] = $this->users_model->getUsers();
+		
+		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+		
+		//$this->load->view('users/timesheet', $this->page_data);
+		//$this->load->view('users/timesheet-admin', $this->page_data);
+		$this->load->view('users/timelog', $this->page_data);
+	}
+
 	// added for tracking Timesheet of employees
 	public function timesheet_user()
 	{	
@@ -216,7 +233,7 @@ class Users extends MY_Controller {
 			$image = $this->uploadlib->uploadImage('image', '/users');
 
 			if($image['status']){
-				$this->users_model->update($id, ['img_type' => $ext]);
+				$this->users_model->update($id, ['profile_img' => $ext]);
 			}else{
 				copy(FCPATH.'uploads/users/default.png', 'uploads/users/'.$id.'.png');
 			}
