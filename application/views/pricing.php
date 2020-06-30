@@ -1299,8 +1299,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- <div class="ctext expert--anchor">Now set up QuickBooks with a Live Bookkeeping expert<sup>6</sup></div> -->
                     </div>
                     <div class="table-row" id="content_left">
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 2085px;">
-                            <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12 with-border">
+                            <div class="pricing-card-layout-content-wrapper">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
@@ -1422,10 +1422,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -1450,10 +1450,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Finances</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">CRM/Estimates/Invoices</span>
@@ -1474,10 +1474,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Insights</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
@@ -1490,10 +1490,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -1519,8 +1519,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
 
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 2085px;">
-                            <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12 with-border">
+                            <div class="pricing-card-layout-content-wrapper">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
@@ -1642,10 +1642,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -1670,10 +1670,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Finances</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">CRM/Estimates/Invoices</span>
@@ -1694,10 +1694,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Insights</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
@@ -1710,10 +1710,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -1734,10 +1734,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Time Sheets</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Track employee hours</span>
@@ -1746,10 +1746,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Reports</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Real time reports and analytics</span>
@@ -1758,10 +1758,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Marketing</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Automate email marketing campaigns</span>
@@ -1778,10 +1778,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1" class="header-ul">
                                             <li>
-                                                <span class=""><strong>Taskhub</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1" class="desc-ul">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage & assign multiple projects</span>
@@ -1794,8 +1794,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
 
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 2085px;">
-                            <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12 with-border">
+                            <div class="pricing-card-layout-content-wrapper">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-ess">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
@@ -1918,10 +1918,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -1946,10 +1946,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Finances</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">CRM/Estimates/Invoices</span>
@@ -1970,10 +1970,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Insights</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
@@ -1986,10 +1986,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -2010,10 +2010,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Time Sheets</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Track employee hours</span>
@@ -2022,10 +2022,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Reports</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Real time reports and analytics</span>
@@ -2034,10 +2034,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Marketing</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Automate email marketing campaigns</span>
@@ -2054,10 +2054,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Taskhub</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage & assign multiple projects</span>
@@ -2066,10 +2066,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>API Connectors</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Link up with your favorite software</span>
@@ -2078,10 +2078,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Campaign Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create some great designs emails</span>
@@ -2090,10 +2090,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>GPS Tracking</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Get real-time updates on your team's location.</span>
@@ -2104,8 +2104,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12" style="height: 2085px;">
-                            <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12 with-border">
+                            <div class="pricing-card-layout-content-wrapper">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-plus">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
@@ -2228,10 +2228,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -2256,10 +2256,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Finances</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">CRM/Estimates/Invoices</span>
@@ -2280,10 +2280,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Insights</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
@@ -2296,10 +2296,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -2320,10 +2320,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Time Sheets</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Track employee hours</span>
@@ -2332,10 +2332,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Reports</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Real time reports and analytics</span>
@@ -2344,10 +2344,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Marketing</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Automate email marketing campaigns</span>
@@ -2364,10 +2364,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Taskhub</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage & assign multiple projects</span>
@@ -2376,10 +2376,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>API Connectors</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Link up with your favorite software</span>
@@ -2388,10 +2388,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Campaign Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create some great designs emails</span>
@@ -2400,10 +2400,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>GPS Tracking</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Get real-time updates on your team's location.</span>
@@ -2412,10 +2412,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Mobile Tools</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Mobile Tools</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Simple tools that come handy.</span>
@@ -2424,10 +2424,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Survey Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Survey Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Feedbacks and reviews.</span>
@@ -2436,10 +2436,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Inventory Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Inventory Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Keep track of all the your items.</span>
@@ -2450,8 +2450,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </section>
                             </div>
                         </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="height: 2085px;">
-                            <div class="pricing-card-layout-content-wrapper" style="height: 2085px;">
+                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="  border-right: 0px !important;">
+                            <div class="pricing-card-layout-content-wrapper">
                                 <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
                                     <div class="eCommerce-product-div">
                                         <div class="image-price-container">
@@ -2580,10 +2580,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -2608,10 +2608,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Finances</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">CRM/Estimates/Invoices</span>
@@ -2632,10 +2632,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Insights</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
@@ -2648,10 +2648,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -2672,10 +2672,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Time Sheets</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Track employee hours</span>
@@ -2684,10 +2684,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Reports</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Real time reports and analytics</span>
@@ -2696,10 +2696,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Marketing</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Automate email marketing campaigns</span>
@@ -2716,10 +2716,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Taskhub</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage & assign multiple projects</span>
@@ -2728,10 +2728,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>API Connectors</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Link up with your favorite software</span>
@@ -2740,10 +2740,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Campaign Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create some great designs emails</span>
@@ -2752,10 +2752,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>GPS Tracking</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Get real-time updates on your team's location.</span>
@@ -2764,10 +2764,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Mobile Tools</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Mobile Tools</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Simple tools that come handy.</span>
@@ -2776,10 +2776,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Survey Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Survey Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Feedbacks and reviews.</span>
@@ -2788,10 +2788,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Inventory Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Inventory Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Keep track of all the your items.</span>
@@ -2800,10 +2800,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Credit Score</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Credit Score</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
@@ -2812,10 +2812,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Form Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Form Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Customize & save your forms.</span>
@@ -2824,10 +2824,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
@@ -2836,10 +2836,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>eSign</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>eSign</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
@@ -2848,10 +2848,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Campaign Blast</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Blast</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
@@ -2863,58 +2863,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <br /><br /><br />
-                    <section class="addon desktop-only" style="">
-                        <div class="container">
-                            <div class="addon__box">
-                                <div class="addon__list-cnt">
-                                    <div class="addon__list-row">
-                                        <div class="addon__price">
-                                            <div class="addon__price-base"><span class="addon__price-currency">$</span>5</div>
-                                            <div class="addon__price-label">Add-Ons</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <ul class="addon__list">
-                                                    <li><span class="fa fa-plus"></span> Survey Builder</li>
-                                                    <li><span class="fa fa-plus"></span> Online Booking</li>
-                                                    <li><span class="fa fa-plus"></span> Lead Contact Form</li>
-                                                    <li><span class="fa fa-plus"></span> Email Blast</li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <ul class="addon__list">
-                                                    <li><span class="fa fa-plus"></span> Employee Access</li>
-                                                    <li><span class="fa fa-plus"></span> Virtual Number</li>
-                                                    <li><span class="fa fa-plus"></span> SMS Blast</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="addon__list-row">
-                                        <div class="addon__price">
-                                            <div class="addon__price-base"><span class="addon__price-currency">$</span>10</div>
-                                            <div class="addon__price-label">Add-Ons</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <ul class="addon__list">
-                                                    <li><span class="fa fa-plus"></span> API Connectors</li>
-                                                    <li><span class="fa fa-plus"></span> Rewards & Offers</li>
-                                                    <li><span class="fa fa-plus"></span> Campaign Builder</li>
-                                                    <li><span class="fa fa-plus"></span> Time Sheet & Tracking</li>
-                                                    <li><span class="fa fa-plus"></span> Inventory Management</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="addon__btn">
-                                    <a class="btn btn-primary btn-xl" href="<?php echo url('registration') ?>">Try nSmarTrac Now</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                     <!--
                     <div class="payroll--wrapper add-ons col-md-12">
                         <ul>
@@ -2966,9 +2914,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div style="clear:both"></div>
                 </div>
                 <div class="cpricing-card-layout right-pricing group_w_1_3">
-                    <div class="pricing-card-layout-header pricing-card-header-blue" id="header_right">
+                    <div class="pricing-card-layout-header pricing-card-header-blue" id="header_right" style="margin-bottom: 0px;">
                         <div class="ctext">
-                            <h4>Freelancer</h4>
+                            <h4 style="">Freelancer</h4>
                             <div class="tooltip-container">
                                 <span class="tooltip-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" data-di-rand="1590202098840">
@@ -3024,10 +2972,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -3052,10 +3000,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Finances</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">CRM/Estimates/Invoices</span>
@@ -3076,10 +3024,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Insights</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Intuitive dashboard</span>
@@ -3092,10 +3040,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage customers & employees</span>
@@ -3116,10 +3064,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Time Sheets</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Track employee hours</span>
@@ -3128,10 +3076,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Reports</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Real time reports and analytics</span>
@@ -3140,10 +3088,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Marketing</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Automate email marketing campaigns</span>
@@ -3160,10 +3108,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Taskhub</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Manage & assign multiple projects</span>
@@ -3172,10 +3120,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>API Connectors</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Link up with your favorite software</span>
@@ -3184,10 +3132,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Campaign Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Create some great designs emails</span>
@@ -3196,10 +3144,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>GPS Tracking</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Get real-time updates on your team's location.</span>
@@ -3208,10 +3156,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Mobile Tools</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Mobile Tools</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Simple tools that come handy.</span>
@@ -3220,10 +3168,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Survey Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Survey Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Feedbacks and reviews.</span>
@@ -3232,10 +3180,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Inventory Management</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Inventory Management</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Keep track of all the your items.</span>
@@ -3244,10 +3192,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Credit Score</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Credit Score</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
@@ -3256,10 +3204,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Form Builder</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Form Builder</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Customize & save your forms.</span>
@@ -3268,10 +3216,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Accounting</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
@@ -3280,10 +3228,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>eSign</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>eSign</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
@@ -3292,10 +3240,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Campaign Blast</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Blast</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
@@ -3304,10 +3252,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Wizard</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Wizard</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">Turns multiple steps process in to a one-click automated function.</span>
@@ -3316,10 +3264,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <ul data-list="1">
                                             <li>
-                                                <span class=""><strong>Branding</strong></span>
+                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Branding</strong></span>
                                             </li>
                                         </ul>
-                                        <ul data-list="1">
+                                        <ul data-list="1" class="desc-ul hidden">
                                             <li>
                                                 <i class="arrow-down" aria-hidden="true"></i>
                                                 <span class="p3 open-popup">A strategy that get customer to identify your business with your product & services.</span>
@@ -3345,8 +3293,60 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
 
         </div></div>
+        <section class="addon desktop-only" style="">
+            <div class="container">
+                <div class="addon__box">
+                    <div class="addon__list-cnt">
+                        <div class="addon__list-row">
+                            <div class="addon__price">
+                                <div class="addon__price-base"><span class="addon__price-currency">$</span>5</div>
+                                <div class="addon__price-label">Add-Ons</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <ul class="addon__list">
+                                        <li><span class="fa fa-plus"></span> Survey Builder</li>
+                                        <li><span class="fa fa-plus"></span> Online Booking</li>
+                                        <li><span class="fa fa-plus"></span> Lead Contact Form</li>
+                                        <li><span class="fa fa-plus"></span> Email Blast</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-12">
+                                    <ul class="addon__list">
+                                        <li><span class="fa fa-plus"></span> Employee Access</li>
+                                        <li><span class="fa fa-plus"></span> Virtual Number</li>
+                                        <li><span class="fa fa-plus"></span> SMS Blast</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="addon__list-row">
+                            <div class="addon__price">
+                                <div class="addon__price-base"><span class="addon__price-currency">$</span>10</div>
+                                <div class="addon__price-label">Add-Ons</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <ul class="addon__list">
+                                        <li><span class="fa fa-plus"></span> API Connectors</li>
+                                        <li><span class="fa fa-plus"></span> Rewards & Offers</li>
+                                        <li><span class="fa fa-plus"></span> Campaign Builder</li>
+                                        <li><span class="fa fa-plus"></span> Time Sheet & Tracking</li>
+                                        <li><span class="fa fa-plus"></span> Inventory Management</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="addon__btn">
+                        <a class="btn btn-primary btn-xl" href="<?php echo url('registration') ?>">Try nSmarTrac Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
   </section>
 </section>
+
 <section class="ccontainer ss-section all-plans-include" style="margin-bottom: 20px; " id="section-2">
     <div class="content-container">
         <div class="grid-image-text container-fluid g_vertical_align_image mb-pl-4">

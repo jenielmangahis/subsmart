@@ -22,7 +22,7 @@
 							<li><h5 class="font-kanit text-white weight-600">Legal</h5></li>
 							<li><a href="<?php echo url('/terms-and-condition') ?>">Terms & Condition</a></li>
 							<li><a href="<?php echo url('/privacy-policy') ?>">Privacy Policy</a></li>
-							<li><a href="<?php echo url('/anti-spam-policy') ?>">Anti-spam Policy</a></li>							
+							<li><a href="<?php echo url('/anti-spam-policy') ?>">Anti-spam Policy</a></li>
 						</ul>
 					</div>
 					<div class="col-xl-3 col-lg-3 col-sm-6 float-left">
@@ -33,7 +33,7 @@
 						<div class="footer-social text-left">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
-						</div>						
+						</div>
 					</div>
 					<!-- <div class="footer-widget about-widget">
 						<img src="<?php echo $url->assets ?>frontend/images/nsmar.jpg" alt="">
@@ -89,6 +89,16 @@
 	?>
 	<script>
 	    $(document).ready(function(){
+				$('span.show-more-desktop').click(function(){
+					$(this).parent().parent().parent().next().removeClass('hidden');
+					$(this).parent().find("span.show-less-desktop").removeClass('hidden');
+					$(this).addClass('hidden');
+				});
+				$('span.show-less-desktop').click(function(){
+					$(this).parent().parent().parent().next().addClass('hidden');
+					$(this).parent().parent().find("span.show-more-desktop").removeClass('hidden');
+					$(this).addClass('hidden');
+				});
 				$('span.show-more').click(function(){
 					// $(this).parent().find("span.prc-description").addClass('hidden');
 					var height = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().height();

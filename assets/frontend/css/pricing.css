@@ -54,7 +54,7 @@ button,input[type=submit]{
 .owl-auto-height {
   height: auto !important;
 }
-.show-more {
+.show-more, .show-more-desktop {
   font-size: 19px;
   position: relative;
   top: 4px;
@@ -68,13 +68,37 @@ button,input[type=submit]{
   font-weight: 600;
   color: #575567;
 }
+.no-border {
+  border-right: 0px !important;
+}
+section.ccontainer.None.pcard-layout-additional-text.mt-features-single-row-text-only.qb-se {
+  min-height: 1216px;
+}
+.pricing-card-layout-content.none.pcolumns_w3.col-md-4.col-sm-4.col-xs-12 {
+  display: flex !important;
+  min-height: 1200px !important;
+  padding: 0px 0px 30px !important;
+  border-radius: 0px !important;
+  border-right: 1px solid #cccccc !important;
+}
+.pricing-card-layout-content-wrapper {
+  display: contents !important;
+}
+.cpricing-card-layout.left-pricing.group_w_3_1 {
+  background: white !important;
+  display: grid !important;
+}
+div.cpricing-card-layout div.table-row {
+  background: white !important;
+  height: auto !important;
+}
 .desc-ul {
   padding-left: 7px;
 }
 .hide-button {
   display: none !important;
 }
-.show-less {
+.show-less, .show-less-desktop {
   font-size: 19px;
   position: relative;
   top: 4px;
@@ -961,9 +985,6 @@ p{
    }
    .pricing-card-layout .pcolumns_w3{
        width:33.33333333%
-   }
-   .pricing-card-layout .pricing-card-layout-content:not(:last-of-type) .pricing-card-layout-content-wrapper{
-       border-right:1px solid #ccc
    }
 }
 @media (min-width:768px) and (max-width:991px){
@@ -4024,7 +4045,6 @@ span.ft:before{
 }
 @media (min-width:992px){
    .lineup-container .pricing-card-layout-qb #content_left.table-row,.lineup-container .pricing-card-layout-qb #content_right.table-row{
-       box-shadow:0 4px 10px 0 rgba(0,0,0,.1);
        display:inline-block;
        border-radius:4px
    }
@@ -6457,7 +6477,6 @@ body.try-it-free .pricing-card-layout .price-container .pricing-section{
 }
 @media (min-width:992px){
    .lineup-container .pricing-card-layout-qb #content_left.table-row,.lineup-container .pricing-card-layout-qb #content_right.table-row{
-       box-shadow:0 4px 10px 0 rgba(0,0,0,.1);
        display:inline-block;
        border-radius:4px
    }
