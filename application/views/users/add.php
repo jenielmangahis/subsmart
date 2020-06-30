@@ -39,13 +39,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h3>Basic Details</h3>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="formClient-Name">Name</label>
-                                    <input type="text" class="form-control" name="name" id="formClient-Name" required
-                                           placeholder="Enter Name"
+                                    <label for="formClient-Name">First Name</label>
+                                    <input type="text" class="form-control" name="FName" id="formClient-FName" required
+                                           placeholder="Enter First Name"
                                            onkeyup="$('#formClient-Username').val(createUsername(this.value))"
                                            autofocus/>
                                 </div>
                                 <div class="col-md-4 form-group">
+                                    <label for="formClient-Name">Last Name</label>
+                                    <input type="text" class="form-control" name="LName" id="formClient-LName" required
+                                           placeholder="Enter Last Name"/>
+                                </div>
+                                <div class="col-md-4 form-group" style="display:none;">
                                     <label for="formClient-Contact">Contact Number</label>
                                     <input type="text" class="form-control" name="phone" id="formClient-Contact"
                                            placeholder="Enter Contact Number"/>
@@ -74,12 +79,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-Password">Password</label>
-                                    <input type="text" class="form-control" name="password" minlength="6"
+                                    <input type="password" class="form-control" name="password" minlength="6"
                                            id="formClient-Password" required placeholder="Password">
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-ConfirmPassword">Confirm Password</label>
-                                    <input type="text" class="form-control" name="confirm_password"
+                                    <input type="password" class="form-control" name="confirm_password"
                                            equalTo="#formClient-Password" id="formClient-ConfirmPassword" required
                                            placeholder="Confirm Password">
                                 </div>
@@ -111,6 +116,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <option value="1" selected>Active</option>
                                         <option value="0">InActive</option>
                                     </select>
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <label for="formClient-Status">App Access</label><br>
+                                    <input type="checkbox" name="app_access" class="js-switch" checked />
+                                    
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <label for="formClient-Status">Web Access</label><br>
+                                    <input type="checkbox" name="web_access" class="js-switch" checked />
                                 </div>
                             </div>
                             <div class="row">
@@ -159,6 +173,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         $('.select2').select2()
 
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html, {size: 'small'});
+        });
 
     })
 

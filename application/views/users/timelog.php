@@ -9,18 +9,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Employees</h1>
+                        <h1 class="page-title">Time Log</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">manage Employees</li>
+                            <li class="breadcrumb-item active">manage Time Log</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add') ?>" class="btn btn-primary"
+                                    <a href="<?php //echo url('users/add') ?>" class="btn btn-primary"
                                        aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> New Employee
+                                        <i class="mdi mdi-settings mr-2"></i> Log Time
                                     </a>
                                 <?php //endif ?>
                             </div>
@@ -47,8 +47,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Role</th>
                                             <th>Last Login</th>
                                             <th>Status</th>
-                                            <th>App Access</th>
-                                            <th>Web Access</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -74,8 +72,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
                                                     <?php endif ?>
                                                 </td>
-                                                <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
-                                                <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
                                                 <td>
                                                     <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"

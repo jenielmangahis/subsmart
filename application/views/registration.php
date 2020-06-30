@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div id="side-image" class="side-image--regular image-fader left"></div>
 			</div>
 			<div class="col-sm-7 col-md-7 float-left pr-0 container-signup pt-5">
-				<form action="#">
+				<form action="#" method="post">
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
 					<span class="text-center block mt-3">Already signed up? <a href="#" class="reg-color">Log in</a></span>
 					<div class="form-container-reg">
@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<div class="col-md-6 float-left z-100">
 							<div class="input-group z-100">
-								<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name">
+								<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
 							</div>
 						</div>
 
@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<div class="col-md-6 float-left">
 							<div class="input-group z-100">
-								<input autocomplete="off" type="text" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address">
+								<input autocomplete="off" type="email" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
 							</div>
 						</div>
 
@@ -59,13 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<div class="col-md-6 float-left">
 							<div class="input-group z-100">.
-								<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" />
-							</div>
-						</div>
-
-						<div class="col-md-6 float-left">
-							<div class="input-group z-100">.
-								<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" />
+								<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
 							</div>
 						</div>
 
@@ -80,6 +74,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<option value="16-20">16-20</option>
 										<option value="20+">20+</option>
 								</select>
+							</div>
+						</div>						
+
+						<div class="col-md-12 float-left">
+							<div class="input-group z-100">.
+								<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
 							</div>
 						</div>
 
@@ -99,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<div class="col-md-6 float-left z-100">
 							<div class="input-group z-100">
-								<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password">
+								<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
 							</div>
 						</div>
 
@@ -109,11 +109,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
 							</div> -->
 						</div>
-						<br /><br /><br />
-						<div class="col-sm-12">
-							<a href="<?php echo url('/home/signup') ?>" class="btn btn-green-2">
+						
+						<div class="col-sm-12" style="text-align: center !important;">
+							<!-- <a href="<?php //echo url('/home/signup') ?>" class="btn btn-green-2">
 								 Sign up
-							</a>
+							</a> -->
+							<input style="margin:auto; width: 500px;" type="submit" class="btn btn-green-2" name="signup" value="Sign Up">
 						</div>
 
 					</div>

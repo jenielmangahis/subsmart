@@ -19,7 +19,7 @@ class Job extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'assets/frontend/css/invoice/main.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
         ));
 
         // JS to add only Job module
@@ -27,9 +27,11 @@ class Job extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
             'assets/frontend/js/invoice/add.js',
             'assets/frontend/js/inventory/main.js',
-            'assets/js/invoice.js'
+            'assets/frontend/js/job_creation/main.js'
         ));
     }
 
@@ -77,6 +79,8 @@ class Job extends MY_Controller
         if ($job_num_query && empty($get['job_num'])) {
             $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
         } else {
+           $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
+           $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
            $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
@@ -264,7 +268,40 @@ class Job extends MY_Controller
         echo json_encode($data);
     }
 
-    public function buy($id){
+    public function saveInvoiceItems() {
+        postAllowed();
+        $comp_id = logged('company_id');
+
+        $data = array(
+            'company_id' => $comp_id,
+            'job_id' => $this->input->post('job_id'),
+            'item_id' => $this->input->post('item_id'),
+            'qty' => 1,
+            'locations' => '',
+            'total_value' => $this->input->post('total_value'),
+            'discount' => 0,
+            'discount_type' => ""
+        );
+        $this->db->insert($this->invoice_model->table_item, $data);
+        $result = $this->jobs_model->getJobInvoiceItems($this->input->post('job_id'));
+
+        echo json_encode($result);
+    }
+
+    public function updateJobItemQty() {
+        postAllowed();
+
+        $id = $this->input->post('id');
+        $type = $this->input->post('type');
+        $qty = $this->input->post('qty');
+
+        $this->jobs_model->updateJobItemQty($id, $qty, $type);
+        $result = $this->jobs_model->getJobInvoiceItems($this->input->post('job_id'));
+
+        echo json_encode($result);
+    }
+
+    public function buy($id) {
         // Set variables for paypal form
         $returnURL = base_url().'paypal/success';
         $cancelURL = base_url().'paypal/cancel';

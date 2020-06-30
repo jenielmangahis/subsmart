@@ -6,6 +6,7 @@ class Items_model extends MY_Model
 {
     public $table = 'items';
     public $table_categories = 'item_categories';
+    public $table_invoice = 'invoice_has_items';
 
     public function __construct()
     {
