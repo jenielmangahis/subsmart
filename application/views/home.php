@@ -75,11 +75,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   var input = document.getElementById('google_search_place');
                                   var autocomplete = new google.maps.places.Autocomplete(input);
                                     google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                                        var place   = autocomplete.getPlace();       
+                                        var place   = autocomplete.getPlace();
                                         var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
-                                        $("#business_address").val(address);                     
+                                        $("#business_address").val(address);
                                         $("#google_search_place").val(place.name); //Use this if return business name only
-                                        //console.log(place);   
+                                        //console.log(place);
                                     });
                                 }
                                 google.maps.event.addDomListener(window, 'load', initialize);
@@ -98,7 +98,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="text" class="form-control stop" id="inputPhoneNumber" placeholder="Phone Number">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input id="google_search_place" type="text" class="form-control stop" placeholder="Business Name" autocomplete="on" runat="server" /> 
+                                        <input id="google_search_place" type="text" class="form-control stop" placeholder="Business Name" autocomplete="on" runat="server" />
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <input id="business_address" type="text" name="business_address" class="form-control stop" placeholder="Business Address" required="" />
@@ -544,10 +544,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="startTrialBtn my-5 text-center widget-footer-container">
                         <!-- TradingView Widget BEGIN -->
 
-                        <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container mobile-widget-container">
                           <div class="tradingview-widget-container__widget"></div>
                           <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Market Data</span></a> by TradingView</div>
-                          
+
                           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
                           {
                           "colorTheme": "light",
@@ -741,7 +741,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   "proName": "RF"
                                 },
                                 {
-                                  "proName": "LOW"  
+                                  "proName": "LOW"
                                 },
                                 {
                                     "proName": "HD"
