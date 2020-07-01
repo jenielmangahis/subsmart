@@ -211,6 +211,14 @@ $(document).ready(function () {
     $("#newJobTypeModal").modal("show");
     $("#settingType").val($(this).data("jobtype"));
   });
+
+  $("#sendEmailCustomer").click(function () {
+    $.LoadingOverlay("show");
+    var param = {
+      email: "jeykell125@gmail.com",
+    };
+    sendEmailToCustomer(param);
+  });
 });
 
 function getCustomers() {
@@ -479,6 +487,17 @@ function updateItemQty(param) {
         destroy: true,
         data: items,
       });
+    },
+  });
+}
+
+function sendEmailToCustomer(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/sendEstimateEmail",
+    data: param,
+    success: function (data) {
+      $.LoadingOverlay("hide");
     },
   });
 }

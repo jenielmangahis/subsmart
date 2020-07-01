@@ -23,7 +23,7 @@ $user_id = getLoggedUserID();
         flex-direction: column;
         color: #fff;
         text-align: center;
-        font-size: 14px !important;
+        font-size: 13px !important;
     }
 
     #topnav .navigation-menu > li > a i {

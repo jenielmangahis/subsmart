@@ -82,7 +82,8 @@ $(window).on('load', function() {
 		autoplayHoverPause: true,
 		nav: true,
 		dots: false,
-		loop: true,
+		loop: false,
+		rewind:true,
 		slideSpeed : 12000,
 		autoplaySpeed:12000,
 		autoplayTimeout:9000,
@@ -92,6 +93,7 @@ $(window).on('load', function() {
 		animateOut: 'fadeOut',
     	animateIn: 'fadeIn',
 	});
+
 
 	$('.pricing-mobile-slider').owlCarousel({
 		autoHeight: true,

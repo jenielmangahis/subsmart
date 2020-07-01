@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
                 $("#business_address").val(address);                     
                 $("#google_search_place").val(place.name); //Use this if return business name only
-                console.log(place);   
+                //console.log(place);   
             });
         }
         google.maps.event.addDomListener(window, 'load', initialize);

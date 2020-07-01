@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
 
-            <div class="hero-item set-bg" data-setbg="<?php echo $url->assets ?>frontend/images/banner-registration.jpg">
+            <div class="hero-item set-bg hero-registration" data-setbg="<?php echo $url->assets ?>frontend/images/banner-registration.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 col-lg-4 col-xl-5 mobile-quotes text-center">
@@ -70,6 +70,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h2 class="font-weight-bold text-white f-28 mobile-only">Signup Today Free 30-Day Trial</h2>
                                     <h2 class="font-weight-bold text-white f-28 desktop-only">Signup Today for a Free 30-Day Trial</h2>
                             </div>
+                            <script>
+                                function initialize() {
+                                  var input = document.getElementById('google_search_place');
+                                  var autocomplete = new google.maps.places.Autocomplete(input);
+                                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                                        var place   = autocomplete.getPlace();       
+                                        var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
+                                        $("#business_address").val(address);                     
+                                        $("#google_search_place").val(place.name); //Use this if return business name only
+                                        //console.log(place);   
+                                    });
+                                }
+                                google.maps.event.addDomListener(window, 'load', initialize);
+                            </script>
                             <div class="row row-margin-top">
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <input type="text" class="form-control stop" id="inputFirstname" placeholder="First Name">
@@ -84,7 +98,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="text" class="form-control stop" id="inputPhoneNumber" placeholder="Phone Number">
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input id="searchTextField" type="text" class="form-control stop searchTextField" placeholder="Business Name" autocomplete="on" runat="server" /> 
+                                        <input id="google_search_place" type="text" class="form-control stop" placeholder="Business Name" autocomplete="on" runat="server" /> 
+                                </div>
+                                <div class="col-md-12 col-lg-6 row-margin-top">
+                                        <input id="business_address" type="text" name="business_address" class="form-control stop" placeholder="Business Address" required="" />
                                 </div>
                                 <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
@@ -526,9 +543,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-sm-12">
                     <div class="startTrialBtn my-5 text-center widget-footer-container">
                         <!-- TradingView Widget BEGIN -->
+
                         <div class="tradingview-widget-container">
                           <div class="tradingview-widget-container__widget"></div>
                           <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Market Data</span></a> by TradingView</div>
+                          
                           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
                           {
                           "colorTheme": "light",
@@ -566,6 +585,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 {
                                   "s": "FOREXCOM:UKXGBP",
                                   "d": "FTSE 100"
+                                },
+                                {
+                                    "s": "INDEX:USDJPY",
+                                    "d": "US DOLLAR JAPANESE YEN"
                                 }
                               ],
                               "originalTitle": "Indices"
@@ -653,10 +676,173 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 }
                               ],
                               "originalTitle": "Forex"
-                            }
+                            },
+                            /*{
+                              "title": "Favorites",
+                              "symbols": [
+                                {
+                                  "s": "RF"
+                                },
+                                {
+                                  "s": "LOW"
+                                },
+                                {
+                                  "s": "HD"
+                                },
+                                {
+                                  "s": "AMZN"
+                                },
+                                {
+                                  "s": "FX:AUDUSD"
+                                },
+                                {
+                                  "s": "FX:USDCAD"
+                                }
+                                {
+                                    "s": "HON"
+                                }
+                              ],
+                              "originalTitle": "Forex"
+                            }*/
                           ]
                         }
                           </script>
+                        </div>
+                        <!-- TradingView Widget END -->
+
+                        <!-- TradingView Widget BEGIN -->
+                         <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget"></div>
+                            <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+                           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                              {
+                              "symbols": [
+                                {
+                                  "proName": "FOREXCOM:SPXUSD",
+                                  "title": "S&P 500"
+                                },
+                                {
+                                  "proName": "FOREXCOM:NSXUSD",
+                                  "title": "Nasdaq 100"
+                                },
+                                {
+                                  "proName": "FX_IDC:EURUSD",
+                                  "title": "EUR/USD"
+                                },
+                                {
+                                  "proName": "BITSTAMP:BTCUSD",
+                                  "title": "BTC/USD"
+                                },
+                                {
+                                  "proName": "BITSTAMP:ETHUSD",
+                                  "title": "ETH/USD"
+                                },
+                                {
+                                  "proName": "RF"
+                                },
+                                {
+                                  "proName": "LOW"  
+                                },
+                                {
+                                    "proName": "HD"
+                                },
+                                {
+                                    "proName": "AMZN"
+                                },
+                                {
+                                    "proName": "HON"
+                                },
+                                {
+                                    "proName": "GE"
+                                },
+                                {
+                                    "proName": "AAPPL"
+                                },
+                                {
+                                    "proName": "WMT"
+                                },
+                                {
+                                    "proName": "DIS"
+                                },
+                                {
+                                    "proName": "FB"
+                                },
+                                {
+                                    "proName": "CIT"
+                                },
+                                {
+                                    "proName": "UA"
+                                },
+                                {
+                                    "proName": "BAC"
+                                },
+                                {
+                                    "proName": "SSL"
+                                },
+                                {
+                                    "proName": "CNTY"
+                                },
+                                {
+                                    "proName": "MCD"
+                                },
+                                {
+                                    "proName": "CCL"
+                                },
+                                {
+                                    "proName": "KO"
+                                },
+                                {
+                                    "proName": "JBLU"
+                                },
+                                {
+                                    "proName": "AAL"
+                                },
+                                {
+                                    "proName": "NYMT"
+                                },
+                                {
+                                    "proName": "$DJI"
+                                },
+                                {
+                                    "proName": "$SPX.X"
+                                },
+                                {
+                                    "proName": "$COMPX"
+                                },
+                                {
+                                    "proName": "NFLX"
+                                },
+                                {
+                                    "proName": "BP"
+                                },
+                                {
+                                    "proName": "TGT"
+                                },
+                                {
+                                    "proName": "DAL"
+                                },
+                                {
+                                    "proName": "ZAGG"
+                                },
+                                {
+                                    "proName": "BUD"
+                                },
+                                {
+                                    "proName": "UPS"
+                                },
+                                {
+                                    "proName": "KIRK"
+                                },
+                                {
+                                    "proName": "BGG"
+                                }
+                              ],
+                                  "colorTheme": "light",
+                                  "isTransparent": false,
+                                  "displayMode": "adaptive",
+                                  "locale": "en"
+                              }
+                            </script>
                         </div>
                         <!-- TradingView Widget END -->
                     </div>

@@ -332,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div><!-- end row -->
-             <div class="row d-none d-lg-flex">
+            <div class="row d-none d-lg-flex">
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">
@@ -435,6 +435,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div><!-- end row -->
+
+            <div class="row d-none d-lg-flex">
+            	<div class="col-xl-12">
+					<!-- TradingView Widget BEGIN -->
+					<div class="tradingview-widget-container">
+						<div class="tradingview-widget-container__widget"></div>
+						<div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important; text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+						<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+						  {
+						  "symbols": [
+						    {
+						      "proName": "FOREXCOM:SPXUSD",
+						      "title": "S&P 500"
+						    },
+						    {
+						      "proName": "FOREXCOM:NSXUSD",
+						      "title": "Nasdaq 100"
+						    },
+						    {
+						      "proName": "FX_IDC:EURUSD",
+						      "title": "EUR/USD"
+						    },
+						    {
+						      "proName": "BITSTAMP:BTCUSD",
+						      "title": "BTC/USD"
+						    },
+						    {
+						      "proName": "BITSTAMP:ETHUSD",
+						      "title": "ETH/USD"
+						    }
+						  ],
+							  "colorTheme": "light",
+							  "isTransparent": false,
+							  "displayMode": "adaptive",
+							  "locale": "en"
+						  }
+						</script>
+					</div>
+					<!-- TradingView Widget END -->
+            	</div>
+            </div>
+            <br />
+            <div class="row d-none d-lg-flex">
+            	&nbsp;
+            </div>
             
         </div><!-- end container-fluid -->
     </div><!-- page wrapper end -->

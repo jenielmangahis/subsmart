@@ -345,6 +345,37 @@ class Job extends MY_Controller
             $this->db->insert($this->jobs_model->table_credit_cards, $data);
         }
     }
+
+    public function sendEstimateEmail() {
+        postAllowed();
+        $from_email = "jeykell125@gmail.com";
+        $to_email = $this->input->post('email');
+
+        //Load email library
+        $this->load->library('email');
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'nsmartrac@gmail.com',
+            'smtp_pass' => 'nSmarTrac1',
+            'mailtype'  => 'html', 
+            'charset'   => 'iso-8859-1'
+        );
+        $this->email->initialize($config);
+        $this->email->set_newline("\r\n");
+
+        $this->email->from($from_email, 'nSmarTrac');
+        $this->email->to($to_email);
+        $this->email->subject('Review Estimate');
+        $message = $this->load->view('email_campaigns/estimate.php',null,TRUE);
+        $this->email->message($message);
+        //Send mail
+        if($this->email->send())
+            echo json_encode("Congratulation Email Send Successfully.");
+        else
+            echo json_encode($this->email->send());
+    }
 }
 
 /* End of file Job.php */
