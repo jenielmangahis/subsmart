@@ -10,10 +10,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-2">
                         <h1 class="page-title">Dashboard</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Welcome to  Dashboard</li>                            
+                            <li class="breadcrumb-item active">Welcome to  Dashboard</li>
                         </ol>
                     </div>
-					
+
 					<style>
 						.smart__grid{
 							background: #fff;
@@ -29,9 +29,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							display: flex;
 							align-items: center;
 							justify-content: center;
-						} 
+						}
 					</style>
-					
+
 					<div class="col-12 d-md-none d-block p-0">
 					<div class="smart__grid" id="1">
 							<div><a href="http://nsmartrac.com/workorder/add">Add Work Order</a></div>
@@ -47,11 +47,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<div><a href="http://nsmartrac.com/menu3">Sub Menu 1</div>
 							<div><a href="http://nsmartrac.com/menu2">Sub Menu 2</a></div>
 					</div>
-					 
+
 					</div>
-					
-                    <div class="col-sm-6 d-none d-lg-flex">                     
-                        
+
+                    <div class="col-sm-6 d-none d-lg-flex">
+
                     </div>
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
@@ -59,10 +59,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<?php $image = base_url('uploads/users/default.png'); ?>
 							<img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;">
                             <!-- <img src="<?php //echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
-                            <?php 
+                            <?php
                                /*$id = logged('id');
                                $query = $this->db->query("Select name from users where id = $id");
-                               $query11 = $query->row();  */                           
+                               $query11 = $query->row();  */
                             ?>
                             <h5 style="margin: 13px 0 0px 10px;"><?php echo getLoggedName();?></h5>
                         </ol>
@@ -84,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div><!-- end row -->
-			
+
 			<style>
 				.qUickStart{
 					/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fcfcfc+0,eaeaea+100 */
@@ -127,7 +127,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					opacity: 0.6;
 				}
 			</style>
-			
+
             <div class="row d-none d-lg-flex">
 				<div class="col-md-5">
 					<div class="card">
@@ -168,7 +168,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>dashboard/images/services-icon/01.png" alt=""></div>
 										<h5 class="font-16 text-uppercase mt-0 text-white-50">Earned Today</h5>
 										<h4 class="font-500">$0.00 <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-										 
+
 									</div>
 									<div class="pt-2">
 										<div class="float-right"><a href="index.html#" class="text-white-50"><i
@@ -186,7 +186,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												alt=""></div>
 										<h5 class="font-16 text-uppercase mt-0 text-white-50">Total Jobs month to date</h5>
 										<h4 class="font-500">0 (Avg: $0.00) <i class="mdi mdi-arrow-down text-danger ml-2"></i></h4>
-										 
+
 									</div>
 									<div class="pt-2">
 										<div class="float-right"><a href="index.html#" class="text-white-50"><i
@@ -204,7 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												alt=""></div>
 										<h5 class="font-16 text-uppercase mt-0 text-white-50">Total Invoice Due</h5>
 										<h4 class="font-500">$0.00 (0) <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-										 
+
 									</div>
 									<div class="pt-2">
 										<div class="float-right"><a href="index.html#" class="text-white-50"><i
@@ -222,7 +222,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												alt=""></div>
 										<h5 class="font-16 text-uppercase mt-0 text-white-50">Total Estimate Pending</h5>
 										<h4 class="font-500">0.00 <i class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-										
+
 									</div>
 									<div class="pt-2">
 										<div class="float-right"><a href="index.html#" class="text-white-50"><i
@@ -439,7 +439,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row d-none d-lg-flex">
             	<div class="col-xl-12">
 					<!-- TradingView Widget BEGIN -->
-					<div class="tradingview-widget-container">
+					<div class="tradingview-widget-container mobile-widget-container">
 						<div class="tradingview-widget-container__widget"></div>
 						<div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important; text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
 						<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
@@ -480,13 +480,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row d-none d-lg-flex">
             	&nbsp;
             </div>
-            
+
         </div><!-- end container-fluid -->
     </div><!-- page wrapper end -->
 
 
 
- 
+
 <div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
   <div class="mdc-bottom-navigation">
       <nav class="mdc-bottom-navigation__list">
@@ -507,9 +507,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
         </span>
       </nav>
-    </div> 
+    </div>
 </div>
- 
+
 <div style="" class="floating-btn-div div1">
 	<label class="label"><a href="#">Notes</a></label>
 	<a href="#" class="float1">
@@ -839,7 +839,7 @@ display: none;
 display: block !important;
  }
 }
- 
+
 </style>
 
     <?php include viewPath('includes/footer'); ?>
