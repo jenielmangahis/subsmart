@@ -69,10 +69,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td><?php echo ucfirst($this->roles_model->getById($row->role)->title) ?></td>
                                                 <td><?php echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?></td>
                                                 <td>
-                                                    <?php if (logged('id') !== $row->id): ?>
-                                                        <input type="checkbox" class="js-switch"
-                                                               onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                    <?php endif ?>
+                                                    <?php //if (logged('id') !== $row->id): ?>
+                                                        <!-- <input type="checkbox" class="js-switch"
+                                                               onchange="updateUserStatus('<?php //echo $row->id ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                        <?php if( $row->status == 1 ): ?>
+                                                            <span>Active</span>
+                                                        <?php else: ?>
+                                                            <span>Inactive</span>
+                                                        <?php endif; ?>
+                                                    <?php //endif ?>
                                                 </td>
                                                 <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
                                                 <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>

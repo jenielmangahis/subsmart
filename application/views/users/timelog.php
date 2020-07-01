@@ -39,13 +39,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <table id="dataTable1" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th>Id</th>
-                                            <th>Image</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Password</th>
-                                            <th>Role</th>
                                             <th>Last Login</th>
+                                            <!-- <th>Id</th>
+                                            <th>Image</th> -->
+                                            <th>Name</th>
+                                            <!-- <th>Email</th>
+                                            <th>Password</th> -->
+                                            <th>Role</th>
+                                            
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -53,19 +54,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tbody>
                                         <?php foreach ($users as $row): ?>
                                             <tr>
-                                                <td width="60"><?php echo $row->id ?></td>
-                                                <td width="50" class="text-center">
+                                                <!-- last login -->
+                                                <td><?php echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>
+                                                    
+                                                </td>
+                                                <!-- <td width="60"><?php echo $row->id ?></td> -->
+                                                <!-- <td width="50" class="text-center"> -->
                                                     <!-- <img src="<?php //echo userProfile($row->id) ?>" width="40"
                                                          height="40" alt="" class="img-avtar"> -->
-                                                    <img src="<?php echo base_url('uploads/users/default.png');?>" width="40" height="40" alt="" class="img-avatar" />
-                                                </td>
+                                                    <!-- <img src="<?php //echo base_url('uploads/users/default.png');?>" width="40" height="40" alt="" class="img-avatar" /> -->
+                                                <!-- </td> -->
                                                 <td>
                                                     <?php echo $row->FName.' '.$row->LName ?>
                                                 </td>
-                                                <td><?php echo $row->email ?></td>
-                                                <td><?php echo $row->password_plain ?></td>
+                                                <!-- <td><?php //echo $row->email ?></td>
+                                                <td><?php //echo $row->password_plain ?></td> -->
                                                 <td><?php echo ucfirst($this->roles_model->getById($row->role)->title) ?></td>
-                                                <td><?php echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?></td>
+                                                
                                                 <td>
                                                     <?php if (logged('id') !== $row->id): ?>
                                                         <input type="checkbox" class="js-switch"

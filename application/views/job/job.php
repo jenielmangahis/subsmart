@@ -226,7 +226,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <button class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Send to Customer</button>
+                                                <button type="button" class="btn btn-primary col-md-12" id="sendEmailCustomer">Send to Customer</button>
                                             </div>
                                         </div>
                                     </div>
