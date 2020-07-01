@@ -711,7 +711,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- TradingView Widget END -->
 
                         <!-- TradingView Widget BEGIN -->
-                         <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container">
                             <div class="tradingview-widget-container__widget"></div>
                             <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
