@@ -756,7 +756,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     "proName": "GE"
                                 },
                                 {
-                                    "proName": "AAPPL"
+                                    "proName": "AAPL"
                                 },
                                 {
                                     "proName": "WMT"
@@ -799,15 +799,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 },
                                 {
                                     "proName": "NYMT"
-                                },
-                                {
-                                    "proName": "$DJI"
-                                },
-                                {
-                                    "proName": "$SPX.X"
-                                },
-                                {
-                                    "proName": "$COMPX"
                                 },
                                 {
                                     "proName": "NFLX"
