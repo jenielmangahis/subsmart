@@ -366,6 +366,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="card mt-5 border-0">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-5">
+                                                <div class="imgHolder"><img src="<?php echo $url->assets ?>frontend/images/business-form-templates.png" class="card-img card-features-home" alt="card 1"></div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><a href="#">Business Form Templates</a></h5>
+                                                    <p class="card-text"> Form Templates is designed to help business people get more done in less time. This do-it-yourself document templates solution has been created to increase at-work productivity and efficiency.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
