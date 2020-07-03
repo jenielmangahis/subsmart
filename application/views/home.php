@@ -543,6 +543,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             <div class="row">
                 <div class="col-sm-12">
+                    <h3 class="widget-txt-title">Stock Market Watch</h3>
+                    <span class="widget-desc">Learning how to read stock tickers can help you better understand what consumers are buying and why?  This will give you a better footing in where to invest your money.</span>
                     <div class="startTrialBtn my-5 text-center widget-footer-container">
                         <!-- TradingView Widget BEGIN -->
 
