@@ -66,83 +66,85 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         </div>
                         <div class="col-md-12 col-lg-7 col-xl-7 text-center pt-110">
-                            <div class="row justify-content-center">
-                                    <h2 class="font-weight-bold text-white f-28 mobile-only">Signup Today Free 30-Day Trial</h2>
-                                    <h2 class="font-weight-bold text-white f-28 desktop-only">Signup Today for a Free 30-Day Trial</h2>
-                            </div>
-                            <script>
-                                function initialize() {
-                                  var input = document.getElementById('google_search_place');
-                                  var autocomplete = new google.maps.places.Autocomplete(input);
-                                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                                        var place   = autocomplete.getPlace();       
-                                        var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
-                                        $("#business_address").val(address);                     
-                                        $("#google_search_place").val(place.name); //Use this if return business name only
-                                        //console.log(place);   
-                                    });
-                                }
-                                google.maps.event.addDomListener(window, 'load', initialize);
-                            </script>
-                            <div class="row row-margin-top">
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control stop" id="inputFirstname" placeholder="First Name">
+                            <form action="" method="post">
+                                <div class="row justify-content-center">
+                                        <h2 class="font-weight-bold text-white f-28 mobile-only">Signup Today Free 30-Day Trial</h2>
+                                        <h2 class="font-weight-bold text-white f-28 desktop-only">Signup Today for a Free 30-Day Trial</h2>
                                 </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control stop" id="inputLastname" placeholder="Last Name">
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top" >
-                                        <input type="text" class="form-control stop" id="inputEmailAddress" placeholder="Email Address">
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input type="text" class="form-control stop" id="inputPhoneNumber" placeholder="Phone Number">
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input id="google_search_place" type="text" class="form-control stop" placeholder="Business Name" autocomplete="on" runat="server" /> 
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                        <input id="business_address" type="text" name="business_address" class="form-control stop" placeholder="Business Address" required="" />
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
+                                <script>
+                                    function initialize() {
+                                      var input = document.getElementById('google_search_place');
+                                      var autocomplete = new google.maps.places.Autocomplete(input);
+                                        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                                            var place   = autocomplete.getPlace();
+                                            var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
+                                            $("#business_address").val(address);
+                                            $("#google_search_place").val(place.name); //Use this if return business name only
+                                            //console.log(place);
+                                        });
+                                    }
+                                    google.maps.event.addDomListener(window, 'load', initialize);
+                                </script>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                            <input type="text" class="form-control stop" required="" name="firstname" id="inputFirstname" placeholder="First Name">
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                            <input type="text" class="form-control stop" required="" name="lastname" id="inputLastname" placeholder="Last Name">
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top" >
+                                            <input type="email" class="form-control stop" name="email" id="inputEmailAddress" placeholder="Email Address">
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                            <input type="text" class="form-control stop" name="phone_number" id="inputPhoneNumber" placeholder="Phone Number">
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                            <input id="google_search_place" type="text" required="" name="business_name" class="form-control stop" placeholder="Business Name" autocomplete="on" runat="server" />
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                            <input id="business_address" type="text" name="business_address" class="form-control stop" placeholder="Business Address" required="" />
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                            <select class="form-control" id="sel1">
+                                            <option value="0">Number of Employees</option>
+                                                    <option value="1 (Just Me)">1 (Just Me)</option>
+                                                    <option value="2-10">2-10</option>
+                                                    <option value="11-50">11-50</option>
+                                                    <option value="51-100">51-100</option>
+                                                    <option value="101-500">101-500</option>
+                                                    <option value="1000+<">1000+<</option>
+                                            </select>
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
                                         <select class="form-control" id="sel1">
-                                        <option value="0">Number of Employees</option>
-                                                <option value="1 (Just Me)">1 (Just Me)</option>
-                                                <option value="2-10">2-10</option>
-                                                <option value="11-50">11-50</option>
-                                                <option value="51-100">51-100</option>
-                                                <option value="101-500">101-500</option>
-                                                <option value="1000+<">1000+<</option>
-                                        </select>
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                    <select class="form-control" id="sel1">
-                                        <option>--Select your Industry--</option>
-                                        <?php foreach( $business as $key => $values ){ ?>
-                                            <optgroup label="<?php echo $key; ?>">
-                                            <?php foreach( $values as $value ){ ?>
-                                                <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+                                            <option>--Select your Industry--</option>
+                                            <?php foreach( $business as $key => $values ){ ?>
+                                                <optgroup label="<?php echo $key; ?>">
+                                                <?php foreach( $values as $value ){ ?>
+                                                    <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+                                                <?php } ?>
                                             <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-12 col-lg-6 row-margin-top">
-                                    <div class="input-group">
-                                        <input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password" style="padding:18px 15px;">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 row-margin-top">
+                                        <div class="input-group">
+                                            <input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password" style="padding:18px 15px;">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row row-margin-top">
-                                <div class="col-md-12 col-lg-6 col-sm-12 mobile-only">
-                                  <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-12 col-lg-6 col-sm-12 mobile-only">
+                                      <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 col-sm-12">
+                                            <button type="submit" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
+                                            <label class="font-weight-bold text-white">No credit card required</label>
+                                    </div>
+                                    <div class="col-md-12 col-lg-6 col-sm-12 desktop-only">
+                                            <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
+                                    </div>
                                 </div>
-                                <div class="col-md-12 col-lg-6 col-sm-12">
-                                        <button type="button" class="btn btn-success w-100 float-left font-weight-bold">Sign Up Now</button>
-                                        <label class="font-weight-bold text-white">No credit card required</label>
-                                </div>
-                                <div class="col-md-12 col-lg-6 col-sm-12 desktop-only">
-                                        <label class="text-white align-bottom"><input type="checkbox" value=""> I accept the User Agreement</label>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -544,10 +546,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="startTrialBtn my-5 text-center widget-footer-container">
                         <!-- TradingView Widget BEGIN -->
 
-                        <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container mobile-widget-container">
                           <div class="tradingview-widget-container__widget"></div>
                           <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Market Data</span></a> by TradingView</div>
-                          
+
                           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
                           {
                           "colorTheme": "light",
@@ -711,7 +713,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- TradingView Widget END -->
 
                         <!-- TradingView Widget BEGIN -->
-                         <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container">
                             <div class="tradingview-widget-container__widget"></div>
                             <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
@@ -741,7 +743,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   "proName": "RF"
                                 },
                                 {
-                                  "proName": "LOW"  
+                                  "proName": "LOW"
                                 },
                                 {
                                     "proName": "HD"
@@ -756,7 +758,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     "proName": "GE"
                                 },
                                 {
-                                    "proName": "AAPPL"
+                                    "proName": "AAPL"
                                 },
                                 {
                                     "proName": "WMT"
@@ -799,15 +801,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 },
                                 {
                                     "proName": "NYMT"
-                                },
-                                {
-                                    "proName": "$DJI"
-                                },
-                                {
-                                    "proName": "$SPX.X"
-                                },
-                                {
-                                    "proName": "$COMPX"
                                 },
                                 {
                                     "proName": "NFLX"

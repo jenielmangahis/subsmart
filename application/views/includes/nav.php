@@ -242,6 +242,9 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php //echo url('/more/upgrades') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Video Estimate
                         </a>
+                        <a class="dropdown-item" href="<?php echo url('/more/addons') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> Add-on
+                        </a>
                     </div>
                     <?php /*<div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <?php if (hasPermissions('businessdetail')): ?><a class="dropdown-item"

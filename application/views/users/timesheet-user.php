@@ -52,12 +52,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php //if (hasPermissions('users_add')): ?>
+                                <?php if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
                                     </a>
-                                <?php //endif ?>
+                                <?php endif ?>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php /*<th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th>*/ ?>
-                                            <th>Recorded Clock In/Clock Out</th>
+                                            <th>Last Login</th>
                                             <!-- <th>Status</th> -->
                                             <th>In</th>
                                             <th>Out</th>
@@ -125,6 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </td>
                                                     
                                                     <td id="last_login">
+                                                        <!-- last recorded clock in  -->
                                                         <?php 
                                                             if( !empty($clockin_arr) ){
                                                         ?>
@@ -151,13 +152,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         $user_clock_in = $clockin_arr[0]->timestamp;
                                                                         echo date('h:i a', strtotime($user_clock_in))." Manual Clock Out";
                                                                     }
-                                                                    
+                                                                    elseif( $clockin_arr[0]->action == 'Lunch In' ){
+                                                                        $user_clock_in = $clockin_arr[0]->timestamp;
+                                                                        echo date('h:i a', strtotime($user_clock_in))." Manual Lunch In";
+                                                                    }
+                                                                    elseif( $clockin_arr[0]->action == 'Lunch Out' ){
+                                                                        $user_clock_in = $clockin_arr[0]->timestamp;
+                                                                        echo date('h:i a', strtotime($user_clock_in))." Manual Lunch Out";
+                                                                    }
+                                                                    elseif( $clockin_arr[0]->action == 'Break In' ){
+                                                                        $user_clock_in = $clockin_arr[0]->timestamp;
+                                                                        echo date('h:i a', strtotime($user_clock_in))." Manual Break In";
+                                                                    }
+                                                                    elseif( $clockin_arr[0]->action == 'Break Out' ){
+                                                                        $user_clock_in = $clockin_arr[0]->timestamp;
+                                                                        echo date('h:i a', strtotime($user_clock_in))." Manual Break Out";
+                                                                    }
                                                                 }
                                                                                                                                 
                                                             ?>
-                                                        
                                                         </span>
-                                                        
+                                                        <!-- EOL: last recorded clock in  -->
                                                         <?php //echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>  
                                                     </td>
 
@@ -236,6 +251,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             
                                                         <?php //endif ?>
                                                     </td>
+
+                                                    <!-- Add Breaked In here -->
+
+                                                    <!-- Add Breaked Out here -->
 
                                                     <td>
                                                         <?php //if (logged('id') !== $row->id): ?>
@@ -316,6 +335,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <?php else: ?>
                                                                         <a id="clockout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
+                                                                        </a>
+                                                                    <?php endif; ?>
+                                                                <?php endif; ?>
+
+                                                                <!-- Break In-->
+                                                                <?php if( !empty($clockin_arr) ):?>
+                                                                    <?php if( $clockin_arr[0]->action == 'Break In' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <a id="breakin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary breakin_btn" title="Clock Out" data-toggle="tooltip">
+                                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break In
+                                                                        </a>
+                                                                    <?php else: ?>
+                                                                        <a id="breakin_btn" style="display: ;" href="#" class="btn btn-sm btn-primary breakin_btn" title="Clock Out" data-toggle="tooltip">
+                                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break In
+                                                                        </a>
+                                                                    <?php endif; ?>
+                                                                <?php endif; ?>
+
+                                                                <!-- Break Out-->
+                                                                <?php if( !empty($clockin_arr) ):?>
+                                                                    <?php if( $clockin_arr[0]->action == 'Break Out' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <a id="breakout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary breakout_btn" title="Clock Out" data-toggle="tooltip">
+                                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break Out
+                                                                        </a>
+                                                                    <?php else: ?>
+                                                                        <a id="breakout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary breakout_btn" title="Clock Out" data-toggle="tooltip">
+                                                                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break Out
                                                                         </a>
                                                                     <?php endif; ?>
                                                                 <?php endif; ?>
@@ -692,7 +737,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('User has Clocked In');
+                    //alert('User has Clocked In');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -736,7 +781,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('User has Clocked In');
+                    //alert('User has Clocked In');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -780,7 +825,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('User has Lunch In');
+                    //alert('User has Lunch In');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -824,7 +869,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('User has Lunched Out');
+                    //alert('User has Lunched Out');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -838,6 +883,94 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             });
         })
+
+        // Break In action
+        $('.breakin_btn').on('click', function(e){
+            //var values = $(this).parent('form').serializeArray();
+            var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };
+            var clockin_user_id = getValue('clockin_user_id');
+            //console.log(clockin_user_id);
+
+            e.preventDefault();
+            //alert('Are you sure you want to Lunch Out?');
+            //
+            
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/break_in') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    //alert('User has Break In');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
+        });
+
+        // Break Out action
+        $('.breakout_btn').on('click', function(e){
+            //var values = $(this).parent('form').serializeArray();
+            var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };
+            var clockin_user_id = getValue('clockin_user_id');
+            //console.log(clockin_user_id);
+
+            e.preventDefault();
+            alert('Are you sure you want to Break Out?');
+            //
+            
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/break_out') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    //alert('User has Break Out');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
+        });
 
     });
 

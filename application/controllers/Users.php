@@ -570,7 +570,42 @@ class Users extends MY_Controller {
 		);
 
 		$this->timesheet_model->clockOut($data);
+	}
 
+	public function break_in()
+	{
+		print_r($this->input->post());
+		$this->load->model('timesheet_model');
+		$data = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Break In',
+			'timestamp' => $this->input->post('current_time_in'),
+			'entry_type' => 'Normal'
+			/*'user_id' => $this->input->post('clockin_user_id'),
+			'company_id' => $this->input->post('clockin_company_id'),
+			'clock_in' => $this->input->post('current_time_in'),
+			'session_key' => $this->input->post('clockin_sess'),
+			'status' => $this->input->post('clockin_status')*/
+		);
+		$this->timesheet_model->clockIn($data);
+	}
+
+	public function break_out()
+	{
+		print_r($this->input->post());
+		$this->load->model('timesheet_model');
+		$data = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Break Out',
+			'timestamp' => $this->input->post('current_time_in'),
+			'entry_type' => 'Normal'
+			/*'user_id' => $this->input->post('clockin_user_id'),
+			'company_id' => $this->input->post('clockin_company_id'),
+			'clock_in' => $this->input->post('current_time_in'),
+			'session_key' => $this->input->post('clockin_sess'),
+			'status' => $this->input->post('clockin_status')*/
+		);
+		$this->timesheet_model->clockIn($data);
 	}
 
 	public function manual_clock_in()

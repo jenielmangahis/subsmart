@@ -43,8 +43,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <?php if ($type == 'product' || empty($type)) : ?>
                                 <div class="col-md-10" id="onHandInventory">
                                     <div class="row pt-4">
-                                        <h4 for="exampleFormControlSelect1" class="col-md-10 text-left">Inventory On Hand</h4>
-                                        <div class="col-md-2 text-right" style="margin-bottom:10px;">
+                                        <h4 for="exampleFormControlSelect1" class="col-md-8 text-left">Inventory On Hand</h4>
+                                        <div class="col-md-4 text-right" style="margin-bottom:10px;">
+                                            <button class="btn btn-info" id="addNewItemInventory"><span class="fa fa-upload"></span> Import</button>
+                                            <button class="btn btn-info" id="addNewItemInventory"><span class="fa fa-download"></span> Export</button>
                                             <button class="btn btn-primary" id="addNewItemInventory">New Item</button>
                                         </div>
                                     </div>

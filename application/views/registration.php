@@ -12,6 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<form action="#" method="post">
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
 					<span class="text-center block mt-3">Already signed up? <a href="#" class="reg-color">Log in</a></span>
+										<span class="text-reg-subtle">Studies show CRM Systems will increase your customer relationship by 74% and improves your sales by 87%</span>
 					<div class="form-container-reg">
 
 						<!-- <div class="col-md-6 float-left z-100">
@@ -58,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
 
 						<div class="col-md-6 float-left">
-							<div class="input-group z-100">.
+							<div class="input-group z-100">
 								<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
 							</div>
 						</div>
@@ -75,10 +76,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<option value="20+">20+</option>
 								</select>
 							</div>
-						</div>						
+						</div>
 
 						<div class="col-md-12 float-left">
-							<div class="input-group z-100">.
+							<div class="input-group z-100">
 								<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
 							</div>
 						</div>
@@ -109,7 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
 							</div> -->
 						</div>
-						
+
 						<div class="col-sm-12" style="text-align: center !important;">
 							<!-- <a href="<?php //echo url('/home/signup') ?>" class="btn btn-green-2">
 								 Sign up

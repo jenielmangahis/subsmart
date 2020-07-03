@@ -9,7 +9,7 @@ class Survey_model extends MY_Model {
 	}
 
 	public function add($data){
-    	$this->db->insert('survey', $data);
+		$this->db->insert('survey', $data);
 		$insert_id = $this->db->insert_id();
 
 		$this->db->select('*');
@@ -55,9 +55,9 @@ class Survey_model extends MY_Model {
 		'question' => $template->question,
 		'template_id' => $tid
 		);
-
-			$this->db->insert('survey_questions', $data);
-			$insert_id = $this->db->insert_id();
+		
+		$this->db->insert('survey_questions', $data);
+		$insert_id = $this->db->insert_id();
 
 			$data_option = array(
 				'survey_template_choice' => $template->answer,
@@ -101,6 +101,78 @@ class Survey_model extends MY_Model {
 				'template_title' => $template->type
 			);
 		return $data;
+	}
+
+	// new
+	public function addAndUpdateQuestion($id, $tid){
+		$this->db->select('*');
+		$this->db->where('id', $tid);
+		$query = $this->db->get('survey_template_questions');
+		$template = $query->row();
+			$data = array(
+		'survey_id' => $id,
+		'question' => $this->input->post('question'),
+		'order' => $this->input->post('order'),
+		'template_id' => $tid,
+		'required' => $this->input->post('required'),
+		'description' => $this->input->post('description'),
+		'description_label' => $this->input->post('description_label')
+		);
+		
+		$this->db->insert('survey_questions', $data);
+		$insert_id = $this->db->insert_id();
+
+		$data = array(
+			'id'=> $insert_id,
+			'tid' => $tid,
+			'data' => $template->answer,
+			'test' => $test,
+			'question' => $template->question,
+			'template_title' => $template->type
+		);
+		return $data;
+	}
+
+	// new
+	public function addAndUpdateQuestionChoices($choices){
+		echo "<pre/>";
+		var_dump($choices);
+		exit;
+		foreach($choices as $choice){
+			$data_option = array(
+				'survey_template_choice' => $template->answer,
+				'survey_template_id' => $insert_id,
+			);
+			$this->db->insert('survey_template_answer', $data_option);
+			$tinsert_id = $this->db->insert_id();
+
+			if($tid == 4){
+				$test = '<div class="input-group input-content mb-3">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" aria-label="Checkbox for following text input">
+							</div>
+						</div>
+						<input name="choices_label_'.$tinsert_id.'" type="text" class="form-control"  value="">
+					</div>';
+			}elseif($tid == 3) {
+				$test = '<div class="input-group input-content mb-2">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+							<input name="options" type="radio" aria-label="Radio button for following text input">
+							</div>
+						</div>
+						<input name="choices_label_'.$tinsert_id.'" type="text" class="form-control">
+					</div>';
+			}elseif($tid == 15) {
+				$test = '<div class="form-group input-content">
+						<input type="text" class="form-control" name="choices_label_'.$tinsert_id.'" value="" placeholder="Enter your answer">
+				</div>';
+			}else{
+				$test = '';
+			}
+		}
+		return;
 	}
 
 	public function getQuestions($id){
@@ -277,11 +349,11 @@ class Survey_model extends MY_Model {
 				}else{
 				$upload_data = $this->upload->data();
 			}
-				$datas = array(
-					'answer' => $value['name'],
-					'survey_id' => $id,
-					'question_id' => $question_id
-				);
+			$datas = array(
+				'answer' => $value['name'],
+				'survey_id' => $id,
+				'question_id' => $question_id
+			);
 				$this->db->insert('survey_answer',$datas);
 			}
 		}
@@ -323,8 +395,18 @@ class Survey_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function deleteQuestion($id){
-		$this->db->where('id', $id);
+	public function deleteQuestion($id, $condition = null){
+		if($condition == null){
+			$this->db->where('id', $id);
+		}else{
+			switch($condition){
+				case 'survey':
+					$this->db->where('survey_id', $id);
+					break;
+				default:
+					break;
+			}
+		}
 		return $this->db->delete('survey_questions');
 	}
 
@@ -404,5 +486,43 @@ class Survey_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function getWorkspaces($id = null){
+		$this->db->select('*');
+		if($id !== null){
+			$this->db->where('id', $id);
+		}
+
+		
+		$query = $this->db->get('survey_workspaces');
+		foreach($query->result() as $q){
+			
+			$this->db->select('*');
+			$this->db->where('workspace_id',$q->id);
+			$query2 = $this->db->get('survey');
+			$q->surveys = $query2->result();
+
+			foreach($q->surveys as $q2){
+				$q2->survey_theme = $this->getThemes($q2->theme_id);
+			}
+		}
+		return $query->result();
+	}
+
+	public function addWorkspace($data){
+		$this->db->insert('survey_workspaces', $data);
+		return $this->db->insert_id();
+	}
+
+	public function deleteWorkspace($id){
+		return $this->db->delete('survey_workspaces', array('id'=>$id));
+	}
+
+	public function editWorkspace($id, $data){
+		$workspaceChange = array(
+			"name" => $data["name"]
+		);
+		$this->db->where('id', $id);
+		return $this->db->update('survey_workspaces', $workspaceChange);
+	}
 
 }

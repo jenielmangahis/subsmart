@@ -373,7 +373,7 @@ class Builder extends MY_Controller {
 
 	public function demo($id) {
 		$formdetail = $this->builder_model->get_forms($id);
-
+		
 		$company_id = logged('company_id');
         $this->db->select('*');
         $this->db->from($this->builder_model->table_questions);
@@ -383,9 +383,8 @@ class Builder extends MY_Controller {
         $this->db->where('forms_id', $id);
         $query = $this->db->get();
         $questions =  $query->result();
-        
-
 		$formdetail->questions = $questions;
+		
 		foreach ($formdetail->questions as $key => $value) {
 			if($value->parameter != '') {
 				$formdetail->questions[$key]->parameter = json_decode($value->parameter);
@@ -438,6 +437,20 @@ class Builder extends MY_Controller {
 		}	
 
 		$this->page_data['formdetail'] = $formdetail; 
+
+		$this->db->select('*');
+		$this->db->from('phone');
+        $this->db->where('user_id', $this->session->userdata['logged']['id']);
+        $query = $this->db->get();
+		$this->page_data['basic_details']['phones'] =  $query->result();
+		
+		$this->db->select('*');
+		$this->db->from('address');
+        $this->db->where('user_id', $this->session->userdata['logged']['id']);
+        $query = $this->db->get();
+        $this->page_data['basic_details']['address'] =  $query->result();
+		$this->page_data['user'] = $this->session->userdata['logged']['id'];
+		
 		$this->load->view('builder/demo', $this->page_data);
 		// $this->load->view('roles/add', $this->page_data);
 	}

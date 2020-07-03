@@ -15,7 +15,7 @@ class Job extends MY_Controller
         $this->load->model('Invoice_model', 'invoice_model');
 
 
-        add_css(array(
+        add_css(array( 
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -79,8 +79,10 @@ class Job extends MY_Controller
         if ($job_num_query && empty($get['job_num'])) {
             $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
         } else {
-           $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
-           $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
+            if (!empty($get['job_num'])) {
+                $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
+                $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
+            }
            $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
@@ -358,9 +360,9 @@ class Job extends MY_Controller
             'smtp_host' => 'ssl://smtp.gmail.com',
             'smtp_port' => 465,
             'smtp_user' => 'nsmartrac@gmail.com',
-            'smtp_pass' => 'nSmarTrac1',
+            'smtp_pass' => 'nSmarTrac2020',
             'mailtype'  => 'html', 
-            'charset'   => 'iso-8859-1'
+            'charset'   => 'utf-8'
         );
         $this->email->initialize($config);
         $this->email->set_newline("\r\n");
@@ -368,7 +370,11 @@ class Job extends MY_Controller
         $this->email->from($from_email, 'nSmarTrac');
         $this->email->to($to_email);
         $this->email->subject('Review Estimate');
-        $message = $this->load->view('email_campaigns/estimate.php',null,TRUE);
+        $data = array(
+            'customer' => getLoggedFullName($this->input->post('customer_id')),
+            "items" => $this->jobs_model->getJobInvoiceItems($this->input->post('job_id'))
+        );
+        $message = $this->load->view('email_campaigns/estimate.php',$data,TRUE);
         $this->email->message($message);
         //Send mail
         if($this->email->send())

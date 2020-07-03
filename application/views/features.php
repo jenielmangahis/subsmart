@@ -62,7 +62,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<img class="group__img" alt="marketing" src="<?php echo $url->assets ?>frontend/images/feature_marketing.png">
 									</div>
 									<div class="group__name group-marketing">
-											Marketing
+											Sales and Marketing
 									</div>
 								</div>
 						</div>
@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </ul>
         </div>
 				<div class="features-group">
-            <div class="features-group__name">Marketing</div>
+            <div class="features-group__name">Sales and Marketing</div>
             <ul class="features-group__list">
                 <!-- <li>Create your own online store</li> -->
                 <li>Run exclusive deals and campaigns</li>
@@ -240,7 +240,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="text-center">
             <div class="circle-down"><span class="fa fa-chevron-down"></span></div>
         </div>
-        <h2>Fact</h2>
+        <h2>STATISTIC</h2>
         <p>
             <!-- Companies using nSmarTrac realized a <br><span>3.5x increase</span> in productivity alone. -->
             Business that use our proud platform realized a <br><span>10x increase</span> in productivity.
@@ -271,7 +271,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="text-center">
             <div class="circle-down"><span class="fa fa-chevron-down"></span></div>
         </div>
-        <div class="group-title">Marketing</div>
+        <div class="group-title">Sales and Marketing</div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
@@ -279,14 +279,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-sm-6 systemInfo pl-5 pt-5 mt-3">
                     <h3>
-                        Create your own online store
+                        Create a front end service directory
                     </h3>
                     <ol class="feature__list">
                         <li>
-                            Customize your store with your business in mind. Simply upload your credentials, pictures, service areas, reviews and so much more.
+                            Customize your directory with your business in mind. Simply upload your credentials, pictures, service areas, reviews and so much more.
                         </li>
                         <li>
-                            Customers can view your services and contact you directly through the website.
+                            Customers can view and schedule services right from the front end.
                         </li>
                     </ol>
                 </div>

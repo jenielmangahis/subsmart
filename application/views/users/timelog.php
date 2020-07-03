@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('users_add')): ?>
-                                    <a href="<?php //echo url('users/add') ?>" class="btn btn-primary"
+                                    <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Log Time
                                     </a>
@@ -72,21 +72,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td><?php echo ucfirst($this->roles_model->getById($row->role)->title) ?></td>
                                                 
                                                 <td>
-                                                    <?php if (logged('id') !== $row->id): ?>
-                                                        <input type="checkbox" class="js-switch"
-                                                               onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> />
-                                                    <?php endif ?>
+                                                    <?php //if (logged('id') !== $row->id): ?>
+                                                        <!-- <input type="checkbox" class="js-switch"
+                                                               onchange="updateUserStatus('<?php //echo $row->id ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' ?> /> -->
+                                                        <?php if( $row->status == 1 ): ?>
+                                                            <span>Active</span>
+                                                        <?php else: ?>
+                                                            <span>Inactive</span>
+                                                        <?php endif; ?>
+                                                    <?php //endif ?>
                                                 </td>
                                                 <td>
-                                                    <?php if (hasPermissions('users_edit')): ?>
+                                                    <?php //if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
-                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                    <?php endif ?>
+                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Edit</a>
+                                                    <?php //endif ?>
                                                     <?php if (hasPermissions('users_view')): ?>
                                                         <a href="<?php echo url('users/view/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="View User"
-                                                           data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                                                           data-toggle="tooltip"><i class="fa fa-eye"></i>Edit</a>
                                                     <?php endif ?>
                                                     <?php //if (hasPermissions('users_delete')): ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id): ?>
@@ -94,11 +99,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                class="btn btn-sm btn-default"
                                                                onclick="return confirm('Do you really want to delete this user ?')"
                                                                title="Delete User" data-toggle="tooltip"><i
-                                                                        class="fa fa-trash"></i></a>
+                                                                        class="fa fa-trash"></i> Delete</a>
                                                         <?php else: ?>
                                                             <a href="#" class="btn btn-sm btn-default"
                                                                title="You cannot Delete this User" data-toggle="tooltip"
-                                                               disabled><i class="fa fa-trash"></i></a>
+                                                               disabled><i class="fa fa-trash"></i> Delete</a>
                                                         <?php endif ?>
                                                     <?php //endif ?>
                                                 </td>
