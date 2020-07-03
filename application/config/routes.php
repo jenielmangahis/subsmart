@@ -124,3 +124,4 @@ $route['terms-and-condition'] = 'pages/terms_and_condition';
 $route['privacy-policy'] = 'pages/privacy_policy';
 $route['anti-spam-policy'] = 'pages/anti_spam_policy';
 $route['find-pros'] = 'pages/find_pros';
+$route['find-pros/search'] = 'pages/find_pros_form';

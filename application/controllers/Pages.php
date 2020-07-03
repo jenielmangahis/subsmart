@@ -31,4 +31,12 @@ class Pages extends MY_Controller {
 		$this->page_data['page']->title = 'nSmartTrac - Find Pros';	
 		$this->load->view('pages/find_pros', $this->page_data);
 	}
+
+	public function find_pros_form(){
+		$find_pro = $this->input->get('find_pro');
+
+		$this->page_data['find_pro'] = $find_pro;
+		$this->page_data['page']->title = 'nSmartTrac - Find Pros';	
+		$this->load->view('pages/find_pros_form', $this->page_data);
+	}
 }

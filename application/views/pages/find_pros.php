@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <!-- Headline Section -->
 <section class="dyk-find desktop-only">
+  <?php echo form_open('find-pros/search', [ 'method' => 'GET', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
     <div class="container">
       <div class="white-card">
         <div>
@@ -12,13 +13,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="find-container">
           <span  data-height-value="150" class="material-icons icon-find ">search</span>
-          <input type="text" placeholder="What service you need?" class="no-border"/>
-          <button class="button-purple">Find Pro</button>
+          <input type="text" placeholder="What service you need?" name="find_pro" required="" class="no-border"/>
+          <button class="button-purple" type="submit">Find Pro</button>
         </div>
       </div>
     </div>
+  <?php echo form_close(); ?>
 </section>
 <section class="dyk-find mobile-only">
+  <?php echo form_open('find-pros/search', [ 'type' => 'GET', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
     <div class="container">
       <div class="white-card">
         <div>
@@ -26,14 +29,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="find-container">
           <span  data-height-value="150" class="material-icons icon-find ">search</span>
-          <input type="text" placeholder="What service you need?" class="no-border"/>
+          <input type="text" placeholder="What service you need?" name="find_pro" required="" class="no-border"/>
         </div>
         <div>
-          <button class="button-purple">Find Pro</button>
+          <button class="button-purple" type="submit">Find Pro</button>
         </div>
       </div>
     </div>
+  <?php echo form_close(); ?>
 </section>
+
 
 
 <section class="find-pro-b">
