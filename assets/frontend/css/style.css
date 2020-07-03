@@ -288,6 +288,22 @@
    font-weight: 500;
    animation:blinkingTextH 2s infinite;
 }
+h3.widget-txt-title {
+    margin: 0 auto;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 44px;
+    margin-top: 20px;
+}
+span.widget-desc {
+    width: 700px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    font-size: 20px;
+    color: #000000;
+}
  /* Tab */
 
  .tab-element .nav-tabs {
@@ -1330,6 +1346,21 @@ img.card-features-home {
   font-weight: 600;
 }
 @media(max-width:991px) {
+    span.widget-desc {
+      width: 85%;
+      display: block;
+      margin: 0 auto;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #000000;
+    }
+    h3.widget-txt-title {
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 28px;
+    }
     .mobile-widget-container {
         width: 100% !important;
         display: block;
