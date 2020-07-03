@@ -17,13 +17,13 @@ $(document).ready(function(){
       success: function(res){
         toastr["success"]("Successfully Added!");
         var content = `<div class="col-sm-2">
-           <div id="survey-card" data-id="${res.data['id']}" class="card pt-0 2">
+          <div id="survey-card" data-id="${res.data['id']}" class="card pt-0 2">
               <div class="card-body"><i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"></i> <?= $question->template_title ?>
                 <h5 class="card-title">${res.data['title']}</h5>
                 </div>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-end align-items-center flex-row">
-                 <div class="btn-group ">
+                <div class="btn-group ">
                     <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Settings
                     </button>
@@ -129,7 +129,7 @@ $(document).ready(function(){
           var append = `<div id="container-${res.data.id}" class="col-sm-12">
                <div class="card">
                   <div class="card-body p-0">
-                  <form action="/nsmartrac/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
+                  <form action="${surveyBaseUrl}/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
                       <div class="d-flex justify-content-between">
                         <h5 class="card-title">
                         ${res.data.template_title}
@@ -219,7 +219,7 @@ $(document).ready(function(){
         var append = `<div id="container-${res.data.id}" class="col-sm-12">
              <div class="card">
                 <div class="card-body p-0">
-                <form action="/nsmartrac/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
+                <form action="${surveyBaseUrl}/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
                     <div class="d-flex justify-content-between">
                       
                       <h5 class="card-title">
@@ -672,11 +672,10 @@ $(document).ready(function(){
   $('input[type="file"]').change(function(e){
        var value = $(this).val();
        var id = $(this).data('id');
-       var data = new FormData($(this).parent().parent().parent().parent().parent()[0]);
+       var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
        var fileName = e.target.files[0].name;
-
        switch(e.target.name){
-         case "welcomeImageUpload":
+         case "image_background":
           $.ajax({
             url: surveyBaseUrl + 'survey/question/upload/'+ id,
             type:'POST',
@@ -909,42 +908,21 @@ $("#shared").jsSocials({
 
 
   toastr.options = {
-  "closeButton": false,
-  "debug": false,
-  "newestOnTop": false,
-  "progressBar": false,
-  "positionClass": "toast-top-right",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "300",
-  "hideDuration": "1000",
-  "timeOut": "5000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
-$(".btnrating").on('click',(function(e) {
-
-	var previous_value = $("#selected_rating").val();
-
-	var selected_value = $(this).attr("data-attr");
-	$("#selected_rating").val(selected_value);
-
-	$(".selected-rating").empty();
-	$(".selected-rating").html(selected_value);
-
-	for (i = 1; i <= selected_value; ++i) {
-	$("#rating-star-"+i).toggleClass('btn-warning');
-	$("#rating-star-"+i).toggleClass('btn-default');
-	}
-
-	for (ix = 1; ix <= previous_value; ++ix) {
-	$("#rating-star-"+ix).toggleClass('btn-warning');
-	$("#rating-star-"+ix).toggleClass('btn-default');
-	}
-
-	}));
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  }
 
 });

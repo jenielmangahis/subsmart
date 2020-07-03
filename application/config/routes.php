@@ -69,16 +69,23 @@ $route['services'] = 'service';
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
 $route['survey/(:num)']['GET'] = 'survey/preview/$1';
-$route['survey/edit/(:num)'] = 'survey/view/$1';
+$route['survey/edit/(:num)'] = 'survey/edit/$1';
 $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
 $route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
+$route['survey/create'] = 'survey/add';
+$route['survey/add'] = 'survey/addSurvey';
+
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
-$route['survey/themes'] = 'survey/themeIndex'; //new
-$route['survey/themes/(:num)'] = 'survey/themeView/$1'; //new
-$route['survey/themes/create'] = 'survey/themeCreate'; //new
+$route['survey/themes'] = 'survey/themeIndex';
+$route['survey/themes/create'] = 'survey/themeCreate';
+$route['survey/themes/(:num)'] = 'survey/themeView/$1';
 $route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
 //question module
 $route['survey/update/question'] = 'survey/updateQuestion';
+$route['survey/update/(:num)/(:any)/(:num)'] = 'survey/updateSurvey/$1/$2/$3';
+$route['survey/update/(:any)'] = 'survey/updateSurvey/$1';
+$route['survey/add/questions/choices/(:num)/(:num)'] = 'survey/addAndUpdateQuestionChoices/$1/$2';
+$route['survey/add/questions/(:num)/(:num)'] = 'survey/addAndUpdateQuestion/$1/$2';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';
 $route['survey/delete/question/(:num)']['GET'] = 'survey/deleteQuestion/$1';
 $route['survey/order/question']['POST'] = 'survey/orderUpdate/$1';
@@ -95,6 +102,10 @@ $route['reports/main/report/(:any)'] = 'reports/report/$1';
 $route['survey/tribute/(:num)'] = 'survey/getQuestions/$1';
 
 $route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
+$route['survey/workspace/delete/(:num)'] = 'survey/deleteWorkspace/$1';
+$route['survey/workspace/edit/(:num)'] = 'survey/editWorkspace/$1';
+$route['survey/workspace/add'] = 'survey/addWorkspace';
+$route['survey/workspace'] = 'survey/workspaceList';
 $route['survey/tribue'] = 'survey/getQuestions';
 $route['survey/result/$1'] = 'survey/result/$1';
 $route['survey/share/$1'] = 'survey/share/$1';

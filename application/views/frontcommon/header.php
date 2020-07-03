@@ -35,11 +35,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           var input = document.getElementById('google_search_place');
           var autocomplete = new google.maps.places.Autocomplete(input);
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place 	= autocomplete.getPlace();       
+                var place 	= autocomplete.getPlace();
                 var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
-                $("#business_address").val(address);                     
+                $("#business_address").val(address);
                 $("#google_search_place").val(place.name); //Use this if return business name only
-                //console.log(place);   
+                //console.log(place);
             });
         }
         google.maps.event.addDomListener(window, 'load', initialize);
@@ -97,11 +97,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								</ul>
 								<ul class="over-write-menu" style="margin-top:8px;">
 									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
-									<li class=""><a href="<?php echo url('/about') ?>">ABOUT</a></li>
+									<li class=""><a href="<?php echo url('/about') ?>">ABOUT US</a></li>
 									<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
 									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
-									<li><a href="<?php echo url('/find-pros') ?>">FIND</a></li>
+									<li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li>
 									<li class="no-break"><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
                   <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
                   <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>

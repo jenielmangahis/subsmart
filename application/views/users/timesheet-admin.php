@@ -560,6 +560,182 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             });
         });
+
+        // Clocked In action
+        $('.clockin_btn').on('click', function(e){
+            //var values = $(this).parent('form').serializeArray();
+            var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };
+            var clockin_user_id = getValue('clockin_user_id');
+            //console.log(clockin_user_id);
+
+            e.preventDefault();
+            //alert('Clock In this user');
+            //
+            
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/clock_in') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    alert('User has Clocked In');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
+        });
+
+        // Clocked Out action
+        $('.clockout_btn').on('click', function(e){
+            //var values = $(this).parent('form').serializeArray();
+            var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };
+            var clockin_user_id = getValue('clockin_user_id');
+            //console.log(clockin_user_id);
+
+            e.preventDefault();
+            alert('Are you sure you want to Clock Out?');
+            //
+            
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/clock_out') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    alert('User has Clocked In');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
+        });
+
+        // Lunched In action
+        $('.lunchin_btn').on('click', function(e){
+            //var values = $(this).parent('form').serializeArray();
+            var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };
+            var clockin_user_id = getValue('clockin_user_id');
+            //console.log(clockin_user_id);
+
+            e.preventDefault();
+            //alert('Clock In this user');
+            //
+            
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/lunch_in') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    alert('User has Lunch In');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
+        });
+
+        // Lunched Out action
+        $('.lunchout_btn').on('click', function(e){
+            //var values = $(this).parent('form').serializeArray();
+            var values = {};
+            $.each($(this).parent('form').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            //Value Retrieval Function
+            var getValue = function (valueName) {
+                return values[valueName];
+            };
+            var clockin_user_id = getValue('clockin_user_id');
+            //console.log(clockin_user_id);
+
+            e.preventDefault();
+            alert('Are you sure you want to Lunch Out?');
+            //
+            
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/lunch_out') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    alert('User has Lunched Out');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
+        });
     });
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));

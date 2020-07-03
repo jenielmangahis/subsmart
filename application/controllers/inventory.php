@@ -16,7 +16,6 @@ class Inventory extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'assets/frontend/css/invoice/main.css',
         ));
 
 

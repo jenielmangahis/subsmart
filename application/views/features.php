@@ -67,7 +67,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</div>
 						</div>
         </div>
-				<div class="group-title-tn features-group-title">nSmarTrac Features</div>
+        <div class="group-title-tn features-group-title mobile-only">
+            <h2 class="tr-mobile-blink">Discover Why nSmarTrac is <span class="d-md-block">So IMPORTANT for Your Business</span></h2>
+        </div>
+				<div class="group-title-tn features-group-title desktop-only">nSmarTrac Features</div>
 				<div class="features-group">
             <div class="features-group__name">Management</div>
             <ul class="features-group__list">
@@ -271,7 +274,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="text-center">
             <div class="circle-down"><span class="fa fa-chevron-down"></span></div>
         </div>
-        <div class="group-title">Marketing</div>
+        <div class="group-title">Sales and Marketing</div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
@@ -283,7 +286,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </h3>
                     <ol class="feature__list">
                         <li>
-                            Customize your directory.
+                            Customize your directory with your business in mind. Simply upload your credentials, pictures, service areas, reviews and so much more.
                         </li>
                         <li>
                             Customers can view and schedule services right from the front end.

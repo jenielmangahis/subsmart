@@ -18,6 +18,7 @@ class Survey extends MY_Controller
         'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
         'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css',
         'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css',
         'assets/css/survey.css',
       ));
 
@@ -61,10 +62,11 @@ class Survey extends MY_Controller
     $this->load->view('survey/list', $this->page_data);
   }
 
-  public function add(){
+  public function add($settings = null){
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
+      'workspace_id' => $this->input->post('workspace_id')
     );
     $data = $this->survey_model->add($data);
 
@@ -72,19 +74,22 @@ class Survey extends MY_Controller
       'success' => 1,
       'data' => $data
     );
-    redirect('/survey', 'refresh');
     echo json_encode($result);
+      if(!isset($settings->hasTemplate)){
+        redirect('/survey/workspace', 'refresh');
+      }
     exit;
   }
 
   public function delete($id){
-    $delete = $this->survey_model->delete($id);
+    $deleteSurvey = $this->survey_model->delete($id);
+    $deleteQuestions = $this->survey_model->deleteQuestion($id, "survey");
     $result = array(
       'success' => 1,
 
     );
     
-    redirect('/survey', 'refresh');
+    redirect('/survey/workspace', 'refresh');
     echo json_encode($result);
     exit;
   }
@@ -139,6 +144,38 @@ class Survey extends MY_Controller
     echo json_encode($result);
     exit;
   }
+
+  public function addAndUpdateQuestion($id, $tid){
+    $data = $this->survey_model->addAndUpdateQuestion($id, $tid);
+    var_dump($_POST);
+    exit;
+    $result = array(
+      'success' => 1,
+      'data' => $data,
+    );
+    // add_footer_js(array(
+    //     'assets/js/survey.js',
+    // ));
+    echo json_encode($result);
+    exit;
+  }
+
+  public function addAndUpdateQuestionChoices($id, $tid){
+    $data = $this->survey_model->addAndUpdateQuestionChoices($id, $tid);
+    var_dump($_POST);
+    exit;
+    $result = array(
+      'success' => 1,
+      'data' => $data,
+    );
+    // add_footer_js(array(
+    //     'assets/js/survey.js',
+    // ));
+    echo json_encode($result);
+    exit;
+  }
+
+
 
   public function updateQuestion(){
     $id = $this->input->post('survey_id');
@@ -224,7 +261,7 @@ class Survey extends MY_Controller
   }
 
   public function answer($id){
-    
+    // payment
     if($this->input->post('stripeToken') != NULL){
       require_once('application/libraries/stripe-php/init.php');
       \Stripe\Stripe::setApiKey("sk_test_mMoB3fX3PZwWzdDGj1EwGr9E004bgLdyLv");
@@ -240,6 +277,13 @@ class Survey extends MY_Controller
       unset($_POST['stripeToken']);
     }
     
+		foreach ($_POST as $key => $value) {
+      $datas = array(
+        'answer' => $value,
+        'survey_id' => 2,
+        // 'question_id' => (int)$question_id
+      );
+    }
     $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
     echo json_encode($answered);
     exit;
@@ -288,6 +332,13 @@ class Survey extends MY_Controller
     }
     echo json_encode($data);
     exit;
+  }
+
+  public function addSurvey(){
+    $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
+    $this->page_data['survey_templates'] = json_decode($templates);
+    $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
+    $this->load->view('survey/add', $this->page_data);
   }
 
   // survey themes
@@ -341,7 +392,43 @@ class Survey extends MY_Controller
   //   // exit;
   // }
   
-  
+  public function workspaceList(){
+    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
+    $this->load->view('survey/workspace', $this->page_data);
+  }
+
+  public function addWorkspace(){
+    // var_dump($this->input->post());
+    $data = array(
+      "name" => $this->input->post('txtWorkspaceName'),
+      "users" => json_encode(array(0))
+    );
+    $this->survey_model->addWorkspace($data);
+    redirect('survey/workspace');
+  }
+
+  public function deleteWorkspace($id){
+    $deleteWorkspace = $this->survey_model->deleteWorkspace($id);
+    $result = array(
+      'success' => 1,
+    );
+    
+    redirect('survey/workspace', 'refresh');
+    echo json_encode($result);
+    exit;
+  }
+
+  public function editWorkspace($id){
+    $data = array(
+      "name" => $this->input->post('txtWorkspaceName')
+    );
+    $this->survey_model->editWorkspace($id, $data);
+    $result = array(
+      'success' => 1,
+    );
+    echo json_encode($result);
+    exit;
+  }
 
 
 

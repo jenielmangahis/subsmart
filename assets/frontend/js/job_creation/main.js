@@ -216,6 +216,8 @@ $(document).ready(function () {
     $.LoadingOverlay("show");
     var param = {
       email: "jeykell125@gmail.com",
+      job_id: $("#jobId").val(),
+      customer_id: $("#customer_id").val(),
     };
     sendEmailToCustomer(param);
   });

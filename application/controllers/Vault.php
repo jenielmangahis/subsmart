@@ -20,6 +20,24 @@ class Vault extends MY_Controller {
 		$this->load->view('vault/list', $this->page_data);
 	}
 
+	public function shared_library()
+	{	
+		$this->page_data['folder_manager'] = getFolderManagerView();
+		$this->load->view('vault/shared_library', $this->page_data);
+	}
+
+	public function beforeafter()
+	{	
+		$this->page_data['folder_manager'] = getFolderManagerView();
+		$this->load->view('vault/beforeafter', $this->page_data);
+	}
+
+	public function businessformtemplates()
+	{	
+		$this->page_data['folder_manager'] = getFolderManagerView();
+		$this->load->view('vault/businessformtemplates', $this->page_data);
+	}
+
 	public function add()
 	{	
 		$return = array(

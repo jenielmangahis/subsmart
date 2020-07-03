@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "name": "Online Contact Us Form Template",
+    "questions": [
+      {
+          "question": "Welcome! Online contact us form template",
+          "temp_id": "1",
+          "order": "1",
+          "active": "",
+          "required": "",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "Hi, what's your name",
+          "temp_id": "9",
+          "order": "2",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "And your last name?",
+          "temp_id": "15",
+          "order": "3",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "So, what store are you reporting from?",
+          "temp_id": "15",
+          "order": "4",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": "",
+          "choices": [
+          "Regent Street",
+          "Floral Street",
+          "Chancery Lane",
+          "Horseferry Road",
+          "Portman Square",
+          "Harley Gardens",
+          "Whitechapel High Street",
+          "Stoke Newington High Street"
+        ]
+      },
+      {
+          "question": "And what day is it??",
+          "temp_id": "17",
+          "order": "5",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "Great! Now, how many items did you sell today?",
+          "temp_id": "6",
+          "order": "6",
+          "active": "1",
+          "required": "1"
+      },
+      {
+          "question": "Before you go, we'd love to hear your thoughts about today's sales",
+          "temp_id": "2",
+          "order": "6",
+          "active": "1",
+          "required": "1"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Get in Touch Template",
+    "questions": [
+      {
+          "question": "Interested in our product? Answer a few short questions and we'll get in touch with you!",
+          "temp_id": "1",
+          "order": "1",
+          "active": "",
+          "required": "",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "First up, what should we call you?",
+          "temp_id": "9",
+          "order": "2",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "Cool! And your surname?",
+          "temp_id": "9",
+          "order": "3",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "Great. Now what's your email?",
+          "temp_id": "5",
+          "order": "4",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "And your phone number?",
+          "temp_id": "8",
+          "order": "5",
+          "active": "1",
+          "required": "1",
+          "description": "",
+          "description_label": ""
+      },
+      {
+          "question": "Last question, what product are you interested in?",
+          "temp_id": "9",
+          "order": "6",
+          "active": "1",
+          "required": "1"
+      },
+      {
+          "question": "All good! We've got that. We'll be in touch soon!",
+          "temp_id": "19",
+          "order": "6",
+          "active": "1",
+          "required": "1"
+      }
+    ]
+  }
+]

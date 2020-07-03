@@ -282,7 +282,12 @@
    margin-bottom: 0;
    padding: 25px 0 20px;
  }
-
+.tr-mobile-blink {
+   color: #e05656;
+   text-transform: uppercase;
+   font-weight: 500;
+   animation:blinkingTextH 2s infinite;
+}
  /* Tab */
 
  .tab-element .nav-tabs {
