@@ -271,7 +271,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="text-center">
             <div class="circle-down"><span class="fa fa-chevron-down"></span></div>
         </div>
-        <div class="group-title">Marketing</div>
+        <div class="group-title">Sales and Marketing</div>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6">
@@ -283,7 +283,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </h3>
                     <ol class="feature__list">
                         <li>
-                            Customize your directory.
+                            Customize your directory with your business in mind. Simply upload your credentials, pictures, service areas, reviews and so much more.
                         </li>
                         <li>
                             Customers can view and schedule services right from the front end.
