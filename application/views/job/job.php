@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_customer">Customer</label>
                                     <?php if(!empty($job_other_info)) : ?>
-                                        <label for="">: <?php echo getLoggedFullName($job_other_info->id); ?></label>
+                                        <label for="">: <?php echo getLoggedFullName($job_other_info->id); ?></label> 
                                         <input type="hidden" id="job_customer_id" name="job_customer_id" value="<?php echo getLoggedFullName($job_other_info->id); ?>">
                                         <input type="hidden" id="customer_id" name="customer_id" value="<?php echo $job_other_info->id; ?>">
                                     <?php else: ?>

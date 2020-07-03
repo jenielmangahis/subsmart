@@ -47,9 +47,15 @@
                               <a class="btn btn-primary btn-md text-light" href="<?php echo base_url()?>survey/themes">
                                 <span class="fa fa-th text-light"></span> Themes
                               </a>
-                              <a class="btn btn-success btn-md text-light" data-toggle="modal" data-target="#exampleModal">
-                              <span class="fa fa-plus text-light"></span> New Survey
+                              <a class="btn btn-primary btn-md text-light" href="<?php echo base_url()?>survey/themes">
+                                <span class="fa fa-cubes text-light"></span> Templates
                               </a>
+                              <a class="btn btn-success btn-md text-light" href="<?php echo base_url()?>survey/add">
+                                <span class="fa fa-plus text-light"></span> New Survey
+                              </a>
+                              <!-- <a class="btn btn-success btn-md text-light" data-toggle="modal" data-target="#exampleModal">
+                              <span class="fa fa-plus text-light"></span> New Survey
+                              </a> -->
                            </div>
                         </div>
                      </div>
@@ -127,28 +133,29 @@
 </div>
 <!-- page wrapper end -->
 
-  <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <?= form_open('survey/add', array('id'=>'frm-add-survey')) ?>
-      <div class="modal-content">
-        <div class="modal-header">
-         <h5 class="modal-title" id="exampleModalLongTitle">Add New Survey</h5>
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-           <span aria-hidden="true">&times;</span>
-         </button>
-       </div>
-       <div class="modal-body">
-          <label for="title">What would you like to name your survey?</label>
-          <input type="text" class="form-control" id="title" name="title">
-       </div>
-       <div class="modal-footer">
-         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-         <button disabled id="btnSubmitTitle" type="submit" class="btn btn-primary">Add New Survey</button>
-       </div>
+<!-- add new survey modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <?= form_open('survey/add', array('id'=>'frm-add-survey')) ?>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add New Survey</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <?= form_close() ?>
+      <div class="modal-body">
+        <label for="title">What would you like to name your survey?</label>
+        <input type="text" class="form-control" id="title" name="title">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+        <button disabled id="btnSubmitTitle" type="submit" class="btn btn-primary">Add New Survey</button>
+      </div>
     </div>
+    <?= form_close() ?>
   </div>
+</div>
 
   <script>
     document.querySelector('#title').addEventListener('keyup', event => {

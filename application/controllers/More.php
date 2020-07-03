@@ -29,6 +29,18 @@ class More extends MY_Controller {
 		
 		$this->load->view('more/upgrades', $this->page_data);
 	}
+
+	public function addons(){	
+		
+		$user = (object)$this->session->userdata('logged');
+		$cid=logged('company_id');
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		
+		/*$this->page_data['userid'] = $user->id;
+		$this->page_data['profiledata'] = $profiledata[0];*/
+		
+		$this->load->view('more/addons', $this->page_data);
+	}
 }
 
 
