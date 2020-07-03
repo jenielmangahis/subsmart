@@ -252,7 +252,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <h2>STATISTIC</h2>
         <p>
             <!-- Business that use our proud platform realized a <br><span>10x increase</span> in productivity. -->
-            Businesses that uses CRM systems improved productivity by <span>50%</span>
+            Businesses that uses CRM systems improved productivity by <span>50%</span>.
         </p>
     </div>
     <div class="dyk__btn">
