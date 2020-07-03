@@ -68,9 +68,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
         </div>
         <div class="group-title-tn features-group-title mobile-only">
-            <h2 class="tr-mobile-blink">Discover Why nSmarTrac is <span class="d-md-block">So IMPORTANT for Your Business</span></h2>
+            <h2 class="tr-mobile-blink">
+                <!-- Discover Why nSmarTrac is <span class="d-md-block">So IMPORTANT for Your Business</span> -->
+                nSmarTrac Features
+            </h2>
         </div>
-				<div class="group-title-tn features-group-title desktop-only">nSmarTrac Features</div>
+				<!-- <div class="group-title-tn features-group-title desktop-only">nSmarTrac Features</div> -->
+                <div class="sectionHeader pb-5 w-75 m-auto sectionHeaderBlink desktop-only" style="margin-top: 110px !important; margin-bottom: 70px !important;">
+                    <h2 style="color: #e05656;" class="hl-purple blink">nSmarTrac Features</h2>
+                </div>
 				<div class="features-group">
             <div class="features-group__name">Management</div>
             <ul class="features-group__list">
