@@ -1008,6 +1008,9 @@ p{
    }
 }
 @media (max-width:991px){
+    .lineup-container .arrow-down {
+      display: block;
+    }
    .pricing-card-layout .pricing-card-layout-header{
        height:48px;
        padding:0 50px 0 10px;
@@ -3527,6 +3530,10 @@ ul#mobile-menu>li:first-child{
    bottom:32px;
    cursor:pointer
 }
+.trial-byn {
+  padding-top: 43px;
+  padding-bottom: 60px;
+}
 ._buyNow ._toggleButton{
    background-position:-3px -51px;
    height:39px;
@@ -3544,7 +3551,8 @@ ul#mobile-menu>li:first-child{
 ._buyNow{
    margin:0 0;
    padding-top:30px;
-   text-align:center
+   text-align:center;
+   width: 1280px;
 }
 span.bn:before{
    display:inline-block;
@@ -3803,13 +3811,91 @@ span.ft:before{
    width:100%;
    padding:0 12px 0 20px
 }
+ul.desc-ul > li > i {
+  display: none;
+}
+ul.ul-color-header {
+  color: #6e2ea9;
+}
+ul.ul-color-highlight {
+  color: #6e2ea9;
+}
+ul.desc-ul > li {
+  margin-bottom: 5px;
+}
+.container-table-pricing {
+  margin: 0 auto;
+  display: block;
+  width: 85%;
+  min-width: 1280px;
+}
+ul.desc-ul li, ul.header-ul li {
+  list-style: none;
+}
+div.ctext-v2 ul.desc-ul li span {
+  padding-left: 10px;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  margin-bottom: 13px;
+  margin-top: 10px;
+}
+.sb-e2:before {
+  width: 100%;
+  height: 24px;
+  background-color: #00d7d7;
+  top: -41px!important;
+  position: absolute!important;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  padding-top: 5px;
+  color: #fff!important;
+  text-align: center!important;
+  font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif!important;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .8px;
+}
+.sb-e2:before {
+  content: "MOST POPULAR";
+}
+h4.cs-small {
+  font-size: 24px!important;
+  letter-spacing: 0;
+  float:left;
+}
+.ctext-float {
+  position: absolute !important;
+  bottom: 11px;
+  width: 300px;
+}
+.tooltip-container.cs-tooltip {
+  position: relative;
+  top: 3px;
+  left: 7px;
+}
+.mbc-20 {
+  margin-bottom: 29px;
+  margin-top: 18px
+}
+div.price-container-freelancer {
+  text-align: left!important;
+  margin-left: 25px!important;
+  padding-bottom: 11px;
+  padding-top: 18px;
+}
+.table-sp-3 {
+  width: 16.30%;
+  float: left;
+  margin-right: 4px;
+}
 .lineup-container .arrow-down{
    float:left;
    margin-top:5px
 }
 .lineup-container .mt-features-single-row-text-only .ctext ul li span.p3.open-popup{
-   padding-left:17px;
-   font-size:11px;
+   padding-left:10px;
+   font-size:12px;
    line-height:1.90
 }
 .lineup-container .pcard-layout-additional-text .info-text{
@@ -3950,6 +4036,37 @@ span.ft:before{
 .eCommerce-product-div .image-price-container .price-container .pricing-section .red-price-text{
    float:none!important;
    display:inline-block
+}
+div.price-container-title-v2 {
+  font-size: 20px!important;
+  font-weight: 600!important;
+  letter-spacing: 0;
+  line-height: 24px!important;
+  margin-bottom: 0;
+  text-align: left;
+  margin-left: 24px;
+}
+div.ctext-v2 ul li, ul.desc-ul, ul.header-ul {
+  list-style: none;
+  margin:0px !important;
+}
+.pricing-card-layout-content.wht-tile {
+  background: white;
+  padding: 34px 13px;
+}
+.ctext-v2 {
+  width: 100%;
+  padding: 0 12px 0 20px;
+}
+div.price-container-title-v2:after{
+   content:'';
+   width:39px;
+   height:2px;
+   background-color:#694a86;
+   position:absolute;
+   margin-top:33px;
+   left: 25px;
+   border-radius:4px
 }
 .lineup-container .pricing-card-layout .qb-ss .price-container-title:after{
    content:'';
@@ -4197,6 +4314,12 @@ span.ft:before{
    color:#000
 }
 @media (max-width:1023px){
+  ._buyNow{
+     margin:0 0;
+     padding-top:30px;
+     text-align:center;
+     width: auto;
+  }
    #section-3 .faq-container .llp-faq-section .llp-faq-head p{
        font-size:19px!important;
        font-weight:500!important;
@@ -5046,6 +5169,15 @@ section.r-site-footer.resp-site-footer form{
    text-decoration:underline
 }
 @media (max-width:1023px){
+    ul.desc-ul > li > i {
+      display: inline-block;
+    }
+    ul.ul-color-header {
+      color: black;
+    }
+    ul.desc-ul > li {
+      margin-bottom: 0px;
+    }
    .truste-logo-container{
        padding-top:40px
    }

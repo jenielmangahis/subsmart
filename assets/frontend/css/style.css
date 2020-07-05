@@ -3787,6 +3787,17 @@ label.reg-def {
  }
 
  /* Large Mobile :480px. */
+ @media only screen and (min-width: 1650px) {
+   .site-navbar:after{
+     content: "";
+      height: 70px;
+      background: #fff;
+      width: 28vw;
+      position: absolute;
+      left: -10vw;
+      bottom: -14px;
+   }
+ }
  @media only screen and (max-width: 1480px) {
    .w-120 {
      width: 105%;
