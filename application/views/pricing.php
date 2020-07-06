@@ -1272,7 +1272,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <br class="clear" />
         <!-- pricing v2 -->
         <div class="container-table-pricing">
-          <div class="table-sp-3">
+          <div class="table-sp-3 minimize">
             <div class="ctext-float">
                 <h4 class="cs-small">Small Business</h4>
                 <div class="tooltip-container cs-tooltip">
@@ -1362,7 +1362,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="header-ul">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul">
@@ -1428,7 +1428,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
           </div>
-          <div class="table-sp-3">
+          <div class="table-sp-3 minimize">
             <div class="pricing-card-layout-content wht-tile">
                 <div class="pricing-card-layout-content-wrapper">
                     <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
@@ -1555,7 +1555,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
                             </ul>
-
+                            <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a>
                             <ul data-list="1" class="header-ul ul-color-header">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
@@ -1611,13 +1611,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Manage & assign multiple projects</span>
                                 </li>
                             </ul>
-
                         </div>
                     </section>
                 </div>
             </div>
           </div>
-          <div class="table-sp-3">
+          <div class="table-sp-3 minimize">
             <div class="pricing-card-layout-content wht-tile">
                 <div class="pricing-card-layout-content-wrapper">
                     <section class="ccontainer None mt-features-single-row-text-only qb-ess">
@@ -1773,7 +1772,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
                             </ul>
-
+                            <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a>
                             <ul class="ul-color-header" data-list="1">
                                 <li>
                                     <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
@@ -1871,7 +1870,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
           </div>
 
-          <div class="table-sp-3">
+          <div class="table-sp-3 minimize">
             <div class="pricing-card-layout-content wht-tile">
                 <div class="pricing-card-layout-content-wrapper">
                     <section class="ccontainer None mt-features-single-row-text-only qb-plus sb-e2">
@@ -1998,7 +1997,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
                             </ul>
-
+                            <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a>
                             <ul class="ul-color-header" data-list="1">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
@@ -2133,7 +2132,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
           </div>
 
-          <div class="table-sp-3">
+          <div class="table-sp-3 minimize">
             <div class="pricing-card-layout-content wht-tile">
                 <div class="pricing-card-layout-content-wrapper">
                     <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
@@ -2259,7 +2258,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
                             </ul>
-
+                            <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a>
                             <ul data-list="1" class="ul-color-header">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
@@ -2454,7 +2453,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
           </div>
 
-          <div class="table-sp-3">
+          <div class="table-sp-3 minimize">
             <div class="ctext-float">
                 <h4 class="cs-small">Freelancer</h4>
                 <div class="tooltip-container cs-tooltip">
@@ -2600,7 +2599,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
                             </ul>
-
+                            <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a>
                             <ul data-list="1" class="ul-color-header">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
