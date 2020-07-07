@@ -3852,14 +3852,23 @@ div.ctext-v2 ul.desc-ul li span {
   margin-bottom: 13px;
   margin-top: 10px;
 }
+ul.bsc-margin {
+  padding-bottom: 12px;
+}
+div.table-sp-3 > div.pricing-card-layout-content {
+  height: 893px;
+}
+div.scrollable-pricing {
+  overflow-y: scroll;
+}
 .sb-e2:before {
   width: 100%;
   height: 24px;
   background-color: #00d7d7;
-  top: -30px!important;
+  top: -59px!important;
   position: absolute!important;
-  border-top-right-radius: 0px;
-  border-top-left-radius: 0px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
   padding-top: 5px;
   color: #fff!important;
   text-align: center!important;
@@ -4069,6 +4078,7 @@ div.ctext-v2 ul li, ul.desc-ul, ul.header-ul {
 .pricing-card-layout-content.wht-tile {
   background: white;
   padding: 34px 13px;
+  min-height: 893px;
 }
 .ctext-v2 {
   width: 100%;
@@ -6309,6 +6319,7 @@ body.expert-payroll-on.core-payroll-on .qb-se .blue-button,body.expert-payroll-o
 img.img-pricing-testimonial {
   position: relative;
   top: 14px;
+  object-fit: cover;
 }
 .testimonial-desc-pricing {
     font-size: 19px;
