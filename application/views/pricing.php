@@ -9,6 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .btn-show-less-more-desktop, .btn-show-less-more-desktop:hover, .btn-show-less-more-desktop:visited{
 	color:#6e2ea9;
   font-size: 1rem;
+  padding-left: 4px;
 }
 </style>
 <!-- Headline Section -->
@@ -1470,7 +1471,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="header-ul bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Management</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1498,7 +1499,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="header-ul bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Finances</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1522,7 +1523,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="header-ul bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Insights</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1538,7 +1539,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="header-ul bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1562,7 +1563,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="header-ul ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="timesheet" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop">done</span><strong>Time Sheets</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="timesheet" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight timesheet-list">
@@ -1687,7 +1688,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Management</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1715,7 +1716,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Finances</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1739,7 +1740,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Insights</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1755,7 +1756,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1779,7 +1780,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Time Sheets</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1791,7 +1792,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Reports</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1803,7 +1804,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1823,7 +1824,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Taskhub</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1912,7 +1913,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Management</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1940,7 +1941,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Finances</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1964,7 +1965,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Insights</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -1980,7 +1981,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2004,7 +2005,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Time Sheets</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2016,7 +2017,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Reports</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2028,7 +2029,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2048,7 +2049,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Taskhub</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2060,7 +2061,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>API Connectors</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2072,7 +2073,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Campaign Builder</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Builder</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2084,7 +2085,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>GPS Tracking</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2120,7 +2121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="inventory-management" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory &nbsp; &nbsp; Management</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="inventory-management" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:84%;float:left;">Inventory &nbsp; &nbsp; Management</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight inventory-management-list">
@@ -2173,7 +2174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Management</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2201,7 +2202,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Finances</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2225,7 +2226,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Insights</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2241,7 +2242,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2265,7 +2266,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Time Sheets</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2277,7 +2278,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Reports</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2289,7 +2290,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2309,7 +2310,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Taskhub</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2321,7 +2322,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>API Connectors</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2344,7 +2345,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>GPS Tracking</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2356,7 +2357,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Mobile Tools</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Mobile Tools</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2368,7 +2369,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Survey Builder</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Survey Builder</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2380,7 +2381,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory &nbsp; &nbsp; Management</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory &nbsp; &nbsp; Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2513,7 +2514,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Management</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2541,7 +2542,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Finances</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2565,7 +2566,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Insights</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2581,7 +2582,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2605,7 +2606,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Time Sheets</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2617,7 +2618,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Reports</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2629,7 +2630,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2649,7 +2650,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Taskhub</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2661,7 +2662,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>API Connectors</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2672,7 +2673,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </ul>
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Campaign Builder</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Builder</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2684,7 +2685,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>GPS Tracking</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2696,7 +2697,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Mobile Tools</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Mobile Tools</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2708,7 +2709,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Survey Builder</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Survey Builder</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2720,7 +2721,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory &nbsp; &nbsp; Management</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory &nbsp; &nbsp; Management</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2732,7 +2733,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" style="padding-top: 12px;clear:both;padding-bottom:12px;">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Credit Score</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Credit Score</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2744,7 +2745,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Form Builder</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Form Builder</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2756,7 +2757,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2768,7 +2769,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>eSign</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>eSign</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2780,7 +2781,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Campaign Blast</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Blast</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2792,7 +2793,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="wizard" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Wizard</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="wizard" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Wizard</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight wizard-list">
@@ -2804,7 +2805,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="branding" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">done</span><strong>Branding</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="branding" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Branding</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight branding-list">
