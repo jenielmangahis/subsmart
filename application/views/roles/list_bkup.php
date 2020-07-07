@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
   <h1>
     Roles
-    <small>manage user roles</small>
+    <small>Manage user roles</small>
   </h1>
 </section>
 
@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <?php echo $row->title ?>
               </td>
               <td>
-                <?php if (hasPermissions('roles_edit')): ?>
+                <?php //if (hasPermissions('roles_edit')): ?>
                   <a href="<?php echo url('roles/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User Role" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
                 <?php endif ?>
               </td>

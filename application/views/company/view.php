@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
   <h1>
     Company
-    <small>manage company</small>
+    <small>Manage company</small>
   </h1>
 </section>
 
@@ -20,15 +20,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     
       <li class="active"><a href="#tab_1" data-toggle="tab">Overview</a></li>
       <li><a href="#tab_2" data-toggle="tab">Activity</a></li>
-      <?php if (hasPermissions('users_edit')): ?>
+      <?php //if (hasPermissions('users_edit')): ?>
         <li><a href="<?php echo url('company/edit/'.$User->id) ?>">Edit Profile</a></li>
-      <?php endif ?>
+      <?php //endif ?>
       
       <li class="pull-right"><a href="<?php echo url('company') ?>"><i class="fa fa-arrow-left"></i> &nbsp;&nbsp; Go Back to company</a></li>
       
-      <?php if (hasPermissions('users_edit')): ?>
+      <?php //if (hasPermissions('users_edit')): ?>
         <li class="pull-right"><a href="<?php echo url('company/edit/'.$User->id) ?>" class="text-muted"><i class="fa fa-pencil"></i></a></li>
-      <?php endif ?>
+      <?php //endif ?>
     
     </ul>
     <div class="tab-content">

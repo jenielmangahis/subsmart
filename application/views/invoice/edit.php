@@ -18,12 +18,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
                                     <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>

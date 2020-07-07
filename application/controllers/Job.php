@@ -19,7 +19,8 @@ class Job extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+            'assets/frontend/css/workorder/main.css',
         ));
 
         // JS to add only Job module

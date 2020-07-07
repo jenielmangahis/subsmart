@@ -36,11 +36,11 @@
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
-
 <!-- Include calender js files -->
 <!-- <script src="<?php //echo base_url() ?>calender/assets/js/calendar.js"></script> -->
 <!-- dynamic assets goes  -->
-<!-- <#?php echo put_footer_assets(); ?> -->
+<?php echo put_footer_assets(); ?>
+
 
 <!-- <script src="<?php //echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
 <script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>

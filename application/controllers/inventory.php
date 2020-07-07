@@ -11,6 +11,8 @@ class Inventory extends MY_Controller
         $this->page_data['page']->title = 'Inventory Management';
         $this->page_data['page']->menu = 'items';
         $this->load->model('Items_model', 'items_model');
+        $this->load->library('form_validation');
+        $this->load->helper('file');
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -40,9 +42,9 @@ class Inventory extends MY_Controller
         if (!empty($get['category'])) {
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
-            $this->page_data['items'] = $this->items_model->filterBy(['category' => $get['category']], $comp_id, $type);
+            $this->page_data['items'] = $this->items_model->filterBy(['category' => $get['category']], $comp_id, ucfirst($type));
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $comp_id, 'type' => $type]);
+            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $comp_id, 'type' => ucfirst($type)]);
         }
         
         $comp = array(
@@ -78,7 +80,7 @@ class Inventory extends MY_Controller
         $permission = $this->items_model->create([
             'company_id' => $comp_id,
             'title' => $this->input->post('item_name'),
-            'type' => $this->input->post('item_type'),
+            'type' => ucfirst($this->input->post('item_type')),
             'model' => $this->input->post('model_number'),
             'COGS' => $this->input->post('cost_of_goods'),
             'price' => $this->input->post('cost'),
@@ -143,6 +145,129 @@ class Inventory extends MY_Controller
         $this->session->set_flashdata('alert', 'New item Created Successfully');
         
         redirect('inventory?type=fees');
+    }
+
+    public function exportItems()
+    {
+        $items = $this->items_model->getByCompanyId(logged('company_id'));
+        $delimiter = ",";
+        $filename = getLoggedName()."_items.csv";
+
+        $f = fopen('php://memory', 'w');
+  
+        $fields = array('Name', 'Price', 'Discount', 'Description', 'Customer Group', 'Item Vendor', 'Item Type', 'Item Cost', 'Link/Url', 'Notes');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($items)) {       
+            foreach ($items as $item) {
+                $csvData = array($item->title, '$'.number_format($item->price,2,".",","), '', $item->description, '', '', $item->type, 0, '', '');
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function importItems () {
+        $data = array();
+        $itemData = array();
+        
+        if ($this->input->post('importSubmit')) {
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            
+            if ($this->form_validation->run() == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+                
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $this->load->library('CSVReader');
+                    
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    
+                    if (!empty($csvData)) {
+                        foreach ($csvData as $row) { 
+                            $rowCount++;
+                            
+                            $price = explode("$",$row['Price']);
+
+                            $itemData = array(
+                                'company_id' => logged('company_id'),
+                                'title' => $row['Name'],
+                                'price' => intval($price[1]),
+                                'COGS' => intval($price[1]),
+                                'description' => $row['Description'],
+                                'type' => $row['Item Type'],
+                                'is_active' => 1
+                            );
+                            
+                            $con = array(
+                                'where' => array(
+                                    'title' => $row['Name']
+                                ),
+                                'returnType' => 'count'
+                            );
+                            $prevCount = $this->items_model->getRows($con);
+                            
+                            if ($prevCount > 0) {
+                                $condition = array('title' => $row['Name']);
+                                $update = $this->items_model->update($itemData, $condition);
+                                
+                                if ($update) {
+                                    $updateCount++;
+                                }
+                            } else {
+                                $insert = $this->items_model->insert($itemData);
+                                
+                                if ($insert) {
+                                    $insertCount++;
+                                }
+                            }
+                        }
+                        
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'inventory imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        $this->session->set_userdata('success_msg', $successMsg);
+
+                        $this->activity_model->add($successMsg);
+                        $this->session->set_flashdata('alert-type', 'success');
+                        $this->session->set_flashdata('alert', $successMsg);
+                    }
+                } else {
+                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                }
+            } else {
+                $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+            }
+        }
+        redirect('inventory');
+    }
+    
+    /*
+     * Callback function to check file value and type during validation
+     */
+    public function file_check($str){
+        $allowed_mime_types = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
+        if(isset($_FILES['file']['name']) && $_FILES['file']['name'] != ""){
+            $mime = get_mime_by_extension($_FILES['file']['name']);
+            $fileAr = explode('.', $_FILES['file']['name']);
+            $ext = end($fileAr);
+            if(($ext == 'csv') && in_array($mime, $allowed_mime_types)){
+                return true;
+            }else{
+                $this->form_validation->set_message('file_check', 'Please select only CSV file to upload.');
+                return false;
+            }
+        }else{
+            $this->form_validation->set_message('file_check', 'Please select a CSV file to upload.');
+            return false;
+        }
     }
 }
 

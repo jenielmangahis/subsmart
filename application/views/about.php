@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="container spacing-ft">
         <div class="row">
             <div class="col-sm-12 pt-5 mt-3 text-center">
-                <h1 class="about-title">We Are nSMART, LLC. USA.</h1>
+                <h1 class="about-title">We Are nSmarTrac, LLC. USA.</h1>
                 <br/>
                 <span class="about-desc">A business model with real experience approach to build a better software experience. <br/> Web. eCommerce. Mobile App Development. CRM. </span>
                 <br class="clear"/><br/>

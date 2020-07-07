@@ -564,9 +564,9 @@
         ?>
         
         <span class="text-right d-block">
-          <button type="button" id="page-back-button" class="btn btn-sm btn-outline-light"> < </button>
+          <!-- <button type="button" id="page-back-button" class="btn btn-sm btn-outline-light"> < </button> -->
             Page <span id="page-current-number">0</span> of <span id="page-end-number">0</span>
-          <button type="button" id="page-next-button" class="btn btn-sm btn-outline-light"> > </button>
+          <!-- <button type="button" id="page-next-button" class="btn btn-sm btn-outline-light"> > </button> -->
         </span>
       </div>
 

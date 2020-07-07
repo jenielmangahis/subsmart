@@ -1,0 +1,89 @@
+.tile-container{
+    overflow: hidden;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(0,0,0,.2);
+    -moz-box-shadow: 0 2px 8px 0 rgba(0,0,0,.2);
+    box-shadow:0 2px 8px 0 rgba(0,0,0,.2);
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d4d7dc;
+    -webkit-transition: all .3s ease;
+}
+.inner-content{
+    height: 32rem;
+    padding: 20px;
+}
+.header-container{
+    padding-bottom: 35px;
+}
+.header-content{
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 20px;
+    float: left;
+    color: rgb(57, 58, 61);
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 14px !important;
+    margin: 0px;
+}
+.header-separator{
+    float: right;
+    text-align: right;
+}
+.hs-content{
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/*Banking Page CSS*/
+.banking-tab-container{
+    border-bottom: 3px solid grey;
+    padding-left: 0;
+}
+.banking-tab{
+    padding: 4px 16px;
+    text-decoration: none;
+    line-height: 28px;
+    height: 36px;
+    font-size: 14px;
+    color: #6b6c72;
+}
+.banking-tab:hover{
+    color: #404040;
+    text-decoration: none;
+    border-bottom: 5px solid grey;
+}
+.banking-tab-active{
+    padding: 4px 16px;
+    border-bottom: 5px solid #498002;
+    font-weight: bolder;
+    text-decoration: none;
+    line-height: 28px;
+    height: 36px;
+    font-size: 14px;
+    color: #404040;
+}
+.banking-tab-active:hover{
+    color: #404040;
+    text-decoration: none;
+}
+
+.banking-sub-tab{
+    text-decoration: none;
+    color: #6b6c72;
+    background-color: transparent !important;
+}
+.banking-sub-tab:hover{
+    color: #6b6c72;
+}
+.banking-sub-active{
+    background-color: transparent !important;
+    border-bottom: 5px solid #498002 !important;
+    font-weight: bolder;
+    text-decoration: none;
+    font-size: 14px;
+    color: #404040;
+}

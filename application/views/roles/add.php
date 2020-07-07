@@ -10,7 +10,7 @@
             <div class="col-sm-6">
                <h1 class="page-title">Roles</h1>
                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">manage roles</li>
+                  <li class="breadcrumb-item active">Manage roles</li>
                </ol>
             </div>
             <!-- <div class="col-sm-6">

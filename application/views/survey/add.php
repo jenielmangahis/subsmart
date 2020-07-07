@@ -42,7 +42,7 @@
       <div class="card-body">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+            <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Surveys</a></li>
             <li class="breadcrumb-item active" aria-current="page">Add Survey</li>
           </ol>
         </nav>
@@ -56,6 +56,9 @@
           </div>
         </div>
         <hr/>
+        <div id="workspace-text-card" class="card" style="display: none">
+          <span class="h3" id="workspace-text">No workspace selected</span>
+        </div>
         <div class="form-group">
           <label for="txtSurveyName">Place a new survey name</label>
           <input type="text" name="txtSurveyName" id="txtSurveyName" class="form-control" placeholder="(e.g. Alexa's 18th Birthday review, etc.)">
@@ -112,6 +115,30 @@
         </div>
       </div>
 
+      <div id="modalViewWorkspaces" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+              <div id="modalViewWorkspaceContent">
+                <div class="modal-header">
+                  <h3>
+                    Select workspace
+                  </h3>
+                </div>
+                <div class="modal-body">
+                  <?php foreach($survey_workspaces as $workspace){
+                    ?>
+                      <div class="card template-card" data-dismiss="modal" onclick="selectWorkspace(<?= $workspace->id?>, '<?=$workspace->name?>')">
+                        <h4><?=$workspace->name?></h4>
+                        <span><?=count($workspace->surveys)?> survey<?=(count($workspace->surveys) > 1 )?"s":""?> registered to this workspace.</span>
+                      </div>
+                    <?php
+                  }?>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -125,7 +152,24 @@
   let viewingTemplate = null;
   let templateQuestions = <?=json_encode($survey_question_templates)?>;
   let selectedTemplate = null;
+  let selectedWorkspace = null;
   
+  let searchedParams = url.searchParams;
+
+  $(document).ready(()=>{
+    if(!searchedParams.get('ws')){
+      $('#modalViewWorkspaces').modal('show');
+      document.querySelector('#workspace-text-card').style.display = "block";
+    }
+  })
+
+  selectWorkspace = (id, name) => {
+    selectedWorkspace = id;
+    console.log(name);
+    document.querySelector('#workspace-text').innerHTML = "Selected Workspace: <strong>" + name + "</strong>";
+    
+  }
+
   viewTemplate = tempId => {
     let questionsContainer = document.querySelector('#template-questions-list');
     cardIsLoading = true;
@@ -164,14 +208,12 @@
   selectTemplate = id => {
     selectedTemplate = viewingTemplate;
     document.querySelector('#selected-template-text').innerHTML = "Selected Theme: <strong>"+selectedTemplate.name+"</strong>";
-    
   }
   
   submitSurvey = (e) => {
-    let searchedParams = url.searchParams;
     surveyData = {
       'title': document.querySelector('#txtSurveyName').value,
-      'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):0 
+      'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)?selectedWorkspace:0 
     };
 
     if(document.querySelector('#txtSurveyName').value === ""){

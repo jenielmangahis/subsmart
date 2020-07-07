@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/inquiries'); ?>
-    <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+   
 
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -20,12 +20,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
                                     <a href="<?php echo base_url('inquiries') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Inquiries
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>

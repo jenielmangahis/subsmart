@@ -52,12 +52,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
+                                <?php //if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
@@ -144,6 +144,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?php 
                                                                 // clock in for each user; temporarily specifying the first data in the array
                                                                 if( !empty($clockin_arr) ){
+
                                                                     if( $clockin_arr[0]->action == 'Clock In' ){
                                                                         $user_clock_in = $clockin_arr[0]->timestamp;
                                                                         echo date('h:i a', strtotime($user_clock_in))." Manual Clock In";    
@@ -182,13 +183,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateClockIn('<?php echo $row->id ?>', '<?php echo $current_time_now; ?>' )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
                                                             <?php if( !empty($clockin_arr) ):?>
-                                                                <?php if( $clockin_arr[0]->action == 'Clock In' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                    <input type="radio" name="clocked_in_<?php echo $row->id;?>" checked="checked" /><br />
-                                                                    <span class="clocked_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin_arr[0]->timestamp)); ?></span>
-                                                                <?php else: ?>
-                                                                    <input type="radio" name="clocked_in_<?php echo $row->id;?>" /><br />
-                                                                    <span class="clocked_in_<?php echo $row->id;?>">00:00 </span>
-                                                                <?php endif;?>
+
+                                                                <?php foreach($clockin_arr as $k => $clockin ): ?>
+                                                                    <?php if( $clockin->action == 'Clock In' && $k == 0 && $clockin->timestamp != 0 ):?>
+                                                                        <input type="radio" name="clocked_in_<?php echo $row->id;?>" checked="checked" /><br />
+                                                                        <span class="clocked_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                    <?php elseif( $clockin->action == 'Clock In' && $clockin_arr[0]->action != 'Clock In' && $clockin->timestamp != 0 ):?>
+                                                                        <input type="radio" name="clocked_in_<?php echo $row->id;?>" /><br />
+                                                                        <span class="clocked_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                    <?php //else: ?>
+                                                                        <!-- <input type="radio" name="clocked_in_<?php echo $row->id;?>" /><br />
+                                                                        <span class="clocked_in_<?php echo $row->id;?>">00:00 </span> -->
+                                                                    <?php endif;?>
+                                                                <?php endforeach; ?>
                                                             <?php endif;?>
                                                             <input type="hidden" name="clocked_in" value="" />
                                                             
@@ -200,13 +207,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
                                                             <?php if( !empty($clockin_arr) ):?>
-                                                                <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                <?php foreach($clockin_arr as $k => $clockin ): ?>
+                                                                <?php if( $clockin->action == 'Clock Out' && $k == 0 && $clockin->timestamp != 0 ):?>
                                                                     <input type="radio" name="clocked_out_<?php echo $row->id;?>" checked="checked" /><br />
-                                                                    <span class="clocked_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin_arr[0]->timestamp)); ?></span>
-                                                                <?php else: ?>
+                                                                    <span class="clocked_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                <?php elseif( $clockin->action == 'Clock Out' && $clockin_arr[0]->action != 'Clock Out' && $clockin->timestamp != 0 ):?>
                                                                     <input type="radio" name="clocked_out_<?php echo $row->id;?>" /><br />
-                                                                    <span class="clocked_out_<?php echo $row->id;?>">00:00 </span>
+                                                                    <span class="clocked_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                <?php //else: ?>
+                                                                    <!-- <input type="radio" name="clocked_out_<?php echo $row->id;?>" /><br />
+                                                                    <span class="clocked_out_<?php echo $row->id;?>">00:00 </span> -->
                                                                 <?php endif;?>
+                                                                <?php endforeach; ?>
                                                             <?php endif;?>
                                                             
                                                             <input type="hidden" name="clocked_out" value="" />
@@ -219,13 +231,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
                                                             <?php if( !empty($clockin_arr) ):?>
-                                                                <?php if( $clockin_arr[0]->action == 'Lunch In' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                    <input type="radio" name="lunched_in_<?php echo $row->id;?>" checked="checked" /><br />
-                                                                    <span class="lunched_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin_arr[0]->timestamp)); ?></span>
-                                                                <?php else: ?>
-                                                                    <input type="radio" name="lunched_in_<?php echo $row->id;?>" /><br />
-                                                                    <span class="lunched_in_<?php echo $row->id;?>">00:00 </span>
-                                                                <?php endif;?>
+                                                                <?php foreach($clockin_arr as $k => $clockin ): ?>
+                                                                    <?php if( $clockin->action == 'Lunch In' && $k == 0 && $clockin->timestamp != 0 ):?>
+                                                                        <input type="radio" name="lunched_in_<?php echo $row->id;?>" checked="checked" /><br />
+                                                                        <span class="lunched_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                    <?php elseif( $clockin->action == 'Lunch In' && $clockin_arr[0]->action != 'Lunch In' && $clockin->timestamp != 0 ):?>
+                                                                        <input type="radio" name="lunched_in_<?php echo $row->id;?>" /><br />
+                                                                        <span class="lunched_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                    <?php //else: ?>
+                                                                        <!-- <input type="radio" name="lunched_in_<?php echo $row->id;?>" /><br />
+                                                                        <span class="lunched_in_<?php echo $row->id;?>">00:00 </span> -->
+                                                                    <?php endif;?>
+                                                                <?php endforeach;?>
                                                             <?php endif;?>
                                                             
                                                             <input type="hidden" name="lunched_in" value="" />
@@ -238,13 +255,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
                                                             <?php if( !empty($clockin_arr) ):?>
-                                                                <?php if( $clockin_arr[0]->action == 'Lunch Out' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                    <input type="radio" name="lunched_out_<?php echo $row->id;?>" checked="checked" /><br />
-                                                                    <span class="lunched_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin_arr[0]->timestamp)); ?></span>
-                                                                <?php else: ?>
-                                                                    <input type="radio" name="lunched_out_<?php echo $row->id;?>" /><br />
-                                                                    <span class="lunched_out_<?php echo $row->id;?>">00:00 </span>
-                                                                <?php endif;?>
+                                                                <?php foreach($clockin_arr as $k => $clockin ): ?>
+                                                                    <?php if( $clockin->action == 'Lunch Out' && $k == 0 && $clockin->timestamp != 0 ):?>
+                                                                        <input type="radio" name="lunched_out_<?php echo $row->id;?>" checked="checked" /><br />
+                                                                        <span class="lunched_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                    <?php elseif( $clockin->action == 'Lunch Out' && $clockin_arr[0]->action != 'Lunch Out' && $clockin->timestamp != 0 ):?>
+                                                                        <input type="radio" name="lunched_out_<?php echo $row->id;?>" /><br />
+                                                                        <span class="lunched_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
+                                                                    <?php //else: ?>
+                                                                        <!-- <input type="radio" name="lunched_out_<?php echo $row->id;?>" /><br />
+                                                                        <span class="lunched_out_<?php echo $row->id;?>">00:00 </span> -->
+                                                                    <?php endif;?>
+                                                                <?php endforeach;?>
                                                             <?php endif;?>
                                                             
                                                             <input type="hidden" name="lunched_out" value="" />
@@ -281,7 +303,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <a id="clockout_btn" style="display: none; color: red;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
                                                         </a>*/?>
-                                                        <?php //if (hasPermissions('users_edit')): ?>
+                                                        <?php ////if (hasPermissions('users_edit')): ?>
                                                             <form name="clockin_form" method="post">
                                                                 <input type="hidden" name="current_time_in" value="<?php echo date('Y-m-d H:i'); ?>" />
                                                                 <input type="hidden" name="clockin_user_id" value="<?php echo $row->id; ?>" />

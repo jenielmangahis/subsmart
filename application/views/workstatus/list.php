@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                    <?php //if (hasPermissions('add_plan')): ?>
+                                    <?php ////if (hasPermissions('add_plan')): ?>
                                     <a href="<?php echo url('workstatus/add') ?>" class="btn btn-primary"><i
                                                 class="fa fa-plus"></i> New Workorder type</a>
 
@@ -57,17 +57,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
 
                                         <td>
-                                            <?php if (hasPermissions('plan_edit')): ?>
+                                            <?php //if (hasPermissions('plan_edit')): ?>
                                                 <a href="<?php echo url('workstatus/edit/' . $row->id) ?>"
                                                    class="btn btn-sm btn-default" title="Edit item"
                                                    data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                            <?php endif ?>
-                                            <?php if (hasPermissions('plan_delete')): ?>
+                                            <?php //endif ?>
+                                            <?php //if (hasPermissions('plan_delete')): ?>
                                                 <a href="<?php echo url('workstatus/delete/' . $row->id) ?>"
                                                    class="btn btn-sm btn-default"
                                                    onclick='return confirm("Do you really want to delete this item ? \nIt may cause errors where it is currently being used !!")'
                                                    title="Delete item" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
-                                            <?php endif ?>
+                                            <?php //endif ?>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

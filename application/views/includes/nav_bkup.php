@@ -13,13 +13,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </a>
   </li>
 
-  <?php if (hasPermissions('users_list')): ?>
+  <?php //if (hasPermissions('users_list')): ?>
     <li <?php echo ($page->menu=='users')?'class="active"':'' ?>>
       <a href="<?php echo url('users') ?>">
         <i class="fa fa-user"></i> <span>Users</span>
       </a>
     </li>	 
-  <?php endif ?>
+  <?php //endif ?>
 
   <?php if($user_id == 1) { ?>
 
@@ -30,39 +30,39 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </li>
   <?php }?>
 
-  <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+  <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
     <li <?php echo ($page->menu=='workorder')?'class="active"':'' ?>>
       <a href="<?php echo url('workorder') ?>">
         <i class="fa fa-user"></i> <span>Workorder</span>
       </a>
     </li>	 
-  <?php endif ?>
+  <?php //endif ?>
 
-  <?php if (hasPermissions('activity_log_list')): ?>
+  <?php //if (hasPermissions('activity_log_list')): ?>
   <li <?php echo ($page->menu=='activity_logs')?'class="active"':'' ?>>
     <a href="<?php echo url('activity_logs') ?>">
       <i class="fa fa-history"></i><span>Activity Logs</span>
     </a>
   </li>
-  <?php endif ?>
+  <?php //endif ?>
 
-  <?php if (hasPermissions('roles_list')): ?>
+  <?php //if (hasPermissions('roles_list')): ?>
   <li <?php echo ($page->menu=='roles')?'class="active"':'' ?>>
     <a href="<?php echo url('roles') ?>">
       <i class="fa fa-lock"></i><span>Manage Roles</span>
     </a>
   </li>
-  <?php endif ?>
+  <?php //endif ?>
 
-  <?php if (hasPermissions('permissions_list')): ?>
+  <?php //if (hasPermissions('permissions_list')): ?>
   <li <?php echo ($page->menu=='permissions')?'class="active"':'' ?>>
     <a href="<?php echo url('permissions') ?>">
       <i class="fa fa-lock"></i><span>Manage Permissions</span>
     </a>
   </li>
-  <?php endif ?>
+  <?php //endif ?>
 
-  <?php /* if (hasPermissions('backup_db')): ?>
+  <?php /* //if (hasPermissions('backup_db')): ?>
   <li <?php echo ($page->menu=='backup')?'class="active"':'' ?>>
     <a href="<?php echo url('backup') ?>">
       <i class="fa fa-download"></i><span>Backup</span>

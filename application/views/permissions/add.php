@@ -10,7 +10,7 @@
             <div class="col-sm-6">
                <h1 class="page-title">Permissions</h1>
                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">manage permissions</li>
+                  <li class="breadcrumb-item active">Manage permissions</li>
                </ol>
             </div>
          </div>

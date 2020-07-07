@@ -26,7 +26,7 @@
                   <div class="card-header">
                      <div class="float-right d-none d-md-block">
                         <div class="dropdown">
-                           <?php //if (hasPermissions('users_add')): ?>
+                           <?php ////if (hasPermissions('users_add')): ?>
                            <a href="#" class="btn btn-primary" aria-expanded="false" id="btn-add-new-folder">
                            <i class="fa fa-folder mr-2"></i> Add New Folder
                            </a> 

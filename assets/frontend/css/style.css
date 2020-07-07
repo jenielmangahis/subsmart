@@ -282,7 +282,28 @@
    margin-bottom: 0;
    padding: 25px 0 20px;
  }
-
+.tr-mobile-blink {
+   color: #e05656;
+   text-transform: uppercase;
+   font-weight: 500;
+   animation:blinkingTextH 2s infinite;
+}
+h3.widget-txt-title {
+    margin: 0 auto;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 44px;
+    margin-top: 20px;
+}
+span.widget-desc {
+    width: 700px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    font-size: 20px;
+    color: #000000;
+}
  /* Tab */
 
  .tab-element .nav-tabs {
@@ -1325,6 +1346,21 @@ img.card-features-home {
   font-weight: 600;
 }
 @media(max-width:991px) {
+    span.widget-desc {
+      width: 85%;
+      display: block;
+      margin: 0 auto;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #000000;
+    }
+    h3.widget-txt-title {
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 28px;
+    }
     .mobile-widget-container {
         width: 100% !important;
         display: block;
@@ -3751,6 +3787,17 @@ label.reg-def {
  }
 
  /* Large Mobile :480px. */
+ @media only screen and (min-width: 1650px) {
+   .site-navbar:after{
+     content: "";
+      height: 70px;
+      background: #fff;
+      width: 28vw;
+      position: absolute;
+      left: -10vw;
+      bottom: -14px;
+   }
+ }
  @media only screen and (max-width: 1480px) {
    .w-120 {
      width: 105%;

@@ -1,5 +1,5 @@
 <?php include viewPath('includes/header'); ?>
-<link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+<link href="<?php echo $url->assets ?rel="stylesheet">
 <style>
   .custom-signaturepad {
     padding-left: 0;
@@ -28,12 +28,12 @@
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
                                     <a href="<?php echo url('workorder') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Workorder
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>

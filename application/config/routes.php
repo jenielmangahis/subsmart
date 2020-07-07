@@ -74,6 +74,7 @@ $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
 $route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
 $route['survey/create'] = 'survey/add';
 $route['survey/add'] = 'survey/addSurvey';
+$route['survey/home'] = 'survey/index';
 
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
 $route['survey/themes'] = 'survey/themeIndex';
@@ -124,3 +125,10 @@ $route['terms-and-condition'] = 'pages/terms_and_condition';
 $route['privacy-policy'] = 'pages/privacy_policy';
 $route['anti-spam-policy'] = 'pages/anti_spam_policy';
 $route['find-pros'] = 'pages/find_pros';
+$route['find-pros/search'] = 'pages/find_pros_form';
+
+$route['before-after/main'] = 'Before_after';
+$route['before-after/add_photo'] = 'Before_after/addPhoto';
+
+$route['accounting/sales-overview'] = 'accounting/salesoverview';
+$route['accounting/all-sales'] = 'accounting/allsales';

@@ -185,7 +185,7 @@
 
             <td>
 
-              <?php if (hasPermissions('activity_log_view')): ?>
+              <?php //if (hasPermissions('activity_log_view')): ?>
 
                 <a href="<?php echo url('activity_logs/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="View Activity" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
 
@@ -195,7 +195,7 @@
 
                 <?php endif ?>
 
-              <?php endif ?>
+              <?php //endif ?>
 
             </td>
 

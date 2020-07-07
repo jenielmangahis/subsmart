@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
   <h1>
     Permissions
-    <small>manage permissions</small>
+    <small>Manage permissions</small>
   </h1>
 </section>
 

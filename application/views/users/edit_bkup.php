@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     User
 
-    <small>manage users</small>
+    <small>Manage users</small>
 
   </h1>
 

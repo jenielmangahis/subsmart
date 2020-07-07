@@ -18,12 +18,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                                <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                                     <a href="<?php echo url('workorder/add') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Workorder
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
@@ -87,11 +87,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 data-toggle="dropdown">Manage
                                                             <span class="caret"></span></button>
                                                         <ul class="dropdown-menu">
-                                                            <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                                                            <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                                                                 <li>
                                                                     <a href="<?php echo url('workorder/edit/' . $workorder->id) ?>">Edit</a>
                                                                 </li>
-                                                            <?php endif ?>
+                                                            <?php //endif ?>
                                                         </ul>
                                                     </div>
                                                 </td>

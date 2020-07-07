@@ -6,7 +6,7 @@
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
-    <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+   
 
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -22,12 +22,12 @@
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
                                     <a href="<?php echo base_url('customer') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Customer
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                                               echo "<div class='reperator'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
                                             $dummyHtml .= '<div class="col-md-6">';
-                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                              $dummyHtml .= getInputRepeaterHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           
@@ -120,7 +120,7 @@
                                               echo "<div class='reperator'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
                                             $dummyHtml .= '<div class="col-md-6">';
-                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                              $dummyHtml .= getInputRepeaterHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           
@@ -219,7 +219,7 @@
                                               echo "<div class='reperator'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
                                             $dummyHtml .= '<div class="col-md-6">';
-                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                              $dummyHtml .= getInputRepeaterHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           
@@ -241,7 +241,7 @@
                                               echo "<div class='reperator'>";
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
                                             $dummyHtml .= '<div class="col-md-6">';
-                                              $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                              $dummyHtml .= getInputRepeaterHtml($keySubQuestions, $valueSubQuestions);
                                             $dummyHtml .= '</div>';
                                           }
                                           

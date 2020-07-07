@@ -30,9 +30,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                   <div class="box-tools pull-right">
 
-                    <?php if (hasPermissions('users_add')): ?>
+                    <?php //if (hasPermissions('users_add')): ?>
                       <a href="<?php echo url('company/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Company</a>
-                    <?php endif ?>
+                    <?php //endif ?>
 
                     <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                             title="Collapse">
@@ -77,19 +77,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <?php endif ?>
                           </td>
                           <td>
-                            <?php if (hasPermissions('users_edit')): ?>
+                            <?php //if (hasPermissions('users_edit')): ?>
                               <a href="<?php echo url('company/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                            <?php endif ?>
-                            <?php if (hasPermissions('users_view')): ?>
+                            <?php //endif ?>
+                            <?php //if (hasPermissions('users_view')): ?>
                               <a href="<?php echo url('company/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
-                            <?php endif ?>
-                            <?php if (hasPermissions('users_delete')): ?>
+                            <?php //endif ?>
+                            <?php //if (hasPermissions('users_delete')): ?>
                               <?php if ($row->id!=1 && logged('id')!=$row->id): ?>
                                 <a href="<?php echo url('company/delete/'.$row->id) ?>" class="btn btn-sm btn-default" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                               <?php else: ?>
                                 <a href="#" class="btn btn-sm btn-default" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                               <?php endif ?>
-                            <?php endif ?>
+                            <?php //endif ?>
                           </td>
                         </tr>
                       <?php endforeach ?>

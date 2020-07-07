@@ -37,7 +37,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <br/>
     <br/>
 </section>
-
 <section class="hero-section mobile-pricing mobile-only">
     <div class="pricing-mobile-slider home-slider owl-carousel">
       <div class="mobile-pricing-banner hero-item-pricing">
@@ -1233,11 +1232,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   </div>
 </section>
 
-
 <section class="ccontainer bg-grey ss_ccmph_4 lineup-container hidden-sm hidden-xs desktop-only" style="padding-top: 0px; height:auto; ">
     <div class="content-container desktop-only">
         <div class="ctext">
-            <div class="_buyNow _freeTrial">
+            <div class="_buyNow _freeTrial trial-byn">
                 <div class="toggle-container">
                     <span class="bn" data-wa-link="toggle_fiftyper-diy" data-di-id="#toggle_fiftyper-diy">Buy now for 50% off for 3 months*</span>
                     <label class="switch pricing-switch">
@@ -1269,2030 +1267,1572 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-        <div class="pricing-card-layout pricing-card-layout-qb desktop-only">
-            <div class="pcard-cols-3-1">
-                <div class="cpricing-card-layout left-pricing group_w_3_1 ">
-                    <div class="pricing-card-layout-header pricing-card-header-green" id="header_left">
-                        <div class="ctext">
-                            <h4>Small Business</h4>
-                            <div class="tooltip-container">
-                                <span class="tooltip-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" data-di-rand="1590202098831">
-                                        <defs>
-                                            <path id="a3" d="M8 .381c4.201 0 7.619 3.418 7.619 7.619S12.201 15.619 8 15.619.381 12.201.381 8 3.799.381 8 .381zm0 13.714A6.102 6.102 0 0 0 14.095 8 6.102 6.102 0 0 0 8 1.905 6.102 6.102 0 0 0 1.905 8 6.102 6.102 0 0 0 8 14.095zm0-6.857c-.42 0-.762.34-.762.762v2.286a.762.762 0 1 0 1.524 0V8A.762.762 0 0 0 8 7.238m0-2.286a.762.762 0 1 0 0 1.524.762.762 0 0 0 0-1.524">
-                                            </path>
-                                        </defs>
-                                        <g fill="none" fill-rule="evenodd">
-                                            <mask id="b3" fill="#fff">
-                                                <use xlink:href="#a3"></use>
-                                            </mask>
-                                            <g fill="#8D9096" mask="url(#b3)">
-                                                <path d="M-1.143-1.143h18.286v18.286H-1.143z"></path>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                </span>
-                                <span class="tooltip-content">For sole proprietors, LLCs, partnerships,
-                                    corporations, non-profits, and more.</span>
-                            </div>
-                        </div>
-                        <!-- <div class="ctext expert--anchor">Now set up QuickBooks with a Live Bookkeeping expert<sup>6</sup></div> -->
-                    </div>
-                    <div class="table-row" id="content_left">
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12 with-border">
-                            <div class="pricing-card-layout-content-wrapper">
-                                <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">25</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">12</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Simple Start" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#ssbuynow-diy"><span>Buy
-                                                    now</span></a>
-                                        </div>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Simple Start" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sstrial-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">70</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">35</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$4/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow_core-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_core-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial_core-diy" class="ctasecondary" data-di-id="#sstrial_core-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">24.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">19.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">$8/employees</p>
-                                                <p class="payroll_text">+1 License</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Essential</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">150</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">75</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$10/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_elite-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial_elite-diy" class="ctasecondary" data-di-id="#sstrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="ctext">
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Integrate online payments</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Intuitive dashboard</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Monitor expenses and profits</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-
-
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12 with-border">
-                            <div class="pricing-card-layout-content-wrapper">
-                                <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">25</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">12</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Simple Start" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#ssbuynow-diy"><span>Buy
-                                                    now</span></a>
-                                        </div>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Simple Start" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sstrial-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Simple Start</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">70</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">35</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$4/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow_core-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_core-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial_core-diy" class="ctasecondary" data-di-id="#sstrial_core-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Essential</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">59.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">49.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">$8/employees</p>
-                                                <p class="payroll_text">+2 License</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Essential</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">150</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">75</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$10/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="ssbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_elite-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="sstrial_elite-diy" class="ctasecondary" data-di-id="#sstrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="ctext">
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Integrate online payments</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Intuitive dashboard</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Monitor expenses and profits</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Track employee hours</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Automate email marketing campaigns</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize postcard marketing functionality</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create a customized digital store</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1" class="header-ul">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-
-
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12 with-border">
-                            <div class="pricing-card-layout-content-wrapper">
-                                <section class="ccontainer None mt-features-single-row-text-only qb-ess">
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">40</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">20</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="esbuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Essentials" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#esbuynow-diy"><span>Buy
-                                                    now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="estrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Essentials" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#estrial-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">85</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">42</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$4/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="esbuynow_core-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_core-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="estrial_core-diy" class="ctasecondary" data-di-id="#estrial_core-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">79.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">69.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">$8/employees</p>
-                                                <p class="payroll_text">+3 License</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="estrial_prem-diy" class="ctasecondary" data-di-id="#estrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Plus</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">165</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">82</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$10/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="esbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_elite-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="estrial_elite-diy" class="ctasecondary" data-di-id="#estrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="ctext">
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Integrate online payments</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Intuitive dashboard</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Monitor expenses and profits</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Track employee hours</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Automate email marketing campaigns</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize postcard marketing functionality</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create a customized digital store</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Link up with your favorite software</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create some great designs emails</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4 col-sm-4 col-xs-12 with-border">
-                            <div class="pricing-card-layout-content-wrapper">
-                                <section class="ccontainer None mt-features-single-row-text-only qb-plus">
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">PremierPro</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">70</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">35</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="plbuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Plus" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#plbuynow-diy"><span>Buy
-                                                    now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="pltrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Plus" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#pltrial-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">PremierPro</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">115</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">57</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$4/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="plbuynow_core-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_core-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="pltrial_core-diy" class="ctasecondary" data-di-id="#pltrial_core-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">PremierPro</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">99.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">89.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">$8/employees</p>
-                                                <p class="payroll_text">+4 License</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">PremierPro</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">195</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">97</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$10/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="plbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_elite-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">or</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="pltrial_elite-diy" class="ctasecondary" data-di-id="#pltrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="ctext">
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Integrate online payments</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Intuitive dashboard</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Monitor expenses and profits</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Track employee hours</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Automate email marketing campaigns</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize postcard marketing functionality</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create a customized digital store</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Link up with your favorite software</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create some great designs emails</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Mobile Tools</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Simple tools that come handy.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Survey Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Feedbacks and reviews.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Inventory Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Keep track of all the your items.</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                        <div class="pricing-card-layout-content none pcolumns_w3 col-md-4  col-sm-4 col-xs-12" style="  border-right: 0px !important;">
-                            <div class="pricing-card-layout-content-wrapper">
-                                <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Enterprise</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">150</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">75</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="advbuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Advanced" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#advbuynow-diy"><span>Buy
-                                                    now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">,,</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <span class="free-trial-text">Call for a product
-                                                demo<br>1-844-324-8623</span>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Enterprise</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">195</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">98</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+$4/employee/mo</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="advbuynow_core-diy" class="ctasecondary ctacenter" data-di-id="#advbuynow_core-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <div class="tryit-free-link-url default-product">
-                                            <span class="free-trial-text">Call for a product
-                                                demo<br>1-844-324-8623</span>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Enterprise</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">149.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">$8/employees</p>
-                                                <p class="payroll_text">+5 License</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="advbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#advbuynow_prem-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">,,</p>
-                                        <!-- <div class="tryit-free-link-url default-product">
-                                            <span class="free-trial-text">Call for a product
-                                                demo<br>1-844-324-8623</span>
-                                        </div> -->
-                                        <div class="tryit-free-link-url default-product">
-                                            <a href="#" data-wa-link="pltrial_core-diy" class="ctasecondary" data-di-id="#pltrial_core-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Enterprise</div>
-                                            <div class="price-container default-product">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                        <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <span class="ct">$</span><span class="aw">149.99</span>
-                                                        <span class="as"></span><span class="ac"></span>
-                                                    </div>
-                                                    <span class="per red-price-month">/mo</span>
-                                                </div>
-                                                <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
-                                                </p>
-                                                <p class="payroll_text">+5 License</p>
-                                                <div class="text--payroll">+$50/one-time setup session</div>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button default-product">
-                                            <a href="#" data-wa-link="advbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#advbuynow_elite-diy"><span>Buy now</span></a>
-                                        </div>
-                                        <p class="or-text default-product">,,</p>
-                                        <div class="tryit-free-link-url default-product">
-                                            <span class="free-trial-text">Call for a product
-                                                demo<br>1-844-324-8623</span>
-                                        </div>
-                                    </div>
-                                    <div class="ctext">
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Integrate online payments</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Intuitive dashboard</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Monitor expenses and profits</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Track employee hours</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Automate email marketing campaigns</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize postcard marketing functionality</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create a customized digital store</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Link up with your favorite software</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create some great designs emails</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Mobile Tools</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Simple tools that come handy.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Survey Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Feedbacks and reviews.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Inventory Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Keep track of all the your items.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Credit Score</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Form Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Customize & save your forms.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>eSign</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Blast</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="payroll--wrapper add-ons col-md-12">
-                        <ul>
-                            <li class="core-add-on payroll--section section--core" data-popup="14">
-                                <div class="section--left">
-                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>$5 Add-ons</div>
-                                    <div class="payroll-text">
-
-                                    </div>
-                                    <label class="switch pricing-switch add-ons-slide-switch">
-                                      <input type="checkbox" class="add-on-switch">
-                                      <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <div class="section--right">
-                                    <ul class="addon-list">
-                                        <li> Ask Customer for Review </li>
-                                        <li> Online Booking </li>
-                                        <li> Lead Contact Form </li>
-                                        <li> Email Blast </li>
-                                        <li> Employee Access </li>
-                                        <li> Virtual Number </li>
-                                        <li> SMS Blast </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="premium-add-on payroll--section section--prem" data-popup="65">
-                                <div class="section--left">
-                                    <div class="section--title title"><i class="arrow-down" aria-hidden="true"></i>$10 Add-ons</div>
-                                    <div class="payroll-text">
-
-                                    </div>
-                                    <label class="switch pricing-switch add-ons-slide-switch">
-                                      <input type="checkbox" class="add-on-switch">
-                                      <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <div class="section--right">
-                                    <ul class="addon-list">
-                                        <li> NiceJob Connector </li>
-                                        <li> Deals & Steals </li>
-                                        <li> Proposal Kit </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    -->
-                    <div style="clear:both"></div>
+      </div>
+      <br/>
+      <br class="clear" />
+        <!-- pricing v2 -->
+        <div class="container-table-pricing">
+          <div class="table-sp-3">
+            <div class="ctext-float">
+                <h4 class="cs-small">Small Business</h4>
+                <div class="tooltip-container cs-tooltip">
+                    <span class="tooltip-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" data-di-rand="1590202098831">
+                            <defs>
+                                <path id="a3" d="M8 .381c4.201 0 7.619 3.418 7.619 7.619S12.201 15.619 8 15.619.381 12.201.381 8 3.799.381 8 .381zm0 13.714A6.102 6.102 0 0 0 14.095 8 6.102 6.102 0 0 0 8 1.905 6.102 6.102 0 0 0 1.905 8 6.102 6.102 0 0 0 8 14.095zm0-6.857c-.42 0-.762.34-.762.762v2.286a.762.762 0 1 0 1.524 0V8A.762.762 0 0 0 8 7.238m0-2.286a.762.762 0 1 0 0 1.524.762.762 0 0 0 0-1.524">
+                                </path>
+                            </defs>
+                            <g fill="none" fill-rule="evenodd">
+                                <mask id="b3" fill="#fff">
+                                    <use xlink:href="#a3"></use>
+                                </mask>
+                                <g fill="#8D9096" mask="url(#b3)">
+                                    <path d="M-1.143-1.143h18.286v18.286H-1.143z"></path>
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="tooltip-content">For sole proprietors, LLCs, partnerships,
+                        corporations, non-profits, and more.</span>
                 </div>
-                <div class="cpricing-card-layout right-pricing group_w_1_3">
-                    <div class="pricing-card-layout-header pricing-card-header-blue" id="header_right" style="margin-bottom: 0px;">
-                        <div class="ctext">
-                            <h4 style="">Freelancer</h4>
-                            <div class="tooltip-container">
-                                <span class="tooltip-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" data-di-rand="1590202098840">
-                                        <defs>
-                                            <path id="a3" d="M8 .381c4.201 0 7.619 3.418 7.619 7.619S12.201 15.619 8 15.619.381 12.201.381 8 3.799.381 8 .381zm0 13.714A6.102 6.102 0 0 0 14.095 8 6.102 6.102 0 0 0 8 1.905 6.102 6.102 0 0 0 1.905 8 6.102 6.102 0 0 0 8 14.095zm0-6.857c-.42 0-.762.34-.762.762v2.286a.762.762 0 1 0 1.524 0V8A.762.762 0 0 0 8 7.238m0-2.286a.762.762 0 1 0 0 1.524.762.762 0 0 0 0-1.524">
-                                            </path>
-                                        </defs>
-                                        <g fill="none" fill-rule="evenodd">
-                                            <mask id="b3" fill="#fff">
-                                                <use xlink:href="#a3"></use>
-                                            </mask>
-                                            <g fill="#8D9096" mask="url(#b3)">
-                                                <path d="M-1.143-1.143h18.286v18.286H-1.143z"></path>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                </span>
-                                <span class="tooltip-content">For sole proprietors who file a Schedule C.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-row" id="content_right">
-                        <div class="pricing-card-layout-content none pcolumns_w1 col-md-12 col-sm-4 col-sm-offset-4 col-xs-12 pccol_1">
-                            <div class="pricing-card-layout-content-wrapper  pccolwrap_1" style="height: 2068px;">
-                                <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
-                                    <div class="eCommerce-product-div">
-                                        <div class="image-price-container">
-                                            <div class="price-container-title">Industry Specific</div>
-                                            <div class="price-container">
-                                                <div class="pricing-section">
-                                                    <div class="price">
-                                                      <p>Contact Us</p>
-                                                    </div>
-                                                    <div class="red-price-text">
-                                                        <p>for a Demo</p>
-                                                    </div>
-
-                                                </div>
-                                                <p class="offer-text"><span class="high-attention-text">Save 50%
-                                                        for 3 months</span></p>
-                                            </div>
-                                        </div>
-                                        <div class="blue-button">
-                                            <a href="https://signup.quickbooks.intuit.com/?locale=en-us&amp;offerType=buy&amp;bc=OBI-LL7&amp;offerId=20016674&amp;product=qbse" data-wa-link="sebuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Self Employed" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sebuynow-diy"><span>Buy
-                                                    now</span></a>
-                                        </div>
-                                        <p class="or-text ">or</p>
-                                        <div class="tryit-free-link-url ">
-                                            <a href="https://signup.quickbooks.intuit.com/?locale=en-us&amp;offerType=trial&amp;bc=OBI-LL7&amp;offerId=20016680&amp;product=qbse" data-wa-link="setrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Self Employed" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#setrial-diy"><span class="free-trial-text">Try it free</span></a>
-                                        </div>
-                                    </div>
-                                    <div class="ctext">
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Seamlessly assign work orders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigation</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Finances</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">CRM/Estimates/Invoices</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Integrate online payments</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Estimate costs & expenses with ease</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Insights</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Intuitive dashboard</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Monitor expenses and profits</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage customers & employees</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create reminders</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Implement before and after photos</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Time Sheets</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Track employee hours</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Reports</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Real time reports and analytics</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Marketing</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Automate email marketing campaigns</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Utilize postcard marketing functionality</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create a customized digital store</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Taskhub</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Manage & assign multiple projects</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>API Connectors</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Link up with your favorite software</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Create some great designs emails</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>GPS Tracking</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Get real-time updates on your team's location.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Mobile Tools</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Simple tools that come handy.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Survey Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Feedbacks and reviews.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Inventory Management</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Keep track of all the your items.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Credit Score</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Form Builder</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Customize & save your forms.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Accounting</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>eSign</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Campaign Blast</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Wizard</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Turns multiple steps process in to a one-click automated function.</span>
-                                            </li>
-                                        </ul>
-
-                                        <ul data-list="1">
-                                            <li>
-                                                <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-less-desktop hidden">remove</span><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">add</span><strong>Branding</strong></span>
-                                            </li>
-                                        </ul>
-                                        <ul data-list="1" class="desc-ul hidden">
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">A strategy that get customer to identify your business with your product & services.</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Video Estimates.</span>
-                                            </li>
-                                            <li>
-                                                <i class="arrow-down" aria-hidden="true"></i>
-                                                <span class="p3 open-popup">Improve your rate of acceptance.</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="clear:both"></div>
-                </div>
-                <div style="clear:both"></div>
             </div>
+            <div class="pricing-card-layout-content wht-tile">
+                <div class="pricing-card-layout-content-wrapper">
+                    <section class="ccontainer">
 
-        </div></div>
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title-v2">Simple Start</div>
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">24.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">19.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                    </p>
+                                    <p class="payroll_text">$8/employees</p>
+                                    <p class="payroll_text">+1 License</p>
+                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                </div>
+                            </div>
+                            <div class="blue-button default-product">
+                                <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
+                            </div>
+                            <p class="or-text default-product">or</p>
+                            <div class="tryit-free-link-url default-product">
+                                <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="ctext-v2">
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Integrate online payments</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Intuitive dashboard</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+          </div>
+          <div class="table-sp-3">
+            <div class="pricing-card-layout-content wht-tile">
+                <div class="pricing-card-layout-content-wrapper">
+                    <section class="ccontainer None mt-features-single-row-text-only qb-ss hidden-sm hidden-xs">
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title-v2">Essential</div>
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">59.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">49.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                    </p>
+                                    <p class="payroll_text">$8/employees</p>
+                                    <p class="payroll_text">+2 License</p>
+                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                </div>
+                            </div>
+                            <div class="blue-button default-product">
+                                <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
+                            </div>
+                            <p class="or-text default-product">or</p>
+                            <div class="tryit-free-link-url default-product">
+                                <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="ctext-v2">
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Integrate online payments</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Intuitive dashboard</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Track employee hours</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Real time reports and analytics</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+          </div>
+          <div class="table-sp-3">
+            <div class="pricing-card-layout-content wht-tile">
+                <div class="pricing-card-layout-content-wrapper">
+                    <section class="ccontainer None mt-features-single-row-text-only qb-ess">
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title-v2">Plus</div>
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">79.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">69.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                    </p>
+                                    <p class="payroll_text">$8/employees</p>
+                                    <p class="payroll_text">+3 License</p>
+                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                </div>
+                            </div>
+                            <div class="blue-button default-product">
+                                <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+                            </div>
+                            <p class="or-text default-product">or</p>
+                            <div class="tryit-free-link-url default-product">
+                                <a href="#" data-wa-link="estrial_prem-diy" class="ctasecondary" data-di-id="#estrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title">Plus</div>
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">165</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">82</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                    </p>
+                                    <p class="payroll_text">+$10/employee/mo</p>
+                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                </div>
+                            </div>
+                            <div class="blue-button default-product">
+                                <a href="#" data-wa-link="esbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_elite-diy"><span>Buy now</span></a>
+                            </div>
+                            <p class="or-text default-product">or</p>
+                            <div class="tryit-free-link-url default-product">
+                                <a href="#" data-wa-link="estrial_elite-diy" class="ctasecondary" data-di-id="#estrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="ctext-v2">
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Integrate online payments</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Intuitive dashboard</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Track employee hours</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Real time reports and analytics</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Link up with your favorite software</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create some great designs emails</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+          </div>
+
+          <div class="table-sp-3">
+            <div class="pricing-card-layout-content wht-tile">
+                <div class="pricing-card-layout-content-wrapper">
+                    <section class="ccontainer None mt-features-single-row-text-only qb-plus sb-e2">
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title-v2">PremierPro</div>
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">99.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">89.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                    </p>
+                                    <p class="payroll_text">$8/employees</p>
+                                    <p class="payroll_text">+4 License</p>
+                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                </div>
+                            </div>
+                            <div class="blue-button default-product">
+                                <a href="#" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
+                            </div>
+                            <p class="or-text default-product">or</p>
+                            <div class="tryit-free-link-url default-product">
+                                <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="ctext-v2">
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Integrate online payments</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Intuitive dashboard</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Track employee hours</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Real time reports and analytics</span>
+                                </li>
+                            </ul>
+
+                            <ul class="ul-color-header" data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Link up with your favorite software</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create some great designs emails</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Mobile Tools</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Simple tools that come handy.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Survey Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Feedbacks and reviews.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Keep track of all the your items.</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+          </div>
+
+          <div class="table-sp-3">
+            <div class="pricing-card-layout-content wht-tile">
+                <div class="pricing-card-layout-content-wrapper">
+                    <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title-v2">Enterprise</div>
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">149.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
+                                    </p>
+                                    <p class="payroll_text">+5 License</p>
+                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                </div>
+                            </div>
+                            <div class="blue-button default-product">
+                                <a href="#" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
+                            </div>
+                            <p class="or-text default-product">or</p>
+                            <div class="tryit-free-link-url default-product">
+                                <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="ctext-v2">
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Integrate online payments</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Intuitive dashboard</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Track employee hours</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Real time reports and analytics</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Link up with your favorite software</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create some great designs emails</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Mobile Tools</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Simple tools that come handy.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Survey Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Feedbacks and reviews.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:87%;float:left;">Inventory Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Keep track of all the your items.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Credit Score</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Form Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Customize & save your forms.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>eSign</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Blast</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+          </div>
+
+          <div class="table-sp-3">
+            <div class="ctext-float">
+                <h4 class="cs-small">Freelancer</h4>
+                <div class="tooltip-container cs-tooltip">
+                    <span class="tooltip-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" data-di-rand="1590202098831">
+                            <defs>
+                                <path id="a3" d="M8 .381c4.201 0 7.619 3.418 7.619 7.619S12.201 15.619 8 15.619.381 12.201.381 8 3.799.381 8 .381zm0 13.714A6.102 6.102 0 0 0 14.095 8 6.102 6.102 0 0 0 8 1.905 6.102 6.102 0 0 0 1.905 8 6.102 6.102 0 0 0 8 14.095zm0-6.857c-.42 0-.762.34-.762.762v2.286a.762.762 0 1 0 1.524 0V8A.762.762 0 0 0 8 7.238m0-2.286a.762.762 0 1 0 0 1.524.762.762 0 0 0 0-1.524">
+                                </path>
+                            </defs>
+                            <g fill="none" fill-rule="evenodd">
+                                <mask id="b3" fill="#fff">
+                                    <use xlink:href="#a3"></use>
+                                </mask>
+                                <g fill="#8D9096" mask="url(#b3)">
+                                    <path d="M-1.143-1.143h18.286v18.286H-1.143z"></path>
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="tooltip-content">For sole proprietors, LLCs, partnerships,
+                        corporations, non-profits, and more.</span>
+                </div>
+            </div>
+            <div class="pricing-card-layout-content wht-tile">
+                <div class="pricing-card-layout-content-wrapper">
+                    <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
+                        <div class="eCommerce-product-div">
+                            <div class="image-price-container">
+                                <div class="price-container-title-v2">Industry Specific</div>
+                                <div class="price-container-freelancer">
+                                    <div class="pricing-section mbc-20">
+                                        <div class="price">
+                                          <p>Contact Us</p>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <p>for a Demo</p>
+                                        </div>
+
+                                    </div>
+                                    <p class="offer-text" style="position: relative;right: 10px;"><span class="high-attention-text">Save 50%
+                                            for 3 months</span></p>
+                                </div>
+                            </div>
+                            <div class="blue-button">
+                                <a href="https://signup.quickbooks.intuit.com/?locale=en-us&amp;offerType=buy&amp;bc=OBI-LL7&amp;offerId=20016674&amp;product=qbse" data-wa-link="sebuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Self Employed" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sebuynow-diy"><span>Buy
+                                        now</span></a>
+                            </div>
+                            <p class="or-text ">or</p>
+                            <div class="tryit-free-link-url ">
+                                <a href="https://signup.quickbooks.intuit.com/?locale=en-us&amp;offerType=trial&amp;bc=OBI-LL7&amp;offerId=20016680&amp;product=qbse" data-wa-link="setrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Self Employed" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#setrial-diy"><span class="free-trial-text">Try it free</span></a>
+                            </div>
+                        </div>
+                        <div class="ctext-v2">
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Seamlessly assign work orders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigation</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Finances</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">CRM/Estimates/Invoices</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Integrate online payments</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Estimate costs & expenses with ease</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">nSmarTrac, Google & iCal integration</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Intuitive dashboard</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Track employee hours</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Real time reports and analytics</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage & assign multiple projects</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Link up with your favorite software</span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create some great designs emails</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Get real-time updates on your team's location.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Mobile Tools</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Simple tools that come handy.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Survey Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Feedbacks and reviews.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Inventory Management</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Keep track of all the your items.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Credit Score</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Get the credit worthiness of your prospect.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Form Builder</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Customize & save your forms.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>eSign</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Easily customize any templates to create personal or business signage.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Blast</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Narrow down your target demographics & connect.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Wizard</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Turns multiple steps process in to a one-click automated function.</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="ul-color-header">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Branding</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">A strategy that get customer to identify your business with your product & services.</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Video Estimates.</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Improve your rate of acceptance.</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+          </div>
+        </div>
+        <!-- end pricing v2 -->
+
+
+        <br class="clear" />
+        <br/>
+
+
         <section class="addon desktop-only" style="">
             <div class="container">
                 <div class="addon__box">

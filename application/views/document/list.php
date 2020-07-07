@@ -21,8 +21,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="box-tools pull-right">
 
                       <a href="<?php echo url('document/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Document</a>
-                    <?php if (hasPermissions('users_add')): ?>
-                    <?php endif ?>
+                    <?php //if (hasPermissions('users_add')): ?>
+                    <?php //endif ?>
 
 
                   </div>
@@ -57,19 +57,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <?php echo $row->file ?>
                           </td>
                           <td>
-                            <?php if (hasPermissions('users_edit') || true): ?>
+                            <?php //if (hasPermissions('users_edit') || true): ?>
                               <a href="<?php echo url('document/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                            <?php endif ?>
-                            <?php if (hasPermissions('users_view') || true): ?>
+                            <?php //endif ?>
+                            <?php //if (hasPermissions('users_view') || true): ?>
                               <a href="<?php echo url('document/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
-                            <?php endif ?>
-                            <?php if (hasPermissions('users_delete') || true): ?>
+                            <?php //endif ?>
+                            <?php //if (hasPermissions('users_delete') || true): ?>
                               <?php if ($row->id!=1 && logged('id')!=$row->id || true): ?>
                                 <a href="<?php echo url('document/delete/'.$row->id) ?>" class="btn btn-sm btn-default" onclick="return confirm('Do you really want to delete this document ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                               <?php else: ?>
                                 <a href="#" class="btn btn-sm btn-default" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                               <?php endif ?>
-                            <?php endif ?>
+                            <?php //endif ?>
                           </td>
                         </tr>
                       <?php endforeach ?>

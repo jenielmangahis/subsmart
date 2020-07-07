@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
   <h1>
     Activity Logs
-    <small>manage activity logs</small>
+    <small>Manage activity logs</small>
   </h1>
 </section>
 

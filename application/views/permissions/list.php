@@ -11,15 +11,15 @@
             <div class="col-sm-6">
                <h1 class="page-title">Permissions</h1>
                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">manage user permissions</li>
+                  <li class="breadcrumb-item active">Manage user permissions</li>
                </ol>
             </div>
             <div class="col-sm-6">
                <div class="float-right d-none d-md-block">
                   <div class="dropdown">
-                    <?php if (hasPermissions('permissions_add')): ?>
+                    <?php //if (hasPermissions('permissions_add')): ?>
                     <a href="<?php echo url('permissions/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Permission</a>
-                    <?php endif ?>
+                    <?php //endif ?>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                         title="Collapse">
                     <i class="fa fa-minus"></i></button>
@@ -58,12 +58,12 @@
                            <?php echo $row->code ?>
                         </td>
                         <td>
-                           <?php if (hasPermissions('permissions_edit')): ?>
+                           <?php //if (hasPermissions('permissions_edit')): ?>
                            <a href="<?php echo url('permissions/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit Permission" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                           <?php endif ?>
-                           <?php if (hasPermissions('permissions_delete')): ?>
+                           <?php //endif ?>
+                           <?php //if (hasPermissions('permissions_delete')): ?>
                            <a href="<?php echo url('permissions/delete/'.$row->id) ?>" class="btn btn-sm btn-default" onclick='return confirm("Do you really want to delete this permissions ? \nIt may cause errors where it is currently being used !!")' title="Delete Permission" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
-                           <?php endif ?>
+                           <?php //endif ?>
                         </td>
                      </tr>
                      <?php endforeach ?>
