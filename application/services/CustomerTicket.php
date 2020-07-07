@@ -6,7 +6,7 @@ class CustomerTicket
 
     public function __construct($app)
     {
-        $this->app = $app;
+               $this->app = $app;
 
         $sub_method = $this->app->uri->segment(3);
         $id = $this->app->uri->segment(4); // parameters

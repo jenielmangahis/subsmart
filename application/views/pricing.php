@@ -1844,7 +1844,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="ul-color-header" data-list="1">
                                 <li>
+<<<<<<< HEAD
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Builder</strong></span>
+=======
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+>>>>>>> staging
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight">
@@ -2069,7 +2073,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
+<<<<<<< HEAD
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Builder</strong></span>
+=======
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+>>>>>>> staging
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight">
@@ -2670,7 +2678,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </ul>
                             <ul data-list="1" class="ul-color-header">
                                 <li>
+<<<<<<< HEAD
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Builder</strong></span>
+=======
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:15%;float:left;">done</span><strong style="width:85%;float:left;">Campaign Builder</strong></span>
+>>>>>>> staging
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight">

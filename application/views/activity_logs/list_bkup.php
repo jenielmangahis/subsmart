@@ -97,11 +97,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </td>
               <td><?php echo date( setting('datetime_format') , strtotime($row->created_at)) ?></td>
               <td>
-                <?php if (hasPermissions('activity_log_view')): ?>
+                <?php //if (hasPermissions('activity_log_view')): ?>
                   <a href="<?php echo url('activity_logs/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="View Activity" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
                   <?php if ($row->user > 0): ?>
                     <a href="<?php echo url('users/view/'.$row->user) ?>" class="btn btn-sm btn-default" title="View User" target="_blank" data-toggle="tooltip"><i class="fa fa-user"></i></a>
-                  <?php endif ?>
+                  <?php //endif ?>
                 <?php endif ?>
               </td>
             </tr>

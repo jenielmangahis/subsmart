@@ -870,5 +870,992 @@
                 
                                 
         ]
+    },
+    
+    {
+        "id": 8,
+        "category": "business",
+        "name": "Customer Success Story Questionnaire Template",
+        "questions": [
+            {
+                "question": "Hey there! We'd love to learn a bit more about how you use our product in your day-to-day work. Could you spare 10 minutes to tell us a bit about your business and how our product fits in?",
+                "temp_id": "1",
+                "order": "1",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+            },
+            {
+                "question": "Let's start simple - what's your first name? ",
+                "temp_id": "9",
+                "order": "2",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+            },
+            {
+                "question": "It's good to see you! What's your last name? ",
+                "temp_id": "9",
+                "order": "3",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+            {
+                "question": "And what company do you work for? ",
+                "temp_id": "9",
+                "order": "4",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+            {
+                "question": "Thanks, We want to show other user's how different people are using our product to get things done. We like what you're doing and think your work can help inspire others. :)",
+                "temp_id": "12",
+                "order": "5",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": ""
+
+            },
+
+
+            {
+                "question": "In a sentence or two, tell us what your company does. ",    
+                "temp_id": "13",
+                "order": "6",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": ""
+
+            },
+
+            {
+                "question": "Before you found our solution, what problem were you facing? ",    
+                "temp_id": "13",
+                "order": "7",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "In other words what led you to try our products?"
+
+            },
+
+            {
+                "question":"Which features and integrations have you been using and why?" ,    
+                "temp_id": "9",
+                "order": "8",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+            {
+                "question":"What are some of the concrete ways the tool has helped you? Please list a few below." ,    
+                "temp_id": "9",
+                "order": "9",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "This section is designed to show the value we're bringing to your company. We'd love to share metrics like hours saved, money saved, big wins you've achieved, etc."
+
+            },
+            {
+                "question":"What tips do you have for others using the software?",    
+                "temp_id": "9",
+                "order": "10",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+            {
+                "question":"Thanks for sharing, we really appreciate it. Just before you go, we have some  final things to clear up - should take a couple of minutes",    
+                "temp_id": "9",
+                "order": "11",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+            {   "question": "Could you let us know your role at your company",
+                "temp_id": "9",
+                "order": "11",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+
+            {   "question": "And what's your email address?",
+                "temp_id": "9",
+                "order": "12",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "This is so we can contact you if you have follow-up questions. We'll also use it to let you know when we publish the case study."
+
+            },
+
+            {   "question": "Thank's Would you mind uploading a picture of yourself for us to use in the article?",
+                "temp_id": "7",
+                "order": "13",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "A high resolution in portrait or landscape mode would be great"
+
+            },
+
+            {   "question": "And do you have any cool pictures of the team, your workplace, or company products we could use in the article?",
+                "temp_id": "7",
+                "order": "14",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "A high resolution in portrait or landscape mode would be great"
+
+            },
+
+            {   "question": "We may wish to include these images outside of the case study article (e.g. for social media, testimonials, marketing campaigns). Are you OK with us doing this?",
+                "temp_id": "11",
+                "order": "15",
+                "active": "",
+                "required": "1",
+                "description": "",  
+                "description_label": "",
+                "choices":[
+                    "YES",
+                    "NO"
+                ]
+
+            }
+        ]
+    },   
+    {
+
+        "id": 9,
+        "category": "Human Resources Survey",
+        "name": "Employee On-boarding Survey Template",
+        "questions": [
+
+            
+            {
+
+                "question": "Hello. Welcome to the team. Help us improve our onboarding process by answering these quick questions about how it went for you.",
+                "temp_id": "1",
+                "order": "1",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+
+            },
+
+            {
+                "question": "First up, can you tell us how long you’ve been with us?",
+                "temp_id": "4",
+                "order": "2",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "Remember, all your answers are anonymouse so please make sure the info you give us is accurate and honest.",
+                "choices":[
+                            "Less than a week",
+                            "1-2 week",
+                            "2-4 weeks",
+                            "1-2 months",
+                            "3-6 months",
+                            "6-12 onths",
+                            "Over 1 year"
+                ]
+            },    
+                {
+                    "question": "Great! Now, to begin with, we’d like to ask about how you found our recruitment process",
+                    "temp_id": "1",
+                    "order": "3",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+                },
+
+
+                {
+                    "question": "How long did the recruitment process take, from when you first applied until you got accepted for the job?",
+                    "temp_id": "3",
+                    "order": "4",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",
+                    "choices":[
+
+                            "0-2 weeks",
+                            "2-4 weeks",
+                            "1-2 months",
+                            "3-6 months",
+                            "Other"
+                    ]
+                },
+
+                {
+                    "question": "On a scale of 1-5, show how much you agree with the statement: ",
+                    "temp_id": "3",
+                    "order": "5",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "The recruitment process was very professional.",
+                    "choices":[
+
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                    ]
+                },
+
+
+                {
+                    "question": "On a scale of 1-5, show how much you agree with the statement: ",
+                    "temp_id": "3",
+                    "order": "6",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "During the recruitment process, I learned about the company and my role.",
+                    "choices":[
+
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                    ]
+                },
+
+
+                {
+                        "question": "Any suggestions for ways we could improve the recruitment process?",
+                        "temp_id": "9",
+                        "order": "7",
+                        "active": "",
+                        "required": "1",
+                        "description": "",
+                        "description_label": ""
+
+                },
+                {
+                    "question": "Ok, good to know! Now, we have a few questions about the equipment and resources you need to do your job",
+                    "temp_id": "9",
+                    "order": "8",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+
+                },
+                {
+                    "question": "On a scale of 1-5, show how much you agree with the statement:",
+                    "temp_id": "3",
+                    "order": "9",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "The equipment or resources I need were ready for me when I started my job. Computers, tools, materials, etc.",
+                    "choices":[
+
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                ]
+                },
+
+                {
+                    "question": "On a scale of 1-5, show how much you agree with the statement:",
+                    "temp_id": "3",
+                    "order": "10",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "After onboarding, I feel confident using the equipment and resources that my job requires.",                
+                    "choices":[
+
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                ]
+                },
+
+
+                {
+                    "question": "Do you feel that you're provided with all the equipment and resources you need to do your job well?",
+                    "temp_id": "3",
+                    "order": "11",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "YES",
+                            "NO"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "Oh! In that case, what equipment or resources do you feel are lacking?",
+                    "temp_id": "9",
+                    "order": "12",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+                },
+
+
+                {
+                    "question": "Excellent, thanks! You’re about halfway through the survey now. his time, a few questions about how the onboarding process has left you feeling about your role",
+                    "temp_id": "9",
+                    "order": "13",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "On a scale of 1-5, show how much you agree with the 5 statements"
+                },    
+                
+
+                {
+                    "question": "I’ve received adequate training to do my role.",
+                    "temp_id": "3",
+                    "order": "14",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "The information I received during training/onboarding was at the right level for me.",
+                    "temp_id": "3",
+                    "order": "15",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+
+                {
+                    "question": "Now that I’ve finished the onboarding process, I’m feeling productive.",
+                    "temp_id": "3",
+                    "order": "16",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "I now have a clear understanding of what is expected of me in this role.",
+                    "temp_id": "3",
+                    "order": "17",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "I now have an understanding of how I can expect my role to develop in the future.",
+                    "temp_id": "3",
+                    "order": "18",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "This feedback is really helping, thanks! Just a few more questions. Now we want to ask about how the onboarding process has left you feeling about the company",
+                    "temp_id": "1",
+                    "order": "19",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "On a scale of 1-5, show how much you agree with the 5 statements"                
+                    
+            
+            
+                },
+
+
+                {
+                    "question": "I feel welcome here.",
+                    "temp_id": "3",
+                    "order": "20",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+
+                {
+                    "question": "I feel like I fit in here.",
+                    "temp_id": "3",
+                    "order": "21",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+
+                {
+                    "question": "I can see myself still working here in a year’s time.",
+                    "temp_id": "3",
+                    "order": "22",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "I have a clear idea of how my role contributes to the main mission(s) of the company.",
+                    "temp_id": "3",
+                    "order": "23",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+            
+
+                {
+                    "question": "Working here is what I hoped it would be.",
+                    "temp_id": "3",
+                    "order": "24",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+            
+
+                {
+                    "question": "Thanks! Just 2 more questions to go.Overall, how would you rate your onboarding experience with us?",
+                    "temp_id": "3",
+                    "order": "25",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "Think about duration of the training, clarity of the information, professionality, etc.",                
+                    "choices":[
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        
+                    ]
+            
+                },
+
+                {
+                    "question": "Ok. And finally, please let us know anything we could do to improve the onboarding experience.",
+                    "temp_id": "12",
+                    "order": "26",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+                    
+            
+                }
+        ]
+    },
+    {
+
+        "id": 10,
+        "category": "Marketing",
+        "name": "Market Research Survey Template",
+        "questions": [
+
+
+            {
+                "question": "Thanks for taking time out to tell us more about you and your beachwear preferences",
+                "temp_id": "1",
+                "order": "1",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+                
+        
+            },
+
+
+            {
+                "question": "Let's start by finding out how beachwear aware you are",
+                "temp_id": "9",
+                "order": "2",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+                
+        
+            },
+
+            {
+                "question": "How often do you use beachwear products?",
+                "temp_id": "3",
+                "order": "3",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": "",
+                "choices":[
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10"
+
+                ]
+                
+        
+            },
+
+            {
+                "question": "What beachwear brands, if any, can you think of?",
+                "temp_id": "9",
+                "order": "4",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+                
+        
+            },
+
+
+
+            {
+                "question": "When did you last buy a beachwear product?",
+                "temp_id": "3",
+                "order": "5",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": "",
+                "choices": [
+
+                    "Less than 1 month ago",
+                    "Between 1 and 6 months ago",
+                    "Between 6 months and 1 year ago",
+                    "More than 1 year ago",
+                    "I don't remember"
+                ]
+                
+        
+            },
+
+
+
+            {
+
+
+                "question": "Great. So, let's hear your thoughts about Origama",
+                "temp_id": "9",
+                "order": "6",
+                "active": "",
+                "required": "1",
+                "description": "",
+                "description_label": ""
+            },
+
+
+            
+            {
+
+
+                "question": "If Origama® were a person, which of the following adjectives do you feel would best describe their personality?",
+                "temp_id": "4",
+                "order": "7",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "Choose as many as you like",
+                "choices": [
+
+                    "Daring",
+                    "Honest",
+                    "Reliable",
+                    "Successful",
+                    "Cheerful",
+                    "Sophisticated",
+                    "Spirited",
+                    "Imaginative",
+                    "Rugged",
+                    "Tough",
+                    "Upper-class",
+                    "Intelligent",
+                    "Charming",
+                    "Outdoorsy",
+                    "Down-to-earth"
+                ]
+            },
+
+            {
+            "question": "Thanks for checking out the new Origama® Sun Seat. How interested are you in the product on a scale of one to five?",
+                "temp_id": "3",
+                "order": "8",
+                "active": "",
+                "required": "1",
+                "description": "1",
+                "description_label": "Choose as many as you like",
+                "choices": [
+
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+
+
+                ]
+
+            },
+
+            {
+                "question": "What appeals to you most about the Sun Seat?",
+                    "temp_id": "9",
+                    "order": "9",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "Give as much detail as you can based on what you've seen so far."
+
+            },
+
+            {
+                "question": "And what puts you off it?",
+                    "temp_id": "9",
+                    "order": "10",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "Don't hold back. We can take it!"
+
+            },
+
+            {
+                "question": "Thanks. Which of the following would influence your decision the most if you were to buy a Sun Seat?",
+                    "temp_id": "3",
+                    "order": "11",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",
+                    "choices": [
+                            "A. Value",
+                            "B. Price",
+                            "C. Brand",
+                            "D. Quality"
+
+                    ]
+
+            },
+
+            {
+                "question": "You're doing great; we're about halfway through now, Let's find out what you think about the Sun Seat's pricing.",
+                    "temp_id": "1",
+                    "order": "12",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+
+            },
+
+            {
+                "question": "At what USD price would you begin to think the Sun Seat to be a great buy for the money?",
+                    "temp_id": "1",
+                    "order": "13",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "Enter number's only"
+
+            },
+
+            {
+                "question": "And at what price would you think it's too cheap to be good quality?",
+                    "temp_id": "1",
+                    "order": "14",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+
+            },
+
+            {
+                "question": "OK—and finally, at what price is it getting expensive, but still not out of the question?",
+                    "temp_id": "1",
+                    "order": "14",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+
+            },
+
+            {
+                "question": "Thank you. We're almost there—just some questions about you.",
+                    "temp_id": "1",
+                    "order": "15",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+
+            },
+
+            {
+                "question": "What's your age range?This question is required?",
+                    "temp_id": "3",
+                    "order": "16",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",
+                    "choices":[
+
+                            "A. 18 or younger",
+                            "B. 19-24",
+                            "C. 25-34",
+                            "D. 35-44",
+                            "E. 45-54",
+                            "F. 55-64",
+                            "G. 65 or Older"
+
+                    ]
+
+            },
+
+
+
+            
+            {
+                "question": "and your early income?",
+                    "temp_id": "3",
+                    "order": "17",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",
+                    "choices":[
+
+                            "A. $9,999 or less",
+                            "B. $10,000 -24,999",
+                            "C. $25,000 - $49,999",
+                            "D. $50,000 - $74,999",
+                            "E. $75,000 - $99,999",
+                            "F. $100,000 or more",
+                            "G. I prefer not to answer"
+
+                    ]
+
+            },
+
+            {
+                "question": "What country were you born in",
+                    "temp_id": "15",
+                    "order": "18",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": ""
+
+            },
+
+            {
+                "question": "What's your current employment status?",
+                    "temp_id": "3",
+                    "order": "19",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",
+                    "choices": [
+
+                            "A. Employed full-time",
+                            "B. Employed part-time",
+                            "C. Self-employed",
+                            "D. Unemployed",
+                            "E. Not looking for work",
+                            "F. Homemaker",
+                            "G. Retired",
+                            "H. Student",
+                            "I Prefer not to answer"
+                    ]
+
+            },
+
+            {
+                "question": "Whats the highest level of education you've completed?",
+                    "temp_id": "3",
+                    "order": "20",
+                    "active": "",
+                    "required": "1",
+                    "description": "",
+                    "description_label": "",
+                    "choices": [
+
+                            "A. Less than High School",
+                            "B. High School",
+                            "C. Some College/University",
+                            "D. College Diploma/Certificate",
+                            "E. Undergraduate Degree",
+                            "F. Masters/Graduate Degree",
+                            "G. Doctorate",
+                            "H. I prefer not to answer",
+                            "I. Other"
+                    ]
+
+            },
+
+            {
+                "question": "If you're considering buying a Sun Seat, enter your email address and we'll let you know when it makes it to market.",
+                    "temp_id": "9",
+                    "order": "21",
+                    "active": "",
+                    "required": "1",
+                    "description": "1",
+                    "description_label": "Don't worry your email is safe with us."
+                
+
+            }
+        ]
+
     }
+    
 ]

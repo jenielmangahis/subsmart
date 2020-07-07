@@ -15,7 +15,6 @@ class Builder_model extends MY_Model {
 	}
 
 	public function get_jobs() {
-
         $company_id = logged('company_id');
         $this->db->select('*');
         $this->db->from($this->table_jobs);
@@ -23,6 +22,15 @@ class Builder_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_addresses() {
+        $this->db->select('*');
+        $this->db->from($this->table_jobs);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+   
 
     public function get_forms($id = 0) {
 
@@ -68,6 +76,14 @@ class Builder_model extends MY_Model {
         return $query->result();
     }
 
+    public function get_phones() {
+        $this->db->select('*');
+        $this->db->from($this->table_jobs);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+
     public function get_jobs_forms() {
 
         $company_id = logged('company_id');
@@ -92,6 +108,14 @@ class Builder_model extends MY_Model {
 
     //     return $query->result();
     // }
+
+    
+    public function get_custom() {
+        $this->db->select('*');
+        $this->db->from($this->table_jobs);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
 }
 

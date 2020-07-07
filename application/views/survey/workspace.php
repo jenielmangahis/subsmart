@@ -42,7 +42,7 @@
   <div wrapper__section>
     <div class="card">
       <div class="col-xs-12 text-left">
-          <h1 class="m-0 text-left">Surveys</h1>
+          <h1 class="m-0 text-left">Workspaces</h1>
       </div>
       <hr/>
       <div class="row">

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
     <title>Home</title>
     <meta content="Admin Dashboard" name="description">
-    <meta content="Themesbrand" name="author">
+  
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--Chartist Chart CSS -->
 
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
-    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="<?php echo $url->assets ?>css/jquery.signaturepad.css" >
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
@@ -130,11 +130,11 @@
                                         <a class="dropdown-item" href="<?php echo url('profile')?>"><i class="mdi mdi-account-circle m-r-5"></i>Public Profile</a>
                                         <a class="dropdown-item" href="<?php echo url()?>"><i class="mdi mdi-account-circle m-r-5"></i>nSmart Home</a>
                                         <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i>Join our community</a>
-										<?php if (hasPermissions('activity_log_list')): ?>
+										<?php //if (hasPermissions('activity_log_list')): ?>
 											<a href="<?php echo url('activity_logs') ?>">
 											<i class="mdi mdi-account-circle m-r-5"></i><span>Activity Logs</span>
 											</a>
-										<?php endif ?>
+										<?php //endif ?>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item text-danger" href="<?php echo url('/logout') ?>"><i class="mdi mdi-power text-danger"></i> Logout</a>
                                     </div>

@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     Users
 
-    <small>manage users</small>
+    <small>Manage users</small>
 
   </h1>
 
@@ -44,11 +44,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
 
-        <?php if (hasPermissions('users_add')): ?>
+        <?php //if (hasPermissions('users_add')): ?>
 
           <a href="<?php echo url('users/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New User</a>
 
-        <?php endif ?>
+        <?php //endif ?>
 
 
 
@@ -138,19 +138,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
               <td>
 
-                <?php if (hasPermissions('users_edit')): ?>
+                <?php //if (hasPermissions('users_edit')): ?>
 
                   <a href="<?php echo url('users/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
 
-                <?php endif ?>
+                <?php //endif ?>
 
-                <?php if (hasPermissions('users_view')): ?>
+                <?php //if (hasPermissions('users_view')): ?>
 
                   <a href="<?php echo url('users/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
 
-                <?php endif ?>
+                <?php //endif ?>
 
-                <?php if (hasPermissions('users_delete')): ?>
+                <?php //if (hasPermissions('users_delete')): ?>
 
                   <?php if ($row->id!=1 && logged('id')!=$row->id): ?>
 
@@ -162,7 +162,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                   <?php endif ?>
 
-                <?php endif ?>
+                <?php //endif ?>
 
               </td>
 

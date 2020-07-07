@@ -12,11 +12,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h2 class="page-title text-left">Inventory</h2>
+                            <div style="display:flex !important; padding-top:20px; padding-bottom:20px;">
+                                <h2 class="page-title col-md-4 text-left">Inventory</h2>
+                                <div class="col-md-8 text-right" style="margin-bottom:10px;">
+                                    <form action="<?php echo base_url('inventory/importItems'); ?>" method="post" enctype="multipart/form-data">
+                                        <input type="file" name="file" />
+                                        <input type="submit" class="btn btn-info" name="importSubmit" id="importItemsInventory" value="Import">
+                                        <button type="button" class="btn btn-info" id="exportItemsInventory"><span class="fa fa-download"></span> Export</button>
+                                    </form>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addOnHandInventory" href="<?php echo base_url('inventory?type=material') ?>">On Hand</a>
+                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addOnHandInventory" href="<?php echo base_url('inventory') ?>">Inventory</a>
                                     </div>
                                     <div class="col-md-10" style="margin-bottom:10px;">
                                         <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addServicesInventory" href="<?php echo base_url('inventory?type=service') ?>">Services</a>
@@ -43,11 +52,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <?php if ($type == 'product' || empty($type)) : ?>
                                 <div class="col-md-10" id="onHandInventory">
                                     <div class="row pt-4">
-                                        <h4 for="exampleFormControlSelect1" class="col-md-8 text-left">Inventory On Hand</h4>
-                                        <div class="col-md-4 text-right" style="margin-bottom:10px;">
-                                            <button class="btn btn-info" id="addNewItemInventory"><span class="fa fa-upload"></span> Import</button>
-                                            <button class="btn btn-info" id="addNewItemInventory"><span class="fa fa-download"></span> Export</button>
-                                            <button class="btn btn-primary" id="addNewItemInventory">New Item</button>
+                                        <h4 for="exampleFormControlSelect1" class="col-md-4 text-left">Inventory On Hand</h4>
+                                        <div class="col-md-8 text-right" style="margin-bottom:10px;">
+                                            <button type="button" class="btn btn-primary" id="addNewItemInventory">New Item</button>
                                         </div>
                                     </div>
                                     <div class="row col-md-6 pt-2 pb-4">

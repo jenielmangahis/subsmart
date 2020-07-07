@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                                            <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                                                 <a class="btn btn-primary btn-md"
                                                    href="<?php echo url('services/add') ?>"><span
                                                             class="fa fa-plus"></span> New Service</a>

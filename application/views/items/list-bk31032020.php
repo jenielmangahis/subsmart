@@ -13,16 +13,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-sm-6">
                             <h1 class="page-title">Items</h1>
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item active">manage Company items</li>
+                                <li class="breadcrumb-item active">Manage Company items</li>
                             </ol>
                         </div>
                         <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                    <?php if (hasPermissions('items_add')): ?>
+                                    <?php //if (hasPermissions('items_add')): ?>
                                         <a href="<?php echo url('items/add') ?>" class="btn btn-primary"><i
                                                     class="fa fa-plus"></i> New Items</a>
-                                    <?php endif ?>
+                                    <?php //endif ?>
                                     <button type="button" class="btn btn-box-tool" data-widget="collapse"
                                             data-toggle="tooltip"
                                             title="Collapse">
@@ -67,17 +67,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php echo $row->discount ?>
                                         </td>
                                         <td>
-                                            <?php if (hasPermissions('items_edit')): ?>
+                                            <?php //if (hasPermissions('items_edit')): ?>
                                                 <a href="<?php echo url('items/edit/' . $row->id) ?>"
                                                    class="btn btn-sm btn-default" title="Edit item"
                                                    data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                            <?php endif ?>
-                                            <?php if (hasPermissions('items_delete')): ?>
+                                            <?php //endif ?>
+                                            <?php //if (hasPermissions('items_delete')): ?>
                                                 <a href="<?php echo url('items/delete/' . $row->id) ?>"
                                                    class="btn btn-sm btn-default"
                                                    onclick='return confirm("Do you really want to delete this item ? \nIt may cause errors where it is currently being used !!")'
                                                    title="Delete item" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
-                                            <?php endif ?>
+                                            <?php //endif ?>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

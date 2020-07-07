@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <?php include viewPath('includes/sidebars/job_settings'); ?>
+    <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>

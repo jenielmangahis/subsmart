@@ -15,11 +15,11 @@
             <div class="col-sm-6">
                <div class="float-right d-none d-md-block">
                   <div class="dropdown">
-                     <?php if (hasPermissions('users_add')): ?>
+                     <?php //if (hasPermissions('users_add')): ?>
                      <a href="<?php echo url('vault') ?>" class="btn btn-primary" aria-expanded="false">
                      <i class="mdi mdi-settings mr-2"></i> Go Back to Files
                      </a>   
-                     <?php endif ?>
+                     <?php //endif ?>
                   </div>
                </div>
             </div>

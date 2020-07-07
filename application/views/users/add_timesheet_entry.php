@@ -11,17 +11,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">Users</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">manage users</li>
+                            <li class="breadcrumb-item active">Manage users</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
+                                <?php //if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users') ?>" class="btn btn-primary" aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to User
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>

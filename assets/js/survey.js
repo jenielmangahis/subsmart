@@ -378,36 +378,40 @@ $(document).ready(function(){
     var name = e.target.name;
     switch(name){
       case "txtSurveyTitle":
-        var data = {"title":value}
-        $.ajax({
-          url: surveyBaseUrl + 'survey/update/'+id,
-          type: 'POST',
-          data: data,
-          dataType: 'json',
-          success: function(res){
-    
-            if(res.success == 1){
-              $('#survey-title').html(value);
-              toastr["success"]("Survey name changed");
+        if(localStorage.getItem('cls_as')){
+          var data = {"title":value}
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(res){
+      
+              if(res.success == 1){
+                $('#survey-title').html(value);
+                toastr["success"]("Survey name changed");
+              }
             }
-          }
-        });
+          });
+        }
+
         break;
       case "txtRedirectionLink":
-        var data = {"redirectionLink":value}
-        $.ajax({
-          url: surveyBaseUrl + 'survey/update/'+id,
-          type: 'POST',
-          data: data,
-          dataType: 'json',
-          success: function(res){
-    
-            if(res.success == 1){
-              $('#redirection-link-text').html("Redirection Link: <a href=" + value + "> " + value + " </a>");
-              toastr["success"]("Redirection name changed");
+        if(localStorage.getItem('cls_as')){
+          var data = {"redirectionLink":value}
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(res){
+      
+              if(res.success == 1){
+                $('#redirection-link-text').html("Redirection Link: <a href=" + value + "> " + value + " </a>");
+              }
             }
-          }
-        });
+          });
+        }
         break;
       default:
         break;
@@ -550,69 +554,75 @@ $(document).ready(function(){
         }
         break;
       case "hasProgressBar":
-        if($(this).is(":checked")){
-          $.ajax({
-            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
-            type:'GET',
-            dataType: 'json',
-            success: function(res){
-              toastr["success"]("Progress bar Set!");
-            }
-          });
-        }else{
-          $.ajax({
-            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
-            type:'GET',
-            dataType: 'json',
-            success: function(res){
-              toastr["success"]("Progress bar Removed!");
-            }
-          });
+        if(localStorage.getItem('cls_as')){
+          if($(this).is(":checked")){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Progress bar Set!");
+              }
+            });
+          }else{
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Progress bar Removed!");
+              }
+            });
+          }
         }
         break;
       case "canRedirectOnComplete":
-        if($(this).is(":checked")){
-          $.ajax({
-            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
-            type:'GET',
-            dataType: 'json',
-            success: function(res){
-              $('#txtRedirectionLink').prop('disabled', false);
-              toastr["success"]("Redirection Link Set!");
-            }
-          });
-        }else{
-          $.ajax({
-            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
-            type:'GET',
-            dataType: 'json',
-            success: function(res){
-              $('#redirection-link-text').html("");
-              $('#txtRedirectionLink').prop('disabled', true);
-              toastr["success"]("Redirection Link Removed!");
-            }
-          });
+        if(localStorage.getItem('cls_as')){
+          if($(this).is(":checked")){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                $('#txtRedirectionLink').prop('disabled', false);
+                toastr["success"]("Redirection Link Set!");
+              }
+            });
+          }else{
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                $('#redirection-link-text').html("");
+                $('#txtRedirectionLink').prop('disabled', true);
+                toastr["success"]("Redirection Link Removed!");
+              }
+            });
+          }
         }
         break;
       case "isNewRespondentsClosed":
-        if($(this).is(":checked")){
-          $.ajax({
-            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
-            type:'GET',
-            dataType: 'json',
-            success: function(res){
-              toastr["success"]("New respondents closed!");
-            }
-          });
-        }else{
-          $.ajax({
-            url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
-            type:'GET',
-            dataType: 'json',
-            success: function(res){
-              toastr["success"]("New respondents closed!");
-            }
-          });
+        if(localStorage.getItem('cls_as')){
+          if($(this).is(":checked")){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("New respondents closed!");
+              }
+            });
+          }else{
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("New respondents closed!");
+              }
+            });
+          }
         }
         break;
       case "hasClosedDate":
@@ -670,12 +680,12 @@ $(document).ready(function(){
 
   // input file functions
   $('input[type="file"]').change(function(e){
-       var value = $(this).val();
-       var id = $(this).data('id');
-       var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
-       var fileName = e.target.files[0].name;
-       switch(e.target.name){
-         case "image_background":
+      var value = $(this).val();
+      var id = $(this).data('id');
+      var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
+      var fileName = e.target.files[0].name;
+      switch(e.target.name){
+        case "image_background":
           $.ajax({
             url: surveyBaseUrl + 'survey/question/upload/'+ id,
             type:'POST',
@@ -711,11 +721,13 @@ $(document).ready(function(){
             }
           });
           break;
-       }
+      }
 
-   });
+  });
 
 
+
+  
   // function remoteSearch() {
   //   var return_first = function () {
   //       var tmp = null;
@@ -890,7 +902,7 @@ $("#shared").jsSocials({
 // });
 
 
- tribute.attach(document.getElementsByClassName('questions'));
+tribute.attach(document.getElementsByClassName('questions'));
 
 
 

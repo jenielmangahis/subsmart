@@ -59,7 +59,7 @@ class Survey extends MY_Controller
     foreach($this->page_data['surveys'] as $key => $survey){
       $survey->survey_theme = $this->survey_model->getThemes($survey->theme_id);
     };
-    $this->load->view('survey/list', $this->page_data);
+    $this->load->view('survey/index.php', $this->page_data);
   }
 
   public function add($settings = null){
@@ -336,6 +336,7 @@ class Survey extends MY_Controller
 
   public function addSurvey(){
     $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
+    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
     $this->load->view('survey/add', $this->page_data);

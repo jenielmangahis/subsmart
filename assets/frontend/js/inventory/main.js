@@ -111,6 +111,11 @@ $(document).ready(function () {
     $.LoadingOverlay("show");
   });
 
+  $("#exportItemsInventory").click(function () {
+    $.LoadingOverlay("show");
+    exportItems();
+  });
+
   $("#goUpload").click(function () {
     if ($("#attach_img_item").val() == "upload") {
       $("#attach_photo").click();
@@ -153,4 +158,13 @@ function readURL(input) {
 
     reader.readAsDataURL(input.files[0]);
   }
+}
+
+function exportItems() {
+  $.LoadingOverlay("hide");
+  var link = document.createElement("a");
+  link.href = base_url + "inventory/exportItems";
+
+  document.body.appendChild(link);
+  link.click();
 }

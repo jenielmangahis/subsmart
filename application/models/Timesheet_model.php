@@ -46,12 +46,17 @@ class Timesheet_model extends MY_Model {
         //$sql = "SELECT * FROM timesheet WHERE id = ? LIMIT 1";
         //$query = $db->query($sql, [$user_id]);
 
+
+        $todaysDate = date("Y-m-d"); # or any other date
+
         $this->db->select('*');
+        //$this->db->distinct();
         $this->db->from($this->table);
         $this->db->where('employees_id', $user_id);
+        //$this->db->like('timestamp', $todaysDate);
         //$this->db->where('action', "Clock In");
         $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(1);
+        $this->db->limit(6);
         $query = $this->db->get();
         // $this->db->select('*');
         // $this->db->from($this->table);

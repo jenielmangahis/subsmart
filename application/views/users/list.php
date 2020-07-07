@@ -11,13 +11,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">Employees</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">manage Employees</li>
+                            <li class="breadcrumb-item active">Manage Employees</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php //if (hasPermissions('users_add')): ?>
+                                <?php ////if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Employee
@@ -82,16 +82,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
                                                 <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
                                                 <td>
-                                                    <?php if (hasPermissions('users_edit')): ?>
+                                                    <?php //if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                    <?php endif ?>
-                                                    <?php if (hasPermissions('users_view')): ?>
+                                                    <?php //endif ?>
+                                                    <?php //if (hasPermissions('users_view')): ?>
                                                         <a href="<?php echo url('users/view/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="View User"
                                                            data-toggle="tooltip"><i class="fa fa-eye"></i></a>
-                                                    <?php endif ?>
+                                                    <?php //endif ?>
                                                     <?php //if (hasPermissions('users_delete')): ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id): ?>
                                                             <a href="<?php echo url('users/delete/' . $row->id) ?>"

@@ -11,7 +11,7 @@
             <div class="col-sm-6">
                <h3 style="font-size:26px;" class="page-title">Roles</h3>
                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">manage user roles</li>
+                  <li class="breadcrumb-item active">Manage user roles</li>
                </ol>
             </div>
             <div class="col-sm-6">
@@ -52,9 +52,9 @@
                            <?php echo $row->title ?>
                         </td>
                         <td>
-                           <?php if (hasPermissions('roles_edit')): ?>
+                           <?php //if (hasPermissions('roles_edit')): ?>
                            <a href="<?php echo url('roles/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User Role" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                           <?php endif ?>
+                           <?php //endif ?>
                         </td>
                      </tr>
                      <?php endforeach ?>

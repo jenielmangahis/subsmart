@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <section class="content-header">
   <h1>
     Workorder
-    <small>manage Workorder</small>
+    <small>Manage Workorder</small>
   </h1>
 </section>
 

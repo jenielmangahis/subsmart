@@ -65,17 +65,17 @@
             <div class="col-sm-6">
                <h1 class="page-title">Workorders</h1>
                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active">manage workorders</li>
+                  <li class="breadcrumb-item active">Manage workorders</li>
                </ol>
             </div>
             <div class="col-sm-6">
                <div class="float-right d-none d-md-block">
                   <div class="dropdown">
-                     <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                     <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                         <a href="<?php echo url('workorder') ?>" class="btn btn-primary" aria-expanded="false">
                             <i class="mdi mdi-settings mr-2"></i> Go Back to Workorder
                         </a>   
-                     <?php endif ?>
+                     <?php //endif ?>
                   </div>
                </div>
             </div>

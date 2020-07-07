@@ -669,18 +669,18 @@ class Customer extends MY_Controller
 
         $user_id = logged('id');
 
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
 
-        if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
 
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
 
-        } else {
+        // } else {
 
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
 
-        }
+        // }
 
 
         //
@@ -688,7 +688,7 @@ class Customer extends MY_Controller
 
         $company_id = logged('company_id');
 
-        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+       // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 

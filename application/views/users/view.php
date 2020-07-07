@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">User</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">manage user</li>
+                            <li class="breadcrumb-item active">Manage user</li>
                         </ol>
                     </div>
                 </div>
@@ -24,13 +24,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_1" data-toggle="tab" style="padding: 7px;">Overview</a></li>
                         <li><a href="#tab_2" data-toggle="tab" style="padding: 7px;">Activity</a></li>
-                        <?php if (hasPermissions('users_edit')): ?>
+                        <?php //if (hasPermissions('users_edit')): ?>
                             <li><a href="<?php echo url('users/edit/' . $User->id) ?>" style="padding: 7px;">Edit
                                     Profile</a></li>
-                        <?php endif ?>
+                        <?php //endif ?>
                         <li class="pull-right"><a href="<?php echo url('users') ?>"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Go
                                 Back to User</a></li>
-                        <!-- <?php //if (hasPermissions('users_edit')): ?>
+                        <!-- <?php ////if (hasPermissions('users_edit')): ?>
                   <li class="pull-right"><a href="<?php //echo url('users/edit/'.$User->id) ?>" class="text-muted"><i class="fa fa-pencil"></i></a></li>
                   
                   <?php //endif ?> -->

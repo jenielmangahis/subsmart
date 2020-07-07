@@ -31,14 +31,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="fa fa-print "></span> Print
                                                 </a>
                                             <?php } ?>
-                                            <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                                            <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                                                 <!-- <a href="<?php echo url('customer/add') ?>" class="btn btn-primary" aria-expanded="false">
 									<i class="mdi mdi-settings mr-2"></i> New Customer
 								</a>    -->
                                                 <a class="btn btn-primary btn-md"
                                                    href="<?php echo url('customer/add') ?>"><span
                                                             class="fa fa-plus"></span> New Customer</a>
-                                            <?php endif ?>
+                                            <?php //endif ?>
                                         </div>
                                     </div>
                                 </div>

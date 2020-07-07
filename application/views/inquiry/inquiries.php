@@ -26,14 +26,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
-                                            <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                                            <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                                                 <!-- <a href="<?php echo url('inquiries/add') ?>" class="btn btn-primary" aria-expanded="false">
 									<i class="mdi mdi-settings mr-2"></i> New inquiry
 								</a>    -->
                                                 <a class="btn btn-primary btn-md"
                                                    href="<?php echo url('inquiries/add') ?>"><span
                                                             class="fa fa-plus"></span> New Lead</a>
-                                            <?php endif ?>
+                                            <?php //endif ?>
                                         </div>
                                     </div>
                                 </div>

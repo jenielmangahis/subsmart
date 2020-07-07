@@ -6,7 +6,7 @@
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
-    <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+   
 
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -22,12 +22,12 @@
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
                                     <a href="<?php echo base_url('customer') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Customer
                                     </a>
-                                <?php endif ?>
+                                <?php //endif ?>
                             </div>
                         </div>
                     </div>
@@ -53,6 +53,13 @@ function getInputHtml($valueQuestions){
 
   
   switch ($valueQuestions->q_type) {
+
+       case "custom-textbox-input":
+        echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
+
+        echo '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+
+        break;
       case "text":
 
 
@@ -175,12 +182,19 @@ function getInputHtml($valueQuestions){
           echo '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
+    case "custom-address-input":
+        echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
+
+        echo '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+
+        break;
+      
       default:
           echo "";
     }
 }
 
-function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
+function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
 
   $html = '';
   $questionParameterRequire = (isset($valueQuestions->parameter->required) && $valueQuestions->parameter->required == true) ? 'required' : '' ;
@@ -316,6 +330,12 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
           $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
 
           break;
+    case "custom-address-input":
+        $html .= '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
+
+        $html .= '<input maxlength="'.$questionParameterMaxLength.'" type="date" class="form-control reperator-input '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+
+        break;
       default:
           $html .= "";
     }
@@ -379,7 +399,7 @@ function getInputReperatorHtml($keySubQuestions, $valueQuestions) {
                                           
                                             foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) {
                                                 $dummyHtml .= '<div class="col-md-5 float-left" style="width:47%">';
-                                                $dummyHtml .= getInputReperatorHtml($keySubQuestions, $valueSubQuestions);
+                                                $dummyHtml .= getInputRepeaterHtml($keySubQuestions, $valueSubQuestions);
                                                 $dummyHtml .= '</div>';
                                             }
                                           

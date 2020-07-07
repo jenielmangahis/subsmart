@@ -52,6 +52,7 @@ class Builder extends MY_Controller {
 
 	function saveform() {
 
+
 		$form_id = '0';
 		if($this->input->post('form_id') == "new")
 		{
@@ -453,6 +454,29 @@ class Builder extends MY_Controller {
 		
 		$this->load->view('builder/demo', $this->page_data);
 		// $this->load->view('roles/add', $this->page_data);
+	}
+
+	function custom_address_inputs_configuration($id) {
+
+		$formdetail = $this->builder_model->get_forms($id);
+		$questions = $this->builder_model->get_forms_questions($id);
+		$formdetail->questions = $questions;
+		foreach ($formdetail->questions as $key => $value) {
+			if($value->parameter != '') {
+				$formdetail->questions[$key]->parameter = json_decode($value->parameter);
+			}
+
+			if($value->q_type == 'selection')
+			{
+				$formdetail->questions[$key]->options = $this->builder_model->get_forms_questions_options($value->Questions_id);
+			}
+		}
+		die(json_encode($formdetail));
+	}
+
+	public function addAddress()
+	{
+		$this->load->view('roles/add', $this->page_data);
 	}
 
 }

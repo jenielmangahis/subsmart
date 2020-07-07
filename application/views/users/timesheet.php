@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php //if (hasPermissions('users_add')): ?>
+                                <?php ////if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
@@ -185,7 +185,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td id="">
                                                         
 
-                                                        <?php //if (hasPermissions('users_edit')): ?>
+                                                        <?php ////if (hasPermissions('users_edit')): ?>
                                                             <form name="clockin_form" method="post">
                                                                 <input type="hidden" name="current_time_in" value="<?php echo date('Y-m-d H:i'); ?>" />
                                                                 <input type="hidden" name="clockin_user_id" value="<?php echo $row->id; ?>" />

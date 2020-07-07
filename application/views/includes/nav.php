@@ -70,7 +70,7 @@ $user_id = getLoggedUserID();
             <!-- Navigation Menu-->
             <ul class="navigation-menu d-flex justify-content-center">
 
-                <?php //if (hasPermissions('plan_list')): ?>
+                <?php ////if (hasPermissions('plan_list')): ?>
                     <li class="has-submenu">
                         <a href="<?php echo url('/workcalender') ?>">
                             <i class="fa fa-bookmark" aria-hidden="true"></i><span>Schedule</span>
@@ -85,48 +85,44 @@ $user_id = getLoggedUserID();
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
-						<a class="dropdown-item" href="<?php echo base_url('job/new_job') ?>"><i class="fa fa-wrench"></i> Create Job</a>
+						<a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Job</a>
                         <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i><b> Estimates</b></a>
-                        <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
+                        <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>
                             <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
                         <?php //endif ?>
                         <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i><b> Invoices</b></a>
-                        <?php //if (hasPermissions('items_list')): ?>
-                            <a class="dropdown-item" href="<?php echo url('job/settings') ?>"><i class="fa fa-wrench"></i><b> Settings</b></a>
-                        <?php //endif ?>
-                        <?php //if (hasPermissions('items_list')): ?>
+                        <?php ////if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a>
                         <?php //endif ?>
-                        <?php //if (hasPermissions('plan_list')): ?>
+                        <?php ////if (hasPermissions('plan_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a>
                         <?php //endif ?>
-                        <?php //if (hasPermissions('items_list')): ?>
+                        <?php ////if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
                         <?php //endif ?>
-                        <?php //if (hasPermissions('items_list')): ?>
+                        <?php ////if (hasPermissions('items_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('inquiries') ?>"><i class="fa fa-question-circle"></i> Leads</a>
                         <?php //endif ?>
-                        <?php //if (hasPermissions('items_list')): ?>
+                        <?php ////if (hasPermissions('items_list')): ?>
                             <?php /*<a class="dropdown-item" href="<?php //echo url('services') ?>"><i class="fa fa-user-circle-o"></i> Leads</a>*/?>
                         <?php //endif ?>
-                        <?php //if (hasPermissions('plan_list')): ?>
+                        <?php ////if (hasPermissions('plan_list')): ?>
                                 <a class="dropdown-item" href="<?php echo url('/workstatus') ?>"><i class="fa fa-check m-r-5"></i> Status</a>
                         <?php //endif ?>
                     </div>
                 </li>
                 <li class="has-submenu">
-                    <a class="dropdown-toggle" href="<?php echo base_url('expenses') ?>"
-                       role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
+                    <a class="" href="<?php echo url('/accounting/banking') ?>"
+                       role="button" >
                         <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span></a>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php echo url('/accounting/banking') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Banking
-                        </a>
-                        <a class="dropdown-item" href="<?php echo url('/accounting/expenses') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Expenses
-                        </a>
+<!--                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">-->
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/banking') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> Banking-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/expenses') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> Expenses-->
+<!--                        </a>-->
                         <!-- <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> My Expenses
                         </a>
@@ -142,22 +138,22 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i> Expense Vendor
                         </a> -->
-                        <a class="dropdown-item" href="<?php echo url('/accounting/receivables') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Receivables
-                        </a>
-                        <a class="dropdown-item" href="<?php echo url('/accounting/workers') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Workers
-                        </a>
-                        <a class="dropdown-item" href="<?php echo url('/accounting/taxes') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Taxes
-                        </a>
-                        <a class="dropdown-item" href="<?php echo url('/accounting/chart_of_accounts') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Chart of Accounts
-                        </a>
-                        <a class="dropdown-item" href="<?php echo url('/accounting/my_accountant') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> My Accountant
-                        </a>
-                    </div>
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/receivables') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> Receivables-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/workers') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> Workers-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/taxes') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> Taxes-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/chart_of_accounts') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> Chart of Accounts-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/my_accountant') ?><!--">-->
+<!--                            <i class="mdi mdi-wallet m-r-5"></i> My Accountant-->
+<!--                        </a>-->
+<!--                    </div>-->
                 </li>
                 <li class="has-submenu">
                     <li class="has-submenu">
@@ -173,7 +169,7 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> Before and After Photos</a>
                     </div>*/ ?>
                 </li>
-                <?php //if (hasPermissions('report')): ?>
+                <?php ////if (hasPermissions('report')): ?>
                     <li class="has-submenu">
                         <a href="<?php echo url('reports/main') ?>"><i class="fa fa-bookmark" aria-hidden="true"></i><span>Reports</span></a>
                     </li>
@@ -237,38 +233,41 @@ $user_id = getLoggedUserID();
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Upgrades
+                            <i class="fa fa-level-up"></i> Upgrades
                         </a>
                         <a class="dropdown-item" href="<?php //echo url('/more/upgrades') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Video Estimate
+                            <i class="fa fa-video-camera"></i> Video Estimate
                         </a>
                         <a class="dropdown-item" href="<?php echo url('/more/addons') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i> Add-on
+                            <i class="fa fa-user-plus"></i> Add-on
+                        </a>
+                        <a class="dropdown-item" href="<?php echo url('/before-after/main') ?>">
+                            <i class="fa fa-camera"></i> Before/After
                         </a>
                     </div>
                     <?php /*<div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <?php if (hasPermissions('businessdetail')): ?><a class="dropdown-item"
+                        <?php //if (hasPermissions('businessdetail')): ?><a class="dropdown-item"
                                                                           href="<?php echo url('/users/businessview') ?>">
-                                <i class="mdi mdi-wallet m-r-5"></i> My Business</a><?php endif ?>
+                                <i class="mdi mdi-wallet m-r-5"></i> My Business</a><?php //endif ?>
                         <a class="dropdown-item" href="<?php echo base_url('dashboard/blank/?page=Before/After') ?>"><i
                                     class="mdi mdi-wallet m-r-5"></i> Before/After</a>
-                        <?php if (hasPermissions('users_list')): ?><a class="dropdown-item"
+                        <?php //if (hasPermissions('users_list')): ?><a class="dropdown-item"
                                                                       href="<?php echo url('/users') ?>"><i
                                         class="mdi mdi-wallet m-r-5"></i> Employees</a><?php endif ?>
                         <a class="dropdown-item" href="<?php echo base_url('dashboard/blank/?page=Share A Job') ?>"><i
                                     class="mdi mdi-wallet m-r-5"></i> Share A Job</a>
                         <a class="dropdown-item" href="<?php echo base_url('dashboard/blank/?page=Add-ons') ?>"><i
                                     class="mdi mdi-wallet m-r-5"></i> Add-ons</a>
-                        <?php if (hasPermissions('roles_list')): ?>
+                        <?php //if (hasPermissions('roles_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('roles') ?>">Manage Roles</a>
                         <?php endif ?>
-                        <?php if (hasPermissions('activity_log_list')): ?>
+                        <?php //if (hasPermissions('activity_log_list')): ?>
 
                             <a class="dropdown-item" href="<?php echo url('activity_logs') ?>">Activity Logs</a>
                             <!-- <a class="dropdown-item" href="<?php echo url('vault') ?>">Files Vault</a> -->
 
                         <?php endif ?>
-                        <?php if (hasPermissions('permissions_list')): ?>
+                        <?php //if (hasPermissions('permissions_list')): ?>
                             <a class="dropdown-item" href="<?php echo url('permissions') ?>">Manage Permissions</a>
                         <?php endif ?>
 
@@ -284,24 +283,24 @@ $user_id = getLoggedUserID();
                     </a>
                 </li>
 
-                <?php if (hasPermissions('users_list')): ?>
+                <?php //if (hasPermissions('users_list')): ?>
                     <li  class="has-submenu" <?php echo ($page->menu == 'users') ? 'class="active"' : '' ?>>
                         <a href="<?php echo url('users') ?>">
                             <i class="fa fa-user" aria-hidden="true"></i> <span>Users</span>
                         </a>
                     </li>    
-                <?php endif ?>
+                <?php //endif ?>
 
                 
-                <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
                     <li class="has-submenu" <?php echo ($page->menu == 'workorder') ? 'class="active"' : '' ?>>
                     <a href="<?php echo url('workorder') ?>">
                         <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Workorder</span>
                     </a>
                     </li>    
-                <?php endif ?>  
+                <?php //endif ?>  
 
-                <?php if (hasPermissions('report')): ?>
+                <?php //if (hasPermissions('report')): ?>
                     <li class="has-submenu" <?php echo ($page->menu == 'report') ? 'class="active"' : '' ?>>
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Reports</span>
@@ -310,38 +309,38 @@ $user_id = getLoggedUserID();
                             <a class="dropdown-item" href="<?php echo url('report/workorder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Workorder</a>
                         </div>
                     </li>    
-                <?php endif ?>          
+                <?php //endif ?>          
 
-                <?php if (hasPermissions('activity_log_list')): ?>
+                <?php //if (hasPermissions('activity_log_list')): ?>
                     <li class="has-submenu" <?php echo ($page->menu == 'activity_logs') ? 'class="active"' : '' ?>>
                         <a href="<?php echo url('activity_logs') ?>">
                         <i class="fa fa-history" aria-hidden="true"></i><span>Activity Logs</span>
                         </a>
                     </li>
-                <?php endif ?>
+                <?php //endif ?>
 
-                <?php if (hasPermissions('roles_list')): ?>
+                <?php //if (hasPermissions('roles_list')): ?>
                     <li class="has-submenu" <?php echo ($page->menu == 'roles') ? 'class="active"' : '' ?>>
                         <a href="<?php echo url('roles') ?>">
                         <i class="fa fa-lock" aria-hidden="true"></i><span>Manage Roles</span>
                         </a>
                     </li>
-                <?php endif ?>
+                <?php //endif ?>
 
-                <?php if (hasPermissions('permissions_list')): ?>
+                <?php //if (hasPermissions('permissions_list')): ?>
                     <li class="has-submenu" <?php echo ($page->menu == 'permissions') ? 'class="active"' : '' ?>>
                         <a href="<?php echo url('permissions') ?>">
                         <i class="fa fa-lock" aria-hidden="true"></i><span>Manage Permissions</span>
                         </a>
                     </li>
-                <?php endif ?>
-                <?php if (hasPermissions('businessdetail')): ?>
+                <?php //endif ?>
+                <?php //if (hasPermissions('businessdetail')): ?>
                     <li class="has-submenu" <?php echo ($page->menu == 'businessview') ? 'class="active"' : '' ?>>
                         <a href="<?php echo url('users/businessview') ?>">
                         <i class="fa fa-lock" aria-hidden="true"></i><span>My business</span>
                         </a>
                     </li>
-                <?php endif ?>
+                <?php //endif ?>
                 -->
 
                 <!-- <li class="has-submenu"><a href="#"><i class="fa fa-money" aria-hidden="true"></i>Expenses</a></li>

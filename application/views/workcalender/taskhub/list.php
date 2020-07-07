@@ -19,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                    <?php //if (hasPermissions('add_plan')): ?>
+                                    <?php ////if (hasPermissions('add_plan')): ?>
                                     <a href="<?php echo base_url('taskhub/entry'); ?>" class="btn btn-primary"><i
                                                 class="fa fa-plus"></i> Add Task</a>
 
