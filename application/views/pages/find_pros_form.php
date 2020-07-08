@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   <span class="find-pro-subtle">Please give us a few details so we can connect you with the best pros.</span>
   <img src="<?php echo $url->assets ?>frontend/images/map-marker.png" class="img-marker"/>
 </div>
-<?php echo form_open('find-pros/search', [ 'type' => 'POST', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+<?php echo form_open('find-pros/send', [ 'type' => 'POST', 'class' => 'form-validate', 'id' => 'form-find-pros', 'autocomplete' => 'off' ]); ?>
 <?php echo form_hidden('find_pro',$find_pro) ?>
 <?php
   $location_type = [
@@ -134,8 +134,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         	<a href="javascript:void(0);" class="prev-find-pro" data-prev="e" style="margin:0 auto;">Edit</a>
     	</div>
       </div>
+      <div class="send-msg"></div>
       <div class="center-btn">        
-        <a class="fnd-btn prev-find-pro" class="btn btn-info" style="width:100%;">Submit</a>
+        <a href="javascript:void(0);" class="fnd-btn send-pros"style="width:100%;">Submit</a>
       </div>
       <div class="clear"></div>
       <div style="display: block; font-size: 11px;margin-top: 32px;">
@@ -150,6 +151,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('frontcommon/footer'); ?>
 
 <script>
+var base_url = '<?php echo base_url(); ?>';
+
 $(function(){
   $(".next-find-pro").click(function(){
     var next = $(this).attr("data-next");
@@ -179,6 +182,24 @@ $(function(){
     $("#locationType").val('Business');
     $("div.location-home-residence-container span").removeClass('location-active');
     $("div.location-business-container span").addClass('location-active');
+  });
+
+  $(".send-pros").click(function(){
+  	$.ajax({
+       type: "POST",
+       dataType: "json",    
+       url: base_url + 'find-pros/send',      
+       data: $("#form-find-pros").serialize(),
+       success: function(o)
+       {
+          if( o.is_success == 1 ){
+          	$(".find-pro-form").html("");
+          	$(".find-pro").html("Your email has been sent.");
+          }else{
+          	$(".send-msg").html("Cannot send email");
+          }
+       }
+    });
   });
 });
 </script>
