@@ -304,6 +304,114 @@ span.widget-desc {
     font-size: 20px;
     color: #000000;
 }
+ /* Find Pro Form */
+ .find-pro-container{
+   position: absolute;
+   left: 4px;
+ }
+ section.center-form {
+    width: 585px;
+    margin: 0 auto;
+    margin-bottom: 70px;
+ }
+ img.img-marker {
+   width: 200px;
+   margin: 0 auto;
+   display: block;
+   margin-top: 35px;
+ }
+ div.find-pro-container {
+   width: 100%;
+ }
+ .center-btn {
+   width: 260px;
+   margin: 0 auto;
+   margin-top: 30px;
+ }
+ span.finalize-spn {
+   text-align: center;
+   display: block;
+   font-size: 24px;
+   margin-top: 12px;
+   color: #828181;
+   font-weight: 300;
+ }
+ span.info-text {
+   text-align: center;
+   display: block;
+   margin-bottom: 20px;
+   font-size: 20px;
+ }
+ .location-active {
+   background-color: #ef6868;
+   padding: 10px;
+   color: white !important;
+ }
+ .radio-divider {
+   margin-bottom: 10px;
+ }
+ div.form-indent-b {
+   width: 270px;
+   margin: 0 auto;
+ }
+ span.span-radio {
+   font-size: 21px;
+   margin-left: 9px;
+ }
+ .btn-color-white {
+  color:white !important;
+  margin: 0 auto;
+  text-align: center;
+  width: 155px;
+  display: block;
+  cursor: pointer;
+  margin-top: 10px;
+ }
+ span.selector-link {
+   font-size: 21px;
+   color: #007de0;
+   cursor: pointer;
+   margin-bottom: 10px;
+   display: block;
+   padding-left: 23px;
+ }
+ a.fnd-btn {
+   background: #694a85;
+   padding: 10px 10px;
+   text-transform: uppercase;
+   float: left;
+   margin-right: 10px;
+   color: white !important;
+   width: 120px;
+   text-align: center;
+   cursor: pointer;
+ }
+ div.form-indent {
+   width: 370px;
+   margin: 0 auto;
+ }
+ div.find-pro-container h2 {
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: 40px;
+  color: #000000;
+  font-weight: 200;
+ }
+ h1.find-pro-header {
+  text-align: center;
+  font-size: 43px;
+  font-weight: 500;
+ }
+ span.find-pro-subtle {
+  text-align: center;
+  display: block;
+  color: #777;
+  font-size: 20px;
+ }
+ .container.find-pro-form {
+   padding-top: 100px;
+   padding-bottom: 43px;
+ }
  /* Tab */
 
  .tab-element .nav-tabs {
