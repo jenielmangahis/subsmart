@@ -8,6 +8,7 @@ class Jobs_model extends MY_Model
     public $table_jobs_has_address = 'jobs_has_address';
     public $table_jobs_has_customers = 'jobs_has_customers';
     public $table_credit_cards = 'credit_cards';
+    public $table_estimates = 'estimates';
 
 
     /**
@@ -158,6 +159,28 @@ class Jobs_model extends MY_Model
 
         $this->db->where('ihi_id',$id);
         $this->db->update('invoice_has_items',$data);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJobSettingByName($name)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_job_settings);
+        $this->db->where('value', $name);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+        /**
+     * @return mixed
+     */
+    public function updateJobType($id, $data)
+    {
+        $this->db->where('job_settings_id',$id);
+        $this->db->update($this->table_job_settings, $data);
     }
 }
 

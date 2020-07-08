@@ -20,7 +20,7 @@ class Job extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-            'assets/frontend/css/workorder/main.css',
+			"assets/css/accounting/sidebar.css",
         ));
 
         // JS to add only Job module
@@ -30,8 +30,6 @@ class Job extends MY_Controller
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
             'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-            'assets/frontend/js/invoice/add.js',
-            'assets/frontend/js/inventory/main.js',
             'assets/frontend/js/job_creation/main.js'
         ));
     }
@@ -134,14 +132,23 @@ class Job extends MY_Controller
 
         $data = array(
             'company_id' => $comp_id,
-            'setting_type' => $this->input->post('settingType'),
+            'setting_type' => "job_type",
             'value' => $this->input->post('settingType'),
             'status' => 1,
             'created_at' => date('Y-m-d H:i:s')
         );
 
-        $this->db->insert($this->jobs_model->table_job_settings, $data);
-        $job_type_id = $this->db->insert_id();
+        if ($this->input->post('type') == "update") {
+            $this->jobs_model->updateJobType($this->input->post('id'), $data);
+        } else {
+            $is_exist = count($this->jobs_model->getJobSettingByName($this->input->post('settingType')));
+            
+            if(!$is_exist) {
+                $this->db->insert($this->jobs_model->table_job_settings, $data);
+                $job_type_id = $this->db->insert_id();
+            }
+        }
+
         
         $arr = $this->jobs_model->getJobType();
 
@@ -382,6 +389,25 @@ class Job extends MY_Controller
             echo json_encode("Congratulation Email Send Successfully.");
         else
             echo json_encode($this->email->send());
+    }
+
+    public function saveEstimate() {
+        postAllowed();
+
+        $data = array(
+            'estimate_date' => date("Y-m-d", strtotime($this->input->post('estimate_date'))),
+            'expiry_date' => date("Y-m-d", strtotime($this->input->post('expiry_date'))),
+            'description' => $this->input->post('description'),
+            'employee_id' => $this->input->post('employee_id'),
+            'status' => $this->input->post('status'),
+            'job_id' => $this->input->post('job_id'),
+            'estimate_value' => $this->input->post('estimate_value'),
+            'deposit_request' => $this->input->post('deposit_request')
+        );
+
+        $this->db->insert($this->jobs_model->table_estimates, $data);
+
+        echo json_encode($data);
     }
 }
 

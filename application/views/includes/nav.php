@@ -241,9 +241,6 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo url('/more/addons') ?>">
                             <i class="fa fa-user-plus"></i> Add-on
                         </a>
-                        <a class="dropdown-item" href="<?php echo url('/before-after/main') ?>">
-                            <i class="fa fa-camera"></i> Before/After
-                        </a>
                     </div>
                     <?php /*<div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <?php //if (hasPermissions('businessdetail')): ?><a class="dropdown-item"

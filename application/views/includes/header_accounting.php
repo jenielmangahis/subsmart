@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
     
-	<?php 
+	<!--<?php 
 		if($page_title){ 
 	?>
 			<title><?php echo $page_title; ?></title>
@@ -14,8 +14,8 @@
 		}else{ 
 	?>
 		<title>Home</title>
-	<?php } ?>
-	
+	<?php } ?>-->
+	<title>Home</title>
     <meta content="Admin Dashboard" name="description">
     <meta content="Themesbrand" name="author">
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">

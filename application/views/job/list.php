@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tbody>
                                 </table>  
                                 <?php } else { ?>
-                                    <div class="page-empty-container">
+                                    <div class="page-empty-container" style="text-align:center; margin-top:50px;">
                                         <h5 class="page-empty-header">There are no Jobs</h5>
                                         <p class="text-ter margin-bottom">Manage your job.</p>
                                     </div>

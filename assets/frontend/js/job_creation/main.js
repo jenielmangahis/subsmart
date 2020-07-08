@@ -3,6 +3,7 @@ $(document).ready(function () {
     "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable, #jobTypeTable"
   ).DataTable({
     scrollX: true,
+    destroy: true,
   });
 
   $("#job_customer").autocomplete({
@@ -56,17 +57,32 @@ $(document).ready(function () {
     $.LoadingOverlay("show");
   });
 
-  $(".deleteJobTypeBtn").click(function () {
+  $(document).on("click", ".deleteJobTypeBtn", function () {
+    var param = {
+      job_id: $("#jobId").val(),
+      item_id: $(this).data("id"),
+      qty: 1,
+      total_value: $(this).data("cost"),
+    };
     $.LoadingOverlay("show");
+    saveInvoiceItems(param);
   });
 
-  $("#invoiceCreatedDate, #workOrderCreatedDate, #estimateDate").datetimepicker(
-    {
-      format: "L",
-    }
-  );
+  $("#invoiceCreatedDate, #workOrderCreatedDate").datetimepicker({
+    format: "L",
+  });
 
-  $("#expiryDateEstimate, #billingDate").datetimepicker({
+  $("#estimateDate").datetimepicker({
+    format: "L",
+    minDate: new Date(),
+  });
+
+  $("#expiryDateEstimate").datetimepicker({
+    format: "L",
+    minDate: new Date(),
+  });
+
+  $("#billingDate").datetimepicker({
     format: "L",
   });
 
@@ -200,26 +216,102 @@ $(document).ready(function () {
     validateCVV($("#cardNumber").val(), $("#cvv").val());
   });
 
-  $("#jobTypeAddCloseBtn").click(function () {
+  $("#jobTypeAddAnotherBtn").click(function () {
+    var send = false;
     var param = {
       settingType: $("#settingType").val(),
+      type: "add",
     };
-    saveJobType(param);
+
+    if (!send && $("#settingType").val() != "") {
+      $.LoadingOverlay("show");
+      send = true;
+      saveJobType(param, "add_another");
+    } else {
+      $("#error_settingType").fadeIn();
+    }
   });
 
-  $(".editJobTypeBtn").click(function () {
+  $("#settingType").keypress(function () {
+    $("#error_settingType").hide();
+  });
+
+  $("#jobTypeAddCloseBtn").click(function () {
+    var send = false;
+    var param = {
+      settingType: $("#settingType").val(),
+      type: "add",
+    };
+
+    if (!send && $("#settingType").val() != "") {
+      $.LoadingOverlay("show");
+      send = true;
+      saveJobType(param, "add");
+    } else {
+      $("#error_settingType").fadeIn();
+    }
+  });
+
+  $("#jobTypeEditBtn").click(function () {
+    var send = false;
+    var param = {
+      settingType: $("#settingType").val(),
+      type: "update",
+      id: $("#settingTypeId").val(),
+    };
+
+    if (!send && $("#settingType").val() != "") {
+      $.LoadingOverlay("show");
+      send = true;
+      saveJobType(param, "edit");
+    } else {
+      $("#error_settingType").fadeIn();
+    }
+  });
+
+  $("#newJobTypeBtn").click(function () {
+    $("#jobTypeAddAnotherBtn").show();
+    $("#jobTypeAddCloseBtn").show();
+    $("#jobTypeEditBtn").hide();
+    $("#settingType").val("");
+  });
+
+  $(document).on("click", ".editJobTypeBtn", function () {
     $("#newJobTypeModal").modal("show");
+    $("#jobTypeAddAnotherBtn").hide();
+    $("#jobTypeAddCloseBtn").hide();
+    $("#jobTypeEditBtn").show();
+    $("#settingTypeId").val($(this).data("id"));
     $("#settingType").val($(this).data("jobtype"));
   });
 
   $("#sendEmailCustomer").click(function () {
-    $.LoadingOverlay("show");
-    var param = {
-      email: "jeykell125@gmail.com",
-      job_id: $("#jobId").val(),
-      customer_id: $("#customer_id").val(),
-    };
-    sendEmailToCustomer(param);
+    if ($("#jobId").val() != "") {
+      $.LoadingOverlay("show");
+      var param = {
+        email: "jeykell125@gmail.com",
+        job_id: $("#jobId").val(),
+        customer_id: $("#customer_id").val(),
+      };
+      sendEmailToCustomer(param);
+    }
+  });
+
+  $("#saveEstimate").click(function () {
+    if ($("#jobId").val() != "") {
+      $.LoadingOverlay("show");
+      var param = {
+        estimate_date: $("#estimateDate").val(),
+        expiry_date: $("#expiryDateEstimate").val(),
+        description: $("#estimateDescription").val(),
+        status: $("#estimateStatus").val(),
+        job_id: $("#jobId").val(),
+        employee_id: $("#customer_id").val(),
+        estimate_value: $("#estimate_value").val(),
+        deposit_request: $("#deposit_request").val(),
+      };
+      saveEstimate(param);
+    }
   });
 });
 
@@ -391,7 +483,7 @@ function validateCVV(creditCard, cvv) {
   $("#cvv").val("");
 }
 
-function saveJobType(param) {
+function saveJobType(param, action) {
   var items = [];
   $.ajax({
     type: "POST",
@@ -401,18 +493,27 @@ function saveJobType(param) {
       var result = jQuery.parseJSON(data);
       for (var i = 0; i < result.length; i++) {
         var item = [
-          result[i].setting_type,
-          '<button type="button" data-id="' +
-            result[i].id +
-            '" class="editJobTypeBtn btn btn-warning btn-sm"><span class="fa fa-plus"></span> Edit</button> ' +
-            '<button type="button" data-id="' +
-            result[i].id +
-            '" class="deleteJobTypeBtn btn btn-danger btn-sm"><span class="fa fa-plus"></span> Delete</button>',
+          result[i].value,
+          '<a href="javascript:void(0)" data-toggle="modal" data-target="#newJobTypeModal" data-id="' +
+            result[i].job_settings_id +
+            '" data-jobtype="' +
+            result[i].value +
+            '" class="editJobTypeBtn btn btn-warning btn-sm pr-2"><span class="fa fa-plus"></span> Edit</a>&nbsp; ' +
+            '<a href="' +
+            base_url +
+            "job/deleteJobType?id=" +
+            result[i].job_settings_id +
+            '" data-id="' +
+            result[i].job_settings_id +
+            '" class="deleteJobTypeBtn btn btn-danger btn-sm"><span class="fa fa-plus"></span> Delete</a>',
         ];
         items.push(item);
       }
-
-      $("#newJobTypeModal").modal("toggle");
+      $.LoadingOverlay("hide");
+      if (action != "add_another") {
+        $("#newJobTypeModal").modal("toggle");
+      }
+      $("#settingType").val("");
       $("#jobTypeTable").DataTable({
         scrollX: true,
         destroy: true,
@@ -502,4 +603,36 @@ function sendEmailToCustomer(param) {
       $.LoadingOverlay("hide");
     },
   });
+}
+
+function saveEstimate(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/saveEstimate",
+    data: param,
+    success: function (data) {
+      window.location.href = "";
+    },
+  });
+}
+
+function dropdownAccounting(n) {
+  var id = $(n).attr("href");
+  var sidebar = $("#sidebar").width();
+  var s;
+  if (sidebar == 40) {
+    s = "41px";
+  } else if (sidebar == 210) {
+    s = "211px";
+  } else {
+    s = "261px";
+  }
+
+  if ($(id).css("display") == "none") {
+    $(".sidebar-accounting li ul").hide();
+    $("#sidebar ul li > ul").css("left", s);
+    $(id).slideDown();
+  } else {
+    $(id).slideUp();
+  }
 }

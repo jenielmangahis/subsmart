@@ -43,30 +43,7 @@
 <script src="<?php echo $url->assets ?>js/accounting/main.js"></script>
 <!--Dropzone JS-->
 <script src="<?php echo $url->assets ?>plugins/dropzone/dist/dropzone.js"></script>
-<!-- Include calender js files -->
-<!-- <script src="<?php //echo base_url() ?>calender/assets/js/calendar.js"></script> -->
-<!-- dynamic assets goes  -->
-<!-- <#?php echo put_footer_assets(); ?> -->
 
-
-<!-- <script src="<?php //echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
-<script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
-<script src="<?php //echo $url->assets ?>jSignature-master/libs/modernizr.js"></script> -->
-<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>	
-<!-- <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
-<script src="<?php echo $url->assets ?>js/sign_new.js"></script>
-<script src="<?php echo $url->assets ?>js/sign.js"></script>
-<script src="<?php echo $url->assets ?>js/sign2.js"></script>
-<script>
-	jQuery(document).ready(function () {
-		jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
-		jQuery("#CustomerSign").on("click touchstart", function () {
-			var canvas = document.getElementById("CustomerSign");
-			var dataURL = canvas.toDataURL("image/png");
-			jQuery("#saveSignatureDB").val(dataURL);
-		});
-	});
-</script> -->
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 </script>
@@ -98,7 +75,63 @@
   });
    $(document).ready(function() {
         $('#all_sales_table').DataTable();
+		var screenWidth = $( window ).width();
+		
+		setTimeout(function(){
+			console.log(123);
+			console.log($("#sidebar").width());
+			if(screenWidth > 768){
+				if($("#sidebar").width() == 40){
+						
+						$("div[wrapper__section]").css({"margin-left":"40px"});
+					}
+					else{
+						$("div[wrapper__section]").css({"margin-left":"260px"});
+					}
+			}
+		}, 100);
+			
+		$('.nav-close').click(function() {
+			$(".sidebar-accounting .submenus ul").hide();
+			var screenWidth = $( window ).width();
+			
+			if(screenWidth > 768){
+				if($("#sidebar").width() == 40){
+					$("div[wrapper__section]").css({"margin-left":"260px"});
+				}
+				else{
+					$("div[wrapper__section]").css({"margin-left":"40px"});
+				}
+			}
+		});
     } );
+	function showAddBtnModal(){
+		$("#addBtnModal").modal("show");
+	}
+	function dropdownAccounting(n){
+		var id = $(n).attr('href');
+		var sidebar = $("#sidebar").width();
+		var s;
+		if(sidebar == 40){
+			s = "41px";
+		}else if(sidebar == 210){
+			s = "211px";
+		}else{
+			s = "261px";
+		}
+		
+		if($(id).css('display') == 'none')
+		{
+			$(".sidebar-accounting li ul").hide();
+			$("#sidebar ul li > ul").css("left",s);
+			$(id).slideDown();
+			
+			
+		}else{
+			$(id).slideUp();
+			
+		}
+	}
 </script>
 
 <style>

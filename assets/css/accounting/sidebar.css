@@ -1,77 +1,148 @@
 .d-flex {
-    display: -webkit-box !important;
-    display: -ms-flexbox !important;
-    display: flex !important; }
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+}
 .align-items-stretch {
-    -webkit-box-align: stretch !important;
-    -ms-flex-align: stretch !important;
-    align-items: stretch !important; }
+  -webkit-box-align: stretch !important;
+  -ms-flex-align: stretch !important;
+  align-items: stretch !important;
+}
 
 #sidebar {
-    min-width: 300px;
-    max-width: 300px;
-    background: #32243d;
-    color: #fff;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s; }
+  /** min-width: 300px;
+    max-width: 300px;**/
+  background: #32243d;
+  color: #fff;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
 #sidebar.active {
-    margin-left: -300px; }
+  margin-left: -300px;
+}
 #sidebar .logo {
-    display: block;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto; }
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+}
 #sidebar .logo span {
-    display: block; }
+  display: block;
+}
 #sidebar ul.components {
-    padding: 0; }
+  padding: 0;
+}
 #sidebar ul li {
-    font-size: 16px; }
-#sidebar ul li > ul {
-    margin-left: 10px; }
+  font-size: 16px;
+}
+
 #sidebar ul li > ul li {
-    font-size: 14px; }
-#sidebar ul li a {
-    padding: 10px 0;
-    display: block;
-    color: rgba(255, 255, 255, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  font-size: 14px;
+}
+#sidebar ul li a:focus,
 #sidebar ul li a:hover {
-    color: #f8b739; }
+  background: #45a73c;
+  background: -moz-linear-gradient(top, #45a73c 0%, #67ce5e 100%);
+  background: -webkit-linear-gradient(top, #45a73c 0%, #67ce5e 100%);
+  background: linear-gradient(to bottom, #45a73c 0%, #67ce5e 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#45a73c', endColorstr='#67ce5e', GradientType=0);
+  color: #fff;
+  text-decoration: none;
+}
+#sidebar ul li > ul li:first-child a:focus,
+#sidebar ul li > ul li:first-child a:hover {
+  border-radius: 0 20px 0 0;
+  text-decoration: none;
+}
+#sidebar ul li > ul li:last-child a:focus,
+#sidebar ul li > ul li:last-child a:hover {
+  border-radius: 0 0 20px 20px;
+  text-decoration: none;
+}
 #sidebar ul li.active > a {
-    background: transparent;
-    color: #f8b739; }
+  background: transparent;
+  color: #f8b739;
+}
+#sidebar ul li .dropdown-toggle::after {
+  right: 10px;
+  border-top: 0.4em solid transparent;
+  border-right: 0;
+  border-bottom: 0.4em solid transparent;
+  border-left: 0.4em solid;
+}
+
 @media (max-width: 991.98px) {
-    #sidebar {
-        margin-left: -300px; }
-    #sidebar.active {
-        margin-left: 0; } }
+  #sidebar {
+    margin-left: 0;
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
+}
 
 a[data-toggle="collapse"] {
-    position: relative; }
+  position: relative;
+}
 
 .dropdown-toggle::after {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%); }
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
 
 @media (max-width: 991.98px) {
-    #sidebarCollapse span {
-        display: none; } }
+  #sidebar {
+    margin-left: -300px;
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: 0;
+    top: 65px;
+  }
+  div[wrapper__section] {
+    margin-left: 50px;
+  }
+}
+@media (max-width: 500px) {
+  #sidebar {
+    top: 58px;
+  }
+  div[wrapper__section] {
+    margin-left: 40px !important;
+  }
+  div[role="wrapper"] .navbar-side,
+  div[role="wrapper"] .navbar-side .nav {
+    width: 210px;
+  }
+  #sidebar ul li > ul {
+    left: 211px;
+  }
+  div[role="wrapper"] .navbar-side .nav li > a {
+    padding: 10px 15px !important;
+  }
+}
 
 .p-4 {
-    padding: 1.5rem !important; }
+  padding: 1.5rem !important;
+}
 .p-5 {
-    padding: 3rem !important; }
+  padding: 3rem !important;
+}
 
 .list-unstyled {
-    padding-left: 0;
-    list-style: none; }
+  padding-left: 0;
+  list-style: none;
+}
 .mb-5,
 .my-5 {
-    margin-bottom: 3rem !important; }
+  margin-bottom: 3rem !important;
+}

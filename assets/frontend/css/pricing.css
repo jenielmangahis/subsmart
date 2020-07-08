@@ -21,6 +21,18 @@ button,input[type=submit]{
   width: 100%;
   text-align: center;
 }
+a.minimize-button span {
+  font-size: 36px;
+  text-align: center;
+}
+a.minimize-button {
+  display: block;
+  text-align: center;
+  position: relative;
+  right: 1px;
+  color: #4e2ac6 !important;
+  bottom: 6px;
+}
 .cd-fs:after {
   content: '';
   width: 39px;
@@ -3840,14 +3852,23 @@ div.ctext-v2 ul.desc-ul li span {
   margin-bottom: 13px;
   margin-top: 10px;
 }
+ul.bsc-margin {
+  padding-bottom: 12px;
+}
+div.table-sp-3 > div.pricing-card-layout-content {
+  height: 893px;
+}
+div.scrollable-pricing {
+  overflow-y: scroll;
+}
 .sb-e2:before {
   width: 100%;
   height: 24px;
   background-color: #00d7d7;
-  top: -41px!important;
+  top: -59px!important;
   position: absolute!important;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
   padding-top: 5px;
   color: #fff!important;
   text-align: center!important;
@@ -3888,6 +3909,10 @@ div.price-container-freelancer {
   width: 16.30%;
   float: left;
   margin-right: 4px;
+}
+.table-sp-3.minimize {
+  height: 892px;
+  overflow-y: hidden;
 }
 .lineup-container .arrow-down{
    float:left;
@@ -4053,6 +4078,7 @@ div.ctext-v2 ul li, ul.desc-ul, ul.header-ul {
 .pricing-card-layout-content.wht-tile {
   background: white;
   padding: 34px 13px;
+  min-height: 893px;
 }
 .ctext-v2 {
   width: 100%;
@@ -6293,6 +6319,7 @@ body.expert-payroll-on.core-payroll-on .qb-se .blue-button,body.expert-payroll-o
 img.img-pricing-testimonial {
   position: relative;
   top: 14px;
+  object-fit: cover;
 }
 .testimonial-desc-pricing {
     font-size: 19px;
@@ -6520,7 +6547,7 @@ _:-ms-fullscreen,:root .lineup-container .pcard-layout-additional-text .info-tex
    }
 }
 .try-it-free .eCommerce-product-div .image-price-container .price-container{
-   padding-bottom:12px
+   padding-bottom:25px;
 }
 .pricing-card-layout-qb .ccontainer.None.mt-features-single-row-text-only.qb-plus:before,.pricing-card-layout-qb .ccontainer.None.mt-features-single-row-text-only.qb-se:before{
    width:100%;
@@ -6536,32 +6563,33 @@ _:-ms-fullscreen,:root .lineup-container .pcard-layout-additional-text .info-tex
    font-family:"Avenir Next LT Pro","Avenir Next",Futura,sans-serif!important;
    font-weight:600;
    font-size:12px;
-   letter-spacing:.8px
+   letter-spacing:.8px;
 }
 .pricing-card-layout-qb .ccontainer.None.mt-features-single-row-text-only.qb-plus:before{
-   content:"MOST POPULAR"
+   content:"MOST POPULAR";
 }
 .cust-hero-container{
-   padding-top:9px
+   padding-top:9px;
 }
 .try-it-free .eCommerce-product-div .image-price-container .price-container .pricing-section .price{
-   display:inline-block!important
+   display:inline-block!important;
+   margin-top: 30px;
 }
 .grid-image-text.g_vertical_align_image div.row div[class*=col-] div.cimage{
    display:inline-block!important;
-   height:35px!important
+   height:35px!important;
 }
 .footer_text{
    margin-left:-15px;
-   text-align:left
+   text-align:left;
 }
 .grid-image-text.g_vertical_align_image div.row div[class*=col-]>div.ctext{
    padding:31px 16px 0 0!important;
-   text-align:left!important
+   text-align:left!important;
 }
 @media (min-width:1024px){
    .all-plans-include .container-fluid{
-       width:1120px!important
+       width:1120px!important;
    }
 }
 .bg-grey.lineup-container{
@@ -6572,7 +6600,7 @@ _:-ms-fullscreen,:root .lineup-container .pcard-layout-additional-text .info-tex
    width:108px;
    height:36px!important;
    padding:0 21px!important;
-   text-align:center
+   text-align:center;
 }
 .eCommerce-product-div .blue-button a.ctasecondary{
    border-radius:27px!important;
@@ -6580,49 +6608,49 @@ _:-ms-fullscreen,:root .lineup-container .pcard-layout-additional-text .info-tex
 }
 .eCommerce-product-div [class^=blue-button] a span{
    font-size:14px!important;
-   line-height:20px!important
+   line-height:20px!important;
 }
 body.try-it-free .pricing-card-layout .price-container .pricing-section{
-   padding-top:28px!important
+   padding-top:28px!important;
 }
 @media (min-width:1024px) and (max-width:1131px){
    #global-header .container{
        width:100%!important;
-       padding:0
+       padding:0;
    }
 }
 @media (min-width:1132px){
    #global-header .container{
        width:1132px!important;
-       padding:0
+       padding:0;
    }
 }
 @media (min-width:768px){
    #section-3{
        padding-top:51px;
-       padding-bottom:40px!important
+       padding-bottom:40px!important;
    }
 }
 .add-on,.add-ons-flag{
    font-family:AvenirNextforINTUIT,"Avenir Next",Futura,sans-serif!important;
-   font-weight:600
+   font-weight:600;
 }
 @media (min-width:992px){
    .lineup-container .pricing-card-layout-qb #content_left.table-row,.lineup-container .pricing-card-layout-qb #content_right.table-row{
        display:inline-block;
-       border-radius:4px
+       border-radius:4px;
    }
 }
 @media (max-width:1024px){
    .qb-ss li.core-add-on.add-ons.add-on-disable:before{
-       width:237px
+       width:237px;
    }
    .qb-ess li.core-add-on.add-ons.add-on-disable:before,.qb-plus li.core-add-on.add-ons.add-on-disable:before{
-       width:238px
+       width:238px;
    }
 }
 .try-it-free .buy-disc-dura-for-se,.try-it-free .pricing-card-layout-qb .ccontainer.None.mt-features-single-row-text-only.qb-se:before{
-   display:none
+   display:none;
 }
 /* Toggle etc related popup start*/
 .eCommerce-product-div .tryit-free-link-url{
@@ -7369,6 +7397,11 @@ h3.testimonial-name {
   font-size: 24px;
   text-align: right;
   font-style: italic;
+}
+@media (max-width:1850px) {
+  div.table-sp-3 > div.pricing-card-layout-content {
+      height: 1040px;
+  }
 }
 @media (max-width:767px) {
   .eCommerce-product-div .tryit-free-link-url a.ctasecondary {

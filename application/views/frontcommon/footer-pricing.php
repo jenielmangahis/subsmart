@@ -88,17 +88,26 @@
 		}
 	?>
 	<script>
-	    $(document).ready(function(){
-				$('span.show-more-desktop').click(function(){
+	    $(document).ready(function(){	    		
+				/*$('span.show-more-desktop').click(function(){
 					$(this).parent().parent().parent().next().removeClass('hidden');
 					$(this).parent().find("span.show-less-desktop").removeClass('hidden');
 					$(this).addClass('hidden');
+				});*/
+				$('.btn-show-less-more-desktop').click(function(){
+					var dataKey = $(this).attr("data-key");			
+
+					if( $(this).hasClass('show-less') ){
+						$("." + dataKey + '-list').addClass('hidden');
+						$(this).removeClass('show-less');
+						$(this).addClass('show-more');
+					}else{
+						$("." + dataKey + '-list').removeClass('hidden');
+						$(this).addClass('show-less');
+						$(this).removeClass('show-more');
+					}
 				});
-				$('span.show-less-desktop').click(function(){
-					$(this).parent().parent().parent().next().addClass('hidden');
-					$(this).parent().parent().find("span.show-more-desktop").removeClass('hidden');
-					$(this).addClass('hidden');
-				});
+
 				$('span.show-more').click(function(){
 					// $(this).parent().find("span.prc-description").addClass('hidden');
 					var height = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().height();

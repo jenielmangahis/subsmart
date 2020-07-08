@@ -27,7 +27,7 @@
         <li class="submenus <?php if( strpos($uri,'shared_library') ){ echo 'active';}?>"><a href="<?php echo base_url('vault/shared_library') ?>" title="Shared Library"><span
                         class="fa fa-user"></span>Shared Library</a></li>
         <li class="submenus <?php //if( strpos($uri,'timesheet') ){ echo 'active';}?>"><a href="<?php //echo base_url('users/timesheet') ?>" title="My Library"><span class="fa fa-clock-o"></span>My Library</a></li>
-        <li class="submenus <?php if( strpos($uri,'beforeafter') ){ echo 'active';}?>"><a href="<?php echo base_url('vault/beforeafter') ?>" title="Before and After Photos"><span class="fa fa-map-pin"></span>Before and After Photos</a></li>
+        <li class="submenus <?php if( strpos($uri,'beforeafter') ){ echo 'active';}?>"><a href="<?php echo base_url('vault/beforeafter') ?>" title="Before and After Photos"><span class="fa fa-camera"></span>Before and After Photos</a></li>
         <li class="submenus <?php if( strpos($uri,'businessformtemplates') ){ echo 'active';}?>"><a href="<?php echo base_url('vault/businessformtemplates') ?>" title="Before and After Photos"><span class="fa fa-map-pin"></span>Business Form Templates</a></li>
     </ul>
 </nav>

@@ -80,10 +80,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="features-group">
             <div class="features-group__name">Management</div>
             <ul class="features-group__list">
-                <li>Manage customers and send <br/> SMS/email notifications</li>
-                <li>Create & Assign Proposals, Work Orders, <br/> and Service Tickets</li>
-                <li>Assigned Appointment Scheduling</li>
-                <li>Time Clock & GPS locator</li>
+                <li>Manage customers and work forces</li>
+                <li>Assign work orders and invoices</li>
+                <li>Create reminders and task</li>
+                <li>Overview of GPS navigation</li>
+                <li>Before and After Gallery </li>
             </ul>
         </div>
 				<div class="features-group">
@@ -100,18 +101,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="features-group__name">Sales and Marketing</div>
             <ul class="features-group__list">
                 <!-- <li>Create your own online store</li> -->
-                <li>Run exclusive deals and campaigns</li>
-                <li>SMS & Email Blasts</li>
-				<li>Personalized Campaigns</li>
+                <li>Automate email marketing campaigns</li>
+                <li>Target prospects with marketing tools</li>
+				        <li>Create sms and email campaigns</li>
                 <!-- <li>Customer Finder 360</li>  This looks like a trademarked term, we need our own name for whatever this is.  -->
             </ul>
         </div>
 				<div class="features-group">
             <div class="features-group__name">Insights</div>
             <ul class="features-group__list">
-                <li>Customized "At A Glance" widgets <br/> for Dashboard</li>
-                <li>Company, Management, & Financial <br/> Reporting</li>
-								<li>TaskHub Organizer</li>
+                <li>Customizable dashboard</li>
+                <li>Personalizes Business Report Card</li>
+								<li>Track expense and profits</li>
             </ul>
         </div>
 				<div class="features-group">
