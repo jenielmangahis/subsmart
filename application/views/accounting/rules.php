@@ -1,8 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/banking'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -58,12 +57,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row"></div>
             <!-- end row -->
-        </div>
-        <!-- end container-fluid -->
     </div>
+        <!-- end container-fluid -->
+	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $(document).ready(function() {
         $('#rules_table').DataTable();

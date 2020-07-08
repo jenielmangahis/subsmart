@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/banking'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -12,6 +11,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
                         <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
                         <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
+                    </div>
+                </div>
+                <div class="row" style="margin-left: 50px;padding-bottom: 20px;">
+                    <div class="col-md-4">
+                        <h2>Bank and Credit Cards</h2>
+                    </div>
+                    <div class="col-md-4" style="border-left:1px dimgrey dotted;">
+                        <div class="dropdown">
+                            <button class="btn btn-default" type="button" data-toggle="dropdown" style="text-decoration: none; color: #393a3d;font-size: 20px;background-color: transparent;border: 0;">
+                                <i class="fa fa-credit-card"></i> Corporate Account (XXXXXX 5850) <i class="fa fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Order Checks</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="text-align: right">
+                        <div class="dropdown" style="position: relative;display: inline-block;">
+                            <button type="button" class="btn btn-default" style="border-radius: 20px 0 0 20px">Update</button>
+                            <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Order Checks</a></li>
+                                <li><a href="#">Pay Bills</a></li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-success" style="border-radius: 20px 20px 20px 20px">Add account</button>
                     </div>
                 </div>
                 <div class="row align-items-center">
@@ -71,9 +97,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 <script>
+    // DataTable JS
     $(document).ready(function() {
         $('#banking_table').DataTable();
     } );
@@ -88,3 +116,5 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     });
 
 </script>
+
+

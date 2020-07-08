@@ -2,21 +2,21 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_accounting'); ?>
     <div class="wrapper" role="wrapper" >
-        <?php include viewPath('includes/sidebars/accounting/banking'); ?>
+       
         <!-- page wrapper start -->
         <div wrapper__section>
-            <div class="container-fluid w-90" >
+            <div class="container-fluid w-97">
                     <div class="row">
-                        <div class="col-lg-10">
+                        <div class="col-lg-12">
 							<div class="row bg-white px-3 py-4">
-								<div class="col-lg-3">
+								<div class="col-lg-2">
 									<h5 class="text-secondary">INCOME OVER TIME</h5>
 									<div class="">
 										<h1 class="display-4 pt-4"><strong>$2</strong></h1>
 										<h6 class="text-secondary">THIS MONTH</h6>
 									</div>
 								</div>
-								<div class="col-lg-9">
+								<div class="col-lg-10">
 									<div class="dropdown pull-right dropdown-toggle">
 									  <button class="btn btn-default border-0 p-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										This Month&ensp;
@@ -43,6 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end container-fluid -->
         </div>
         <!-- page wrapper end -->
-    </div>
+		 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+   </div>
 
 <?php include viewPath('includes/footer_accounting'); ?>

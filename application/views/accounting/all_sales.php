@@ -2,10 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_accounting'); ?>
     <div class="wrapper" role="wrapper" >
-        <?php include viewPath('includes/sidebars/accounting/banking'); ?>
         <!-- page wrapper start -->
            <div wrapper__section>
-        <div class="container-fluid w-90">
+        <div class="container-fluid w-97">
 			<div class="row">
 				<div class="col-lg-6">
 					<h2>Sales Transactions</h2>
@@ -78,6 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
 	  <!-- page wrapper end -->
+	  <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     </div>
 
 <?php include viewPath('includes/footer_accounting'); ?>

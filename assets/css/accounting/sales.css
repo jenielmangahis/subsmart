@@ -1,3 +1,16 @@
-.w-90{
-	width:90%;
+.w-97{
+	width:97%;
+}
+
+#sidebar ul li > ul {
+    padding: 0;
+    position: fixed;
+    left: 261px;
+    background-color: #32243d;
+	border-radius: 0 20px 20px 20px;
+	margin-top: -54px;
+}
+#sidebar ul li > ul li{
+    padding: 0;
+    min-width: 150px;
 }

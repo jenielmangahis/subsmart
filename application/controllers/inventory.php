@@ -203,7 +203,7 @@ class Inventory extends MY_Controller
                                 'price' => intval($price[1]),
                                 'COGS' => intval($price[1]),
                                 'description' => $row['Description'],
-                                'type' => $row['Item Type'],
+                                'type' => "product",
                                 'is_active' => 1
                             );
                             

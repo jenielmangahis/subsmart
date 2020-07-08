@@ -99,9 +99,9 @@
 <!--</nav>-->
 
 <nav id="sidebar" class="d-none d-md-block navbar-side">
-    <div class="p-4 pt-5">
-       <button class="btn btn-tranparent acct-btn-add" type="button" data-toggle="modal" data-target="#addBtnModal"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
-        <ul class="list-unstyled components mb-5">
+
+       <button class="btn btn-tranparent acct-btn-add mx-auto" type="button" data-toggle="modal" data-target="#addBtnModal"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
+        <ul class="nav mb-5">
             <li>
                 <a href="#"><i class="fa fa-tachometer" style="margin-right: 20px"></i>Dashboard</a>
             </li>
@@ -202,8 +202,6 @@
                 </ul>
             </li>
         </ul>
-
-    </div>
 </nav>
 
 <!-- Modal For add button-->

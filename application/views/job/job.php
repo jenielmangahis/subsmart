@@ -198,26 +198,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <input type="text" class="form-control col-md-6" id="expiryDateEstimate">
                                             </div>
                                         </div>
+                                        <div class="row pt-2 col-md-8">
+                                            <div class="row col-md-5">
+                                                <label class="pt-2 pr-2" for="">Estimate Value</label>
+                                                <input type="text" class="form-control col-md-6" id="estimate_value">
+                                            </div>
+                                            <div class="row col-md-5">
+                                                <label class="pt-2 pr-3 pl-3" for="">Deposit Request</label>
+                                                <input type="text" class="form-control col-md-6" id="deposit_request">
+                                            </div>
+                                        </div>
                                         <div class="row col-md-4">
                                             <label class="pt-2 pr-2" for="">Status</label>
-                                            <select class="form-control col-md-7" id="exampleFormControlSelect1">
-                                                <option value="draft" selected>Draft</option>
-                                                <option>Scheduled</option>
-                                                <option>In progress</option>
-                                                <option>Completed</option>
-                                                <option>Canceled</option>
-                                                <option>Postponed</option>
+                                            <select class="form-control col-md-7" id="estimateStatus">
+                                                <option value="1" selected>Draft</option>
+                                                <option value="2">Scheduled</option>
+                                                <option value="3">In progress</option>
+                                                <option value="4">Completed</option>
+                                                <option value="5">Canceled</option>
+                                                <option value="6">Postponed</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
                                             <label class="pt-2 pr-4" for="">Description</label>
-                                            <input type="text" class="form-control col-md-7" id="inlineFormInputName" placeholder="">
+                                            <input type="text" class="form-control col-md-7" id="estimateDescription" placeholder="">
                                         </div>
                                         <div class="row col-md-4">
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Save</button>
+                                                <button type="button" class="btn btn-primary col-md-12" id="saveEstimate">Save</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button class="btn btn-primary col-md-12">Preview</button>
@@ -755,9 +765,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-<script src="<?php echo $url->assets ?>frontend/js/job_creation/main.js"></script>

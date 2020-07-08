@@ -162,17 +162,17 @@ function getInputHtml($valueQuestions){
                 echo '</select>';
             echo '</div>';
 
-            echo '<div class="col-md-6 form-group float-left">';
-                echo '<label for="'.$questionName2.'"> Phone </label>';
-                echo '<select name="'.$questionName2.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
-                    echo '<option value="" >Select Phone</option>';
-                    if(isset($basic_details['phones'])) {
-                        foreach($basic_details['phones'] as $keyOptions=>$addressOptions)  {
-                            echo '<option value="'.$addressOptions->phone_id.'" >'.$addressOptions->number.' - '.$addressOptions->type.'</option>';
-                        }
-                    }
-                echo '</select>';
-            echo '</div>';
+            // echo '<div class="col-md-6 form-group float-left">';
+            //     echo '<label for="'.$questionName2.'"> Phone </label>';
+            //     echo '<select name="'.$questionName2.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
+            //         echo '<option value="" >Select Phone</option>';
+            //         if(isset($basic_details['phones'])) {
+            //             foreach($basic_details['phones'] as $keyOptions=>$addressOptions)  {
+            //                 echo '<option value="'.$addressOptions->phone_id.'" >'.$addressOptions->number.' - '.$addressOptions->type.'</option>';
+            //             }
+            //         }
+            //     echo '</select>';
+            // echo '</div>';
         echo "</div>";
     echo "</div>";
           break;
@@ -310,17 +310,17 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
                 echo '</select>';
             echo '</div>';
 
-            echo '<div class="col-md-6 form-group float-left">';
-                echo '<label for="'.$questionName2.'"> Phone </label>';
-                echo '<select name="'.$questionName2.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
-                    echo '<option value="" >Select Phone</option>';
-                    if(isset($basic_details['phones'])) {
-                        foreach($basic_details['phones'] as $keyOptions=>$addressOptions)  {
-                            echo '<option value="'.$addressOptions->phone_id.'" >'.$addressOptions->number.' - '.$addressOptions->type.'</option>';
-                        }
-                    }
-                echo '</select>';
-            echo '</div>';
+            // echo '<div class="col-md-6 form-group float-left">';
+            //     echo '<label for="'.$questionName2.'"> Phone </label>';
+            //     echo '<select name="'.$questionName2.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
+            //         echo '<option value="" >Select Phone</option>';
+            //         if(isset($basic_details['phones'])) {
+            //             foreach($basic_details['phones'] as $keyOptions=>$addressOptions)  {
+            //                 echo '<option value="'.$addressOptions->phone_id.'" >'.$addressOptions->number.' - '.$addressOptions->type.'</option>';
+            //             }
+            //         }
+            //     echo '</select>';
+            // echo '</div>';
         echo "</div>";
     echo "</div>";
           break;

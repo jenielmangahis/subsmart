@@ -1,41 +1,183 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/expenses'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Expenses</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage Expenses</li>
-                        </ol>
+                <div class="row" style="margin-left: 50px;padding-bottom: 20px;">
+                    <div class="col-md-12 banking-tab-container">
+                        <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="expenses")?:'-active';?>" style="text-decoration: none">Expenses</a>
+                        <a href="<?php echo url('/accounting/vendors')?>" class="banking-tab">Vendors</a>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php //if (hasPermissions('users_add')): ?>
-                                    <!-- <a href="<?php //echo url('users/add') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> New Employee
-                                    </a> -->
-                                <?php //endif ?> 
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-12" style="padding: 0 70px 10px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2>Expense Transactions</h2>
+                            </div>
+                            <div class="col-md-6" style="text-align: right">
+                                <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">New transaction
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Time Activity</a></li>
+                                        <li><a href="#">Bill</a></li>
+                                        <li><a href="#">Expenses</a></li>
+                                        <li><a href="#">Check</a></li>
+                                        <li><a href="#">Vendor Credit</a></li>
+                                        <li><a href="#">Pay down credit card</a></li>
+                                    </ul>
+                                </div>
+                                <div class="dropdown" style="position: relative;display: inline-block;">
+                                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#print_checks" style="border-radius: 20px 0 0 20px">Print Checks</button>
+                                    <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Order Checks</a></li>
+                                        <li><a href="#">Pay Bills</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-md-12" style="padding: 0 70px 10px;">
+                                <div class="dropdown">
+                                    <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li style="padding: 30px 30px 30px 30px">
+                                            <form action="" class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label for="type">Type</label>
+                                                    <select name="type" id="type" class="form-control">
+                                                        <option value="">All transaction</option>
+                                                        <option value="">Expenses</option>
+                                                        <option value="">Bill</option>
+                                                        <option value="">Bill payments</option>
+                                                        <option value="">Check</option>
+                                                        <option value="">Recently paid</option>
+                                                        <option value="">Vendor credit</option>
+                                                        <option value="">Credit Card Payment</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div style="position: relative; display: inline-block;">
+                                                        <label for="">Status</label>
+                                                        <select name="status" id="type" class="form-control">
+                                                            <option value="">All statuses</option>
+                                                            <option value="">Open</option>
+                                                            <option value="">Overdue</option>
+                                                            <option value="">Paid</option>
+                                                        </select>
+                                                    </div>
+                                                    <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                        <label for="">Delivery Method</label>
+                                                        <select name="status" id="type" class="form-control">
+                                                            <option value="">Any</option>
+                                                            <option value="">Print later</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div style="position: relative; display: inline-block;">
+                                                        <label for="">Date</label>
+                                                        <select name="status" id="type" class="form-control" style="width: 100%">
+                                                            <option value="">All statuses</option>
+                                                            <option value="">Open</option>
+                                                            <option value="">Overdue</option>
+                                                            <option value="">Paid</option>
+                                                        </select>
+                                                    </div>
+                                                    <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                        <label for="">From</label>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                    <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                        <label for="">To</label>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Payee</label>
+                                                    <select name="status" id="type" class="form-control" style="width: 100%">
+                                                        <option value="">All statuses</option>
+                                                        <option value="">Open</option>
+                                                        <option value="">Overdue</option>
+                                                        <option value="">Paid</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Category</label>
+                                                    <select name="status" id="type" class="form-control" style="width: 100%">
+                                                        <option value="">All statuses</option>
+                                                        <option value="">Open</option>
+                                                        <option value="">Overdue</option>
+                                                        <option value="">Paid</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button class="btn btn-default" type="reset" style="border-radius: 20px 20px 20px 20px">Reset</button>
+                                                    <button class="btn btn-success" type="submit" style="border-radius: 20px 20px 20px 20px; float: right;">Apply</button>
+                                                </div>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--DataTables-->
+                                <table id="expenses_table" class="table table-striped table-bordered" style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>No.</th>
+                                        <th>Payee</th>
+                                        <th>Category</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td>Test</td>
+                                        <td>Test</td>
+                                        <td>Test</td>
+                                        <td></td>
+                                        <td>Test</td>
+                                        <td></td>
+                                        <td><a href="">View</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
             </div>
             <!-- end row -->
-            <div class="row">
-                
-            </div>
+            <div class="row"></div>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
+<script>
+    // DataTable JS
+    $(document).ready(function() {
+        $('#expenses_table').DataTable({
+            "paging": false,
+        });
+    } );
+</script>
+
+
