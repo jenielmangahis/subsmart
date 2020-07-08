@@ -8,7 +8,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
 <div class="container find-pro-form">
-  <h1 class="find-pro-header">Let's find you <b><?php echo $find_pro; ?></b></h1>
+  <!-- <h1 class="find-pro-header">Let's find you <b><?php echo $find_pro; ?></b></h1> -->
+  <h1 class="find-pro-header">Let's find you some <b>Pros</b> to help</h1>
   <span class="find-pro-subtle">Please give us a few details so we can connect you with the best pros.</span>
   <img src="<?php echo $url->assets ?>frontend/images/map-marker.png" class="img-marker"/>
 </div>
@@ -129,10 +130,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <span class="info-name info-text"></span>
         <span class="info-contact-number info-text"></span>
         <span class="info-email info-text"></span>
+        <div class="center-btn"  style="text-align: center;">
+        	<a href="javascript:void(0);" class="prev-find-pro" data-prev="e" style="margin:0 auto;">Edit</a>
+    	</div>
       </div>
-      <div class="center-btn">
-        <a class="fnd-btn prev-find-pro" data-prev="e">Previous</a>
-        <a class="fnd-btn prev-find-pro" class="btn btn-info">Send</a>
+      <div class="center-btn">        
+        <a class="fnd-btn prev-find-pro" class="btn btn-info" style="width:100%;">Submit</a>
+      </div>
+      <div class="clear"></div>
+      <div style="display: block; font-size: 11px;margin-top: 32px;">
+      	By clicking Submit, you affirm you have read and agree to the nSmartracs Terms, and you agree and authorize nSmartracs and its affiliates, and their networks of Service Professionals, to deliver marketing calls or texts using automated technology to the number you provided above regarding your project and other home services offers. Consent is not a condition of purchase.
       </div>
     </div>
   </div>
