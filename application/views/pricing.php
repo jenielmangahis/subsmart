@@ -1405,7 +1405,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="header-ul">
+                            <!-- <ul data-list="1" class="header-ul">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
@@ -1427,7 +1427,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </section>
                 </div>
@@ -1537,57 +1537,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="header-ul bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="desc-ul hidden">
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Manage customers & employees</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create reminders</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Implement before and after photos</span>
-                                </li>
-                            </ul>
-                            <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="header-ul ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="timesheet" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Time Sheets</strong></a>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="desc-ul ul-color-highlight timesheet-list">
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Track employee hours</span>
-                                </li>
-                            </ul>
-
-                            <ul data-list="1" class="header-ul ul-color-header">
-                                <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="reports" href="javascript:void(0);"><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Reports</strong></a>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="desc-ul ul-color-highlight reports-list">
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Real time reports and analytics</span>
-                                </li>
-                            </ul>
-
-                            <ul data-list="1" class="header-ul ul-color-header">
-                                <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="marketing" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="marketing" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Marketing</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight marketing-list">
@@ -1605,9 +1557,58 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
+                            <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="header-ul ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="taskhub" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Taskhub</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="timesheet" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Time Sheets</strong></a>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight timesheet-list">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Track employee hours</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="reports" href="javascript:void(0);"><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Reports</strong></a>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight reports-list">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Real time reports and analytics</span>
+                                </li>
+                            </ul>
+
+                            <!-- <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="accounting" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Accounting</strong></a>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul ul-color-highlight accounting-list">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create reminders</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul> -->
+
+                            <ul data-list="1" class="header-ul ul-color-header">
+                                <li>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="taskhub" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Taskhub</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight taskhub-list">
@@ -1754,29 +1755,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="bsc-margin">
+                            <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create reminders</span>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
+                            
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul class="bsc-margin" data-list="1">
                                 <li>
@@ -1802,25 +1800,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul class="bsc-margin" data-list="1">
+                            <!-- <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                    <span class="p3 open-popup">Create reminders</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
                                 </li>
-                            </ul>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul> -->
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
@@ -1836,7 +1838,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="ul-color-header" data-list="1">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="api-connectors" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>API Connectors</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="api-connectors" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>API Connectors</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight api-connectors-list">
@@ -1848,7 +1850,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="ul-color-header" data-list="1">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="campaign-builder" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Builder</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="campaign-builder" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Campaign Builder</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight campaign-builder-list">
@@ -1860,7 +1862,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="ul-color-header" data-list="1">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="gps-tracking" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="gps-tracking" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>GPS Tracking</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight gps-tracking-list">
@@ -1979,29 +1981,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="bsc-margin">
+                            <ul class="bsc-margin" data-list="1">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create reminders</span>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
+
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul class="bsc-margin" data-list="1">
                                 <li>
@@ -2027,25 +2026,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul class="bsc-margin" data-list="1">
+                            <!-- <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                    <span class="p3 open-popup">Create reminders</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
                                 </li>
-                            </ul>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul> -->
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2097,7 +2100,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="mobile-tools" href="javascript:void(0);"><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Mobile Tools</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="mobile-tools" href="javascript:void(0);"><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Mobile Tools</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight mobile-tools-list">
@@ -2109,7 +2112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="survey-builder" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Survey Builder</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="survey-builder" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Survey Builder</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight survey-builder-list">
@@ -2121,7 +2124,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="inventory-management" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">done</span><strong style="width:84%;float:left;">Inventory &nbsp; &nbsp; Management</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="inventory-management" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop" style="width:13%;float:left;">remove</span><strong style="width:84%;float:left;">Inventory &nbsp; &nbsp; Management</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight inventory-management-list">
@@ -2242,27 +2245,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create reminders</span>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
+                            
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2288,25 +2288,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="bsc-margin">
+                            <!-- <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                    <span class="p3 open-popup">Create reminders</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
                                 </li>
-                            </ul>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul> -->
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2393,7 +2397,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <br style="clear:both;"/>
                             <ul data-list="1" class="ul-color-header" style="margin-top: 13px !important;">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="credit-score" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Credit Score</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="credit-score" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Credit Score</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight credit-score-list">
@@ -2405,7 +2409,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="form-builder" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Form Builder</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="form-builder" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Form Builder</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight form-builder-list">
@@ -2415,9 +2419,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="ul-color-header">
+                            <!-- <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="accounting" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="accounting" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Accounting</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight accounting-list">
@@ -2425,11 +2429,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
                                 </li>
-                            </ul>
+                            </ul> -->
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="esign" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>eSign</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="esign" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>eSign</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight esign-list">
@@ -2441,7 +2445,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="campaign-blast" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Blast</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="campaign-blast" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Campaign Blast</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight campaign-blast-list">
@@ -2582,27 +2586,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Manage customers & employees</span>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create reminders</span>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
-                                </li>
-                                <li>
-                                    <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
+
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2628,25 +2629,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="bsc-margin">
+                            <!-- <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                    <span class="p3 open-popup">Manage customers & employees</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                    <span class="p3 open-popup">Create reminders</span>
                                 </li>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
-                                    <span class="p3 open-popup">Create a customized digital store</span>
+                                    <span class="p3 open-popup">Utilize GPS for simple navigatio</span>
                                 </li>
-                            </ul>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Implement before and after photos</span>
+                                </li>
+                            </ul> -->
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2793,7 +2798,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="wizard" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Wizard</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="wizard" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Wizard</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight wizard-list">
@@ -2805,7 +2810,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="branding" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Branding</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="branding" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Branding</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight branding-list">
