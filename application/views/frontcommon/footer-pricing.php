@@ -98,10 +98,12 @@
 					var dataKey = $(this).attr("data-key");			
 
 					if( $(this).hasClass('show-less') ){
+						$(this).find('span').text('add');
 						$("." + dataKey + '-list').addClass('hidden');
 						$(this).removeClass('show-less');
 						$(this).addClass('show-more');
 					}else{
+						$(this).find('span').text('remove');
 						$("." + dataKey + '-list').removeClass('hidden');
 						$(this).addClass('show-less');
 						$(this).removeClass('show-more');
