@@ -2,6 +2,22 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
+<style>
+.label-error{
+  display: block;
+  margin-bottom: 26px;
+  padding: 10px;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+  background-color: #d9534f;
+}
+</style>
 <div class="container find-pro-form">
   <!-- <h1 class="find-pro-header">Let's find you <b><?php echo $find_pro; ?></b></h1> -->
   <h1 class="find-pro-header">Let's find you some <b>Pro</b> to help</h1>
