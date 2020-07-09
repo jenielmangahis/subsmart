@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="margin-left: 50px;padding-bottom: 20px;">
+                <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
                         <a href="<?php echo url('/accounting/rules')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="rules")?:'-active';?>">Rules</a>
@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <div class="row align-items-center">
-                    <div class="col-md-12" style="padding: 0 70px 10px;">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6"><h2>Rules</h2></div>
                             <div class="col-md-6" style="text-align: right">

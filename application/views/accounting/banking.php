@@ -1,23 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="margin-left: 50px;padding-bottom: 20px;">
+                <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
                         <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
                         <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
                     </div>
                 </div>
-                <div class="row" style="margin-left: 50px;padding-bottom: 20px;">
+                <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-4">
                         <h2>Bank and Credit Cards</h2>
                     </div>
-                    <div class="col-md-4" style="border-left:1px dimgrey dotted;">
+                    <div class="col-md-4" style="position: relative;display: inline-block;">
                         <div class="dropdown">
                             <button class="btn btn-default" type="button" data-toggle="dropdown" style="text-decoration: none; color: #393a3d;font-size: 20px;background-color: transparent;border: 0;">
                                 <i class="fa fa-credit-card"></i> Corporate Account (XXXXXX 5850) <i class="fa fa-chevron-down"></i>
@@ -28,64 +28,122 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="col-md-4" style="text-align: right">
-                        <div class="dropdown" style="position: relative;display: inline-block;">
-                            <button type="button" class="btn btn-default" style="border-radius: 20px 0 0 20px">Update</button>
+                        <div style="float: right;position: relative;display: inline-block; margin-left: 10px">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#addAccountModal" style="border-radius: 20px 20px 20px 20px;">Add account</button>
+                        </div>
+                        <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                            <button type="button" class="btn btn-default"  style="border-radius: 20px 0 0 20px">Update</button>
                             <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                <span class="caret"></span></button>
+                                <span class="fa fa-caret-down"></span></button>
                             <ul class="dropdown-menu">
+                                <li><a href="#" data-toggle="modal" data-target="#fileUpload">File Upload</a></li>
                                 <li><a href="#">Order Checks</a></li>
-                                <li><a href="#">Pay Bills</a></li>
                             </ul>
                         </div>
-                        <button class="btn btn-success" style="border-radius: 20px 20px 20px 20px">Add account</button>
                     </div>
                 </div>
                 <div class="row align-items-center">
-                    <div class="col-md-12" style="padding: 0 70px 10px;">
-                        <ul class="nav nav-tabs banking-tab-container">
-                            <li class="banking-sub-active"><a data-toggle="tab" href="#forReview" class="banking-sub-tab">For Review</a></li>
-                            <li><a data-toggle="tab" href="#reviewed" class="banking-sub-tab">Reviewed</a></li>
-                            <li><a data-toggle="tab" href="#excluded" class="banking-sub-tab">Excluded</a></li>
-                        </ul>
-                        <div class="tab-content" style="padding-top: 20px">
-                            <div id="forReview" class="tab-pane fade in active">
-                                <table id="banking_table" class="table table-striped table-bordered" style="width:100%">
+                    <div class="col-md-12" style="">
+                        <!-- Nav tabs -->
+                        <div class="banking-tab-container">
+                            <div class="rb-01">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item banking-sub-active">
+                                        <a class="nav-link active banking-sub-tab" data-toggle="tab" href="#forReview">For Review</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link banking-sub-tab" data-toggle="tab" href="#reviewed">Reviewed</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link banking-sub-tab" data-toggle="tab" href="#excluded">Excluded</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="rb-02">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item"><a href="#"  data-toggle="modal" data-target="#takeAtour"><i class="fa fa-map-signs" style="margin-right: 10px"></i>Take a tour</a></li>
+                                    <li class="nav-item">|</li>
+                                    <li class="nav-item"><a href="#">Go to Register</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Tab panes -->
+                        <div class="tab-content" style="padding-top: 10px">
+                            <div class="tab-pane active" id="forReview">
+                                <table id="forReview_table" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" class=""></th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Payee</th>
+                                    <th>Category or Match</th>
+                                    <th>Spent</th>
+                                    <th>Received</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td>06/29/2020</td>
+                                    <td>CHECK #2701 2701</td>
+                                    <td>Mike Bell Jr</td>
+                                    <td></td>
+                                    <td>$320</td>
+                                    <td></td>
+                                    <td><a href="">View</a></td>
+                                </tr>
+                                </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="reviewed">
+                                <table id="reviewedTable" class="table table-striped table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th></th>
+                                        <th><input type="checkbox" class=""></th>
                                         <th>Date</th>
                                         <th>Description</th>
-                                        <th>Payee</th>
-                                        <th>Category or Match</th>
-                                        <th>Spent</th>
-                                        <th>Received</th>
+                                        <th>Added or Matched</th>
+                                        <th>Rule</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td><input type="checkbox"></td>
-                                        <td>06/29/2020</td>
-                                        <td>CHECK #2701 2701</td>
-                                        <td>Mike Bell Jr</td>
-                                        <td></td>
-                                        <td>$320</td>
-                                        <td></td>
-                                        <td><a href="">View</a></td>
+                                        <td>07/02/2020</td>
+                                        <td>CHECK #2702 2702</td>
+                                        <td>$-300.00</td>
+                                        <td>Matched to: </td>
+                                        <td><a href="">Undo</a></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div id="reviewed" class="tab-pane fade">
-                                <h3>Menu 1</h3>
-                                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                            </div>
-                            <div id="excluded" class="tab-pane fade">
-                                <h3>Menu 2</h3>
-                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                            <div class="tab-pane fade" id="excluded">
+                                <table id="reviewedTable" class="table table-striped table-bordered" style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class=""></th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
@@ -100,21 +158,194 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
+<!-- Modal for add account-->
+<div class="full-screen-modal">
+    <div id="addAccountModal" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Connect an account</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container modal-container">
+                        <div class="header-modal"><h3>Let's get a picture of your profits</h3></div>
+                        <div class="sub-header-modal"><span>Connect your bank or credit card to bring in your transactions.</span></div>
+                        <div class="body-modal">
+                            <input type="text" class="form-control" placeholder="Enter your bank name or URL" style=" margin: 40px 0 50px 0;">
+                            <div class=""><span>Here are some of the most popular ones</span></div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/citibank.png') ?>" alt="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/chase-logo.png') ?>" alt="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/bank-of-america.png') ?>" alt="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/Wells_Fargo.png') ?>" alt="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" alt="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/us-bank-logo-vector.png') ?>" alt="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/paypal_PNG20.png') ?>" alt="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/pncbank_pms_c.png') ?>" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: auto;">
+                    <span style="font-size: 14px"><i class="fa fa-unlock-alt" style="margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                </div>
+                <div style="margin: auto">
+                    <a href="" style="text-align: center">Privacy</a>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end of modal-->
+</div>
+
+<div class="full-screen-modal">
+    <!--Modal for file upload-->
+    <div id="fileUpload" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
+                </div>
+                <div class="modal-body">
+                    <h1 class="modal-title" style="text-align: center;font-size: 46px;">Bring your info into nSmartrac</h1>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="modal-container box-bank-container">
+                                <div class="centered-container">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/Artboard_230-512.png') ?>" alt="">
+                                </div>
+                                <div>
+                                    <h4 style="margin: 20px 20px 30px 20px; ">Get your info from your bank</h4>
+                                    <ol>
+                                        <li>Open a new tab and sign in to your bank.</li>
+                                        <li>Download transactions: CSV, QFX, QBO, OFX or TXT format only.</li>
+                                        <li>Close the tab and return to nSmartrac.</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <h5 style="margin: 20px 20px 30px 20px;">Select a file to upload</h5>
+                                    <form style="margin: 20px 20px 30px 20px;">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="customFile">
+                                            <label class="custom-file-label" for="customFile">Choose file</label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 250px;"><h1 class="modal-title" style="text-align: center;font-size: 46px;">OR</h1></div>
+                        <div class="col-sm-5">
+                            <div class="modal-container box-bank-container">
+                                <div class="centered-container">
+                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/bank-security-system-621346.png') ?>" alt="">
+                                </div>
+                                <div>
+                                    <h4 style="margin: 20px 20px 30px 20px; ">Securely connect your bank</h4>
+                                    <ol>
+                                        <li>More secure. No need to share files with bank data.</li>
+                                        <li>No work. Transactions come in from your bank automatically.</li>
+                                    </ol>
+                                </div>
+                                <div style="display: flex;justify-content: center;margin-top: 70px">
+                                    <button class="btn btn-success" style="border-radius: 20px 20px 20px 20px;">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer-upload-file">
+                    <button class="btn btn-dark" style="float: left;border-radius: 20px 20px 20px 20px;">Cancel</button>
+                    <button class="btn btn-success" style="float: right;border-radius: 20px 20px 20px 20px">Next</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal for Take a tour -->
+<div id="takeAtour" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="header">
+                    <h3>Keep your books organized all year</h3>
+                    <span>Check out these resources to learn how</span>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="modal-container box-bank-container">
+                                <div class="centered-container">
+                                    <i class="fa fa-map-signs fa-5x"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="modal-container box-bank-container">
+                                <div class="centered-container">
+                                    <i class="fa fa-map-signs fa-5x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 <script>
     // DataTable JS
     $(document).ready(function() {
-        $('#banking_table').DataTable();
+        $('#forReview_table').DataTable({
+            "paging": false,
+        });
+    } );
+    $(document).ready(function() {
+        $('#reviewedTable').DataTable({
+            "paging": false,
+        });
     } );
     $('.banking-sub-tab').click(function(){
         $(this).parent().addClass('banking-sub-active').siblings().removeClass('banking-sub-active')
     });
-
-    $(document).ready(function(){
-        $(".nav-tabs a").click(function(){
-            $(this).tab('show');
-        });
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
-
 </script>
+
 
 

@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <td>
                 <?php //if (hasPermissions('roles_edit')): ?>
                   <a href="<?php echo url('roles/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User Role" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                <?php endif ?>
+                <?php //endif ?>
               </td>
             </tr>
           <?php endforeach ?>

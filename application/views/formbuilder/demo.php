@@ -1,7 +1,7 @@
 <<<<<<< Updated upstream
 
 <?php include viewPath('includes/header'); ?>
-<link href="<?php echo $url->assets ?rel="stylesheet">
+
 <style>
   .custom-signaturepad {
     padding-left: 0;

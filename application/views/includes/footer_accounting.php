@@ -14,8 +14,8 @@
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/waves.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<!--Chartist Chart-->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+Chartist Chart-->
 <!-- <script src="../plugins/chartist/js/chartist.min.js"></script>
 <script src="../plugins/chartist/js/chartist-plugin-tooltip.min.js"></script>
 <script src="../plugins/peity-chart/jquery.peity.min.js"></script> -->

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 29, 2020 at 11:47 AM
+-- Generation Time: Jul 08, 2020 at 10:31 AM
 -- Server version: 5.6.41-84.1
 -- PHP Version: 7.3.6
 
@@ -21,6 +21,93 @@ SET time_zone = "+00:00";
 --
 -- Database: `admintom_nsmart_companies`
 --
+CREATE DATABASE IF NOT EXISTS `admintom_nsmart_companies` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `admintom_nsmart_companies`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL,
+  `account_name` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL COMMENT '1= active',
+  `company_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `account`
+--
+
+INSERT INTO `account` (`id`, `account_name`, `status`, `company_id`) VALUES
+(1, 'Bank', 1, NULL),
+(2, 'Income', 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts_has_account_details`
+--
+
+DROP TABLE IF EXISTS `accounts_has_account_details`;
+CREATE TABLE `accounts_has_account_details` (
+  `account_id` int(11) NOT NULL,
+  `acc_detail_id` int(11) NOT NULL,
+  `company_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `accounts_has_account_details`
+--
+
+INSERT INTO `accounts_has_account_details` (`account_id`, `acc_detail_id`, `company_id`) VALUES
+(1, 1, NULL),
+(1, 2, NULL),
+(1, 3, NULL),
+(1, 4, NULL),
+(1, 5, NULL),
+(1, 6, NULL),
+(2, 7, NULL),
+(2, 8, NULL),
+(2, 9, NULL),
+(2, 10, NULL),
+(2, 11, NULL),
+(2, 12, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `account_detail`
+--
+
+DROP TABLE IF EXISTS `account_detail`;
+CREATE TABLE `account_detail` (
+  `acc_detail_id` int(11) NOT NULL,
+  `acc_detail_name` varchar(255) NOT NULL,
+  `status` int(1) NOT NULL COMMENT '1 = active',
+  `company_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `account_detail`
+--
+
+INSERT INTO `account_detail` (`acc_detail_id`, `acc_detail_name`, `status`, `company_id`) VALUES
+(1, 'Cash on hand', 1, NULL),
+(2, 'Checking', 1, NULL),
+(3, 'Money market', 1, NULL),
+(4, 'Rents Held in Trust', 1, NULL),
+(5, 'Savings', 1, NULL),
+(6, 'Trust account', 1, NULL),
+(7, 'Discounts/Refunds Given', 1, NULL),
+(8, 'Non-Profit Income', 1, NULL),
+(9, 'Other Primary Income', 1, NULL),
+(10, 'Sales of Product Income', 1, NULL),
+(11, 'Service/Fee Income', 1, NULL),
+(12, 'Unapplied Cash Payment Income', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -260,7 +347,67 @@ INSERT INTO `activity_logs` (`id`, `title`, `user`, `ip_address`, `created_at`, 
 (215, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (216, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (217, 'john  (admin) Logged in', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(218, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(218, 'User:  Logged Out', 2, '110.54.249.164', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(219, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(220, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(221, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(222, 'john  (admin) Logged in', 2, '203.189.118.226', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(223, 'john  (admin) Logged in', 2, '119.94.187.192', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(224, 'john  (admin) Logged in', 2, '203.189.118.226', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(225, 'john  (admin) Logged in', 2, '110.54.248.84', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(226, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(227, 'New User $9 Created by User:john ', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(228, 'User #1 Deleted by User:', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(229, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(230, 'john  (admin) Logged in', 2, '110.54.251.47', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(231, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(232, 'john  (admin) Logged in', 2, '203.189.118.173', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(233, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(234, 'john  (admin) Logged in', 2, '110.54.248.152', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(235, 'john  (admin) Logged in', 2, '110.54.251.47', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(236, 'User: John  Smith Logged Out', 2, '110.54.251.47', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(237, 'john  (admin) Logged in', 2, '110.54.251.47', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(238, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(239, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(240, 'john  (admin) Logged in', 2, '49.146.43.181', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(241, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(242, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(243, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(244, 'john  (admin) Logged in', 2, '110.54.251.47', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(245, 'john  (admin) Logged in', 2, '110.54.251.47', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(246, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(247, 'john  (admin) Logged in', 2, '45.155.89.2', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(248, 'john  (admin) Logged in', 2, '110.54.250.130', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(249, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(250, 'inventory imported successfully. Total Rows (104) | Inserted (104) | Updated (0) | Not Inserted (0)', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(251, 'New User $10 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(252, 'New User $11 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(253, 'New User $12 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(254, 'New User $13 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(255, 'New User $14 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(256, 'New User $15 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(257, 'New User $16 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(258, 'New User $17 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(259, 'New User $18 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(260, 'New User $19 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(261, 'New User $20 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(262, 'New User $21 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(263, 'User #1 Deleted by User:', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(264, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(265, 'User #1 Deleted by User:', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(266, 'New item Categories # Created by User: #2', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(267, 'john  (admin) Logged in', 2, '119.94.187.192', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(268, 'john  (admin) Logged in', 2, '119.94.187.192', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(269, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(270, 'User #1 Deleted by User:', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(271, 'New User $22 Created by User:john ', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(272, 'john  (admin) Logged in', 2, '43.250.156.21', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(273, 'john  (admin) Logged in', 2, '112.198.74.71', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(274, 'john  (admin) Logged in', 2, '106.76.80.223', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(275, 'john  (admin) Logged in', 2, '174.69.30.11', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(276, 'john  (admin) Logged in', 2, '203.189.118.50', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(277, 'john  (admin) Logged in', 2, '203.189.118.50', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(278, 'john  (admin) Logged in', 2, '162.72.82.177', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -326,6 +473,7 @@ CREATE TABLE `business_profile` (
   `b_name` varchar(255) NOT NULL,
   `b_email` varchar(255) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
+  `timezone` varchar(150) NOT NULL,
   `is_emergency_support` tinyint(1) DEFAULT NULL COMMENT '1=true',
   `year_est` char(4) DEFAULT NULL,
   `employee_count` int(6) DEFAULT NULL,
@@ -345,9 +493,9 @@ CREATE TABLE `business_profile` (
 -- Dumping data for table `business_profile`
 --
 
-INSERT INTO `business_profile` (`id`, `b_name`, `b_email`, `website`, `is_emergency_support`, `year_est`, `employee_count`, `is_subcontract_allowed`, `EIN`, `business_desc`, `logo_id`, `nsmart_plans_id`, `folder_name`, `created_at`, `updated_at`, `deleted_at`, `created_by`) VALUES
-(1, 'A Cool Company', 'company@test.com', 'acoolcompany.exp', 1, '2020', 6, 0, '123456789', 'A company that does cool stuff for cool people, because we are cool. OBVIOSULY', NULL, 1, '', '2020-05-20 19:24:17', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2),
-(2, 'NSmartrac', 'support@nsmartrac.com', 'nsmartrac.com', 0, '2020', 10, NULL, '123456789', NULL, NULL, 0, 'kGTpqxyyo9', '2020-05-20 19:35:10', '2020-06-12 17:16:44', '0000-00-00 00:00:00', 2);
+INSERT INTO `business_profile` (`id`, `b_name`, `b_email`, `website`, `timezone`, `is_emergency_support`, `year_est`, `employee_count`, `is_subcontract_allowed`, `EIN`, `business_desc`, `logo_id`, `nsmart_plans_id`, `folder_name`, `created_at`, `updated_at`, `deleted_at`, `created_by`) VALUES
+(1, 'A Cool Company', 'company@test.com', 'acoolcompany.exp', '', 1, '2020', 6, 0, '123456789', 'A company that does cool stuff for cool people, because we are cool. OBVIOSULY', NULL, 1, '', '2020-05-20 19:24:17', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2),
+(2, 'NSmartrac', 'support@nsmartrac.com', 'nsmartrac.com', '', 0, '2020', 10, NULL, '123456789', NULL, NULL, 0, 'kGTpqxyyo9', '2020-05-20 19:35:10', '2020-06-12 17:16:44', '0000-00-00 00:00:00', 2);
 
 -- --------------------------------------------------------
 
@@ -377,6 +525,22 @@ CREATE TABLE `companies_has_modules` (
   `company_id` int(11) NOT NULL,
   `modules_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contacts`
+--
+
+DROP TABLE IF EXISTS `contacts`;
+CREATE TABLE `contacts` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `im` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -636,7 +800,8 @@ INSERT INTO `file_folders` (`folder_id`, `folder_name`, `parent_id`, `descriptio
 (11, 'Employee Docs', 0, '', '/Employee Docs/', NULL, 2, '2020-06-16 05:54:00', NULL, NULL, 1),
 (12, 'Business Contracts', 1, '', '/Contracts/Business Contracts/', NULL, 2, '2020-06-16 05:54:28', NULL, NULL, 1),
 (13, 'My Templates', 0, 'Saved Doc Created By You', '/My Templates/', NULL, 2, '2020-06-16 06:28:24', NULL, NULL, 1),
-(14, 'Shared Template', 0, 'All Company Documents', '/Shared Template/', NULL, 2, '2020-06-16 06:29:45', NULL, NULL, 1);
+(14, 'Shared Template', 0, 'All Company Documents', '/Shared Template/', NULL, 2, '2020-06-16 06:29:45', NULL, NULL, 1),
+(15, 'sub folder test', 9, '', '/Contracts/Employee Contracts/sub folder test/', NULL, 2, '2020-07-04 07:39:26', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -731,6 +896,7 @@ CREATE TABLE `items` (
   `brand` varchar(255) NOT NULL,
   `COGS` decimal(8,2) NOT NULL COMMENT 'cost of goods sold',
   `price` decimal(8,2) NOT NULL,
+  `cost per` varchar(20) NOT NULL,
   `url` varchar(255) NOT NULL,
   `notes` text NOT NULL,
   `item_categories_id` int(11) NOT NULL,
@@ -741,6 +907,117 @@ CREATE TABLE `items` (
   `estimated_time` smallint(6) NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `items`
+--
+
+INSERT INTO `items` (`id`, `company_id`, `title`, `type`, `description`, `model`, `brand`, `COGS`, `price`, `cost per`, `url`, `notes`, `item_categories_id`, `is_active`, `vendor_id`, `units`, `frequency`, `estimated_time`, `modified`) VALUES
+(1, 1, '19 HDMI Monitor', 'Service', '', '', '', 259.00, 259.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(2, 1, '4 Button Remote', 'Service', '', '', '', 159.00, 159.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(3, 1, '4 CH DVR 1TB', 'Service', '', '', '', 799.00, 799.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(4, 1, '8 Channel Stream Video Recorder', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(5, 1, 'AIO SMART Control Panel', 'Service', '', '', '', 179.00, 179.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(6, 1, 'Alarm Billable Rate per Hour', 'Service', '', '', '', 79.00, 79.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(7, 1, 'Alarm.com Door Bell Slim', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(8, 1, 'Alarm.com IP Outdoor Camera', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(9, 1, 'ALARM.COM Thermostat', 'Service', '', '', '', 249.00, 249.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(10, 1, 'Alpha Keypad 6160 RF', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(11, 1, 'Arlo 2 CAM IP', 'Service', '', '', '', 799.00, 799.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(12, 1, 'CCTV Billable Rate per Hour', 'Service', '', '', '', 105.00, 105.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(13, 1, 'Cellular Card Honeywell Lynx Plus', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(14, 1, 'Cellular Honeywell Radio Vista', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(15, 1, 'Commercial Alarm QSP', '', '', '', '', 59.00, 59.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(16, 1, 'Commercial DVR QSP', 'Service', '', '', '', 89.00, 89.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(17, 1, 'Commercial Fire Alarm Service', 'Service', 'per hour', '', '', 165.00, 165.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(18, 1, 'Commercial Installation up to 5000 sq feet', 'Service', '', '', '', 799.00, 799.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(19, 1, 'Commercial Vista with Sem', '', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(20, 1, 'Consultation', 'Service', '', '', '', 250.00, 250.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(21, 1, 'Designated Surge Protector', '', '', '', '', 59.00, 59.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(22, 1, 'Detached Garage Motion', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(23, 1, 'Doorbell Chime Setup', '', '', '', '', 79.00, 79.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(24, 1, 'Doorbell Kit', 'Service', '', '', '', 55.00, 55.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(25, 1, 'Doorbell Video (Existing)', 'Service', 'Add-on $5 on MMR', '', '', 249.00, 249.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(26, 1, 'Doorbell Video (non existing)', 'Service', 'non working or no current doorbell at location', '', '', 279.00, 279.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(27, 1, 'DSL Phone Line Filter', 'Service', '', '', '', 50.00, 50.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(28, 1, 'Extended Antenna', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(29, 1, 'Extender', 'Service', '', '', '', 149.00, 149.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(30, 1, 'Extra Recessed  Door', 'Service', '', '', '', 159.00, 159.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(31, 1, 'Extra Wireless Door/Window', 'Service', '', '', '', 139.00, 139.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(32, 1, 'Eye Fixed HD', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(33, 1, 'Eye Varifocal HD', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(34, 1, 'Fixed Honeywell Indoor Camera', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(35, 1, 'Fixed Honeywell Outdoor Video Camera', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(36, 1, 'Go Panel 2', 'Service', '', '', '', 799.00, 799.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(37, 1, 'Go Panel 3', 'Service', '', '', '', 999.00, 999.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(38, 1, 'HDMI Sold Per 1 FT', 'Service', '', '', '', 5.00, 5.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(39, 1, 'Honeywell 6150RF', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(40, 1, 'Honeywell Alpha 6160', 'Service', '', '', '', 249.00, 249.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(41, 1, 'Honeywell Lynx 3000 (Quick Connect)', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(42, 1, 'Honeywell Lynx Touch Screen', 'Service', '', '', '', 799.00, 799.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(43, 1, 'Honeywell Skybell Cam', 'Service', '', '', '', 359.00, 359.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(44, 1, 'Honeywell Thermostat', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(45, 1, 'Honeywell Total Connect Access Point', 'Service', '', '', '', 89.00, 89.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(46, 1, 'Honeywell Vista 15P with GSM', 'Service', '', '', '', 698.00, 698.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(47, 1, 'Honeywell Vista 15P with Sem', 'Service', '', '', '', 698.00, 698.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(48, 1, 'Honeywell Wifi Card', 'Service', '', '', '', 99.00, 99.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(49, 1, 'Indoor DVR Camera', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(50, 1, 'Interior IP Camera', 'Service', 'Add $5 extra MMR', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(51, 1, 'Key Pad W/L 5828', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(52, 1, 'Keyless Entry Doorlock', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(53, 1, 'LYNX TOUCH Honeywell GSM', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(54, 1, 'Medical Alert', 'Service', '', '', '', 149.00, 149.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(55, 1, 'Medical Panic', 'Service', 'Extra $7 to MMR', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(56, 1, 'Net Gear Router', 'Service', '', '', '', 215.00, 215.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(57, 1, 'Network Issue Diagnostics', 'Service', 'per hour', '', '', 69.00, 69.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(58, 1, 'New Medical Pendant', 'Service', '', '', '', 149.00, 149.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(59, 1, 'Outdoor Camera', 'Service', 'Extra $5 MMR', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(60, 1, 'Outside Gate Contact', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(61, 1, 'Overhead Contact', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(62, 1, 'Pan and Tilt Video Camera (ip-cam-pt)', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(63, 1, 'PERS with monitoring', 'Service', '', '', '', 699.00, 699.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(64, 1, 'POE Outdoor IP Camera Commercial', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(65, 1, 'Power Supply (6-24V 2.5A)', 'Service', '', '', '', 149.00, 149.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(66, 1, 'Prewire (rough end)', 'Service', '', '', '', 195.00, 195.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(67, 1, 'Program & Setup', '', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(68, 1, 'Recess Door Contact', 'Service', '', '', '', 99.00, 99.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(69, 1, 'Remote View Kit', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(70, 1, 'Residential 4 CH Wire Run', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(71, 1, 'Residential Installation up to 1900 sq feet', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(72, 1, 'Residential Program and Setup', 'Service', '', '', '', 99.00, 99.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(73, 1, 'Residential Smart Home Program and Setup', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(74, 1, 'Residential Smart QSP', '', '', '', '', 53.00, 53.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(75, 1, 'RF Transceiver', 'Service', '', '', '', 289.00, 289.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(76, 1, 'RJ Jack', 'Service', '', '', '', 55.00, 55.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(77, 1, 'Run cat5 & high cable', 'Service', '', '', '', 219.00, 219.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(78, 1, 'Safe Contact', '', '', '', '', 100.00, 100.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(79, 1, 'SEM Module Honeywell Hardwire', 'Service', '', '', '', 499.00, 499.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(80, 1, 'Surface Contact', 'Service', '2 for $100', '', '', 149.00, 149.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(81, 1, 'System Battery', '', '', '', '', 65.00, 65.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(82, 1, 'Talking Key Pad W/L 5828', 'Service', '', '', '', 550.00, 550.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(83, 1, 'Translator Universal', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(84, 1, 'Trenching Run to Detached Building', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(85, 1, 'Universal AC Transformer', 'Service', '', '', '', 79.00, 79.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(86, 1, 'Vista 20 panel upgrade', 'Service', '', '', '', 100.00, 100.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(87, 1, 'Warranty Deductible', 'Service', '', '', '', 35.00, 35.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(88, 1, 'Warranty Deductible /Trip', 'Service', '', '', '', 65.00, 65.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(89, 1, 'White Bullet HD', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(90, 1, 'Wire Drop', 'Service', 'per location', '', '', 65.00, 65.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(91, 1, 'Wireless Carbon Monoxide', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(92, 1, 'Wireless GlassBreak', 'Service', '', '', '', 179.00, 179.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(93, 1, 'Wireless Heat Detector', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(94, 1, 'Wireless Motion Detector Commercial', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(95, 1, 'Wireless Motion Detector Residential', 'Service', '', '', '', 229.00, 229.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(96, 1, 'Wireless Outdoor Contact', 'Service', '', '', '', 199.00, 199.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(97, 1, 'Wireless Repeater (Strength RF Signal)', 'Service', '', '', '', 249.00, 249.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(98, 1, 'Wireless Siren', 'Service', '', '', '', 279.00, 279.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(99, 1, 'Wireless Smoke Detector Resi/Comm', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(100, 1, 'WireLoop for Double Windows', 'Service', '', '', '', 179.00, 179.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(101, 1, 'Yale Deadbolt Locks', 'Service', '', '', '', 299.00, 299.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(102, 1, 'Yale Handle Door Locks', 'Service', '', '', '', 399.00, 399.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(103, 1, 'Z-wave module', 'Service', '', '', '', 149.00, 149.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(104, 1, 'Z-wave plug', 'Service', '', '', '', 69.00, 69.00, '', '', '', 0, 1, 0, NULL, '', 0, '2020-07-06 21:49:19'),
+(105, 1, '10 Test Item', '', 'This is a test item...', '', '', 0.00, 199.00, '', '', '', 0, NULL, 0, NULL, '', 0, '2020-07-07 10:17:24');
 
 -- --------------------------------------------------------
 
@@ -784,6 +1061,13 @@ CREATE TABLE `item_categories` (
   `parent_id` int(11) DEFAULT NULL,
   `company_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `item_categories`
+--
+
+INSERT INTO `item_categories` (`item_categories_id`, `name`, `description`, `parent_id`, `company_id`) VALUES
+(1, 'Cameras', '', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -905,6 +1189,18 @@ CREATE TABLE `job_settings` (
   `company_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `job_settings`
+--
+
+INSERT INTO `job_settings` (`job_settings_id`, `setting_type`, `value`, `status`, `created_at`, `company_id`) VALUES
+(1, 'Type 1', 'Type 1', 1, '2020-07-07 04:31:41', 1),
+(2, 'Type 1', 'Type 1', 1, '2020-07-07 04:31:41', 1),
+(3, 'Type 1', 'Type 1', 1, '2020-07-07 04:31:42', 1),
+(4, 'Type 1', 'Type 1', 1, '2020-07-07 04:31:42', 1),
+(5, 'Type 2', 'Type 2', 1, '2020-07-07 04:32:08', 1),
+(6, 'Type 2', 'Type 2', 1, '2020-07-07 04:32:08', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -963,7 +1259,27 @@ CREATE TABLE `oauth_access_tokens` (
 --
 
 INSERT INTO `oauth_access_tokens` (`access_token`, `client_id`, `user_id`, `expires`, `scope`) VALUES
-('62af2a28b725c647991e3d6490611826a07cc36a', 'admintom_admin', 'support@nsmartrac.com', '2020-07-07 02:12:07', NULL);
+('62af2a28b725c647991e3d6490611826a07cc36a', 'admintom_admin', 'support@nsmartrac.com', '2020-07-07 02:12:07', NULL),
+('808f6edc917389392120f859d5ef6462ff46184e', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 06:57:35', NULL),
+('29fd9cb9e0fdbca02919aa2a7a317d04252afa6d', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 08:57:34', NULL),
+('4f88dd82479114821adf9fa80456a9e9305b5d50', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 09:09:01', NULL),
+('4e0eb08d6b4eb3e2546b2317ed7d7827145e9e06', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 09:12:45', NULL),
+('b6ee005d3151c5ac46ac573dbef7fd703938f08f', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 09:28:09', NULL),
+('88e44f4be39772eefec7ab1f36d7a98c1bdd6267', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 09:42:02', NULL),
+('6eec5a51650622870888d6e531bd2be6418ff570', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 10:16:57', NULL),
+('a9351f8bfb1d0d94b1147af26cb162888f7b31c1', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 11:26:00', NULL),
+('c87a18479657fa325c2b3c2ba134c6fb5af27e4f', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 12:37:42', NULL),
+('97d6bf63cd4759a3a230937a4315a86cb642b7d9', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 12:42:47', NULL),
+('c206c5d85d362ca64072e91d2ad6c75cddc4fa05', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 12:44:06', NULL),
+('45597c96950a83119430bcf5a33bb2e9bae742b9', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 12:51:18', NULL),
+('80089b21be18b1cdd563d751a9e57fd892d8eadf', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 12:53:57', NULL),
+('0362c19d7f431590427b59f0356103087074e9bb', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 15:16:37', NULL),
+('fb13e910501bb1e932f8aef9701b0fa58bbd6501', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 15:43:00', NULL),
+('4c516313ec2cf8e8005e8ed5a67f4bb656306c5f', 'admintom_admin', 'support@nsmartrac.com', '2020-07-22 09:37:56', NULL),
+('eba51431c1bb2c98a0c8542697ba91e9c097ea88', 'admintom_admin', 'support@nsmartrac.com', '2020-07-22 12:50:28', NULL),
+('60e1fc3bf12eb99837df7f42cf293a4ed6322d2e', 'admintom_admin', 'support@nsmartrac.com', '2020-07-22 13:42:21', NULL),
+('9d5524a0685303e69cd4559f4b6225ce52dac962', 'admintom_admin', 'support@nsmartrac.com', '2020-07-22 13:54:31', NULL),
+('bf328ca6c33aadd49a5b963a8d48c98d5cf7a32a', 'admintom_admin', 'support@nsmartrac.com', '2020-07-22 14:01:12', NULL);
 
 -- --------------------------------------------------------
 
@@ -1038,7 +1354,27 @@ CREATE TABLE `oauth_refresh_tokens` (
 --
 
 INSERT INTO `oauth_refresh_tokens` (`refresh_token`, `client_id`, `user_id`, `expires`, `scope`) VALUES
-('23e7ab91e370940588ee2d1e310d8370f99d3fcb', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 02:12:07', NULL);
+('23e7ab91e370940588ee2d1e310d8370f99d3fcb', 'admintom_admin', 'support@nsmartrac.com', '2020-07-21 02:12:07', NULL),
+('db3207f493e3b5c44183d988931ee4a19b61bc7b', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 06:57:35', NULL),
+('613302e4ade08285f94a288d73d2192b898938a6', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 08:57:34', NULL),
+('2247c275864e0db41178f8626eaee12e70825dab', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 09:09:01', NULL),
+('61608e6e25e5fe860a38b260bfeb037c2906ee02', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 09:12:45', NULL),
+('68d533cd98f6e7f07a7c7508d63ad4ffa1683758', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 09:28:09', NULL),
+('37132388629e1c4cc2a3ad887d494a3b837c8228', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 09:42:02', NULL),
+('6633bbd3a0bc42a4a0f60a5818bb5706fa349068', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 10:16:57', NULL),
+('bfc187d675600071fa414ff4743274732353e29b', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 11:26:00', NULL),
+('8de6c43bfbea1391b97a5dcf80d1c1af9303b56b', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 12:37:42', NULL),
+('2a10ebdd9b5be938a450efe50e7717662944719a', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 12:42:47', NULL),
+('189e0e625fbf2f3e41995e6e995fb27cdbc19e67', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 12:44:06', NULL),
+('9ea3787ab643daaff9665343601aa9a9d8310349', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 12:51:18', NULL),
+('bef38da24399f2ca4c33767902d6043778ec141f', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 12:53:57', NULL),
+('104d017efe1016569cb7a0fc8e252f3070e8f4a0', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 15:16:37', NULL),
+('f78bc698e7476e711717a592049f70efddca3966', 'admintom_admin', 'support@nsmartrac.com', '2020-08-04 15:43:00', NULL),
+('8cd4281cc2e19c8571af82900945caec2ab4cb11', 'admintom_admin', 'support@nsmartrac.com', '2020-08-05 09:37:56', NULL),
+('5751b3a9cea5510373f1a950a9058ed08fda7110', 'admintom_admin', 'support@nsmartrac.com', '2020-08-05 12:50:28', NULL),
+('eab151c711de599cdd3236148659ce509c92b67e', 'admintom_admin', 'support@nsmartrac.com', '2020-08-05 13:42:21', NULL),
+('cf85d93f3b61ae5616193391ee723d7a06130021', 'admintom_admin', 'support@nsmartrac.com', '2020-08-05 13:54:31', NULL),
+('fdc1cc87054a5f51682f6f2648d09cc4928be318', 'admintom_admin', 'support@nsmartrac.com', '2020-08-05 14:01:12', NULL);
 
 -- --------------------------------------------------------
 
@@ -1404,6 +1740,7 @@ CREATE TABLE `storage_loc` (
 DROP TABLE IF EXISTS `survey`;
 CREATE TABLE `survey` (
   `id` int(11) UNSIGNED NOT NULL,
+  `workspace_id` int(11) NOT NULL,
   `count_timer` varchar(255) NOT NULL,
   `count` int(11) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
@@ -1430,12 +1767,12 @@ CREATE TABLE `survey` (
 -- Dumping data for table `survey`
 --
 
-INSERT INTO `survey` (`id`, `count_timer`, `count`, `title`, `published`, `created_by`, `date_created`, `date_published`, `company_id`, `theme_id`, `hasProgressBar`, `canRedirectOnComplete`, `redirectionLink`, `isNewRespondentsClosed`, `hasClosedDate`, `closingDate`, `hasResponseLimit`, `responseLimit`, `hasCustomClosedMessage`, `closingMessage`, `isPublished`) VALUES
-(72, '', 0, 'test', 0, 0, '2020-06-11 07:47:12', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0),
-(79, '', 0, 'A new survey', 0, 0, '2020-06-19 02:52:02', NULL, 0, 3, 0, 1, 'https://www.google.com', 0, 1, '2020-07-02', 1, 20, 0, '', 0),
-(80, '', 0, 'Another survey', 0, 0, '2020-06-19 03:44:49', NULL, 0, 3, 0, 1, 'https://reactjs.org/', 0, 1, '2020-10-02', 0, 0, 0, '', 0),
-(81, '', 0, 'Third survey', 0, 10, '2020-06-19 08:40:57', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0),
-(82, '', 0, 'ADI', 0, 0, '2020-06-29 02:59:32', NULL, 0, 0, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0);
+INSERT INTO `survey` (`id`, `workspace_id`, `count_timer`, `count`, `title`, `published`, `created_by`, `date_created`, `date_published`, `company_id`, `theme_id`, `hasProgressBar`, `canRedirectOnComplete`, `redirectionLink`, `isNewRespondentsClosed`, `hasClosedDate`, `closingDate`, `hasResponseLimit`, `responseLimit`, `hasCustomClosedMessage`, `closingMessage`, `isPublished`) VALUES
+(72, 0, '', 0, 'test', 0, 0, '2020-06-11 07:47:12', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0),
+(79, 0, '', 0, 'A new survey', 0, 0, '2020-06-19 02:52:02', NULL, 0, 3, 0, 1, 'https://www.google.com', 0, 1, '2020-07-02', 1, 20, 0, '', 0),
+(80, 0, '', 0, 'Another survey', 0, 0, '2020-06-19 03:44:49', NULL, 0, 3, 0, 1, 'https://reactjs.org/', 0, 1, '2020-10-02', 0, 0, 0, '', 0),
+(81, 0, '', 0, 'Third survey', 0, 10, '2020-06-19 08:40:57', NULL, 0, 6, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0),
+(82, 0, '', 0, 'ADI', 0, 0, '2020-06-29 02:59:32', NULL, 0, 4, 0, 0, '', 0, 0, '0000-00-00', 0, 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -1626,7 +1963,10 @@ INSERT INTO `survey_questions` (`id`, `survey_id`, `question`, `template_id`, `o
 (378, 81, '', 8, 1, NULL, NULL, '', '', '', 0, 0, 0, 0, '', '', ''),
 (379, 81, 'test', 13, 2, NULL, NULL, '', '', '', 0, 0, 0, 0, '', '', ''),
 (380, 81, '', 2, 3, NULL, NULL, '', '', '', 0, 0, 0, 0, '', '', ''),
-(381, 81, 'Welcome Message', 1, 0, NULL, NULL, '', '', '', 0, 0, 0, 0, 'Test text button', '', '');
+(381, 81, 'Welcome Message', 1, 0, NULL, NULL, '', '', '', 0, 0, 0, 0, 'Test text button', '', ''),
+(382, 82, 'Welcome Message', 1, 0, NULL, NULL, '', '', '', 0, 0, 0, 0, '', '', ''),
+(383, 82, '', 3, 0, NULL, NULL, '', '', '', 0, 0, 0, 0, '', '', ''),
+(384, 82, '', 9, 0, NULL, NULL, '', '', '', 0, 0, 0, 0, '', '', '');
 
 -- --------------------------------------------------------
 
@@ -2024,7 +2364,10 @@ INSERT INTO `survey_template_answer` (`id`, `survey_template_id`, `survey_templa
 (373, '378', ' 		<div class=\"form-group input-content\">                                   <input type=\"text\" class=\"form-control valid\" name=\"answer[]\" id=\"contact_phone\" placeholder=\"(555) 555-5555\" aria-invalid=\"false\">                                 </div>', ''),
 (374, '379', '<div class=\"form-group input-content\">                                                                             <textarea class=\"form-control\" name=\"answer[]\" rows=\"5\" placeholder=\"Enter your answer\"></textarea>                                      </div>', ''),
 (375, '380', '<div class=\"input-content form-group\">                                                                             <textarea class=\"form-control\" name=\"answer[]\" rows=\"5\" placeholder=\"Enter your answer\"></textarea>                                      </div>', ''),
-(376, '381', '', '');
+(376, '381', '', ''),
+(377, '382', '', ''),
+(378, '383', '<div class=\"input-group input-content mb-1\">\r\n                                   <div class=\"input-group-prepend\">\r\n                                    <div class=\"input-group-text\">\r\n                                    <input name=\"options\"\r\n type=\"radio\" aria-label=\"Radio button for following text input\">\r\n                                    </div>\r\n                                  </div>\r\n                                  <input type=\"text\" class=\"form-control\" name=\"choices_label[]\">\r\n                                </div>', ''),
+(379, '384', '<div class=\"form-group input-content\">                                          <input type=\"text\" class=\"form-control\" name=\"answer[]\" value=\"\" placeholder=\"Enter your answer\">                                       </div>', '');
 
 -- --------------------------------------------------------
 
@@ -2101,6 +2444,26 @@ INSERT INTO `survey_themes` (`sth_rec_no`, `sth_theme_name`, `sth_primary_color`
 (5, 'Crisia', '#027494', '#EFB700', '#E3001F', '#07cd14', '#ff7e08', '#0499e9', '#ff0000', '#ffffff', '#000000', 'lady-facemask-city.jpg', '', 1, 0),
 (6, 'Matter', '#AAAA39', '#277554', '#AA7939', '#07cd14', '#ff7e08', '#0499e9', '#ff0000', '#ffffff', '#000000', 'gray-office.jpg', '', 1, 0),
 (7, 'Darkrise', '#642C81', '#C1793C', '#247474', '#07cd14', '#ff7e08', '#0499e9', '#ff0000', '#ffffff', '#000000', 'orange-moon.jpg', '', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `survey_workspaces`
+--
+
+DROP TABLE IF EXISTS `survey_workspaces`;
+CREATE TABLE `survey_workspaces` (
+  `id` int(9) NOT NULL,
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `users` text COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `survey_workspaces`
+--
+
+INSERT INTO `survey_workspaces` (`id`, `name`, `users`) VALUES
+(1, 'FICO HEROES ', '[0]');
 
 -- --------------------------------------------------------
 
@@ -2222,11 +2585,9 @@ CREATE TABLE `time_record` (
   `action` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'In\\nOut\\njob-in\\nJob-out\\nlunch-in\\nlunch-out',
   `timestamp` datetime DEFAULT NULL,
   `entry_type` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'manual\\nclock\\nadjusted',
+  `status` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'pending, rejected, approved',
+  `approved_by` int(11) NOT NULL COMMENT 'link to employee_id',
   `company_id` int(11) DEFAULT NULL,
-  `clock_in_from` timestamp NULL DEFAULT NULL,
-  `clock_in_to` timestamp NULL DEFAULT NULL,
-  `break_from` timestamp NULL DEFAULT NULL,
-  `break_to` timestamp NULL DEFAULT NULL,
   `job_code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `notes` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -2235,25 +2596,50 @@ CREATE TABLE `time_record` (
 -- Dumping data for table `time_record`
 --
 
-INSERT INTO `time_record` (`timesheet_id`, `employees_id`, `action`, `timestamp`, `entry_type`, `company_id`, `clock_in_from`, `clock_in_to`, `break_from`, `break_to`, `job_code`, `notes`) VALUES
-(14, 4, 'Clock In', '2020-06-02 15:59:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(15, 3, 'Clock In', '2020-06-02 16:00:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(16, 3, 'Clock Out', '2020-06-02 16:00:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(17, 3, 'Clock Out', '2020-06-02 16:12:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(18, 4, 'Clock Out', '2020-06-03 11:21:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(19, 2, 'Clock In', '0000-00-00 00:00:00', 'workhours', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'workhours', 'aaaaaaaaaaaa'),
-(20, 2, 'Clock In', '0000-00-00 00:00:00', 'workhours', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'workhours', 'sample notes'),
-(21, 2, 'Clock In', '0000-00-00 00:00:00', 'workhours', NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'workhours', 'testttt'),
-(22, 2, 'Clock Out', '2020-06-10 16:42:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(23, 3, 'Clock In', '2020-06-13 12:19:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(24, 4, 'Clock In', '2020-06-13 12:19:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(25, 3, 'Clock Out', '2020-06-13 12:27:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(26, 4, 'Clock Out', '2020-06-16 07:17:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(27, 2, 'Clock In', '2020-06-17 22:32:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(28, 3, 'Clock In', '2020-06-17 22:33:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(29, 4, 'Clock In', '2020-06-18 00:15:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(30, 2, 'Clock Out', '2020-06-29 03:05:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(31, 2, 'Clock In', '2020-06-29 13:47:00', 'Normal', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `time_record` (`timesheet_id`, `employees_id`, `action`, `timestamp`, `entry_type`, `status`, `approved_by`, `company_id`, `job_code`, `notes`) VALUES
+(14, 4, 'Clock In', '2020-06-02 15:59:00', 'Normal', '', 0, NULL, NULL, NULL),
+(15, 3, 'Clock In', '2020-06-02 16:00:00', 'Normal', '', 0, NULL, NULL, NULL),
+(16, 3, 'Clock Out', '2020-06-02 16:00:00', 'Normal', '', 0, NULL, NULL, NULL),
+(17, 3, 'Clock Out', '2020-06-02 16:12:00', 'Normal', '', 0, NULL, NULL, NULL),
+(18, 4, 'Clock Out', '2020-06-03 11:21:00', 'Normal', '', 0, NULL, NULL, NULL),
+(19, 2, 'Clock In', '0000-00-00 00:00:00', 'workhours', '', 0, NULL, 'workhours', 'aaaaaaaaaaaa'),
+(20, 2, 'Clock In', '0000-00-00 00:00:00', 'workhours', '', 0, NULL, 'workhours', 'sample notes'),
+(21, 2, 'Clock In', '0000-00-00 00:00:00', 'workhours', '', 0, NULL, 'workhours', 'testttt'),
+(22, 2, 'Clock Out', '2020-06-10 16:42:00', 'Normal', '', 0, NULL, NULL, NULL),
+(23, 3, 'Clock In', '2020-06-13 12:19:00', 'Normal', '', 0, NULL, NULL, NULL),
+(24, 4, 'Clock In', '2020-06-13 12:19:00', 'Normal', '', 0, NULL, NULL, NULL),
+(25, 3, 'Clock Out', '2020-06-13 12:27:00', 'Normal', '', 0, NULL, NULL, NULL),
+(26, 4, 'Clock Out', '2020-06-16 07:17:00', 'Normal', '', 0, NULL, NULL, NULL),
+(27, 2, 'Clock In', '2020-06-17 22:32:00', 'Normal', '', 0, NULL, NULL, NULL),
+(28, 3, 'Clock In', '2020-06-17 22:33:00', 'Normal', '', 0, NULL, NULL, NULL),
+(29, 4, 'Clock In', '2020-06-18 00:15:00', 'Normal', '', 0, NULL, NULL, NULL),
+(30, 2, 'Clock Out', '2020-06-29 03:05:00', 'Normal', '', 0, NULL, NULL, NULL),
+(31, 2, 'Clock In', '2020-06-29 13:47:00', 'Normal', '', 0, NULL, NULL, NULL),
+(32, 2, 'Clock Out', '2020-06-29 21:09:00', 'Normal', '', 0, NULL, NULL, NULL),
+(33, 2, 'Lunch Out', '2020-06-29 21:10:00', 'Normal', '', 0, NULL, NULL, NULL),
+(34, 2, 'Clock In', '2020-06-30 20:28:00', 'Normal', '', 0, NULL, NULL, NULL),
+(35, 2, 'Lunch Out', '2020-06-30 20:28:00', 'Normal', '', 0, NULL, NULL, NULL),
+(36, 2, 'Clock Out', '2020-06-30 20:34:00', 'Normal', '', 0, NULL, NULL, NULL),
+(37, 2, 'Clock In', '2020-07-02 02:53:00', 'Normal', '', 0, NULL, NULL, NULL),
+(38, 2, 'Lunch Out', '2020-07-02 02:53:00', 'Normal', '', 0, NULL, NULL, NULL),
+(39, 2, 'Clock Out', '2020-07-02 02:54:00', 'Normal', '', 0, NULL, NULL, NULL),
+(40, 2, 'Clock In', '2020-07-02 16:05:00', 'Normal', '', 0, NULL, NULL, NULL),
+(41, 2, 'Lunch Out', '2020-07-02 16:05:00', 'Normal', '', 0, NULL, NULL, NULL),
+(42, 2, 'Lunch Out', '2020-07-02 16:05:00', 'Normal', '', 0, NULL, NULL, NULL),
+(43, 2, 'Clock Out', '2020-07-02 16:06:00', 'Normal', '', 0, NULL, NULL, NULL),
+(44, 2, 'Clock In', '2020-07-03 23:28:00', 'Normal', '', 0, NULL, NULL, NULL),
+(45, 2, 'Lunch Out', '2020-07-03 23:28:00', 'Normal', '', 0, NULL, NULL, NULL),
+(46, 2, 'Clock Out', '2020-07-03 23:28:00', 'Normal', '', 0, NULL, NULL, NULL),
+(47, 2, 'Lunch Out', '2020-07-06 21:40:00', 'Normal', '', 0, NULL, NULL, NULL),
+(48, 2, 'Lunch In', '2020-07-06 21:40:00', 'Normal', '', 0, NULL, NULL, NULL),
+(49, 2, 'Break Out', '2020-07-06 21:40:00', 'Normal', '', 0, NULL, NULL, NULL),
+(50, 2, 'Clock Out', '2020-07-06 21:40:00', 'Normal', '', 0, NULL, NULL, NULL),
+(51, 2, 'Clock In', '2020-07-07 04:03:00', 'Normal', '', 0, NULL, NULL, NULL),
+(52, 2, 'Lunch In', '2020-07-07 04:03:00', 'Normal', '', 0, NULL, NULL, NULL),
+(53, 2, 'Clock Out', '2020-07-07 04:03:00', 'Normal', '', 0, NULL, NULL, NULL),
+(54, 2, 'Clock Out', '2020-07-07 04:03:00', 'Normal', '', 0, NULL, NULL, NULL),
+(55, 2, 'Lunch Out', '2020-07-08 15:04:00', 'Normal', '', 0, NULL, NULL, NULL),
+(56, 2, 'Lunch In', '2020-07-08 15:08:00', 'Normal', '', 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2285,11 +2671,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `FName`, `LName`, `username`, `email`, `password`, `password_plain`, `last_login`, `role`, `reset_token`, `status`, `created_at`, `updated_at`, `profile_img`, `company_id`) VALUES
-(2, 'john ', 'smith', 'admin', 'support@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-30 02:06:48', 3, '$2y$10$QHAQRM8x5JmAkGg6lnXDlOXU9mjDyRKEwdA9XQ04OoRrCF15X4VTG', 1, '0000-00-00 00:00:00', '2020-06-29 16:18:12', 0, 1),
+(2, 'john ', 'smith', 'admin', 'support@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-07-09 01:07:30', 3, '$2y$10$QHAQRM8x5JmAkGg6lnXDlOXU9mjDyRKEwdA9XQ04OoRrCF15X4VTG', 1, '0000-00-00 00:00:00', '2020-07-08 15:00:41', 0, 1),
 (5, 'Tommy', 'n', 'tommy', 'tommy@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-29 23:06:29', 1, '', 1, '0000-00-00 00:00:00', '2020-06-29 12:59:05', NULL, 2),
 (6, 'Jon', 'c', 'jonc', 'jonc@nsmartrac.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '0000-00-00 00:00:00', 1, '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, 2),
-(7, '0', '0', 'tyler_nguyen', 'moresecureadi@gmail.com', '66017edccc91ad05ab05dd631e687db03fe88eb2132073810fb3ea44505b6a70', 'nsmart@101', '2020-06-29 03:46:43', 7, '', 1, '2020-06-29 03:46:43', '0000-00-00 00:00:00', NULL, 1),
-(8, '0', '0', 'king', 'employee@test.com', '2fcc60a9f1471784dfa4407e8bcdff01cca9bd27a9174ad3177f1ba2bb65850c', 'sony@123', '2020-06-29 13:46:07', 6, '', 1, '2020-06-29 13:46:07', '0000-00-00 00:00:00', NULL, 1);
+(10, 'Stephen', 'Cabalida', 'stephen', 'stephencabalida80@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 21:55:34', 6, '', 1, '2020-07-06 21:55:34', '0000-00-00 00:00:00', NULL, 1),
+(11, 'Artemeo', 'Alberca', 'artemeo', 'jeykell125@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:01:38', 6, '', 1, '2020-07-06 22:01:38', '0000-00-00 00:00:00', NULL, 1),
+(12, 'Jerry ', 'Tiu', 'jerry', 'rarecandy06@gmail.co', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:03:08', 6, '', 1, '2020-07-06 22:03:08', '0000-00-00 00:00:00', NULL, 1),
+(13, 'Welyelf', 'Hisula', 'welyelf', 'wrhisula1123@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:04:46', 6, '', 1, '2020-07-06 22:04:46', '0000-00-00 00:00:00', NULL, 1),
+(14, 'Jonah ', 'Pacas-Abanil', 'jonah', 'jonahpacas.cpe@icloud.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:08:07', 6, '', 1, '2020-07-06 22:08:07', '0000-00-00 00:00:00', NULL, 1),
+(15, 'Gil', 'Francis Carillo', 'gil', 'gilfranciscarillo@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:10:45', 6, '', 1, '2020-07-06 22:10:45', '0000-00-00 00:00:00', NULL, 1),
+(16, 'Neil', 'Diagdal', 'neil', 'neildiagdal@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:12:20', 6, '', 1, '2020-07-06 22:12:20', '0000-00-00 00:00:00', NULL, 1),
+(17, 'Bryann', 'Revina', 'bryann', 'bryann.revina03@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:13:35', 6, '', 1, '2020-07-06 22:13:35', '0000-00-00 00:00:00', NULL, 1),
+(18, 'Gene', 'Terry Rejano', 'gene', 'geneterryrejano@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:17:19', 6, '', 1, '2020-07-06 22:17:19', '0000-00-00 00:00:00', NULL, 1),
+(19, 'Cirilo', 'Benolirao Jr', 'cirilo', 'iamchiriru@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:22:00', 6, '', 1, '2020-07-06 22:22:00', '0000-00-00 00:00:00', NULL, 1),
+(20, 'Sahil', 'Ghodasara', 'sahil', 'crisistrike1896@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-06 22:24:51', 6, '', 1, '2020-07-06 22:24:51', '0000-00-00 00:00:00', NULL, 1),
+(22, 'Nik', 'Estrada', 'nik', 'logicalcodes09@gmail.com', '19513fdc9da4fb72a4a05eb66917548d3c90ff94d5419e1f2363eea89dfee1dd', 'Password1', '2020-07-07 04:02:46', 6, '', 1, '2020-07-07 04:02:46', '0000-00-00 00:00:00', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -2505,6 +2901,24 @@ INSERT INTO `workorders` (`id`, `user_id`, `company_id`, `customer_id`, `custome
 --
 
 --
+-- Indexes for table `account`
+--
+ALTER TABLE `account`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `accounts_has_account_details`
+--
+ALTER TABLE `accounts_has_account_details`
+  ADD PRIMARY KEY (`account_id`,`acc_detail_id`);
+
+--
+-- Indexes for table `account_detail`
+--
+ALTER TABLE `account_detail`
+  ADD PRIMARY KEY (`acc_detail_id`);
+
+--
 -- Indexes for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
@@ -2545,6 +2959,12 @@ ALTER TABLE `comments`
 --
 ALTER TABLE `companies_has_modules`
   ADD PRIMARY KEY (`company_id`,`modules_id`);
+
+--
+-- Indexes for table `contacts`
+--
+ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `contracts`
@@ -2895,6 +3315,12 @@ ALTER TABLE `survey_themes`
   ADD PRIMARY KEY (`sth_rec_no`);
 
 --
+-- Indexes for table `survey_workspaces`
+--
+ALTER TABLE `survey_workspaces`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
@@ -2977,10 +3403,22 @@ ALTER TABLE `workorders`
 --
 
 --
+-- AUTO_INCREMENT for table `account`
+--
+ALTER TABLE `account`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `account_detail`
+--
+ALTER TABLE `account_detail`
+  MODIFY `acc_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=279;
 
 --
 -- AUTO_INCREMENT for table `address`
@@ -3011,6 +3449,12 @@ ALTER TABLE `business_profile`
 --
 ALTER TABLE `comments`
   MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contacts`
+--
+ALTER TABLE `contacts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contracts`
@@ -3064,7 +3508,7 @@ ALTER TABLE `filevault`
 -- AUTO_INCREMENT for table `file_folders`
 --
 ALTER TABLE `file_folders`
-  MODIFY `folder_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `folder_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `form_responses`
@@ -3094,13 +3538,13 @@ ALTER TABLE `invoice_has_items`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `item_categories`
 --
 ALTER TABLE `item_categories`
-  MODIFY `item_categories_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `item_categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -3112,7 +3556,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `job_settings`
 --
 ALTER TABLE `job_settings`
-  MODIFY `job_settings_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `job_settings_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -3214,13 +3658,13 @@ ALTER TABLE `survey_answer`
 -- AUTO_INCREMENT for table `survey_questions`
 --
 ALTER TABLE `survey_questions`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
 
 --
 -- AUTO_INCREMENT for table `survey_template_answer`
 --
 ALTER TABLE `survey_template_answer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=377;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=380;
 
 --
 -- AUTO_INCREMENT for table `survey_template_questions`
@@ -3233,6 +3677,12 @@ ALTER TABLE `survey_template_questions`
 --
 ALTER TABLE `survey_themes`
   MODIFY `sth_rec_no` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `survey_workspaces`
+--
+ALTER TABLE `survey_workspaces`
+  MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tasks`
@@ -3256,13 +3706,13 @@ ALTER TABLE `tasks_updates`
 -- AUTO_INCREMENT for table `time_record`
 --
 ALTER TABLE `time_record`
-  MODIFY `timesheet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `timesheet_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user_details`

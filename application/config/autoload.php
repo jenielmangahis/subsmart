@@ -147,5 +147,8 @@ $autoload['model'] = array(
 	'business_model',
 	'templates_model',
 	'folders_model',
-	'comments_model'
+	'comments_model',
+	'account_model',
+	'account_detail_model',
+	'accounts_has_account_details_model'
 );

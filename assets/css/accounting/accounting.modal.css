@@ -1,0 +1,57 @@
+.full-screen-modal .modal {
+    padding: 0 !important; // override inline padding-right added from js
+}
+.full-screen-modal .modal .modal-dialog {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+}
+.full-screen-modal .modal .modal-content {
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    color: #393A3D !important;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif !important;
+    background-color: #f4f5f8;
+}
+.full-screen-modal .modal .modal-body {
+    overflow-y: auto;
+}
+
+.full-screen-modal .modal-container{
+    margin: auto;
+    width: 50%;
+    border:1px solid gainsboro;
+    padding: 10px;
+    -moz-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+}
+
+.banks-img{
+    height: 84px;
+    width: 140px;
+    margin: 20px 20px 20px 20px;
+}
+.modal-container .centered-container{
+    display: flex;
+    justify-content: center;
+    margin: 20px 20px 20px 20px;
+}
+.modal-container .centered-container img{
+    width: 120px;
+    height: 130px;
+}
+.box-bank-container{
+    padding: 20px;
+    min-height: 500px;
+    width: 550px;
+    margin-bottom: 72px;
+}
+#fileUpload .modal-footer-upload-file{
+    padding: 8px 15px;
+    background: #393A3D;
+    height: 56px;
+    text-align: left;
+}

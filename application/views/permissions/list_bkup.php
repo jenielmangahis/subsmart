@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="box-tools pull-right">
         <?php //if (hasPermissions('permissions_add')): ?>
           <a href="<?php echo url('permissions/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Permission</a>
-        <?php endif ?>
+        <?php //endif ?>
         <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                 title="Collapse">
           <i class="fa fa-minus"></i></button>

@@ -1,5 +1,5 @@
 <?php include viewPath('includes/header'); ?>
-<link href="<?php echo $url->assets ?rel="stylesheet">
+
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>

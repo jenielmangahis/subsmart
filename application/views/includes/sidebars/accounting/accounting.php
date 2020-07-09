@@ -33,6 +33,7 @@
 
 </style>
 <nav id="sidebar" class="navbar-side">
+
     <ul class="nav sidebar-accounting">
         <span class="nav-close">
             <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%">
@@ -42,105 +43,25 @@
         <li class="nav-header">
 			<button class="btn btn-tranparent acct-btn-add mx-auto" type="button" onclick="showAddBtnModal()"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
 		</li>
-        <li class="submenus">
-            <a href="<?php echo url('/accounting/banking')?>"><i class="fa fa-tachometer" style="margin-right: 20px"></i>Dashboard</a>
-        </li>
-        <li class="submenus dropright">
-            <a href="#submenuBanking" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-university" style="margin-right: 20px"></i>Banking</a>
-            <ul class="collapse list-unstyled" id="submenuBanking">
-				<li>
-					<a href="<?php echo url('/accounting/link_bank')?>">Link Bank</a>
-                </li>
-                <li>
-                    <a href="<?php echo url('/accounting/rules')?>">Rules</a>
-                </li>
-                <li>
-                    <a href="<?php echo url('/accounting/receipts')?>">Receipts</a>
-                </li>
-            </ul>
-        </li>
-        <li class="submenus dropright">
-            <a href="#submenuExpenses" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-credit-card" style="margin-right: 20px"></i>Expenses</a>
-            <ul class="collapse list-unstyled" id="submenuExpenses">
-				<li>
-					<a href="<?php echo url('/accounting/expenses')?>">Expenses</a>
-                </li>
-                <li>
-                     <a href="<?php echo url('/accounting/vendors')?>">Vendors</a>
-                </li>
-             </ul>
-        </li>
-        <li class="submenus dropright">
-            <a href="#submenuSales" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-money" style="margin-right: 20px"></i>Sales</a>
-                <ul class="collapse list-unstyled" id="submenuSales">
-                    <li>
-                        <a href="<?php echo base_url();?>accounting/sales-overview">Overview</a>
-                    </li>
-                    <li>
-                        <a href="<?php echo base_url();?>accounting/all-sales">All Sales</a>
-                    </li>
-                    <li>
-                        <a href="#">Invoices</a>
-                    </li>
-                    <li>
-                        <a href="#">Customers</a>
-                    </li>
-                    <li>
-                        <a href="#">Deposits</a>
-                    </li>
-                    <li>
-                        <a href="#">Products and Services</a>
-                    </li>
-                </ul>
-        </li>
-        <li class="submenus dropright">
-            <a href="#submenuPayroll" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-dollar" style="margin-right: 20px"></i>Payroll</a>
-                <ul class="collapse list-unstyled" id="submenuPayroll">
-                    <li>
-                        <a href="#">Overview</a>
-                    </li>
-                    <li>
-                        <a href="#">Employees</a>
-                    </li>
-                    <li>
-                        <a href="#">Contractors</a>
-                    </li>
-                    <li>
-                        <a href="#">Workers' Comp</a>
-                    </li>
-                    <li>
-                        <a href="#">Benifits</a>
-                    </li>
-                </ul>
-        </li>
-        <li class="submenus">
-            <a href="#"><i class="fa fa-bar-chart" style="margin-right: 20px"></i>Reports</a>
-        </li>
-		<li class="submenus">
-            <a href="#submenuTaxes" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-minus-circle" style="margin-right: 20px"></i>Taxes</a>
-                <ul class="collapse list-unstyled" id="submenuTaxes">
-                    <li>
-                        <a href="#">Sales Tax</a>
-                    </li>
-                    <li>
-                        <a href="#">Payroll Tax</a>
-                    </li>
-                </ul>
-        </li>
-		<li class="submenus">
-             <a href="#"><i class="fa fa-file" style="margin-right: 20px"></i>Mileage</a>
-        </li>
-		<li class="submenus">
-            <a href="#submenuAccounting" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-calculator" style="margin-right: 20px"></i>Accounting</a>
-                <ul class="collapse list-unstyled" id="submenuAccounting">
-                    <li>
-                        <a href="#">Chart of Accounts</a>
-                    </li>
-                    <li>
-                        <a href="#">Reconcile</a>
-                    </li>
-                </ul>
-        </li>
+
+		<?php  for($x=0;$x<count($menu_name);$x++){ ?>
+				<?php  if(count($menu_name[$x][1]) > 0){ ?>
+					<li class="submenus dropright">
+						<a href="#menu<?php echo $x; ?>" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa <?php echo $menu_icon[$x]; ?> pr-3"></i><?php echo $menu_name[$x][0]; ?></a>
+						<ul class="collapse list-unstyled" id="menu<?php echo $x; ?>">
+							<?php  for($y=0;$y<count($menu_name[$x][1]);$y++){ ?>
+								<li>
+									<a href="<?php echo url($menu_link[$x][1][$y]); ?>"><?php echo $menu_name[$x][1][$y]; ?></a>
+								</li>
+							<?php  } ?>
+						</ul>
+					</li>
+				<?php  }else{ ?>
+					<li class="submenus">
+						<a href="<?php echo url($menu_link[$x][0]); ?>"><i class="fa <?php echo $menu_icon[$x]; ?> pr-3"></i><?php echo $menu_name[$x][0]; ?></a>
+					</li>
+				<?php  } ?>
+		<?php  } ?>
     </ul>
 </nav>
 
@@ -150,17 +71,16 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+			<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
       </div>
       <div class="modal-body">
-        ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

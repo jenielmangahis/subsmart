@@ -172,6 +172,59 @@ class Timesheet_model extends MY_Model {
         // echo $this->db->last_query(); die;
         return $query->result();
     }    
+
+    /**
+     * @return mixed
+     */
+    public function getLastClockin($data)
+    {
+        $user_id = $data['user_id'];
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock In");
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+       /*$this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $user_id);
+        $this->db->order_by('clock_in', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();*/
+        
+
+        return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastClockout($data)
+    {
+        $user_id = $data['user_id'];
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock Out");
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+       /*$this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $user_id);
+        $this->db->order_by('clock_in', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();*/
+        
+
+        return $query->result();
+    }
+
 }
 
 

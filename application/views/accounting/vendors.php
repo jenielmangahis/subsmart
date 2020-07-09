@@ -19,10 +19,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <h2>Vendors</h2>
                             </div>
                             <div class="col-md-6" style="text-align: right">
-                                <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                                <div class="dropdown" style="position: relative;display: inline-block;">
                                     <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">New vendor</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                        <span class="caret"></span>
+                                        <span class="fa fa-caret-down"></span>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#">Import</a></li>
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="dropdown" style="position: relative;display: inline-block;">
                                     <button type="button" class="btn btn-default" style="border-radius: 20px 0 0 20px">Prepare 1099s</button>
                                     <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                        <span class="caret"></span></button>
+                                        <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#">Order Checks</a></li>
                                         <li><a href="#">Pay Bills</a></li>

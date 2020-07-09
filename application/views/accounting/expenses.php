@@ -6,14 +6,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="margin-left: 50px;padding-bottom: 20px;">
+                <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="expenses")?:'-active';?>" style="text-decoration: none">Expenses</a>
                         <a href="<?php echo url('/accounting/vendors')?>" class="banking-tab">Vendors</a>
                     </div>
                 </div>
                 <div class="row align-items-center">
-                    <div class="col-md-12" style="padding: 0 70px 10px;">
+                    <div class="col-md-12" style="padding: 0 30px 10px;">
                         <div class="row">
                             <div class="col-md-6">
                                 <h2>Expense Transactions</h2>
@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-6" style="text-align: right">
                                 <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">New transaction
-                                        <span class="caret"></span></button>
+                                        <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#">Time Activity</a></li>
                                         <li><a href="#">Bill</a></li>
@@ -31,10 +31,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <li><a href="#">Pay down credit card</a></li>
                                     </ul>
                                 </div>
-                                <div class="dropdown" style="position: relative;display: inline-block;">
-                                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#print_checks" style="border-radius: 20px 0 0 20px">Print Checks</button>
+                                <div class="dropdown" style="position: relative;display: inline;">
+                                    <button type="button" class="btn btn-default"  style="border-radius: 20px 0 0 20px">Print Checks</button>
                                     <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                        <span class="caret"></span></button>
+                                        <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#">Order Checks</a></li>
                                         <li><a href="#">Pay Bills</a></li>
@@ -42,12 +42,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-
                         <div class="row" style="margin-top: 20px">
                             <div class="col-md-12" style="padding: 0 70px 10px;">
                                 <div class="dropdown">
-                                    <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
-                                        <span class="caret"></span></button>
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
+                                        <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
                                         <li style="padding: 30px 30px 30px 30px">
                                             <form action="" class="form-horizontal">
@@ -168,8 +167,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="addBtnModal" tabindex="-1" role="dialog" aria-labelledby="addBtnModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>Hello World</h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-</div>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     // DataTable JS
