@@ -11,7 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   <!-- <h1 class="find-pro-header">Let's find you <b><?php echo $find_pro; ?></b></h1> -->
   <h1 class="find-pro-header">Let's find you some <b>Pros</b> to help</h1>
   <span class="find-pro-subtle">Please give us a few details so we can connect you with the best pros.</span>
-  <img src="<?php echo $url->assets ?>frontend/images/map-marker.png" class="img-marker"/>
 </div>
 <?php echo form_open('find-pros/send', [ 'type' => 'POST', 'class' => 'form-validate', 'id' => 'form-find-pros', 'autocomplete' => 'off' ]); ?>
 <?php echo form_hidden('find_pro',$find_pro) ?>
@@ -28,6 +27,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="find-pro center-form">
   <div class="container" style="min-height: 400px; position: relative;">
     <div class="find-pro-a find-pro-container">
+      <div>
+        <img src="<?php echo $url->assets ?>frontend/images/map-marker.png" class="img-marker"/>
+      </div>
       <h2>What is the location of your project</h2>
       <div class="form-indent">
         <div class="form-group">
@@ -43,18 +45,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <div class="find-pro-b find-pro-container" style="display: none;">
       <h2>What kind of location is this?</h2>
-      <div class="form-indent">
+      <div class="form-indent-c">
         <div class="form-group">
           <a class="btn-home-residence">
             <div class="location-home-residence-container">
-              <span class="selector-link">Home / Residence</span>
+              <span class="selector-link">
+                <img src="<?php echo $url->assets ?>frontend/images/home-icon.png"/>
+                <br style="clear:both;"/>
+                <br/>
+                <span>Home / Residence</span>
+              </span>
             </div>
           </a>
           <a class="btn-business">
             <div class="location-business-container">
-              <span class="selector-link">Business</span>
+              <span class="selector-link">
+                <img src="<?php echo $url->assets ?>frontend/images/business-icon.png"/>
+                <br style="clear:both;"/>
+                <br/>
+                <span>Business</span>
+              </span>
             </div>
           </a>
+          <br style="clear:both;"/>
           <div class="center-btn">
             <a class="fnd-btn prev-find-pro" data-prev="a">Previous</a>
             <a class="fnd-btn next-find-pro" data-next="c">Next</a>
@@ -135,7 +148,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	</div>
       </div>
       <div class="send-msg"></div>
-      <div class="center-btn">        
+      <div class="center-btn">
         <a href="javascript:void(0);" class="fnd-btn send-pros"style="width:100%;">Submit</a>
       </div>
       <div class="clear"></div>
@@ -187,8 +200,8 @@ $(function(){
   $(".send-pros").click(function(){
   	$.ajax({
        type: "POST",
-       dataType: "json",    
-       url: base_url + 'find-pros/send',      
+       dataType: "json",
+       url: base_url + 'find-pros/send',
        data: $("#form-find-pros").serialize(),
        success: function(o)
        {
