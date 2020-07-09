@@ -2,11 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
-<style>
-.find-pro-container{
-  position: absolute;
-}
-</style>
 <div class="container find-pro-form">
   <!-- <h1 class="find-pro-header">Let's find you <b><?php echo $find_pro; ?></b></h1> -->
   <h1 class="find-pro-header">Let's find you some <b>Pros</b> to help</h1>
@@ -25,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   echo form_input($location_type);
 ?>
 <section class="find-pro center-form">
-  <div class="container" style="min-height: 400px; position: relative;">
+  <div class="container" style="min-height: 400px; position: relative;padding-bottom:60px;">
     <div class="find-pro-a find-pro-container">
       <div>
         <img src="<?php echo $url->assets ?>frontend/images/map-marker.png" class="img-marker"/>
@@ -201,12 +196,12 @@ $(function(){
       $(".info-business-address").text($("#business_address").val());
     }
 
-    $(".find-pro-container").fadeOut();
+    $(".find-pro-container").hide();
     $(".find-pro-" + next).fadeIn();
   });
   $(".prev-find-pro").click(function(){
     var prev = $(this).attr("data-prev");
-    $(".find-pro-container").fadeOut();
+    $(".find-pro-container").hide();
     $(".find-pro-" + prev).fadeIn();
   });
 

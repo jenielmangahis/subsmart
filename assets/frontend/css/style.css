@@ -306,7 +306,7 @@ span.widget-desc {
 }
  /* Find Pro Form */
  .find-pro-container{
-   position: absolute;
+   position: relative;
    left: 4px;
  }
  section.center-form {
@@ -1486,11 +1486,35 @@ img.card-features-home {
   font-weight: 600;
 }
 @media(max-width:991px) {
+    span.selector-link img {
+        float: left;
+        background: white;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 2px solid gray;
+        border-radius: 100px;
+        z-index: 1;
+        padding: 3px;
+        margin-right: 0px;
+    }
+    span.selector-link {
+      font-size: 21px;
+      color: #007de0;
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: block;
+      padding-left: 0px;
+      float: left;
+      margin-left: 0px;
+      position: relative;
+      right: 0px;
+      padding-left: 12vw;
+    }
     section.center-form {
-        width: 85%;
-        margin: 0 auto;
-        margin-bottom: 30px;
-        min-height: 675px;
+      width: 85%;
+      margin: 0 auto;
+      margin-bottom: 30px;
     }
     a.btn-business, a.btn-business {
       width: 100% !important;
