@@ -1307,7 +1307,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="eCommerce-product-div">
                             <div class="image-price-container">
-                                <div class="price-container-title-v2">Simple Start</div>
+                                <div class="price-container-title-v2">Simple Start1</div>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
@@ -1402,6 +1402,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Monitor expenses and profits</span>
+                                </li>
+                            </ul>
+
+                            <ul data-list="1" class="header-ul">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="desc-ul">
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Automate email marketing campaigns</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Utilize postcard marketing functionality</span>
+                                </li>
+                                <li>
+                                    <i class="arrow-down" aria-hidden="true"></i>
+                                    <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
 
@@ -1537,12 +1557,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <ul data-list="1" class="header-ul ul-color-header">
+                            <ul data-list="1" class="header-ul bsc-margin">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="marketing" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Marketing</strong></a>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Marketing</strong></span>
                                 </li>
                             </ul>
-                            <ul data-list="1" class="desc-ul ul-color-highlight marketing-list">
+                            <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Automate email marketing campaigns</span>
@@ -1582,7 +1602,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <!-- <ul data-list="1" class="header-ul ul-color-header">
+                            <ul data-list="1" class="header-ul ul-color-header">
                                 <li>
                                     <a class="btn-show-less-more-desktop show-less" data-key="accounting" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Accounting</strong></a>
                                 </li>
@@ -1604,7 +1624,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
-                            </ul> -->
+                            </ul>
 
                             <ul data-list="1" class="header-ul ul-color-header">
                                 <li>
@@ -1800,7 +1820,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <!-- <ul data-list="1" class="bsc-margin">
+                            <ul data-list="1" class="bsc-margin">
                                 <li>
                                     <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
@@ -1822,7 +1842,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
-                            </ul> -->
+                            </ul>
 
                             <ul class="bsc-margin" data-list="1">
                                 <li>
@@ -2026,7 +2046,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <!-- <ul data-list="1" class="bsc-margin">
+                            <ul data-list="1" class="bsc-margin">
                                 <li>
                                     <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
@@ -2048,7 +2068,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
-                            </ul> -->
+                            </ul>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2288,7 +2308,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <!-- <ul data-list="1" class="bsc-margin">
+                            <ul data-list="1" class="bsc-margin">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
@@ -2310,7 +2330,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
-                            </ul> -->
+                            </ul>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
@@ -2419,7 +2439,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <!-- <ul data-list="1" class="ul-color-header">
+                            <ul data-list="1" class="ul-color-header">
                                 <li>
                                     <a class="btn-show-less-more-desktop show-less" data-key="accounting" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Accounting</strong></a>
                                 </li>
@@ -2429,7 +2449,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">A lite accounting software to keep you on the right track.</span>
                                 </li>
-                            </ul> -->
+                            </ul>
 
                             <ul data-list="1" class="ul-color-header">
                                 <li>
@@ -2629,7 +2649,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
 
-                            <!-- <ul data-list="1" class="bsc-margin">
+                            <ul data-list="1" class="bsc-margin">
                                 <li>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Accounting</strong></span>
                                 </li>
@@ -2651,7 +2671,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <i class="arrow-down" aria-hidden="true"></i>
                                     <span class="p3 open-popup">Implement before and after photos</span>
                                 </li>
-                            </ul> -->
+                            </ul>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>

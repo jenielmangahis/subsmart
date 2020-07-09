@@ -855,7 +855,8 @@ p{
    display:block
 }
 .eCommerce-product-div .image-price-container p.payroll_text{
-   margin:15px auto 0;
+   /*margin:15px auto 0;*/
+   margin: 15px 2px 8px;
    display:table
 }
 .eCommerce-product-div .blue-button{
@@ -3412,7 +3413,7 @@ ul#mobile-menu>li:first-child{
    padding-bottom:20px!important
 }
 .eCommerce-product-div .payroll_text{
-   display:none!important
+   /*display:none!important*/
 }
 .eCommerce-product-div .image-price-container .price-container{
    text-align:center;
