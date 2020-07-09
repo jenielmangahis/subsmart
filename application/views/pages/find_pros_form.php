@@ -27,13 +27,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
       <h2>What is the location of your project</h2>
       <div class="form-indent">
+        <div class="form-a-error"></div>
         <div class="form-group">
           <label>Street*</label>
-          <input type="text" class="form-control" name="location_street" required="">
+          <input type="text" class="form-control" id="locationStreet" name="location_street" required="">
         </div>
         <div class="form-group">
           <label>Zip*</label>
-          <input type="text" class="form-control" data-next="b" name="location_zip" required="">
+          <input type="text" class="form-control" id="locationZip" data-next="b" name="location_zip" required="">
         </div>
         <a class="about-btn btn-color-white next-find-pro" data-next="b">Next</a>
       </div>
@@ -44,11 +45,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="form-group">
           <a class="btn-home-residence">
             <div class="location-home-residence-container">
-              <span class="selector-link">
+              <span class="selector-link location-active">
                 <img src="<?php echo $url->assets ?>frontend/images/home-icon.png"/>
                 <br style="clear:both;"/>
                 <br/>
-                <span>Home / Residence</span>
+                <span class="location-active">Home / Residence</span>
               </span>
             </div>
           </a>
@@ -74,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <h2>What kind of pro is needed?</h2>
       <div class="form-indent-b">
         <div class="radio-divider">
-          <input type="radio" name="pro_type" class="form-control-radio" value="Ready to Hire">
+          <input type="radio" name="pro_type" checked="" class="form-control-radio" value="Ready to Hire">
           <span class="span-radio">Ready to Hire</span>
         </div>
         <div class="radio-divider">
@@ -91,7 +92,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <h2>When would you like<br/> this request to be completed?</h2>
       <div class="form-indent-b">
         <div class="radio-divider">
-          <input type="radio" name="recurring_cleaning" class="form-control-radio" value="Timing is flexible">
+          <input type="radio" name="recurring_cleaning" checked="" class="form-control-radio" value="Timing is flexible">
           <span class="span-radio">Timing is flexible</span>
         </div>
         <div class="radio-divider">
@@ -110,6 +111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <div class="find-pro-e find-pro-container" style="display: none;">
       <h2>Your contact details</h2>
+      <div class="form-e-error"></div>
       <div class="form-indent">
         <div class="form-group">
           <label>Name*</label>
@@ -188,17 +190,53 @@ $(function(){
   $(".next-find-pro").click(function(){
     var next = $(this).attr("data-next");
 
-    if( next == 'f' ){
-      $(".info-name").text($("#proName").val());
-      $(".info-contact-number").text($("#proContactNumber").val());
-      $(".info-email").text($("#proEmailAddress").val());
-      $(".info-business-name").text($("#google_search_place").val());
-      $(".info-business-address").text($("#business_address").val());
+    if( next == "b" ){
+      if( $("#locationZip").val() == '' || $("#locationStreet").val() == '' ){
+        var error = '<label class="label label-error">Both fields are required.</label>';
+        $(".form-a-error").html(error);
+      }else{
+        $(".form-a-error").html("");
+        $(".find-pro-container").hide();
+        $(".find-pro-" + next).fadeIn();
+      }
+    }else if( next == 'f' ){
+      var error = '';
+      if( $("#proName").val() == '' ){
+        var error = '<label class="label label-error">Your name is required.</label>';
+      }else if( $("#proContactNumber").val() == '' ){
+        var error = '<label class="label label-error">Your contact number is required.</label>';
+      }else if( $("#proEmailAddress").val() == '' ){
+        var error = '<label class="label label-error">Your email is required.</label>';
+      }else if( $("#google_search_place").val() == '' ){
+        var error = '<label class="label label-error">Your business name is required.</label>';
+      }else if( $("#business_address").val() == '' ){
+        var error = '<label class="label label-error">Your business address is required.</label>';
+      }else if( $("#sel2").val() == '' ){
+        var error = '<label class="label label-error">Please select industry.</label>';
+      }
+
+      if( error != '' ){
+        $(".form-e-error").html(error);
+      }else{
+        $(".form-e-error").html("");
+        $(".find-pro-container").hide();
+        $(".find-pro-" + next).fadeIn();
+
+        $(".info-name").text($("#proName").val());
+        $(".info-contact-number").text($("#proContactNumber").val());
+        $(".info-email").text($("#proEmailAddress").val());
+        $(".info-business-name").text($("#google_search_place").val());
+        $(".info-business-address").text($("#business_address").val());
+      }
+
+      
+    }else {
+      $(".find-pro-container").hide();
+      $(".find-pro-" + next).fadeIn();
     }
 
-    $(".find-pro-container").hide();
-    $(".find-pro-" + next).fadeIn();
   });
+
   $(".prev-find-pro").click(function(){
     var prev = $(this).attr("data-prev");
     $(".find-pro-container").hide();
