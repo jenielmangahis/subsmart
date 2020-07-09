@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('frontcommon/header'); ?>
 <div class="container find-pro-form">
   <!-- <h1 class="find-pro-header">Let's find you <b><?php echo $find_pro; ?></b></h1> -->
-  <h1 class="find-pro-header">Let's find you some <b>Pros</b> to help</h1>
+  <h1 class="find-pro-header">Let's find you some <b>Pro</b> to help</h1>
   <span class="find-pro-subtle">Please give us a few details so we can connect you with the best pros.</span>
 </div>
 <?php echo form_open('find-pros/send', [ 'type' => 'POST', 'class' => 'form-validate', 'id' => 'form-find-pros', 'autocomplete' => 'off' ]); ?>
@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
     </div>
     <div class="find-pro-d find-pro-container" style="display: none;">
-      <h2>How often does your <br/> home need to be cleaned?</h2>
+      <h2>When would you like<br/> this request to be completed?</h2>
       <div class="form-indent-b">
         <div class="radio-divider">
           <input type="radio" name="recurring_cleaning" class="form-control-radio" value="Timing is flexible">

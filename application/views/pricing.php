@@ -11,6 +11,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   font-size: 1rem;
   padding-left: 4px;
 }
+.eCommerce-product-div .image-price-container .offer-text {
+  font-size: 13px !important;
+}
 </style>
 <!-- Headline Section -->
 <section id="main" class="main-content-div">
@@ -2514,16 +2517,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container-freelancer">
                                     <div class="pricing-section mbc-20">
                                         <div class="price">
-                                          <p>Contact Us</p>
-                                        </div>
-                                        <div class="red-price-text">
-                                            <p>for a Demo</p>
+                                          <p>Contact Us for a Demo</p>
                                         </div>
 
                                     </div>
                                     <p class="offer-text" style="position: relative;right: 10px;"><span class="high-attention-text">Save 50%
                                             for 3 months</span></p>
-                                    <p class="payroll_text">+12 License</p>
+                                    <p class="payroll_text">+20 License</p>
                                 </div>
                             </div>
                             <div class="blue-button">
