@@ -1020,6 +1020,14 @@ p{
        line-height:24px
    }
 }
+@media (max-width:1510px){
+  .eCommerce-product-div .image-price-container .price-container .pricing-section {
+      display: inline-block;
+      margin: 0 auto!important;
+      padding-top: 17px;
+      padding-bottom: 5px;
+  }
+}
 @media (max-width:991px){
     .lineup-container .arrow-down {
       display: block;
