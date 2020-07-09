@@ -1307,7 +1307,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="eCommerce-product-div">
                             <div class="image-price-container">
-                                <div class="price-container-title-v2">Simple Start1</div>
+                                <div class="price-container-title-v2">Simple Start</div>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
@@ -1322,9 +1322,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                     </p>
-                                    <p class="payroll_text">$8/employees</p>
+                                    <!-- <p class="payroll_text">$8/employees</p> -->
                                     <p class="payroll_text">+1 License</p>
-                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                    <!-- <div class="text--payroll">+$50/one-time setup session</div> -->
                                 </div>
                             </div>
                             <div class="blue-button default-product">
@@ -1474,9 +1474,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                     </p>
-                                    <p class="payroll_text">$8/employees</p>
+                                    <!-- <p class="payroll_text">$8/employees</p> -->
                                     <p class="payroll_text">+2 License</p>
-                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                    <!-- <div class="text--payroll">+$50/one-time setup session</div> -->
                                 </div>
                             </div>
                             <div class="blue-button default-product">
@@ -1663,9 +1663,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                     </p>
-                                    <p class="payroll_text">$8/employees</p>
+                                    <!-- <p class="payroll_text">$8/employees</p> -->
                                     <p class="payroll_text">+3 License</p>
-                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                    <!-- <div class="text--payroll">+$50/one-time setup session</div> -->
                                 </div>
                             </div>
                             <div class="blue-button default-product">
@@ -1918,9 +1918,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                     </p>
-                                    <p class="payroll_text">$8/employees</p>
+                                    <!-- <p class="payroll_text">$8/employees</p> -->
                                     <p class="payroll_text">+4 License</p>
-                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                    <!-- <div class="text--payroll">+$50/one-time setup session</div> -->
                                 </div>
                             </div>
                             <div class="blue-button default-product">
@@ -2182,7 +2182,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <p class="offer-text default-product"><span class="high-attention-text">Save 50% for 3 months</span>
                                     </p>
                                     <p class="payroll_text">+5 License</p>
-                                    <div class="text--payroll">+$50/one-time setup session</div>
+                                    <!-- <div class="text--payroll">+$50/one-time setup session</div> -->
                                 </div>
                             </div>
                             <div class="blue-button default-product">
@@ -2523,6 +2523,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <p class="offer-text" style="position: relative;right: 10px;"><span class="high-attention-text">Save 50%
                                             for 3 months</span></p>
+                                    <p class="payroll_text">+12 License</p>
                                 </div>
                             </div>
                             <div class="blue-button">

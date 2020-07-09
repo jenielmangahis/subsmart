@@ -129,6 +129,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <label>Email*</label>
           <input type="text" class="form-control" id="proEmailAddress" name="email_address" required="">
         </div>
+
+        <div class="form-group">
+          <label>Business Name*</label>
+          <input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" autocomplete="on" runat="server" required="" />
+        </div>
+
+        <div class="form-group">
+          <label>Business Address*</label>
+          <input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" required="" />
+        </div>
+
+        <div class="form-group">
+          <label>Your Industry*</label>
+          <select class="reg-select z-100 cmb-industry" id="sel2">
+            <option>--Select your Industry--</option>
+              <?php foreach( $business as $key => $values ){ ?>
+                  <optgroup label="<?php echo $key; ?>">
+                  <?php foreach( $values as $value ){ ?>
+                      <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+                  <?php } ?>
+              <?php } ?>
+          </select>
+        </div>
       </div>
       <div class="center-btn">
         <a class="fnd-btn prev-find-pro" data-prev="d">Previous</a>
@@ -174,6 +197,8 @@ $(function(){
       $(".info-name").text($("#proName").val());
       $(".info-contact-number").text($("#proContactNumber").val());
       $(".info-email").text($("#proEmailAddress").val());
+      $(".info-business-name").text($("#google_search_place").val());
+      $(".info-business-address").text($("#business_address").val());
     }
 
     $(".find-pro-container").fadeOut();
