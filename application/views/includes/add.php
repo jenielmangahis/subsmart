@@ -55,7 +55,7 @@
    );
    ?>
 <?php include viewPath('includes/header'); ?>
-<link href="<?php echo $url->assets ?rel="stylesheet">
+
 
 <!-- page wrapper start -->
 <div class="wrapper">

@@ -5,7 +5,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- page wrapper start -->
            <div wrapper__section>
         <div class="container-fluid w-97">
-			<div class="row">
+			<div class="row ml-4 pb-2 mt-3">
+				<div class="col-md-12 banking-tab-container">
+					<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab" style="text-decoration: none">Overview</a>
+					<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab-active">All Sales</a>
+					<a href="#" class="banking-tab">Invoices</a>
+					<a href="#" class="banking-tab">Customers</a>
+					<a href="#" class="banking-tab">Deposits</a>
+					<a href="#" class="banking-tab">Products and Services</a>
+				</div>
+			</div>
+			<div class="row ml-2 pt-3">
 				<div class="col-lg-6">
 					<h2>Sales Transactions</h2>
 				</div>
@@ -34,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row ml-2">
 				<div class="col-lg-12">
 					<div class="bg-white p-4">
 						<table id="all_sales_table" class="table table-striped table-bordered" style="width:100%">
@@ -71,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
 			<!-- end row -->
-            <div class="row"></div>
+            <div class="row ml-2"></div>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->

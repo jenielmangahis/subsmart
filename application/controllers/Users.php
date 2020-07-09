@@ -113,8 +113,8 @@ class Users extends MY_Controller {
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		
 		//$this->load->view('users/timesheet', $this->page_data);
-		//$this->load->view('users/timesheet-admin', $this->page_data);
-		$this->load->view('users/timesheet-user', $this->page_data);
+		$this->load->view('users/timesheet-admin', $this->page_data);
+		//$this->load->view('users/timesheet-user', $this->page_data);
 	}
 
 	// added for tracking Time Log of employees

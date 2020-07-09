@@ -6,20 +6,45 @@ class Accounting extends MY_Controller {
     public function __construct()
     {
         parent::__construct();
-
         add_css(array(
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
             "assets/css/accounting/banking.css",
+            "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/print.checks.css",
             "assets/css/accounting/sidebar.css",
+			"assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css"
         ));
 
         add_footer_js(array(
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
             "assets/js/accounting/main.js",
             "assets/plugins/dropzone/dist/dropzone.js"
         ));
+
+		$this->page_data['menu_name'] =
+			array(
+				array("Dashboard",	array()),
+				array("Banking", 	array('Link Bank','Rules','Receipts')),
+				array("Expenses", 	array('Expenses','Vendors')),
+				array("Sales", 		array('Overview','All Sales','Invoices','Customers','Deposits','Products and Services')),
+				array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
+				array("Reports",	array()),
+				array("Taxes",		array("Sales Tax","Payroll Tax")),
+				array("Mileage",	array()),
+				array("Accounting",	array("Chart of Accounts","Reconcile"))
+			); 
+		$this->page_data['menu_link'] = 
+			array(
+				array('/accounting/banking',array()), 
+				array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts')), 
+				array("",	array('/accounting/expenses','/accounting/vendors')), 
+				array("",	array('/accounting/sales-overview','/accounting/all-sales','#','#','#','#')), 
+				array("",	array('#','#','#','#','#')), 
+				array('#',	array()), 
+				array("",	array('#','#')), 
+				array('#',	array()), 
+				array("",	array('#','#')), 
+			); 
+		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
     }
 
     /*public function index()

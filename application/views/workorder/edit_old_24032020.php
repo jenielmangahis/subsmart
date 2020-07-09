@@ -56,7 +56,7 @@ $states = array(
 ?>
 <!--<pre>--><?php //print_r($workorder); die; ?><!--</pre>-->
 <?php include viewPath('includes/header'); ?>
-<link href="<?php echo $url->assets ?rel="stylesheet">
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->

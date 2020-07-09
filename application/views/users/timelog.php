@@ -57,6 +57,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <!-- last login -->
                                                 <td><?php echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>
                                                     
+                                                <?php
+                                                    $data['user_id'] = $row->id;
+                                                    $clockin_arr = $this->timesheet_model->getClockIn($data);
+                                                    $clockout_arr = $this->timesheet_model->getClockOut($data);
+                                                ?>
                                                 </td>
                                                 <!-- <td width="60"><?php echo $row->id ?></td> -->
                                                 <!-- <td width="50" class="text-center"> -->
@@ -104,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a href="#" class="btn btn-sm btn-default"
                                                                title="You cannot Delete this User" data-toggle="tooltip"
                                                                disabled><i class="fa fa-trash"></i> Delete</a>
-                                                        <?php //endif ?>
+                                                        <?php endif ?>
                                                     <?php //endif ?>
                                                 </td>
                                             </tr>

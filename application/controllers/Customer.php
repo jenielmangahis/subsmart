@@ -692,7 +692,7 @@ class Customer extends MY_Controller
 
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
-        $this->page_data['groups'] = get_customer_groups();
+        //$this->page_data['groups'] = get_customer_groups();
 
 
         $this->load->view('customer/add', $this->page_data);

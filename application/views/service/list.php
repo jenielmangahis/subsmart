@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <a class="btn btn-primary btn-md"
                                                    href="<?php echo url('services/add') ?>"><span
                                                             class="fa fa-plus"></span> New Service</a>
-                                            <?php endif ?>
+                                            <?php //endif ?>
                                         </div>
                                     </div>
                                 </div>

@@ -131,3 +131,8 @@ $route['before-after/main'] = 'Before_after';
 $route['before-after/add_photo'] = 'Before_after/addPhoto';
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
+
+// [Accounting]
+$route['accounting/chart_of_accounts/create'] = 'chart_of_accounts/add';
+$route['accounting/chart_of_accounts/fetch_acc_detail'] = 'chart_of_accounts/fetch_acc_detail';
+
