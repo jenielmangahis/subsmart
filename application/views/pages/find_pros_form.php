@@ -125,6 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <a class="fnd-btn next-find-pro" data-next="e">Next</a>
       </div>
     </div>
+
     <div class="find-pro-e find-pro-container" style="display: none;">
       <h2>Your contact details</h2>
       <div class="form-e-error"></div>
@@ -140,38 +141,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <div class="form-group">
           <label>Email*</label>
-          <input type="text" class="form-control" id="proEmailAddress" name="email_address" required="">
+          <input type="email" class="form-control" id="proEmailAddress" name="email_address" required="">
         </div>
 
         <div class="form-group">
-          <label>Business Name*</label>
-          <input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" autocomplete="on" runat="server" required="" />
+          <label>Address*</label>
+          <input id="business_address" type="text" name="address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Address" required="" />
         </div>
 
         <div class="form-group">
-          <label>Business Address*</label>
-          <input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" required="" />
+          <label>Tell us a brief description of what u need help with*</label>
+          <textarea id="brief_description" name="brief_description" class="form-control" rows="4" cols="50"></textarea>
         </div>
 
-        <div class="form-group">
-          <label>Your Industry*</label>
-          <select class="reg-select z-100 cmb-industry" id="sel2">
-            <option>--Select your Industry--</option>
-              <?php foreach( $business as $key => $values ){ ?>
-                  <optgroup label="<?php echo $key; ?>">
-                  <?php foreach( $values as $value ){ ?>
-                      <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
-                  <?php } ?>
-              <?php } ?>
-          </select>
-        </div>
       </div>
       <div class="center-btn">
         <a class="fnd-btn prev-find-pro" data-prev="d">Previous</a>
         <a class="fnd-btn next-find-pro" data-next="f">Next</a>
       </div>
     </div>
+
+    <div class="find-pro-g find-pro-container" style="display: none;">
+      <div style="text-align: center !important;">
+        <img src="<?php echo $url->assets ?>frontend/images/send-mail-icon.png" class="send-image"/>
+      </div>
+      <div class="form-indent">
+        <h2><div class="find-pro-send-message"></div></h2>
+      </div>
+
+    </div>
+
     <div class="find-pro-f find-pro-container" style="display: none;">
+      <h2><strong><?php echo isset($_GET['find_pro']) ? ucfirst($_GET['find_pro']) : '-'; ?></strong></h2>
       <h2 class="mb-0">We have matching Pros in your area</h2>
       <span class="finalize-spn">Does the info look correct?</span>
       <br/>
@@ -185,6 +186,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
       <div class="send-msg"></div>
       <div class="center-btn">
+        <div style="text-align: center;" class="loading-container"></div>
         <a href="javascript:void(0);" class="fnd-btn send-pros"style="width:100%;">Submit</a>
       </div>
       <div class="clear"></div>
@@ -272,6 +274,7 @@ $(function(){
   });
 
   $(".send-pros").click(function(){
+    $(".loading-container").html("<strong>Sending....</strong>");
   	$.ajax({
        type: "POST",
        dataType: "json",
@@ -281,9 +284,15 @@ $(function(){
        {
           if( o.is_success == 1 ){
           	$(".find-pro-form").html("");
-          	$(".find-pro").html("Your email has been sent.");
+          	//$(".find-pro").html("Your email has been sent.");
+            $(".find-pro-send-message").html("Please check your email, our team sent a survey to complete to get a better idea on project.");
+            $(".find-pro-container").hide();
+            $(".find-pro-g").fadeIn();            
           }else{
-          	$(".send-msg").html("Cannot send email");
+          	//$(".send-msg").html("Cannot send email");
+            $(".find-pro-send-message").html("Cannot send email. Please contact your administrator");
+            $(".find-pro-container").hide();
+            $(".find-pro-g").fadeIn(); 
           }
        }
     });
