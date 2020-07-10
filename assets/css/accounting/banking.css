@@ -97,3 +97,78 @@
 .rb-02 .nav-item{
     margin-left: 20px;
 }
+/*Bank Account Dropdown*/
+
+.bank-account-picker .bank-account-dd{
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #d4d7dc;
+    box-shadow: 0 4px 0 0 rgba(0,0,0,.1);
+    cursor: pointer;
+    margin: 10px 3px 3px -14px;
+    max-height: 500px;
+    max-width: 490px;
+    overflow: scroll;
+    position: fixed;
+    z-index: 200;
+    padding: 10px;
+    min-width: 525px;
+}
+.bank-account-picker .bank-account-dd .bank-account-view{
+    border-bottom-color: #d4d7dc;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    background: #f4f5f8;
+    border-radius: 5px;
+}
+.bank-account-picker .bank-account-dd .bank-account-view .subcolumn{
+    display: inline-block;
+    position: relative;
+}
+.bank-account-picker .bank-account-dd .bank-account-view{
+    flex: 1;
+}
+.bank-account-picker .account-logo{
+    border-radius: 50px;
+    margin-right: 16px;
+    height: 40px;
+    width: 40px;
+    background-color: #0077c5;
+    display: inline-block;
+}
+.bank-account-picker .account-logo .hi{
+    align-items: center;
+    color: #fff;
+    display: flex;
+    height: 40px;
+    width: 40px;
+    font-size: 24px;
+    justify-content: center;
+}
+.bank-account-picker .bank-account-dd .bank-account-view .subcolumn .subrow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 12px;
+}
+.bank-account-picker .bank-account-dd .bank-account-view .subcolumn .space-between{
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.bank-account-picker .bank-account-dd .bank-account-view .account-name{
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    max-width: 90%;
+    text-overflow: ellipsis;
+}
+.bank-account-picker .bank-account-dd .bank-account-view .subcontent{
+    color: #6b6c72;
+    font-size: 12px;
+}
+.bank-account-picker .bank-account-dd .bank-account-view .subcolumn .pull-right{
+    bottom: 0;
+    margin-right: 12px;
+    position: absolute;
+    right: 0;
+}

@@ -7,9 +7,8 @@ class Accounting extends MY_Controller {
     {
         parent::__construct();
         add_css(array(
-            "assets/css/accounting/banking.css",
-            "assets/css/accounting/accounting.modal.css",
-            "assets/css/accounting/print.checks.css",
+            "assets/css/accounting/banking.css?v=".rand(),
+            "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css"

@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <h1 class="page-title">Chart of Accounts</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Add Chart of Accounts</li>
+                            <li class="breadcrumb-item active">Edit Chart of Accounts</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">New Chart of account</h4>
+                            <h4 class="mt-0 header-title mb-5">Edit Chart of account</h4>
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Account</h3>

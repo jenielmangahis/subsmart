@@ -18,6 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <?php echo form_open('job/updateJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                         <?php endif;?>
                             <h2 class="page-title text-left">Create Job</h2>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-2 text-left" style="margin-top:10px;">
                                     <label for="job_number">Job Number: <?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?></label>
@@ -57,7 +58,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php if(!empty($job_other_info)) : ?>
                                         <label for="">: <?php echo getLoggedFullName($job_other_info->id); ?></label> 
                                         <input type="hidden" id="job_customer_id" name="job_customer_id" value="<?php echo getLoggedFullName($job_other_info->id); ?>">
+                                        <input type="hidden" id="job_owner_name" name="job_owner_name" value="<?php echo getLoggedName(); ?>">
+                                        <input type="hidden" id="job_owner_email" name="job_owner_email" value="<?php echo getUserEmail(logged('id')); ?>">
                                         <input type="hidden" id="customer_id" name="customer_id" value="<?php echo $job_other_info->id; ?>">
+                                        <input type="hidden" id="customer_email" name="customer_email" value="<?php echo getUserEmail($job_other_info->id); ?>">
                                     <?php else: ?>
                                         <input id="job_customer" class="form-control" type="text" placeholder="Customer">
                                         <input type="hidden" id="job_customer_id" name="job_customer_id">
@@ -67,7 +71,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 text-left form-group">
                                     <p>&nbsp;</p>
                                     <?php if(empty($job_other_info)) : ?>
-                                    <a href="<?php echo url('customer') ?>"><span
+                                    <a href="<?php echo url('customer/add') ?>"><span
                                                 class="fa fa-plus fa-margin-right"></span>New Customer</a>
                                     <?php endif; ?>
                                 </div>
@@ -133,7 +137,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </select>
                                 </div>
                             </div>
-                            <hr>
+                            <hr style="border-top: 2px solid gray;">
                             <div class="row mb-5" style="background: none;">
                                 <div class="pt-5">
                                     <div class="col-md-12" style="margin-bottom:10px;">
@@ -151,30 +155,55 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-10 pt-5 text-left" id="currentForms">
                                     <h4 for="exampleFormControlSelect1">Current Forms</h4>
+                                    <hr>
                                     <table class="table table-hover table-bordered table-striped" style="width:100%;" id="currentFormsTable">
                                         <thead>
                                             <tr>
                                                 <th scope="col"><strong>Form Number</strong></th>
                                                 <th scope="col"><strong>Type</strong></th>
-                                                <th scope="col"><strong>Description</strong></th>
+                                                <th scope="col"><strong>Note</strong></th>
                                                 <th scope="col"><strong>Status</strong></th>
                                                 <th scope="col"><strong>Created</strong></th>
                                                 <th scope="col"><strong>Completed</strong></th>
                                                 <th scope="col"><strong>Created By</strong></th>
+                                                <th scope="col"><strong>Action</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach($invoices as $invoice) : ?>
-                                            <tr>
-                                                <td class="pl-3"><?php echo 'Inv-' . $invoice->invoice_number; ?></td>
-                                                <td class="pl-3">Invoice</td>
-                                                <td class="pl-3"><?php echo $invoice->description; ?></td>
-                                                <td class="pl-3"><?php echo $invoice->status; ?></td>
-                                                <td class="pl-3"><?php echo date_format(date_create($invoice->created_date),"d/m/Y"); ?></td>
-                                                <td class="pl-3">&nbsp;</td>
-                                                <td class="pl-3"><?php echo getLoggedFullName($invoice->created_by)?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
+                                        <?php if(!empty($estimates)) : ?>
+                                            <?php foreach($estimates as $estimate) : ?>
+                                                <tr>
+                                                    <td class="pl-3"><?php echo 'EST-' . $estimate->estimate_number; ?></td>
+                                                    <td class="pl-3">Estimate</td>
+                                                    <td class="pl-3"><?php echo $estimate->description; ?></td>
+                                                    <td class="pl-3"><?php echo $estimate->status; ?></td>
+                                                    <td class="pl-3"><?php echo date_format(date_create($estimate->estimate_date),"d/m/Y"); ?></td>
+                                                    <td class="pl-3"><?php echo date_format(date_create($estimate->expiry_date),"d/m/Y"); ?></td>
+                                                    <td class="pl-3"><?php echo getLoggedFullName($job_other_info->id)?></td>
+                                                    <td class="pl-3">
+                                                        <a href="javascript:void(0)" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                        <a href="<?php echo base_url('job/deleteJobForm?type=estimate&id='.$estimate->id .'&job_num='.$job_data->job_number); ?>" class="btn btn-danger btn-sm deleteJobCurrentForm"><span class="fa fa-trash"></span> Delete</a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                        <?php if(!empty($invoices)) : ?>
+                                            <?php foreach($invoices as $invoice) : ?>
+                                                <tr>
+                                                    <td class="pl-3"><?php echo 'INV-' . $invoice->invoice_number; ?></td>
+                                                    <td class="pl-3">Invoice</td>
+                                                    <td class="pl-3"><?php echo $invoice->description; ?></td>
+                                                    <td class="pl-3"><?php echo $invoice->status; ?></td>
+                                                    <td class="pl-3"><?php echo date_format(date_create($invoice->created_date),"d/m/Y"); ?></td>
+                                                    <td class="pl-3">&nbsp;</td>
+                                                    <td class="pl-3"><?php echo getLoggedFullName($invoice->created_by)?></td>
+                                                    <td class="pl-3">
+                                                        <a href="javascript:void(0)" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                        <a href="javascript:void(0)" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                         </tbody>
                                     </table> 
                                 </div>
@@ -183,60 +212,63 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row col-md-8">
                                             <h4 class="pl-2" for="exampleFormControlSelect1">Estimate</h4>
                                         </div>
-                                        <div class="row col-md-4">
+                                        <div class="row col-md-4" style="display:none;">
                                             <label class="pt-2 pr-2" for="">Added By:</label>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
-                                            <div class="row col-md-5">
-                                                <label class="pt-2 pr-2" for="">Estimate Date</label>
+                                            <div class="row col-md-6">
+                                                <label class="pt-2 pr-2" for="">Estimate Date:</label>
                                                 <input type="text" class="form-control col-md-6" id="estimateDate">
                                             </div>
-                                            <div class="row col-md-5">
-                                                <label class="pt-2 pr-3 pl-3" for="">Expiry Date</label>
+                                            <div class="row col-md-6">
+                                                <label class="pt-2 pr-3 pl-3" for="">Expiry Date:</label>
                                                 <input type="text" class="form-control col-md-6" id="expiryDateEstimate">
                                             </div>
                                         </div>
-                                        <div class="row pt-2 col-md-8">
-                                            <div class="row col-md-5">
-                                                <label class="pt-2 pr-2" for="">Estimate Value</label>
-                                                <input type="text" class="form-control col-md-6" id="estimate_value">
-                                            </div>
-                                            <div class="row col-md-5">
-                                                <label class="pt-2 pr-3 pl-3" for="">Deposit Request</label>
-                                                <input type="text" class="form-control col-md-6" id="deposit_request">
-                                            </div>
-                                        </div>
                                         <div class="row col-md-4">
-                                            <label class="pt-2 pr-2" for="">Status</label>
-                                            <select class="form-control col-md-7" id="estimateStatus">
-                                                <option value="1" selected>Draft</option>
-                                                <option value="2">Scheduled</option>
-                                                <option value="3">In progress</option>
-                                                <option value="4">Completed</option>
-                                                <option value="5">Canceled</option>
-                                                <option value="6">Postponed</option>
+                                            <label class="pt-2 pr-2" for="">Status:</label>
+                                            <select class="form-control col-md-10" id="estimateStatus">
+                                                <option value="Draft" selected>Draft</option>
+                                                <option value="Scheduled">Scheduled</option>
+                                                <option value="In progress">In progress</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Canceled">Canceled</option>
+                                                <option value="Postponed">Postponed</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="row pl-2 pt-2 pb-2">
-                                        <div class="row col-md-8">
-                                            <label class="pt-2 pr-4" for="">Description</label>
-                                            <input type="text" class="form-control col-md-7" id="estimateDescription" placeholder="">
+                                        <div class="row pt-3 col-md-8">
+                                            <div class="row col-md-6">
+                                                <label class="pt-2 pr-2" for="">Estimate Value:</label>
+                                                <input type="number" class="form-control col-md-6" id="estimate_value">
+                                            </div>
+                                            <div class="row col-md-6">
+                                                <label class="pt-2 pr-3 pl-3" for="">Deposit Request:</label>
+                                                <input type="number" class="form-control col-md-6" id="deposit_request">
+                                            </div>
                                         </div>
-                                        <div class="row col-md-4">
+                                        <div class="row col-md-4 pt-3 pl-0">
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button type="button" class="btn btn-primary col-md-12" id="saveEstimate">Save</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Preview</button>
+                                                <button type="button" class="btn btn-default col-md-12 previewCurrentJobTable">Preview</button>
                                             </div>
-                                            <div class="col-md-6" style="margin-bottom:10px;">
+                                        </div>
+                                    </div>
+                                    <div class="row pl-2 pt-1 pb-2">
+                                        <div class="row col-md-8">
+                                            <label class="pt-2 pr-4" for="">Description:</label>
+                                            <input type="text" class="form-control col-md-9" id="estimateDescription" placeholder="">
+                                        </div>
+                                        <div class="row col-md-4 pl-0">
+                                            <div class="col-md-6" style="margin-bottom:10px; display:none;">
                                                 <button class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button type="button" class="btn btn-primary col-md-12" id="sendEmailCustomer">Send to Customer</button>
+                                                <button type="button" class="btn btn-primary col-md-12 pl-1 pr-1" id="sendEmailCustomer">Send to Customer</button>
                                             </div>
                                         </div>
                                     </div>
@@ -246,31 +278,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row col-md-8">
                                             <h4 class="pl-2" for="exampleFormControlSelect1">Work Order</h4>
                                         </div>
-                                        <div class="row col-md-4">
+                                        <div class="row col-md-4" style="display:none;">
                                             <label class="pt-2 pr-2" for="">Added By:</label>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
-                                            <label class="pt-2 pr-2" for="">Created Date</label>
-                                            <input type="text" class="form-control col-md-2" id="workOrderCreatedDate" placeholder="">
+                                            <label class="pt-2 pr-2" for="">Created Date:</label>
+                                            <input type="text" class="form-control col-md-3" id="workOrderCreatedDate" placeholder="">
                                         </div>
                                         <div class="row col-md-4">
-                                            <label class="pt-2 pr-2" for="">Status</label>
-                                            <select class="form-control col-md-7" id="exampleFormControlSelect1">
-                                                <option value="draft" selected>Draft</option>
-                                                <option>Scheduled</option>
-                                                <option>In progress</option>
-                                                <option>Completed</option>
-                                                <option>Canceled</option>
-                                                <option>Postponed</option>
+                                            <label class="pt-2 pr-2" for="">Status:</label>
+                                            <select class="form-control col-md-10" id="exampleFormControlSelect1">
+                                                <option value="Draft" selected>Draft</option>
+                                                <option value="Scheduled">Scheduled</option>
+                                                <option value="In progress">In progress</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Canceled">Canceled</option>
+                                                <option value="Postponed">Postponed</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
-                                            <label class="pt-2 pr-4" for="">Description</label>
-                                            <input type="text" class="form-control col-md-6" id="inlineFormInputName" placeholder="">
+                                            <label class="pt-2 pr-4" for="">Description:</label>
+                                            <input type="text" class="form-control col-md-9" id="inlineFormInputName" placeholder="">
                                         </div>
                                         <div class="row col-md-4">
                                             <div class="col-md-6" style="margin-bottom:10px;">
@@ -279,14 +312,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button class="btn btn-primary col-md-12">Scheduled Appointment</button>
                                             </div>
-                                            <div class="col-md-6" style="margin-bottom:10px;">
+                                            <div class="col-md-6" style="margin-bottom:10px; display:none;">
                                                 <button class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button class="btn btn-primary col-md-12">Assign Tech</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Preview</button>
+                                                <button type="button" class="btn btn-default col-md-12 previewCurrentJobTable">Preview</button>
                                             </div>
                                         </div>
                                     </div>
@@ -296,41 +329,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row col-md-8">
                                             <h4 class="pl-2" for="exampleFormControlSelect1">Invoice</h4>
                                         </div>
-                                        <div class="row col-md-4">
+                                        <div class="row col-md-4" style="display:none;">
                                             <label class="pt-2 pr-2" for="">Added By:</label>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
                                             <label class="pt-2 pr-2" for="">Created Date</label>
-                                            <input type="text" class="form-control col-md-2" name="invoiceCreatedDate" id="invoiceCreatedDate">
+                                            <input type="text" class="form-control col-md-3" name="invoiceCreatedDate" id="invoiceCreatedDate">
                                             <input type="hidden" id="invoiceNumber" name="invoiceNumber" value="<?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?>-01">
                                         </div>
                                         <div class="row col-md-4">
                                             <label class="pt-2 pr-2" for="">Status</label>
-                                            <select class="form-control col-md-7" id="invoiceStatus">
-                                                <option value="draft" selected>Draft</option>
-                                                <option value="scheduled">Scheduled</option>
-                                                <option value="in progress">In progress</option>
-                                                <option value="completed">Completed</option>
-                                                <option value="canceled">Canceled</option>
-                                                <option value="postponed">Postponed</option>
+                                            <select class="form-control col-md-10" id="invoiceStatus">
+                                                <option value="Draft" selected>Draft</option>
+                                                <option value="Scheduled">Scheduled</option>
+                                                <option value="In progress">In progress</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Canceled">Canceled</option>
+                                                <option value="Postponed">Postponed</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row pl-2 pt-2 pb-2">
                                         <div class="row col-md-8">
                                             <label class="pt-2 pr-4" for="">Description</label>
-                                            <input type="text" class="form-control col-md-6" name="invoiceDescription" id="invoiceDescription" placeholder="">
+                                            <input type="text" class="form-control col-md-9" name="invoiceDescription" id="invoiceDescription" placeholder="">
                                         </div>
                                         <div class="row col-md-4">
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button type="button" id="saveJobInvoice" class="btn btn-primary col-md-12">Save</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button type="button" class="btn btn-default col-md-12">Preview</button>
+                                                <button type="button" class="btn btn-default col-md-12 previewCurrentJobTable">Preview</button>
                                             </div>
-                                            <div class="col-md-6" style="margin-bottom:10px;">
+                                            <div class="col-md-6" style="margin-bottom:10px;  display:none;">
                                                 <button type="button" class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                         </div>
@@ -580,21 +614,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="tab-pane fade pa-10 margin-left margin-top" id="billing" role="tabpanel" aria-labelledby="billing-tab">
                                             <h4>Billing</h4>
-                                            <div class="row pl-2 pt-2 pb-2">
+                                            <div class="row pl-3 pt-2 pb-2">
                                                 <div class="row col-md-12">
                                                     <label class="pt-2 pr-2">Billing Date</label>
                                                     <input type="text" class="form-control col-md-2" id="billingDate">
                                                 </div>
                                             </div>
-                                            <div class="row pl-2 pt-2 pb-2">
+                                            <div class="row pl-3 pt-2 pb-2">
                                                 <label class="pt-2 pr-2" for="">Deposit Due</label>
                                                 <label class="pt-2 pr-2" for="">$00.00</label>
                                             </div>
-                                            <div class="row pl-2 pt-2 pb-2">
+                                            <div class="row pl-3 pt-2 pb-2">
                                                 <label class="pt-2 pr-2" for="">Total Due</label>
                                                 <label class="pt-2 pr-2" for="">$00.00</label>
                                             </div>
-                                            <div class="row pt-2 pl-2">
+                                            <div class="row pt-3 pl-3">
                                                 <label for="" style="margin-right:105px;">Choose payment method</label>
                                                 <div class="form-check form-check-inline pr-4">
                                                     <input class="form-check-input payment_method" checked type="radio" name="payment_method" id="inlineRadio1" value="creditcard">

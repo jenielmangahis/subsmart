@@ -194,7 +194,7 @@
                 <a href="#submenuAccounting" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-calculator" style="margin-right: 20px"></i>Accounting</a>
                 <ul class="collapse list-unstyled" id="submenuAccounting">
                     <li>
-                        <a href="#">Chart of Accounts</a>
+                        <a href="<?php echo url('/accounting/chart_of_accounts') ?>">Chart of Accounts</a>
                     </li>
                     <li>
                         <a href="#">Reconcile</a>

@@ -60,7 +60,6 @@ class Job extends MY_Controller
 
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
-        $this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
         
         if (empty($get['job_num'])) {
             $comp = array(
@@ -81,7 +80,10 @@ class Job extends MY_Controller
             if (!empty($get['job_num'])) {
                 $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
                 $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
+                $this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
+                $this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
             }
+            
            $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
@@ -358,7 +360,8 @@ class Job extends MY_Controller
 
     public function sendEstimateEmail() {
         postAllowed();
-        $from_email = "jeykell125@gmail.com";
+        $from_email = $this->input->post('from_email');
+        $company = $this->input->post('company');
         $to_email = $this->input->post('email');
 
         //Load email library
@@ -375,7 +378,7 @@ class Job extends MY_Controller
         $this->email->initialize($config);
         $this->email->set_newline("\r\n");
 
-        $this->email->from($from_email, 'nSmarTrac');
+        $this->email->from($from_email, $company);
         $this->email->to($to_email);
         $this->email->subject('Review Estimate');
         $data = array(
@@ -385,6 +388,7 @@ class Job extends MY_Controller
         $message = $this->load->view('email_campaigns/estimate.php',$data,TRUE);
         $this->email->message($message);
         //Send mail
+
         if($this->email->send())
             echo json_encode("Congratulation Email Send Successfully.");
         else
@@ -408,6 +412,26 @@ class Job extends MY_Controller
         $this->db->insert($this->jobs_model->table_estimates, $data);
 
         echo json_encode($data);
+    }
+
+    public function deleteJobForm() {
+        $get = $this->input->get();
+
+        switch ($get['type']) {
+            case "estimate":
+                $this->jobs_model->deleteEstimate($get['id']);
+            break;
+
+            case "work_order":
+                $this->jobs_model->deleteWorkOrder($get['id']);
+            break;
+
+            case "invoice":
+                $this->jobs_model->deleteWorkInvoice($get['id']);
+            break;
+        }
+
+        redirect('job/new_job?job_num=' . $get['job_num']);
     }
 }
 

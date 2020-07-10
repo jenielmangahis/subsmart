@@ -689,6 +689,9 @@
 			"isNewRespondentsClosed": (document.querySelector("#isNewRespondentsClosed<?=$survey->id?>").checked) ? '1' : '0',
 			"hasClosedDate": (document.querySelector("#hasClosedDate<?=$survey->id?>").checked) ? '1' : '0',
 			"hasResponseLimit": (document.querySelector("#hasResponseLimit<?=$survey->id?>").checked) ? '1' : '0',
+			"closingDate": document.querySelector('#txtSchedDate').value,
+			"responseLimit": document.querySelector('#txtResponseLimit').value,
+			"closingMessage": document.querySelector('#txtClosingMessage').value,
 		}
 		let error = false;
 			

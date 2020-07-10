@@ -14,17 +14,27 @@
 		padding:15px 15px;
         text-align: left;
     }
-.acct-btn-add{
-    border-radius: 20px;
-    width: 90%;
-    color:#fff;
-    border: solid 2px white;
-}
-.acct-btn-add:hover{
-    border: solid 2px #adff2f;
-	color:#adff2f;
-}
-
+    .acct-btn-add{
+        border-radius: 20px;
+        width: 90%;
+        color:#fff;
+        border: solid 2px white;
+    }
+    .acct-btn-add:hover{
+        border: solid 2px #adff2f !important;
+        color:#adff2f;
+    }
+    .dropdown-toggle::after {
+        top: 25px !important;
+    }
+    #sidebar ul li > ul li:first-child a:focus,
+    #sidebar ul li > ul li:first-child a:hover {
+        border-radius: 0 0 0 0 !important;
+    }
+    #sidebar ul li > ul li:last-child a:focus,
+    #sidebar ul li > ul li:last-child a:hover {
+        border-radius: 0 0 0 0 !important;
+    }
 </style>
 <nav id="sidebar" class="navbar-side">
     <ul class="nav sidebar-accounting">
@@ -33,11 +43,8 @@
                 <path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path>
             </svg>
         </span>
-        <li class="submenus">
-            &nbsp;
-        </li>
-        <li class="submenus">
-            &nbsp;
+        <li class="nav-header">
+			<a href="<?php echo url('/job/new_job')?>" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
         </li>
         <li class="submenus dropright">
             <a href="#submenuJob" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-briefcase" style="margin-right: 20px"></i>Job</a>
@@ -54,13 +61,13 @@
             <a href="#submenuForm" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-credit-card" style="margin-right: 20px"></i>Forms</a>
             <ul class="collapse list-unstyled" id="submenuForm">
 				<li>
-					<a href="<?php echo url('/job')?>">Estimate</a>
+					<a href="<?php echo url('/estimate')?>">Estimate</a>
                 </li>
                 <li>
-                     <a href="<?php echo url('/job/list')?>">Work Orders</a>
+                     <a href="<?php echo url('/workorder')?>">Work Orders</a>
                 </li>
                 <li>
-                     <a href="<?php echo url('/job/list')?>">Invoice</a>
+                     <a href="<?php echo url('/invoice')?>">Invoice</a>
                 </li>
              </ul>
         </li>
@@ -71,10 +78,10 @@
                         <a href="<?php echo base_url();?>job/job_type">Job Type</a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>job">Priority</a>
+                        <a href="<?php echo base_url();?>workorder/priority">Priority</a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>job">Status</a>
+                        <a href="<?php echo base_url();?>workorder">Status</a>
                     </li>
                 </ul>
         </li>
