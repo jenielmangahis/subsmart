@@ -115,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<!-- <a href="<?php //echo url('/home/signup') ?>" class="btn btn-green-2">
 								 Sign up
 							</a> -->
-							<input style="margin:auto; width: 500px;" type="submit" class="btn btn-green-2" name="signup" value="Sign Up">
+							<input style="margin:auto; width: 300px;" type="submit" class="btn btn-green-2" name="signup" value="Sign Up">
 						</div>
 
 					</div>
