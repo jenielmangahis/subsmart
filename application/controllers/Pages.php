@@ -34,7 +34,8 @@ class Pages extends MY_Controller {
 
 	public function find_pros_form(){
 		$find_pro = $this->input->get('find_pro');
-
+		
+		$this->page_data['business'] = getIndustryBusiness();
 		$this->page_data['find_pro'] = $find_pro;
 		$this->page_data['page']->title = 'nSmartTrac - Find Pros';	
 		$this->load->view('pages/find_pros_form', $this->page_data);

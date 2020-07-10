@@ -9,6 +9,12 @@ class Chart_of_accounts extends MY_Controller {
 		$this->load->view('accounting/chart_of_accounts/add', $this->page_data);
 	}
 
+	public function edit()
+	{
+		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
+	}
+
 	public function fetch_acc_detail()
 	{
 		if($this->input->post('account_id'))

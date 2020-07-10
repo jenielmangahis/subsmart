@@ -18,12 +18,47 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h2>Bank and Credit Cards</h2>
                     </div>
                     <div class="col-md-4" style="position: relative;display: inline-block;">
-                        <div class="dropdown">
+                        <div class="dropdown bank-account-picker">
                             <button class="btn btn-default" type="button" data-toggle="dropdown" style="text-decoration: none; color: #393a3d;font-size: 20px;background-color: transparent;border: 0;">
-                                <i class="fa fa-credit-card"></i> Corporate Account (XXXXXX 5850) <i class="fa fa-chevron-down"></i>
+                                <div class="account-logo">
+                                    <div class="hi">
+                                        <i class="fa fa-credit-card"></i>
+                                    </div>
+                                </div>
+                                Corporate Account (XXXXXX 5850) <i class="fa fa-chevron-down"></i>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Order Checks</a></li>
+                            <ul class="dropdown-menu bank-account-dd">
+                                <li class="bank-account-view">
+                                    <div class="account-logo">
+                                        <div class="hi">
+                                            <i class="fa fa-credit-card"></i>
+                                        </div>
+                                    </div>
+                                    <div class="subcolumn expand">
+                                        <div class="subrow space-between">
+                                            <div class="account-name">
+                                                Region Bank - Corporate Account (XXXXXX 5850)
+                                            </div>
+                                        </div>
+                                        <div class="subrow">
+                                            <div>
+                                                <div class="bank-balance-text">
+                                                    Bank balance:&nbsp;<span>6,041.11</span>$
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="subrow">
+                                            <div>
+                                                <div class="num-transaction-text">
+                                                    10&nbsp;Transactions
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="subcontent pull-right">
+                                            Updated 1 day ago
+                                        </div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -235,11 +270,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <h1 class="modal-title" style="text-align: center;font-size: 46px;">Bring your info into nSmartrac</h1>
                     <div class="row">
                         <div class="col-sm-5">
-                            <div class="modal-container box-bank-container">
+                            <div class="modal-container box-bank-container" style="width: 100%">
                                 <div class="centered-container">
-                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/Artboard_230-512.png') ?>" alt="">
+                                    <img src="<?php echo base_url('assets/img/accounting/Artboard_230-512.png') ?>" alt="">
                                 </div>
-                                <div>
+                                <div style="margin-top: 70px;">
                                     <h4 style="margin: 20px 20px 30px 20px; ">Get your info from your bank</h4>
                                     <ol>
                                         <li>Open a new tab and sign in to your bank.</li>
@@ -260,11 +295,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-sm-2" style="padding-top: 250px;"><h1 class="modal-title" style="text-align: center;font-size: 46px;">OR</h1></div>
                         <div class="col-sm-5">
-                            <div class="modal-container box-bank-container">
+                            <div class="modal-container box-bank-container" style="width: 100%">
                                 <div class="centered-container">
-                                    <img class="banks-img" src="<?php echo base_url('assets/img/accounting/bank-security-system-621346.png') ?>" alt="">
+                                    <img src="<?php echo base_url('assets/img/accounting/bank-security-system-621346.png') ?>" alt="">
                                 </div>
-                                <div>
+                                <div style="margin-top: 70px;">
                                     <h4 style="margin: 20px 20px 30px 20px; ">Securely connect your bank</h4>
                                     <ol>
                                         <li>More secure. No need to share files with bank data.</li>
@@ -288,41 +323,45 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 </div>
 <!-- Modal for Take a tour -->
-<div id="takeAtour" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="header">
-                    <h3>Keep your books organized all year</h3>
-                    <span>Check out these resources to learn how</span>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="modal-container box-bank-container">
-                                <div class="centered-container">
-                                    <i class="fa fa-map-signs fa-5x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="modal-container box-bank-container">
-                                <div class="centered-container">
-                                    <i class="fa fa-map-signs fa-5x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="centered-modal">
+    <div id="takeAtour" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="content"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+                <div class="modal-body">
+                    <div class="header">
+                        <h3>Keep your books organized all year</h3>
+                        <p>Check out these resources to learn how</p>
+                    </div>
+                    <div class="take-a-tour-box">
+                        <div class="tat-container">
+                            <i class="fa fa-laptop fa-5x"></i>
+                        </div>
+                        <h4>Get on overview</h4>
+                        <p>Watch a quick video</p>
+                    </div>
+                    <div class="take-a-tour-box" style="margin-left: 20px">
+                        <div class="tat-container">
+                            <i class="fa fa-map-signs fa-5x"></i>
+                        </div>
+                        <h4>Take a guide tour</h4>
+                        <p>Step-by-step guidance</p>
+                    </div>
+                    <div class="path"></div>
+                    <div class="help-link-container">
+                        <div class="more-info">Tips & Resource</div>
+                        <a href="" class="helpLink">How to import transactions automatically from bank</a>
+                        <a href="" class="helpLink">How to enter, edit, delete expenses</a>
+                        <a href="" class="helpLink">When and why to enter an expense vs. a bill</a>
+                    </div>
 
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 <script>

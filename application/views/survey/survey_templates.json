@@ -1,6 +1,7 @@
 [
     {
         "id": 1,
+        "category": "Feedback",
         "name": "Online Contact Us Form Template",
         "questions": [
             {
@@ -81,6 +82,7 @@
     {
         "id": 2,
         "name": "Get in Touch Template",
+        "category": "Feedback",
         "questions": [
             {
                 "question": "Interested in our product? Answer a few short questions and we'll get in touch with you!",
@@ -149,7 +151,7 @@
     },
     {
         "id": 3,
-        "category": "evaluation",
+        "category": "Evaluation",
         "name": "Self-Evaluation Form",
         "questions": [
             {
@@ -395,7 +397,7 @@
     },
     {
         "id": 4,
-        "category": "application",
+        "category": "Application",
         "name": "Membership Application",
         "questions": [
             {
@@ -474,7 +476,7 @@
     },
     {
         "id": 5,
-        "category": "registration",
+        "category": "Registration",
         "name": "Registration Form",
         "questions": [
             {
@@ -730,7 +732,7 @@
     },
     {
         "id": 6,
-        "category": "form",
+        "category": "Form",
         "name": "Event Feedback Form",
         "questions": [
             {
@@ -827,7 +829,7 @@
     },
     {
         "id": 7,
-        "category": "evaluation",
+        "category": "Evaluation",
         "name": "Employee Engagement Application",
         "questions": [
             {
@@ -870,11 +872,10 @@
                 
                                 
         ]
-    },
-    
+    },    
     {
         "id": 8,
-        "category": "business",
+        "category": "Business",
         "name": "Customer Success Story Questionnaire Template",
         "questions": [
             {
@@ -1045,13 +1046,10 @@
         ]
     },   
     {
-
         "id": 9,
-        "category": "Human Resources Survey",
+        "category": "Human Resources",
         "name": "Employee On-boarding Survey Template",
         "questions": [
-
-            
             {
 
                 "question": "Hello. Welcome to the team. Help us improve our onboarding process by answering these quick questions about how it went for you.",
@@ -1486,13 +1484,10 @@
         ]
     },
     {
-
         "id": 10,
         "category": "Marketing",
         "name": "Market Research Survey Template",
         "questions": [
-
-
             {
                 "question": "Thanks for taking time out to tell us more about you and your beachwear preferences",
                 "temp_id": "1",
@@ -1504,8 +1499,6 @@
                 
         
             },
-
-
             {
                 "question": "Let's start by finding out how beachwear aware you are",
                 "temp_id": "9",

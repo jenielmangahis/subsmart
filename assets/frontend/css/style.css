@@ -306,7 +306,7 @@ span.widget-desc {
 }
  /* Find Pro Form */
  .find-pro-container{
-   position: absolute;
+   position: relative;
    left: 4px;
  }
  section.center-form {
@@ -318,10 +318,13 @@ span.widget-desc {
    width: 200px;
    margin: 0 auto;
    display: block;
-   margin-top: 35px;
+   margin-top: 0px;
  }
  div.find-pro-container {
    width: 100%;
+ }
+ span.location-active img {
+   border: 2px solid #ef6868 !important;
  }
  .center-btn {
    width: 260px;
@@ -341,11 +344,6 @@ span.widget-desc {
    display: block;
    margin-bottom: 20px;
    font-size: 20px;
- }
- .location-active {
-   background-color: #ef6868;
-   padding: 10px;
-   color: white !important;
  }
  .radio-divider {
    margin-bottom: 10px;
@@ -367,13 +365,43 @@ span.widget-desc {
   cursor: pointer;
   margin-top: 10px;
  }
+ a.btn-business, a.btn-business {
+    float: left;
+    width: 50%;
+ }
+ span.selector-link span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    bottom: 14px;
+ }
+ span.selector-link.location-active span {
+     color: #f06767 !important;
+ }
+ span.selector-link img {
+   float: left;
+   background: white;
+   width: 200px;
+   height: 200px;
+   object-fit: cover;
+   border: 2px solid gray;
+   border-radius: 100px;
+   z-index: 1;
+   padding: 3px;
+   margin-right: 15px;
+ }
  span.selector-link {
    font-size: 21px;
    color: #007de0;
    cursor: pointer;
    margin-bottom: 10px;
    display: block;
-   padding-left: 23px;
+   padding-left: 27px;
+   float: left;
+   margin-left: 33px;
+   position: relative;
+   right: 15px;
  }
  a.fnd-btn {
    background: #694a85;
@@ -388,6 +416,10 @@ span.widget-desc {
  }
  div.form-indent {
    width: 370px;
+   margin: 0 auto;
+ }
+ div.form-indent-c {
+   width: 570px;
    margin: 0 auto;
  }
  div.find-pro-container h2 {
@@ -1454,6 +1486,44 @@ img.card-features-home {
   font-weight: 600;
 }
 @media(max-width:991px) {
+    span.selector-link img {
+        float: left;
+        background: white;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 2px solid gray;
+        border-radius: 100px;
+        z-index: 1;
+        padding: 3px;
+        margin-right: 0px;
+    }
+    span.selector-link {
+      font-size: 21px;
+      color: #007de0;
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: block;
+      padding-left: 0px;
+      float: left;
+      margin-left: 0px;
+      position: relative;
+      right: 0px;
+      padding-left: 12vw;
+    }
+    section.center-form {
+      width: 85%;
+      margin: 0 auto;
+      margin-bottom: 30px;
+    }
+    a.btn-business, a.btn-business {
+      width: 100% !important;
+      float:none;
+    }
+    div.form-indent, div.form-indent-c, div.form-indent-b {
+      width: 90%;
+      margin: 0 auto;
+    }
     span.widget-desc {
       width: 85%;
       display: block;

@@ -855,7 +855,8 @@ p{
    display:block
 }
 .eCommerce-product-div .image-price-container p.payroll_text{
-   margin:15px auto 0;
+   /*margin:15px auto 0;*/
+   margin: 15px 2px 8px;
    display:table
 }
 .eCommerce-product-div .blue-button{
@@ -1018,6 +1019,14 @@ p{
        font:400 19px "Avenir Next LT Pro","Avenir Next",Futura,sans-serif;
        line-height:24px
    }
+}
+@media (max-width:1510px){
+  .eCommerce-product-div .image-price-container .price-container .pricing-section {
+      display: inline-block;
+      margin: 0 auto!important;
+      padding-top: 17px;
+      padding-bottom: 5px;
+  }
 }
 @media (max-width:991px){
     .lineup-container .arrow-down {
@@ -3412,7 +3421,7 @@ ul#mobile-menu>li:first-child{
    padding-bottom:20px!important
 }
 .eCommerce-product-div .payroll_text{
-   display:none!important
+   /*display:none!important*/
 }
 .eCommerce-product-div .image-price-container .price-container{
    text-align:center;

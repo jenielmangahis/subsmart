@@ -146,14 +146,14 @@ $(document).ready(function(){
                           </div>
                       <input type="hidden" name="survey_id" value="${res.data.id}">
                       <div class="form-group">
-                         <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question">
-                       </div>
-                       <div id="choices">
-                       ${data}
+                          <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question">
+                        </div>
+                        <div id="choices">
+                        ${data}
                       </div>
-                       <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end">
                           ${choice_btn}
-                       </div>
+                        </div>
                       </form>
                       <div class="dropdown btn-add-question-bottom">
                         <button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -217,7 +217,7 @@ $(document).ready(function(){
             var data = ``;
           }
         var append = `<div id="container-${res.data.id}" class="col-sm-12">
-             <div class="card">
+            <div class="card">
                 <div class="card-body p-0">
                 <form action="${surveyBaseUrl}/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
                     <div class="d-flex justify-content-between">
@@ -237,15 +237,15 @@ $(document).ready(function(){
                         </div>
                     <input type="hidden" name="survey_id" value="${res.data.id}">
                     <div class="form-group">
-                       <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question"/>
-                     </div>
-                     <div id="choices">
-                     ${data}
+                        <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question"/>
+                      </div>
+                      <div id="choices">
+                      ${data}
                     </div>
-                     <div class="d-flex justify-content-end">
+                      <div class="d-flex justify-content-end">
                         ${choice_btn}
-                     </div>
-                     <div class="btn-group justify-content-right">
+                      </div>
+                      <div class="btn-group justify-content-right">
                         <a class="dropdown-item btn " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><span class="text-info">More Options</span></a>
                         <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
                       </div>

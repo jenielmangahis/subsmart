@@ -136,3 +136,4 @@ $route['accounting/all-sales'] = 'accounting/allsales';
 // [Accounting]
 $route['accounting/chart_of_accounts/create'] = 'chart_of_accounts/add';
 $route['accounting/chart_of_accounts/fetch_acc_detail'] = 'chart_of_accounts/fetch_acc_detail';
+$route['accounting/chart_of_accounts/edit'] = 'chart_of_accounts/edit';

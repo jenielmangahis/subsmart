@@ -238,6 +238,41 @@
 <script>
   let deleteId = null;
   let editId = null;
+  
+  viewTemplate = tempId => {
+    let questionsContainer = document.querySelector('#template-questions-list');
+    cardIsLoading = true;
+    document.querySelector('#modalLoadingSpinner').style.display = "block";
+    document.querySelector('#modalViewTemplateContent').style.display = "none";
+    setTimeout(()=>{
+      viewingTemplate = templates.find(data => {
+        if(data.id === tempId){
+          return data
+        }
+      });
+      
+      let questionContent = '';
+      viewingTemplate.questions.map((question)=>{
+        let tempQuestion = templateQuestions.find(data => {
+          if(data.id === question.temp_id) return data
+        });
+
+        questionContent += 
+          `<div class="card w-100 ">
+            <div class="card-content">
+              <p class="d-flex m-0">
+                <i class="icon-design ${tempQuestion.icon}" style="background-color: ${tempQuestion.color}"></i>
+                ${question.question}
+              </p>
+            </div>
+          </div>`
+      })
+      questionsContainer.innerHTML = questionContent;
+      cardIsLoading = false;
+      document.querySelector('#modalLoadingSpinner').style.display = "none";
+      document.querySelector('#modalViewTemplateContent').style.display = "block";
+    },1000)
+  }
 
   handleDeleteWorkspacePrompt = (id = null) => {
     deleteId = (id === null)? deleteId = null : deleteId = id 

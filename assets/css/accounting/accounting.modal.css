@@ -11,8 +11,6 @@
     height: 100%;
     border: 0;
     border-radius: 0;
-    color: #393A3D !important;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif !important;
     background-color: #f4f5f8;
 }
 .full-screen-modal .modal .modal-body {
@@ -54,4 +52,190 @@
     background: #393A3D;
     height: 56px;
     text-align: left;
+}
+.centered-modal .take-a-tour-box .tat-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.centered-modal .take-a-tour-box{
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    height: 200px;
+    width: 280px;
+    border: 1px solid #d4d7dc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+    margin-bottom: 30px;
+}
+.centered-modal .modal-dialog .modal-content{
+    min-width: 662px;
+    border: 1px solid #d4d7dc;
+    border-radius: 5px;
+    background-color: #fff
+}
+.centered-modal .modal-dialog .modal-content .modal-body .path{
+    box-sizing: border-box;
+    height: 1px;
+    width: 580px;
+    border: .5px solid #d4d7dc;
+    margin-bottom: 20px;
+}
+.centered-modal .modal-dialog .modal-content .modal-body .help-link-container{
+    margin: 20px 0 40px;
+}
+.centered-modal .modal-dialog .modal-content .modal-body .more-info{
+    color: #393a3d;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: .29px;
+    line-height: 20px;
+    padding: 5px 0;
+}
+.centered-modal .modal-dialog .modal-content .modal-body .helpLink{
+    display: block;
+    margin: 3px 0;
+    height: 20px;
+    color: #0077c5;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+/*Print Checks*/
+#print-checks-modal .modal-title{
+    font-size: 2.4rem;
+    line-height: 50px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+}
+#print-checks-modal .modal-header{
+    border-bottom: 0;
+}
+#print-checks-modal .modal-footer-print{
+    padding: 10px;
+    background: #393A3D;
+}
+#print-checks-modal .footer-links{
+    display: inline-block;
+    height: 25px;
+    padding: 0 15px;
+    line-height: 50px;
+    cursor: pointer;
+    color: #FFFFFF;
+    background: transparent;
+    border: 0 none;
+    box-shadow: none;
+}
+#print-checks-modal .action-bar{
+    height: 60px;
+    position: relative;
+    margin-bottom: 5px;
+}
+#print-checks-modal .batchAction{
+    margin-left: 12px;
+    display: inline-block;
+}
+#print-checks-modal .icon-arrow{
+    color: #BABEC5;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-left: 30px;
+}
+#print-checks-modal .remove-button{
+    border-radius: 36px;
+    border: 2px solid #393a3d;
+    color: #393a3d;
+    line-height: 20px;
+    font-weight: 600;
+    font-size: 16px;
+}
+#print-checks-modal .select-sort{
+    display: inline-block;
+    border: 0;
+    padding: 0;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+#print-checks-modal .labeled-input{
+    display: inline-block;
+    margin-left: 20px;
+    border: 0;
+    padding: 0;
+}
+#print-checks-modal .labeled-input label{
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B6C72;
+}
+#print-checks-modal .print-settings{
+    position: absolute;
+    right: 0;
+    margin-right: 30px;
+    margin-top: 30px;
+}
+#print-checks-modal .print-settings a i{
+    color: #6B6C72;
+    display: inline-block;
+}
+#print-checks-modal .modal-footer-print .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+#print-checks-modal .modal-footer-print .print-button{
+    float: right;
+    border-radius: 36px
+}
+/*Pay Bills*/
+#pay-bills-modal .modal-title{
+    font-size: 2.4rem;
+    line-height: 50px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+}
+#pay-bills-modal .modal-header{
+    border-bottom: 0;
+}
+#pay-bills-modal .modal-footer-print{
+    padding: 10px;
+    background: #393A3D;
+}
+#pay-bills-modal .remove-button{
+    border-radius: 36px;
+}
+#pay-bills-modal .modal-footer-print .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+#pay-bills-modal .modal-footer-print .print-button{
+    float: right;
+    border-radius: 36px
+}
+#pay-bills-modal .modal-body{
+    background: #F4F5F8;
+}
+#pay-bills-modal .table-container{
+    background: #ffffff;
+    padding-top: 15px;
+}
+#pay-bills-modal .filter-container{
+    height: 60px;
+    position: relative;
+    margin-bottom: 5px;
+}
+#pay-bills-modal .filter-container button{
+    border-radius: 5px;
+    border: 1px solid black;
+}
+#pay-bills-modal .filter-container ul li{
+    padding: 20px;
+    height: 300px;
 }

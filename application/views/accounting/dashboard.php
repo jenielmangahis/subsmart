@@ -68,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!--                                        <!-- <a href="--><?php ////echo url('users/add') ?><!--" class="btn btn-primary"-->
                     <!--                                       aria-expanded="false">-->
                     <!--                                        <i class="mdi mdi-settings mr-2"></i> New Employee-->
-                    <!--                                    </a> -->-->
+                    <!--                                    </a> -->
                     <!--                                    --><?php //endif ?>
                     <!--                                </div>-->
                     <!--                            </div>-->

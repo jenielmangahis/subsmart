@@ -646,11 +646,11 @@
               </div>
             </div>
             <!-- end card -->
-         </div>
+        </div>
       </div>
       <!-- end row -->
-   </div>
-   <!-- end container-fluid -->
+  </div>
+  <!-- end container-fluid -->
 </div>
 </div>
 <!-- page wrapper end -->
@@ -658,6 +658,41 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script type="text/javascript" src="https://nsmartrac.com/assets/js/survey.js"></script>
 <script>
+
+  // set storage
+  store = [];
+  if(!localStorage.getItem('survey_ro') || localStorage.getItem('survey_ro') === ""){
+    localStorage.setItem('survey_ro', JSON.stringify(store));
+  }
+  store = JSON.parse(localStorage.getItem('survey_ro'));
+  
+  // store.some((e)=>{ 
+  const checker = store.some((e)=>{ 
+    if(e.id === <?=json_encode($survey->id)?>){
+      return true;
+    }
+  });
+
+  if(checker){
+    store.map((item, i)=>{
+      if(item.id === <?=json_encode($survey->id)?>){
+        store.splice(i, 1);
+      }
+    })
+  }
+
+  if(store.length > 3){
+    store.pop();
+    localStorage.setItem('survey_ro', JSON.stringify(store));
+  }
+  <?php
+    $survey->survey_theme = $survey_theme;
+  ?>
+  store.unshift(<?=json_encode($survey)?>);
+  localStorage.setItem('survey_ro', JSON.stringify(store));
+  // end of settings storage
+
+
   let dataSectionDisplay = false;
 
   toggleDataChart = () => {

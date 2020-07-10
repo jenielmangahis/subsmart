@@ -55,10 +55,17 @@ class Survey extends MY_Controller
   }
 
   public function index(){
+    $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
+
     $this->page_data['surveys'] = $this->survey_model->list();
-    foreach($this->page_data['surveys'] as $key => $survey){
+    foreach($this->page_data["surveys"] as $survey){
       $survey->survey_theme = $this->survey_model->getThemes($survey->theme_id);
-    };
+    }
+    
+    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
+    $this->page_data['survey_templates'] = json_decode($templates);
+    $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
+    $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
     $this->load->view('survey/index.php', $this->page_data);
   }
 
@@ -394,6 +401,7 @@ class Survey extends MY_Controller
   // }
   
   public function workspaceList(){
+    
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->load->view('survey/workspace', $this->page_data);
   }

@@ -1892,6 +1892,15 @@ function getLoggedName() {
     return ucwords($result[0]->FName);
 }
 
+function getUserEmail($id) {
+    $CI =& get_instance();
+    $CI->load->model('Users_model', 'user_model');
+    $result = $CI->user_model->getByWhere(array('id' => $id));
+
+    //return ucwords($result[0]->name);
+    return ucwords($result[0]->email);
+}
+
 function getItemCategoryName($categories, $id) {
 
     $name = $id;

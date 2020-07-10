@@ -2,7 +2,6 @@ $(document).ready(function () {
   $(
     "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable, #jobTypeTable"
   ).DataTable({
-    scrollX: true,
     destroy: true,
   });
 
@@ -53,7 +52,14 @@ $(document).ready(function () {
     $("#addItemsTableDiv").fadeIn();
   });
 
-  $("#newJobBtn, #cancelJobBtn").click(function () {
+  $(".previewCurrentJobTable").click(function () {
+    $("#currentForms").fadeIn();
+    $("#estimateForms").hide();
+    $("#workOrderForms").hide();
+    $("#invoiceForms").hide();
+  });
+
+  $("#newJobBtn, #cancelJobBtn, .deleteJobCurrentForm").click(function () {
     $.LoadingOverlay("show");
   });
 
@@ -289,7 +295,9 @@ $(document).ready(function () {
     if ($("#jobId").val() != "") {
       $.LoadingOverlay("show");
       var param = {
-        email: "jeykell125@gmail.com",
+        company: $("#job_owner_name").val(),
+        from_email: $("#job_owner_email").val(),
+        email: $("#customer_email").val(),
         job_id: $("#jobId").val(),
         customer_id: $("#customer_id").val(),
       };
@@ -387,7 +395,6 @@ function getItems(param, table) {
       }
       if (table) {
         $("#" + table).DataTable({
-          scrollX: true,
           destroy: true,
           data: items,
         });
@@ -435,7 +442,6 @@ function saveInvoiceItems(param) {
         items.push(item);
       }
       $("#addItemsTable").DataTable({
-        scrollX: true,
         destroy: true,
         data: items,
       });
@@ -515,7 +521,6 @@ function saveJobType(param, action) {
       }
       $("#settingType").val("");
       $("#jobTypeTable").DataTable({
-        scrollX: true,
         destroy: true,
         data: items,
       });
@@ -586,7 +591,6 @@ function updateItemQty(param) {
           )
       );
       $("#addItemsTable").DataTable({
-        scrollX: true,
         destroy: true,
         data: items,
       });

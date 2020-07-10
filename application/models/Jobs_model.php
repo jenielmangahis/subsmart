@@ -93,8 +93,8 @@ class Jobs_model extends MY_Model
         $this->db->from('jobs');
         $this->db->where('jobs.company_id', $comp_id);
         $this->db->where('jobs.job_number', $job_num);
-        $this->db->join('jobs_has_customers', 'jobs.jobs_id = jobs_has_customers.jobs_id');
-        $this->db->join('jobs_has_address', 'jobs.jobs_id = jobs_has_address.jobs_id');
+        $this->db->join($this->table_jobs_has_customers, 'jobs.jobs_id = jobs_has_customers.jobs_id');
+        $this->db->join($this->table_jobs_has_address, 'jobs.jobs_id = jobs_has_address.jobs_id');
         $query = $this->db->get();
 
         return $query->row();
@@ -130,8 +130,8 @@ class Jobs_model extends MY_Model
     public function deleteJob($id)
     {
         $this->db->delete('jobs', array("jobs_id" => $id));
-        $this->db->delete('jobs_has_address', array("jobs_id" => $id));
-        $this->db->delete('jobs_has_customers', array("jobs_id" => $id));
+        $this->db->delete($this->table_jobs_has_address, array("jobs_id" => $id));
+        $this->db->delete($this->table_jobs_has_customers, array("jobs_id" => $id));
     }
 
     /**
@@ -139,7 +139,15 @@ class Jobs_model extends MY_Model
      */
     public function deleteJobType($id)
     {
-        $this->db->delete('job_settings', array("job_settings_id" => $id));
+        $this->db->delete($this->table_job_settings, array("job_settings_id" => $id));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function deleteEstimate($id)
+    {
+        $this->db->delete($this->table_estimates, array("id" => $id));
     }
 
     /**
@@ -174,13 +182,26 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
-        /**
+    /**
      * @return mixed
      */
     public function updateJobType($id, $data)
     {
         $this->db->where('job_settings_id',$id);
         $this->db->update($this->table_job_settings, $data);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstimateByJobId($job_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_estimates);
+        $this->db->where('job_id', $job_id);
+        $query = $this->db->get();
+
+        return $query->result();
     }
 }
 
