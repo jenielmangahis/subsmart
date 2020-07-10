@@ -1453,6 +1453,16 @@ img.card-features-home {
   height: 150px;
   object-fit: cover;
 }
+.wizard-d-m.mobile-only {
+  margin-top: 28px;
+  position: relative;
+  top: 20px;
+}
+img.wizard-mobile {
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
 /* Home Signup */
 .signupForm {
     margin-top: -80px;
