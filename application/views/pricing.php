@@ -2517,13 +2517,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="eCommerce-product-div">
                             <div class="image-price-container">
                                 <div class="price-container-title-v2">Industry Specific</div>
-                                <div class="price-container-freelancer">
+                                <div class="price-container default-product">
+                                    <div class="pricing-section">
+                                        <div class="price">
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">399.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <div class="red-price-text">
+                                            <span class="ct">$</span><span class="aw">249.99</span>
+                                            <span class="as"></span><span class="ac"></span>
+                                        </div>
+                                        <span class="per red-price-month">/mo</span>
+                                    </div>
+                                    <!--
                                     <div class="pricing-section mbc-20">
                                         <div class="price">
                                           <p>Contact Us for a Demo</p>
                                         </div>
 
-                                    </div>
+                                    </div> -->
                                     <p class="offer-text" style="position: relative;right: 10px;"><span class="high-attention-text">Save 50%
                                             for 3 months</span></p>
                                     <p class="payroll_text">+20 License</p>
