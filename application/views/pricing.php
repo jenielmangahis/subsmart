@@ -2825,6 +2825,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Blast</strong></span>
                                 </li>
                             </ul>
+                            <ul data-list="1" class="bsc-margin">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Business analytics & <br/> &nbsp; &nbsp; insights</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="bsc-margin">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Batch invoices & <br/> &nbsp; &nbsp; expenses</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="bsc-margin">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Automate <br/> &nbsp; &nbsp; workflows</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="bsc-margin">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Customize access by <br/> &nbsp; &nbsp; role</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="bsc-margin">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Dedicated account <br/> &nbsp; &nbsp; manager</strong></span>
+                                </li>
+                            </ul>
+                            <ul data-list="1" class="bsc-margin">
+                                <li>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>On-demand online <br/> &nbsp; &nbsp; training</strong></span>
+                                </li>
+                            </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
@@ -2924,9 +2954,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <br/>
                         <div class="addon__list-row">
-                            <div class="addon__price">
+                            <div class="addon__price-b">
                                 <div class="addon__price-base"><span class="addon__price-currency">$</span>15</div>
-                                <div class="addon__price-label">Add-Ons</div>
+                                <div class="addon__price-label-b">Wizard</div>
+                                <div class="addon__price-label-b">Add-Ons</div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
