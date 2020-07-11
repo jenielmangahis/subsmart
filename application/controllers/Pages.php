@@ -70,7 +70,7 @@ class Pages extends MY_Controller {
 			$message .= '<strong>Brieft Dscription of Project: </strong>' . $brief_description . '<br />';
 
 	        $this->load->library('email');
-
+            //$email_address = 'bryann.revina03@gmail.com';
 			$config = array();
 			
 			/*$config['protocol']  = 'smtp';
@@ -90,7 +90,7 @@ class Pages extends MY_Controller {
 			$this->email->initialize($config);
 
 			$this->email->set_newline("\r\n");
-			$this->email->from('admin@nsmartrac.com');
+			$this->email->from('noreply@nsmartrac.com');
 			$this->email->to($email_address);
 			$this->email->subject('nSmarTrac : Find Pro');
 			$this->email->message($message);
