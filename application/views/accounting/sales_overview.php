@@ -5,20 +5,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
        
         <!-- page wrapper start -->
         <div wrapper__section>
-            <div class="container-fluid w-97">
-					<div class="row ml-4 pb-2 mt-3">
+            <div class="container-fluid">
+				<div class="page-title-box mx-4">
+					<div class="row pb-2">
 						<div class="col-md-12 banking-tab-container">
-							<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab-active" style="text-decoration: none">Overview</a>
+							<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab-active text-decoration-none">Overview</a>
 							<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab">All Sales</a>
-							<a href="#" class="banking-tab">Invoices</a>
-							<a href="#" class="banking-tab">Customers</a>
-							<a href="#" class="banking-tab">Deposits</a>
-							<a href="#" class="banking-tab">Products and Services</a>
+							<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab">Invoices</a>
+							<a href="<?php echo url('/accounting/customers')?>" class="banking-tab">Customers</a>
+							<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab">Deposits</a>
+							<a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a>
 						</div>
 					</div>
-					<div class="row ml-4 pt-3">
+					<div class="row pt-3">
 						<div class="col-lg-12">
-							<div class="row bg-white px-3 py-4">
+							<div class="row bg-white px-3 py-4 rounded">
 								<div class="col-lg-3">
 									<h5 class="text-secondary">INCOME OVER TIME</h5>
 									<div class="">
@@ -48,8 +49,114 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</div>
 							</div>
                         </div>
-                    
 					</div>
+					<div class="row pt-3">
+						<div class="col-lg-7 pl-0">
+							<div class="bg-white p-4 rounded">
+								<h5 class="text-secondary mt-0">INVOICES</h5>
+								<div class="row px-3">
+									<div class="col-sm-12">
+										<h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span class="pl-3">Last 365 days</span></h6>
+									</div>
+									<div class="col-sm-12 mt-0">
+										<div class="pull-left">
+											<h3 class="mb-0"><strong>$0</strong></h3>
+											<h6 class="font-weight-normal text-secondary mt-1">Overdue</h6>
+										</div>
+										<div class="pull-right">
+											<h3 class="mb-0"><strong>$4</strong></h3>
+											<h6 class="font-weight-normal text-secondary mt-1">Not due yet</h6>
+										</div>
+									</div>
+									<div class="col-sm-12 mt-1">
+										<div class="progress" style="height:30px">
+											<div class="progress-bar bg-secondary w-50"></div>
+											<div class="progress-bar bg-dark  w-50"></div>
+										</div>
+									</div>
+								</div>
+								<div class="row px-3 mt-3 pb-2">
+									<div class="col-sm-12">
+										<h6 class="font-weight-normal"><strong>$0 Paid</strong><span class="pl-3">Last 30 days</span></h6>
+									</div>
+									<div class="col-sm-12 mt-0">
+										<div class="pull-left">
+											<h3 class="mb-0"><strong>$0</strong></h3>
+											<h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
+										</div>
+										<div class="pull-right">
+											<h3 class="mb-0"><strong>$0</strong></h3>
+											<h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
+										</div>
+									</div>
+									<div class="col-sm-12 mt-1">
+										<div class="progress" style="height:30px">
+											<div class="progress-bar bg-success w-50"></div>
+											<div class="progress-bar bg-info  w-50"></div>
+										</div>
+									</div>
+								</div>
+							
+							</div>
+						</div>
+						<div class="col-lg-5 pr-0">
+							<div class="bg-white p-4 rounded h-100">
+								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
+								<div class="row px-2 text-center mt-4 align-items-center">
+									<div class="col-sm-6">
+										<p class=""><i class="fa fa-file h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>New Invoice</h6>
+									</div>
+									<div class="col-sm-6">
+										<p class=""><i class="fa fa-file-o h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Recurring Invoice</h6>
+									</div>
+									<div class="col-sm-6">
+										<p class=""><i class="fa fa-file-text h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>New Sale</h6>
+									</div>
+									<div class="col-sm-6">
+										<p class=""><i class="fa fa-files-o h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Recurring Sale</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row pt-3">
+						<div class="col-sm-12 px-0">
+							<div class="bg-white p-4 rounded text-secondary">
+								<h5 class="text-secondary mt-0">DEPOSITS</h5>
+								<h1 class="mb-0 d-block mt-4"><strong>$0.00</strong></h1>
+								<h6 class="font-weight-normal text-secondary mt-1 d-block">Deposit for July 10, 2020</h6>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="w-100 d-inline-block">
+											<ul class="timeline timeline-horizontal text-center">
+												<li class="timeline-item">
+													<div class="timeline-badge primary"><i class="glyphicon glyphicon-check"></i></div>
+													<h5 class="timeline-title">Processing</h5>
+												</li>
+												<li class="timeline-item">
+													<div class="timeline-badge primary"><i class="glyphicon glyphicon-check"></i></div>
+													<h5 class="timeline-title">Batched</h5>
+												</li>
+												<li class="timeline-item">
+													<div class="timeline-badge primary"><i class="glyphicon glyphicon-check"></i></div>
+													<h5 class="timeline-title">In transit</h5>
+												</li>
+												<li class="timeline-item">
+													<div class="timeline-badge primary"><i class="glyphicon glyphicon-check"></i></div>
+													<h5 class="timeline-title">Deposited</h5>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
             </div>
             <!-- end container-fluid -->
         </div>

@@ -6,6 +6,7 @@ class Accounting extends MY_Controller {
     public function __construct()
     {
         parent::__construct();
+//        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
             "assets/css/accounting/accounting.modal.css?v=".rand(),
@@ -127,5 +128,13 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/all_sales', $this->page_data);
     }
+
+    public function audit_log()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "All Sales";
+        $this->load->view('accounting/audit_log', $this->page_data);
+    }
+
 
 }

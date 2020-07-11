@@ -72,13 +72,20 @@ class Pages extends MY_Controller {
 	        $this->load->library('email');
 
 			$config = array();
-			$config['protocol']  = 'smtp';
+			
+			/*$config['protocol']  = 'smtp';
 			$config['smtp_host'] = 'smtp.mailtrap.io';
 			$config['smtp_user'] = 'd7c92e3b5e901d';
 			$config['smtp_pass'] = '203aafda110ab7';
 			$config['smtp_port'] = 2525;
-			$config['mailtype']  = 'html';
+			$config['mailtype']  = 'html';*/
 
+			$config['protocol']  = 'smtp';
+			$config['smtp_host'] = 'mail.nsmartrac.com';
+			$config['smtp_user'] = 'admin@nsmartrac.com';
+			$config['smtp_pass'] = 'UqzD+td4Yb&S';
+			$config['smtp_port'] = 25;
+			$config['mailtype']  = 'html';
 
 			$this->email->initialize($config);
 

@@ -118,8 +118,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </select>
                                                 </div>
                                                 <div class="">
-                                                    <button class="btn btn-default" type="reset" style="border-radius: 20px 20px 20px 20px">Reset</button>
-                                                    <button class="btn btn-success" type="submit" style="border-radius: 20px 20px 20px 20px; float: right;">Apply</button>
+                                                    <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
+                                                    <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
                                                 </div>
                                             </form>
                                         </li>
@@ -239,7 +239,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <span class="print-settings">
                                 <a href=""><i class="fa fa-print fa-lg"></i></a>
-                                <a href=""><i class="fa fa-cog fa-lg"></a></i>
+                                <a href=""><i class="fa fa-cog fa-lg"></i></a>
                             </span>
                         </div>
 <!--                        DataTables-->

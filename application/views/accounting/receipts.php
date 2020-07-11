@@ -5,16 +5,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row" style="padding-bottom: 20px;">
+            <div class="page-title-box mx-4">
+                <div class="row pb-2">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
                         <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
                         <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="receipts")?:'-active';?>">Receipts</a>
                     </div>
                 </div>
-                <div class="row align-items-center">
-                    <div class="col-md-12">
+                <div class="row align-items-center mt-3">
+                    <div class="col-md-12 px-0">
                         <div class="row">
                             <div class="col-md-8">
                                 <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="border: 2px grey dashed;">
@@ -33,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-top: 20px">
+                        <div class="p-3 bg-white mt-4">
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs banking-tab-container">
                                 <li class="nav-item banking-sub-active">
@@ -47,16 +47,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- Tab panes -->
                             <div class="tab-content" style="padding-top: 10px">
                                 <div class="tab-pane active" id="forReview">
-                                    <table id="banking_table" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="forReview_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th><input type="checkbox" class="form-control"></th>
+                                            <th><input type="checkbox"></th>
                                             <th>Receipt</th>
                                             <th>Transaction Date</th>
                                             <th>Description/Vendor</th>
-                                            <th>Payment Account</th>
+                                            <th>Payment account</th>
+                                            <th>Total amount/Taxes</th>
+                                            <th>Category or Matched</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td><img src="<?php echo base_url('assets/img/accounting/default-img.png') ?>" alt="" height="100" width="100"></td>
+                                            <td>CHECK #2701 2701</td>
+                                            <td>Mike Bell Jr</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><a href="">Review</a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="reviewed">
+                                    <table id="reviewed_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th><input type="checkbox"></th>
+                                            <th>Receipt</th>
+                                            <th>Transaction Date</th>
+                                            <th>Description/Vendor</th>
                                             <th>Total amount/Tax</th>
-                                            <th>Category or Match</th>
+                                            <th>Linked Record</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -67,15 +94,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td>CHECK #2701 2701</td>
                                             <td>Mike Bell Jr</td>
                                             <td></td>
-                                            <td>$320</td>
                                             <td></td>
                                             <td><a href="">View</a></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                                <div class="tab-pane fade" id="reviewed">
-                                    <h4>Menu 2</h4>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +118,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
     // DataTable JS
     $(document).ready(function() {
-        $('#receipts_table').DataTable();
+        $('#forReview_receipts_tbl').DataTable();
+    } );
+    $(document).ready(function() {
+        $('#reviewed_receipts_tbl').DataTable();
     } );
     // Active menu jquery
     $('.banking-sub-tab').click(function(){

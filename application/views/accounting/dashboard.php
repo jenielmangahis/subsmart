@@ -6,9 +6,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid" >
             <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-md-4">
-                        <div class="income tile-container" style="position:relative;top:20px;left:50px;width: 320px;height: 320px;padding: 0px;">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="income tile-container">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -25,8 +25,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="expenses tile-container" style="position:relative;top:20px;left: 50px;width: 320px;height: 320px;padding: 0px;">
+                    <div class="col-sm-4">
+                        <div class="expenses tile-container">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -43,8 +43,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="bank-accounts tile-container" style="position:relative;top:20px;left: 50px;width: 320px;height: 320px;padding: 0px;">
+                    <div class="col-sm-4">
+                        <div class="bank-accounts tile-container">
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -61,6 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
+                </div>
                     <!--                        <div class="col-sm-6">-->
                     <!--                            <div class="float-right d-none d-md-block">-->
                     <!--                                <div class="dropdown">-->
@@ -73,10 +74,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!--                                </div>-->
                     <!--                            </div>-->
                     <!--                        </div>-->
-                </div>
+
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="sales tile-container" style="position:relative;top:20px;left: 50px;width: 320px;height: 320px;padding: 0px;">
+                    <div class="col-sm-4">
+                        <div class="sales tile-container" >
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -94,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="more tile-container" style="position:relative;top:20px;left: 50px;width: 320px;height: 320px;padding: 0px;">
+                        <div class="more tile-container" >
                             <div class="inner-container">
                                 <div class="tileContent">
                                     <div class="clear">
@@ -113,9 +114,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-md-4"></div>
                 </div>
+                <div class="activity-container">
+                    <a href="<?php echo url('/accounting/audit_log') ?>" class="activityLink">See all activity</a>
+                </div>
             </div>
-            <!-- end row -->
-            <div class="row"></div>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->

@@ -83,6 +83,9 @@
                     <li>
                         <a href="<?php echo base_url();?>workorder">Status</a>
                     </li>
+                    <li>
+                        <a href="<?php echo base_url();?>job">Custom Form</a>
+                    </li>
                 </ul>
         </li>
     </ul>

@@ -118,7 +118,8 @@
                     
                     <nav aria-label="breadcrumb">
                       <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Surveys</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Workspace</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><?=$survey->title?></li>
                       </ol>
                     </nav>
@@ -132,7 +133,7 @@
                         <?php
                           if(!empty($survey_theme)){
                             ?>
-                           
+
                               <div class="card survey-kpi-card survey-kpi-card-theme">
                                 <img class="survey-kpi-card-theme-image" src="<?=base_url()?>uploads/survey/themes/<?=$survey_theme->sth_primary_image?>" alt="image">
                                 <div class="card-content survey-kpi-card-theme-content">

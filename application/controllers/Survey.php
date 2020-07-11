@@ -104,6 +104,7 @@ class Survey extends MY_Controller
   public function edit($id){
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
+    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
     $this->page_data['qTemplate'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['themes'] = $this->survey_model->getThemes();
@@ -343,6 +344,7 @@ class Survey extends MY_Controller
 
   public function addSurvey(){
     $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
+    $this->page_data['survey_themes'] = $this->survey_model->getThemes();
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
@@ -385,20 +387,8 @@ class Survey extends MY_Controller
   //   $test = $this->upload->initialize($config);
   //   // if ( ! $this->upload->do_upload('image_background') ){
 
-  //   // }else{
-  //   //   $upload_data = $this->upload->data();
-  //   // }
 
-  //   // $data = array(
-  //   //   'image_background' => $_FILES['image_background']['name'],
-  //   // );
 
-  //   // $this->survey_model->addThemeImage($id, $data);
-  //   // echo json_encode(array(
-  //   //   'success' => 1
-  //   // ));
-  //   // exit;
-  // }
   
   public function workspaceList(){
     

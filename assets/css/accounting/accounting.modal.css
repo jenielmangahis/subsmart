@@ -29,13 +29,13 @@
 
 .banks-img{
     height: 84px;
-    width: 140px;
-    margin: 20px 20px 20px 20px;
+    width: 105px;
+    margin: 20px;
 }
 .modal-container .centered-container{
     display: flex;
     justify-content: center;
-    margin: 20px 20px 20px 20px;
+    margin: 20px;
 }
 .modal-container .centered-container img{
     width: 120px;
@@ -239,3 +239,170 @@
     padding: 20px;
     height: 300px;
 }
+/*Right side modal*/
+
+.modal-right-side .modal.right .modal-dialog {
+    position: fixed;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    -webkit-transform: translate3d(0%, 0, 0);
+    -ms-transform: translate3d(0%, 0, 0);
+    -o-transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0);
+}
+.modal-right-side .modal.right .modal-content {
+    height: 100%;
+    overflow-y: auto;
+}
+.modal-right-side .modal.right .modal-body {
+    padding: 0 30px 80px;
+    font-family: "Avenir Next LT Pro", "Avenir Next", Futura, sans-serif;
+}
+
+.modal-right-side .modal.right.fade .modal-dialog {
+    right: 0;
+    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+    transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.modal-right-side .modal.right.fade.in .modal-dialog {
+    right: 0;
+}
+.modal-right-side .modal-content {
+    border-radius: 0;
+    border: none;
+}
+.modal-right-side .modal-header {
+    border-bottom: 0;
+    background-color: #FAFAFA;
+    margin-bottom: 0;
+}
+.modal-right-side .modal-body .subheader{
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 22px;
+}
+.modal-right-side .modal-body .form-group{
+    margin-bottom: 17px;
+}
+.modal-right-side .modal-body .form-group label{
+    font-size: 16px;
+    color: #333333;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.modal-right-side .modal-body .form-group input,select{
+    border-radius: 3px;
+}
+.modal-right-side .modal-body .form-group .tab-select{
+    display: inline-block;
+    position: relative;
+}
+.modal-right-side .modal-body .form-group .tab-select select{
+    max-width: 250px;
+}
+.modal-right-side .modal-body .form-group .selectBox {
+    position: relative;
+}
+.modal-right-side .modal-body .form-group .selectBox select {
+    width: 100%;
+}
+
+.modal-right-side .modal-body .form-group .overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.modal-right-side .modal-body .form-group #checkboxes {
+    display: none;
+    border: 1px #dadada solid;
+    z-index: 200;
+    position: absolute;
+}
+
+.modal-right-side .modal-body .form-group #checkboxes label {
+    display: block;
+}
+
+.modal-right-side .modal-body .form-group #checkboxes label:hover {
+    background-color: #afafaf;
+}
+.modal-right-side .modal-body .form-group .inline-select{
+    position: relative;
+    display: inline-block;
+    max-width: 150px;
+}
+.modal-right-side .modal-body .form-group .action-section{
+    align-items: center;
+    display: flex;
+    margin-bottom: 16px;
+}
+.modal-right-side .modal-body .form-group .action-section .form-control{
+    max-width: 220px;
+}
+.modal-right-side .modal-body .form-group .action-section .action-label{
+    margin-right: 30px;
+    width: 100px;
+}
+.modal-right-side .modal-body .form-group .action-section .dp-btn{
+    height: 46px;
+    width: 36px;
+}
+.modal-right-side .modal-body .form-group .action-section .dp-menu-container{
+    width: 256px;
+}
+.modal-right-side .modal-body .form-group .action-section .dp-menu-container li{
+    height: 30px;
+}
+.modal-right-side .modal-body .form-group .custom-control-label {
+    font-size: 14px;
+    color: #333333;
+    font-weight: lighter;
+}
+.modal-right-side .modal-footer .btn {
+    border-radius: 36px;
+}
+/*Process Steps*/
+#importRules .modal-body .progressSection{
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e3eaf3;
+    background-image: -webkit-linear-gradient(bottom, #f6f8fb 0%, #f9fafb 100%);
+    background-image: linear-gradient(to top, #f6f8fb 0%, #f9fafb 100%);
+}
+#importRules .modal-body .uploadList .step-title{
+    margin-top: 30px;
+    font-weight: 700;
+    font-size: 20px;
+}
+#importRules .modal-body .uploadList .sub-title{
+    margin-top: 15px;
+    margin-bottom: 45px;
+    font-weight: lighter;
+    font-size: 14px;
+}
+#importRules .modal-body .uploadList .instruction{
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 16px;
+}
+#importRules .modal-footer-importRules{
+    padding: 8px 15px;
+    background: #393A3D;
+    height: 56px;
+    text-align: left;
+}
+#importRules .modal-footer-importRules .btn{
+    border-radius: 36px;
+    color: #FFFFFF;
+}
+#importRules .modal-footer-importRules .btn-default{
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+

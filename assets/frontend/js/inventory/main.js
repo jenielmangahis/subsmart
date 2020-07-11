@@ -144,8 +144,14 @@ $(document).ready(function () {
     console.log($("#selectInventoryCat").val());
   });
 
-  $("#inventoryOnHandItems, #serviceItemsTable, #feesItemsTable").DataTable({
-    scrollX: true,
+  $("#serviceItemsTable, #feesItemsTable").DataTable({});
+
+  $("#inventoryOnHandItems").DataTable({
+    order: [[1, "asc"]],
+  });
+
+  $(".deleteJobCurrentForm").click(function () {
+    $.LoadingOverlay("show");
   });
 });
 

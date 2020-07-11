@@ -81,8 +81,8 @@
             What would you like to do?
           </p>
           <div class="text-center">
-            <button class="btn btn-small btn-primary"><a class="text-white" href="<?base_url()?>survey/add"><i class="fa fa-plus"></i> Add new survey</a></button>
-            <button class="btn btn-small btn-secondary"><a class="text-white" href="<?base_url()?>survey/themes/create"><i class="fa fa-plus"></i> Add new themes</a></button>
+            <button class="btn btn-small btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-plus"></i> Add new survey</a></button>
+            <button class="btn btn-small btn-secondary"><a class="text-white" href="<?=base_url()?>survey/themes/create"><i class="fa fa-plus"></i> Add new themes</a></button>
           </div>
         </div>
       </div>
@@ -101,7 +101,10 @@
   <!-- workspace container -->
   <div id="workspace-survey-list" class="w-100">
     <div class="card p-5">
-      <h4>Workspaces</h4>
+      <div class="d-flex w-100 justify-content-between">
+        <h4>Workspaces</h4>
+        <a href="<?=base_url()?>survey/workspace">View in a separate page</a>
+      </div>
       <div class="row">
         <div class="col-2">
           <div class="list-group" id="list-tab" role="tablist">
@@ -214,34 +217,115 @@
     <div class="card p-5">
       <div class="card-content">
         <h4>Templates</h4>
-        <?php      
-          array_map(function($category) use ($survey_templates){
-            ?>
-              <p><?=$category?></p>
-              <hr>
-              
-              <div class="row d-flex w-100">
-                <?php
-                  foreach($survey_templates as $template){
-                    if($template->category === $category){
-                      ?>
-                        <div id="template-card<?=$template->id?>" onclick="viewTemplateDetails(<?=$template->id?>)" class="card template-card" data-toggle="popover" data-placement="top" data-html="true" title="<h6><?=$template->name?></h6>" data-content='<div id="template-popover<?=$template->id?>">Loading...</div>' style="width: 600px">
-                        <!-- <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate"> -->
-                          <div class="card-content">
-                            <h4><?=$template->name?></h4>
-                            <span><?= count($template->questions)?> question<?=(count($template->questions) > 1)?"s":""?> </span>
-                          </div>
-                        </div>
-                        
-                        
-                      <?php
-                    }
-                  }
-                ?>
-              </div>
-            <?php
-          },$template_categories);
-        ?>
+
+        <div class="accordion" id="accordionExample">
+
+
+          <?php      
+            foreach($template_categories as $key => $category){
+              ?>
+                <hr>
+                
+                <div class="card m-0 p-0">
+                
+                  <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapse-<?=$key?>" aria-expanded="true" aria-controls="collapse-<?=$key?>">
+                    <button class="btn btn-link" type="button" >
+                      <?=$category?> 
+                    </button>
+                  </div>
+
+                  <div id="collapse-<?=$key?>" class="collapse" data-parent="#accordionExample">
+                    <div class="card-body">
+                      
+                      <div class="row d-flex w-100">
+                        <?php
+                          foreach($survey_templates as $template){
+                            if($template->category === $category){
+                              ?>
+                                <div id="template-card<?=$template->id?>" onclick="viewTemplateDetails(<?=$template->id?>)" class="col card template-card" data-toggle="popover" data-placement="top" data-html="true" title="<h6><?=$template->name?></h6>" data-content='<div id="template-popover<?=$template->id?>">Loading...</div>' style="width: 600px">
+                                <!-- <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate"> -->
+                                  <div class="card-content">
+                                    <h4><?=$template->name?></h4>
+                                    <span><?= count($template->questions)?> question<?=(count($template->questions) > 1)?"s":""?> </span>
+                                  </div>
+                                </div>
+                                </a>
+                                
+                                
+                              <?php
+                            }
+                          }
+                        ?>
+                      </div>
+
+                      
+                    </div>
+                  </div>
+                </div>        
+
+                
+              <?php
+            };
+          ?>
+
+  
+          <?php      
+            // array_map(function($category) use ($survey_templates){
+              ?>
+                <hr>
+                
+                <div class="card">
+                
+                  <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <?=$category?>
+                      </button>
+                    </h2>
+                  </div>
+
+                  <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                      
+                      <div class="row d-flex w-100">
+                        <?php
+                          foreach($survey_templates as $template){
+                            if($template->category === $category){
+                              ?>
+                                <div id="template-card<?=$template->id?>" onclick="viewTemplateDetails(<?=$template->id?>)" class="col card template-card" data-toggle="popover" data-placement="top" data-html="true" title="<h6><?=$template->name?></h6>" data-content='<div id="template-popover<?=$template->id?>">Loading...</div>' style="width: 600px">
+                                <!-- <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate"> -->
+                                  <div class="card-content">
+                                    <h4><?=$template->name?></h4>
+                                    <span><?= count($template->questions)?> question<?=(count($template->questions) > 1)?"s":""?> </span>
+                                  </div>
+                                </div>
+                                </a>
+                                
+                                
+                              <?php
+                            }
+                          }
+                        ?>
+                      </div>
+
+                      
+                    </div>
+                  </div>
+                </div>        
+
+                
+              <?php
+            // },$template_categories);
+          ?>
+          
+        </div>
+
+
+
+
+
+
+
       </div>
     </div>
   </div>
@@ -323,8 +407,7 @@
       </div>
     </div>
   </div>
-
-      <!-- end of modals -->
+  <!-- end of modals -->
 </div>
 
   
@@ -368,7 +451,6 @@
   }
   
   JSON.parse(localStorage.getItem('survey_ro')).map((item)=>{
-    // <tr><td><i class="fa fa-newspaper-o"></i> <a href="<?=base_url()?>survey/result/${item.id}">${item.title}</a></td></tr>
     document.querySelector('#recent-survey-opened-table').innerHTML += `
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div data-id="${item.id}" class="card survey-card border-0 shadow" style="background-image: url('<?=base_url()?>uploads/survey/themes/${item.survey_theme?.sth_primary_image}')">
@@ -387,7 +469,6 @@
 
   
   recentSurveys.map((item)=>{
-    // <tr><td><i class="fa fa-newspaper-o"></i> <a href="<?=base_url()?>survey/result/${item.id}">${item.title}</a></td></tr>
     document.querySelector('#recent-survey-added-table').innerHTML += `
     <div class="col-xs-12 col-sm-6 col-md-3">
       <div data-id="${item.id}" class="card survey-card border-0 shadow" style="background-image: url('<?=base_url()?>uploads/survey/themes/${item.survey_theme?.sth_primary_image}')">
@@ -403,7 +484,6 @@
     </div>
     `;
   })
-  
   
 
   handleDeleteWorkspacePrompt = (id = null) => {

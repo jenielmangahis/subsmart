@@ -269,6 +269,14 @@ class Inventory extends MY_Controller
             return false;
         }
     }
+
+    public function delete() {
+        $get = $this->input->get();
+
+        $this->items_model->delete($get['id']);
+
+        redirect('inventory');
+    }
 }
 
 

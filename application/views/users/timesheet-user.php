@@ -32,6 +32,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         visibility: visible;
         border: 2px solid white;
     }
+    th{
+        text-align: center;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -68,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">List of Employees</h4>
+                            <h4 class="mt-0 header-title mb-5">Timesheet</h4>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="dataTable1" class="table table-bordered table-striped">
@@ -76,18 +79,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tr>
                                             <!-- <th>Id</th>
                                             <th>Image</th> -->
-                                            <th>Name</th>
+                                            <th rowspan="2">Name</th>
                                             <?php /*<th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th>*/ ?>
-                                            <th>Last Login</th>
+                                            <th rowspan="2">Last Login</th>
                                             <!-- <th>Status</th> -->
+                                            <th rowspan="2">In</th>
+                                            <th rowspan="2">Out</th>
+
+                                            <th colspan="2">Lunch</th>
+                                            <!-- <th>Out</th> -->
+                                            <th rowspan="2">Comments/Schedule</th>
+                                            <th rowspan="2">Action</th>
+                                        </tr>
+                                        <tr>
                                             <th>In</th>
                                             <th>Out</th>
-                                            <th>Lunch In</th>
-                                            <th>Lunch Out</th>
-                                            <th>Comments/Schedule</th>
-                                            <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -143,7 +151,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?php //echo $current_time_now; ?>
                                                             <?php 
                                                                 // clock in for each user; temporarily specifying the first data in the array
-                                                                if( !empty($clockin_arr) ){
+                                                                //if( !empty($clockin_arr) ){
 
                                                                     if( $clockin_arr[0]->action == 'Clock In' ){
                                                                         $user_clock_in = $clockin_arr[0]->timestamp;
@@ -169,7 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         $user_clock_in = $clockin_arr[0]->timestamp;
                                                                         echo date('h:i a', strtotime($user_clock_in))." Manual Break Out";
                                                                     }
-                                                                }
+                                                                //}
                                                                                                                                 
                                                             ?>
                                                         </span>
@@ -182,7 +190,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateClockIn('<?php echo $row->id ?>', '<?php echo $current_time_now; ?>' )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
-                                                            <?php if( !empty($clockin_arr) ):?>
+                                                            <?php //if( !empty($clockin_arr) ):?>
 
                                                                 <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                                     <?php if( $clockin->action == 'Clock In' && $k == 0 && $clockin->timestamp != 0 ):?>
@@ -196,7 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <span class="clocked_in_<?php echo $row->id;?>">00:00 </span> -->
                                                                     <?php endif;?>
                                                                 <?php endforeach; ?>
-                                                            <?php endif;?>
+                                                            <?php //endif;?>
                                                             <input type="hidden" name="clocked_in" value="" />
                                                             
                                                         <?php //endif ?>
@@ -206,7 +214,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
-                                                            <?php if( !empty($clockin_arr) ):?>
+                                                            <?php //if( !empty($clockin_arr) ):?>
                                                                 <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                                 <?php if( $clockin->action == 'Clock Out' && $k == 0 && $clockin->timestamp != 0 ):?>
                                                                     <input type="radio" name="clocked_out_<?php echo $row->id;?>" checked="checked" /><br />
@@ -219,7 +227,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="clocked_out_<?php echo $row->id;?>">00:00 </span> -->
                                                                 <?php endif;?>
                                                                 <?php endforeach; ?>
-                                                            <?php endif;?>
+                                                            <?php //endif;?>
                                                             
                                                             <input type="hidden" name="clocked_out" value="" />
                                                             
@@ -230,7 +238,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
-                                                            <?php if( !empty($clockin_arr) ):?>
+                                                            <?php //if( !empty($clockin_arr) ):?>
                                                                 <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                                     <?php if( $clockin->action == 'Lunch In' && $k == 0 && $clockin->timestamp != 0 ):?>
                                                                         <input type="radio" name="lunched_in_<?php echo $row->id;?>" checked="checked" /><br />
@@ -243,7 +251,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <span class="lunched_in_<?php echo $row->id;?>">00:00 </span> -->
                                                                     <?php endif;?>
                                                                 <?php endforeach;?>
-                                                            <?php endif;?>
+                                                            <?php //endif;?>
                                                             
                                                             <input type="hidden" name="lunched_in" value="" />
                                                             
@@ -254,7 +262,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php //if (logged('id') !== $row->id): ?>
                                                             <!-- <input type="checkbox" class="js-switch"
                                                                    onchange="updateUserStatus('<?php echo $row->id ?>', $(this).is(':checked') )" <?php echo ($row->status) ? 'checked' : '' ?> /> -->
-                                                            <?php if( !empty($clockin_arr) ):?>
+                                                            <?php //if( !empty($clockin_arr) ):?>
                                                                 <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                                     <?php if( $clockin->action == 'Lunch Out' && $k == 0 && $clockin->timestamp != 0 ):?>
                                                                         <input type="radio" name="lunched_out_<?php echo $row->id;?>" checked="checked" /><br />
@@ -267,7 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <span class="lunched_out_<?php echo $row->id;?>">00:00 </span> -->
                                                                     <?php endif;?>
                                                                 <?php endforeach;?>
-                                                            <?php endif;?>
+                                                            <?php //endif;?>
                                                             
                                                             <input type="hidden" name="lunched_out" value="" />
                                                             
@@ -311,6 +319,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <input type="hidden" name="clockin_status" value="1" />
                                                                 <input type="hidden" name="clockin_sess" value="<?php echo $clockin_sess; ?>" />
                                                                 
+                                                                <?php if( empty($clockin_arr) ):?>
+                                                                    <a id="clockin_btn" style="display:;" href="#" class="btn btn-sm btn-primary clockin_btn" title="Clock In" data-toggle="tooltip">
+                                                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In
+                                                                    </a>
+                                                                    <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
+                                                                    </a>
+                                                                    <a id="lunchin_btn" style="display:;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
+                                                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
+                                                                    </a>
+                                                                    <a id="clockout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
+                                                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
+                                                                    </a>
+                                                                <?php endif; ?>
+
                                                                 <!-- The following are new timesheet actions -->
                                                                 <!-- Clock In-->
                                                                 <?php if( !empty($clockin_arr) ):?>
@@ -362,30 +385,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <?php endif; ?>
 
                                                                 <!-- Break In-->
-                                                                <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Break In' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                        <a id="breakin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary breakin_btn" title="Clock Out" data-toggle="tooltip">
+                                                                <?php //if( !empty($clockin_arr) ):?>
+                                                                    <?php //if( $clockin_arr[0]->action == 'Break In' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <!-- <a id="breakin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary breakin_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break In
-                                                                        </a>
-                                                                    <?php else: ?>
-                                                                        <a id="breakin_btn" style="display: ;" href="#" class="btn btn-sm btn-primary breakin_btn" title="Clock Out" data-toggle="tooltip">
+                                                                        </a> -->
+                                                                    <?php //else: ?>
+                                                                        <!-- <a id="breakin_btn" style="display: ;" href="#" class="btn btn-sm btn-primary breakin_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break In
-                                                                        </a>
-                                                                    <?php endif; ?>
-                                                                <?php endif; ?>
+                                                                        </a> -->
+                                                                    <?php //endif; ?>
+                                                                <?php //endif; ?>
 
                                                                 <!-- Break Out-->
-                                                                <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Break Out' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                        <a id="breakout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary breakout_btn" title="Clock Out" data-toggle="tooltip">
+                                                                <?php //if( !empty($clockin_arr) ):?>
+                                                                    <?php //if( $clockin_arr[0]->action == 'Break Out' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <!-- <a id="breakout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary breakout_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break Out
-                                                                        </a>
-                                                                    <?php else: ?>
-                                                                        <a id="breakout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary breakout_btn" title="Clock Out" data-toggle="tooltip">
+                                                                        </a> -->
+                                                                    <?php //else: ?>
+                                                                        <!-- <a id="breakout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary breakout_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Break Out
-                                                                        </a>
-                                                                    <?php endif; ?>
-                                                                <?php endif; ?>
+                                                                        </a> -->
+                                                                    <?php //endif; ?>
+                                                                <?php //endif; ?>
 
                                                                 <!-- <?php if( !empty($clockin_arr) ):?>
                                                                     <?php if( $clockin_arr[0]->action == 'Clock In' && $clockin_arr[0]->timestamp != 0 ):?>
@@ -633,7 +656,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('User has Clocked In');
+                    //alert('User has Clocked In');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -803,7 +826,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    //alert('User has Clocked In');
+                    alert('Clocked Out');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -891,7 +914,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    //alert('User has Lunched Out');
+                    alert('Clocked out for lunch');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');

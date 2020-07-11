@@ -5,15 +5,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row" style="padding-bottom: 20px;">
+            <div class="page-title-box mx-4">
+                <div class="row pb-2">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab" style="text-decoration: none">Expenses</a>
                         <a href="<?php echo url('/accounting/vendors')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="vendors")?:'-active';?>">Vendors</a>
                     </div>
                 </div>
-                <div class="row align-items-center">
-                    <div class="col-md-12" >
+                <div class="row align-items-center mt-3">
+                    <div class="col-md-12 px-0" >
                         <div class="row">
                             <div class="col-md-6">
                                 <h2>Vendors</h2>
@@ -46,8 +46,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12" >
+                        <div class="row p-3 bg-white mt-3 mx-0">
+                            <div class="col-md-12">
                                 <!--                        DataTables-->
                                 <table id="vendors_table" class="table table-striped table-bordered" style="width:100%">
                                     <thead>
