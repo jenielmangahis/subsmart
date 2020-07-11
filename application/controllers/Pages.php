@@ -55,6 +55,7 @@ class Pages extends MY_Controller {
 			$email_address = $this->input->post('email_address');
 			$address = $this->input->post('address');
 			$brief_description = $this->input->post('brief_description');
+			$admin_email       = 'bryann.revina03@gmail.com';
 
 			$message = '';
 			$message .= '<strong>Find Pro: </strong>' . $find_pro . '<br />';
@@ -70,7 +71,7 @@ class Pages extends MY_Controller {
 			$message .= '<strong>Brieft Dscription of Project: </strong>' . $brief_description . '<br />';
 
 	        $this->load->library('email');
-            //$email_address = 'bryann.revina03@gmail.com';
+	        
 			$config = array();
 			
 			/*$config['protocol']  = 'smtp';
@@ -91,7 +92,7 @@ class Pages extends MY_Controller {
 
 			$this->email->set_newline("\r\n");
 			$this->email->from('noreply@nsmartrac.com');
-			$this->email->to($email_address);
+			$this->email->to($admin_email);
 			$this->email->subject('nSmarTrac : Find Pro');
 			$this->email->message($message);
 			if($this->email->send()){
