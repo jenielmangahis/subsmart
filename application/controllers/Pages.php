@@ -55,7 +55,7 @@ class Pages extends MY_Controller {
 			$email_address = $this->input->post('email_address');
 			$address = $this->input->post('address');
 			$brief_description = $this->input->post('brief_description');
-			$admin_email       = 'bryann.revina03@gmail.com';
+			$admin_email       = 'admin@nsmartrac.com';
 
 			$message = '';
 			$message .= '<strong>Find Pro: </strong>' . $find_pro . '<br />';
@@ -70,8 +70,10 @@ class Pages extends MY_Controller {
 			$message .= '<strong>Full Address: </strong>' . $address . '<br />';
 			$message .= '<strong>Brieft Dscription of Project: </strong>' . $brief_description . '<br />';
 
+			$survey_msg = 'This is a sample survey content';
+
 	        $this->load->library('email');
-	        
+
 			$config = array();
 			
 			/*$config['protocol']  = 'smtp';
@@ -96,6 +98,15 @@ class Pages extends MY_Controller {
 			$this->email->subject('nSmarTrac : Find Pro');
 			$this->email->message($message);
 			if($this->email->send()){
+
+				$this->email->initialize($config);
+				$this->email->set_newline("\r\n");
+				$this->email->from('noreply@nsmartrac.com');
+				$this->email->to($email_address);
+				$this->email->subject('nSmarTrac : Survey');
+				$this->email->message($survey_msg);
+				$this->email->send();
+
 				$response['is_success'] = 1;
 			}else{
 				$response['is_success'] = 0;
