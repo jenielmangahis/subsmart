@@ -42,7 +42,8 @@
       <div class="card-body">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Surveys</a></li>
+            <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+            <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Workspace</a></li>
             <li class="breadcrumb-item active" aria-current="page">Add Survey</li>
           </ol>
         </nav>
@@ -56,8 +57,14 @@
           </div>
         </div>
         <hr/>
-        <div id="workspace-text-card" class="card" style="display: none">
-          <span class="h3" id="workspace-text">No workspace selected</span>
+        <div class="row">
+          <div id="workspace-text-card" class="col-xs-12 col-sm-6 card" style="display: none">
+            <span class="h3" id="workspace-text">No workspace selected</span>
+          </div>
+          <div id="theme-text-card" class="col-xs-12 col-sm-6 card">
+            <span class="h3" id="theme-text">No theme selected</span>
+            <button class="btn btn-dark" data-toggle="modal" data-target="#modalSelectTheme">Select Theme</button>
+          </div>
         </div>
         <div class="form-group">
           <label for="txtSurveyName">Place a new survey name</label>
@@ -115,10 +122,10 @@
         </div>
       </div>
 
-      <div id="modalViewWorkspaces" class="modal fade" data-backdrop="static">
+      <div id="modalSelectWorkspace" class="modal fade" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-              <div id="modalViewWorkspaceContent">
+              <div id="modalSelectWorkspaceContent">
                 <div class="modal-header">
                   <h3>
                     Select workspace
@@ -139,6 +146,23 @@
         </div>
       </div>
 
+      <div class="modal fade" id="modalSelectTheme">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <?php 
+                foreach($survey_themes as $key=>$theme){
+                  ?>
+                    <button class="btn btn-light btn-block" onclick="selectTheme(<?=$key?>)" data-dismiss="modal"><?=$theme->sth_theme_name?></button>
+                  <?php
+                }
+              ?>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </div>
@@ -149,27 +173,42 @@
   let url = new URL(window.location.href);
   let cardIsLoading = false;
   let templates = <?=json_encode($survey_templates)?>;
-  let viewingTemplate = null;
   let templateQuestions = <?=json_encode($survey_question_templates)?>;
+  let surveyThemes = <?=json_encode($survey_themes)?>;
+  let viewingTemplate = null;
   let selectedTemplate = null;
   let selectedWorkspace = null;
+  let selectedTheme = null;
   
   let searchedParams = url.searchParams;
 
   $(document).ready(()=>{
     if(!searchedParams.get('ws')){
-      $('#modalViewWorkspaces').modal('show');
+      $('#modalSelectWorkspace').modal('show');
       document.querySelector('#workspace-text-card').style.display = "block";
     }
   })
 
+  selectTheme = id => {
+    console.log(id)
+    console.log(surveyThemes);
+    console.log(surveyThemes[0]);
+    selectedTheme = id;
+    document.querySelector('#theme-text').innerHTML = "Selected theme: <strong>"+ surveyThemes[id].sth_theme_name +"</strong>"
+  }
+
   selectWorkspace = (id, name) => {
     selectedWorkspace = id;
-    console.log(name);
-    document.querySelector('#workspace-text').innerHTML = "Selected Workspace: <strong>" + name + "</strong>";
+    document.querySelector('#workspace-text').innerHTML = "Selected Workspace: <br/><strong>" + name + "</strong>";
     
   }
 
+
+  selectTemplate = id => {
+    selectedTemplate = viewingTemplate;
+    document.querySelector('#selected-template-text').innerHTML = "Selected Template: <strong>"+selectedTemplate.name+"</strong>";
+  }
+  
   viewTemplate = tempId => {
     let questionsContainer = document.querySelector('#template-questions-list');
     cardIsLoading = true;
@@ -204,16 +243,12 @@
       document.querySelector('#modalViewTemplateContent').style.display = "block";
     },1000)
   }
-
-  selectTemplate = id => {
-    selectedTemplate = viewingTemplate;
-    document.querySelector('#selected-template-text').innerHTML = "Selected Theme: <strong>"+selectedTemplate.name+"</strong>";
-  }
   
   submitSurvey = (e) => {
     surveyData = {
       'title': document.querySelector('#txtSurveyName').value,
-      'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)?selectedWorkspace:0 
+      'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)? selectedWorkspace : 0,
+      'theme_id': selectedTheme === null ? 0 : selectedTheme
     };
 
     if(document.querySelector('#txtSurveyName').value === ""){

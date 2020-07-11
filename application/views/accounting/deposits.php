@@ -1,0 +1,35 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
+    <div class="wrapper" role="wrapper" >
+        <!-- page wrapper start -->
+           <div wrapper__section>
+        <div class="container-fluid">
+			<div class="page-title-box mx-4">
+				<div class="row pb-2">
+					<div class="col-md-12 banking-tab-container">
+						<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab">Overview</a>
+						<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab">All Sales</a>
+						<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab">Invoices</a>
+						<a href="<?php echo url('/accounting/customers')?>" class="banking-tab">Customers</a>
+						<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab-active text-decoration-none">Deposits</a>
+						<a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a>
+					</div>
+				</div>
+
+				<div class="row pt-3">
+					<div class="col-lg-12 px-0">
+					</div>
+				</div>
+				<!-- end row -->
+				<div class="row ml-2"></div>
+            <!-- end row -->
+			</div>
+        </div>
+        <!-- end container-fluid -->
+    </div>
+	  <!-- page wrapper end -->
+	  <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+    </div>
+
+<?php include viewPath('includes/footer_accounting'); ?>

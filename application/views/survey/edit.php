@@ -143,7 +143,8 @@
 
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Surveys</a></li>
+								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Workspace</a></li>
 								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/result/<?=$survey->id?>"><?=$survey->title?></a></li>
 								<li class="breadcrumb-item active" aria-current="page">Edit Survey</li>
 							</ol>
@@ -478,6 +479,26 @@
 											</li>
 											<li class="list-group-item">
 												<div class="d-flex w-100 justify-content-between">
+													<span>Survey Name</span>
+													<select name="selWorkspace" id="selWorkspace" class="custom-select">
+
+														<?php
+															if($survey->workspace_id == 0 || $survey->workspace_id == ""){
+																?>
+																	<option disabled selected value="0">Select workspace</option>
+																<?php
+															}
+															foreach($survey_workspaces as $key => $workspace){
+																?>
+																	<option onclick="selectWorkspace(<?=$workspace->id?>)" <?= ($survey->workspace_id === $workspace->id)?"selected":""?> value="<?=$workspace->id?>"><?=$workspace->name?></option>
+																<?php
+															}
+														?>
+													</select>
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
 													<span>Show Progress</span>
 													<div class="form-check">
 														<input 	<?= ($survey->hasProgressBar == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="hasProgressBar" data-id="<?= $survey->id ?>" id="hasProgressBar<?= $survey->id ?>">
@@ -610,6 +631,13 @@
 			document.querySelector('#btnPublish').innerHTML  = 'Publish';
 		}
 	})
+	
+	$(document).on('change', 'select', function(e){
+		if(!localStorage.getItem('cls_as')){
+			document.querySelector('#btnPublish').disabled = false;
+			document.querySelector('#btnPublish').innerHTML  = 'Publish';
+		}
+	})
 
 	// toggle autosave
 	$(document).on('click', '#btnToggleAutoPublish', function(e){
@@ -691,9 +719,13 @@
 			"hasResponseLimit": (document.querySelector("#hasResponseLimit<?=$survey->id?>").checked) ? '1' : '0',
 			"closingDate": document.querySelector('#txtSchedDate').value,
 			"responseLimit": document.querySelector('#txtResponseLimit').value,
+			"workspace_id": document.querySelector('#selWorkspace').value,
 			"closingMessage": document.querySelector('#txtClosingMessage').value,
 		}
 		let error = false;
+
+		console.log(formData);
+		return;
 			
 		
     $.ajax({

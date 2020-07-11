@@ -75,7 +75,7 @@
                             </div>
                         </div>
                     
-                        <?= form_open('survey/themes/create', array('id'=>'frm-add-survey-theme'))?>
+                        <?= form_open_multipart('survey/themes/addImage', array('id'=>'frm-add-survey-theme'))?>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="txtName">What's the name of your theme?</label>
@@ -143,7 +143,7 @@
                                 Image has not yet been set. Add an image to see the design.
                             </div>
                             
-                            <!-- <button id="btnPreview" class="btn btn-secondary btn-block" type="button">Preview</button> -->
+                            <button id="btnPreview" class="btn btn-secondary btn-block" type="button">Preview</button>
                             <button id="btnSubmit" class="btn btn-success btn-block" type="submit">Submit</button>
                         </>
 
@@ -161,9 +161,8 @@
                                         imageContainer.src = e.target.result;
                                     }
                                     fileReader.readAsDataURL(uploadedImage.files[0]);
-                                }s
+                                }
                             });
-
 
                             document.querySelector('#btnPreview').addEventListener('click',() => {
                                 
@@ -176,8 +175,8 @@
                                 document.querySelector('#sampleSecondaryButton').style.color = document.querySelector('#colTextMain').value;
                             })
 
-                            document.querySelector('#btnSubmit').addEventListener('click',() => {
-                                console.log("submit");
+                            document.querySelector('#btnSubmit').addEventListener('click',(e) => {
+                                e.preventDefault();
                                 let error = false;
                                 if(document.querySelector('#txtName').value === '' || !uploadedImage.files[0] ){
                                     if(document.querySelector('#txtName').value === ''){
@@ -203,7 +202,6 @@
                                         'sth_primary_image': document.querySelector('#txtName').value,
 
                                     }
-                                    console.log(data);
                                     
                                 }else{
                                     console.log("gawa ka ng error handlers lex");
@@ -222,6 +220,6 @@
     <!-- end of page wrapper -->
 </div>
 
-<script type="text/javascript" src="https://nsmartrac.com/assets/js/survey.js"></script>
+<!-- <script type="text/javascript" src="https://nsmartrac.com/assets/js/survey.js"></script> -->
 <?php echo put_footer_assets(); ?>
 <?php include viewPath('includes/footer'); ?>

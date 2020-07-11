@@ -3864,6 +3864,13 @@ div.ctext-v2 ul.desc-ul li span {
 ul.bsc-margin {
   padding-bottom: 12px;
 }
+img.wizard-desktop {
+  width: 115px;
+  position: relative;
+  top: 45px;
+  left: 20px;
+  z-index: 100;
+}
 div.table-sp-3 > div.pricing-card-layout-content {
   height: 893px;
 }

@@ -101,6 +101,14 @@ class Items_model extends MY_Model
         }
         return false;
     }
+
+    /**
+     * @return mixed
+     */
+    public function delete($id)
+    {
+        $this->db->delete($this->table, array("id" => $id));
+    }
     
 }
 

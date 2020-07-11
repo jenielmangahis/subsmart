@@ -77,26 +77,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </ul>
                                             </div>
                                         </div>
-                                    <table class="table table-hover" style="width:100%;" id="inventoryOnHandItems"> 
+                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="inventoryOnHandItems"> 
                                         <thead>
                                             <tr>
+                                                <th scope="col"><strong>ID</strong></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Description</strong></th>
                                                 <th scope="col"><strong>Brand</strong></th>
                                                 <th scope="col"><strong>QTY-OH</strong></th>
                                                 <th scope="col"><strong>Qty-Ordered</strong></th>
                                                 <th scope="col"><strong>Locations</strong></th>
+                                                <th scope="col"><strong>Actions</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach($items as $item) : ?>
                                             <tr>
+                                                <td><?php echo $item->id; ?></td>
                                                 <td><?php echo $item->title; ?></td>
                                                 <td><?php echo $item->description; ?></td>
                                                 <td><?php echo $item->brand; ?></td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
+                                                <td class="pl-3">
+                                                    <a href="javascript:void(0)" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                    <a href="<?php echo base_url('inventory/delete?id='.$item->id); ?>" class="btn btn-danger btn-sm deleteJobCurrentForm"><span class="fa fa-trash"></span> Delete</a>
+                                                </td>
                                             </tr>
                                             <?php endforeach; ?>
                                         </tbody>

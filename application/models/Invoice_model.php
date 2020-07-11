@@ -431,6 +431,24 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    function getInvoiceNumber($jobId, $jobNum) {
+        $this->db->select("*");
+        $this->db->from($this->table);
+        $this->db->where('job_id', $jobId);
+        $query = $this->db->get();
+        $result = $query->num_rows();
+
+        return $jobNum . "-" . ((intval($result) > 9) ? strval(intval($result) + 1) : "0" . strval(intval($result) + 1));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function deleteInvoice($id)
+    {
+        $this->db->delete($this->table, array("invoice_id" => $id));
+    }
 }
 
 /* End of file Invoice_model.php */

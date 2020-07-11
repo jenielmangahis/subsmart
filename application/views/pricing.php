@@ -1797,7 +1797,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
-                            
+
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul class="bsc-margin" data-list="1">
                                 <li>
@@ -2164,6 +2164,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           </div>
 
           <div class="table-sp-3">
+            <div class="ctext-float">
+                <img src="<?php echo $url->assets ?>frontend/images/wizard.png" class="wizard-desktop" alt="card 1">
+            </div>
             <div class="pricing-card-layout-content wht-tile scrollable-pricing">
                 <div class="pricing-card-layout-content-wrapper">
                     <section class="ccontainer None mt-features-single-row-text-only qb-adv pcard-layout-additional-text hidden-sm hidden-xs">
@@ -2285,7 +2288,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="p3 open-popup">Create a customized digital store</span>
                                 </li>
                             </ul>
-                            
+
                             <!-- <a href="javascript:void(0);" class="minimize-button"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon">keyboard_arrow_down</span></a> -->
                             <ul data-list="1" class="bsc-margin">
                                 <li>

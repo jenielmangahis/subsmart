@@ -203,6 +203,16 @@ class Jobs_model extends MY_Model
 
         return $query->result();
     }
+
+    function getEstimateNumber($jobId, $jobNum) {
+        $this->db->select("*");
+        $this->db->from($this->table_estimates);
+        $this->db->where('job_id', $jobId);
+        $query = $this->db->get();
+        $result = $query->num_rows();
+
+        return $jobNum . "-" . ((intval($result) > 9) ? strval(intval($result) + 1) : "0" . strval(intval($result) + 1));
+    }
 }
 
 /* End of file JobType_model.php */

@@ -262,6 +262,7 @@ class Job extends MY_Controller
 
         $comp_id = logged('company_id');
         $date_created = date_format(date_create($this->input->post('createdDate')),"Y-m-d H:i:s");
+        $invoice_number = $this->invoice_model->getInvoiceNumber($this->input->post('jobId'), $this->input->post('jobNumber'));
 
         $data = array(
             'company_id' => $comp_id,
@@ -274,7 +275,7 @@ class Job extends MY_Controller
             'job_id' => $this->input->post('jobId'),
             'created_by' => logged('id'),
             'status' => $this->input->post('status'),
-            'invoice_number' => $this->input->post('invoiceNumber')
+            'invoice_number' => $invoice_number
         );
         $this->db->insert($this->invoice_model->table, $data);
         echo json_encode($data);
@@ -397,6 +398,8 @@ class Job extends MY_Controller
 
     public function saveEstimate() {
         postAllowed();
+        $estimate_number = $this->jobs_model->getEstimateNumber($this->input->post('job_id'), $this->input->post('jobNumber'));
+
 
         $data = array(
             'estimate_date' => date("Y-m-d", strtotime($this->input->post('estimate_date'))),
@@ -406,7 +409,8 @@ class Job extends MY_Controller
             'status' => $this->input->post('status'),
             'job_id' => $this->input->post('job_id'),
             'estimate_value' => $this->input->post('estimate_value'),
-            'deposit_request' => $this->input->post('deposit_request')
+            'deposit_request' => $this->input->post('deposit_request'),
+            'estimate_number' => $estimate_number
         );
 
         $this->db->insert($this->jobs_model->table_estimates, $data);
@@ -427,7 +431,7 @@ class Job extends MY_Controller
             break;
 
             case "invoice":
-                $this->jobs_model->deleteWorkInvoice($get['id']);
+                $this->invoice_model->deleteInvoice($get['id']);
             break;
         }
 

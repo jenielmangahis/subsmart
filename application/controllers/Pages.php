@@ -42,35 +42,67 @@ class Pages extends MY_Controller {
 	}
 
 	public function ajax_send_find_pros(){
-		echo "<pre>";
-		print_r($this->input->post());
-		exit;
 
-		$config = Array(
-		  'protocol' => 'smtp',
-		  'smtp_host' => 'ssl://smtp.googlemail.com',
-		  'smtp_port' => 465,
-		  'smtp_user' => 'xxx@gmail.com', // change it to yours
-		  'smtp_pass' => 'xxx', // change it to yours
-		  'mailtype' => 'html',
-		  'charset' => 'iso-8859-1',
-		  'wordwrap' => TRUE
-		);
+		if($this->input->post()) {
 
-		$message = '';
-        $this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-		$this->email->from('xxx@gmail.com');
-		$this->email->to('xxx@gmail.com');
-		$this->email->subject('nSmartTrac : Find Pros');
-		$this->email->message($message);
-		if($this->email->send()){
-			$response['is_success'] = 1;
-		}else{
-			$response['is_success'] = 0;
+			$find_pro = $this->input->post('find_pro');
+			$location_type = $this->input->post('location_type');
+			$location_street = $this->input->post('location_street');
+			$location_zip = $this->input->post('location_zip');
+			$recurring_cleaning = $this->input->post('recurring_cleaning');
+			$name = $this->input->post('name');
+			$contact_number = $this->input->post('contact_number');
+			$email_address = $this->input->post('email_address');
+			$address = $this->input->post('address');
+			$brief_description = $this->input->post('brief_description');
+
+			$message = '';
+			$message .= '<strong>Find Pro: </strong>' . $find_pro . '<br />';
+			$message .= '<strong>Location Type: </strong>' . $location_type . '<br />';
+			$message .= '<strong>Street: </strong>' . $location_street . '<br />';
+			$message .= '<strong>Zip Code: </strong>' . $location_zip . '<br />';
+			$message .= '<strong>Zip Code: </strong>' . $recurring_cleaning . '<br />';
+
+			$message .= '<strong>Name: </strong>' . $name . '<br />';
+			$message .= '<strong>Contact Number: </strong>' . $contact_number . '<br />';
+			$message .= '<strong>Email: </strong>' . $email_address . '<br />';
+			$message .= '<strong>Full Address: </strong>' . $address . '<br />';
+			$message .= '<strong>Brieft Dscription of Project: </strong>' . $brief_description . '<br />';
+
+	        $this->load->library('email');
+
+			$config = array();
+			/*$config['protocol']  = 'smtp';
+			$config['smtp_host'] = 'smtp.mailtrap.io';
+			$config['smtp_user'] = 'd7c92e3b5e901d';
+			$config['smtp_pass'] = '203aafda110ab7';
+			$config['smtp_port'] = 2525;
+			$config['mailtype']  = 'html';*/
+
+			$config['protocol']  = 'smtp';
+			$config['smtp_host'] = 'mail.nsmartrac.com';
+			$config['smtp_user'] = 'admin@nsmartrac.com';
+			$config['smtp_pass'] = 'UqzD+td4Yb&S';
+			$config['smtp_port'] = 25;
+			$config['mailtype']  = 'html';
+
+			$this->email->initialize($config);
+
+			$this->email->set_newline("\r\n");
+			$this->email->from('admin@nsmartrac.com');
+			$this->email->to($email_address);
+			$this->email->subject('nSmarTrac : Find Pro');
+			$this->email->message($message);
+			if($this->email->send()){
+				$response['is_success'] = 1;
+			}else{
+				$response['is_success'] = 0;
+			}
+
 		}
 
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
+
 }

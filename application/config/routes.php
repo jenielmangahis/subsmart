@@ -130,10 +130,13 @@ $route['find-pros/send'] = 'pages/ajax_send_find_pros';
 $route['before-after/main'] = 'Before_after';
 $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
+// [Accounting]
+
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
+$route['accounting/products-and-services'] = 'accounting/products_and_services';
 
-// [Accounting]
 $route['accounting/chart_of_accounts/create'] = 'chart_of_accounts/add';
 $route['accounting/chart_of_accounts/fetch_acc_detail'] = 'chart_of_accounts/fetch_acc_detail';
 $route['accounting/chart_of_accounts/edit'] = 'chart_of_accounts/edit';
+$route['accounting/reconcile/create'] = 'reconcile/add';

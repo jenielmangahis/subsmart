@@ -110,7 +110,7 @@ $(document).ready(function () {
       billingType: "payment plan",
       jobId: $("#jobId").val(),
       customerId: $("#customer_id").val(),
-      invoiceNumber: $("#invoiceNumber").val(),
+      jobNumber: $("#jobNum").val(),
     };
     saveJobInvoice(param);
   });
@@ -317,6 +317,7 @@ $(document).ready(function () {
         employee_id: $("#customer_id").val(),
         estimate_value: $("#estimate_value").val(),
         deposit_request: $("#deposit_request").val(),
+        jobNumber: $("#jobNum").val(),
       };
       saveEstimate(param);
     }

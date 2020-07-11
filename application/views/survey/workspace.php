@@ -41,13 +41,19 @@
   <?php include viewPath('includes/sidebars/marketing'); ?>
   <div wrapper__section>
     <div class="card">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Workspaces</li>
+        </ol>
+      </nav>
       <div class="col-xs-12 text-left">
           <h1 class="m-0 text-left">Workspaces</h1>
       </div>
       <hr/>
       <div class="row">
         <div class="col-2">
-          <button class="btn btn-success btn-block" data-toggle="modal" data-target="#modalAddWorkspace"> <i class="fa fa-plus"></i> Add new workspace</button>
+          <button class="list-group-item btn-block btn-light" data-toggle="modal" data-target="#modalAddWorkspace"> <i class="fa fa-plus"></i> Add new workspace</button>
           <div class="list-group" id="list-tab" role="tablist">
             <?php
               foreach($survey_workspaces as $workspace){

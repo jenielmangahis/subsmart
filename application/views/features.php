@@ -67,6 +67,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</div>
 						</div>
         </div>
+        <div class="wizard-d-m mobile-only">
+            <img src="<?php echo $url->assets ?>frontend/images/wizard-mobile.jpg" class="wizard-mobile" alt="card 1">
+        </div>
         <div class="group-title-tn features-group-title mobile-only">
             <h2 class="tr-mobile-blink">
                 <!-- Discover Why nSmarTrac is <span class="d-md-block">So IMPORTANT for Your Business</span> -->

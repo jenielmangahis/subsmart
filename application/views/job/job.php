@@ -199,7 +199,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td class="pl-3"><?php echo getLoggedFullName($invoice->created_by)?></td>
                                                     <td class="pl-3">
                                                         <a href="javascript:void(0)" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                        <a href="javascript:void(0)" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
+                                                        <a href="<?php echo base_url('job/deleteJobForm?type=invoice&id='.$invoice->invoice_id .'&job_num='.$job_data->job_number); ?>" class="btn btn-danger btn-sm deleteJobCurrentForm"><span class="fa fa-trash"></span> Delete</a>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -338,7 +338,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row col-md-8">
                                             <label class="pt-2 pr-2" for="">Created Date</label>
                                             <input type="text" class="form-control col-md-3" name="invoiceCreatedDate" id="invoiceCreatedDate">
-                                            <input type="hidden" id="invoiceNumber" name="invoiceNumber" value="<?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?>-01">
+                                            <input type="hidden" id="jobNum" name="jobNum" value="<?php echo (!empty($job_data)) ? $job_data->job_number : $job_number; ?>">
                                         </div>
                                         <div class="row col-md-4">
                                             <label class="pt-2 pr-2" for="">Status</label>
