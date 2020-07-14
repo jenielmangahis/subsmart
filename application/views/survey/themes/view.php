@@ -45,9 +45,10 @@
             <div class="card">
                 <div class="card-body">
                     <a href="<?= base_url()?>survey/themes">Back to Themes</a>
-                    <div class="row">
-                        <div class="col-6">
-                            <h2><?= $theme->sth_theme_name?></h2>
+                    <div class="d-flex w-100 justify-content-between">
+                        <h2><?= $theme->sth_theme_name?></h2>
+                        <div>
+                            <a class="btn btn-success stretched-link" href="<?=base_url()?>survey/themes/edit/<?=$theme->sth_rec_no?>"><i class="fa fa-edit"></i> Edit Theme</a>
                         </div>
                         <!-- <div class="col-6 text-right">
                             <a href="#button" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Show</a>

@@ -36,6 +36,8 @@ class Invoice extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
             'assets/frontend/js/invoice/add.js',
             'assets/frontend/js/job_creation/main.js',
             'assets/js/invoice.js'

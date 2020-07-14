@@ -62,14 +62,31 @@ class Esign extends MY_Controller {
 	public function Photos(){
 		$this->load->model('User_docphoto_model', 'User_docphoto_model');
 		$this->page_data['users'] = $this->User_docphoto_model->getUser(logged('id'));
-		// print_r($this->page_data['users']);die;
+		
 		$this->load->view('esign/photos', $this->page_data);
 	}
 
 	public function Files(){
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['file_id'] = $this->input->get('id');
+		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 		$this->load->view('esign/files', $this->page_data);
+	}
+
+
+	public function recipients() {
+		if(isset($_POST['recipients']) && count($_POST['recipients'])>0 ) {
+			foreach($_POST['recipients'] as $key => $value) {
+				$id = $this->db->insert('user_docfile_recipients',[
+					'user_id' => logged('id'),
+					'docfile_id' => $_POST['file_id'],
+					'name' => $value,
+					'email' => $_POST['email'][$key],
+				]);
+			}
+			redirect('esign/Files?id='.$id.'&next_step=4');
+		}
 	}
 
 	public function photoSave(){
@@ -118,26 +135,63 @@ class Esign extends MY_Controller {
 
 	public function fileSave(){
 		$this->load->model('User_docflies_model', 'User_docflies_model');
-		$id = logged('id');
-
-		print_r($_FILES);
+		//$id = logged('id');
+		
 		// $extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
 		// $filename = time()."_".rand(1,9999999)."_"."DocFiles".".".$extension;
 		// $location = "../../uploads/DocFiles";
 		// echo move_uploaded_file($filename, $location);
 
-		$tmp_name = $_FILES['docFile']['tmp_name'];
-        // basename() may prevent filesystem traversal attacks;
-        // further validation/sanitation of the filename may be appropriate
-        $name = time()."_".rand(1,9999999)."_".basename($_FILES["docFile"]["name"]);
-		move_uploaded_file($tmp_name, "./uploads/DocFiles/$name");
-		
-		$id = $this->User_docflies_model->create([
-			'user_id' => $id,
-			'docFile' => $name
-		]);
+		if(isset($_FILES['docFile']) && $_FILES['docFile']['tmp_name'] != '') {
+				
+			$tmp_name = $_FILES['docFile']['tmp_name'];
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = time()."_".rand(1,9999999)."_".basename($_FILES["docFile"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/DocFiles/$name");
+			$id = 0;
+			
 
-		redirect('esign/files');
+
+			if($_POST['file_id'] > 0)
+			{
+				$this->db->where('id', $_POST['file_id']);
+				$this->db->update($this->User_docflies_model->table, [
+					'docFile' => $name
+				]);
+					
+				$id = $_POST['file_id'];
+			} else {
+				
+				$id = $this->User_docflies_model->create([
+					'user_id' => logged('id'),
+					'docFile' => $name
+				]);
+			}
+
+		
+
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
+			{
+			  redirect('esign/Files?id='.$id);
+			}
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
+			{
+				
+				 redirect('esign/Files?id='.$id.'&next_step=2');
+			}
+		} else if(isset($_POST['file_id']) && $_POST['file_id'] > 0) {
+
+			
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
+			{
+				redirect('esign/Files?id='.$_POST['file_id']);
+			}
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
+			{
+				redirect('esign/Files?id='.$_POST['file_id'].'&next_step=2');
+			}
+		}	
 	}
 }
 

@@ -45,6 +45,7 @@ class Vault extends MY_Controller {
 		);
 
 		$uid = logged('id');
+		$company_id = logged('company_id');
 
 		$folder_id = $_POST['folder_id'];
 		$file_desc = '';
@@ -56,40 +57,49 @@ class Vault extends MY_Controller {
 			$filename = $_FILES['fullfile']['name'];
 			$filesize = $_FILES['fullfile']['size'];
 
-			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+			if($filesize < 8000000){
+				$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-			$record = $this->db->query(
-				'select count(*) as `existing` from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '"'
-			)->row();
+				$record = $this->db->query(
+					'select count(*) as `existing` from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '"'
+				)->row();
 
-			if($record->existing <= 0){
-				$folder = $this->folders_model->getById($folder_id);
-
-				$this->uploadlib->initialize([
-					'file_name' => $filename
-				]);
-
-				$file = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder->path);
-
-				if($file['status']){
-					$data = array(
-						'title' => $filename,
-						'description' => $file_desc,
-						'file_path' => $folder->path . $filename,
-						'modified' => date('Y-m-d h:i:s'),
-						'created' => date('Y-m-d h:i:s'),
-						'file_size' => $filesize,
-						'folder_id' => $folder_id,
-						'user_id' => $uid,
-						'company_id' => $folder->company_id
-					);
-
-					if(!$this->vault_model->trans_create($data)){
-						$return['error'] = 'Error in uploading file';
+				if($record->existing <= 0){
+					if($folder_id > 0){
+						$folder = $this->folders_model->getById($folder_id);
+						$folder_path = $folder->path;
+					} else {
+						$folder_path = '/';
 					}
+
+					$this->uploadlib->initialize([
+						'file_name' => $filename
+					]);
+
+					$file = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
+
+					if($file['status']){
+						$data = array(
+							'title' => $filename,
+							'description' => $file_desc,
+							'file_path' => $folder_path . $filename,
+							'modified' => date('Y-m-d h:i:s'),
+							'created' => date('Y-m-d h:i:s'),
+							'file_size' => $filesize,
+							'folder_id' => $folder_id,
+							'user_id' => $uid,
+							'company_id' => $company_id
+						);
+
+						if(!$this->vault_model->trans_create($data)){
+							$return['error'] = 'Error in uploading file';
+						}
+					}
+				} else {
+					$return['error'] = 'File already exists';	
 				}
 			} else {
-				$return['error'] = 'File already exists';	
+				$return['error'] = 'File is larger than 8mb';
 			}
 		} else {
 			$return['error'] = 'No file to upload';

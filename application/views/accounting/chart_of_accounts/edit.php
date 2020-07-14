@@ -110,7 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
-    <?php include viewPath('includes/sidebars/accounting/banking'); ?>
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>

@@ -102,6 +102,15 @@ class Items_model extends MY_Model
         return false;
     }
 
+    public function getItemById($id) 
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     /**
      * @return mixed
      */

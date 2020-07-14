@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_accounting'); ?>
+<?php include viewPath('includes/header'); ?>
 <style type="text/css">
     .hide-toggle::after {
         display: none;
@@ -34,7 +34,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6 px-0">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown show">
-                            <a href="<?php echo url('/accounting/chart_of_accounts/create') ?>" class="btn btn-success rounded"
+                            
+                            <a href="#" class="btn btn-success rounded"
                                    aria-expanded="false">
                                     Run Report
                             </a>
@@ -53,6 +54,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- end row -->
 				<?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
 				<div class="row pt-2">
 					<div class="col-xl-12 px-0">
@@ -67,7 +70,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										   <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<i class="fa fa-cog"></i>
 										  </a>
-
 										  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 											Columns<br/>
 											<p class="p-padding"><input type="checkbox" name="chk_type" id="chk_type"> Type</p>
@@ -95,7 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<tbody>
 									<tr>
 										<td><input type="checkbox"></td>
-										<td>Cash on hand</td>
+										<td contenteditable="true">Cash on hand</td>
 										<td>Bank</td>
 										<td>Cash on hand</td>
 										<td>111,111.00</td>
@@ -111,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<a class="dropdown-item" href="<?php echo url('/accounting/chart_of_accounts/edit') ?>">Edit</a>
 											<a class="dropdown-item" href="#">Make Inactive (Reduce usage)</a>
 											<a class="dropdown-item" href="#">Run Report</a>
-										  </div>
+										  </div> 
 										</div>
 										</td>
 									</tr>

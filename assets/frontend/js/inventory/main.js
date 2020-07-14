@@ -1,7 +1,3 @@
-var options = {
-  urlGetAllCategory: base_url + "inventory/customer/json_list",
-};
-
 $(document).ready(function () {
   $("#addOnHandInventory, #closeAddNewItem, #cancelAddItemGroups").click(
     function () {
@@ -106,7 +102,7 @@ $(document).ready(function () {
   });
 
   $(
-    "#addOnHandInventory, #addServicesInventory, #addFeesInventory, #addItemGroups, #addNewFeesInventory"
+    "#addOnHandInventory, #addServicesInventory, #addFeesInventory, #addItemGroups"
   ).click(function () {
     $.LoadingOverlay("show");
   });
@@ -147,11 +143,30 @@ $(document).ready(function () {
   $("#serviceItemsTable, #feesItemsTable").DataTable({});
 
   $("#inventoryOnHandItems").DataTable({
-    order: [[1, "asc"]],
+    ordering: false,
+    destroy: true,
   });
 
   $(".deleteJobCurrentForm").click(function () {
     $.LoadingOverlay("show");
+  });
+
+  $(document).on("click", ".editItemBtn", function () {
+    $("#itemId").val($(this).data("id"));
+    $("#servicesInventory").hide();
+    $("#onHandInventory").hide();
+    $("#feesInventory").hide();
+    $("#itemGroups").hide();
+    $("#newServiceInventory").hide();
+    $("#newFeesInventory").hide();
+    $("#newItemInventory").fadeIn();
+    $("#saveAddAnother").text("Edit");
+    $("#save_close_item").hide();
+    $.LoadingOverlay("show");
+    var param = {
+      item_id: $(this).data("id"),
+    };
+    getItemById(param);
   });
 });
 
@@ -173,4 +188,29 @@ function exportItems() {
 
   document.body.appendChild(link);
   link.click();
+}
+
+function getItemById(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "inventory/getItemById",
+    data: param,
+    success: function (response) {
+      var obj = JSON.parse(response);
+      obj.forEach(populateItem);
+      $.LoadingOverlay("hide");
+    },
+  });
+}
+
+function populateItem(item) {
+  console.log(item.id);
+  $("#itemName").val(item.title);
+  $("#descriptionItem").val(item.description);
+  $("#brandField").val(item.brand);
+  $("#costField").val(item.price);
+  $("#unitItem").val(item.units);
+  $("#productUrlItem").val(item.url);
+  $("#cogsItem").val(item.COGS);
+  $("#modelNumItem").val(item.model);
 }

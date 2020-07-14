@@ -149,7 +149,7 @@ function getInputHtml($valueQuestions){
         $questionName2 = 'question['.$valueQuestions->Questions_id.']['.'phone'.']';
         
         echo '<div class="col-md-12 form-group">';
-        echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+        echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
             echo '<div class="col-md-6 form-group float-left">';
                 echo '<label for="'.$questionName1.'">'.$valueQuestions->question.'</label>';
                 echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
@@ -297,7 +297,7 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
         $questionName2 = 'question['.$valueQuestions->Questions_id.']['.'phone'.']';
         
         echo '<div class="col-md-12 form-group">';
-        echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+        echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
             echo '<div class="col-md-6 form-group float-left">';
                 echo '<label for="'.$questionName1.'">'.$valueQuestions->question.'</label>';
                 echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
@@ -365,8 +365,6 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
                                     foreach($formdetail->questions as $keyQuestions => $valueQuestions)
                                     {
 
-                                    
-
                                         if( $valueQuestions->q_type != 'group' && $valueQuestions->q_type != 'reperator'  && $valueQuestions->q_type != 'address' ) {
                                             echo '<div class="col-md-6 form-group">';
                                             getInputHtml ($valueQuestions);
@@ -375,7 +373,7 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
 
                                         if( $valueQuestions->q_type == 'group' ) {
                                             echo '<div class="col-md-12 form-group">';
-                                            echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+                                            echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
                                 
                                           foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions)
                                           {
@@ -426,7 +424,7 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
                                             $questionName2 = 'question['.$valueQuestions->Questions_id.']['.'phone'.']';
 
                                             echo '<div class="col-md-12 form-group">';
-                                                echo '<div class="col-md-12" style="border:2px solid #16478a;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+                                                echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
                                                     echo '<div class="col-md-6 form-group float-left">';
                                                         echo '<label for="'.$questionName1.'">'.$valueQuestions->question.'</label>';
                                                         echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';

@@ -18,6 +18,7 @@ class Inventory extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+			"assets/css/accounting/sidebar.css",
         ));
 
 
@@ -26,6 +27,7 @@ class Inventory extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
             'assets/frontend/js/inventory/main.js',
         ));
     }
@@ -42,11 +44,12 @@ class Inventory extends MY_Controller
         if (!empty($get['category'])) {
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
-            $this->page_data['items'] = $this->items_model->filterBy(['category' => $get['category']], $comp_id, ucfirst($type));
+            $items = $this->items_model->filterBy(['category' => $get['category']], $comp_id, ucfirst($type));
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $comp_id, 'type' => ucfirst($type)]);
+            $items = $this->items_model->getByWhere(['company_id' => $comp_id, 'type' => ucfirst($type)]);
         }
-        
+        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
+
         $comp = array(
             'company_id' => $comp_id
         );
@@ -77,7 +80,8 @@ class Inventory extends MY_Controller
     {
         postAllowed();
         $comp_id = logged('company_id');
-        $permission = $this->items_model->create([
+        $id = $this->input->post('item_id');
+        $data = array(
             'company_id' => $comp_id,
             'title' => $this->input->post('item_name'),
             'type' => ucfirst($this->input->post('item_type')),
@@ -85,22 +89,41 @@ class Inventory extends MY_Controller
             'COGS' => $this->input->post('cost_of_goods'),
             'price' => $this->input->post('cost'),
             'brand' => $this->input->post('brand'),
-            'cost_per' => $this->input->post('cost_per'),
+            // 'cost_per' => $this->input->post('cost_per'),
             'description' => $this->input->post('description'),
             'url' => $this->input->post('product_url'),
             'notes' => '',
             'item_categories_id' => $this->input->post('item_category'),
             'is_active' => 1,
             'vendor_id' => $this->input->post('vendor'),
-            'units' => $this->input->post('unit'),
+            'units' => $this->input->post('unit')
+        );
 
-        ]);
+        $message_1 = "New";
+        $message_2 = "New item Created Successfully";
 
-        $this->activity_model->add("New item #$permission Created by User: #" . logged('id'));
+        if ($id == "0") {
+            $permission = $this->items_model->create($data);
+        } else {
+            $this->items_model->update($data, array("id" => $id));
+            $message_1 = "Updated";
+            $message_2 = "Item Updated Successfully";
+        }
+
+        $this->activity_model->add($message_1 . " item #$permission Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
-        $this->session->set_flashdata('alert', 'New item Created Successfully');
+        $this->session->set_flashdata('alert', $message_2);
         
         redirect('inventory');
+    }
+
+    public function getItemById()
+    {
+        postAllowed();
+        $id = $this->input->post('item_id');
+        $item = $this->items_model->getItemById($id);
+
+        echo json_encode($item);
     }
 
     public function saveServiceItems() 
@@ -276,6 +299,66 @@ class Inventory extends MY_Controller
         $this->items_model->delete($get['id']);
 
         redirect('inventory');
+    }
+
+    public function categorizeNameAlphabetically($items) {
+        $result = array();
+
+        $cat = array(
+            '#' => array(),
+            'A' => array(),
+            'B' => array(),
+            'C' => array(),
+            'D' => array(),
+            'E' => array(),
+            'F' => array(),
+            'G' => array(),
+            'H' => array(),
+            'I' => array(),
+            'J' => array(),
+            'K' => array(),
+            'L' => array(),
+            'M' => array(),
+            'N' => array(),
+            'O' => array(),
+            'P' => array(),
+            'Q' => array(),
+            'R' => array(),
+            'S' => array(),
+            'T' => array(),
+            'U' => array(),
+            'V' => array(),
+            'W' => array(),
+            'X' => array(),
+            'Y' => array(),
+            'Z' => array()
+        );
+
+        foreach($items as $item) {
+            $letter = ucfirst(substr($item->title,0,1));
+            foreach($cat as $key => $c) {
+                if ($letter == $key) {
+                    array_push($cat[$key], $item);
+                } else if (is_numeric($letter)) {
+                    if (!in_array($item, $cat["#"]))
+                        array_push($cat["#"], $item);
+                }
+            }
+        }
+        
+        foreach($cat as $key => $c) {
+            if(!empty($c)) {
+                $header = array($key, "header", "", "");
+                array_push($result,$header);
+
+                foreach($c as $v) {
+                    $value = array($v->title, $v->description, $v->brand, $v->id);
+                    array_push($result,$value);
+                }
+            }
+        }
+        
+        return $result;
     }
 }
 

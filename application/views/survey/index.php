@@ -84,6 +84,7 @@
             <button class="btn btn-small btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-plus"></i> Add new survey</a></button>
             <button class="btn btn-small btn-secondary"><a class="text-white" href="<?=base_url()?>survey/themes/create"><i class="fa fa-plus"></i> Add new themes</a></button>
           </div>
+          <p class="text-center">Quick Links<br/><a href="<?=base_url()?>survey/workspace">Workspaces</a> | <a href="<?=base_url()?>survey/themes">Themes</a> </p>
         </div>
       </div>
     </div>

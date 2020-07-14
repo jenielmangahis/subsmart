@@ -902,10 +902,10 @@ body .ui-tooltip {
 .ui-widget-content {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
-	color: #222222;
+	/* color: #222222; */
 }
 .ui-widget-content a {
-	color: #222222;
+	/* color: #222222; */
 }
 .ui-widget-header {
 	border: 1px solid #aaaaaa;
@@ -941,7 +941,7 @@ a:link.ui-button,
 a:visited.ui-button,
 .ui-button {
 	color: #555555;
-	text-decoration: none;
+	/* text-decoration: none; */
 }
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
