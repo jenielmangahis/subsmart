@@ -144,3 +144,11 @@ $route['accounting/chart_of_accounts/edit'] = 'chart_of_accounts/edit';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile'] = 'reconcile/index';
 
+// [Addons - Booking]
+$route['more/addon/booking'] = 'booking/index';
+$route['more/addon/booking/products'] = 'booking/products';
+$route['more/addon/booking/time'] = 'booking/time';
+$route['more/addon/booking/form'] = 'booking/form';
+$route['more/addon/booking/coupons'] = 'booking/coupons';
+$route['more/addon/booking/settings'] = 'booking/settings';
+$route['more/addon/booking/preview'] = 'booking/preview';
