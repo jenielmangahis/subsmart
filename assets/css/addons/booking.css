@@ -49,11 +49,36 @@
 }
 
 .card .dashboard-container-1 {
-    padding-top: 18px;
+    padding-top: 25px;
     padding-bottom: 10px;
 }
 
 .card .dashboard-container-2 {
-    padding-left: 18px;
+    padding-left: 25px;
 }
 
+.card .dashboard-container-2 .service-items {
+    position: relative;
+    min-height: 80px;
+}
+
+.card .dashboard-container-2 .service-items .service-item-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;    
+}
+
+.card .dashboard-container-2 .service-items .service-item-cnt {
+    padding-left: 100px;
+}
+
+.margin-bottom-sec .product-edit__image-cnt {
+    border: 1px solid #dcdbdc;
+    width: 175px;
+    padding: 10px;
+    display: inline-block;
+    margin-bottom: 15px;
+    ": ;
+}
