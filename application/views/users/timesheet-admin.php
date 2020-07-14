@@ -55,12 +55,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php //if (hasPermissions('users_add')): ?>
+                                <?php if (hasPermissions('users_add')): ?>
                                     <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
                                     </a>
-                                <?php //endif ?>
+                                <?php endif ?>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">List of Employees</h4>
+                            <h4 class="mt-0 header-title mb-5">Timesheet</h4>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="dataTable1" class="table table-bordered table-striped">

@@ -12,12 +12,12 @@ class Accounting extends MY_Controller {
             "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
-            "assets/plugins/dropzone/dist/dropzone.css"
+            "assets/plugins/dropzone/dist/dropzone.css",
         ));
 
         add_footer_js(array(
             "assets/js/accounting/main.js",
-            "assets/plugins/dropzone/dist/dropzone.js"
+            "assets/plugins/dropzone/dist/dropzone.js",
         ));
 
 		$this->page_data['menu_name'] =
@@ -37,8 +37,8 @@ class Accounting extends MY_Controller {
 				array('/accounting/banking',array()), 
 				array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts')), 
 				array("",	array('/accounting/expenses','/accounting/vendors')), 
-				array("",	array('/accounting/sales-overview','/accounting/all-sales','#','#','#','#')), 
-				array("",	array('#','#','#','#','#')), 
+				array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services')),
+				array("",	array('/accounting/payroll-overview','/accounting/employees','#','#','#')), 
 				array('#',	array()), 
 				array("",	array('#','#')), 
 				array('#',	array()), 
@@ -128,13 +128,47 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/all_sales', $this->page_data);
     }
-
+	public function invoices()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Invoices";
+        $this->load->view('accounting/invoices', $this->page_data);
+    }
+	public function customers()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Customers";
+        $this->load->view('accounting/customers', $this->page_data);
+    }
+	public function deposits()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Deposits";
+        $this->load->view('accounting/deposits', $this->page_data);
+    }
+	public function products_and_services()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Product and Services";
+        $this->load->view('accounting/products_and_services', $this->page_data);
+    }
     public function audit_log()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/audit_log', $this->page_data);
     }
-
+	 public function payrolloverview()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Sales Overview";
+        $this->load->view('accounting/payroll_overview', $this->page_data);
+    }	
+	 public function employees()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Sales Overview";
+        $this->load->view('accounting/employees', $this->page_data);
+    }
 
 }

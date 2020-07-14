@@ -633,7 +633,9 @@ if (!function_exists('getJobAddress')) {
         $CI->db->where('address_id', $addressId);
         $address = $CI->db->get()->row();
 
-        return ucwords($address->address1) . ' ' .ucwords($address->address2) . ' ' . ucwords($address->city . ' ' . ucwords($address->state));
+        if ($address) {
+            return ucwords($address->address1) . ' ' .ucwords($address->address2) . ' ' . ucwords($address->city . ' ' . ucwords($address->state));
+        }
     }
 }
 
@@ -726,7 +728,7 @@ if (!function_exists('obfuscate_email')) {
 if (!function_exists('getCompany')){
     function getCompany(){
         $CI = &get_instance();
-        $company_id = logged('id');
+        $company_id = logged('company_id');
 
         return $CI->business_model->getById($company_id);
     }
@@ -765,15 +767,15 @@ if (!function_exists('getCompanyFolder')){
 
 if (!function_exists('getFolders')) {
 
-    function getFolders($getallparent = false, $getallchild = false)
+    function getFolders($parent_id = -1, $getallparent = false, $getallchild = false, $asArray = false)
     {
         $CI = &get_instance();
-        $uid = logged('id');
-        $role_id = logged('role');
         $company_id = logged('company_id');
 
         $parent_filter = '';
-        if($getallparent){
+        if($parent_id >= 0){
+            $parent_filter = 'and a.parent_id = ' . $parent_id . ' ';
+        } else if($getallparent){
             $parent_filter = 'and (a.parent_id = 0 or a.parent_id is null) ';
         } else if($getallchild){
             $parent_filter = 'and (a.parent_id <> 0 and a.parent_id is not null) ';
@@ -781,18 +783,61 @@ if (!function_exists('getFolders')) {
 
         $sql = 'select ' . 
 
-               'a.* '.
+               'a.*, '.
+               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+               'c.folder_name as c_folder '.
 
                'from file_folders a '.
+               'left join users b on b.id = a.created_by '.
+               'left join business_profile c on c.id = a.company_id '.
 
                'where a.company_id = ' . $company_id . ' ' . $parent_filter . 
 
                'order by create_date ASC';
 
-        return $CI->db->query($sql);
+        if($asArray){
+            $return = $CI->db->query($sql)->result_array();
+        } else {
+            $return = $CI->db->query($sql);
+        }
+        
+        return $return;
     }
 
 }
+
+if (!function_exists('getFiles')) {
+
+    function getFiles($folder_id, $asArray = false){
+        $CI = &get_instance();
+        $company_id = logged('company_id');
+
+        $sql = 'select ' . 
+
+               'a.*, '.
+               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+               'c.folder_name '.
+
+               'from filevault a '.
+               'left join users b on b.id = a.user_id '.
+               'left join business_profile c on c.id = a.company_id '.
+
+               'where a.company_id = ' . $company_id . ' and folder_id = ' . $folder_id . ' ' . 
+
+               'order by created ASC';
+
+        if($asArray){
+            $return = $CI->db->query($sql)->result_array();
+        } else {
+            $return = $CI->db->query($sql);
+        }
+        
+        return $return;
+    }
+
+}
+
+
 
 function getFolderManagerView($isMain = true){
     $CI = &get_instance();
@@ -1897,8 +1942,9 @@ function getUserEmail($id) {
     $CI->load->model('Users_model', 'user_model');
     $result = $CI->user_model->getByWhere(array('id' => $id));
 
-    //return ucwords($result[0]->name);
-    return ucwords($result[0]->email);
+    if ($result) {
+        return ucwords($result[0]->email);
+    }
 }
 
 function getItemCategoryName($categories, $id) {

@@ -26,7 +26,7 @@ class Folders extends MY_Controller {
 		}
 
 		$result = array();
-		$parents = getFolders(true);
+		$parents = getFolders(-1, true);
 		$parents = $parents->result();
 
 		$isSelected = false;
@@ -54,7 +54,7 @@ class Folders extends MY_Controller {
 			}
 		}
 		
-		$children = getFolders(false, true);
+		$children = getFolders(-1, false, true);
 		$children = $children->result();
 
 		foreach ($children as $c => $child) {
@@ -77,7 +77,7 @@ class Folders extends MY_Controller {
 	}
 
 	public function getfiles(){
-		$result = $this->getfolders(true, true);
+		$result = $this->getfolders(-1, true, true);
 		
 		echo json_encode($result);
 	}
@@ -159,12 +159,15 @@ class Folders extends MY_Controller {
 			case 'doc':
 			case 'docx':
 				$return = 'fa fa-file-word-o';
+				break;
 			case 'rtf':
 				$return = 'fa fa-file-text-o';
+				break;
 			case 'png':
 			case 'jpg':
 			case 'gif':
 				$return = 'fa fa-file-image-o';
+				break;
 			default:
 				$return = 'fa fa-file-o';
 				break;
@@ -179,7 +182,7 @@ class Folders extends MY_Controller {
 
 		if($this->company_folder != ''){
 			$return = array(
-				'file_folders' => array(),
+				'latest_folder' => array(),
 				'error' => ''
 			);
 
@@ -224,12 +227,21 @@ class Folders extends MY_Controller {
 				if($this->folders_model->trans_create($data)){
 					mkdir('./uploads/' . $this->company_folder . $path, 0777);
 
-					$latest_folder_id = $this->db->query('select max(folder_id) as `latest_folder_id` from file_folders where company_id = ' . $company_id)->row();
-					$latest_folder_id = $latest_folder_id->latest_folder_id;
+					$latest_folder = $this->db->query($sql = 'select ' . 
 
-					$this->selected_folder = $latest_folder_id;
+		               'a.*, '.
+		               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+		               'c.folder_name as c_folder '.
 
-					$return['file_folders'] = $this->getfolders(true, true);
+		               'from file_folders a '.
+		               'left join users b on b.id = a.created_by '.
+		               'left join business_profile c on c.id = a.company_id '.
+
+		               'where a.company_id = ' . $company_id . ' and a.created_by = ' . $uid . ' ' .
+
+		               'order by create_date DESC limit 1')->row();
+
+					$return['latest_folder'] = $latest_folder;
 				} else {
 					$return['error'] = 'Error in creating folder. Please contact our support';
 				}
@@ -243,7 +255,6 @@ class Folders extends MY_Controller {
 
 	public function delete(){ 
 		$return = array(
-			'file_folders' => array(),
 			'error' => ''
 		);
 
@@ -260,9 +271,7 @@ class Folders extends MY_Controller {
 			if($delete_result['status']){
 				rmdir('./uploads/' . $this->company_folder . $folder->path);
 
-				$this->selected_folder = $folder->parent_id;
-
-				$return['file_folders'] = $this->getFolders(true, true);
+				//$return = getFoldersFiles($folder->parent_id, true);
 			} else {
 				$return['error'] = $delete_result['message'];
 			}
@@ -275,6 +284,59 @@ class Folders extends MY_Controller {
 	}
 
 	public function getFolderPermissions(){
+	}
+
+	public function getFoldersFiles($parent_id = 0, $internal = false){
+		if($parent_id == 0){
+			$folders_path = '/<a control="gotofolder" href="0">root</a>/';
+			$folders_name = 'Root';
+		} else {
+			$folders_path = '';
+			$folders_name = '';
+			$sql = 'select '.
+
+				   'folder_id, '.
+				   'folder_name, '.
+				   'parent_id '.
+
+				   'from file_folders '.
+
+				   'where folder_id = @';
+
+			$cSql = str_replace('@', $parent_id, $sql);
+			$folder = $this->db->query($cSql)->row();
+
+			$folders_name = $folder->folder_name;
+			$folders_path = '<a control="gotofolder" href="'. $folder->folder_id .'">' . $folder->folder_name . '</a>/' . $folders_path; 
+			
+			$cSql = str_replace('@', $folder->parent_id, $sql);
+			$folder = $this->db->query($cSql);
+			while($folder->num_rows() > 0){
+				$folder = $folder->row();
+				
+
+				$folders_path = '<a control="gotofolder" href="'. $folder->folder_id .'">' . $folder->folder_name . '</a>/' . $folders_path; 
+
+				$cSql = str_replace('@', $folder->parent_id, $sql);
+				$folder = $this->db->query($cSql);
+			}
+
+			$folders_path = '/<a control="gotofolder" href="0">root</a>/' . $folders_path;
+		}
+
+		$return = array(
+			'folders' => getFolders($parent_id, false, false, true),
+			'files' => getFiles($parent_id, true),
+			'folders_path' => $folders_path,
+			'folders_name' => $folders_name,
+			'error' => ''
+		);
+
+		if(!$internal){
+			echo json_encode($return);
+		} else {
+			return $return;
+		}
 	}
 }
 

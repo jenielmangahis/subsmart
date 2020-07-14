@@ -1,25 +1,84 @@
 $(document).ready(function(){
 // Document ready start ----------------------------------------------------------------------------------------
+  
+  $(document).on('show.bs.modal', '.modal', function (event) {
+      var zIndex = 1040 + (10 * $('.modal:visible').length);
+      $(this).css('z-index', zIndex);
+      setTimeout(function() {
+          $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+      }, 0);
+  });
+  
+  current_selected_folder = 0;
 
-  selected_folder = {};
-  selected_file = {};
+  selected = 0;
+  selected_isFolder = 1;
 
   current_process = '';
   current_alert_theme = '';
 
   clear_process = true;
 
-  $('#btn-add-new-folder').click(function(e){
-    e.preventDefault();
+  row_trace = 1;
+  col_trace = 1;
 
-    selected_folder = {};
+// -------------------------------------------------------------------------------------------------------------
+// Folder entry control events
+// -------------------------------------------------------------------------------------------------------------
+  $('a[control="create_folder"]').click(function(e){
+    e.preventDefault();
 
     openEntry('create_folder');
   });
 
-  $.initialize('li.node-folders_treeview', function(){
-    setNodesButtons($(this)); 
+  $('a[control="delete"]').click(function(e){
+    e.preventDefault();
+    
+    if(selected != 0){ 
+      var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+      var confirm_text = '';
+      var confirm_path = $('#folders_path').text();
+
+      confirm_path = confirm_path.trim() + div.attr('fnm');
+
+      if(selected_isFolder == 1){
+        current_process = 'delete_folder';
+        confirm_text = ' Folder ' + div.attr('fnm');
+      } else {
+        current_process = 'delete_file';
+        confirm_text = ' File ' + div.attr('fnm');
+      }
+
+      if(current_process != ''){
+        showFolderManagerNotif('Confirm Delete',
+                               'Delete' + confirm_text + '?<br>' + confirm_path, 'confirm');
+      }
+    } else {
+      showFolderManagerNotif('Error','Please select a file or a folder to delete','error');
+    }
   });
+
+  $('a[control="add_file"]').click(function(e){
+    e.preventDefault();
+
+    openEntry('add_file');
+  });
+  
+  $('a[control="view"]').click(function(e){
+    e.preventDefault();
+
+    if(selected != 0){
+      if(selected_isFolder == 1){
+        showFolderDetails();
+      } else {
+        showFileDetail();
+      }
+    } else {
+      showFolderManagerNotif('Error','Please select a file or a folder to view','error');
+    }
+  });
+
+// -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
 // Folder entry controls
@@ -30,15 +89,10 @@ $(document).ready(function(){
 
       var folder_name = $('#folder_name').val();
       var folder_desc = $('#folder_desc').val();
+      var parent_id = current_selected_folder;
 
       folder_name = folder_name.trim();
       folder_desc = folder_desc.trim();
-
-      var parent_id = 0;
-
-      if(folderSelectedIsNotEmpty()){
-        parent_id = selected_folder.id;
-      }
 
       if(isFolderNameValid(folder_name)){
         $.ajax({
@@ -46,23 +100,19 @@ $(document).ready(function(){
           url: base_url + "folders/create",
           data: {folder_name:folder_name,parent_id:parent_id,folder_desc:folder_desc},
           beforeSend: function(){
-            showProcessLoading();
+
           },
           success: function(data){
             var result = jQuery.parseJSON(data);
             if(result.error != ''){
               showFolderManagerNotif('Error', result.error, 'error');
             } else {
-              setFoldersTreeview(result.file_folders);
+              getFoldersAndFiles(current_selected_folder);
 
               closeEntry();
             }
-
-            hideProcessLoading();
           },
           error: function(jqXHR, textStatus, errorThrown) {
-            hideProcessLoading();
-            
             showFolderManagerNotif(textStatus, errorThrown, 'error');  
           }
         });
@@ -73,39 +123,47 @@ $(document).ready(function(){
       var formdata = new FormData();
       var file = $('#fullfile').prop('files')[0];
       var desc = $('#file_desc').val();
-      var folder_id = selected_folder.id;
+      var folder_id = current_selected_folder; //selected folder's id
 
       formdata.append('fullfile', file);
       formdata.append('file_desc', desc.trim());
       formdata.append('folder_id', folder_id);
 
       $.ajax({
+        xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = ((evt.loaded / evt.total) * 100);
+                        percentComplete = percentComplete.toFixed(0);
+                        $('#modal-folder-manager-uploading-percentage').text(percentComplete + '%');
+                    }
+                }, false);
+                return xhr;
+        },
         type: 'POST',
         url: base_url + "vault/add",
         data: formdata,
         contentType: false,
         processData: false,
         beforeSend: function(){
-          showProcessLoading();
+          closeEntry();
+
+          showUploading(file.name);
         }, 
         success: function(data){
           var result = jQuery.parseJSON(data);
           if(result.error != ""){
-            hideProcessLoading();
-
             showFolderManagerNotif('Error', result.error, 'error');  
           } else {
-            hideProcessLoading();
-            closeEntry();
+            hideUploading();
 
-            var params = {selected_folder:selected_folder.id};
-
-            getFoldersAndFiles(params);
+            getFoldersAndFiles(current_selected_folder);
           }
         },
-        error: function(jqXHR, textStatus, errorThrown){
-          hideProcessLoading();
-            
+        error: function(jqXHR, textStatus, errorThrown){ 
+          hideUploading();
+
           showFolderManagerNotif(textStatus, errorThrown, 'error'); 
         }
       });  
@@ -122,58 +180,52 @@ $(document).ready(function(){
 
   $('#btn-modal-folder-manager-alert-confirm').click(function(){
     if(current_process == 'delete_folder'){
-      var folder_id = selected_folder.id;
+      var folder_id = selected;
 
       $.ajax({
         type: 'POST',
         url: base_url + "folders/delete",
         data: {folder_id:folder_id},
         beforeSend: function(){
-          hideFolderManagerNotif();
-          showProcessLoading();
+
         },
         success: function(data){
           var result = jQuery.parseJSON(data);
           if(result.error != ''){
+            hideFolderManagerNotif();
+
             showFolderManagerNotif('Error', result.error, 'error');      
           } else {
-            setFoldersTreeview(result.file_folders); 
-          }
+            getFoldersAndFiles(current_selected_folder);
 
-          hideProcessLoading();
+            hideFolderManagerNotif();
+          }
         },
-        error: function(jqXHR, textStatus, errorThrown){
-          hideProcessLoading();
-            
+        error: function(jqXHR, textStatus, errorThrown){            
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });
     } else if(current_process == 'delete_file'){
-      var file_id = selected_file.id;
+      var file_id = selected;
       
       $.ajax({
         type: 'POST',
         url: base_url + "vault/delete",
         data: {file_id:file_id},
         beforeSend: function(){
-          hideFolderManagerNotif();
-          showProcessLoading();
+
         },
         success: function(data){
           var result = jQuery.parseJSON(data);
           if(result.error != ''){
             showFolderManagerNotif('Error', result.error, 'error');      
           } else {
-            hideProcessLoading();
+            getFoldersAndFiles(current_selected_folder);
 
-            var params = {selected_folder:result.folder_id};
-
-            getFoldersAndFiles(params); 
+            hideFolderManagerNotif();
           }
         },
-        error: function(jqXHR, textStatus, errorThrown){
-          hideProcessLoading();
-            
+        error: function(jqXHR, textStatus, errorThrown){            
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         } 
       });   
@@ -194,131 +246,228 @@ $(document).ready(function(){
 });
 
 // Functions below ---------------------------------------------------------------------------------------------
-
-function getFoldersAndFiles(params = {}){
+function getFoldersAndFiles(parent_id = 0){
   $.ajax({
-    type: "GET",
-    url: base_url + "folders/getfolders/0/1",
-    data: params,
-    beforeSend: function(){
-      showProcessLoading();
-    },
-    success: function(data) {
-      var result = jQuery.parseJSON(data);
-      setFoldersTreeview(result);
+    type: 'GET',
+    url: base_url + "folders/getFoldersFiles/" + parent_id,
+    success: function(data){
+        var result = jQuery.parseJSON(data);
+        var folders = result.folders;
+        var files = result.files;
+        var paths = result.folders_path;
+        var fname = result.folders_name;
 
-      hideProcessLoading();
+        setFoldersAndFiles(folders, files);
+
+        $('#folders_name').html(fname);
+        $('#folders_path').empty();
+        $('#folders_path').append(paths);
+
+        $('a[control="gotofolder"]').click(function(e){
+          e.preventDefault();
+
+          current_selected_folder = $(this).attr('href');
+
+          getFoldersAndFiles(current_selected_folder);
+        });
     },
     error: function(jqXHR, textStatus, errorThrown){
-      hideProcessLoading();
-            
-      showFolderManagerNotif(textStatus, errorThrown, 'error'); 
+      showFolderManagerNotif(textStatus, errorThrown, 'error');
     }
   });
 }
 
-function setFoldersTreeview(folders_data) {
-  $("#folders_treeview").treeview({
-    expandIcon: "fa fa-folder-o",
-    collapseIcon: "fa fa-folder-open-o",
-    highlightSelected: false,
-    data: folders_data
-  });
+function setFoldersAndFiles(folders, files){
+  $('#folders_and_files').empty();
 
-  selected_folder = $("#folders_treeview").treeview('getExpanded');
-  selected_folder = selected_folder[0];
+  selected = 0;
+  selected_isFolder = 1;
 
-  if(folderSelectedIsNotEmpty()){
-    $("#folders_treeview").treeview('revealNode', [selected_folder.nodeId]);
-  }
-}
+  row_trace = 1;
+  col_trace = 1;
 
-function setNodesButtons(liObject){
-  var nodeId = liObject.attr('data-nodeid');
-  var element = $('#folders_treeview').treeview('getNode', nodeId);
+  var cur_count = 1; 
+  var append = '<div class="row row-' + row_trace + '">';
+  $.each(folders, function(index, folder){
+    if(col_trace == 7){
+      append += '</div>';
 
-  if(!$('a.nodecontrol[href="'+ element.nodeId +'"][control="edit_permission"]').length){
-    var btnEditPermission = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit_permission" title="Edit Permission" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>';
-    var btnDelete = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="@title" data-toggle="tooltip"><i class="fa fa-trash"></i></a>';
-    var btnAddFile = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File" data-toggle="tooltip"><i class="fa fa-file"></i></a>';
-    var btnCreateFolder = '<a href="@href" class="nodecontrol btn btn-sm btn-default pull-right" control="create_folder" title="Create Folder" data-toggle="tooltip"><i class="fa fa-plus"></i></a>';
+      col_trace = 1;
+      row_trace++;
 
-    data = $('#folders_treeview').treeview('getEnabled');
-
-    var liObject = $('li[data-nodeid="'+ element.nodeId +'"]');
-    var nBEP = btnEditPermission.replace('@href', element.nodeId);
-    var nBD = btnDelete.replace('@href', element.nodeId);
-    var nBCF = btnCreateFolder.replace('@href', element.nodeId);
-    var nBAF = btnAddFile.replace('@href', element.nodeId);
-
-    liObject.append(nBEP);
-
-    if(element.isFile){
-      nBD = nBD.replace('@title', 'Delete File');
-
-      liObject.append(nBD);
+      if(folders.length >= cur_count){
+        append += '<div class="row row-' + row_trace + ' mt-4">';
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+          append += '<td class=""><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+          append += '<td class="pl-2">' + folder.folder_name + '</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+      }
     } else {
-      nBD = nBD.replace('@title', 'Delete Folder');
-      
-      liObject.append(nBD);
-      liObject.append(nBAF);
-      liObject.append(nBCF);
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+        append += '<td><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+        append += '<td class="pl-2">' + folder.folder_name + '</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+    }   
+
+    col_trace++;
+    cur_count++;
+  });
+
+  var ex_infos = [];
+
+  $.each(files, function(index, file){
+    ex_infos = getfileExInfos(file.title);
+
+    if(col_trace == 7){
+      append += '</div>';
+
+      col_trace = 1;
+      row_trace++;
+
+      if(files.length >= cur_count){
+        append += '<div class="row row-' + row_trace + ' mt-4">';
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+          append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+          append += '<td class="pl-2">' + file.title + '</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+        append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+        append += '<td class="pl-2">' + file.title + '</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+    }   
+
+    col_trace++;
+    cur_count++;
+  });
+  
+  append += '</div>';
+
+  $('#folders_and_files').append(append);
+
+//On Select Folder or File
+  $('tr.node > td, div.node').click(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node');
+      var div = $('div[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    var id = div.attr('fid');
+    var isFolder = div.attr('isFolder');
+    var proceed = ((selected != id) || 
+                    ((selected == id) && (selected_isFolder != isFolder)));
+
+    if((selected > 0) && (proceed)){
+      var prev_div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+
+      if(prev_div.length){
+        prev_div.removeClass('bg-info');
+        prev_div.removeClass('text-white');
+      }  
     }
 
-    $('a[control="create_folder"][href="'+ element.nodeId +'"]').click(function(e){
-      e.preventDefault();
+    div.addClass('bg-info');
+    div.addClass('text-white');
 
-      var nodeId = $(this).attr('href');
+    selected = id;
+    selected_isFolder = isFolder;
 
-      selected_folder = $('#folders_treeview').treeview('getNode', nodeId);
+    $('#folders_name').html(div.attr('fnm'));
+  });
 
-      openEntry('create_folder');
-    });
+  $('tr.node > td, div.node').dblclick(function(){
+    var tag = $(this).prop('tagName');
 
-    $('a[control="delete"][href="'+ element.nodeId +'"]').click(function(e){
-      e.preventDefault();
-      
-      var nodeId = $(this).attr('href');
-      var confirm_text = '';
-      var selected = {};
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node');
+      var div = $('div[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    selected = div.attr('fid');
+    selected_isFolder = div.attr('isFolder');
 
-      current_process = '';
-      selected_file = {};
-      selected_folder = {};
+    if(selected_isFolder == 1){
+      current_selected_folder = selected;
 
-      selected = $('#folders_treeview').treeview('getNode', nodeId);
-      if(selected.isFile){
-        selected_file = selected;
+      getFoldersAndFiles(selected);
+    } else {
+      if($('#fs_selected_file').length){
+        var fpath = $('#folders_path').text();
+
+        fpath = fpath.trim() + div.attr('fnm');
+
+        $('#fs_selected_file_text').val(fpath);
+        $('#fs_selected_file').val(selected);
+        $('#modal-folder-manager').modal('hide');
       } else {
-        selected_folder = selected;
+        showFileDetail();
       }
+    }  
+  });
+}
 
-      if(folderSelectedIsNotEmpty()){
-        current_process = 'delete_folder';
-        confirm_text = ' folder ';
-      } else if(fileSelectedIsNotEmpty()){
-        current_process = 'delete_file';
-        confirm_text = ' file ';
-      }
+function getfileExInfos(filename){
+    var ext = filename.split('.');
+    var len = ext.length - 1;
 
-      if(current_process != ''){
-        showFolderManagerNotif('Confirm Delete',
-                               'Delete' + confirm_text + selected.text + '?<br>' + selected.path, 'confirm');
-      }
-    });
+    var fIcon = '';
+    var fColor = '';
+    var vReturn = {'icon':'','color':''};
 
-    if(!element.isFile){
-      $('a[control="add_file"][href="'+ element.nodeId +'"]').click(function(){
-        current_process = 'add_file';
+    ext = ext[len];
 
-        var nodeId = $(this).attr('href');
-        
-        selected_folder = $('#folders_treeview').treeview('getNode', nodeId);
-
-        openEntry('add_file'); 
-      });
+    switch (ext) {
+      case 'pdf':
+        fIcon = 'fa fa-file-pdf-o';
+        fColor = 'text-danger';
+        break;
+      case 'doc':
+      case 'docx':
+        fIcon = 'fa fa-file-word-o';
+        fColor = 'text-primary';
+        break;
+      case 'rtf':
+        fIcon = 'fa fa-file-text-o';
+        break;
+      case 'png':
+      case 'jpg':
+      case 'gif':
+        fIcon = 'fa fa-file-image-o';
+        fColor = 'text-warning';
+        break;
+      default:
+        fIcon = 'fa fa-file-o';
+        fColor = 'text-secondary';
+        break;
     }
-  }
+
+    vReturn['icon'] = fIcon;
+    vReturn['color'] = fColor;
+
+    return vReturn;
 }
 
 function openEntry(type){
@@ -359,16 +508,46 @@ function closeEntry(){
   $('#modal-folder-manager-entry').modal('hide');
 }
 
-function showProcessLoading(){
-  if(!modalIsOpen('#modal-folder-manager-preloader')){
-    $('#modal-folder-manager-preloader').modal('show');
+function showUploading(filename){
+  if(!modalIsOpen('#modal-folder-manager-uploading')){
+    $('#modal-folder-manager-uploading-title').text('Uploading ' + filename);
+    $('#modal-folder-manager-uploading-percentage').text('0%');
+    $('#modal-folder-manager-uploading').modal('show');
   }
 }
 
-function hideProcessLoading(){
-  if(modalIsOpen('#modal-folder-manager-preloader')){
-    $('#modal-folder-manager-preloader').modal('hide');  
+function hideUploading(){
+  if(modalIsOpen('#modal-folder-manager-uploading')){
+    $('#modal-folder-manager-uploading').modal('hide');  
   }
+}
+
+function showFileDetail(){
+  var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+  var fpath = div.attr('path');
+
+  fpath = base_url + '/uploads/' + fpath;
+
+  $('#view-image-date-created').text(div.attr('created_date'));
+  $('#view-image-created-by').text(div.attr('created_by'));
+
+  $('#modal-folder-manager-view-image-file').attr('src', fpath);
+  $('#modal-folder-manager-view-image-title').text(div.attr('fnm'));
+  $('#modal-folder-manager-view-image').modal('show');
+}
+
+function showFolderDetails(){
+  var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+  var fpath = $('#folders_path').text();
+
+  fpath = fpath.trim() + div.attr('fnm');
+
+  $('#view-folder-path').text(fpath);
+  $('#view-folder-date-uploaded').text(div.attr('created_date'));
+  $('#view-folder-uploaded-by').text(div.attr('created_by'));
+
+  $('#modal-folder-manager-view-folder-title').text(div.attr('fnm'));
+  $('#modal-folder-manager-view-folder').modal('show'); 
 }
 
 function isFolderNameValid(folder_name) {
@@ -469,15 +648,11 @@ function hideFolderManagerNotif(){
 }
 
 function folderSelectedIsNotEmpty() {
-  return (
-    !jQuery.isEmptyObject(selected_folder) && selected_folder !== undefined
-  );
+
 }
 
 function fileSelectedIsNotEmpty() {
-  return (
-    !jQuery.isEmptyObject(selected_file) && selected_file !== undefined
-  );
+
 }
 
 function modalIsOpen(modal_id){

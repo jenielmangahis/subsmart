@@ -8,13 +8,48 @@
  .node-folders_treeview:not(.node-disabled):hover{background-color:#F5F5F5;} 
 
 </style>
+<?php if(!$isMain){ ?>
+<div id="modal-folder-manager" class="modal" role="dialog">
+  <div class="modal-dialog" style="max-width: 1500px">
 
-<?php if($isMain){ ?>
-  <div style="overflow: auto"> 
-    <div id="folders_treeview" class="treeview">
-    </div>   
+    <!-- Modal content-->
+    <div class="modal-content" style="height: 90vh">
+      <div class="modal-header" id="modal-folder-manager-title-div">
+        <h4 id="modal-folder-manager-title" class="modal-title">File Vault</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1rem !important">
+<?php } ?>
+
+        <div class="card">
+          <div class="card-header">        
+            <div class="row">
+                <div class="col-md-6">
+                  <h5 id="folders_name">Root</h5>
+                  <small id="folders_path"></small>
+                </div>
+                <div class="col-md-6 align-middle">
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="edit_permission" title="Edit Permission" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="delete" title="Delete Folder/File" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="add_file" title="Add File" data-toggle="tooltip"><i class="fa fa-file"></i></a>
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="create_folder" title="Create Folder" data-toggle="tooltip"><i class="fa fa-plus"></i></a>
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right float-right" control="view" title="View Details" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                </div> 
+            </div>
+          </div>
+          <div class="card-body" style="height: 64vh !important; overflow: auto">
+            <div id="folders_and_files">
+                
+            </div>
+          </div>
+        </div>
+
+<?php if(!$isMain){ ?>    
+      </div>
+    </div>
+
   </div>
-<?php } else { ?>
+</div>
 <?php } ?>
 
 <div id="modal-folder-manager-entry" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
@@ -76,7 +111,7 @@
   </div>
 </div>
 
-<div id="modal-folder-manager-preloader" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
+<div id="modal-folder-manager-uploading" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -84,13 +119,55 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-md-9">
-            <h4>Processing. Please Wait...</h4>
-            <span><small>Please don't close your browser to avoid system conflicts</small></span>
+            <h5 id="modal-folder-manager-uploading-title"></h5>
+            <span><small>Please do not close the browser or tab</small></span>
           </div>
           <div class="col-md-3">
-            <div class="spinner-border text-secondary pull-right"></div> 
+            <h5 id="modal-folder-manager-uploading-percentage" class="pull-right"></h5>
           </div>
         </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="modal-folder-manager-view-image" class="modal" role="dialog">
+  <div class="modal-dialog modal-xl">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="height: 90vh">
+      <div class="modal-header">
+        <h4 id="modal-folder-manager-view-image-title"></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body pt-3">
+        <ul class="list-group list-group-horizontal mb-3">
+          <li class="list-group-item"><strong>Date Uploaded : </strong><span id="view-image-date-created"></span></li>
+          <li class="list-group-item"><strong>Uploaded By : </strong><span id="view-image-created-by"></span></li>
+        </ul>
+        <div style="height: 70vh"><img id="modal-folder-manager-view-image-file" src="#" class="img-thumbnail w-100 h-100"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="modal-folder-manager-view-folder" class="modal" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="modal-folder-manager-view-folder-title"></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body pt-3">
+        <ul class="list-group mb-3">
+          <li class="list-group-item"><strong>Path : </strong><span id="view-folder-path"></span></li>
+          <li class="list-group-item"><strong>Date Created : </strong><span id="view-folder-date-uploaded"></span></li>
+          <li class="list-group-item"><strong>Created By : </strong><span id="view-folder-uploaded-by"></span></li>
+        </ul>
       </div>
     </div>
 

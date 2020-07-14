@@ -19,28 +19,13 @@
                </div>
             </div>
          </div>
-                       
-         <div class="row">
-            <div class="col-xl-12">
-               <div class="card">
-                  <div class="card-header">
-                     <div class="float-right d-none d-md-block">
-                        <div class="dropdown">
-                           <?php ////if (hasPermissions('users_add')): ?>
-                           <a href="#" class="btn btn-primary" aria-expanded="false" id="btn-add-new-folder">
-                           <i class="fa fa-folder mr-2"></i> Add New Folder
-                           </a> 
-                      
-                           <?php //endif ?>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="card-body">
-                     <?php echo $folder_manager; ?>
-                  </div>
+      </div>
+                    
+      <div class="row">
+         <div class="col-xl-12">
+               <div>
+                  <?php echo $folder_manager; ?>
                </div>
-               <!-- end card -->
-            </div>
          </div>
          <!-- end row -->           
       </div>

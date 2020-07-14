@@ -351,7 +351,7 @@ class Survey extends MY_Controller
     $this->load->view('survey/add', $this->page_data);
   }
 
-  // survey themes
+  /* THEMES */
   public function themeIndex(){
     
     $this->page_data['themes'] = $this->survey_model->getThemes();
@@ -370,6 +370,11 @@ class Survey extends MY_Controller
     $this->load->view('survey/themes/create', $this->page_data);
   }
 
+  public function themeEdit($id){
+    $this->page_data['theme'] = $this->survey_model->getThemes($id);
+    $this->load->view('survey/themes/edit',$this->page_data);
+  }
+
   public function selectTheme($survey_id, $theme_id){
     $this->db->set('theme_id', $theme_id);
     $this->db->where('id', $survey_id);
@@ -377,19 +382,46 @@ class Survey extends MY_Controller
     redirect('survey/edit/'.$survey_id);
   }
 
-  // public function themeAddImage(){
-  //   $path = 'uploads/survey/themes';
-  //   $config = [
-  //     'upload_path' 		=> $path,
-  //     'allowed_types' 	=> '*',
-  //     'overwrite' 		=> false
-  //   ];
-  //   $test = $this->upload->initialize($config);
-  //   // if ( ! $this->upload->do_upload('image_background') ){
+  public function addTheme(){
+    
+    $filename = $_POST["sth_theme_name"];
+    $path = 'uploads/survey/themes';
+    $config = [
+      'file_name' => strtolower($filename),
+      'upload_path' 		=> $path,
+      'allowed_types' 	=> '*',
+      'overwrite' 		=> false,
+    ];
+    $_POST["sth_primary_image"] = strtolower($filename).".jpg";
+    $test = $this->upload->initialize($config);
+    $this->upload->do_upload('filePrimaryImage');
+    $this->survey_model->addTheme($_POST);
+    redirect('survey');
+  }
 
+  public function updateTheme($id){
+    $filename = $_POST["sth_theme_name"];
+    $path = 'uploads/survey/themes';
+    if($_FILES["filePrimaryImage"]["name"] !== "" || $_FILES["filePrimaryImage"]["size"] !== 0){
+      unlink($path.'/'.strtolower($filename).'.jpg');
+    }
+    $config = [
+      'file_name' => strtolower($filename),
+      'upload_path' 		=> $path,
+      'allowed_types' 	=> '*',
+      'overwrite' 		=> false,
+    ];
+    $_POST["sth_primary_image"] = strtolower($filename).".jpg";
+    $test = $this->upload->initialize($config);
+    $this->upload->do_upload('filePrimaryImage');
+    $this->survey_model->updateTheme($id, $_POST);
+    redirect('survey/themes');
+  }  
 
 
   
+  /** WORKSPACES **/
+
   public function workspaceList(){
     
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();

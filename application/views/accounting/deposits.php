@@ -18,7 +18,40 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				</div>
 
 				<div class="row pt-3">
+					<div class="col-lg-6 px-0">
+						<h2>Deposits from QuickBooks Payments</h2>
+					</div>
+					<div class="col-lg-6">
+					</div>
+				</div>
+				<div class="row pt-3">
 					<div class="col-lg-12 px-0">
+						<div class="bg-white p-4">
+							<table id="all_sales_table" class="table table-striped table-bordered w-100">
+										<thead>
+										<tr>
+											<th></th>
+											<th>Invoice</th>
+											<th>Customer</th>
+											<th>Date</th>
+											<th>Deposited</th>
+											<th>Status</th>
+											<th>Action</th>
+										</tr>
+										</thead>
+										<tbody>
+										<tr>
+											<td><input type="checkbox"></td>
+											<td>1234</td>
+											<td>John Meyer</td>
+											<td>06/29/2020</td>
+											<td>$42</td>
+											<td>Success</td>
+											<td><a href="">View</a></td>
+										</tr>
+										</tbody>
+								</table>
+							</div>
 					</div>
 				</div>
 				<!-- end row -->

@@ -23,34 +23,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-2">
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addOnHandInventory" href="<?php echo base_url('inventory') ?>">Inventory</a>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addServicesInventory" href="<?php echo base_url('inventory?type=service') ?>">Services</a>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addFeesInventory" href="<?php echo base_url('inventory?type=fees') ?>">Fees</a>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="orderInventory">Order</button>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="vendorInventory">Vendors</button>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12" id="reportsInventory">Reports</button>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <a style="color:#fff;" class="btn btn-primary col-md-12" tabindex="-1" id="addItemGroups" href="<?php echo base_url('inventory?type=itemgroup') ?>">Item Groups</a>
-                                    </div>
-                                    <div class="col-md-10" style="margin-bottom:10px;">
-                                        <button class="btn btn-primary col-md-12">Plans</button>
-                                    </div>
-                                </div>
                                 <?php if ($type == 'product' || empty($type)) : ?>
-                                <div class="col-md-10" id="onHandInventory">
+                                <div class="col-md-12" id="onHandInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-4 text-left">Inventory On Hand</h4>
                                         <div class="col-md-8 text-right" style="margin-bottom:10px;">
@@ -80,7 +54,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <table class="table table-hover table-bordered table-striped" style="width:100%;" id="inventoryOnHandItems"> 
                                         <thead>
                                             <tr>
-                                                <th scope="col"><strong>ID</strong></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Description</strong></th>
                                                 <th scope="col"><strong>Brand</strong></th>
@@ -92,25 +65,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody>
                                             <?php foreach($items as $item) : ?>
-                                            <tr>
-                                                <td><?php echo $item->id; ?></td>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->description; ?></td>
-                                                <td><?php echo $item->brand; ?></td>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                                <td class="pl-3">
-                                                    <a href="javascript:void(0)" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                    <a href="<?php echo base_url('inventory/delete?id='.$item->id); ?>" class="btn btn-danger btn-sm deleteJobCurrentForm"><span class="fa fa-trash"></span> Delete</a>
-                                                </td>
-                                            </tr>
+                                            <?php if($item[1] != "header") : ?>
+                                                <tr>
+                                                    <td><?php echo $item[0]; ?></td>
+                                                    <td><?php echo $item[1]; ?></td>
+                                                    <td><?php echo $item[2]; ?></td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td style="width:12%" class="pl-3">
+                                                        <a href="javascript:void(0)" class="btn btn-warning btn-sm editItemBtn" data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
+                                                        <a href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="btn btn-danger btn-sm deleteJobCurrentForm"><span class="fa fa-trash"></span> Delete</a>
+                                                    </td>
+                                                </tr>
+                                            <?php else : ?>
+                                                <tr style="background-color:#D3D3D3;">
+                                                    <td colspan="6"><?php echo $item[0]; ?></td>
+                                                    <td style="display: none"></td>
+                                                    <td style="display: none"></td>
+                                                    <td style="display: none"></td>
+                                                    <td style="display: none"></td>
+                                                    <td style="display: none"></td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            <?php endif; ?>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table> 
                                 </div>
                                 <?php elseif ($type == 'service') : ?>
-                                <div class="col-md-10" id="servicesInventory">
+                                <div class="col-md-12" id="servicesInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-10 text-left">Services</h4>
                                         <div style="margin-bottom:10px;" class="col-md-2 text-right">
@@ -139,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </table> 
                                 </div>
                                 <?php elseif ($type == 'fees') : ?>
-                                <div class="col-md-10" id="feesInventory">
+                                <div class="col-md-12" id="feesInventory">
                                     <div class="row pt-4">
                                         <h4 class="col-md-10 text-left" for="exampleFormControlSelect1">Fees</h4>
                                         <div class="col-md-2 text-right" style="margin-bottom:10px;">
@@ -166,26 +150,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </table> 
                                 </div>
                                 <?php elseif ($type == 'itemgroup') : ?>
-                                <div class="col-md-10" id="itemGroups">
+                                <div class="col-md-12" id="itemGroups">
                                     <div class="row col-md-12 pt-4 pl-0">
-                                        <h4 class="col-md-10 pl-0 text-left" for="exampleFormControlSelect1">Create Item Groups</h4>
+                                        <h4 class="col-md-10 pl-2 text-left" for="exampleFormControlSelect1">Create Item Groups</h4>
                                     </div>
                                     <?php echo form_open('inventory/saveItemsCategories', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                                         <div class="row pl-2 pt-2 pb-2">
                                             <div class="row col-md-12">
                                                 <label class="pt-2 pr-3">Group Name</label>
-                                                <input type="text" id="groupNameField" name="groupName" required class="form-control col-md-5">
+                                                <input type="text" id="groupNameField" name="groupName" required class="form-control col-md-6">
                                             </div>
                                         </div>
                                         <div class="row pl-2 pt-2 pb-2">
                                             <div style="margin-top:10px;" class="row col-md-12 pl-3">
                                                 <label class="pt-2 pr-4">Description</label>
-                                                <textarea rows="3" style="height:150px !important;" id="descriptionItemCat"  name="descriptionItemCat" class="form-control col-md-5"></textarea>
+                                                <textarea rows="3" style="height:150px !important;" id="descriptionItemCat"  name="descriptionItemCat" class="form-control col-md-6"></textarea>
                                             </div>
                                         </div>
 
                                         <div style="margin-top:10px;" class="row pl-3">
-                                            <div class="col-md-6 text-right pr-5">
+                                            <div class="col-md-7 text-right pr-5">
                                                 <button type="button" class="btn btn-default" id="cancelAddItemGroups">Cancel</button>
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                             </div>
@@ -200,15 +184,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php echo form_open('inventory/saveItems', ['class' => 'form-validate require-validation', 'id' => 'new_item_form', 'autocomplete' => 'off']); ?>
                                         <div class="row col-md-12">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Item Name</label>
-                                            <input type="text" id="groupNameField" name="item_name" class="form-control col-md-5" required>
-                                            <input type="hidden" name="item_type" value="material">
+                                            <input type="text" id="itemName" name="item_name" class="form-control col-md-5" required>
+                                            <input type="hidden" name="item_type" value="product">
+                                            <input type="hidden" name="item_id" id="itemId" value="0">
                                             <input type="hidden" name="event_type" id="event_type" value="save_another">
-                                            <button type="submit" class="btn btn-primary col-md-2 ml-3">Save & Add Another</button>
+                                            <button type="submit" class="btn btn-primary col-md-2 ml-3" id="saveAddAnother">Save & Add Another</button>
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Description</label>
-                                            <textarea rows="3" id="exampleFormControlTextarea1" name="description" class="form-control col-md-5"  required></textarea>
+                                            <textarea rows="3" id="descriptionItem" name="description" class="form-control col-md-5"  required></textarea>
                                             <button type="submit" class="btn btn-primary col-md-2 ml-3" id="save_close_item">Save & Close</button>
+
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Brand</label>
@@ -224,7 +210,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <select class="form-control col-md-5" name="cost_per" id="cost_per" required>
                                                 <option value="each" selected>Each</option>
                                                 <option>Weight</option>
-                                                <option>Lenght</option>
+                                                <option>Length</option>
                                                 <option>Area</option>
                                                 <option>Volume</option>
                                                 <option>Other</option>
@@ -232,7 +218,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Unit</label>
-                                            <input type="text" id="groupNameField" name="unit" class="form-control col-md-5">
+                                            <input type="text" id="unitItem" name="unit" class="form-control col-md-5">
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Vendor</label>
@@ -244,19 +230,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Product URL</label>
-                                            <input type="text" id="groupNameField" name="product_url" class="form-control col-md-5" required>
+                                            <input type="text" id="productUrlItem" name="product_url" class="form-control col-md-5" required>
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Costs of Goods</label>
-                                            <input type="text" id="groupNameField" name="cost_of_goods" class="form-control col-md-5" required>
+                                            <input type="text" id="cogsItem" name="cost_of_goods" class="form-control col-md-5" required>
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Model Number</label>
-                                            <input type="text" id="groupNameField" name="model_number" class="form-control col-md-5" required>
+                                            <input type="text" id="modelNumItem" name="model_number" class="form-control col-md-5" required>
                                         </div>
                                         <div class="row col-md-12 pt-4">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Item Category</label>
-                                            <select class="form-control col-md-5" name="item_category" id="exampleFormControlSelect1" required>
+                                            <select class="form-control col-md-5" name="item_category" id="exampleFormControlSelect1">
                                                 <?php foreach($items_categories as $cat) : ?>
                                                     <option value="<?php echo $cat->item_categories_id; ?>"><?php echo $cat->name; ?></option>
                                                 <?php endforeach; ?>
@@ -485,8 +471,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-<script src="<?php echo $url->assets ?>frontend/js/inventory/main.js"></script>

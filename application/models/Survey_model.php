@@ -486,6 +486,11 @@ class Survey_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function updateTheme($id, $data){
+		$this->db->where('sth_rec_no', $id);
+		return $this->db->update('survey_themes', $data);
+	}
+
 	public function getWorkspaces($id = null){
 		$this->db->select('*');
 		if($id !== null){

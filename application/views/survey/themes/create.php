@@ -75,11 +75,11 @@
                             </div>
                         </div>
                     
-                        <?= form_open_multipart('survey/themes/addImage', array('id'=>'frm-add-survey-theme'))?>
+                        <?= form_open_multipart('survey/themes/add', array('id'=>'frm-add-survey-theme'))?>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="txtName">What's the name of your theme?</label>
-                                    <input type="text" name="txtName" id="txtName" class="form-control" placeholder="Enter name here"/>
+                                    <input type="text" name="sth_theme_name" id="txtName" class="form-control" placeholder="Enter name here"/>
                                     <div id="themeNameError" class="invalid-feedback" >
                                         Please provide a name.
                                     </div>
@@ -90,31 +90,31 @@
                                 <label>Theme colors:</label>
                                 <div class="form-row">
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colPrimary" id="colPrimary" value="#9D344B" data-toggle="tooltip" data-placement="top" title="Primary Color">
+                                        <input class="form-control" type="color" name="sth_primary_color" id="colPrimary" value="#9D344B" data-toggle="tooltip" data-placement="top" title="Primary Color">
                                         <small>Primary</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colSecondary" id="colSecondary" value="#257059" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                        <input class="form-control" type="color" name="sth_secondary_color" id="colSecondary" value="#257059" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                         <small>Secondary</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colTertiary" id="colTertiary" value="#8AA236" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                        <input class="form-control" type="color" name="sth_tertiary_color" id="colTertiary" value="#8AA236" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                         <small>Tertiary</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colSuccess" id="colSuccess" value="#00BC0C">
+                                        <input class="form-control" type="color" name="sth_success_color" id="colSuccess" value="#00BC0C">
                                         <small>Success</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colInfo" id="colInfo" value="#045899">>
+                                        <input class="form-control" type="color" name="sth_info_color" id="colInfo" value="#045899">>
                                         <small>Info</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colWarning" id="colWarning" value="#EF6C00">>
+                                        <input class="form-control" type="color" name="sth_warning_color" id="colWarning" value="#EF6C00">>
                                         <small>Warning</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colDanger" id="colDanger" value="#EF0000">>
+                                        <input class="form-control" type="color" name="sth_danger_color" id="colDanger" value="#EF0000">>
                                         <small>Danger</small>
                                     </div>
                                 </div>
@@ -124,11 +124,11 @@
                                 <label>Text colors:</label>
                                 <div class="form-row">
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colTextMain" id="colTextMain" value="#ffffff">
+                                        <input class="form-control" type="color" name="sth_text_color" id="colTextMain" value="#ffffff">
                                         <small>Text</small>
                                     </div>
                                     <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="colTextDark" id="colTextDark" value="#222222">
+                                        <input class="form-control" type="color" name="sth_dark_text_color" id="colTextDark" value="#222222">
                                         <small>Dark Mode Text</small>
                                     </div>
                                 </div>
@@ -150,13 +150,13 @@
                         <script>
                             let imageContainer = document.querySelector('#imageContainer');
                             let uploadedImage = document.querySelector("#filePrimaryImage");
+														let fileReader = new FileReader();
 
 
                             uploadedImage.addEventListener('change', () => {
                                 document.querySelector('#themeSampleWrapper').style.display = 'flex';
                                 if(uploadedImage.files && uploadedImage.files[0]){
                                     document.querySelector('#imagePreviewError').style.display = 'none';
-                                    let fileReader = new FileReader();
                                     fileReader.onload = e => {
                                         imageContainer.src = e.target.result;
                                     }
@@ -175,19 +175,24 @@
                                 document.querySelector('#sampleSecondaryButton').style.color = document.querySelector('#colTextMain').value;
                             })
 
-                            document.querySelector('#btnSubmit').addEventListener('click',(e) => {
-                                e.preventDefault();
+                            document.querySelector('#btnasdfubmit').addEventListener('click',(e) => {
+																e.preventDefault();
                                 let error = false;
                                 if(document.querySelector('#txtName').value === '' || !uploadedImage.files[0] ){
                                     if(document.querySelector('#txtName').value === ''){
+                                        console.log("Please enter a name.")
                                         document.querySelector('#themeNameError').style.display = "inline-block";
                                     }else{
                                         document.querySelector('#themeNameError').style.display = "none";
                                     }
+
+                                    if(!uploadedImage. files[0]){
+                                        console.log("Add an image");
+                                    }
                                     error = true;
                                 }
 
-                                if(error === false){
+                                // if(error === false){
                                     let data = {
                                         'sth_theme_name' : document.querySelector('#txtName').value,
                                         'sth_primary_color': document.querySelector('#colPrimary').value,
@@ -199,13 +204,24 @@
                                         'sth_danger_color': document.querySelector('#colDanger').value,
                                         'sth_text_color': document.querySelector('#colTextMain').value,
                                         'sth_dark_text_color': document.querySelector('#colTextDark').value,
-                                        'sth_primary_image': document.querySelector('#txtName').value,
-
+																				'sth_primary_image': document.querySelector('#txtName').value,
+																				'image': document.querySelector('#filePrimaryImage'),
                                     }
                                     
-                                }else{
-                                    console.log("gawa ka ng error handlers lex");
-                                }
+																		console.log(data);
+																		// console.log(fileReader.readAsDataURL(uploadedImage.files[0]));
+
+																		$.ajax({
+																			url: surveyBaseUrl+'survey/themeAddImage',
+																			type: "post",
+																			data: data,
+																			success: function(res){
+																				// console.log(res)
+																			}
+																		})
+                                // }else{
+                                //     console.log("gawa ka ng error handlers lex");
+                                // }
                             });
                             
                         </script>

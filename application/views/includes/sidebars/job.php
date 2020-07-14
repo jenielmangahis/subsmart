@@ -72,7 +72,7 @@
              </ul>
         </li>
         <li class="submenus dropright">
-            <a href="#submenuSetting" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-wrench" style="margin-right: 20px"></i>Settings</a>
+            <a href="#submenuSetting" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-cogs" style="margin-right: 20px"></i>Settings</a>
                 <ul class="collapse list-unstyled" id="submenuSetting">
                     <li>
                         <a href="<?php echo base_url();?>job/job_type">Job Type</a>

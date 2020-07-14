@@ -37,9 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                      <label for="account_type">Account</label>
                                     <select name="account_type" id="account_type" class="form-control select2" required>
                                         <option value="">Select Account Type</option>
-                                        <?php foreach ($this->account_model->get() as $row): ?>
-                                            <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
-                                        <?php endforeach ?>
+                                       
                                     </select>
                                 </div>
                             </div>
@@ -88,9 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="name">Expense account</label>
                                     <select name="account_type" id="account_type" class="form-control select2" required>
                                         <option value="">Select Account Type</option>
-                                        <?php foreach ($this->account_model->get() as $row): ?>
-                                            <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
-                                        <?php endforeach ?>
+                                       
                                     </select>
                                 </div>
                             </div>
@@ -115,9 +111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="name">Expense account</label>
                                     <select name="account_type" id="account_type" class="form-control select2" required>
                                         <option value="">Select Account Type</option>
-                                        <?php foreach ($this->account_model->get() as $row): ?>
-                                            <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
-                                        <?php endforeach ?>
+                                       
                                     </select>
                                 </div>
                             </div>
@@ -137,7 +131,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
-    <?php include viewPath('includes/sidebars/accounting/banking'); ?>
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
