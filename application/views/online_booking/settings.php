@@ -1,11 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_booking'); ?>
-<style>
-.employees{
-    list-style: none;
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/addons'); ?>
     <!-- page wrapper start -->
