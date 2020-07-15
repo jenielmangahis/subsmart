@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="row dashboard-container-2 table-time-slots">
                             
-                            <table class="table">
+                            <table class="table table-timeslots" id="table-timeslots">
                               <thead>
                                 <tr>
                                   <th width="" scope="col">Time Start - End</th>
@@ -102,7 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               </tbody>
                             </table>  
 
-                            <a style="padding-left: 9px;" data-time-slot="btn-add" href="#"><span class="fa fa-plus-square fa-margin-right"></span> Add Time Slot</a> 
+                            <a style="padding-left: 9px;" id="add-timeslots-row" data-time-slot="btn-add" href="javascript:void(0);"><span class="fa fa-plus-square fa-margin-right add-timeslots-row"></span> Add Time Slot</a> 
 
                         </div>
 
