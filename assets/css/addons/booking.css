@@ -49,6 +49,7 @@
 }
 
 .card .dashboard-container-1 {
+    padding-left: 18px;
     padding-top: 25px;
     padding-bottom: 10px;
 }
@@ -80,5 +81,9 @@
     padding: 10px;
     display: inline-block;
     margin-bottom: 15px;
-    ": ;
+}
+
+.table-time-slots .time-input {
+    display: inline-block;
+    width: 122px !important;
 }

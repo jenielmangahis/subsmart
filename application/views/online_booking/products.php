@@ -134,4 +134,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/booking_modals'); ?>   
 
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_booking'); ?>
