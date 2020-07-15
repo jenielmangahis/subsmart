@@ -55,4 +55,9 @@ class Reconcile extends MY_Controller {
 	{
 		$this->load->view('accounting/reconcile/add', $this->page_data);
 	}
+
+	public function edit()
+	{
+		$this->load->view('accounting/reconcile/edit', $this->page_data);
+	}
 }

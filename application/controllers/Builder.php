@@ -42,7 +42,7 @@ class Builder extends MY_Controller {
 				$formdetail->questions[$key]->parameter = json_decode($value->parameter);
 			}
 
-			if($value->q_type == 'selection')
+			if($value->q_type == 'radio' || $value->q_type == 'checkbox' || $value->q_type == 'dropdown')
 			{
 				$formdetail->questions[$key]->options = $this->builder_model->get_forms_questions_options($value->Questions_id);
 			}
@@ -52,7 +52,16 @@ class Builder extends MY_Controller {
 
 	function saveform() {
 
-
+		if($this->input->post('deletedQuestions') != '') {
+			$DELETE_QUESTIONS = explode(",",$this->input->post('deletedQuestions'));
+			
+			foreach($DELETE_QUESTIONS as $key => $value )
+			{
+				$this->db->where('Questions_id', $value);
+				$this->db->delete('questions');
+			}
+			
+		}
 		$form_id = '0';
 		if($this->input->post('form_id') == "new")
 		{
@@ -72,7 +81,7 @@ class Builder extends MY_Controller {
 			$this->db->where('forms_id', $this->input->post('form_id'));
 			$this->db->update( $this->builder_model->table_custom_forms, $data);
 		}
-
+		
 		$questions = $this->input->post('questions');
 
 		if(!empty($questions)) {
@@ -391,7 +400,7 @@ class Builder extends MY_Controller {
 				$formdetail->questions[$key]->parameter = json_decode($value->parameter);
 			}
 
-			if($value->q_type == 'selection')
+			if($value->q_type == 'radio' || $value->q_type == 'checkbox' || $value->q_type == 'dropdown')
 			{
 				$formdetail->questions[$key]->options = $this->builder_model->get_forms_questions_options($value->Questions_id);
 			} elseif ($value->q_type == 'group') {
@@ -408,8 +417,8 @@ class Builder extends MY_Controller {
 		        	if($valueSubQuestions->parameter != '') {
 						$formdetail->questions[$key]->questions[$keySubQuestions]->parameter = json_decode($valueSubQuestions->parameter);
 					}
-
-					if($valueSubQuestions->q_type == 'selection')
+					
+					if($valueSubQuestions->q_type == 'radio' || $valueSubQuestions->q_type == 'checkbox' || $valueSubQuestions->q_type == 'dropdown')
 					{
 						$formdetail->questions[$key]->questions[$keySubQuestions]->options = $this->builder_model->get_forms_questions_options($valueSubQuestions->Questions_id);
 					}
@@ -428,8 +437,8 @@ class Builder extends MY_Controller {
 		        	if($valueSubQuestions->parameter != '') {
 						$formdetail->questions[$key]->questions[$keySubQuestions]->parameter = json_decode($valueSubQuestions->parameter);
 					}
-
-					if($valueSubQuestions->q_type == 'selection')
+					
+					if($valueSubQuestions->q_type == 'radio' || $valueSubQuestions->q_type == 'checkbox' || $valueSubQuestions->q_type == 'dropdown')
 					{
 						$formdetail->questions[$key]->questions[$keySubQuestions]->options = $this->builder_model->get_forms_questions_options($valueSubQuestions->Questions_id);
 					}

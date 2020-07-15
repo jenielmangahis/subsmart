@@ -21,9 +21,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<h2>Sales Transactions</h2>
 					</div>
 					<div class="col-lg-6">
-						<div class="dropdown pull-right rounded-circle">
-							<button class="btn btn-success rounded" type="button" id="dropNewTraaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								New Transaction&ensp;&#9660;
+						<div class="pull-right">
+							<button class="btn btn-success rounded-20" type="button" id="dropNewTraaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								New Transaction&ensp;<span class="fa fa-caret-down"></span>
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropNewTraaction">
 								<a class="dropdown-item" href="#">Invoice</a>
@@ -35,9 +35,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<a class="dropdown-item" href="#">Time Activity</a>
 							</div>
 						</div>
-						<div class="dropdown pull-right rounded-circle mr-3">
-							<button class="btn btn-default rounded" type="button" id="dropImportantTraaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Important Transaction&ensp;&#9660;
+						<div class="pull-right mr-3">
+							<button class="btn btn-default rounded-20" type="button" id="dropImportantTraaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Important Transaction&ensp;<span class="fa fa-caret-down"></span>
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropImportantTraaction">
 								<a class="dropdown-item" href="#">Square</a>

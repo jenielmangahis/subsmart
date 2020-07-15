@@ -222,6 +222,9 @@
 #pay-bills-modal .modal-body{
     background: #F4F5F8;
 }
+#pay-bills-modal .modal-body label{
+    font-weight: bolder;
+}
 #pay-bills-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
@@ -406,3 +409,174 @@
     border:1px solid #6B6C72;
 }
 
+#receiptModal .modal-header{
+    height: 40px;
+    line-height: 50px;
+    font-weight: 600;
+    color: #fff;
+    background: #393a3d;
+    padding: 10px;
+    border-radius: 0;
+}
+#receiptModal .modal-header h2{
+    margin-top: 0;
+    padding-left: 10px;
+    font-family: "Avenir Next forINTUIT",Avenir,sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #fff;
+}
+#receiptModal .modal-header .fa{
+    color: #fff;
+    cursor: pointer;
+    margin-top: 5px;
+}
+#receiptModal .modal-header{
+    font-family: "Avenir Next forINTUIT",Avenir,sans-serif;
+}
+#receiptModal .modal-body{
+    font-family: "Avenir Next forINTUIT",Avenir,sans-serif!important;
+}
+#receiptModal .modal-body .viewer-backdrop-container{
+    width: 532px;
+    height: 585px;
+    margin: 0 auto;
+}
+#receiptModal .modal-body .viewer-backdrop-container .viewer-backdrop{
+    width: 532px;
+    height: 585px;
+    background-color: rgba(0,0,0,.5);
+    z-index: 0;
+    padding-top: 50px;
+}
+#receiptModal .modal-body .viewer-backdrop-container .viewer-backdrop img{
+    min-width: 350px;
+    min-height: 250px;
+    max-width: 500px;
+    max-height: 550px;
+    z-index: 1;
+    vertical-align: center;
+    display: block;
+    margin: auto;
+    overflow: auto;
+}
+#receiptModal .modal-body .receiptDetailsContainer {
+    max-width: 80%;
+}
+#receiptModal .modal-body .step-header {
+    font-weight: 500;
+    font-size: large;
+}
+#receiptModal .modal-body .receiptDetailsContainer label{
+    font-weight: bolder;
+}
+#receiptModal .modal-body .form-element {
+    margin-top: 20px;
+}
+.select-text-dp{
+    height: 46px;
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    color: #363636;
+    font-size: 16px;
+    padding-left: 10px;
+    display: block;
+    width: 100%;
+}
+#receiptModal .modal-body .memo-textarea{
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    font-size: 16px;
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    color: #363636;
+}
+#receiptModal .modal-footer-uploadedReceipt{
+    padding: 10px;
+}
+#receiptModal .modal-footer-uploadedReceipt .btn-leftSide{
+    background-color: transparent;
+    border:3px solid black;
+    border-radius: 36px;
+    font-weight: bolder;
+    color: black;
+    float: left;
+}
+#receiptModal .modal-footer-uploadedReceipt .btn-rightSide{
+    border-radius: 36px;
+    font-weight: bolder;
+    float: right;
+}
+/*Check Expenses modal*/
+#edit-expensesCheck .modal-title{
+    font-size: 2.4rem;
+    line-height: 50px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+}
+#edit-expensesCheck .modal-header{
+    border-bottom: 0;
+}
+#edit-expensesCheck .modal-footer-check{
+    padding: 10px;
+    background: #393A3D;
+}
+#edit-expensesCheck .remove-button{
+    border-radius: 36px;
+}
+#edit-expensesCheck .modal-footer-check .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+#edit-expensesCheck label{
+    font-weight: 700;
+}
+#edit-expensesCheck textarea{
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    font-size: 16px;
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    color: #363636;
+}
+#edit-expensesCheck .table-container{
+    background: #ffffff;
+    padding-top: 15px;
+}
+#edit-expensesCheck .add-remove-line{
+    border-radius: 5px;
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    width: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#edit-expensesCheck .modal-footer-check  .middle-links{
+    display: inline-block;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    border-right: 1px solid whitesmoke;
+}
+#edit-expensesCheck .modal-footer-check  .middle-links a{
+    color: #ffffff;
+}
+#edit-expensesCheck .modal-footer-check  .middle-links a:hover{
+    text-decoration: underline;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
+}
+#edit-expensesCheck .modal-footer-check  .end{
+    border-right: none;
+}

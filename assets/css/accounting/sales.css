@@ -198,3 +198,9 @@
 .accounting-sales .bg-success {
     background-color: #28a745!important;
 }
+.rounded-20{
+	border-radius:20px
+}
+.max-85{
+	max-width:85%;
+}

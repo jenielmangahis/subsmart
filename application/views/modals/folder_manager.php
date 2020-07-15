@@ -41,6 +41,25 @@
             <div id="folders_and_files">
                 
             </div>
+            <div class="mt-5">
+              <div class="row">
+                <div class="col-md-4 border">
+                  <h6>Top 10 Most Downloads<span class="float-right">Count</span></h6>
+                  <ul class="list-group list-group-flush" id="most_downloads">
+                  </ul>
+                </div>
+                <div class="col-md-4 border">
+                  <h6>Top 10 Most Previews<span class="float-right">Count</span></h6>
+                  <ul class="list-group list-group-flush" id="most_previews">
+                  </ul>
+                </div>
+                <div class="col-md-4 border">
+                  <h6>Most Recent Uploads<span class="float-right">Days since uploaded</span></h6>
+                  <ul class="list-group list-group-flush" id="recent_uploads">
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

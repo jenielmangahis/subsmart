@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 				<div class="row pt-3">
 					<div class="col-lg-6 px-0">
-						<h2>Deposits from QuickBooks Payments</h2>
+						<h2>Deposits from Payments</h2>
 					</div>
 					<div class="col-lg-6">
 					</div>

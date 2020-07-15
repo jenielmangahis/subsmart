@@ -1459,10 +1459,10 @@ function get_estimate_status_total($status = 0, $count_only = false)
     }
 
     if ($count_only) {
-        return count($CI->estimate_model->getByWhere(array('user_id' => logged('id'))));
+        return count($CI->estimate_model->getByWhere(array('employee_id' => logged('id'))));
     }
 
-    return $CI->estimate_model->getByWhere(array('user_id' => logged('id')));;
+    return $CI->estimate_model->getByWhere(array('employee_id' => logged('id')));;
 }
 
 

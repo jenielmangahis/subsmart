@@ -9,63 +9,55 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="row pb-2">
 					<div class="col-md-12 banking-tab-container">
 						<a href="<?php echo url('/accounting/payroll-overview')?>" class="banking-tab ">Overview</a>
-						<a href="<?php echo url('/accounting/employees')?>" class="banking-tab-active text-decoration-none">Employees</a>
-						<a href="<?php echo url('/accounting/contractors')?>" class="banking-tab">Contractors</a>
+						<a href="<?php echo url('/accounting/employees')?>" class="banking-tab">Employees</a>
+						<a href="<?php echo url('/accounting/contractors')?>" class="banking-tab-active text-decoration-none">Contractors</a>
 						<a href="<?php echo url('/accounting/workers-comp')?>"" class="banking-tab">Worker's Comp</a>
 						<a href="#" class="banking-tab">Benefits</a>
 					</div>
 				</div>
 				<div class="row pt-3">
 					<div class="col-lg-6 px-0">
-						<h2>Employees</h2>
+						<h2>Contractors</h2>
 					</div>
 					<div class="col-lg-6">
 						<div class="pull-right">
-							<button class="btn btn-success rounded-20" type="button" id="dropNewTraaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Run Payroll&ensp;<span class="fa fa-caret-down"></span>
+							<button class="btn btn-success rounded-20" type="button">
+								Add Contractor
 							</button>
-							<div class="dropdown-menu" aria-labelledby="dropNewTraaction">
-								<a class="dropdown-item" href="#">Bonus Only</a>
-								<a class="dropdown-item" href="#">Commission Only</a>
-							</div>
+						</div>
+						<div class="pull-right mr-3">
+							<button class="btn btn-default rounded-20" type="button">
+								Prepare 1099s
+							</button>
 						</div>
 					</div>
 				</div>
-				
 				<div class="row pt-3">
 					<div class="col-lg-12 px-0">
 						<div class="bg-white p-4">
 							<table id="all_sales_table" class="table table-striped table-bordered w-100">
 										<thead>
 										<tr>
-											<th>Name</th>
-											<th>Pay Rate</th>
-											<th>Pay Method</th>
-											<th>Pay Schedule</th>
-											<th>Status</th>
+											<th>Customer/Company</th>
+											<th>Action</th>
 										</tr>
 										</thead>
 										<tbody>
 											<tr>
 												<td>John Meyer</td>
-												<td>$32</td>
-												<td>Paypal</td>
-												<td>Every Monday</td>
-												<td><a href="">Active</a></td>
+												<td><a href="#">Write Check</a></td>
 											</tr>
 											<tr>
-												<td>Chris Worth</td>
-												<td>$52</td>
-												<td>Check</td>
-												<td>Every Friday</td>
-												<td><a href="">Active</a></td>
+												<td>John Meyer</td>
+												<td><a href="#">Write Check</a></td>
 											</tr>
 											<tr>
-												<td>Tina Burns</td>
-												<td>$35</td>
-												<td>Check</td>
-												<td>Every Saturday</td>
-												<td><a href="">Active</a></td>
+												<td>John Meyer</td>
+												<td><a href="#">Write Check</a></td>
+											</tr>
+											<tr>
+												<td>John Meyer</td>
+												<td><a href="#">Write Check</a></td>
 											</tr>
 										</tbody>
 								</table>

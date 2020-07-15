@@ -140,7 +140,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
+                                    <tr style="cursor: pointer;" data-toggle="modal" data-target="#edit-expensesCheck">
                                         <td><input type="checkbox"></td>
                                         <td>Test</td>
                                         <td>Test</td>
@@ -284,8 +284,152 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             </div>
         </div>
-        <!--end of modal-->
+
+    </div>  <!--end of modal-->
+    <div class="full-screen-modal">
+        <div id="edit-expensesCheck" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                            Check #2714
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="">Payee</label>
+                                <input type="text" list="payee-dropdown" class="select-text-dp">
+                                <datalist id="payee-dropdown">
+                                    <option selected>Tyler Nguyen</option>
+                                    <option>Tyler Nguyen</option>
+                                    <option>Tyler Nguyen</option>
+                                </datalist>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Bank Account</label>
+                                <input type="text" list="bankAccountDp" class="select-text-dp">
+                                <datalist id="bankAccountDp">
+                                    <option>Cash on hand</option>
+                                    <option>Corporate Account(XXXXXX 5850)</option>
+                                    <option>Corporate Account(XXXXXX 5850)Te</option>
+                                </datalist>
+                            </div>
+                            <div class="col-md-3" style="line-height: 100px">
+                                <span style="font-weight: bold">Balance</span>
+                                <span>$-79,005.33</span>
+                            </div>
+                            <div class="col-md-3" style="text-align: right">
+                                <div>AMOUNT</div>
+                                <div><h1>$500.00</h1></div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px">
+                            <div class="col-md-2">
+                                <label for="">Mailing address</label>
+                                <textarea name="" id="memo" cols="15" rows="4" placeholder="Add note (optional)">Tyler Nguyen</textarea>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="">Payment date</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="">Check no.</label>
+                                    <input type="text" class="form-control" value="2714">
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox">
+                                    <label for="">Print later</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                        <div class="table-container">
+                            <!--                        DataTables-->
+                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>CATEGORY</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>AMOUNT</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>Commission & fees</td>
+                                    <td>What did you pay for?</td>
+                                    <td></td>
+                                    <td><i class="fa fa-trash"></i></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><i class="fa fa-trash"></i></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="addAndRemoveRow">
+                            <button type="button" class="add-remove-line">Add lines</button>
+                            <button type="button" class="add-remove-line">Clear all lines</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Memo</label>
+                            <textarea name="" id="memo" cols="30" rows="3" style="width: 350px;" placeholder="Add note (optional)"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer-check">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" type="reset">Revert</button>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="middle-links">
+                                    <a href="">Print check</a>
+                                </div>
+                                <div class="middle-links">
+                                    <a href="">Order checks</a>
+                                </div>
+                                <div class="middle-links">
+                                    <a href="">Make recurring</a>
+                                </div>
+                                <div class="middle-links end">
+                                    <a href="">More</a>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="dropdown" style="float: right">
+                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="#">Save and close</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
+<!--    end of modal-->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
@@ -300,6 +444,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#printChecktbl').DataTable({
             "paging": false,
             "filter":false
+        });
+        $('#expensesCheckTable').DataTable({
+            "paging": false,
+            "filter":false,
+            "info":false
         });
     } );
 </script>

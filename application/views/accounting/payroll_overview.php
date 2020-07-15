@@ -11,8 +11,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="col-md-12 banking-tab-container">
 							<a href="<?php echo url('/accounting/payroll-overview')?>" class="banking-tab-active text-decoration-none">Overview</a>
 							<a href="<?php echo url('/accounting/employees')?>" class="banking-tab">Employees</a>
-							<a href="#" class="banking-tab">Contractors</a>
-							<a href="#" class="banking-tab">Worker's Comp</a>
+							<a href="<?php echo url('/accounting/contractors')?>" class="banking-tab">Contractors</a>
+							<a href="<?php echo url('/accounting/workers-comp')?>"" class="banking-tab">Worker's Comp</a>
 							<a href="#" class="banking-tab">Benefits</a>
 						</div>
 					</div>

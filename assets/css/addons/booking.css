@@ -1,0 +1,84 @@
+/*Booking Page CSS*/
+.booking-tab-container{
+    border-bottom: 1px solid grey;
+    padding-left: 0;
+}
+.booking-tab{
+    padding: 4px 16px;
+    text-decoration: none;
+    line-height: 28px;
+    height: 36px;
+    font-size: 14px;
+    color: #6b6c72;
+}
+.booking-tab:hover{
+    color: #404040;
+    text-decoration: none;
+    border-bottom: 5px solid grey;
+}
+.booking-tab-active{
+    padding: 4px 16px;
+    border-bottom: 5px solid #498002;
+    font-weight: bolder;
+    text-decoration: none;
+    line-height: 28px;
+    height: 36px;
+    font-size: 14px;
+    color: #404040;
+}
+.booking-tab-active:hover{
+    color: #404040;
+    text-decoration: none;
+}
+
+.booking-sub-tab{
+    text-decoration: none;
+    color: #6b6c72;
+    background-color: transparent !important;
+}
+.booking-sub-tab:hover{
+    color: #6b6c72;
+}
+.booking-sub-active{
+    background-color: transparent !important;
+    border-bottom: 5px solid #498002 !important;
+    font-weight: bolder;
+    text-decoration: none;
+    font-size: 14px;
+    color: #404040;
+}
+
+.card .dashboard-container-1 {
+    padding-top: 25px;
+    padding-bottom: 10px;
+}
+
+.card .dashboard-container-2 {
+    padding-left: 25px;
+}
+
+.card .dashboard-container-2 .service-items {
+    position: relative;
+    min-height: 80px;
+}
+
+.card .dashboard-container-2 .service-items .service-item-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;    
+}
+
+.card .dashboard-container-2 .service-items .service-item-cnt {
+    padding-left: 100px;
+}
+
+.margin-bottom-sec .product-edit__image-cnt {
+    border: 1px solid #dcdbdc;
+    width: 175px;
+    padding: 10px;
+    display: inline-block;
+    margin-bottom: 15px;
+    ": ;
+}

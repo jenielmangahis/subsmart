@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/before_after'); ?>
+    <?php include viewPath('includes/sidebars/filevault'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
@@ -12,10 +12,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                        <?php if (empty($job_data)) : ?>
-                            <?php echo form_open('job/saveJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+                        <?php if (empty($photos)) : ?>
+                            <?php echo form_open_multipart('before-after/save-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                         <?php else :?>
-                            <?php echo form_open('job/updateJob', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+                            <?php echo form_open('before-after/update-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                         <?php endif;?>
                             <h2 class="page-title text-left">Add Photos</h2>
                             <div class="row">
@@ -32,14 +32,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <hr>
                             <div class="col-md-12 col-lg-12 col-xl-9">
-                                <form data-ba="form" method="post" action="#">
+                                <div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label>Customer</label> <span class="help">(optional, assign this session to a customer)</span>
                                                 <input id="job_customer" class="form-control" type="text" placeholder="Customer">
-                                                <input type="hidden" id="job_customer_id" name="job_customer_id">
-                                                <input type="hidden" id="customer_id" name="customer_id" value="">
+                                                <input type="hidden" id="job_customer_id" name="customer_id"">
+                                                <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number;?>">
                                             </div>
                                             <div class="col-sm-6">
                                                 <div style="padding-top: 40px">
@@ -65,21 +65,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="0,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="0,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[0])) : ?>
+                                                            <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/" . $photos[0]->before_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="0,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="0,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,1" id="a1_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[0]->after_image)) : ?>
+                                                            <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/" . $photos[0]->after_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="0,0" data-orientation="h" onchange="readURL(this, 'b1_img');" name="userfile" type="file"></span>
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="0,1" data-orientation="h" onchange="readURL(this, 'a1_img');" name="fileimage" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="0,0" data-orientation="h" onchange="readURL(this, 'b1_img');" name="b1_img" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="0,1" data-orientation="h" onchange="readURL(this, 'a1_img');" name="a1_img" type="file"></span>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="notes">
@@ -97,21 +105,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="1,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="1,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="1,0" id="b2_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[1])) : ?>
+                                                            <img data-fileupload-image="0,0" id="b2_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="b2_img" src="<?php echo base_url() . "uploads/" . $photos[1]->before_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="1,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="1,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="1,1" id="a2_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[1]->after_image)) : ?>
+                                                            <img data-fileupload-image="0,0" id="a2_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="a2_img" src="<?php echo base_url() . "uploads/" . $photos[1]->after_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="1,0" data-orientation="h" onchange="readURL(this, 'b2_img');" name="fileimage" type="file"></span>
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="1,1" data-orientation="h" onchange="readURL(this, 'a2_img');" name="fileimage" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="1,0" data-orientation="h" onchange="readURL(this, 'b2_img');" name="b2_img" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="1,1" data-orientation="h" onchange="readURL(this, 'a2_img');" name="a2_img" type="file"></span>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="notes">
@@ -129,21 +145,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="2,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="2,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="2,0" id="b3_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[2])) : ?>
+                                                            <img data-fileupload-image="0,0" id="b3_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="b3_img" src="<?php echo base_url() . "uploads/" . $photos[2]->before_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="2,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="2,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="2,1" id="a3_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[2]->after_image)) : ?>
+                                                            <img data-fileupload-image="0,0" id="a3_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="a3_img" src="<?php echo base_url() . "uploads/" . $photos[2]->after_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="2,0" data-orientation="h" onchange="readURL(this, 'b3_img');" name="fileimage" type="file"></span>
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="2,1" data-orientation="h" onchange="readURL(this, 'a3_img');" name="fileimage" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="2,0" data-orientation="h" onchange="readURL(this, 'b3_img');" name="b3_img" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="2,1" data-orientation="h" onchange="readURL(this, 'a3_img');" name="a3_img" type="file"></span>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="notes">
@@ -162,21 +186,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="3,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="3,0"><span class="fa fa-camera"></span></div>
-                                                        <img class="beforeImgPhoto" id="b4_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[3])) : ?>
+                                                            <img data-fileupload-image="0,0" id="b4_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="b4_img" src="<?php echo base_url() . "uploads/" . $photos[3]->before_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="3,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="3,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="3,1" id="a4_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[3]->after_image)) : ?>
+                                                            <img data-fileupload-image="0,0" id="a4_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="a4_img" src="<?php echo base_url() . "uploads/" . $photos[3]->after_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="3,0" data-orientation="h" name="fileimage" onchange="readURL(this, 'b4_img');" id="fileimage" type="file"></span>
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="3,1" data-orientation="h" onchange="readURL(this, 'a4_img');" name="fileimage" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="3,0" data-orientation="h" name="fileimage" onchange="readURL(this, 'b4_img');" id="b4_img" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="3,1" data-orientation="h" onchange="readURL(this, 'a4_img');" name="a4_img" type="file"></span>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="notes">
@@ -195,21 +227,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="4,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon" data-fileupload="upload" data-position="4,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="4,0" id="b5_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[5])) : ?>
+                                                            <img data-fileupload-image="0,0" id="b5_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="b5_img" src="<?php echo base_url() . "uploads/" . $photos[4]->before_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="4,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="4,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="4,1" id="a5_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php if (empty($photos[4]->after_image)) : ?>
+                                                            <img data-fileupload-image="0,0" id="a5_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png";?>">
+                                                        <?php else : ?>
+                                                            <img data-fileupload-image="0,0" id="a5_img" src="<?php echo base_url() . "uploads/" . $photos[4]->after_image?>">
+                                                        <?php endif; ?>
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="4,0" data-orientation="h"  onchange="readURL(this, 'b5_img');" name="fileimage" type="file"></span>
-                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="4,1" data-orientation="h" onchange="readURL(this, 'a5_img');" name="fileimage" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top pl-0 pr-0">Upload Before<input data-fileupload="file" data-position="4,0" data-orientation="h"  onchange="readURL(this, 'b5_img');" name="b5_img" type="file"></span>
+                                                <span class="btn btn-default btn-block fileinput-button vertical-top">Upload After <input data-fileupload="file" data-position="4,1" data-orientation="h" onchange="readURL(this, 'a5_img');" name="a5_img" type="file"></span>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="notes">
@@ -221,31 +261,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     </div>
                                     <hr class="card-hr">
-                                    <button class="btn btn-primary margin-right" data-ba="submit" data-on-click-label="Saving...">Save</button>
+                                    <button type="submit" class="btn btn-primary margin-right" id="saveBtnAddPhotos">Save</button>
                                     <a class="a-ter" href="<?php echo base_url() . "vault/beforeafter"; ?>">cancel this</a>
-                                </form>
-
-                                <div class="modal customer-modal" data-customer="add_modal" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                                <h4 class="modal-title">New Customer</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="validation-error hide"></div>
-                                                <p class="validation-loader" style="display: none;">loading ...</p>
-                                                <div class="modal-body-content">
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
-                                                <button class="btn btn-primary" type="button" data-customer="submit" data-on-click-label="Saving...">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -253,7 +270,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <!-- end card -->
                 </div>
-            </div>>
+            </div>
         </div>
         <!-- end container-fluid -->
     </div>
