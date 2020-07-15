@@ -11,6 +11,7 @@
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js"></script>
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
+<script src="<?php echo $url->assets ?>js/coupons.js"></script>
 <!-- <script src="<?php //echo $url->assets ?>js/folders_files.js"></script> -->
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>

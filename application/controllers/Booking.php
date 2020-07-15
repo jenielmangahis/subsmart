@@ -29,7 +29,12 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/form', $this->page_data);
 	}
 
-	public function coupons() {
+	public function coupons( $param = '' ) {
+		if( $param == '' ){
+			$param = 'active';
+		}
+
+		$this->page_data['active_tab'] = $param;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/coupons', $this->page_data);
 	}

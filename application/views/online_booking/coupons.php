@@ -26,15 +26,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-8"><strong>Manage coupons that users can input on the booking form.</strong></div>
                         </div>       
                         <hr />
-                        <div class="row dashboard-container-2">
-                            
-                            <p class="">
-                                coupons container
-                            </p>                            
-
+                        <div class="tabs">
+                            <ul class="clearfix">
+                                <li class="<?php echo $active_tab == 'active' ? 'active' : ''; ?>">
+                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/active') ?>">Active <span>(1)</span></a>
+                                </li>
+                                <li class="<?php echo $active_tab == 'closed' ? 'active' : ''; ?>">
+                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/closed') ?>">Closed <span>(0)</span></a>
+                                </li>
+                            </ul>
                         </div>
+                        
+                        <table class="table table-hover" data-id="coupons">
+                            <thead>
+                                <tr>
+                                    <th>Coupon</th>
+                                    <th>Code</th>
+                                    <th>Discount</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        test coupon 
+                                        <div class="text-ter">
+                                            Uses: 1<br>
+                                            Valid: 14-Jul-2020-31-Jul-2020 
+                                        </div>
+                                    </td>
+                                    <td>dx123</td>
+                                    <td>$1.00</td>
+                                    <td>Active</td>
+                                    <td class="text-right">
+                                        <a class="coupon__edit margin-right-sec" data-coupon-edit-modal="open" data-id="165" href="#"><span class="fa fa-edit"></span> edit</a>
+                                        <a class="coupon__delete" data-coupon-delete-modal="open" data-id="165" data-name="test coupon" href="#"><span class="fa fa-trash"></span></a>
+                                    </td>
+                                </tr>
+                                    </tbody>
+                        </table>
+                        <a href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><span class="fa fa-plus-square fa-margin-right"></span> Add Coupon</a>
                         <hr />
-                        <div><a href="#" class="btn btn-success"> Edit Booking Plugin </a></div>                                  
+                        <div class="margin-top text-right">
+                            <a class="btn btn-primary" href="javascript:void(0);">Continue &raquo;</a>
+                        </div>
                     </div>
                     <!-- end card -->
                 </div>
@@ -45,4 +81,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/booking_modals'); ?> 
+<?php include viewPath('includes/footer_booking'); ?>
+<script>
+$(function(){
+    $("#coupon_valid_from").datepicker();
+    $("#coupon_valid_to").datepicker();
+});
+</script>

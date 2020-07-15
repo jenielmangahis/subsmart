@@ -154,6 +154,7 @@ $route['more/addon/booking/products'] = 'booking/products';
 $route['more/addon/booking/time'] = 'booking/time';
 $route['more/addon/booking/form'] = 'booking/form';
 $route['more/addon/booking/coupons'] = 'booking/coupons';
+$route['more/addon/booking/coupons/coupon_tab/(:any)'] = 'booking/coupons/$1';
 $route['more/addon/booking/settings'] = 'booking/settings';
 $route['more/addon/booking/preview'] = 'booking/preview';
 

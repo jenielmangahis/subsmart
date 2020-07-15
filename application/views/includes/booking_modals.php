@@ -1,3 +1,40 @@
+<style>
+.hide{
+  display: none;
+}
+.input-group-addon:last-child {
+    border-left: 0;
+}
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:first-child>.btn-group:not(:first-child)>.btn, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+.input-group-addon {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.input-group-addon, .input-group-btn {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.input-group .form-control, .input-group-addon, .input-group-btn {
+    display: table-cell;
+}
+.col-sm-8 {
+    max-width: 33.333333% !important;
+}
+.col-sm-12 {
+    max-width: 50% !important;
+    float: left;
+}
+</style>
 <!-- Modal Add Category -->
 <div class="modal fade" id="modalAddCategory" tabindex="-1" role="dialog" aria-labelledby="modalAddCategoryTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -106,3 +143,98 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Add Coupon -->
+<div class="modal fade bd-example-modal-lg" id="modalAddCoupon" tabindex="-1" role="dialog" aria-labelledby="modalAddCouponTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add New Coupon</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="modal-form">
+                    <div class="validation-error hide"></div>
+
+                    <div class="form-group">
+                        <label>Coupon Name</label> <span class="form-required">*</span>
+                        <input type="text" name="name" value=""  class="form-control" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                        <label>Code</label> <span class="form-required">*</span> &nbsp; <span class="help help-sm">(a unique code, can contain only letters, numbers and - _ .)</span>
+                        <input type="text" name="code" value=""  class="form-control" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                        <label>Discount from Total</label> <span class="form-required">*</span>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <select name="discount_type" class="form-control">
+                                  <option value="1">Percentage %</option>
+                                  <option value="2">Amount $</option>
+                                </select>
+                            </div>
+                            <div id="discount_percent_cnt" class="hide">
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-addon bold">%</div>
+                                        <input type="text" name="discount_percent" value=""  class="form-control" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="discount_amount_cnt" class="hide">
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <div class="input-group-addon bold">$</div>
+                                        <input type="text" name="discount_amount" value=""  class="form-control" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <label>Valid From</label>
+                                <div class="input-group">
+                                    <input type="text" name="valid_from" value=""  class="form-control coupon_valid_from" id="coupon_valid_from" autocomplete="off" />
+                                    <div class="input-group-addon calendar-button" data-for="coupon_valid_from">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <label>Valid To</label>
+                                <div class="input-group">
+                                    <input type="text" name="valid_to" value=""  class="form-control coupon_valid_to" id="coupon_valid_to" autocomplete="off" />
+                                    <div class="input-group-addon calendar-button" data-for="coupon_valid_to">
+                                        <span class="fa fa-calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <label>Uses per coupon</label>
+                                <input type="text" name="uses_max" value=""  class="form-control" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom-sec">
+                        <div class="col-sm-8">
+                            <label>Status</label>
+                            <select name="status" class="form-control" autocomplete="off">
+                              <option value="1">Active</option>
+                              <option value="2">Closed</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
