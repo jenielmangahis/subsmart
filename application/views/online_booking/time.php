@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
+                                <tr id="tr_0">
                                     <td width="">
                                         <div class="time-cnt">
                                             <input type="text" name="time_start[0]" value="8:00am" class="form-control time-input time_start ui-timepicker-input" autocomplete="off">
@@ -53,48 +53,48 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Mon" class="checkbox-select" id="weekday_Mon_0">
-                                            <label for="weekday_Mon_0"></label>
+                                            <input type="checkbox" name="mon[0]" value="Mon" class="checkbox-select" id="mon_0">
+                                            <label for="mon_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Tue" class="checkbox-select" id="weekday_Tue_0">
-                                            <label for="weekday_Tue_0"></label>
+                                            <input type="checkbox" name="tue[0]" value="Tue" class="checkbox-select" id="tue_0">
+                                            <label for="tue_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Wed" class="checkbox-select" id="weekday_Wed_0">
-                                            <label for="weekday_Wed_0"></label>
+                                            <input type="checkbox" name="wed[0]" value="Wed" class="checkbox-select" id="wed_0">
+                                            <label for="wed_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Thu" class="checkbox-select" id="weekday_Thu_0">
-                                            <label for="weekday_Thu_0"></label>
+                                            <input type="checkbox" name="thu[0]" value="Thu" class="checkbox-select" id="thu_0">
+                                            <label for="thu_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Fri" class="checkbox-select" id="weekday_Fri_0">
-                                            <label for="weekday_Fri_0"></label>
+                                            <input type="checkbox" name="fri[0]" value="Fri" class="checkbox-select" id="fri_0">
+                                            <label for="fri_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Sat" class="checkbox-select" id="weekday_Sat_0">
-                                            <label for="weekday_Sat_0"></label>
+                                            <input type="checkbox" name="sat[0]" value="Sat" class="checkbox-select" id="sat_0">
+                                            <label for="sat_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
                                         <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" name="weekday[0][]" value="Sun" class="checkbox-select" id="weekday_Sun_0">
-                                            <label for="weekday_Sun_0"></label>
+                                            <input type="checkbox" name="sun[0]" value="Sun" class="checkbox-select" id="sun_0">
+                                            <label for="sun_0"></label>
                                         </div>
                                     </td>
                                     <td width="">
-                                        <a class="service-item-delete" data-category-delete-modal="open" data-id="13526" href="#">
+                                        <a class="service-item-delete" data-category-delete-modal="open" data-id="0" onclick="deleteTimeSlotRow(0);" href="javascript:void(0)">
                                             <span class="fa fa-trash"></span>
                                         </a>
                                     </td>
