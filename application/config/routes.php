@@ -134,15 +134,19 @@ $route['before-after/main'] = 'Before_after';
 $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
 // [Accounting]
+
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/products-and-services'] = 'accounting/products_and_services';
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
+$route['accounting/workers-comp'] = 'accounting/workerscomp';
+
 $route['accounting/chart_of_accounts/create'] = 'chart_of_accounts/add';
 $route['accounting/chart_of_accounts/fetch_acc_detail'] = 'chart_of_accounts/fetch_acc_detail';
 $route['accounting/chart_of_accounts/edit'] = 'chart_of_accounts/edit';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile'] = 'reconcile/index';
+$route['accounting/reconcile/edit'] = 'reconcile/edit';
 
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
@@ -152,3 +156,8 @@ $route['more/addon/booking/form'] = 'booking/form';
 $route['more/addon/booking/coupons'] = 'booking/coupons';
 $route['more/addon/booking/settings'] = 'booking/settings';
 $route['more/addon/booking/preview'] = 'booking/preview';
+
+$route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
+$route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
+$route['before-after/edit/(:num)'] = 'before_after/edit/$1';
+$route['before-after/delete/(:num)'] = 'before_after/delete/$1';

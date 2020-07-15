@@ -1,3 +1,7 @@
+input[type='checkbox']{
+    width: 15px;
+    height: 15px;
+}
 .tile-container{
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -623,4 +627,42 @@
      position: absolute;
      bottom: 0;
      color: #0178c5;
+}
+ /*Receipts CSS*/
+.batch-action-dp{
+    border: 3px solid black;
+    font-weight: 700;
+    font-size: 15px;
+    width: 200px;
+
+}
+.filter-dp .dropdown-menu > li{
+    min-width: 550px;
+    min-height: 400px;
+}
+.filter-dp .fa-sliders{
+    cursor: pointer;
+}
+.filter-dp label{
+    color: black;
+    font-weight: 600;
+    font-size: 15px;
+}
+.filter-dp .filter-datalist{
+    height: 46px;
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    color: #363636;
+    font-size: 16px;
+    padding-left: 10px;
+}
+.filter-datalist:focus{
+    outline-color: mediumspringgreen;
+}
+#forReview_receipts_tbl .receiptRow{
+    cursor: pointer;
+}
+#forReview_receipts_tbl .receiptRow:hover{
+    background-color: whitesmoke;
 }

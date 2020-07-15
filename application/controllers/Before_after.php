@@ -10,6 +10,7 @@ class Before_after extends MY_Controller
         parent::__construct();
         $this->page_data['page']->title = 'Before/After';
         $this->page_data['page']->menu = 'before-after';
+        $this->load->model('Before_after_model', 'before_after_model');
 
 
         add_css(array( 
@@ -51,8 +52,93 @@ class Before_after extends MY_Controller
     }
 
     public function addPhoto() {
-       $this->page_data['items'] = logged('company_id');
+       $comp_id = logged('company_id');
+       $group_num_query = $this->db->order_by("id", "desc")->get_where($this->before_after_model->table, $comp_id)->row();
+       $this->page_data['group_number'] = 1;
+       if ($group_num_query) {
+           $this->page_data['group_number'] = intval($this->db->order_by("id", "desc")->get_where($this->before_after_model->table, array('company_id' => $comp_id))->row()->group_number) + 1;
+       }
        $this->load->view('before_after/add_photo', $this->page_data); 
+    }
+
+    public function saveBeforeAfter() {
+        postAllowed();
+        $this->uploadBeforeAfter($this->input->post('customer_id'), $this->input->post('group_number'));
+
+        $this->activity_model->add("New Before/After Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'New Before/After Created Successfully');
+        
+        redirect('vault/beforeafter');
+    }
+
+    public function updateBeforeAfter() {
+        postAllowed();
+        $this->uploadBeforeAfter($this->input->post('customer_id'), $this->input->post('group_number'));
+
+        $this->activity_model->add("Before/After Updated by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Before/After Updated Successfully');
+        
+        redirect('vault/beforeafter');
+    }
+
+    public function uploadBeforeAfter($customer_id, $group_number) {
+        $config = array(
+            'upload_path' => "./uploads/",
+            'allowed_types' => "gif|jpg|png|jpeg",
+            'overwrite' => TRUE,
+            'max_size' => "2048000",
+            'max_height' => "768",
+            'max_width' => "1024"
+        );
+        $this->load->library('upload', $config);
+
+        $comp_id = logged('company_id');
+        $uploadFields = array("b1_img","a1_img","b2_img","a2_img","b3_img","a3_img","b4_img","a4_img","b5_img","a5_img");
+        
+        for($i=1;$i<6;$i++) {
+            $b_image = "";
+            $a_image = "";
+
+            if($this->upload->do_upload("b".$i."_img")) {
+                $draftlogo = array('upload_data' => $this->upload->data());
+                $b_image = $draftlogo['upload_data']['file_name'];
+            }
+
+            if($this->upload->do_upload("a".$i."_img")) {
+                $draftlogo = array('upload_data' => $this->upload->data());
+                $a_image = $draftlogo['upload_data']['file_name'];
+            }
+
+            if ($b_image != "") {
+                $data = array(
+                    'company_id' => $comp_id,
+                    'customer_id' => ($customer_id) ? $customer_id : 0,
+                    'before_image' => $b_image,
+                    'after_image' => $a_image,
+                    'group_number' => $group_number,
+                    "note" => ""
+                );
+
+                $this->db->insert($this->before_after_model->table, $data);
+            }
+        }
+    }
+
+    public function edit($id) {
+        $comp_id = logged('company_id');
+        $this->page_data['group_number'] = $id;
+
+		$this->page_data['photos'] = $this->before_after_model->getByWhere(['company_id' => $comp_id, 'group_number' => $id]);
+		$this->load->view('before_after/add_photo', $this->page_data);
+
+    }
+
+    public function delete($id) {
+        $this->before_after_model->deleteBeforeAfter($id);
+
+        redirect('vault/beforeafter');
     }
 }
 

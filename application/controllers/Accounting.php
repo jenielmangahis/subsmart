@@ -38,7 +38,7 @@ class Accounting extends MY_Controller {
 				array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts')), 
 				array("",	array('/accounting/expenses','/accounting/vendors')), 
 				array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services')),
-				array("",	array('/accounting/payroll-overview','/accounting/employees','#','#','#')), 
+				array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')), 
 				array('#',	array()), 
 				array("",	array('#','#')), 
 				array('#',	array()), 
@@ -170,5 +170,16 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/employees', $this->page_data);
     }
-
+	public function contractors()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Sales Overview";
+        $this->load->view('accounting/contractors', $this->page_data);
+    }
+	public function workerscomp()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Sales Overview";
+        $this->load->view('accounting/workers_comp', $this->page_data);
+    }
 }

@@ -40,5 +40,48 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+  <style type="text/css">
+    /* Style the video: 100% width and height to cover the entire window */
+    #myVideo {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      top: -30px;
+    }
+
+    /* Add some content at the bottom of the video/page */
+    .content {
+      position: fixed;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      padding: 20px;
+    }
+
+    /* Style the button used to pause/play the video */
+    #myBtn {
+      width: 200px;
+      font-size: 18px;
+      padding: 10px;
+      border: none;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #myBtn:hover {
+      background: #ddd;
+      color: black;
+    }
+  </style>
+
 </head>
-<body class="hold-transition <?php echo !isset($body_classes)?'login-page':$body_classes ?>" style="background-image: url('<?php echo urlUpload('/login-bg.'.setting('bg_img_type'), true) ?>');">
+<!-- <body class="hold-transition <?php //echo !isset($body_classes)?'login-page':$body_classes ?>" style="background-image: url('<?php //echo urlUpload('/login-bg.'.setting('bg_img_type'), true) ?>');"> -->
+<!-- <body class="hold-transition <?php echo !isset($body_classes)?'login-page':$body_classes ?>" style="background-image: url('<?php //echo $assets ?>/login-background-video.mp4');"> -->
+<body>
+  <video autoplay muted playsinline loop id="myVideo">
+    <source src="<?php echo $assets ?>/login-background-video.mp4" type="video/mp4">
+  </video>

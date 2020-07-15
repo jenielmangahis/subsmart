@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  $("#beforeAfterListTable").DataTable({
+    destroy: true,
+  });
+
   $("img.beforeImgPhoto").click(function () {
     var imgDiv = $(this).next("#fileimage");
     imgDiv.trigger("click");
@@ -10,6 +14,14 @@ $(document).ready(function () {
       $("#job_customer_id").val(ui.item.id);
     },
   });
+
+  $(document).on(
+    "click",
+    ".editDeleteBeforeAfterBtn, #saveBtnAddPhotos",
+    function () {
+      $.LoadingOverlay("show");
+    }
+  );
 });
 
 function readURL(input, id) {

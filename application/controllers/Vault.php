@@ -12,6 +12,23 @@ class Vault extends MY_Controller {
 		$this->page_data['page']->menu = 'vault';
 
 		$this->company_folder = getCompanyFolder();
+
+		add_css(array( 
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+            'assets/frontend/js/beforeafter/main.js'
+        ));
 	}
 
 	public function index()
@@ -28,7 +45,10 @@ class Vault extends MY_Controller {
 
 	public function beforeafter()
 	{	
-		$this->page_data['folder_manager'] = getFolderManagerView();
+        $this->load->model('Before_after_model', 'before_after_model');
+		$comp_id = logged('company_id');
+
+		$this->page_data['photos'] = $this->before_after_model->getByWhere(['company_id' => $comp_id]);
 		$this->load->view('vault/beforeafter', $this->page_data);
 	}
 
@@ -132,6 +152,73 @@ class Vault extends MY_Controller {
 		$return = false;
 
 		echo $return;
+	}
+
+	public function most_downloads_files(){
+		$company_id = logged('company_id');
+
+		$sql = 'select ' . 
+
+               'a.*, '.
+               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+               'c.folder_name '.
+
+               'from filevault a '.
+               'left join users b on b.id = a.user_id '.
+               'left join business_profile c on c.id = a.company_id '.
+
+               'where a.company_id = ' . $company_id . ' and a.downloads_count is not null ' . 
+
+               'order by downloads_count DESC limit 10';
+
+        $return = $this->db->query($sql)->result_array();
+
+        echo json_encode($return);							
+	}
+
+	public function most_previewed_files(){
+		$company_id = logged('company_id');
+
+		$sql = 'select ' . 
+
+               'a.*, '.
+               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+               'c.folder_name '.
+
+               'from filevault a '.
+               'left join users b on b.id = a.user_id '.
+               'left join business_profile c on c.id = a.company_id '.
+
+               'where a.company_id = ' . $company_id . ' and a.previews_count is not null ' . 
+
+               'order by previews_count DESC limit 10';
+
+        $return = $this->db->query($sql)->result_array();
+
+        echo json_encode($return);	
+	}
+
+	public function recently_uploaded_files(){
+		$company_id = logged('company_id');
+
+		$sql = 'select ' . 
+
+               'a.*, '.
+               'DATEDIFF(NOW(), a.created) as `days`, '.
+               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+               'c.folder_name '.
+
+               'from filevault a '.
+               'left join users b on b.id = a.user_id '.
+               'left join business_profile c on c.id = a.company_id '.
+
+               'where a.company_id = ' . $company_id . ' and (DATEDIFF(NOW(), a.created) <= 3) ' . 
+
+               'order by created DESC limit 10';
+
+        $return = $this->db->query($sql)->result_array();
+
+        echo json_encode($return);		
 	}
 
 }

@@ -33,31 +33,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
-                                <?php if (!empty($jobs)) { ?>
-                                <table class="table table-hover" style="width:100%;" id="jobListTable">
+                                <?php if (!empty($photos)) { ?>
+                                <table class="table table-hover table-bordered table-striped" style="width:100%;" id="beforeAfterListTable">
                                     <thead>
                                         <tr>
-                                            <th scope="col"><strong>Job Number</strong></th>
-                                            <th scope="col"><strong>Date</strong></th>
-                                            <th scope="col"><strong>Job & Customer</strong></th>
-                                            <th scope="col"><strong>Status</strong></th>
-                                            <th scope="col"><strong>Amount</strong></th>
-                                            <th scope="col"><strong>Manage</strong></th>
+                                            <th scope="col"><strong>Pic</strong></th>
+                                            <th scope="col"><strong>Date Added</strong></th>
+                                            <th scope="col"><strong>Customer</strong></th>
+                                            <th scope="col"><strong></strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                     <?php foreach($jobs as $job) : ?>
+                                    <?php $group=array();?>
+                                     <?php foreach($photos as $photo) : ?>
+                                        <?php if(!in_array($photo->group_number, $group)) : ?>
+                                        <?php array_push($group, $photo->group_number);?>
                                         <tr>
-                                            <td class="pl-3"><?php echo $job->job_number; ?></td>
-                                            <td class="pl-3"><?php echo date_format(date_create($job->created_date),"Y/m/d"); ?></td>
-                                            <td class="pl-3"><?php echo ucwords($job->job_name); ?> - <?php echo getLoggedFullName($job->created_by); ?></td>
-                                            <td class="pl-3"><?php echo $job->status; ?></td>
-                                            <td class="pl-3">$0.00</td>
                                             <td class="pl-3">
-                                                <a href="<?php echo base_url() .'job/new_job?job_num=' . $job->job_number ?>" class="btn btn-warning btn-sm"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                <a href="<?php echo base_url() .'job/delete?id=' . $job->jobs_id ?>" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span> Delete</a>
+                                                <img src="<?php echo base_url() . "uploads/" . $photo->before_image;  ?>" width="200px" height="150px;">
+                                                <img src="<?php echo base_url() . "uploads/" . $photo->after_image;  ?>" width="200px" height="150px;">
+                                                <br><span><strong style="margin-left:70px; margin-right:165px;">Before</strong></span>
+                                                <span><strong>After</strong></span>
+                                            </td>
+                                            <td class="pl-3"><?php echo date_format(date_create($photo->created_at),"d-M-Y H:m"); ?></td>
+                                            <td class="pl-3"><?php echo getLoggedFullName($photo->customer_id); ?></td>
+                                            <td class="pl-3">
+                                                <div class="dropdown dropdown-btn text-center">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/edit/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                        <li role="separator" class="divider"></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/delete/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
+                                        <?php endif;?>
                                     <?php endforeach; ?>
                                     </tbody>
                                 </table>  

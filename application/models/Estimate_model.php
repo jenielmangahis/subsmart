@@ -11,7 +11,7 @@ class Estimate_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        $this->db->where('employee_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -76,7 +76,7 @@ class Estimate_model extends MY_Model
 
 
         if (isset($company_id)) {
-            $this->db->where('company_id', $company_id);
+            $this->db->where('employee_id', $company_id);
         } else {
 
             $this->db->where('user_id', getLoggedUserID());
@@ -99,7 +99,7 @@ class Estimate_model extends MY_Model
     public function filterBy($filters = array(), $company_id = 0)
     {
 
-        $this->db->select('estimates.id, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status');
+        $this->db->select('estimates.id, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.employee_id, estimates.status');
 
 //        $this->db->select("*");
         $this->db->from($this->table);
