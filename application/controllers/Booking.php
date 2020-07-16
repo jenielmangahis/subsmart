@@ -77,13 +77,18 @@ class Booking extends MY_Controller {
         $post = $this->input->post();
 
         if( !empty($post) ){
-        	$this->load->model('BookingCoupon_model');
+
+        	if( post('discount_amount') !== null ){
+        		$discount_amount = post('discount_amount');
+        	}else{
+        		$discount_amount = post('discount_percent');
+        	}
 
         	$data = array(
         		'user_id' => $user['id'],
         		'coupon_name' => post('name'),
         		'coupon_code' => post('code'),
-        		'discount_from_total' => 0,
+        		'discount_from_total' => $discount_amount,
         		'discount_from_total_type' => post('discount_type'),
         		'date_valid_from' => date("Y-m-d",strtotime(post('valid_from'))),
         		'date_valid_to' => date("Y-m-d",strtotime(post('valid_to'))),
@@ -94,8 +99,33 @@ class Booking extends MY_Controller {
         	$bookingCoupon = $this->BookingCoupon_model->create($data);
         }
 
+        $this->session->set_flashdata('message', 'Add New Coupon Successful');
+        $this->session->set_flashdata('alert_class', 'alert-success');     
+
         redirect('more/addon/booking/coupons');
 
+    }
+
+    public function ajax_edit_coupon()
+    {
+
+    	$id = post('cid');
+    	$coupon = $this->BookingCoupon_model->getById($id);
+    	
+    	$this->page_data['coupon'] = $coupon;
+		$this->load->view('online_booking/ajax_edit_coupon', $this->page_data);
+    }
+
+    public function delete_coupon()
+    {
+    	$id = $this->BookingCoupon_model->deleteUserCoupon(post('cid'));
+
+		$this->activity_model->add("Coupon #$id Deleted by User:".logged('name'));
+		
+		$this->session->set_flashdata('message', 'Coupon has been Deleted Successfully');
+		$this->session->set_flashdata('alert_class', 'alert-success');
+
+		redirect('more/addon/booking/coupons');
     }
 
     public function save_category()

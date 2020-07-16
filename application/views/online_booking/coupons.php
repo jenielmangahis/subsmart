@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </li>
                             </ul>
                         </div>
-                        
+                        <?php include viewPath('flash'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
@@ -77,8 +77,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td>$1.00</td>
                                         <td>Active</td>
                                         <td class="text-right">
-                                            <a class="coupon__edit margin-right-sec" data-coupon-edit-modal="open" data-id="<?php echo $c->id; ?>" href="#"><span class="fa fa-edit"></span> edit</a>
-                                            <a class="coupon__delete" data-coupon-delete-modal="open" data-id="<?php echo $c->id; ?>" data-name="test coupon" href="#"><span class="fa fa-trash"></span></a>
+                                            <a class="coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);"><span class="fa fa-edit"></span> edit</a>
+                                            <a class="coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash"></span></a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -103,7 +103,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_booking'); ?>
 <script>
 $(function(){
+    var base_url = "<?php echo base_url(); ?>";
+
     $("#coupon_valid_from").datepicker();
     $("#coupon_valid_to").datepicker();
+
+    $(".coupon-discount-type").change(function(){
+        var type = $(this).val();
+        if( type == 1 ){
+            $("#discount_percent_cnt").removeClass("hide");
+            $("#discount_amount_cnt").addClass("hide");
+        }else{
+            $("#discount_percent_cnt").addClass("hide");
+            $("#discount_amount_cnt").removeClass("hide");
+        }
+    });
+
+    $(".coupon__edit").click(function(){
+        $("#modalEditCoupon").modal('show');
+
+        var cid = $(this).attr("data-id");
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        var url = base_url + '/booking/_edit_coupon';
+
+        $(".modal-edit-coupon").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {cid:cid},
+               success: function(o)
+               {
+                  $(".modal-edit-coupon").html(o);
+               }
+            });
+        }, 1000);
+
+    });
+
+    $(".coupon__delete").click(function(){
+        var cid = $(this).attr("data-id");
+        $("#cid").val(cid);
+        $("#modalDeleteCoupon").modal('show');
+    });
+
+
 });
 </script>

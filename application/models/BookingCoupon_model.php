@@ -21,11 +21,30 @@ class BookingCoupon_model extends MY_Model
         }
 
         $this->db->where('user_id', $id);
-
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getById($id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $user_id);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function deleteUserCoupon($id){
+        $user_id = logged('id');
+
+        $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
     }
 
     public function getAllActive($filters=array())
