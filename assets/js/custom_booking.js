@@ -75,6 +75,16 @@ $(document).ready(function() {
         $("table tbody").append(markup);
     });
 
+    $("#add-form-field-row").click(function() {
+        $("#field-name-container").show();
+        $("#add-form-field-row").hide();
+    });
+
+    $("#hide-add-form-field-row").click(function() {
+        $("#field-name-container").hide();
+        $("#add-form-field-row").show();
+    }); 
+
 });   
 
 function deleteTimeSlotRow(row_id) {

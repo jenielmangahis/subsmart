@@ -30,13 +30,68 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <hr />
                         <div class="row dashboard-container-2">
                             
-                            <p class="">
-                                preview container
-                            </p>                            
+                            <div class="col-md-6">
+                                
+                                <div class="row dashboard-container-1">
+                                    <div class="col-md-12">
+                                        <div style="margin-bottom: 5px;">Booking Page URL</div>
+                                        <div style="margin-bottom: 10px;">
+                                            <textarea style="min-height: 100px !important;" class="input-focus form-control" rows="3" readonly="" id="code.pageUrl">https://www.nsmartrac.com/public/widget/booking/products/c47dc3fa8aa0b78a7f4</textarea>
+                                        </div>
+                                        <div class="c2c">
+                                            <div class="c2c-confirm hide" data-clipboard="copied" data-ref="code.pageUrl">copied</div>
+                                            <a class="a-ter" data-clipboard="copy" data-ref="code.pageUrl" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
+                                        </div>
+                                    </div>
+                                </div>    
+
+                                <div class="row dashboard-container-1">
+                                    <div class="col-md-12">
+                                    <div style="margin-bottom: 5px;">Iframe Code</div>
+                                    <div style="margin-bottom: 10px;">
+                                        <textarea style="min-height: 100px !important;" class="input-focus form-control" rows="3" readonly="" id="code.iframe">&lt;iframe id="markate-widget-booking-iframe" src="https://www.nsmartrac.com/public/widget/booking/products/c47dc3fa8aa0b78a7f4e95d52b3b5450:14356:1c7836db" width="100%" height="1000" scrolling="no" frameborder="0" allowTransparency="true" style="border:none;overflow:hidden"&gt;&lt;/iframe&gt;</textarea>
+                                    </div>
+                                    <div class="c2c">
+                                        <div class="c2c-confirm hide" data-clipboard="copied" data-ref="code.iframe">copied</div>
+                                        <a class="a-ter" data-clipboard="copy" data-ref="code.iframe" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
+                                    </div>                                        
+                                    </div>
+                                </div>                             
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <div style="min-height: 191px !important;" class="row dashboard-container-1">
+                                    <div class="col-md-12">
+
+                                    </div>
+                                </div>  
+
+                                <div class="row dashboard-container-1">
+                                    <div class="col-md-12">
+                                        <div style="margin-bottom: 5px;">Javascript Code</div>
+                                        <div style="margin-bottom: 10px;">
+                                            <textarea style="min-height: 100px !important;" class="input-focus form-control" rows="3" readonly="" id="code.javascript">&lt;div id="nsmartrac-widget-booking"&gt;&lt;/div&gt;
+                            &lt;script&gt;(function() { function async() {var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+                            var u = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.nsmartrac.com/public/widget/booking/js'; 
+                            var t = Math.random()*10000000000000000;
+                            s.src = u + '?id=c47dc3fa8aa0b78a7f4e95d52b3b5450:14356:1c7836db&amp;ref=' + encodeURIComponent(window.location.href) + '&amp;t=' + t;
+                            var w = document.getElementById('nsmartrac-widget-booking'); w.parentNode.insertBefore(s, w);
+                            } if (window.attachEvent) { window.attachEvent('onload', async); } else { window.addEventListener('load', async, false); }
+                            })();&lt;/script&gt;</textarea>
+                                        </div>
+                                        <div class="c2c">
+                                            <div class="c2c-confirm hide" data-clipboard="copied" data-ref="code.javascript">copied</div>
+                                            <a class="a-ter" data-clipboard="copy" data-ref="code.javascript" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
+                                        </div>
+                                    </div>
+                                </div> 
+                                
+                            </div>                       
 
                         </div>
                         <hr />
-                        <div><a href="#" class="btn btn-success"> Edit Booking Plugin </a></div>                                  
+                              
                     </div>
                     <!-- end card -->
                 </div>
