@@ -23,14 +23,42 @@ $(document).ready(function(){
   col_trace = 1;
 
 // -------------------------------------------------------------------------------------------------------------
+// Load initial functions
+// -------------------------------------------------------------------------------------------------------------
+  getFoldersAndFiles();
+  get_most_download_files();
+  get_most_previewd_files();
+  get_recently_uploaded_files();  
+// -------------------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------------------
+// Load Tops events
+// -------------------------------------------------------------------------------------------------------------
+$('span[control="refresh_tops"]').click(function(){
+  $(this).addClass('fa-spin');
+
+  var top = $(this).attr('target');
+  if(top == 'most_downloads'){
+    get_most_download_files();
+  } else if(top == 'most_previews'){
+    get_most_previewd_files();
+  } else if(top == 'recent_uploads'){
+    get_recently_uploaded_files();
+  }
+});
+
+// -------------------------------------------------------------------------------------------------------------
 // Folder entry control events
 // -------------------------------------------------------------------------------------------------------------
+
+// create folder
   $('a[control="create_folder"]').click(function(e){
     e.preventDefault();
 
     openEntry('create_folder');
   });
 
+// delete folder or file
   $('a[control="delete"]').click(function(e){
     e.preventDefault();
     
@@ -58,12 +86,14 @@ $(document).ready(function(){
     }
   });
 
+// add file
   $('a[control="add_file"]').click(function(e){
     e.preventDefault();
 
     openEntry('add_file');
   });
-  
+
+// view folder or file detail
   $('a[control="view"]').click(function(e){
     e.preventDefault();
 
@@ -78,12 +108,17 @@ $(document).ready(function(){
     }
   });
 
+// download file
+  $('a[control="download"]').click(function(e){
+    e.preventDefault();
+
+    window.open(base_url + 'vault/download_file/' + selected);
+  });
 // -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
 // Folder entry controls
 // -------------------------------------------------------------------------------------------------------------
-
   $('#btn-modal-folder-manager-entry-save').click(function(){
     if(current_process == 'create_folder'){
 
@@ -177,7 +212,6 @@ $(document).ready(function(){
 // -------------------------------------------------------------------------------------------------------------
 // Confirm alert type controls
 // -------------------------------------------------------------------------------------------------------------
-
   $('#btn-modal-folder-manager-alert-confirm').click(function(){
     if(current_process == 'delete_folder'){
       var folder_id = selected;
@@ -235,15 +269,6 @@ $(document).ready(function(){
   $('#btn-modal-folder-manager-alert-cancel,#btn-modal-folder-manager-alert-ok').click(function(){
     hideFolderManagerNotif();
   });
-
-// -------------------------------------------------------------------------------------------------------------
-// Load initial functions
-// -------------------------------------------------------------------------------------------------------------
-  getFoldersAndFiles();
-  get_most_download_files();
-  get_most_previewd_files();
-  get_recently_uploaded_files();  
-// -------------------------------------------------------------------------------------------------------------
 
 // Document ready end ------------------------------------------------------------------------------------------
 });
@@ -433,6 +458,7 @@ function setFoldersAndFiles(folders, files){
   });
 }
 
+// Functions to load tops
 function get_most_download_files(){
   $.ajax({
     type: 'GET',
@@ -459,8 +485,10 @@ function get_most_download_files(){
       }
 
       $('#most_downloads').append(sAppend);
+      $('span[target="most_downloads"]').removeClass('fa-spin');
     },
     error: function(jqXHR, textStatus, errorThrown){
+      $('span[target="most_downloads"]').removeClass('fa-spin');
       showFolderManagerNotif(textStatus, errorThrown, 'error');
     }   
   });
@@ -492,8 +520,10 @@ function get_most_previewd_files(){
       }
 
       $('#most_previews').append(sAppend);
+      $('span[target="most_previews"]').removeClass('fa-spin');
     },
     error: function(jqXHR, textStatus, errorThrown){
+      $('span[target="most_previews"]').removeClass('fa-spin');
       showFolderManagerNotif(textStatus, errorThrown, 'error');
     }   
   });
@@ -525,8 +555,10 @@ function get_recently_uploaded_files(){
       }
 
       $('#recent_uploads').append(sAppend);
+      $('span[target="recent_uploads"]').removeClass('fa-spin');
     },
     error: function(jqXHR, textStatus, errorThrown){
+      $('span[target="recent_uploads"]').removeClass('fa-spin');
       showFolderManagerNotif(textStatus, errorThrown, 'error');
     }   
   });
@@ -538,6 +570,7 @@ function getfileExInfos(filename){
 
     var fIcon = '';
     var fColor = '';
+    var fIsImage = false;
     var vReturn = {'icon':'','color':''};
 
     ext = ext[len];
@@ -560,6 +593,7 @@ function getfileExInfos(filename){
       case 'gif':
         fIcon = 'fa fa-file-image-o';
         fColor = 'text-warning';
+        fIsImage = true;
         break;
       default:
         fIcon = 'fa fa-file-o';
@@ -569,6 +603,7 @@ function getfileExInfos(filename){
 
     vReturn['icon'] = fIcon;
     vReturn['color'] = fColor;
+    vReturn['isImage'] = fIsImage;
 
     return vReturn;
 }
@@ -627,19 +662,29 @@ function hideUploading(){
 
 function showFileDetail(){
   var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
-  var fpath = div.attr('path');
+  var file_info = getfileExInfos(div.attr('fnm'));
 
-  fpath = base_url + '/uploads/' + fpath;
+  if(file_info['isImage']){ 
+    var fpath = div.attr('path');
 
-  $('#view-image-date-created').text(div.attr('created_date'));
-  $('#view-image-created-by').text(div.attr('created_by'));
+    fpath = base_url + '/uploads/' + fpath;
 
-  $('#modal-folder-manager-view-image-file').attr('src', fpath);
-  $('#modal-folder-manager-view-image-title').text(div.attr('fnm'));
-  $('#modal-folder-manager-view-image').modal('show');
+    $('#view-image-date-created').text(div.attr('created_date'));
+    $('#view-image-created-by').text(div.attr('created_by'));
+
+    $('#modal-folder-manager-view-image-file').attr('src', fpath);
+    $('#modal-folder-manager-view-image-title').text(div.attr('fnm'));
+    $('#modal-folder-manager-view-image').modal('show');
+  } else {
+    showFolderDetails();
+  }
 }
 
 function showFolderDetails(){
+  if(!$('#download_div').hasClass('d-none')){
+    $('#download_div').addClass('d-none');
+  }
+
   var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
   var fpath = $('#folders_path').text();
 
@@ -650,7 +695,11 @@ function showFolderDetails(){
   $('#view-folder-uploaded-by').text(div.attr('created_by'));
 
   $('#modal-folder-manager-view-folder-title').text(div.attr('fnm'));
-  $('#modal-folder-manager-view-folder').modal('show'); 
+  $('#modal-folder-manager-view-folder').modal('show');
+
+  if((selected_isFolder == 0) && ($('#download_div').hasClass('d-none'))){
+    $('#download_div').removeClass('d-none');   
+  } 
 }
 
 function isFolderNameValid(folder_name) {

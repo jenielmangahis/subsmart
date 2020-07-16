@@ -116,27 +116,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <div id="addCondition">
-                                    <div class="tab-select">
-                                        <select name="" id="" class="form-control">
-                                            <option value="" selected>Description</option>
-                                            <option value="">Bank test</option>
-                                            <option value="">Amount</option>
-                                        </select>
-                                    </div>
-                                    <div class="tab-select">
-                                        <select name="" id="" class="form-control" style="max-width: 140px">
-                                            <option value="" selected>Contain</option>
-                                            <option value="">Doesn't contain</option>
-                                            <option value="">Is exactly</option>
-                                        </select>
-                                    </div>
-                                    <div class="tab-select" style="max-width: 140px">
-                                        <input type="text" class="form-control" placeholder="Enter Text">
+                                <div class="addCondition-container">
+                                    <div id="addCondition">
+                                        <div class="tab-select">
+                                            <select name="" id="" class="form-control">
+                                                <option value="" selected>Description</option>
+                                                <option value="">Bank test</option>
+                                                <option value="">Amount</option>
+                                            </select>
+                                        </div>
+                                        <div class="tab-select">
+                                            <select name="" id="" class="form-control" style="max-width: 140px">
+                                                <option value="" selected>Contain</option>
+                                                <option value="">Doesn't contain</option>
+                                                <option value="">Is exactly</option>
+                                            </select>
+                                        </div>
+                                        <div class="tab-select" style="max-width: 140px">
+                                            <input type="text" class="form-control" placeholder="Enter Text">
+                                        </div>
+                                        <div class="tab-select" id="deleteCondition" style="display: none;">
+                                            <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div style="margin-top: 15px;">
-                                    <a href="#" ><i class="fa fa-plus"></i> Add a condition</a>
+                                    <a href="#" id="btnAddCondition"><i class="fa fa-plus"></i> Add a condition</a>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -149,34 +155,82 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <option value="">Check</option>
                                     </select>
                                 </div>
-                                <div class="action-section">
-                                    <span class="action-label">Category</span>
-                                    <input type="text" class="form-control" placeholder="Select category">
-                                    <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                                        <button class="btn btn-default dp-btn" type="button" data-toggle="dropdown" style="margin-left: -10px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right dp-menu-container">
-                                            <li><a href="#">File Upload</a></li>
-                                            <li><a href="#">Order Checks</a></li>
-                                        </ul>
+                                <div class="action-section" >
+                                    <div id="categoryDefault">
+                                        <span class="action-label" style="margin-right: 70px">Category</span>
+                                        <input type="text" class="text-dropdown" list="categoryListDP" placeholder="Select category">
+                                        <datalist id="categoryListDP">
+                                            <option>Advertising</option>
+                                            <option>Bad Debts</option>
+                                            <option>Bank Charges</option>
+                                        </datalist>
+                                        <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
                                     </div>
+                                    <!--Add Split Div-->
+                                    <div class="add-split-container">
+                                        <div class="add-split-section">
+                                            <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
+                                                Split detail #<span class="splitNum">1</span>
+                                                <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
+                                            </div>
+                                            <div class="split-content">
+                                                <span class="split-category-text" >Percentage</span>
+                                                <input type="text" class="form-control" value="0" style="width: 205px">
+                                            </div>
+                                            <div class="split-content">
+                                                <span class="split-category-text">Category</span>
+                                                <input type="text" class="text-dropdown" list="categoryListDP" style="width: 205px">
+                                                    <datalist id="categoryListDP">
+                                                        <option>Advertising</option>
+                                                        <option>Bad Debts</option>
+                                                        <option>Bank Charges</option>
+                                                    </datalist>
+                                            </div>
+                                            <hr id="border-category">
+                                        </div>
+                                        <div class="add-split-section">
+                                            <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
+                                                Split detail #<span class="splitNum">2</span>
+                                                <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
+                                            </div>
+                                            <div class="split-content">
+                                                <span class="split-category-text" >Percentage</span>
+                                                <input type="text" class="form-control" value="0" style="width: 205px">
+                                            </div>
+                                            <div class="split-content">
+                                                <span class="split-category-text">Category</span>
+                                                <input type="text" class="text-dropdown" list="categoryListDP" style="width: 205px">
+                                                <datalist id="categoryListDP">
+                                                    <option>Advertising</option>
+                                                    <option>Bad Debts</option>
+                                                    <option>Bank Charges</option>
+                                                </datalist>
+                                            </div>
+                                            <hr id="border-category">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 10px;margin-bottom: 10px;">
+                                    <a href="#" id="btnAddLine"  style="color: #0b97c4;display: none;">Add a line</a>
                                 </div>
                                 <div class="action-section">
                                     <span class="action-label">Payee</span>
-                                    <input type="text" class="form-control" placeholder="(Recommended)">
-                                    <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                                        <button class="btn btn-default dp-btn" type="button" data-toggle="dropdown" style="margin-left: -10px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right dp-menu-container">
-                                            <li>
-                                                <a href="#">Advertising</a>
-                                            </li>
-                                            <li><a href="#">Bad Debts</a></li>
-                                        </ul>
-                                    </div>
+                                    <input type="text" class="text-dropdown" list="payeeListDP" placeholder="(Recommended)">
+                                    <datalist id="payeeListDP">
+                                        <option>Advertising</option>
+                                        <option>Bad Debts</option>
+                                        <option>Bank Charges</option>
+                                    </datalist>
+                                </div>
+                                <div class="action-section" id="assignMore" style="display: none;">
+                                    <span class="action-label">Add memo</span>
+                                    <textarea name="" id="" cols="30" rows="5" placeholder="Enter Text" style="resize: none;"></textarea>
                                 </div>
                                 <div style="margin-top: 15px;">
-                                    <a href="#" ><i class="fa fa-plus"></i> Assign more</a>
+                                    <a href="#" id="btnAssignMore"><i class="fa fa-plus"></i> Assign more</a>
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <a href="#" style="display: none;" id="btnClear"><i class="fa fa-trash"></i> Clear</a>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -254,4 +308,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             "paging":false,
         });
     } );
+
+    //Add Condition
+    $(document).ready(function () {
+       $('#btnAddCondition').click(function (e) {
+           $("#deleteCondition").show();
+           $("#addCondition").clone().appendTo($('.addCondition-container'));
+           e.preventDefault();
+       });
+
+        $(document).on("click","#btnDeleteCondition",function (e) {
+            e.preventDefault();
+            $("#addCondition").remove();
+            var check_count = jQuery("div[id='addCondition']").length;
+            if (check_count == 1){
+                $("#deleteCondition").hide();
+            }
+        });
+
+        //Assign More
+        $('#btnAssignMore').click(function () {
+           $('#assignMore').show();
+           $(this).hide();
+           $('#btnClear').show();
+        });
+        $('#btnClear').click(function () {
+           $('#assignMore').hide();
+           $(this).hide();
+           $('#btnAssignMore').show();
+        });
+        // Add Split
+        $('#btnAddSplit').click(function () {
+           $('.add-split-container').show();
+           $('#categoryDefault').hide();
+           $('#btnAddLine').show();
+        });
+
+        $(document).on("click","#btnAddLine",function (e) {
+            e.preventDefault();
+            $(".add-split-container").append($('.add-split-section').last().clone());
+            var num = $('.add-split-section').length;
+            $('.splitNum').last().html(num);
+        });
+        $(document).on("click","#deleteSplitLine",function (e) {
+            var num = $('.add-split-section').length;
+            if(num == 2){
+                $('.add-split-container').hide();
+                $('#categoryDefault').show();
+                $('#btnAddLine').hide();
+            }else{
+                $(".add-split-section").last().remove();
+            }
+        });
+    });
 </script>

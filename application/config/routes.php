@@ -143,6 +143,7 @@ $route['accounting/workers-comp'] = 'accounting/workerscomp';
 
 $route['accounting/chart_of_accounts/create'] = 'chart_of_accounts/add';
 $route['accounting/chart_of_accounts/fetch_acc_detail'] = 'chart_of_accounts/fetch_acc_detail';
+$route['accounting/chart_of_accounts/add'] = 'chart_of_accounts/addChartofaccounts';
 $route['accounting/chart_of_accounts/edit'] = 'chart_of_accounts/edit';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile'] = 'reconcile/index';

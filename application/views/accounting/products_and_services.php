@@ -44,9 +44,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				</div>
 				<div class="row mt-3 bg-white p-3">
 					<div class="col pl-0 border-right">
-						<div class="row">
-							<div class="col-sm-2 offset-sm-7">
-								<i class="fa fa-sort-amount-asc h1 mb-0 text-white bg-warning border border-dark rounded-circle p-4"></i>
+						<div class="row align-items-center">
+							<div class="col-sm-3 offset-sm-6">
+								<p class="mb-0 bg-warning border border-dark rounded-circle p-4"><img src="<?php echo base_url();?>assets/img/accounting/low-stock.png" class="w-100 img-responsive"></p>
 							</div>
 							<div class="col-sm-3">
 								<h1 class="text-warning">0</h1>
@@ -55,9 +55,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</div>
 					</div>
 					<div class="col pr-0">
-						<div class="row  pl-3">
-							<div class="col-sm-2">
-								<i class="fa fa-minus-circle h1 mb-0 text-white bg-danger border border-dark rounded-circle p-4"></i>
+						<div class="row  pl-3 align-items-center">
+							<div class="col-sm-3">
+								<p class="mb-0 bg-danger border border-dark rounded-circle p-3"><img src="<?php echo base_url();?>assets/img/accounting/out-of-stock.png" class="w-100 img-responsive"></p>
 							</div>
 							<div class="col-sm-4">
 								<h1 class="text-danger">0</h1>

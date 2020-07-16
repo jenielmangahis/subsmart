@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<ul class="list-unstyled">
 							<li class="h5 font-weight-normal pt-2"><span class="fa fa-check text-success pr-3"></span>Get a quick online quote from our partner, AP Intego</li>
 							<li class="h5 font-weight-normal pt-2"><span class="fa fa-check text-success pr-3"></span>Automatically pay what you owe when you run payroll</li>
-							<li class="h5 font-weight-normal pt-2"><span class="fa fa-check text-success pr-3"></span>Manage workers' comp and payroll right in QuickBooks</li>
+							<li class="h5 font-weight-normal pt-2"><span class="fa fa-check text-success pr-3"></span>Manage workers' comp and payroll right in nSmarTrac</li>
 						</ul>
 						<a href="#" class="btn btn-success rounded-20 px-3 py-0"><h5>Get a quote</h5></a>
 					</div>
@@ -37,14 +37,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<div class="row pt-3">
 					<div class="col-lg-12">
 						<h3>Already have a workers' comp policy?</h3>
-						<h5 class="font-weight-normal">Connect your policy to QuickBooks and reap the benefits of simplification.</h5>
+						<h5 class="font-weight-normal">Connect your policy to nSmarTrac and reap the benefits of simplification.</h5>
 						<a href="#" class="btn btn-default rounded-20 px-3 py-0 mt-3"><h5>Connect my policy</h5></a>
 					</div>
 				</div>
 				<div class="row pt-3">
 					<div class="col-lg-12">
 						<hr>
-						<p class="pt-3">By selecting Get a quoteor Connect my policy, you agree for QuickBooks to <a href="#">share your data</a> with our partner, AP Intego. Their use of your data is subject to their <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a></p>
+						<p class="pt-3">By selecting Get a quoteor Connect my policy, you agree for nSmarTrac to <a href="#">share your data</a> with our partner, AP Intego. Their use of your data is subject to their <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a></p>
 						<p>The information on this and related pages is provided to you by Intuit Insurance Services Inc. and AP Intego. <a href="#">View Licenses</a></p>
 					</div>
 				</div>

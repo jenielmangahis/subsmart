@@ -247,7 +247,7 @@
 .modal-right-side .modal.right .modal-dialog {
     position: fixed;
     margin: auto;
-    width: 100%;
+    min-width: 520px;
     height: 100%;
     -webkit-transform: translate3d(0%, 0, 0);
     -ms-transform: translate3d(0%, 0, 0);
@@ -313,6 +313,13 @@
 .modal-right-side .modal-body .form-group .selectBox select {
     width: 100%;
 }
+.modal-right-side .modal-body .form-group textarea {
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+}
 
 .modal-right-side .modal-body .form-group .overSelect {
     position: absolute;
@@ -353,15 +360,13 @@
     margin-right: 30px;
     width: 100px;
 }
-.modal-right-side .modal-body .form-group .action-section .dp-btn{
+.modal-right-side .modal-body .form-group .action-section .text-dropdown{
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
     height: 46px;
-    width: 36px;
-}
-.modal-right-side .modal-body .form-group .action-section .dp-menu-container{
-    width: 256px;
-}
-.modal-right-side .modal-body .form-group .action-section .dp-menu-container li{
-    height: 30px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
 }
 .modal-right-side .modal-body .form-group .custom-control-label {
     font-size: 14px;
@@ -370,6 +375,28 @@
 }
 .modal-right-side .modal-footer .btn {
     border-radius: 36px;
+}
+.modal-right-side .modal-body .form-group .action-section .add-split-container{
+    padding: 10px;
+    display: none;
+}
+.modal-right-side .modal-body .form-group .action-section .add-split-container .split-content{
+    display: inline-block;
+    position: relative;
+}
+.modal-right-side .modal-body .form-group .action-section .add-split-container .split-content .split-category-text{
+    display: block;
+    font-size: small;
+}
+#deleteCondition{
+    float: right;
+    padding-top: 15px;
+    margin-left: 5px;
+}
+#addCondition{
+    display: inline-block;
+    position: relative;
+    margin-bottom: 15px;
 }
 /*Process Steps*/
 #importRules .modal-body .progressSection{
@@ -579,4 +606,47 @@
 }
 #edit-expensesCheck .modal-footer-check  .end{
     border-right: none;
+}
+/*Form inline*/
+.form-inline-group{
+    width: 100%;
+}
+.form-inline-group label{
+    font-weight: 700;
+    float: right;
+    margin-right: 10px;
+}
+.form-inline-group .form-inline{
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    height: 46px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    display: inline-block;
+    width: 100%;
+}
+.form-inline-group tr td{
+    padding-bottom: 12px;
+}
+.form-inline-group span{
+    font-weight: 700;
+}
+.form-inline-group textarea{
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    width: 100%;
+}
+#timeActivity-modal .modal-footer-activity{
+    padding: 10px;
+    background: #393A3D;
+}
+.btn-transparent{
+    color: whitesmoke;
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
 }

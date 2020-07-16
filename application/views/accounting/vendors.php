@@ -42,14 +42,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="tableContainer moneyBar">
-
+                                    <div class="unpaid-bar-container">
+                                        <div class="unpaid-bar-header">
+                                            Unpaid 365 days
+                                        </div>
+                                        <div class="overdue-bar">
+                                            <div class="overdue-bar-header">
+                                                <h4>0</h4>
+                                                <span>OPEN BILLS</span>
+                                            </div>
+                                            <div class="openbills-bar">
+                                                <div class="openbills-bar-header">
+                                                    <h4>0</h4>
+                                                    <span>OVERDUE</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="paid-bar-container">
+                                        <div class="paid-header">
+                                            Paid
+                                        </div>
+                                        <div class="paid-bar">
+                                            <div class="paid-bar-header">
+                                                <h4>39</h4>
+                                                <span>PAID LAST 30 DAYS</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row p-3 bg-white mt-3 mx-0">
                             <div class="col-md-12">
+                                <div style="position: absolute;">
+                                    <div class="arrow-level-down">
+                                        <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
+                                    </div>
+                                    <div class="dropdown batch-action-btn" style="display: inline-block;position: relative">
+                                        <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px">Batch Action
+                                            <span class="fa fa-caret-down"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">Print Transaction</a></li>
+                                            <li><a href="#">Categorized selected</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <!--                        DataTables-->
-                                <table id="vendors_table" class="table table-striped table-bordered" style="width:100%">
+                                <table id="vendors_table" class="table table-striped table-bordered" style="width:100%;margin-top: 10px;">
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox"></th>

@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array( 'basic', 'url', 'file', 'form', 'cookie', 'security', 'directory');
+$autoload['helper'] = array( 'basic', 'url', 'file', 'form', 'cookie', 'security', 'directory', 'download');
 
 /*
 | -------------------------------------------------------------------
@@ -150,5 +150,8 @@ $autoload['model'] = array(
 	'comments_model',
 	'account_model',
 	'account_detail_model',
-	'accounts_has_account_details_model'
+	'accounts_has_account_details_model',
+	'account_sub_account_model',
+	'accounts_has_sub_account_model',
+	'chart_of_accounts_model'
 );

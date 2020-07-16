@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="col-md-6">
                   <h5 id="folders_name">Root</h5>
-                  <small id="folders_path"></small>
+                  <p id="folders_path"></p>
                 </div>
                 <div class="col-md-6 align-middle">
                     <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="edit_permission" title="Edit Permission" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
@@ -44,17 +44,17 @@
             <div class="mt-5">
               <div class="row">
                 <div class="col-md-4 border">
-                  <h6>Top 10 Most Downloads<span class="float-right">Count</span></h6>
+                  <h6>Top 10 Most Downloads<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_downloads" title="Reload Top 10 Most Downloads"></span><span class="float-right">Count</span></h6>
                   <ul class="list-group list-group-flush" id="most_downloads">
                   </ul>
                 </div>
                 <div class="col-md-4 border">
-                  <h6>Top 10 Most Previews<span class="float-right">Count</span></h6>
+                  <h6>Top 10 Most Previews<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_previews" title="Reload Top 10 Most Previews"></span><span class="float-right">Count</span></h6>
                   <ul class="list-group list-group-flush" id="most_previews">
                   </ul>
                 </div>
                 <div class="col-md-4 border">
-                  <h6>Most Recent Uploads<span class="float-right">Days since uploaded</span></h6>
+                  <h6>Most Recent Uploads<span class="fa fa-refresh ml-2" control="refresh_tops" target="recent_uploads" title="Reload Most Recent Uploads"></span><span class="float-right">Days since uploaded</span></h6>
                   <ul class="list-group list-group-flush" id="recent_uploads">
                   </ul>
                 </div>
@@ -161,10 +161,19 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body pt-3">
-        <ul class="list-group list-group-horizontal mb-3">
-          <li class="list-group-item"><strong>Date Uploaded : </strong><span id="view-image-date-created"></span></li>
-          <li class="list-group-item"><strong>Uploaded By : </strong><span id="view-image-created-by"></span></li>
-        </ul>
+        <table class="table table-bordered border border-0">
+          <tbody>
+            <tr class="row ml-0 mr-0">
+              <td class="col-md-2 text-center font-weight-bold">Date Uploaded : </td>
+              <td class="text-center col-md-3" id="view-image-date-created"></td>
+              <td class="col-md-2 text-center font-weight-bold">Uploaded By : </td>
+              <td class="text-center col-md-3" id="view-image-created-by"></td>
+              <td class="col-md-2 border border-0 text-right pt-0">
+                <a href="#" class="btn btn-sm btn-default" control="download" title="Download File" data-toggle="tooltip"><i class="fa fa-download"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <div style="height: 70vh"><img id="modal-folder-manager-view-image-file" src="#" class="img-thumbnail w-100 h-100"></div>
       </div>
     </div>
@@ -187,6 +196,9 @@
           <li class="list-group-item"><strong>Date Created : </strong><span id="view-folder-date-uploaded"></span></li>
           <li class="list-group-item"><strong>Created By : </strong><span id="view-folder-uploaded-by"></span></li>
         </ul>
+        <div id="download_div" class="d-none">
+          <a href="#" class="btn btn-sm btn-default pull-right" control="download" title="Download File" data-toggle="tooltip"><i class="fa fa-download"></i></a>
+        </div>
       </div>
     </div>
 

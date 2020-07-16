@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 20px">New transaction
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#">Time Activity</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
                                         <li><a href="#">Bill</a></li>
                                         <li><a href="#">Expenses</a></li>
                                         <li><a href="#">Check</a></li>
@@ -42,47 +42,66 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 20px;background-color: #ffffff">
-                            <div class="col-md-12" style="padding: 0 30px 10px;">
-                                <div class="dropdown" style="margin-top: 20px">
-                                    <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
-                                        <span class="fa fa-caret-down"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li style="padding: 30px 30px 30px 30px">
-                                            <form action="" method="" class="">
-                                                <div class="">
-                                                    <label for="type">Type</label>
-                                                    <select name="type" id="type" class="form-control">
-                                                        <option value="">All transaction</option>
-                                                        <option value="">Expenses</option>
-                                                        <option value="">Bill</option>
-                                                        <option value="">Bill payments</option>
-                                                        <option value="">Check</option>
-                                                        <option value="">Recently paid</option>
-                                                        <option value="">Vendor credit</option>
-                                                        <option value="">Credit Card Payment</option>
-                                                    </select>
-                                                </div>
-                                                <div style="position: relative; display: inline-block;">
-                                                    <label for="">Status</label>
-                                                    <select name="status" id="type" class="form-control">
-                                                        <option value="">All statuses</option>
-                                                        <option value="">Open</option>
-                                                        <option value="">Overdue</option>
-                                                        <option value="">Paid</option>
-                                                    </select>
-                                                </div>
-                                                <div style="position:relative; display: inline-block;margin-left: 10px">
-                                                    <label for="">Delivery Method</label>
-                                                    <select name="status" id="type" class="form-control">
-                                                        <option value="">Any</option>
-                                                        <option value="">Print later</option>
-                                                    </select>
-                                                </div>
-                                                <div class="">
+                        <div class="container-wrapper">
+                            <div class="row">
+                                <div class="col-md-12" style="padding: 0 30px 10px;">
+                                    <div class="dropdown filter-btn" style="margin-top: 20px;margin-right:8px;display: inline-block;">
+                                        <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
+                                            <span class="fa fa-caret-down"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li style="padding: 30px 30px 30px 30px">
+                                                <form action="" method="" class="">
+                                                    <div class="">
+                                                        <label for="type">Type</label>
+                                                        <select name="type" id="type" class="form-control">
+                                                            <option value="">All transaction</option>
+                                                            <option value="">Expenses</option>
+                                                            <option value="">Bill</option>
+                                                            <option value="">Bill payments</option>
+                                                            <option value="">Check</option>
+                                                            <option value="">Recently paid</option>
+                                                            <option value="">Vendor credit</option>
+                                                            <option value="">Credit Card Payment</option>
+                                                        </select>
+                                                    </div>
                                                     <div style="position: relative; display: inline-block;">
-                                                        <label for="">Date</label>
+                                                        <label for="">Status</label>
+                                                        <select name="status" id="type" class="form-control">
+                                                            <option value="">All statuses</option>
+                                                            <option value="">Open</option>
+                                                            <option value="">Overdue</option>
+                                                            <option value="">Paid</option>
+                                                        </select>
+                                                    </div>
+                                                    <div style="position:relative; display: inline-block;margin-left: 10px">
+                                                        <label for="">Delivery Method</label>
+                                                        <select name="status" id="type" class="form-control">
+                                                            <option value="">Any</option>
+                                                            <option value="">Print later</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="">
+                                                        <div style="position: relative; display: inline-block;">
+                                                            <label for="">Date</label>
+                                                            <select name="status" id="type" class="form-control" style="width: 100%">
+                                                                <option value="">All statuses</option>
+                                                                <option value="">Open</option>
+                                                                <option value="">Overdue</option>
+                                                                <option value="">Paid</option>
+                                                            </select>
+                                                        </div>
+                                                        <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                            <label for="">From</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                            <label for="">To</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <label for="">Payee</label>
                                                         <select name="status" id="type" class="form-control" style="width: 100%">
                                                             <option value="">All statuses</option>
                                                             <option value="">Open</option>
@@ -90,73 +109,77 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <option value="">Paid</option>
                                                         </select>
                                                     </div>
-                                                    <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
-                                                        <label for="">From</label>
-                                                        <input type="text" class="form-control">
+                                                    <div class="">
+                                                        <label for="">Category</label>
+                                                        <select name="status" id="type" class="form-control" style="width: 100%">
+                                                            <option value="">All statuses</option>
+                                                            <option value="">Open</option>
+                                                            <option value="">Overdue</option>
+                                                            <option value="">Paid</option>
+                                                        </select>
                                                     </div>
-                                                    <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
-                                                        <label for="">To</label>
-                                                        <input type="text" class="form-control">
+                                                    <div class="">
+                                                        <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
+                                                        <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
                                                     </div>
-                                                </div>
-                                                <div class="">
-                                                    <label for="">Payee</label>
-                                                    <select name="status" id="type" class="form-control" style="width: 100%">
-                                                        <option value="">All statuses</option>
-                                                        <option value="">Open</option>
-                                                        <option value="">Overdue</option>
-                                                        <option value="">Paid</option>
-                                                    </select>
-                                                </div>
-                                                <div class="">
-                                                    <label for="">Category</label>
-                                                    <select name="status" id="type" class="form-control" style="width: 100%">
-                                                        <option value="">All statuses</option>
-                                                        <option value="">Open</option>
-                                                        <option value="">Overdue</option>
-                                                        <option value="">Paid</option>
-                                                    </select>
-                                                </div>
-                                                <div class="">
-                                                    <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
-                                                    <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
-                                                </div>
-                                            </form>
-                                        </li>
-                                    </ul>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="display-filterDate">
+                                        Last 365 Days
+                                    </div>
                                 </div>
-                                <!--DataTables-->
-                                <table id="expenses_table" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>No.</th>
-                                        <th>Payee</th>
-                                        <th>Category</th>
-                                        <th>Total</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr style="cursor: pointer;" data-toggle="modal" data-target="#edit-expensesCheck">
-                                        <td><input type="checkbox"></td>
-                                        <td>Test</td>
-                                        <td>Test</td>
-                                        <td>Test</td>
-                                        <td></td>
-                                        <td>Test</td>
-                                        <td></td>
-                                        <td><a href="">View</a></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                            </div>
+                            <div class="arrow-level-down">
+                                <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
+                            </div>
+                            <div class="dropdown batch-action-btn" style="display: inline-block;position: relative">
+                                <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px">Batch Action
+                                    <span class="fa fa-caret-down"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Print Transaction</a></li>
+                                    <li><a href="#">Categorized selected</a></li>
+                                </ul>
+                            </div>
+                            <div class="icon-settings-container">
+                                <i class="fa fa-print"></i>
+                                <i class="fa fa-upload"></i>
+                                <i class="fa fa-cog"></i>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!--DataTables-->
+                                    <table id="expenses_table" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                                        <thead>
+                                        <tr>
+                                            <th><input type="checkbox"></th>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>No.</th>
+                                            <th>Payee</th>
+                                            <th>Category</th>
+                                            <th>Total</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr style="cursor: pointer;" data-toggle="modal" data-target="#edit-expensesCheck">
+                                            <td><input type="checkbox"></td>
+                                            <td>Test</td>
+                                            <td>Test</td>
+                                            <td>Test</td>
+                                            <td></td>
+                                            <td>Test</td>
+                                            <td></td>
+                                            <td><a href="">View</a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
             </div>
             <!-- end row -->
@@ -328,16 +351,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="" id="memo" cols="15" rows="4" placeholder="Add note (optional)">Tyler Nguyen</textarea>
+                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;">Tyler Nguyen</textarea>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Payment date</label>
                                 <input type="text" class="form-control">
                             </div>
-                            <div class="col-md-2"></div>
-                            <div class="col-md-2"></div>
+                            <div class="col-md-3"></div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Check no.</label>
@@ -389,7 +411,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
-                            <textarea name="" id="memo" cols="30" rows="3" style="width: 350px;" placeholder="Add note (optional)"></textarea>
+                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                            <span>Maximum size: 20MB</span>
+                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple />
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -420,6 +451,102 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                         <li><a href="#">Save and close</a></li>
                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!--    end of modal-->
+<!--    Time Activity modal-->
+    <div class="full-screen-modal">
+        <div id="timeActivity-modal" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                            Time Activity
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                   <table class="form-inline-group">
+                                       <tr>
+                                           <td><label for="">Date</label></td>
+                                           <td>
+                                               <input type="text" class="form-inline">
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td><label for="">Name</label></td>
+                                           <td>
+                                               <input type="text" class="form-inline">
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td><label for="">Customer</label></td>
+                                           <td>
+                                               <input type="text" class="form-inline">
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td></td>
+                                           <td>
+                                               <input type="checkbox">
+                                               <span>Billable (/hr)</span>
+                                           </td>
+                                       </tr>
+                                   </table>
+                            </div>
+                            <div class="col-md-5">
+                                <table class="form-inline-group">
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <input type="checkbox">
+                                            <span>Enter Start and End Times</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="">Time</label></td>
+                                        <td>
+                                            <input type="text" class="form-inline" placeholder="hh:mm">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="">Description</label></td>
+                                        <td>
+                                            <textarea name="" id="" cols="60" rows="5"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer-activity">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-default btn-transparent">Cancel</button>
+                            </div>
+                            <div class="col-md-6">
+                                <div style="right: 0;float: right;">
+                                    <button class="btn btn-default btn-transparent" style="display: inline-block">Save</button>
+                                    <div class="dropdown" style="display: inline-block">
+                                        <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                            <span class="fa fa-caret-down"></span></button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                            <li><a href="#">Save and close</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

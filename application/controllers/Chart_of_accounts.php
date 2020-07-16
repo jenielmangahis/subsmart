@@ -43,11 +43,28 @@ class Chart_of_accounts extends MY_Controller {
 				array('#',	array()), 
 				array("",	array('/accounting/chart_of_accounts','#')), 
 			); 
-		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
+		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");  
     }
 	public function add()
 	{
 		$this->load->view('accounting/chart_of_accounts/add', $this->page_data);
+	}
+
+	public function addChartofaccounts()
+	{
+		$account_id=$this->input->post('account_type');
+		$acc_detail_id=$this->input->post('detail_type');
+		$name=$this->input->post('name');
+		$description=$this->input->post('description');
+		$sub_acc_id=$this->input->post('sub_account_type');
+		$time=$this->input->post('choose_time');
+
+		$this->chart_of_accounts_model->saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time);
+		
+		//$this->session->set_flashdata('error', "Please try again!");
+	    $this->session->set_flashdata('success', "Data inserted successfully!"); 
+		
+		$this->load->view('accounting/chart_of_accounts', $this->page_data);
 	}
 
 	public function edit()

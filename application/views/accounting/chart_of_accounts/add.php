@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -61,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-4 form-group">
                                     <label for="description">Description</label>
                                     <textarea type="text" class="form-control" name="description" id="description"
-                                              placeholder="Enter Description" rows="3"></textarea>
+                                              placeholder="Enter Description" rows="3" required></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -70,30 +70,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                           <p>Typically only property managers use this type of account.</p>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <input type="checkbox" name="sub_account" class="js-switch" />
+                                    <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check()"/>
                                     <label for="formClient-Status">Is sub account</label>
-                                    <select name="sub_account_type" id="sub_account_type" class="form-control select2" required>
-                                        <?php foreach ($this->roles_model->get() as $row): if ($row->id <= logged('role')) continue; ?>
-                                            <?php $sel = !empty(get('role')) && get('role') == $row->id ? 'selected' : '' ?>
-                                            <option selected="selected">Cash on Hand</option>
-                                            <option value="<?php echo $row->id ?>" <?php echo $sel ?>><?php echo $row->title ?></option>
+                                    <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
+                                          <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
+                                            <option value="<?php echo $row_sub->sub_acc_id ?>" ><?php echo $row_sub->sub_acc_name ?></option>
                                         <?php endforeach ?>
                                     </select>
                                     <br>
                                     <label for="choose_time">When do you want to start tracking your finances from this account in Nsmartrac?</label>
                                     <span></span>
                                     <select name="choose_time" id="choose_time" class="form-control select2" required>
-                                        <?php foreach ($this->roles_model->get() as $row): if ($row->id <= logged('role')) continue; ?>
-                                            <?php $sel = !empty(get('role')) && get('role') == $row->id ? 'selected' : '' ?>
-                                            <option selected="selected">Choose one</option>
-                                            <option value="<?php echo $row->id ?>" <?php echo $sel ?>><?php echo $row->title ?></option>
-                                        <?php endforeach ?>
+                                            <option selected="selected" disabled="disabled">Choose one</option>
+                                            <option value="Beginning of this year">Beginning of this year</option>
+                                            <option value="Beginning of this month">Beginning of this month</option>
+                                            <option value="Today">Today</option>
+                                            <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary">Submit</button>
+                                    <button type="submit"  name="save" class="btn btn-flat btn-primary">Submit</button>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <a href="<?php echo url('/accounting/chart_of_accounts') ?>" class="btn btn-flat btn-primary">Cancel</a>
@@ -152,4 +150,15 @@ function showOptions(s) {
     $('#name').val(option_text);
 }
 
+function check() {
+  var x = document.getElementById("check_sub").checked;
+  if(x == true)
+  {
+    $('#sub_account_type').removeAttr('disabled','disabled');
+  }
+  else
+  {
+    $('#sub_account_type').attr('disabled','disabled');
+  }
+}
 </script>

@@ -112,13 +112,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody>
                                         <?php foreach($items as $item) : ?>
-                                            <tr>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><?php echo $item->estimated_time; ?></td>
-                                                <td><?php echo $item->frequency; ?></td>
-                                            </tr>
-                                            <?php endforeach; ?>
+                                            <?php if($item[1] != "header") : ?>
+                                                <tr>
+                                                    <td><?php echo $item[0]; ?></td>
+                                                    <td><?php echo $item[4]; ?></td>
+                                                    <td><?php echo $item[6]; ?></td>
+                                                    <td><?php echo $item[5]; ?></td>
+                                                </tr>
+                                            <?php else : ?>
+                                                <tr style="background-color:#D3D3D3;">
+                                                    <td colspan="3"><?php echo $item[0]; ?></td>
+                                                    <td style="display: none"></td>
+                                                    <td style="display: none"></td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
                                         </tbody>
                                     </table> 
                                 </div>
@@ -140,11 +149,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </thead>
                                         <tbody>
                                         <?php foreach($items as $item) : ?>
-                                            <tr>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><?php echo $item->frequency; ?></td>
-                                            </tr>
+                                            <?php if($item[1] != "header") : ?>
+                                                <tr>
+                                                    <td><?php echo $item[0]; ?></td>
+                                                    <td><?php echo $item[4]; ?></td>
+                                                    <td><?php echo $item[5]; ?></td>
+                                                </tr>
+                                            <?php else : ?>
+                                                <tr style="background-color:#D3D3D3;">
+                                                    <td colspan="2"><?php echo $item[0]; ?></td>
+                                                    <td style="display: none"></td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            <?php endif; ?>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table> 

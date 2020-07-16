@@ -152,8 +152,69 @@ input[type='checkbox']{
     text-overflow: ellipsis;
     overflow: hidden;
 }
-
-
+/*Container Expenses */
+.container-wrapper{
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+}
+/*Vendor CSS*/
+.tableContainer{
+    width: 100%;
+    height: 100px;
+    display: block;
+    margin-bottom: 15px;
+}
+.tableContainer .unpaid-bar-container,.paid-bar-container{
+    display: inline-block;
+    position: relative;
+}
+.tableContainer .unpaid-bar-container{
+    height: 84px;
+    width: 49%;
+    display: inline-block;
+    position: relative;
+}
+.tableContainer .paid-bar-container{
+    height: 84px;
+    width: 49%;
+    display: inline-block;
+    position: absolute;
+}
+.tableContainer .unpaid-bar-container .overdue-bar{
+    background: #babec5 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3MDNFQ0I5RDVGMEMxMUUyQUU2QkE1NjA2NjgyQjlBNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo3MDNFQ0I5RTVGMEMxMUUyQUU2QkE1NjA2NjgyQjlBNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjcwM0VDQjlCNUYwQzExRTJBRTZCQTU2MDY2ODJCOUE2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjcwM0VDQjlDNUYwQzExRTJBRTZCQTU2MDY2ODJCOUE2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+yn67rgAAACVJREFUeNpiYGBg4GVAAErYFBtAfcNGvTbqtVGvjXqNAjZAgAEAEPYFfUaJz74AAAAASUVORK5CYII=);
+    height: inherit;
+    width: 98%;
+}
+.tableContainer .unpaid-bar-container .overdue-bar .openbills-bar{
+    background: #ff8000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3MDNFQ0I5RDVGMEMxMUUyQUU2QkE1NjA2NjgyQjlBNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo3MDNFQ0I5RTVGMEMxMUUyQUU2QkE1NjA2NjgyQjlBNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjcwM0VDQjlCNUYwQzExRTJBRTZCQTU2MDY2ODJCOUE2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjcwM0VDQjlDNUYwQzExRTJBRTZCQTU2MDY2ODJCOUE2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+yn67rgAAACVJREFUeNpiYGBg4GVAAErYFBtAfcNGvTbqtVGvjXqNAjZAgAEAEPYFfUaJz74AAAAASUVORK5CYII=);
+    height: 100%;
+    width: 45%;
+    margin-left: 3%;
+    display: inline-block;
+    position: relative;
+}
+.tableContainer .unpaid-bar-container .overdue-bar .openbills-bar .openbills-bar-header{
+    color: white;
+    margin-left: 10px;
+}
+.tableContainer .unpaid-bar-container .overdue-bar .overdue-bar-header{
+    display: inline-block;
+    position: absolute;
+    color: white;
+    margin-left: 49%;
+}
+.tableContainer .paid-bar-container .paid-bar{
+    background: #7fd000 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3MDNFQ0I5RDVGMEMxMUUyQUU2QkE1NjA2NjgyQjlBNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo3MDNFQ0I5RTVGMEMxMUUyQUU2QkE1NjA2NjgyQjlBNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjcwM0VDQjlCNUYwQzExRTJBRTZCQTU2MDY2ODJCOUE2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjcwM0VDQjlDNUYwQzExRTJBRTZCQTU2MDY2ODJCOUE2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+yn67rgAAACVJREFUeNpiYGBg4GVAAErYFBtAfcNGvTbqtVGvjXqNAjZAgAEAEPYFfUaJz74AAAAASUVORK5CYII=);
+    height: inherit;
+    width: 98%;
+}
+.tableContainer .paid-bar-container .paid-bar .paid-bar-header{
+    display: inline-block;
+    position: absolute;
+    color: white;
+    margin-left: 10px;
+}
 /*Banking Page CSS*/
 .banking-tab-container{
     border-bottom: 1px solid grey;
@@ -634,7 +695,6 @@ input[type='checkbox']{
     font-weight: 700;
     font-size: 15px;
     width: 200px;
-
 }
 .filter-dp .dropdown-menu > li{
     min-width: 550px;
@@ -665,4 +725,38 @@ input[type='checkbox']{
 }
 #forReview_receipts_tbl .receiptRow:hover{
     background-color: whitesmoke;
+}
+
+/*Filter & Batch action btn CSS*/
+.filter-btn button{
+    border: 3px solid black;
+    font-weight: 700;
+    font-size: 15px;
+    width: 120px;
+}
+.display-filterDate{
+    display: inline-block;
+    position: relative;
+}
+.batch-action-btn button{
+    border: 3px solid black;
+    font-weight: 700;
+    font-size: 15px;
+    width: 200px;
+}
+.arrow-level-down{
+    display: inline-block;
+    position: relative;
+    margin-left: 25px;
+    color: grey;
+}
+.icon-settings-container{
+    float: right;
+    display: inline-block;
+    margin-top: 10px;
+}
+.icon-settings-container i{
+    margin-right: 10px;
+    color: grey;
+    font-size: 20px;
 }
