@@ -117,86 +117,86 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form name="modal-form">
-                    <div class="validation-error hide"></div>
+      <?php echo form_open_multipart('booking/create_coupon', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <div class="modal-body">        
+          <div class="validation-error hide"></div>
 
-                    <div class="form-group">
-                        <label>Coupon Name</label> <span class="form-required">*</span>
-                        <input type="text" name="name" value=""  class="form-control" autocomplete="off" />
-                    </div>
-                    <div class="form-group">
-                        <label>Code</label> <span class="form-required">*</span> &nbsp; <span class="help help-sm">(a unique code, can contain only letters, numbers and - _ .)</span>
-                        <input type="text" name="code" value=""  class="form-control" autocomplete="off" />
-                    </div>
-                    <div class="form-group">
-                        <label>Discount from Total</label> <span class="form-required">*</span>
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <select name="discount_type" class="form-control">
-                                  <option value="1">Percentage %</option>
-                                  <option value="2">Amount $</option>
-                                </select>
-                            </div>
-                            <div id="discount_percent_cnt" class="hide">
-                                <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <div class="input-group-addon bold">%</div>
-                                        <input type="text" name="discount_percent" value=""  class="form-control" autocomplete="off" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="discount_amount_cnt" class="hide">
-                                <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <div class="input-group-addon bold">$</div>
-                                        <input type="text" name="discount_amount" value=""  class="form-control" autocomplete="off" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <label>Valid From</label>
-                                <div class="input-group">
-                                    <input type="text" name="valid_from" value=""  class="form-control coupon_valid_from" id="coupon_valid_from" autocomplete="off" />
-                                    <div class="input-group-addon calendar-button" data-for="coupon_valid_from">
-                                        <span class="fa fa-calendar"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <label>Valid To</label>
-                                <div class="input-group">
-                                    <input type="text" name="valid_to" value=""  class="form-control coupon_valid_to" id="coupon_valid_to" autocomplete="off" />
-                                    <div class="input-group-addon calendar-button" data-for="coupon_valid_to">
-                                        <span class="fa fa-calendar"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <label>Uses per coupon</label>
-                                <input type="text" name="uses_max" value=""  class="form-control" autocomplete="off" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom-sec">
-                        <div class="col-sm-8">
-                            <label>Status</label>
-                            <select name="status" class="form-control" autocomplete="off">
-                              <option value="1">Active</option>
-                              <option value="2">Closed</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
+          <div class="form-group">
+              <label>Coupon Name</label> <span class="form-required">*</span>
+              <input type="text" name="name" value=""  class="form-control" autocomplete="off" />
+          </div>
+          <div class="form-group">
+              <label>Code</label> <span class="form-required">*</span> &nbsp; <span class="help help-sm">(a unique code, can contain only letters, numbers and - _ .)</span>
+              <input type="text" name="code" value=""  class="form-control" autocomplete="off" />
+          </div>
+          <div class="form-group">
+              <label>Discount from Total</label> <span class="form-required">*</span>
+              <div class="row">
+                  <div class="col-sm-8">
+                      <select name="discount_type" class="form-control">
+                        <option value="1">Percentage %</option>
+                        <option value="2">Amount $</option>
+                      </select>
+                  </div>
+                  <div id="discount_percent_cnt" class="hide">
+                      <div class="col-sm-8">
+                          <div class="input-group">
+                              <div class="input-group-addon bold">%</div>
+                              <input type="text" name="discount_percent" value=""  class="form-control" autocomplete="off" />
+                          </div>
+                      </div>
+                  </div>
+                  <div id="discount_amount_cnt" class="hide">
+                      <div class="col-sm-8">
+                          <div class="input-group">
+                              <div class="input-group-addon bold">$</div>
+                              <input type="text" name="discount_amount" value=""  class="form-control" autocomplete="off" />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group">
+              <div class="row">
+                  <div class="col-sm-8">
+                      <label>Valid From</label>
+                      <div class="input-group">
+                          <input type="text" name="valid_from" value=""  class="form-control coupon_valid_from" id="coupon_valid_from" autocomplete="off" />
+                          <div class="input-group-addon calendar-button" data-for="coupon_valid_from">
+                              <span class="fa fa-calendar"></span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-sm-8">
+                      <label>Valid To</label>
+                      <div class="input-group">
+                          <input type="text" name="valid_to" value=""  class="form-control coupon_valid_to" id="coupon_valid_to" autocomplete="off" />
+                          <div class="input-group-addon calendar-button" data-for="coupon_valid_to">
+                              <span class="fa fa-calendar"></span>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-sm-8">
+                      <label>Uses per coupon</label>
+                      <input type="text" name="uses_max" value=""  class="form-control" autocomplete="off" />
+                  </div>
+              </div>
+          </div>
+          <div class="row margin-bottom-sec">
+              <div class="col-sm-8">
+                  <label>Status</label>
+                  <select name="status" class="form-control" autocomplete="off">
+                    <option value="1">Active</option>
+                    <option value="2">Closed</option>
+                  </select>
+              </div>
+          </div>      
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add</button>
+        <button type="submit" class="btn btn-primary">Add</button>
       </div>
+      <?php echo form_close(); ?>
     </div>
   </div>
 </div>
