@@ -102,22 +102,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="col-lg-5 pr-0">
 							<div class="bg-white p-4 rounded h-100">
 								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
-								<div class="row px-2 text-center mt-4 align-items-center">
+								<div class="row px-2 text-center mt-5 align-items-center">
 									<div class="col-sm-6">
-										<p class=""><i class="fa fa-file h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>New Invoice</h6>
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img src="<?php echo base_url();?>assets/img/accounting/new-invoice.png" class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">New Invoice</h6>
 									</div>
 									<div class="col-sm-6">
-										<p class=""><i class="fa fa-file-o h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Recurring Invoice</h6>
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img src="<?php echo base_url();?>assets/img/accounting/recurring-invoice.png" class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">Recurring Invoice</h6>
 									</div>
-									<div class="col-sm-6">
-										<p class=""><i class="fa fa-file-text h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>New Sale</h6>
+									<div class="col-sm-6 mt-4">
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img src="<?php echo base_url();?>assets/img/accounting/new-sale.png" class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">New Sale</h6>
 									</div>
-									<div class="col-sm-6">
-										<p class=""><i class="fa fa-files-o h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Recurring Sale</h6>
+									<div class="col-sm-6 mt-4">
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img src="<?php echo base_url();?>assets/img/accounting/recurring-sale.png" class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">Recurring Sale</h6>
 									</div>
 								</div>
 							</div>

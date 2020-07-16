@@ -56,7 +56,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-				<?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <div class="row">
+            	<div class="col-md-12">
+            		<?php if($this->session->flashdata('success')){ ?>
+            		<div class="alert alert-success alert-dismissible">
+            		   <button type="button" class="close" data-dismiss="alert">&times;</button>
+					  <strong>Success!</strong> <?php echo $this->session->flashdata('success'); ?>
+					</div>
+				<?php } if($this->session->flashdata('error')){ ?>
+					<div class="alert alert-danger alert-dismissible">
+					   <button type="button" class="close" data-dismiss="alert">&times;</button>
+					  <strong>Error!</strong> <?php echo $this->session->flashdata('error'); ?>
+					</div>
+				<?php } ?>
+            	</div>
+            </div>
+				<?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
 				<div class="row pt-2">
 					<div class="col-xl-12 px-0">
 						<div class="card p-0">

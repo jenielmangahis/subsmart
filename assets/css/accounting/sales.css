@@ -70,7 +70,8 @@
   left: 0px;
 }
 .timeline .timeline-item .timeline-badge.primary {
-  background-color: #1f9eba;
+ /* background-color: #1f9eba;*/
+  background-color: #888;
 }
 .timeline .timeline-item .timeline-badge.info {
   background-color: #5bc0de;
@@ -203,4 +204,22 @@
 }
 .max-85{
 	max-width:85%;
+}
+.nav-tabs .nav-link.active{
+	background-color: transparent !important;
+    border: 0;
+    border-bottom: 5px solid #498002 !important;
+    font-weight: bolder;
+    text-decoration: none;
+}
+.nav-tabs .nav-link.active:hover{
+	background-color: transparent !important;
+    border: 0;
+    border-bottom: 5px solid #498002 !important;
+    font-weight: bolder;
+    text-decoration: none;
+}
+.standard-accordion .card .card-header a:not(.collapsed) .rotate-icon {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
 }

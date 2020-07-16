@@ -221,6 +221,14 @@ class Vault extends MY_Controller {
         echo json_encode($return);		
 	}
 
+	public function download_file($file_id){
+		$file = $this->vault_model->getById($file_id);
+		$path = '/uploads/' . $this->company_folder . $file->file_path;
+		$fc = file_get_contents($path);
+
+		force_download($file->title, $fc);
+	}
+
 }
 
 /* End of file Permissions.php */
