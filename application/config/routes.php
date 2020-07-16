@@ -159,6 +159,7 @@ $route['more/addon/booking/coupons/coupon_tab/(:any)'] = 'booking/coupons/$1';
 $route['more/addon/booking/settings'] = 'booking/settings';
 $route['more/addon/booking/preview'] = 'booking/preview';
 $route['booking/create_coupon'] = 'booking/save_coupon';
+$route['booking/create_category'] = 'booking/save_category';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';

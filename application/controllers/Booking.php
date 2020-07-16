@@ -8,6 +8,7 @@ class Booking extends MY_Controller {
 
 		$this->page_data['page_title'] = 'Online Booking';
 
+		$this->load->model('BookingCategory_model');
 		$this->load->model('BookingCoupon_model');
 	}
 
@@ -17,7 +18,12 @@ class Booking extends MY_Controller {
 	}
 
 	public function products() {
+
+		$category = $this->BookingCategory_model->getAll();
+
+		$this->page_data['category'] = $category;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		
 		$this->load->view('online_booking/products', $this->page_data);
 	}	
 
@@ -90,6 +96,30 @@ class Booking extends MY_Controller {
 
         redirect('more/addon/booking/coupons');
 
+    }
+
+    public function save_category()
+    {
+        postAllowed();
+
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        if( !empty($post) ){
+        	$this->load->model('BookingCategory_model');
+
+        	$data = array(
+        		'user_id' => $user['id'],
+        		'name' => post('category_name'),
+        		'date_created' => date("Y-m-d H:i:s")
+        	);
+        	$bookingCoupon = $this->BookingCategory_model->create($data);
+
+        	$this->session->set_flashdata('message', 'Add New Category Successful');
+        	$this->session->set_flashdata('alert_class', 'alert-success');       	
+        }
+
+        redirect('more/addon/booking/products');    	
     }
 
 }

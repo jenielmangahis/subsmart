@@ -1,22 +1,24 @@
-<!-- Modal Add Category -->
+<!-- Modal Add Category --> 
 <div class="modal fade" id="modalAddCategory" tabindex="-1" role="dialog" aria-labelledby="modalAddCategoryTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Add Category</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <input type="text" name="category_name" value="" class="form-control" autocomplete="off">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add</button>
-      </div>
-    </div>
-  </div>
+  <?php echo form_open_multipart('booking/create_category', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Add Category</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <input type="text" name="category_name" id="category_name" value="" class="form-control" autocomplete="off">
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="submit" class="btn btn-primary">Add</button>
+	      </div>
+	    </div>
+	  </div>
+  <?php echo form_close(); ?>
 </div>
 
 <!-- Modal Add Service/Item -->
