@@ -29,10 +29,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="tabs">
                             <ul class="clearfix">
                                 <li class="<?php echo $active_tab == 'active' ? 'active' : ''; ?>">
-                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/active') ?>">Active <span>(1)</span></a>
+                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/active') ?>">Active <span>(<?php echo $total_active; ?>)</span></a>
                                 </li>
                                 <li class="<?php echo $active_tab == 'closed' ? 'active' : ''; ?>">
-                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/closed') ?>">Closed <span>(0)</span></a>
+                                    <a href="<?php echo base_url('more/addon/booking/coupons/coupon_tab/closed') ?>">Closed <span>(<?php echo $total_closed; ?>)</span></a>
                                 </li>
                             </ul>
                         </div>
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td>
                                         test coupon 
                                         <div class="text-ter">
@@ -63,8 +63,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <a class="coupon__edit margin-right-sec" data-coupon-edit-modal="open" data-id="165" href="#"><span class="fa fa-edit"></span> edit</a>
                                         <a class="coupon__delete" data-coupon-delete-modal="open" data-id="165" data-name="test coupon" href="#"><span class="fa fa-trash"></span></a>
                                     </td>
-                                </tr>
-                                    </tbody>
+                                </tr> -->
+                                <?php foreach( $coupons as $c ){ ?>
+                                    <tr>
+                                        <td>
+                                            <b><?php echo $c->coupon_name; ?></b>
+                                            <div class="text-ter">
+                                                Uses: <?php echo $c->used_per_coupon; ?><br>
+                                                Valid: <?php echo date("Y-m-d", strtotime($c->date_valid_from)) . ' to ' . date("Y-m-d", strtotime($c->date_valid_to)) ?>
+                                            </div>
+                                        </td>
+                                        <td>dx123</td>
+                                        <td>$1.00</td>
+                                        <td>Active</td>
+                                        <td class="text-right">
+                                            <a class="coupon__edit margin-right-sec" data-coupon-edit-modal="open" data-id="<?php echo $c->id; ?>" href="#"><span class="fa fa-edit"></span> edit</a>
+                                            <a class="coupon__delete" data-coupon-delete-modal="open" data-id="<?php echo $c->id; ?>" data-name="test coupon" href="#"><span class="fa fa-trash"></span></a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
                         </table>
                         <a href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><span class="fa fa-plus-square fa-margin-right"></span> Add Coupon</a>
                         <hr />
