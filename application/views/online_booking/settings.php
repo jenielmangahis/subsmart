@@ -27,16 +27,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
-                        <?php include viewPath('includes/booking_tabs'); ?>   
+                        <?php include viewPath('includes/booking_tabs'); ?>
 
                         <div class="row dashboard-container-1">
                             <div class="col-md-8"><strong></strong></div>
-                        </div>       
-                        <hr />
-                        <div class="row dashboard-container-2">
+                        </div>
+                        <div class="row dashboard-container-2 pr-4">
                             <form name="" data-form="form" style="width:100%;">
                                 <div class="validation-error hide"></div>
-                                
+
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
@@ -55,9 +54,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
+                                <br class="clear"/>
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Products listing mode</label>
                                             <div class="help help-block">How the products shoulds be listed on widget page, like a grid of boxes or a list.</div>
@@ -71,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Appointments per time slot</label>
                                             <div class="help help-block">How many appointments can be made for same time slot and date.</div>
@@ -97,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Minimum price for entire booking</label>
                                             <div class="help help-block">
@@ -125,9 +124,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
+                                <br class="clear-both"/>
                                 <div>
-                                    <div class="weight-medium">Notifications</div>
+                                    <label>Notifications</label>
                                     <div class="help help-block">Select how you want to be notified on a new booking.</div>
                                     <div class="checkbox checkbox-sec margin-right">
                                         <input type="checkbox" name="notify_email" value="1" checked="checked"  id="notify_email" />
@@ -147,7 +146,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="help help-block">Customers should not be able to book your services during blocked time.</div>
                                         <div class="row">
                                             <div class="col-sm-24">
-                                                <div class="checkbox checkbox-sec margin-right">
+                                                <div class="checkbox checkbox-sec margin-right ml-cs-20">
                                                     <input type="checkbox" name="event_blocked_check" value="1" checked="checked"  id="event_blocked_check" />
                                                     <label for="event_blocked_check"><span>Don't accept booking during blocked time</span></label>
                                                 </div>
@@ -159,7 +158,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="help help-block">Customers should not be able to book your services if another event exists in calendar.</div>
                                         <div class="row">
                                             <div class="col-sm-24">
-                                                <div class="checkbox checkbox-sec margin-right">
+                                                <div class="checkbox checkbox-sec margin-right ml-cs-20">
                                                     <input type="checkbox" name="event_all_check" value="1" checked="checked"  id="event_all_check" />
                                                     <label for="event_all_check"><span>Don't accept booking if it overlaps with a calendar event</span></label>
                                                 </div>
@@ -167,7 +166,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
+                                <br class="clear-both"/>
                                 <hr class="card-hr">
 
                                 <div class="row">
@@ -184,7 +183,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="margin-top-ter" id="convert_lead_to_work_order_employees">
                                             <label>Assign To</label>
-                                            <ul class="employees clearfix">
+                                            <ul class="employees clearfix pl-2">
                                                                     <li>
                                                     <div class="checkbox checkbox-sm">
                                                         <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14278" checked="checked"  id="employee_id_14278" />
@@ -217,7 +216,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
+                                <br class="clear-both"/>
                                 <hr class="card-hr">
 
                                 <div class="row">
@@ -242,7 +241,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="text" name="google_analytics_origin" value=""  class="form-control" autocomplete="off" />
                                     </div>
                                 </div>
-
+                                <br class="clear-both"/>
                                 <hr class="card-hr">
 
                                 <div class="row" style="display: block;">
@@ -261,7 +260,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
+                                <br class="clear-both"/>
                                 <hr class="margin-top margin-bottom">
                                 <div class="row margin-top">
                                     <div class="col-sm-12">
@@ -269,11 +268,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <span class="alert-inline-text margin-left hide">Saved</span>
                                     </div>
                                     <div class="col-sm-12 text-right">
-                                        <button class="btn btn-primary" data-form="submit" data-on-click-label="Saving...">Continue &raquo;</button>
+                                        <button class="btn btn-primary mr-4" data-form="submit" data-on-click-label="Saving...">Continue &raquo;</button>
                                     </div>
                                 </div>
                             </form>
-                        </div>                        
+                        </div>
                     </div>
                     <!-- end card -->
                 </div>
@@ -285,7 +284,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/booking_modals'); ?> 
+<?php include viewPath('includes/booking_modals'); ?>
 <?php include viewPath('includes/footer_booking'); ?>
 
 <script>
