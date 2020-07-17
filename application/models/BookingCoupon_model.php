@@ -41,6 +41,25 @@ class BookingCoupon_model extends MY_Model
         return $query;
     }
 
+    public function isCouponCodeExists($coupon_code)
+    {
+        $is_exists = false;
+        $user_id   = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $user_id);
+        $this->db->where('coupon_code', $coupon_code);
+
+        $query = $this->db->get()->row();
+        if( $query ){
+            $is_exists = true;
+        }
+
+        return $is_exists;
+    }
+
     public function deleteUserCoupon($id){
         $user_id = logged('id');
 
@@ -128,5 +147,5 @@ class BookingCoupon_model extends MY_Model
     }
 }
 
-/* End of file BookingCoupon_modal.php */
-/* Location: ./application/models/BookingCoupon_modal.php */
+/* End of file BookingCoupon_model.php */
+/* Location: ./application/models/BookingCoupon_model.php */

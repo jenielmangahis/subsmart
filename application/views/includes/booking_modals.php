@@ -175,17 +175,17 @@
 
           <div class="form-group">
               <label>Coupon Name</label> <span class="form-required">*</span>
-              <input type="text" name="name" value=""  class="form-control" autocomplete="off" />
+              <input type="text" name="name" value=""  class="form-control" required="" autocomplete="off" />
           </div>
           <div class="form-group">
               <label>Code</label> <span class="form-required">*</span> &nbsp; <span class="help help-sm">(a unique code, can contain only letters, numbers and - _ .)</span>
-              <input type="text" name="code" value=""  class="form-control" autocomplete="off" />
+              <input type="text" name="code" value=""  class="form-control" required="" autocomplete="off" />
           </div>
           <div class="form-group">
               <label>Discount from Total</label> <span class="form-required">*</span>
               <div class="row">
                   <div class="col-sm-8">
-                      <select name="discount_type" class="form-control coupon-discount-type">
+                      <select name="discount_type" class="form-control coupon-discount-type" required="">
                         <option value="1">Percentage %</option>
                         <option value="2">Amount $</option>
                       </select>
@@ -194,7 +194,7 @@
                       <div class="">
                           <div class="input-group">
                               <div class="input-group-addon bold">%</div>
-                              <input type="text" name="discount_percent" value=""  class="form-control" autocomplete="off" />
+                              <input type="text" name="discount_percent" value="" required="" class="form-control" autocomplete="off" />
                           </div>
                       </div>
                   </div>
@@ -202,7 +202,7 @@
                       <div class="">
                           <div class="input-group">
                               <div class="input-group-addon bold">$</div>
-                              <input type="text" name="discount_amount" value=""  class="form-control" autocomplete="off" />
+                              <input type="text" name="discount_amount" value="" required="" class="form-control" autocomplete="off" />
                           </div>
                       </div>
                   </div>
@@ -213,7 +213,7 @@
                   <div class="col-sm-8">
                       <label>Valid From</label>
                       <div class="input-group">
-                          <input type="text" name="valid_from" value=""  class="form-control coupon_valid_from" id="coupon_valid_from" autocomplete="off" />
+                          <input type="text" name="valid_from" value=""  class="form-control coupon_valid_from" required="" id="coupon_valid_from" autocomplete="off" />
                           <div class="input-group-addon calendar-button" data-for="coupon_valid_from">
                               <span class="fa fa-calendar"></span>
                           </div>
@@ -222,7 +222,7 @@
                   <div class="col-sm-8">
                       <label>Valid To</label>
                       <div class="input-group">
-                          <input type="text" name="valid_to" value=""  class="form-control coupon_valid_to" id="coupon_valid_to" autocomplete="off" />
+                          <input type="text" name="valid_to" value=""  class="form-control coupon_valid_to" required="" id="coupon_valid_to" autocomplete="off" />
                           <div class="input-group-addon calendar-button" data-for="coupon_valid_to">
                               <span class="fa fa-calendar"></span>
                           </div>
@@ -230,7 +230,7 @@
                   </div>
                   <div class="col-sm-8">
                       <label>Uses per coupon</label>
-                      <input type="text" name="uses_max" value=""  class="form-control" autocomplete="off" />
+                      <input type="text" name="uses_max" value="" required="" class="form-control" autocomplete="off" />
                   </div>
               </div>
           </div>
@@ -320,4 +320,19 @@
 		    </div>
 	    </div>
   <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Update Setting -->
+<div class="modal fade bd-example-modal-md" id="modalUpdateSetting" tabindex="-1" role="dialog" aria-labelledby="modalUpdateSettingTitle" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-gear"></i> Setting</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-setting-msg"></div>      
+    </div>
+  </div>
 </div>

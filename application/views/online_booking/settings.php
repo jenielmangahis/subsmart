@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_booking'); ?>
+<style>
+.row{
+    display: block;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/addons'); ?>
     <!-- page wrapper start -->
@@ -17,6 +22,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
+            <?php include viewPath('flash'); ?>
+            <?php echo form_open_multipart('booking/save_setting', ['id' => 'frm-booking-setting', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
@@ -238,7 +245,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                 <hr class="card-hr">
 
-                                <div class="row">
+                                <div class="row" style="display: block;">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Widget status</label>
@@ -258,7 +265,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <hr class="margin-top margin-bottom">
                                 <div class="row margin-top">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-primary" data-form="save" data-on-click-label="Saving...">Save</button>
+                                        <button type="button" class="btn btn-primary btn-update-setting">Save</button>
                                         <span class="alert-inline-text margin-left hide">Saved</span>
                                     </div>
                                     <div class="col-sm-12 text-right">
@@ -271,6 +278,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!-- end card -->
                 </div>
             </div>
+            <?php echo form_close(); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -279,3 +287,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/booking_modals'); ?> 
 <?php include viewPath('includes/footer_booking'); ?>
+
+<script>
+$(function(){
+    $(".btn-update-setting").click(function(){
+        $("#modalUpdateSetting").modal('show');
+
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Saving...</div>';
+        var url = base_url + '/booking/_save_setting';
+
+        $(".modal-setting-msg").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: $("#frm-booking-setting").serialize(),
+               success: function(o)
+               {
+                  $(".modal-setting-msg").html("<p class='alert alert-info'><i class='fa fa-check'></i> Setting was successfully updated</p>");
+               }
+            });
+        }, 1000);
+
+    });
+});
+</script>

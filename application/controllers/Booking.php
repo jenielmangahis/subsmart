@@ -11,6 +11,7 @@ class Booking extends MY_Controller {
 		$this->load->model('BookingCategory_model');
 		$this->load->model('BookingServiceItem_model');
 		$this->load->model('BookingCoupon_model');
+		$this->load->model('BookingSetting_model');
 	}
 
 	public function index() {
@@ -81,29 +82,34 @@ class Booking extends MY_Controller {
 
         if( !empty($post) ){
 
-        	if( post('discount_amount') !== null ){
-        		$discount_amount = post('discount_amount');
+        	if( $this->BookingCoupon_model->isCouponCodeExists(post('code')) ){
+        		$this->session->set_flashdata('message', 'Coupon code already taken');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');     
         	}else{
-        		$discount_amount = post('discount_percent');
-        	}
+        		if( post('discount_amount') !== null ){
+	        		$discount_amount = post('discount_amount');
+	        	}else{
+	        		$discount_amount = post('discount_percent');
+	        	}
 
-        	$data = array(
-        		'user_id' => $user['id'],
-        		'coupon_name' => post('name'),
-        		'coupon_code' => post('code'),
-        		'discount_from_total' => $discount_amount,
-        		'discount_from_total_type' => post('discount_type'),
-        		'date_valid_from' => date("Y-m-d",strtotime(post('valid_from'))),
-        		'date_valid_to' => date("Y-m-d",strtotime(post('valid_to'))),
-        		'used_per_coupon' => post('uses_max'),
-        		'status' => $this->BookingCoupon_model->isActive(),
-        		'date_created' => date("Y-m-d H:i:s")
-        	);
-        	$bookingCoupon = $this->BookingCoupon_model->create($data);
-        }
+	        	$data = array(
+	        		'user_id' => $user['id'],
+	        		'coupon_name' => post('name'),
+	        		'coupon_code' => post('code'),
+	        		'discount_from_total' => $discount_amount,
+	        		'discount_from_total_type' => post('discount_type'),
+	        		'date_valid_from' => date("Y-m-d",strtotime(post('valid_from'))),
+	        		'date_valid_to' => date("Y-m-d",strtotime(post('valid_to'))),
+	        		'used_per_coupon' => post('uses_max'),
+	        		'status' => post('status'),
+	        		'date_created' => date("Y-m-d H:i:s")
+	        	);
+	        	$bookingCoupon = $this->BookingCoupon_model->create($data);
 
-        $this->session->set_flashdata('message', 'Add New Coupon Successful');
-        $this->session->set_flashdata('alert_class', 'alert-success');     
+	        	$this->session->set_flashdata('message', 'Add New Coupon Successful');
+        		$this->session->set_flashdata('alert_class', 'alert-success');     
+        	}        	
+        }     
 
         redirect('more/addon/booking/coupons');
 
@@ -129,6 +135,43 @@ class Booking extends MY_Controller {
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
 		redirect('more/addon/booking/coupons');
+    }
+
+    public function update_coupon()
+    {
+    	postAllowed();
+
+    	echo "<pre>";
+    	$post = $this->input->post();
+
+    	$coupon = $this->BookingCoupon_model->getById(post('cid'));
+    	if( $coupon ){
+    		if( post('discount_amount') !== null ){
+        		$discount_amount = post('discount_amount');
+        	}else{
+        		$discount_amount = post('discount_percent');
+        	}
+
+    		$this->BookingCoupon_model->update($coupon->id, array(
+    			'coupon_name' => post('name'),
+        		'coupon_code' => post('code'),
+        		'discount_from_total' => $discount_amount,
+        		'discount_from_total_type' => post('discount_type'),
+        		'date_valid_from' => date("Y-m-d",strtotime(post('valid_from'))),
+        		'date_valid_to' => date("Y-m-d",strtotime(post('valid_to'))),
+        		'used_per_coupon' => post('uses_max'),
+        		'status' => post('status'),        		
+    		));
+
+    		$this->session->set_flashdata('message', 'Coupon was successfully updated');
+        	$this->session->set_flashdata('alert_class', 'alert-success');     
+
+    	}else{
+    		$this->session->set_flashdata('message', 'Coupon not found');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
+    	}
+
+    	redirect('more/addon/booking/coupons');
     }
 
     public function save_category()
@@ -231,6 +274,61 @@ class Booking extends MY_Controller {
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
 		redirect('more/addon/booking/products');
+    }
+
+    public function ajax_save_setting()
+    {
+    	postAllowed();
+
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        /*$userSetting = $this->BookingSetting_model->findByUserId($user['id']);
+        if( $userSetting ){
+        	$data = array(        		
+        		'page_title' => post('page_title'),
+        		'page_instruction' => post('page_intro'),
+        		'product_listing_mode' => post('product_list_mode'),
+        		'appointment_per_time_slot' => post('time_slot_bookings'),
+        		'minimum_price_for_entier_booking' => post('cart_total_min'),
+        		'minimum_price_alert' => post('cart_total_min_alert'),
+        		'notification_email' => post('notify_email'),
+        		'notification_app' => post('notify_push'),
+        		'accept_blocked_time' => post('event_blocked_check'),
+        		'accept_booking_overlap_calendar_event' => post('event_all_check')
+        		'auto_schedule_work_order' => post('convert_lead_to_work_order'),
+        		'google_analytics_tracking_id' => post('google_analytics_tracking_id'),
+        		'website_url' => post('google_analytics_origin'),
+        		'widget_status' => post('status')
+        	);
+
+        	$this->BookingCoupon_model->update($userSetting->id, $data);
+
+        }else{
+        	$data = array(
+        		'user_id' => $user['id'],
+        		'page_title' => post('page_title'),
+        		'page_instruction' => post('page_intro'),
+        		'product_listing_mode' => post('product_list_mode'),
+        		'appointment_per_time_slot' => post('time_slot_bookings'),
+        		'minimum_price_for_entier_booking' => post('cart_total_min'),
+        		'minimum_price_alert' => post('cart_total_min_alert'),
+        		'notification_email' => post('notify_email'),
+        		'notification_app' => post('notify_push'),
+        		'accept_blocked_time' => post('event_blocked_check'),
+        		'accept_booking_overlap_calendar_event' => post('event_all_check')
+        		'auto_schedule_work_order' => post('convert_lead_to_work_order'),
+        		'google_analytics_tracking_id' => post('google_analytics_tracking_id'),
+        		'website_url' => post('google_analytics_origin'),
+        		'widget_status' => post('status')
+        	);
+
+        	$bookingSetting = $this->BookingSetting_model->create($data);
+        }*/
+
+        $json_data = array('is_success' => true);
+
+        echo json_encode($json_data);
     }
 
 }
