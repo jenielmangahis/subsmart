@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row align-items-center">
+                <div class="row-fluid align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title">Online Booking</h1>
                         <ol class="breadcrumb">
@@ -19,19 +19,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <?php include viewPath('flash'); ?>
             <?php echo form_open_multipart('booking/save_setting', ['id' => 'frm-booking-setting', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-            <div class="row">
+            <div class="row-fluid">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
                         <?php include viewPath('includes/booking_tabs'); ?>
 
-                        <div class="row dashboard-container-1">
+                        <div class="row-fluid dashboard-container-1">
                             <div class="col-md-8"><strong></strong></div>
                         </div>
-                        <div class="row dashboard-container-2 pr-4">
+                        <div class="row-fluid dashboard-container-2 pr-4">
                             <form name="" data-form="form" style="width:100%;">
                                 <div class="validation-error hide"></div>
 
-                                <div class="row">
+                                <div class="row-fluid">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Page Title</label>
@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <br class="clear"/>
-                                <div class="row">
+                                <div class="row-fluid">
                                     <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Products listing mode</label>
@@ -90,7 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row-fluid">
                                     <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Minimum price for entire booking</label>
@@ -135,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                 <hr class="card-hr">
 
-                                <div class="row">
+                                <div class="row-fluid">
                                     <div class="col-sm-12">
                                         <label>Don't accept booking during blocked time</label>
                                         <div class="help help-block">Customers should not be able to book your services during blocked time.</div>
@@ -164,7 +164,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <br class="clear-both"/>
                                 <hr class="card-hr">
 
-                                <div class="row">
+                                <div class="row-fluid">
                                     <div class="col-sm-12">
                                         <div>
                                             <label>Auto-Schedule a Work Order</label>
@@ -214,7 +214,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <br class="clear-both"/>
                                 <hr class="card-hr">
 
-                                <div class="row">
+                                <div class="row-fluid">
                                     <div class="col-sm-12">
                                         <div>
                                             <label>Google Analytics Tracking Id</label>
@@ -239,7 +239,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <br class="clear-both"/>
                                 <hr class="card-hr">
 
-                                <div class="row" style="display: block;">
+                                <div class="row-fluid" style="display: block;">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Widget status</label>
@@ -257,7 +257,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <br class="clear-both"/>
                                 <hr class="margin-top margin-bottom">
-                                <div class="row margin-top">
+                                <div class="row-fluid margin-top">
                                     <div class="col-sm-12">
                                         <button type="button" class="btn btn-primary btn-update-setting">Save</button>
                                         <span class="alert-inline-text margin-left hide">Saved</span>

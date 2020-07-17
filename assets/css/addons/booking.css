@@ -18,6 +18,13 @@
     text-decoration: none;
     border-bottom: 5px solid grey;
 }
+.row-fluid {
+    display: block;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
 .form-cs-group {
     margin-bottom: 35px;
 }
