@@ -329,8 +329,9 @@ function setFoldersAndFiles(folders, files){
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
-          append += '<td class=""><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
-          append += '<td class="pl-2">' + folder.folder_name + '</td>';
+          append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+          append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
+          append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
           append += '</tr></tbody></table></div>';
         append += '</div>';
       }
@@ -339,8 +340,9 @@ function setFoldersAndFiles(folders, files){
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
-        append += '<td><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
-        append += '<td class="pl-2">' + folder.folder_name + '</td>';
+        append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+        append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
+        append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
         append += '</tr></tbody></table></div>';
       append += '</div>';
     }   

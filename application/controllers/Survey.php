@@ -66,6 +66,7 @@ class Survey extends MY_Controller
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
+    $this->page_data["survey_themes"] = $this->survey_model->getThemes();
     $this->load->view('survey/index.php', $this->page_data);
   }
 
@@ -292,6 +293,7 @@ class Survey extends MY_Controller
         // 'question_id' => (int)$question_id
       );
     }
+    
     $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
     echo json_encode($answered);
     exit;
@@ -348,6 +350,7 @@ class Survey extends MY_Controller
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
+    $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
     $this->load->view('survey/add', $this->page_data);
   }
 

@@ -385,29 +385,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="line-container">
                                 <tr>
                                     <td></td>
                                     <td>1</td>
                                     <td>Commission & fees</td>
                                     <td>What did you pay for?</td>
                                     <td></td>
-                                    <td><i class="fa fa-trash"></i></td>
+                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
                                 </tr>
-                                <tr>
+                                <tr id="tableLine">
                                     <td></td>
-                                    <td>2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><i class="fa fa-trash"></i></td>
+                                    <td id="line-counter">2</td>
+                                    <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="addAndRemoveRow">
-                            <button type="button" class="add-remove-line">Add lines</button>
-                            <button type="button" class="add-remove-line">Clear all lines</button>
+                            <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
+                            <button type="button" class="add-remove-line" id="clear-all-line">Clear all lines</button>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
@@ -578,6 +578,40 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             "info":false
         });
     } );
+    // Add & Remove line in dataTable
+    $(document).ready(function () {
+        //Add line
+        $(document).on("click","#add-four-line",function (e) {
+            for(var x = 1;x <= 4;x++){
+                $("#line-container").append($('#tableLine').last().clone());
+                var num = $('#line-container > tr').length;
+                e.preventDefault();
+                $('#line-counter').last().html(num);
+            }
+        });
+        // Clear Lines
+        $('#clear-all-line').click(function (e) {
+            var num = $('#line-container > tr').length;
+            if (num == 2){
+                e.preventDefault();
+            }else{
+                for (var x = 1;x <= num-2;x++){
+                    $("#tableLine").last().remove();
+                    var count = $('#line-container > tr').length;
+                    $('#line-counter').last().html(count);
+                }
+            }
+        });
+        //Delete Line
+        $(document).on("click","#delete-line-row",function () {
+            $('#tableLine').last().remove();
+        });
+
+        //Table input text show
+        $(document).on("click","#tableLine",function (e) {
+            $('td > input', this).show();
+        });
+    });
 </script>
 
 

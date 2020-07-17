@@ -134,6 +134,33 @@ class Users extends MY_Controller {
 		$this->load->view('users/timelog', $this->page_data);
 	}
 
+	// function to calculate total logged time of user: daily
+	public function total_logged_day(){
+		$this->load->model('timesheet_model');
+		$data = array(
+			'user_id' => $this->input->post('clockin_user_id'),
+		);
+		$total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+	}
+
+	// function to calculate total logged time of user: weekly
+	public function total_logged_week(){
+		$this->load->model('timesheet_model');
+		$data = array(
+			'user_id' => $this->input->post('clockin_user_id'),
+		);
+		$total_clockin = $this->timesheet_model->getTotalClockinWeek($data);
+	}
+
+	// function to calculate total logged time of user: monthly
+	public function total_logged_month(){
+		$this->load->model('timesheet_model');
+		$data = array(
+			'user_id' => $this->input->post('clockin_user_id'),
+		);
+		$total_clockin = $this->timesheet_model->getTotalClockinMonth($data);
+	}
+
 	// added for tracking Timesheet of employees
 	public function timesheet_user()
 	{	

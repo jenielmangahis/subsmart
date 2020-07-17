@@ -56,8 +56,21 @@
                     <a href="<?=base_url()?>survey/themes">Back to Themes List</a>
                     <h2>Create a new theme</h2>
                     <p>Pick colors for your theme.</p>
+                    <div class="row">
+                        <button id="btnPreview" class="btn btn-secondary " type="button">Preview</button>
+                        <button id="btnSubmit" class="btn btn-success " type="submit">Submit</button>
+                    </div>
                     <hr/>
 
+                    <div class="alert alert-info w-100">
+                        <i class="fa fa-info-circle"></i>
+                        Before submitting your theme, make sure you view first your design before submitting your theme. 
+                    </div>
+                    <div id="imagePreviewError" style="display: none" class="alert alert-danger w-100">
+                        <i class="fa fa-times"></i>
+                        Image has not yet been set. Add an image to see the design.
+                    </div>
+                    
                     <div class="row">
                         <div id="themeSampleWrapper" class="col-sm-12">
                             <div class="theme-sample">
@@ -75,8 +88,8 @@
                             </div>
                         </div>
                     
-                        <?= form_open_multipart('survey/themes/add', array('id'=>'frm-add-survey-theme'))?>
-                            <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <?= form_open_multipart('survey/themes/add', array('id'=>'frm-add-survey-theme'))?>
                                 <div class="form-group">
                                     <label for="txtName">What's the name of your theme?</label>
                                     <input type="text" name="sth_theme_name" id="txtName" class="form-control" placeholder="Enter name here"/>
@@ -88,38 +101,37 @@
                                     <input class="form-control-file" type="file" name="filePrimaryImage" id="filePrimaryImage" >
                                 </div>
                                 <label>Theme colors:</label>
-                                <div class="form-row">
-                                    <div class="form-group col text-center">
+                                <div class="form-row row">
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                         <input class="form-control" type="color" name="sth_primary_color" id="colPrimary" value="#9D344B" data-toggle="tooltip" data-placement="top" title="Primary Color">
                                         <small>Primary</small>
                                     </div>
-                                    <div class="form-group col text-center">
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                         <input class="form-control" type="color" name="sth_secondary_color" id="colSecondary" value="#257059" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                         <small>Secondary</small>
                                     </div>
-                                    <div class="form-group col text-center">
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                         <input class="form-control" type="color" name="sth_tertiary_color" id="colTertiary" value="#8AA236" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                         <small>Tertiary</small>
                                     </div>
-                                    <div class="form-group col text-center">
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                         <input class="form-control" type="color" name="sth_success_color" id="colSuccess" value="#00BC0C">
                                         <small>Success</small>
                                     </div>
-                                    <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="sth_info_color" id="colInfo" value="#045899">>
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
+                                        <input class="form-control" type="color" name="sth_info_color" id="colInfo" value="#045899">
                                         <small>Info</small>
                                     </div>
-                                    <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="sth_warning_color" id="colWarning" value="#EF6C00">>
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
+                                        <input class="form-control" type="color" name="sth_warning_color" id="colWarning" value="#EF6C00">
                                         <small>Warning</small>
                                     </div>
-                                    <div class="form-group col text-center">
-                                        <input class="form-control" type="color" name="sth_danger_color" id="colDanger" value="#EF0000">>
+                                    <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
+                                        <input class="form-control" type="color" name="sth_danger_color" id="colDanger" value="#EF0000">
                                         <small>Danger</small>
                                     </div>
                                 </div>
-                            </div>
-                            
+                            </form>
                             <div class="col-12">
                                 <label>Text colors:</label>
                                 <div class="form-row">
@@ -133,24 +145,15 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                             
-                            <div class="alert alert-info w-100">
-                                <i class="fa fa-info-circle"></i>
-                                Before submitting your theme, make sure you view first your design before submitting your theme. 
-                            </div>
-                            <div id="imagePreviewError" style="display: none" class="alert alert-danger w-100">
-                                <i class="fa fa-times"></i>
-                                Image has not yet been set. Add an image to see the design.
-                            </div>
                             
-                            <button id="btnPreview" class="btn btn-secondary btn-block" type="button">Preview</button>
-                            <button id="btnSubmit" class="btn btn-success btn-block" type="submit">Submit</button>
-                        </>
+                            
 
                         <script>
                             let imageContainer = document.querySelector('#imageContainer');
                             let uploadedImage = document.querySelector("#filePrimaryImage");
-														let fileReader = new FileReader();
+                            let fileReader = new FileReader();
 
 
                             uploadedImage.addEventListener('change', () => {
@@ -192,7 +195,7 @@
                                     error = true;
                                 }
 
-                                // if(error === false){
+                                if(error === false){
                                     let data = {
                                         'sth_theme_name' : document.querySelector('#txtName').value,
                                         'sth_primary_color': document.querySelector('#colPrimary').value,
@@ -204,24 +207,21 @@
                                         'sth_danger_color': document.querySelector('#colDanger').value,
                                         'sth_text_color': document.querySelector('#colTextMain').value,
                                         'sth_dark_text_color': document.querySelector('#colTextDark').value,
-																				'sth_primary_image': document.querySelector('#txtName').value,
-																				'image': document.querySelector('#filePrimaryImage'),
+                                        'sth_primary_image': document.querySelector('#txtName').value,
+                                        'image': document.querySelector('#filePrimaryImage'),
                                     }
-                                    
-																		console.log(data);
-																		// console.log(fileReader.readAsDataURL(uploadedImage.files[0]));
 
-																		$.ajax({
-																			url: surveyBaseUrl+'survey/themeAddImage',
-																			type: "post",
-																			data: data,
-																			success: function(res){
-																				// console.log(res)
-																			}
-																		})
-                                // }else{
-                                //     console.log("gawa ka ng error handlers lex");
-                                // }
+                                    $.ajax({
+                                        url: surveyBaseUrl+'survey/themeAddImage',
+                                        type: "post",
+                                        data: data,
+                                        success: function(res){
+                                            // console.log(res)
+                                        }
+                                    })
+                                }else{
+                                    console.log("gawa ka ng error handlers lex");
+                                }
                             });
                             
                         </script>

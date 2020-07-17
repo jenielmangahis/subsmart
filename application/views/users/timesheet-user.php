@@ -312,6 +312,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
                                                         </a>*/?>
                                                         <?php ////if (hasPermissions('users_edit')): ?>
+                                                            <?php //dd($clockin_arr); ?>
                                                             <form name="clockin_form" method="post">
                                                                 <input type="hidden" name="current_time_in" value="<?php echo date('Y-m-d H:i'); ?>" />
                                                                 <input type="hidden" name="clockin_user_id" value="<?php echo $row->id; ?>" />
@@ -373,7 +374,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <?php endif; ?>
                                                                 <!-- Clock Out-->
                                                                 <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                    <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 && $clockin_arr[0]->action == 'Clock Out' ):?>
                                                                         <a id="clockout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
                                                                         </a>

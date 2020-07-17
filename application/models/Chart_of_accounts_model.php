@@ -10,9 +10,15 @@ class Chart_of_accounts_model extends MY_Model {
 		parent::__construct();
 	}
 
-	public function saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time)
+	public function saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date)
 	{
-		$query="insert into chart_of_accounts values('','$account_id','$acc_detail_id','$name','$description','$sub_acc_id','$time','','')";
+		$query="insert into chart_of_accounts values('','$account_id','$acc_detail_id','$name','$description','$sub_acc_id','$time','$balance','$time_date','','')";
 		echo $this->db->query($query);
 	}
+
+	public function select()  
+      {  
+         $query = $this->db->get('chart_of_accounts');  
+         return $query->result();  
+      } 
 }

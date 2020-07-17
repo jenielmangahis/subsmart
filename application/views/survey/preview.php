@@ -307,14 +307,14 @@
                                       case 5: //email
                                         ?>
                                         <div class="form-group input-content">
-                                          <input type="email" class="form-control" name="answer[]" id="for_email" placeholder="name@example.com">
+                                          <input type="email" class="form-control" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
                                         </div>
                                         <?php
                                         break;
                                       case 6: //number
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="number" class="form-control" name="answer" value="" placeholder="Enter your answer">
+                                            <input type="number" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -326,7 +326,7 @@
                                                 <span class="input-group-text">Upload</span>
                                               </div>
                                               <div class="custom-file">
-                                                <input name="answer[]" type="file" class="custom-file-input form-control" id="inputGroupFile01">
+                                                <input name="answer-<?=$question->id?>" type="file" class="custom-file-input form-control" id="inputGroupFile01">
                                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                               </div>
                                             </div>
@@ -336,28 +336,28 @@
                                       case 8: // Phone Number
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="text" class="form-control valid" name="answer[]" id="contact_phone" placeholder="(555) 555-5555" aria-invalid="false">
+                                            <input type="text" class="form-control valid" name="answer-<?=$question->id?>" id="contact_phone" placeholder="(555) 555-5555" aria-invalid="false">
                                           </div>
                                         <?php
                                         break;
                                       case 9:  // short text
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="text" class="form-control" name="answer[]" value="" placeholder="Enter your answer">
+                                            <input type="text" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
                                       case 11: // yes/no 
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="checkbox" checked data-toggle="toggle" name="answer[]"  data-on="Yes" data-off="No">                                   
+                                            <input type="checkbox" checked data-toggle="toggle" name="answer-<?=$question->id?>"  data-on="Yes" data-off="No">                                   
                                           </div>
                                         <?php
                                         break;
                                       case 12: // rating
                                         ?>
                                           <div class="form-group input-content" id="rating-ability-wrapper">
-                                            <input type="hidden" id="selected_rating" name="answer[]" value="" required="required">
+                                            <input type="hidden" id="selected_rating" name="answer-<?=$question->id?>" value="" required="required">
                                             </label>
                                             <h2 class="bold rating-header" style="">
                                             <span class="selected-rating">0</span><small> / 5</small>
@@ -383,14 +383,14 @@
                                       case 13: // statement
                                         ?>
                                           <div class="form-group input-content">
-                                            <textarea class="form-control" name="answer[]" rows="5" placeholder="Enter your answer"></textarea>
+                                            <textarea class="form-control" name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
                                           </div>
                                         <?php
                                         break;
                                       case 14: // website
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="url" class="form-control" name="answer[]" id="for_email" placeholder="name@example.com">
+                                            <input type="url" class="form-control" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
                                           </div>
                                         <?php
                                         break;
@@ -451,7 +451,7 @@
                                       case 17: //date
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="date" class="form-control" name="answer[]" value="" placeholder="Enter your answer">
+                                            <input type="date" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -463,7 +463,7 @@
                                                 <span class="input-group-text">Upload</span>
                                               </div>
                                               <div class="custom-file">
-                                                <input name="answer[]" type="file" class="custom-file-input" id="inputGroupFile01">
+                                                <input name="answer-<?=$question->id?>" type="file" class="custom-file-input" id="inputGroupFile01">
                                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                               </div>
                                             </div>

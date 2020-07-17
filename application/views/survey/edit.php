@@ -98,6 +98,29 @@
 			float: left;
 	}
 
+	/* theme cards */
+	div.theme-card{
+			padding: 0;
+			border: 0;
+	}
+
+	div.theme-card:hover{
+			transition-duration: 300ms;
+			transform: scale(1.05);
+			box-shadow: 0px 0px 10px #000000;
+	}
+
+	div.color-slots{
+			display: inline-block;
+	}
+
+	div.color-slot{
+			padding: 5px 15px;
+			margin: 0 10px 0 0;
+			background-color: #333333;
+			float: left;
+	}
+
 	.theme-image{
 			width: 100%;
 			max-height: 100px;
@@ -108,6 +131,7 @@
 	.theme-info{
 			position: absolute;
 	}
+
 
 </style>
 <script>

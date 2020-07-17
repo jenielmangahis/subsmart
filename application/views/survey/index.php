@@ -21,24 +21,6 @@
     font-size: 14px;
   }
   
-  .template-card{
-    word-wrap: break-word;
-    cursor: pointer;
-    border-radius: 10px;
-    margin: 10px;
-    border: none;
-    box-shadow: 5px 5px 10px #ddd;
-    transition-duration: 300ms;
-  }
-  
-  .template-card:hover{
-    
-    border-radius: 10px;
-    margin: 10px;
-    border: none;
-    box-shadow: 5px 5px 10px #777;
-    transform: scale(1.05)
-  }
 
   .survey-card {
     transition:0.3s;
@@ -60,6 +42,40 @@
     z-index: 0;
     width: 100%;
   }
+
+  .template-card{
+    padding: 0;
+    word-wrap: break-word;
+    cursor: pointer;
+    border-radius: 10px;
+    margin: 10px;
+    border: none;
+    box-shadow: 5px 5px 10px #ddd;
+    transition-duration: 300ms;
+  }
+  
+  .template-card:hover{
+    
+    border-radius: 10px;
+    margin: 10px;
+    border: none;
+    box-shadow: 5px 5px 10px #777;
+    transform: scale(1.05)
+  }
+
+  .template-card-content{
+    z-index: 9;
+    padding: 10px;
+  }
+
+  img.template-image{
+    z-index: 0;
+    width: 100%;
+    position: absolute;
+    object-fit: cover;
+    max-height: 100%;
+  }
+
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -71,20 +87,26 @@
     <div class="card p-5">
       <div class="card-content">
         <div id="workspace-list">
-          <div class="text-center">
-            <img src="assets/survey/wizard.jpg" alt="wizard" style="height: 300px">            
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="text-center">
+                <img src="assets/survey/wizard.jpg" alt="wizard" style="height: 300px">            
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8">
+              <h1 class="text-center">
+                Welcome to Survey Wizard
+              </h1>
+              <p class="text-center">
+                What would you like to do?
+              </p>
+              <div class="text-center">
+                <button class="btn btn-small btn-block btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-wpforms"></i> Add new survey</a></button>
+                <button class="btn btn-small btn-block btn-secondary"><a class="text-white" href="<?=base_url()?>survey/themes/create"><i class="fa fa-paint-brush"></i> Add new themes</a></button>
+              </div>
+              <p class="text-center">Quick Links<br/><a href="<?=base_url()?>survey/workspace">Workspaces</a> | <a href="<?=base_url()?>survey/themes">Themes</a> </p>
+            </div>
           </div>
-          <h1 class="text-center">
-            Welcome to Survey Wizard
-          </h1>
-          <p class="text-center">
-            What would you like to do?
-          </p>
-          <div class="text-center">
-            <button class="btn btn-small btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-plus"></i> Add new survey</a></button>
-            <button class="btn btn-small btn-secondary"><a class="text-white" href="<?=base_url()?>survey/themes/create"><i class="fa fa-plus"></i> Add new themes</a></button>
-          </div>
-          <p class="text-center">Quick Links<br/><a href="<?=base_url()?>survey/workspace">Workspaces</a> | <a href="<?=base_url()?>survey/themes">Themes</a> </p>
         </div>
       </div>
     </div>
@@ -93,7 +115,7 @@
   <!-- recent survey container -->
   <div id="recent-survey-container" class="w-100">
     <div class="card p-5">
-      <h4>Recently opened</h4>
+      <h4><i class="fa fa-folder-open"></i> Recently opened</h4>
       <div id="recent-survey-opened-table" class="row"></div>
     </div>
   </div>
@@ -103,11 +125,26 @@
   <div id="workspace-survey-list" class="w-100">
     <div class="card p-5">
       <div class="d-flex w-100 justify-content-between">
-        <h4>Workspaces</h4>
-        <a href="<?=base_url()?>survey/workspace">View in a separate page</a>
+        <h4><i class="fa fa-table"></i> Workspaces</h4>
+        <a class="d-none d-sm-block" href="<?=base_url()?>survey/workspace">View in a separate page</a>
       </div>
+
+      <button class="btn btn-block btn-light d-sm-block d-md-none" data-toggle="modal" data-target="#modalAddWorkspace"> <i class="fa fa-plus"></i> Add new workspace</button>
       <div class="row">
-        <div class="col-2">
+        <div class="dropdown col-xs-12 d-block d-md-none d-flex">
+          <a href="" class="btn btn-block btn-light dropdown-toggle d-block d-md-none" data-toggle="dropdown">Select workspace <span class="caret"></span></a>
+          <div id="dropdown-workspace-menu" class="dropdown-menu">
+            <?php
+              foreach($survey_workspaces as $workspace){
+                ?>
+                  <a class="list-group-item d-flex justify-content-between " id="list-home-list" data-toggle="list" href="#list-workspace-<?=$workspace->id?>" role="tab" aria-controls="home"><?= $workspace->name?><span class="badge badge-primary badge-pill"><?=(count($workspace->surveys) > 0) ? count($workspace->surveys) : ""?></span></a>
+                <?php
+              }
+            ?>
+          </div>
+        </div>
+        
+        <div class="col-xs-12 col-md-2 d-none d-md-block">
           <div class="list-group" id="list-tab" role="tablist">
             <button class="list-group-item  btn-light" data-toggle="modal" data-target="#modalAddWorkspace"> <i class="fa fa-plus"></i> Add new workspace</button>
             <?php
@@ -119,7 +156,9 @@
             ?>
           </div>
         </div>
-        <div class="col-10">
+
+        <!-- list group window -->
+        <div class="col-xs-12 col-md-10">
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="list-workspace-index" role="tabpanel" aria-labelledby="list-home-list">
               <div class="card">
@@ -149,19 +188,21 @@
                         <hr/>
 
                         <div class="row">
-
-                          <div class="col-xs-12 col-sm-6 col-md-3">
+                        
+                          <div class="col-xs-12 col-sm-6 col-xl-3">
                             <div id="survey-add-card" class="card border-0 shadow" >
                               <a class="text-left" href="<?=base_url()?>survey/add?ws=<?=$workspace->id?>">
                                 <div class="card-body">
-                                  <h5 class="text-center">Add new survey</h5>
+                                  <h5 class="text-center w-100">Add new survey</h5>
+                                  <span class="text-center">
+                                    <i class="fa fa-plus-circle"></i>
+                                  </span>
                                 </div>
                               </a>
                             </div>
                           </div>
-
                           <?php foreach ($workspace->surveys as $key => $survey): ?>
-                            <div class="col-xs-12 col-sm-6 col-md-3">
+                            <div class="col-xs-12 col-sm-6 col-xl-3">
                               <!-- Card content for each survey -->
                               <div data-id="<?= $survey->id ?>" class="card survey-card border-0 shadow" style="<?=($survey->survey_theme != null)? "background-image: url('".base_url()."uploads/survey/themes/".$survey->survey_theme->sth_primary_image."')  " : ""?>">
                                 <a class="text-left" href="<?=base_url()?>survey/result/<?= $survey->id ?>">
@@ -197,6 +238,7 @@
                             </div>
                           <?php endforeach; ?>
                           
+                          
                         </div>
                       </div>
                     </div>
@@ -206,6 +248,7 @@
             ?>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -220,19 +263,17 @@
         <h4>Templates</h4>
 
         <div class="accordion" id="accordionExample">
-
-
           <?php      
             foreach($template_categories as $key => $category){
               ?>
-                <hr>
-                
+              
                 <div class="card m-0 p-0">
                 
-                  <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapse-<?=$key?>" aria-expanded="true" aria-controls="collapse-<?=$key?>">
-                    <button class="btn btn-link" type="button" >
-                      <?=$category?> 
-                    </button>
+                  <div class="card-header d-flex justify-content-between" id="headingOne" data-toggle="collapse" data-target="#collapse-<?=$key?>" aria-expanded="true" aria-controls="collapse-<?=$key?>">
+                      <span>
+                        <?=$category?> 
+                      </span>
+                    <i class="fa fa-caret-down"></i>
                   </div>
 
                   <div id="collapse-<?=$key?>" class="collapse" data-parent="#accordionExample">
@@ -242,22 +283,30 @@
                         <?php
                           foreach($survey_templates as $template){
                             if($template->category === $category){
+                              $theme = null;
+                              if($template->theme_id !== null){
+                                foreach($survey_themes as $key => $survey_theme){
+                                  if($template->theme_id == $survey_theme->sth_rec_no){
+                                    $theme = $survey_theme;
+                                    break;
+                                  }
+                                }
+                              }
                               ?>
-                                <div id="template-card<?=$template->id?>" onclick="viewTemplateDetails(<?=$template->id?>)" class="col card template-card" data-toggle="popover" data-placement="top" data-html="true" title="<h6><?=$template->name?></h6>" data-content='<div id="template-popover<?=$template->id?>">Loading...</div>' style="width: 600px">
-                                <!-- <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate"> -->
-                                  <div class="card-content">
-                                    <h4><?=$template->name?></h4>
-                                    <span><?= count($template->questions)?> question<?=(count($template->questions) > 1)?"s":""?> </span>
+                                <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate">
+                                  <img class="template-image" src="<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>" alt="<?=$theme->sth_primary_image?>">
+                                  <div class="card-content template-card-content">
+                                    <h4 <?= empty($theme->sth_text_color) ? null : "style='color: $theme->sth_text_color '"?>><?=$template->name?></h4>
+                                    <span <?= empty($theme->sth_text_color) ? null : "style='color: $theme->sth_text_color '"?>><?= count($template->questions)?> question<?=(count($template-> questions) > 1)?"s":""?> </span>
                                   </div>
                                 </div>
-                                </a>
-                                
                                 
                               <?php
                             }
                           }
                         ?>
                       </div>
+                      
 
                       
                     </div>
@@ -269,63 +318,8 @@
             };
           ?>
 
-  
-          <?php      
-            // array_map(function($category) use ($survey_templates){
-              ?>
-                <hr>
-                
-                <div class="card">
-                
-                  <div class="card-header" id="headingOne">
-                    <h2 class="mb-0">
-                      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <?=$category?>
-                      </button>
-                    </h2>
-                  </div>
 
-                  <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card-body">
-                      
-                      <div class="row d-flex w-100">
-                        <?php
-                          foreach($survey_templates as $template){
-                            if($template->category === $category){
-                              ?>
-                                <div id="template-card<?=$template->id?>" onclick="viewTemplateDetails(<?=$template->id?>)" class="col card template-card" data-toggle="popover" data-placement="top" data-html="true" title="<h6><?=$template->name?></h6>" data-content='<div id="template-popover<?=$template->id?>">Loading...</div>' style="width: 600px">
-                                <!-- <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate"> -->
-                                  <div class="card-content">
-                                    <h4><?=$template->name?></h4>
-                                    <span><?= count($template->questions)?> question<?=(count($template->questions) > 1)?"s":""?> </span>
-                                  </div>
-                                </div>
-                                </a>
-                                
-                                
-                              <?php
-                            }
-                          }
-                        ?>
-                      </div>
-
-                      
-                    </div>
-                  </div>
-                </div>        
-
-                
-              <?php
-            // },$template_categories);
-          ?>
-          
         </div>
-
-
-
-
-
-
 
       </div>
     </div>
@@ -372,8 +366,13 @@
   <div class="modal fade" id="modalEditWorkspace" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change the name of your workspace</h5>
+        </div>
         <div class="modal-body">
-          <input type="text" id="txtWorkspaceName" name="txtWorkspaceName"/>
+          <div class="form-group">
+            <input type="text" class="form-control" id="txtWorkspaceName" name="txtWorkspaceName" placeholder="Enter the name here.."/>
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-outline-dark btn-sm" onclick="handleEditWorkspacePrompt()" data-dismiss="modal">Cancel</button>
@@ -384,26 +383,28 @@
   </div>
 
   <div class="modal fade" id="modalViewTemplate">
-    <div class="modal-dialog ">
+    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
-        <div id="modalLoadingSpinner">
-          <div class="modal-body">
-            <div class="d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
+        <div class="modal-header d-flex w-100 justify-content-between">
+          <h4>Template</h4>
+        </div>
+        <div class="modal-body">
+          <div id="modalLoadingSpinner">
+              <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
-            </div>
+          </div>
+          <div id="modalViewTemplateContent">
+            
+              <small>Questions Listed:</small>
+              <div id="template-questions-list"></div>
+
           </div>
         </div>
-        <div id="modalViewTemplateContent">
-          <div class="modal-header">
-            Viewing
-          </div>
-          <div class="modal-body m-0">
-            <h4>Questions Listed:</h4>
-            <div id="template-questions-list">
-            </div>
-          </div>
+        <div class="modal-footer">
+          <button id="btnCreateByTemplate" class="btn btn-primary">Use this template</button>
         </div>
       </div>
     </div>
@@ -437,23 +438,51 @@
   let editId = null;
   let items = "";
 
-  viewTemplateDetails = id => {
-    setTimeout(() => {
-      let questions = "";
-      console.log(templateQuestions);
-      templates[id].questions.map(question=>{
-        questions += `<p class="d-flex m-0">
-                <i class="icon-design " style="background-color: ${templateQuestions.color}"></i>
+  document.querySelector('#btnCreateByTemplate').addEventListener('click', ()=>{
+    window.location.href = `<?= base_url()?>survey/add?th=${1}`
+  });
+
+  viewTemplate = tempId => {
+    let questionsContainer = document.querySelector('#template-questions-list');
+    cardIsLoading = true;
+    document.querySelector('#modalLoadingSpinner').style.display = "block";
+    document.querySelector('#modalViewTemplateContent').style.display = "none";
+    setTimeout(()=>{
+      viewingTemplate = templates.find(data => {
+        if(data.id === tempId){
+          return data
+        }
+      });
+      
+      let questionContent = '';
+      viewingTemplate.questions.map((question)=>{
+        let tempQuestion = templateQuestions.find(data => {
+          if(data.id === question.temp_id) return data
+        });
+
+        questionContent += 
+          `<div class="card w-100 ">
+            <div class="card-content">
+              <p class="d-flex m-0">
+                <i class="icon-design ${tempQuestion.icon}" style="background-color: ${tempQuestion.color}"></i>
                 ${question.question}
-              </p>`
+              </p>
+            </div>
+          </div>`
       })
-      document.querySelector('#template-popover'+id).innerHTML = questions;
-    }, 500);
+    
+      questionsContainer.innerHTML = questionContent;
+      cardIsLoading = false;
+      document.querySelector('#modalLoadingSpinner').style.display = "none";
+      document.querySelector('#modalViewTemplateContent').style.display = "block";
+      console.log(viewingTemplate);
+    },1000)
   }
+  
   
   JSON.parse(localStorage.getItem('survey_ro')).map((item)=>{
     document.querySelector('#recent-survey-opened-table').innerHTML += `
-    <div class="col-xs-12 col-sm-6 col-md-3">
+    <div class="col-xs-12 col-sm-6 col-xl-3">
       <div data-id="${item.id}" class="card survey-card border-0 shadow" style="background-image: url('<?=base_url()?>uploads/survey/themes/${item.survey_theme?.sth_primary_image}')">
         <a class="text-left" href="<?=base_url()?>survey/result/${item.id}">
           <div class="card-body">
@@ -471,7 +500,7 @@
   
   recentSurveys.map((item)=>{
     document.querySelector('#recent-survey-added-table').innerHTML += `
-    <div class="col-xs-12 col-sm-6 col-md-3">
+    <div class="col-xs-12 col-sm-6 col-xl-3">
       <div data-id="${item.id}" class="card survey-card border-0 shadow" style="background-image: url('<?=base_url()?>uploads/survey/themes/${item.survey_theme?.sth_primary_image}')">
         <a class="text-left" href="<?=base_url()?>survey/result/${item.id}">
           <div class="card-body">

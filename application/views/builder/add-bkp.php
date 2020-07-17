@@ -19,20 +19,16 @@
     .col-form-label { line-height: 26px; font-weight: normal; font-size: 15px; }
     .portlet-toggle {position: absolute; top: 20%; right: 10px; margin-top: -8px; }
     .portlet-header { padding: 0.2em 0.3em; /* margin-bottom: 0.5em; */ position: relative; }
-    .input-main-box { width:100%; border: 1px solid #cccccc; padding:15px 5px 15px 3px; background:#cccccc85; }
+    .input-main-box { width:100%; border: 1px solid #cccccc; padding:3px; background:white; }
     .input-draggable-parent-child-div { padding-top:25px; min-height: 50px; padding-bottom:25px; }
     .portlet-placeholder { border: 1px dotted black; margin: 1em 1em 1em 0; height: 90px; width:100%; background: #cccccc; }
     .option_div .option .actions .add_action{ padding: 3px 6px; background: green; border-radius: 50px; }
     .option_div .option .actions .remove_action{ padding: 3px 6px; background: red; border-radius: 50px; }
-    .wrapper {
-    padding: 0px;
-    padding-top: 68px;
-}
 </style>
 <!-- page wrapper start -->
 <div class="wrapper">
 
-  <!--<div class="col-sm-12">
+  <div class="col-sm-12">
     <div class="row">
       <label class="col-sm-1 col-form-label text-right">Form Edit</label>
       <div class="col-sm-5">
@@ -62,11 +58,11 @@
         </select>
       </div>
     </div>
-  </div>-->
+  </div>
   <input type="hidden" id="deletedQuestions" value="">
   <div class="form_builder">
-    <div class="col-sm-12 mb-5 pl-0 pr-0">
-      <div class="col-sm-2" style="background:#32243d;height: 735px;">
+    <div class="col-sm-12 mb-5">
+      <div class="col-sm-2">
         <nav class="nav-sidebar border border-dark">
           <ul class="nav pt-2">
               <li class="form_bal_textfield">
@@ -105,9 +101,9 @@
           </ul>
       </nav>
       </div>
-      <div class="col-sm-10 border border-dark p-0" style="min-height: 735px;background:white;">
+      <div class="col-sm-10 border border-dark p-0" style="min-height: 445px;">
             
-          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 699px;padding: 24px !important;">
+          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 445px;">
 
            
           </div>
@@ -970,11 +966,4 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
   .nav-sidebar ul i{ margin-top: 0.3rem; }
   .form-control { font-size: 16px !important; }
   .ui-widget { font-family: Verdana,Arial,sans-serif; font-size: 1.0em !important; }
-  .form_builder .nav-sidebar a {
-    color: white !important;
-  }
-  .form_builder .nav>li>a:focus, .nav>li>a:hover {
-    text-decoration: none;
-    background-color: #8e8e8e;
-  }
 </style>

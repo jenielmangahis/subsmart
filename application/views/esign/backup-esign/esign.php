@@ -16,41 +16,44 @@ ini_set('max_input_vars', 30000);
 		<?php /* include viewPath('includes/notifications'); */ ?>
 		<div >
 		<!-- wrapper__section -->
-			<?php /* include viewPath('includes/notifications'); */?>
-			<div class="card">
-				<div class="container-fluid" style="font-size:14px;">
+				<?php /* include viewPath('includes/notifications'); */?>
+				<div class="card">
 
-						<div class="row">
-								<div class="col">
-										<h1 class="m-0">Signature</h1>
-										<p>This is your signature, update any time.</p>
-								</div>
-								<div class="col-auto">
-										<!-- <div class="h1-spacer">
-												<a class="btn btn-primary btn-md" href="#">
-														<span class="fa fa-plus"></span> New Signature
-												</a>
-										</div> -->
-								</div>
-						</div> 
-						<div class="row">
-							<div class="col-md-12">
-								<div class="signature-holder">
-									<div class="signature-body">
-											<?php if ( empty( $users_sign->esignImage ) ){ ?>
-												<img src="<?=url("");?>uploads/signatures/demo.png" class="img-responsive">
-											<?php }else{ ?>
-												<img src="<?=$users->esignImage?>" class="img-responsive">
-											<?php } ?>
-									</div>
-							</div>
-							<div class="signature-btn-holder">
-								<a class="btn btn-primary btn-block"  data-toggle="modal" data-target="#updateSignature" data-target="#createFolder" data-backdrop="static" data-keyboard="false"> Update Signature</a>
-							</div>
+
+						<div class="container-fluid" style="font-size:14px;">
+
+								<div class="row">
+										<div class="col">
+												<h1 class="m-0">Signature</h1>
+												<p>This is your signature, update any time.</p>
+										</div>
+										<div class="col-auto">
+												<!-- <div class="h1-spacer">
+														<a class="btn btn-primary btn-md" href="#">
+																<span class="fa fa-plus"></span> New Signature
+														</a>
+												</div> -->
+										</div>
+								</div> 
+												<div class="row">
+													<div class="col-md-12">
+													 <div class="signature-holder">
+															<div class="signature-body">
+																	<?php if ( empty( $users_sign->esignImage ) ){ ?>
+																		<img src="<?=url("");?>uploads/signatures/demo.png" class="img-responsive">
+																	<?php }else{ ?>
+																		<img src="<?=$users->esignImage?>" class="img-responsive">
+																	<?php } ?>
+															</div>
+													</div>
+													<div class="signature-btn-holder">
+														<a class="btn btn-primary btn-block"  data-toggle="modal" data-target="#updateSignature" data-target="#createFolder" data-backdrop="static" data-keyboard="false"> Update Signature</a>
+													</div>
+												</div>
+											</div>
+
 						</div>
-					</div>
 				</div>
-			</div>
 		</div>
 		<!-- end container-fluid -->
 </div>
@@ -98,4 +101,3 @@ ini_set('max_input_vars', 30000);
 		})
 	}) 
 </script>
-

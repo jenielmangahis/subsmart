@@ -650,3 +650,46 @@
     background: transparent;
     border:1px solid #6B6C72;
 }
+#new-vendor-modal .modal-dialog{
+    max-width: 1060px;
+}
+#new-vendor-modal .modal-dialog .modal-body{
+    overflow: scroll;
+    max-height: 480px;
+}
+#new-vendor-modal .modal-dialog .modal-footer-vendor{
+    padding: 10px;
+}
+#new-vendor-modal .modal-dialog .modal-footer-vendor button{
+    border-radius: 36px;
+}
+#new-vendor-modal .form-ib-group{
+    display: block;
+    width: 100%;
+}
+#new-vendor-modal .form-ib-group .form-ib{
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+#new-vendor-modal .form-ib-group .form-ib label{
+    font-weight: 600;
+}
+#new-vendor-modal .form-ib-group .form-ib .form-textarea{
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    display: block;
+    width: 100%;
+    resize: none;
+}
+#new-vendor-modal .form-ib-group .form-ib .address-form{
+    width: 49%;
+    display: inline-block;
+    margin-top: 8px;
+}
+.max-width{
+    min-width: 911px;
+}

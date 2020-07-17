@@ -785,11 +785,21 @@ if (!function_exists('getFolders')) {
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
-               'c.folder_name as c_folder '.
+               'c.folder_name as c_folder, '.
+               '(ifnull(d.total_sub_folders,0) + ifnull(e.total_files,0)) as `total_contents` '.
 
                'from file_folders a '.
                'left join users b on b.id = a.created_by '.
                'left join business_profile c on c.id = a.company_id '.
+               'left join('.
+
+                 'select parent_id, count(*) as `total_sub_folders` from file_folders group by parent_id'.
+
+               ') d on d.parent_id = a.folder_id '.
+               'left join('.
+
+                 'select folder_id, count(*) as `total_files` from filevault group by folder_id'.
+               ') e on e.folder_id = a.folder_id '.
 
                'where a.company_id = ' . $company_id . ' ' . $parent_filter . 
 
