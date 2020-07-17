@@ -298,7 +298,31 @@
   </div>
 </div>
 
-<!-- Modal Deelte Service/Item --> 
+<!-- Modal Delete Category --> 
+<div class="modal fade" id="modalDeleteCategory" tabindex="-1" role="dialog" aria-labelledby="modalDeleteCategoryTitle" aria-hidden="true">
+    <?php echo form_open_multipart('booking/delete_category', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <?php echo form_input(array('name' => 'cat_id', 'type' => 'hidden', 'value' => '', 'id' => 'cat_id'));?>
+	   <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Delete Category</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Delete selected category & associated services/items?</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+		        <button type="submit" class="btn btn-danger">Yes</button>
+		      </div>
+		    </div>
+	    </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Delete Service/Item --> 
 <div class="modal fade" id="modalDeleteServiceItem" tabindex="-1" role="dialog" aria-labelledby="modalDeleteServiceItemTitle" aria-hidden="true">
     <?php echo form_open_multipart('booking/delete_service_item', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
     <?php echo form_input(array('name' => 'siid', 'type' => 'hidden', 'value' => '', 'id' => 'siid'));?>

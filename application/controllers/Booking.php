@@ -227,13 +227,27 @@ class Booking extends MY_Controller {
         $post = $this->input->post();
 
         if( !empty($post) ) {
-        	$this->load->model('BookingCategory_model');
+        	$category_id = $post['category_id'];
+        	$cat = $this->BookingCategory_model->getById($category_id);
 
-        	echo '<pre>';
-        	print_r($post);
-        	echo '</pre>';
-        }    	
-    }  
+        	if($cat) {
+	            $this->BookingCategory_model->update($cat->id, array(
+	                'name' => post('category_name'),        
+	            ));
+
+	            $this->session->set_flashdata('message', 'Category was successfully updated');
+	            $this->session->set_flashdata('alert_class', 'alert-success'); 
+        	} else {
+	            $this->session->set_flashdata('message', 'Coupon not found');
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');        	
+        }   
+
+        redirect('more/addon/booking/products'); 	
+    }     
 
     public function save_service_item()
     {
@@ -262,13 +276,58 @@ class Booking extends MY_Controller {
         }
 
         redirect('more/addon/booking/products');    	
-    }   
+    }  
+
+    public function update_service_item()
+    {
+    	postAllowed();
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$service_item_id = $post['service_item_id'];
+        	$siid = $this->BookingServiceItem_model->getById($service_item_id);
+
+        	if($siid) {
+	            $this->BookingServiceItem_model->update($siid->id, array(
+	            	'category_id' => post('category_id'),   
+	                'name' => post('name'),   
+	                'description' => post('description'),   
+	                'price' => post('price'),   
+	                'price_unit' => post('price_unit'),   
+	            ));
+
+	            $this->session->set_flashdata('message', 'Service/Item was successfully updated');
+	            $this->session->set_flashdata('alert_class', 'alert-success'); 
+        	} else {
+	            $this->session->set_flashdata('message', 'Service/Item not found');
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');        	
+        }   
+
+        redirect('more/addon/booking/products'); 	
+    }      
+
+    public function delete_category()
+    {
+    	$id = $this->BookingCategory_model->deleteCategory(post('cat_id'));
+
+		$this->activity_model->add("Category #$id Deleted by User:".logged('name'));
+		
+		$this->session->set_flashdata('message', 'Booking Category has been Deleted Successfully');
+		$this->session->set_flashdata('alert_class', 'alert-success');
+
+		redirect('more/addon/booking/products');
+    }    
 
     public function delete_service_item()
     {
     	$id = $this->BookingServiceItem_model->deleteServiceItem(post('siid'));
 
-		$this->activity_model->add("Coupon #$id Deleted by User:".logged('name'));
+		$this->activity_model->add("Service/Item #$id Deleted by User:".logged('name'));
 		
 		$this->session->set_flashdata('message', 'Service/Item has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');

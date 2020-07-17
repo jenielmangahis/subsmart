@@ -26,6 +26,11 @@ class BookingCategory_model extends MY_Model
         return $query->result();
     }
 
+    public function deleteCategory($id){
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
+    }     
+
 }
 
 /* End of file BookingCoupon_modal.php */

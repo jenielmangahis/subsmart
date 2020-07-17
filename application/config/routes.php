@@ -164,11 +164,13 @@ $route['booking/create_service_item'] = 'booking/save_service_item';
 //$route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
 $route['booking/delete_coupon'] = 'booking/delete_coupon';
 $route['booking/delete_service_item'] = 'booking/delete_service_item';
+$route['booking/delete_category'] = 'booking/delete_category';
 $route['booking/_edit_coupon'] = 'booking/ajax_edit_coupon';
 $route['booking/ajax_edit_category'] = 'booking/ajax_edit_category';
 $route['booking/ajax_edit_service_item'] = 'booking/ajax_edit_service_item';
 $route['booking/update_category'] = 'booking/update_category';
 $route['booking/update_coupon'] = 'booking/update_coupon';
+$route['booking/update_service_item'] = 'booking/update_service_item';
 $route['booking/_save_setting'] = 'booking/ajax_save_setting';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';

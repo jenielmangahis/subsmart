@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a style="margin-right: 15px;" class="category-edit" data-category-edit-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);">
                                                 <span class="fa fa-edit"></span> edit
                                             </a>
-                                            <a class="category-delete" data-category-delete-modal="open" data-id="13526" href="#">
+                                            <a class="category-delete" data-category-delete-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);" data-name="<?php echo $cat->name; ?>">
                                                 <span class="fa fa-trash"></span>
                                             </a>
                                         </td>

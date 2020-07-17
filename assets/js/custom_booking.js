@@ -135,6 +135,13 @@ $(document).ready(function() {
         $("#modalDeleteServiceItem").modal('show');
     });
 
+    $(".category-delete").click(function(){
+        var cat_id = $(this).attr("data-id");
+        $("#cat_id").val(cat_id);
+        $("#modalDeleteCategory").modal('show');
+    });
+
+
 
 });   
 
