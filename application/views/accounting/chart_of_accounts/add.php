@@ -80,13 +80,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <br>
                                     <label for="choose_time">When do you want to start tracking your finances from this account in Nsmartrac?</label>
                                     <span></span>
-                                    <select name="choose_time" id="choose_time" class="form-control select2" required>
+                                    <select name="choose_time" id="choose_time" class="form-control select2" required onchange="showdiv()">
                                             <option selected="selected" disabled="disabled">Choose one</option>
                                             <option value="Beginning of this year">Beginning of this year</option>
                                             <option value="Beginning of this month">Beginning of this month</option>
                                             <option value="Today">Today</option>
-                                            <option value="Other">Other</option>
+                                            <option value="Other" onclick="hidediv()">Other</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group"></div>
+                                <div class="col-md-4 form-group hide-div" style="display: none;">
+                                     <label for="balance">Balance</label>
+                                    <input type="text" class="form-control" name="balance" id="balance" required
+                                           placeholder="Enter Balance"
+                                           autofocus/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group"></div>
+                                <div class="col-md-4 form-group hide-date" style="display: none;">
+                                     <label for="time_date">Date</label>
+                                     <div class="col-xs-10 date_picker">
+                                        <input type="text" class="form-control" name="time_date" id="time_date"
+                                           placeholder="Enter Date" onchange="showdiv2()" autofocus/>
+                                     </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -161,4 +180,36 @@ function check() {
     $('#sub_account_type').attr('disabled','disabled');
   }
 }
+
+function showdiv() {
+    $('.hide-div').css('display','block');
+    if($('#choose_time').find(":selected").text()=='Other')
+    {
+        $('.hide-div').css('display','none');
+        $('.hide-date').css('display','block');
+    }
+    else
+    {
+        $('.hide-date').css('display','none');
+    }
+}
+function showdiv2() {
+    if($('.day').hasClass('active'))
+    {
+        $('.hide-div').css('display','block');
+    }
+    else
+    {
+        $('.hide-div').css('display','none');
+    }
+}
+
+
+$(function(){
+        $('.date_picker input').datepicker({
+           format: "dd.mm.yyyy",
+           todayBtn: "linked",
+           language: "de"
+        });
+    });
 </script>

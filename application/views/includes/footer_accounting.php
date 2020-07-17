@@ -74,6 +74,7 @@ Chartist Chart-->
     });
   });
    $(document).ready(function() {
+		appendFavoriteReports();
         $('#all_sales_table').DataTable();
 		var screenWidth = $( window ).width();
 		
@@ -104,9 +105,58 @@ Chartist Chart-->
 				}
 			}
 		});
+		
+		$(".reports-page .menu-reports .card-body ul li a .fa").hover(function(){
+			  $(this).css("color","#498002");  
+			  $(this).removeClass("fa-star-o");
+			  $(this).addClass("fa-star");
+			  
+		  }, function () {
+			  $(this).css("color","#6c757d");
+			  $(this).addClass("fa-star-o");
+			  $(this).removeClass("fa-star");
+		  });
+		  $(".reports-page #favorites .card-body ul li a .fa").hover(function(){
+				$(this).css("color","#6c757d");
+				$(this).addClass("fa-star-o");
+				$(this).removeClass("fa-star");
+			  
+		  }, function () {
+				$(this).css("color","#498002");  
+				$(this).removeClass("fa-star-o");
+				$(this).addClass("fa-star");
+		  });
     } );
 	function showAddBtnModal(){
 		$("#addBtnModal").modal("show");
+	}
+	function appendFavoriteReports(){
+		var favoriteReports = JSON.parse(getCookie('favorite-reports'));
+		favoriteReports.sort();
+		var reports;
+	   
+	   $("#favorites-reports").empty();
+	   for(var x=0;x < favoriteReports.length ;x++){
+		   reports = "";
+		   reports = '<li class="border-bottom p-3 cursor-pointer">'
+						+ '<a href="'+favoriteReports[x][1]+'" class="h5 mb-0 font-weight-normal">'+favoriteReports[x][0]+'</a>'
+						+ '<a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o"></i></a>'
+						+ '<div class="dropdown pull-right d-inline-block">'
+							+ '<span type="button" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v fa-lg"></i></span>'
+							+ '<ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"><li><a href="#" class="dropdown-item">Customize</a></li></ul>'
+						+ '</div>'
+						+ '<a href="#" onclick="removeFavoriteReports('+x+')" class="pr-4 text-secondary h6 pull-right"><i class="fa fa-star fa-lg"></i></a>'
+					+ '</li>';
+			$("#favorites-reports").append(reports);
+	   }
+	}
+	function removeFavoriteReports(n){
+		var favoriteReports = JSON.parse(getCookie('favorite-reports'));
+		favoriteReports.sort();
+		favoriteReports.splice(n, 1);
+		
+		setCookie('favorite-reports', JSON.stringify(favoriteReports), 999999);
+		appendFavoriteReports();
 	}
 	function dropdownAccounting(n){
 		var id = $(n).attr('href');
@@ -132,6 +182,34 @@ Chartist Chart-->
 			
 		}
 	}
+	function addToFavorites(n){
+		var chk = 0;
+		var addArray = [$(n).attr("data-name"),$(n).attr("data-link")];
+		var getCookieValue = JSON.parse(getCookie('favorite-reports'));
+		for(var x = 0; x < getCookieValue.length ; x++){
+			if(getCookieValue[x][0] == $(n).attr("data-name")){
+				chk = 1
+			}
+		}
+		
+		if(chk == 0){
+			getCookieValue.push(addArray);
+		}
+
+		setCookie('favorite-reports', JSON.stringify(getCookieValue), 999999);
+		appendFavoriteReports();
+	}
+	function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
 </script>
 
 <style>

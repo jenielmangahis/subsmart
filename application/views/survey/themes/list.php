@@ -51,11 +51,11 @@
                 <div class="card-body">
                     <a href="<?= base_url()?>/survey">Back to Survey List</a>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-xs-12 col-sm-6">
                             <h2>Survey Themes</h2>                
                             <p>Here are some themes to help you get more people attracted to your survey.</p>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-xs-12 col-sm-6 text-right">
                             <a href="<?= base_url()?>survey/themes/create" class="btn btn-success">
                                 <i class="fa fa-plus"></i> Add New Theme
                             </a>

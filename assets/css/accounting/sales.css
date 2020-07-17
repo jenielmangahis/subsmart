@@ -223,3 +223,18 @@
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
 }
+.top-1{
+	top:-1px;
+}
+.cursor-pointer{
+	cursor:pointer;
+}
+.opacity-0{
+	opacity:0;
+}
+.reports-page .card-body ul li:hover{
+	background-color:rgba(0,0,0,.03);
+}
+#favorites-reports li a .fa-star{
+	color:#498002 !important;
+}

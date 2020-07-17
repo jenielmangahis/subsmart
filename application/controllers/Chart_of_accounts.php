@@ -36,14 +36,15 @@ class Chart_of_accounts extends MY_Controller {
 				array('/accounting/banking',array()), 
 				array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts')), 
 				array("",	array('/accounting/expenses','/accounting/vendors')), 
-				array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services')), 
-				array("",	array('#','#','#','#','#')), 
-				array('#',	array()), 
+				array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/invoices','/accounting/customers','/accounting/deposits','/accounting/products-and-services')),
+				array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')), 
+				array('/accounting/reports',array()), 
 				array("",	array('#','#')), 
 				array('#',	array()), 
 				array("",	array('/accounting/chart_of_accounts','#')), 
 			); 
-		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");  
+		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
+
     }
 	public function add()
 	{
@@ -58,13 +59,15 @@ class Chart_of_accounts extends MY_Controller {
 		$description=$this->input->post('description');
 		$sub_acc_id=$this->input->post('sub_account_type');
 		$time=$this->input->post('choose_time');
+		$balance=$this->input->post('balance');
+		$time_date=$this->input->post('time_date');
 
-		$this->chart_of_accounts_model->saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time);
+		$this->chart_of_accounts_model->saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date);
 		
 		//$this->session->set_flashdata('error', "Please try again!");
 	    $this->session->set_flashdata('success', "Data inserted successfully!"); 
-		
-		$this->load->view('accounting/chart_of_accounts', $this->page_data);
+		redirect("accounting/chart_of_accounts");
+		//$this->load->view('accounting/chart_of_accounts', $this->page_data);
 	}
 
 	public function edit()

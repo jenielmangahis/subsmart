@@ -166,14 +166,22 @@
                           </div>  
                         </div>
                       </div>
-                      <div class="col-xs-12 col-sm-6 col-md-9">
-                        
-                          <div class="btn-group btn-block py-3">
-                            <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class=" mr-3 btn btn-warning" target="_blank">Preview</a>
-                            <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class=" mx-3 btn btn-info">Share</a>
-                            <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class=" mx-3 btn btn-success">Edit Survey</a>
-                            <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class=" ml-3 btn btn-danger">Delete</a>
+                      <div class="col-xs-12 col-sm-6 col-md-9 py-2">
+                          <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn-block btn btn-warning" target="_blank">Preview</a>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class="btn-block btn btn-info">Share</a>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class="btn-block btn btn-success">Edit Survey</a>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class="btn-block btn btn-danger">Delete</a>
+                            </div>
                           </div>
+                        
 
                           <div class="card">
                             <!-- <div class="card-body"> -->

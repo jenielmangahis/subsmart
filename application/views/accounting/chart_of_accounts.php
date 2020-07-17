@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
 <style type="text/css">
     .hide-toggle::after {
         display: none;
@@ -132,6 +132,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										</div>
 										</td>
 									</tr>
+									<?php
+									  $i=1;
+									  foreach($this->chart_of_accounts_model->select() as $row)
+									  {
+									  echo "<tr>";
+									  echo "<td><input type='checkbox'></td>";
+									  echo "<td>".$row->name."</td>";
+									  echo "<td>".$row->account_id."</td>";
+									  echo "<td>".$row->acc_detail_id."</td>";
+									  echo "<td>".$row->balance."</td>";
+									  echo "<td></td>";
+									  echo "<td>
+										<div class='dropdown show'>
+										  <a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+										   View Register
+										  </a>
+
+										  <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
+											<a class='dropdown-item' href='#'>Connect Bank</a>
+											<a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit').">Edit</a>
+											<a class='dropdown-item' href='#'>Make Inactive (Reduce usage)</a>
+											<a class='dropdown-item' href='#'>Run Report</a>
+										  </div> 
+										</div>
+										</td>";
+									  echo "</tr>";
+									  $i++;
+									  }
+									   ?>
 									</tbody>
 								</table>
 							</div>
@@ -139,16 +168,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<!-- end card -->
 					</div>
 				</div>
-            </div>
+         </div>
             <!-- end row -->
 			<?php echo form_close(); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
+		    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     </div>
     <!-- page wrapper end -->
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-</div>
+
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>

@@ -29,8 +29,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="dropdown" style="position: relative;display: inline-block;">
-                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">New vendor</button>
-                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#new-vendor-modal" style="border-radius: 20px 0 0 20px">New vendor</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -3px;">
                                         <span class="fa fa-caret-down"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-left">
@@ -75,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="row p-3 bg-white mt-3 mx-0">
                             <div class="col-md-12">
-                                <div style="position: absolute;">
+                                <div style="position: relative;">
                                     <div class="arrow-level-down">
                                         <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
                                     </div>
@@ -83,8 +83,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px">Batch Action
                                             <span class="fa fa-caret-down"></span></button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#">Print Transaction</a></li>
-                                            <li><a href="#">Categorized selected</a></li>
+                                            <li><a href="#">Email</a></li>
+                                            <li><a href="#">Pay Bills Online</a></li>
+                                            <li><a href="#">Make inactive</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -269,6 +270,180 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!--end of modal-->
+<!--    Add vendor modal-->
+        <div id="new-vendor-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content max-width">
+                    <div class="modal-header" style="border-bottom: 0">
+                        <div class="modal-title">Vendor Information</div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 56px">
+                                        <label for="">Title</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 106px">
+                                        <label for="">First name</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 106px">
+                                        <label for="">Middle name</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 106px">
+                                        <label for="">Last name</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 56px">
+                                        <label for="">Suffix</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Company</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="" style="margin-right: 10px">Print on check as </label><input type="checkbox"><span style="margin-left: 10px">Use display name</span>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="" style="margin-right: 10px">Address</label><a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
+                                        <textarea name="" id="" cols="30" rows="2" class="form-textarea" placeholder="Street"></textarea>
+                                        <input type="text" class="form-control address-form" placeholder="City/Town">
+                                        <input type="text" class="form-control address-form" placeholder="State/Province">
+                                        <input type="text" class="form-control address-form" placeholder="ZIP Code">
+                                        <input type="text" class="form-control address-form" placeholder="Country">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Notes</label>
+                                        <textarea name="" id="" cols="30" rows="2" class="form-textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> <span>Maximum size: 20MB</span>
+                                        <form action="/file-upload" class="dropzone" style="height: 50px;border:1px dashed grey;">
+                                            <div class="fallback">
+                                                <input name="file" type="file" multiple />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <h4>Get custom fields with Advanced</h4>
+                                    <p>Custom fields let you add more detailed info about your customers and transactions.
+                                        Sort, track, and report info that's important to you.
+                                    </p>
+                                    <a href="#" style="color: #0b97c4;">Learn more</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Email</label>
+                                        <input type="text" class="form-control" placeholder="Separate multiple emails with commas">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 126px">
+                                        <label for="">Phone</label>
+                                        <input type="text" class="form-control" >
+                                    </div>
+                                    <div class="form-ib" style="width: 126px">
+                                        <label for="">Mobile</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 126px">
+                                        <label for="">Fax</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 126px;">
+                                        <label for="">Other</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 255px;">
+                                        <label for="">Website</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Billing rate (/hr)</label>
+                                        <input type="text" class="form-control" style="width: 35%">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Terms</label>
+                                        <input type="text" class="form-control" style="width: 55%">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 147px">
+                                        <label for="">Opening balance</label>
+                                        <input type="text" class="form-control" >
+                                    </div>
+                                    <div class="form-ib" style="width: 120px">
+                                        <label for="">as of</label>
+                                        <input type="text" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 70%">
+                                        <label for="">Account no.</label>
+                                        <input type="text" class="form-control" placeholder="Appears in the memo of all payment">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 50%">
+                                        <label for="">Business ID No.</label>
+                                        <input type="text" class="form-control">
+                                        <input type="checkbox"> <span>Track payment for 1099</span>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 60%">
+                                        <label for="">Default expense account</label>
+                                        <input type="text" class="form-control" placeholder="Choose Account">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer-vendor">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button type="button" class="btn btn-default btn-tranparent">Cancel</button>
+                                <button type="button" class="btn btn-default btn-tranparent">Make inactive</button>
+                            </div>
+                            <div class="col-md-2" style="text-align: center">
+                                <a href="#" >Privacy</a>
+                            </div>
+                            <div class="col-md-5">
+                                <button class="btn btn-success" style="float: right;">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+<!--    end of modal-->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>

@@ -1259,41 +1259,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-
-
-
-        
-
-
-
 			</div>
 		<?php echo form_close(); ?>
 	</div>
 </div><!-- page wrapper end -->
-
-
-    <div class="container-fluid <?php echo isset($next_step) && $next_step == 5 ? '' : 'd-none' ?>">
-		<?php echo form_open_multipart('esign/fileSave', [ 'id' => 'upload_file', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-			<input type="hidden" value="0" name="next_step" />
-			<input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
-			<div class="card">
-            <h1 style="font-size:50px">Review and Send</h1><br>
-            <h2>Message to Recipients</h2>
-				<div class="form-group mb-1">
-					<label for="docFile">Email Subject</label>
-					<input type="text" class="form-control" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel">
-				</div>
-                <div class="form-group mb-1 mt-1">
-					<label for="docFile">Email Message</label>
-					<textarea class="form-control"></textarea>
-				</div>
-				<div class="form-group mb-1 mt-1">
-					<button type="button" onClick="uploadOrNext(true)" id="click" class="btn btn-primary" >Next</button>
-				</div>
-			</div>
-		<?php echo form_close(); ?>
-	</div>
-
 
 <?php include viewPath('includes/footer'); ?>
 <script type="text/javascript" src="<?php echo $url->assets ?>formbuilder/js/jquery.js"></script>

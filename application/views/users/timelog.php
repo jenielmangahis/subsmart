@@ -55,13 +55,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach ($users as $row): ?>
                                             <tr>
                                                 <!-- last login -->
-                                                <td><?php echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>
+                                                <td>
+                                                    <?php //echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>
                                                     
-                                                <?php
-                                                    $data['user_id'] = $row->id;
-                                                    $clockin_arr = $this->timesheet_model->getClockIn($data);
-                                                    $clockout_arr = $this->timesheet_model->getClockOut($data);
-                                                ?>
+                                                    <?php
+                                                        $data['user_id'] = $row->id;
+                                                        $clockin_arr = $this->timesheet_model->getClockIn($data);
+                                                        $clockout_arr = $this->timesheet_model->getClockOut($data);
+                                                    ?>
+
+                                                    <?php foreach($clockin_arr as $k => $clockin): ?>
+                                                        <?php echo date('h:i a', strtotime($clockin->timestamp))." ClockIn"; ?>
+                                                    <?php endforeach; ?>
+
                                                 </td>
                                                 <!-- <td width="60"><?php echo $row->id ?></td> -->
                                                 <!-- <td width="50" class="text-center"> -->
@@ -93,12 +99,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Edit</a>
                                                     <?php //endif ?>
-                                                    <?php //if (hasPermissions('users_view')): ?>
+                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                        <a href="<?php //echo url('users/edit/' . $row->id) ?>"
+                                                           class="btn btn-sm btn-default" title="Edit User"
+                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Day</a>
+                                                    <?php //endif ?>
+                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                        <a href="<?php //echo url('users/edit/' . $row->id) ?>"
+                                                           class="btn btn-sm btn-default" title="Edit User"
+                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Week</a>
+                                                    <?php //endif ?>
+                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                        <a href="<?php //echo url('users/edit/' . $row->id) ?>"
+                                                           class="btn btn-sm btn-default" title="Edit User"
+                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Month</a>
+                                                    <?php //endif ?>
+                                                    <?php if (hasPermissions('users_view')): ?>
                                                         <a href="<?php echo url('users/view/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="View User"
                                                            data-toggle="tooltip"><i class="fa fa-eye"></i>Edit</a>
-                                                    <?php //endif ?>
-                                                    <?php ////if (hasPermissions('users_delete')): ?>
+                                                    <?php endif ?>
+                                                    <?php if (hasPermissions('users_delete')): ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id): ?>
                                                             <a href="<?php echo url('users/delete/' . $row->id) ?>"
                                                                class="btn btn-sm btn-default"
@@ -110,7 +131,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                title="You cannot Delete this User" data-toggle="tooltip"
                                                                disabled><i class="fa fa-trash"></i> Delete</a>
                                                         <?php endif ?>
-                                                    <?php //endif ?>
+                                                    <?php endif ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>

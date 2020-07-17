@@ -225,6 +225,54 @@ class Timesheet_model extends MY_Model {
         return $query->result();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTotalClockinDay($data){
+        $user_id = $data['user_id'];
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock In");
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalClockinWeek($data){
+        $user_id = $data['user_id'];
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock In");
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalClockinMonth($data){
+        $user_id = $data['user_id'];
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock In");
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 
 
