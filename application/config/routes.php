@@ -172,6 +172,8 @@ $route['booking/update_category'] = 'booking/update_category';
 $route['booking/update_coupon'] = 'booking/update_coupon';
 $route['booking/update_service_item'] = 'booking/update_service_item';
 $route['booking/_save_setting'] = 'booking/ajax_save_setting';
+$route['booking/_save_time_slot'] = 'booking/ajax_save_time_slot';
+$route['booking/delete_time_slot'] = 'booking/delete_time_slot';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';

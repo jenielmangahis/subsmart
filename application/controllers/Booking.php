@@ -12,6 +12,7 @@ class Booking extends MY_Controller {
 		$this->load->model('BookingServiceItem_model');
 		$this->load->model('BookingCoupon_model');
 		$this->load->model('BookingSetting_model');
+        $this->load->model('BookingTimeSlot_model');
 	}
 
 	public function index() {
@@ -32,6 +33,11 @@ class Booking extends MY_Controller {
 	}	
 
 	public function time() {
+        $user = $this->session->userdata('logged');  
+
+        $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByUserId($user['id']);
+
+        $this->page_data['bookingTimeSlots'] = $bookingTimeSlots;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/time', $this->page_data);
 	}
@@ -64,7 +70,49 @@ class Booking extends MY_Controller {
 	}
 
 	public function settings() {
-		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$user = $this->session->userdata('logged');  
+		$setting = array();
+
+		$bookingSetting = $this->BookingSetting_model->findByUserId($user['id']);
+
+		if( $bookingSetting ){
+			$setting = array(
+				'page_title' => $bookingSetting->page_title,
+				'page_intro' => $bookingSetting->page_introduction,
+				'product_list_mode' => $bookingSetting->product_listing_mode,
+				'time_slot_bookings' => $bookingSetting->appointment_per_time_slot,
+				'cart_total_min' => $bookingSetting->minimum_price_for_entier_booking,
+				'cart_total_min_alert' => $bookingSetting->minimum_price_alert,
+				'notify_email' => $bookingSetting->notification_email,
+				'notify_push' => $bookingSetting->notification_app,
+				'event_blocked_check' => $bookingSetting->accept_blocked_time,
+				'event_all_check' => $bookingSetting->accept_booking_overlap_calendar_event,
+				'convert_lead_to_work_order' => $bookingSetting->auto_schedule_work_order,
+				'google_analytics_tracking_id' => $bookingSetting->google_analytics_tracking_id,
+				'google_analytics_origin' => $bookingSetting->website_url,
+				'status' => $bookingSetting->widget_status
+			);
+		}else{
+			$setting = array(
+				'page_title' => '',
+				'page_intro' => '',
+				'product_list_mode' => 'grid',
+				'time_slot_bookings' => 0,
+				'cart_total_min' => 1,
+				'cart_total_min_alert' => 1,
+				'notify_email' => 1,
+				'notify_push' => 1,
+				'event_blocked_check' => 0,
+				'event_all_check' => 0,
+				'convert_lead_to_work_order' => 0,
+				'google_analytics_tracking_id' => '',
+				'google_analytics_origin' => '',
+				'status' => 1
+			);
+		}
+
+		$this->page_data['setting'] = $setting;
+		$this->page_data['users']   = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/settings', $this->page_data);
 	}
 	
@@ -342,11 +390,11 @@ class Booking extends MY_Controller {
         $user = $this->session->userdata('logged');        
         $post = $this->input->post();
 
-        /*$userSetting = $this->BookingSetting_model->findByUserId($user['id']);
+        $userSetting = $this->BookingSetting_model->findByUserId($user['id']);
         if( $userSetting ){
         	$data = array(        		
         		'page_title' => post('page_title'),
-        		'page_instruction' => post('page_intro'),
+        		'page_introduction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
         		'appointment_per_time_slot' => post('time_slot_bookings'),
         		'minimum_price_for_entier_booking' => post('cart_total_min'),
@@ -354,20 +402,20 @@ class Booking extends MY_Controller {
         		'notification_email' => post('notify_email'),
         		'notification_app' => post('notify_push'),
         		'accept_blocked_time' => post('event_blocked_check'),
-        		'accept_booking_overlap_calendar_event' => post('event_all_check')
+        		'accept_booking_overlap_calendar_event' => post('event_all_check'),
         		'auto_schedule_work_order' => post('convert_lead_to_work_order'),
         		'google_analytics_tracking_id' => post('google_analytics_tracking_id'),
         		'website_url' => post('google_analytics_origin'),
         		'widget_status' => post('status')
         	);
 
-        	$this->BookingCoupon_model->update($userSetting->id, $data);
+        	$this->BookingSetting_model->update($userSetting->id, $data);
 
         }else{
         	$data = array(
         		'user_id' => $user['id'],
         		'page_title' => post('page_title'),
-        		'page_instruction' => post('page_intro'),
+        		'page_introduction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
         		'appointment_per_time_slot' => post('time_slot_bookings'),
         		'minimum_price_for_entier_booking' => post('cart_total_min'),
@@ -375,7 +423,7 @@ class Booking extends MY_Controller {
         		'notification_email' => post('notify_email'),
         		'notification_app' => post('notify_push'),
         		'accept_blocked_time' => post('event_blocked_check'),
-        		'accept_booking_overlap_calendar_event' => post('event_all_check')
+        		'accept_booking_overlap_calendar_event' => post('event_all_check'),
         		'auto_schedule_work_order' => post('convert_lead_to_work_order'),
         		'google_analytics_tracking_id' => post('google_analytics_tracking_id'),
         		'website_url' => post('google_analytics_origin'),
@@ -383,11 +431,49 @@ class Booking extends MY_Controller {
         	);
 
         	$bookingSetting = $this->BookingSetting_model->create($data);
-        }*/
+        }
 
         $json_data = array('is_success' => true);
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_save_time_slot()
+    {
+        postAllowed();
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        $this->BookingTimeSlot_model->deleteAllUserTimeSlots($user['id']);
+
+        foreach( $post['time'] as $t ){
+            $days = serialize($t['days']);
+            $data = array(
+                'user_id' => $user['id'],
+                'time_start' => $t['time_start'],
+                'time_end' => $t['time_end'],
+                'days' => $days,
+                'availability' => post('soonest_availability'),                
+                'date_created' => date("Y-m-d H:i:s")
+            );
+            $bookingTimeSlots = $this->BookingTimeSlot_model->create($data);
+        }
+        
+        $json_data = array('is_success' => true);
+
+        echo json_encode($json_data);
+    }
+
+    public function delete_time_slot()
+    {
+        $id = $this->BookingTimeSlot_model->deleteUserTimeSlot(post('tid'));
+
+        $this->activity_model->add("Time Slot #$id Deleted by User:".logged('name'));
+        
+        $this->session->set_flashdata('message', 'Time slot has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('more/addon/booking/time');
     }
 
 }

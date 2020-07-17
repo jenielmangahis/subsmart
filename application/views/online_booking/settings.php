@@ -38,14 +38,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="help help-block">
                                                 Set your own title for the booking page
                                             </div>
-                                            <input type="text" name="page_title" value="Sample booking"  class="form-control"  autocomplete="off" />
+                                            <input type="text" name="page_title" value="<?php echo $setting['page_title']; ?>"  class="form-control"  autocomplete="off" />
                                         </div>
                                         <div class="form-group">
                                             <label>Page Instructions</label>
                                             <div class="help help-block">
                                                 Optionally, input a text with some help or instructions, that will appear below title.
                                             </div>
-                                            <textarea name="page_intro" cols="40" rows="3"  class="form-control">this is a sample booking page</textarea>
+                                            <textarea name="page_intro" cols="40" rows="10" class="form-control"><?php echo $setting['page_intro']; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -58,9 +58,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <select name="product_list_mode" class="form-control">
-                            <option value="grid" selected="selected">Grid View</option>
-                            <option value="list">List View</option>
-                            </select>
+                                                        <option <?php echo($setting['product_list_mode'] == 'grid' ? 'selected="selected"' : ''); ?> value="grid" selected="selected">Grid View</option>
+                                                        <option <?php echo($setting['product_list_mode'] == 'list' ? 'selected="selected"' : ''); ?> value="list">List View</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,18 +72,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <select name="time_slot_bookings" class="form-control">
-                            <option value="0" selected="selected">Any number</option>
-                            <option value="1">Only 1</option>
-                            <option value="2">Only 2</option>
-                            <option value="3">Only 3</option>
-                            <option value="4">Only 4</option>
-                            <option value="5">Only 5</option>
-                            <option value="6">Only 6</option>
-                            <option value="7">Only 7</option>
-                            <option value="8">Only 8</option>
-                            <option value="9">Only 9</option>
-                            <option value="10">Only 10</option>
-                            </select>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '0' ? 'selected="selected"' : ''); ?> value="0" selected="selected">Any number</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '1' ? 'selected="selected"' : ''); ?> value="1">Only 1</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '2' ? 'selected="selected"' : ''); ?> value="2">Only 2</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '3' ? 'selected="selected"' : ''); ?> value="3">Only 3</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '4' ? 'selected="selected"' : ''); ?> value="4">Only 4</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '5' ? 'selected="selected"' : ''); ?> value="5">Only 5</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '6' ? 'selected="selected"' : ''); ?> value="6">Only 6</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '7' ? 'selected="selected"' : ''); ?> value="7">Only 7</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '8' ? 'selected="selected"' : ''); ?> value="8">Only 8</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '9' ? 'selected="selected"' : ''); ?> value="9">Only 9</option>
+                                                        <option <?php echo($setting['time_slot_bookings'] == '10' ? 'selected="selected"' : ''); ?> value="10">Only 10</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -102,7 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="col-sm-12">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">$</div>
-                                                        <input type="text" name="cart_total_min" value="50"  class="form-control" id="cart_total_min"  autocomplete="off" />
+                                                        <input type="text" name="cart_total_min" value="<?php echo $setting['cart_total_min']; ?>"  class="form-control" id="cart_total_min"  autocomplete="off" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -115,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 A notification text displayed to customer if min price is not met.<br>
                                                 The tag {{amount}} will be replaced with min price value.
                                             </div>
-                                            <input type="text" name="cart_total_min_alert" value="Minimum booking amount is {{amount}}"  class="form-control" />
+                                            <input type="text" name="cart_total_min_alert" value="Minimum booking amount is <?php echo $setting['cart_total_min_alert']; ?>"  class="form-control" />
                                         </div>
                                     </div>
                                 </div>
@@ -124,11 +124,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label>Notifications</label>
                                     <div class="help help-block">Select how you want to be notified on a new booking.</div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="notify_email" value="1" checked="checked"  id="notify_email" />
+                                        <input type="checkbox" name="notify_email" value="1" <?php echo $setting['notify_email'] == 1 ? 'checked="checked"' : ''; ?>  id="notify_email" />
                                         <label for="notify_email"> Email</label>
                                     </div>
                                     <div class="checkbox checkbox-sec">
-                                        <input type="checkbox" name="notify_push" value="1" checked="checked"  id="notify_push" />
+                                        <input type="checkbox" name="notify_push" value="1" <?php echo $setting['notify_push'] == 1 ? 'checked="checked"' : ''; ?> id="notify_push" />
                                         <label for="notify_push"> App Notification</label>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="row">
                                             <div class="col-sm-24">
                                                 <div class="checkbox checkbox-sec margin-right ml-cs-20">
-                                                    <input type="checkbox" name="event_blocked_check" value="1" checked="checked"  id="event_blocked_check" />
+                                                    <input type="checkbox" name="event_blocked_check" value="1" <?php echo $setting['event_blocked_check'] == 1 ? 'checked="checked"' : ''; ?>  id="event_blocked_check" />
                                                     <label for="event_blocked_check"><span>Don't accept booking during blocked time</span></label>
                                                 </div>
                                             </div>
@@ -154,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="row">
                                             <div class="col-sm-24">
                                                 <div class="checkbox checkbox-sec margin-right ml-cs-20">
-                                                    <input type="checkbox" name="event_all_check" value="1" checked="checked"  id="event_all_check" />
+                                                    <input type="checkbox" name="event_all_check" value="1" <?php echo $setting['event_all_check'] == 1 ? 'checked="checked"' : ''; ?>  id="event_all_check" />
                                                     <label for="event_all_check"><span>Don't accept booking if it overlaps with a calendar event</span></label>
                                                 </div>
                                             </div>
@@ -172,42 +172,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 When a booking is made automatically schedule a Work Order.
                                             </div>
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="convert_lead_to_work_order" value="1"  id="convert_lead_to_work_order" />
+                                                <input type="checkbox" name="convert_lead_to_work_order" value="1" <?php echo $setting['convert_lead_to_work_order'] == 1 ? 'checked="checked"' : ''; ?>  id="convert_lead_to_work_order" />
                                                 <label for="convert_lead_to_work_order"><span>Auto-Schedule a Work Order</span></label>
                                             </div>
                                         </div>
-                                        <div class="margin-top-ter" id="convert_lead_to_work_order_employees">
+                                        <div class="margin-top-ter hide" id="convert_lead_to_work_order_employees">
                                             <label>Assign To</label>
                                             <ul class="employees clearfix pl-2">
-                                                                    <li>
+                                                <li>
                                                     <div class="checkbox checkbox-sm">
                                                         <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14278" checked="checked"  id="employee_id_14278" />
                                                         <label for="employee_id_14278"><span>Alarm Direct</span>
                                                          <span class="text-ter">(owner)</span>                            </label>
                                                     </div>
                                                 </li>
-                                                                    <li>
+                                                <li>
                                                     <div class="checkbox checkbox-sm">
                                                         <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14291"  id="employee_id_14291" />
                                                         <label for="employee_id_14291"><span>Brannon Nguyen</span>
                                                                                     </label>
                                                     </div>
                                                 </li>
-                                                                    <li>
+                                                <li>
                                                     <div class="checkbox checkbox-sm">
                                                         <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14281"  id="employee_id_14281" />
                                                         <label for="employee_id_14281"><span>TC Nguyen</span>
                                                                                     </label>
                                                     </div>
                                                 </li>
-                                                                    <li>
+                                                <li>
                                                     <div class="checkbox checkbox-sm">
                                                         <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14285"  id="employee_id_14285" />
                                                         <label for="employee_id_14285"><span>Tommy Nguyen</span>
                                                                                     </label>
                                                     </div>
                                                 </li>
-                                                                </ul>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +223,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <input type="text" name="google_analytics_tracking_id" value=""  class="form-control" autocomplete="off" />
+                                                    <input type="text" name="google_analytics_tracking_id" value="<?php echo $setting['google_analytics_tracking_id']; ?>"  class="form-control" autocomplete="off" />
                                                 </div>
                                             </div>
                                         </div>
@@ -233,7 +233,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="help help-block">
                                             Your website URL where the widget is placed.
                                         </div>
-                                        <input type="text" name="google_analytics_origin" value=""  class="form-control" autocomplete="off" />
+                                        <input type="text" name="google_analytics_origin" value="<?php echo $setting['google_analytics_origin']; ?>"  class="form-control" autocomplete="off" />
                                     </div>
                                 </div>
                                 <br class="clear-both"/>
@@ -247,9 +247,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <select name="status" class="form-control">
-                            <option value="1" selected="selected">Active</option>
-                            <option value="2">Inactive</option>
-                            </select>
+                                                        <option value="1" <?php echo ($setting['status'] == '1' ? 'selected="selected"' : ''); ?>>Active</option>
+                                                        <option value="2" <?php echo ($setting['status'] == '2' ? 'selected="selected"' : ''); ?>>Inactive</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -302,7 +302,14 @@ $(function(){
                }
             });
         }, 1000);
+    });
 
+    $("#convert_lead_to_work_order").change(function(){
+        if ($(this).is(':checked')) {
+            $("#convert_lead_to_work_order_employees").removeClass('hide');
+        }else{
+            $("#convert_lead_to_work_order_employees").addClass('hide');
+        }
     });
 });
 </script>

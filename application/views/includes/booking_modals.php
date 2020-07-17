@@ -279,7 +279,7 @@
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Coupon</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -305,7 +305,7 @@
 	   <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLongTitle">Delete Category</h5>
+		        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Category</h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
@@ -329,7 +329,7 @@
 	   <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLongTitle">Delete Service/Item</h5>
+		        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Service/Item</h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
@@ -360,3 +360,43 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Update Time Slot -->
+<div class="modal fade bd-example-modal-md" id="modalUpdateTimeSlot" tabindex="-1" role="dialog" aria-labelledby="modalUpdateTimeSlotTitle" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-calendar"></i> Time Slots</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-time-slot-msg"></div>      
+    </div>
+  </div>
+</div>
+
+<!-- Modal Delete Time Slot --> 
+<div class="modal fade" id="modalDeleteTimeSlot" tabindex="-1" role="dialog" aria-labelledby="modalDeleteTimeSlotTitle" aria-hidden="true">
+    <?php echo form_open_multipart('booking/delete_time_slot', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <?php echo form_input(array('name' => 'tid', 'type' => 'hidden', 'value' => '', 'id' => 'tid'));?>
+     <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Time Slot</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Delete selected time slot?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-danger">Yes</button>
+          </div>
+        </div>
+      </div>
+  <?php echo form_close(); ?>
+</div>
+
