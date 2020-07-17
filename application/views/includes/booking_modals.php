@@ -23,6 +23,7 @@
 
 <!-- Modal Add Service/Item -->
 <div class="modal fade bd-example-modal-lg" id="modalAddServiceItem" tabindex="-1" role="dialog" aria-labelledby="modalAddServiceItemTitle" aria-hidden="true">
+  <?php echo form_open_multipart('booking/create_service_item', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -36,21 +37,22 @@
 	      	<div class="col-md-7">
 	      		<div class="form-group">
                     <label>Category</label> <span class="help"></span>
-                    <select name="category" class="form-control">
-						<option value="1">Category1</option>
-						<option value="2">Category2</option>
-						<option value="3">Category3</option>
+                    <select name="category_id" id="category_id" class="form-control">
+                    	<?php foreach( $category as $cat ){ ?>
+                    			<option value="<?= $cat->id; ?>"><?= $cat->name; ?></option>
+                    	<?php } ?>
+						
 					</select>
                 </div>	
 
 				<div class="form-group">
                     <label>Name</label> <span class="help">(e.g. Cleaning)</span>
-                    <input type="text" name="name" value="" class="form-control" autocomplete="off">
+                    <input type="text" name="name" id="name" value="" class="form-control" autocomplete="off" required="">
                 </div>	  
 
 				<div class="form-group">
                     <label>Description</label> <span class="help">(optional)</span>
-                    <textarea name="description" cols="40" rows="5" class="form-control"></textarea>
+                    <textarea name="description" id="description" cols="40" rows="5" class="form-control"></textarea>
                 </div> 
 
 				<div class="form-group">
@@ -58,22 +60,22 @@
 	                    <div class="col-sm-6">
 	                        <label>Price ($)</label>
 	                        <div class="input-group">
-	                            <input type="text" name="price" value="0" class="form-control" autocomplete="off">
+	                            <input type="text" name="price" id="price" value="0" class="form-control" autocomplete="off" required="">
 	                        </div>
 	                    </div>
 	                    <div class="col-sm-6">
 	                        <label>Price Unit</label>
-	                        <select name="price_unit" class="form-control">
-								<option value="1">each</option>
-								<option value="2">sq. ft.</option>
-								<option value="3">sq. yd.</option>
-								<option value="10">linear ft.</option>
-								<option value="4">item</option>
-								<option value="5">room</option>
-								<option value="6">hour</option>
-								<option value="7">day</option>
-								<option value="8">lb</option>
-								<option value="9">total</option>
+	                        <select name="price_unit" id="price_unit" class="form-control">
+								<option value="each">each</option>
+								<option value="sq. ft.">sq. ft.</option>
+								<option value="sq. yd.">sq. yd.</option>
+								<option value="linear ft.">linear ft.</option>
+								<option value="item">item</option>
+								<option value="room">room</option>
+								<option value="hour">hour</option>
+								<option value="day">day</option>
+								<option value="lb">lb</option>
+								<option value="total">total</option>
 							</select>
 	                    </div>
 	                </div>
@@ -103,10 +105,11 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add</button>
+        <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </div>
   </div>
+  <?php echo form_close(); ?>
 </div>
 
 <!-- Modal Add Coupon -->
@@ -248,3 +251,26 @@
   </div>
 </div>
 
+<!-- Modal Deelte Service/Item --> 
+<div class="modal fade" id="modalDeleteServiceItem" tabindex="-1" role="dialog" aria-labelledby="modalDeleteServiceItemTitle" aria-hidden="true">
+    <?php echo form_open_multipart('booking/delete_service_item', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <?php echo form_input(array('name' => 'siid', 'type' => 'hidden', 'value' => '', 'id' => 'siid'));?>
+	   <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Delete Service/Item</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Delete selected service/item?</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+		        <button type="submit" class="btn btn-danger">Yes</button>
+		      </div>
+		    </div>
+	    </div>
+  <?php echo form_close(); ?>
+</div>

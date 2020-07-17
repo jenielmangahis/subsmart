@@ -85,6 +85,13 @@ $(document).ready(function() {
         $("#add-form-field-row").show();
     }); 
 
+    $(".service-item-delete").click(function(){
+        var siid = $(this).attr("data-id");
+        $("#siid").val(siid);
+        $("#modalDeleteServiceItem").modal('show');
+    });
+
+
 });   
 
 function deleteTimeSlotRow(row_id) {

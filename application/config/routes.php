@@ -160,8 +160,10 @@ $route['more/addon/booking/settings'] = 'booking/settings';
 $route['more/addon/booking/preview'] = 'booking/preview';
 $route['booking/create_coupon'] = 'booking/save_coupon';
 $route['booking/create_category'] = 'booking/save_category';
+$route['booking/create_service_item'] = 'booking/save_service_item';
 //$route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
 $route['booking/delete_coupon'] = 'booking/delete_coupon';
+$route['booking/delete_service_item'] = 'booking/delete_service_item';
 $route['booking/_edit_coupon'] = 'booking/ajax_edit_coupon';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
