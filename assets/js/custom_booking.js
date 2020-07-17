@@ -85,6 +85,50 @@ $(document).ready(function() {
         $("#add-form-field-row").show();
     }); 
 
+    $(".category-edit").click(function(){
+        $("#modalEditCategory").modal('show');
+        var cat_id = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        var url = base_url + '/booking/ajax_edit_category';
+
+        $(".modal-edit-category-container").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {cat_id:cat_id},
+               success: function(o)
+               {
+                  $(".modal-edit-category-container").html(o);
+               }
+            });
+        }, 1000);
+
+    });
+        
+    $(".service-item-edit").click(function(){
+        $("#modalEditServiceItem").modal('show');
+        var siid = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        var url = base_url + '/booking/ajax_edit_service_item';
+
+        $(".modal-edit-service-item-container").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {siid:siid},
+               success: function(o)
+               {
+                  $(".modal-edit-service-item-container").html(o);
+               }
+            });
+        }, 1000);
+
+    });
+
     $(".service-item-delete").click(function(){
         var siid = $(this).attr("data-id");
         $("#siid").val(siid);

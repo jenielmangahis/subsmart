@@ -61,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                       <td colspan="2" width="80%"><strong>Category Name:</strong> <?php echo $cat->name; ?></td>
                                       <td width="20%" style="">
-                                            <a style="margin-right: 15px;" class="category-edit" data-category-edit-modal="open" data-id="13526" href="#">
+                                            <a style="margin-right: 15px;" class="category-edit" data-category-edit-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);">
                                                 <span class="fa fa-edit"></span> edit
                                             </a>
                                             <a class="category-delete" data-category-delete-modal="open" data-id="13526" href="#">
@@ -96,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </td>
                                                 <td width="20%" style="">
-                                                    <a style="margin-right: 15px;" class="service-item-edit" data-category-edit-modal="open" data-id="13526" href="#">
+                                                    <a style="margin-right: 15px;" class="service-item-edit" data-category-edit-modal="open" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);">
                                                         <span class="fa fa-edit"></span> edit
                                                     </a>
                                                     <a class="service-item-delete" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);" data-name="<?php echo $sitem->name; ?>">

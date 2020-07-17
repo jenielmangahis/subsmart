@@ -155,6 +155,43 @@ class Booking extends MY_Controller {
         redirect('more/addon/booking/products');    	
     }
 
+    public function ajax_edit_category()
+    {
+    	$id = post('cat_id');
+    	$category = $this->BookingCategory_model->getById($id);
+    	
+    	$this->page_data['category'] = $category;
+    	$this->page_data['category_id'] = $id;
+		$this->load->view('online_booking/ajax_edit_category', $this->page_data);
+    }  
+    
+    public function ajax_edit_service_item()
+    {
+    	$id = post('siid');
+    	$service_item = $this->BookingServiceItem_model->getById($id);
+    	$category = $this->BookingCategory_model->getAll();
+    	
+    	$this->page_data['service_item'] = $service_item;
+    	$this->page_data['category'] = $category;
+    	$this->page_data['service_item_id'] = $id;
+		$this->load->view('online_booking/ajax_edit_service_item', $this->page_data);
+    }
+
+    public function update_category()
+    {
+    	postAllowed();
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$this->load->model('BookingCategory_model');
+
+        	echo '<pre>';
+        	print_r($post);
+        	echo '</pre>';
+        }    	
+    }  
+
     public function save_service_item()
     {
         postAllowed();

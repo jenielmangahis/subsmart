@@ -21,6 +21,30 @@
   <?php echo form_close(); ?>
 </div>
 
+<!-- Modal Edit Category --> 
+<div class="modal fade" id="modalEditCategory" tabindex="-1" role="dialog" aria-labelledby="modalEditCategoryTitle" aria-hidden="true">
+  	<?php echo form_open_multipart('booking/update_category', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+	  	<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Edit Category</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <!-- <input type="text" name="category_name" id="category_name" value="" class="form-control" autocomplete="off"> -->
+		        <div class="modal-edit-category-container"></div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="submit" class="btn btn-primary">Update</button>
+		      </div>
+		    </div>
+	  	</div>
+  	<?php echo form_close(); ?>
+</div>
+
 <!-- Modal Add Service/Item -->
 <div class="modal fade bd-example-modal-lg" id="modalAddServiceItem" tabindex="-1" role="dialog" aria-labelledby="modalAddServiceItemTitle" aria-hidden="true">
   <?php echo form_open_multipart('booking/create_service_item', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
@@ -106,6 +130,29 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Edit Service/Item -->
+<div class="modal fade bd-example-modal-lg" id="modalEditServiceItem" tabindex="-1" role="dialog" aria-labelledby="modalEditServiceItemTitle" aria-hidden="true">
+  <?php echo form_open_multipart('booking/update_service_item', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit Service/Item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    	<div id="modal-edit-service-item-container" class="modal-edit-service-item-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Update</button>
       </div>
     </div>
   </div>
