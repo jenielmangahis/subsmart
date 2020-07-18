@@ -1,5 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<style>
+    tr.hide-table-padding td {
+        padding: 0;
+    }
+</style>
 <?php include viewPath('includes/header_accounting'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -103,8 +108,69 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <!-- Tab panes -->
-                        <div class="tab-content" style="padding-top: 10px">
-                            <div class="tab-pane active" id="forReview">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="forReview" style="background: #ffffff; padding: 10px">
+                                <div class="dropdown" style="position: relative;display: inline-block;margin: 15px 10px 10px 10px;">
+                                    <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
+                                        Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#" class="dropdown-item disabled">Accept selected</a></li>
+                                        <li><a href="#" class="dropdown-item disabled" >Excluded selected</a></li>
+                                        <li><a href="#" class="dropdown-item disabled" >Modify selected</a></li>
+                                    </ul>
+                                </div>
+                                <div class="filterFunnel">
+                                    <a href="#" data-toggle="dropdown"><i class="fa fa-filter fa-2x">&nbsp;<i class="fa fa-caret-down"></i></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li style="padding:30px">
+                                            <form action="" method="" class="">
+                                                <div>
+                                                    <div style="width: 180px;position:relative; display: inline-block;">
+                                                        <label for="type">Dates</label>
+                                                        <select name="type" id="type" class="form-control" >
+                                                            <option value="">All dates</option>
+                                                            <option value="">Customs</option>
+                                                            <option value="">Today</option>
+                                                            <option value="">Yesterday</option>
+                                                            <option value="">This week</option>
+                                                            <option value="">This month</option>
+                                                            <option value="">This quarter</option>
+                                                            <option value="">This year</option>
+                                                            <option value="">Last month</option>
+                                                            <option value="">Last quarter</option>
+                                                            <option value="">Last year</option>
+                                                        </select>
+                                                    </div>
+                                                    <div style="position: relative; display: inline-block;width: 120px;">
+                                                        <label for="">From</label>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                    <div style="position:relative; display: inline-block;margin-left: 10px;width: 120px;">
+                                                        <label for="">To</label>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 20px">
+                                                    <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
+                                                    <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
+                                                </div>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span style="display: inline-block;margin-left: 10px;">All</span>
+                                <div class="sortAll">
+                                    All(19)
+                                </div>
+                                <div class="sortRecognized">
+                                    Recognized(3)
+                                </div>
+                                <div class="icon-settings-container" style="margin-top: 45px">
+                                    <i class="fa fa-print"></i>
+                                    <i class="fa fa-upload"></i>
+                                    <i class="fa fa-cog"></i>
+                                </div>
                                 <table id="forReview_table" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
@@ -127,12 +193,117 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <td></td>
                                     <td>$320</td>
                                     <td></td>
-                                    <td><a href="">View</a></td>
+                                    <td><a href="#collapseOne" class="accordion-toggle collapsed" id="accordion1" data-toggle="collapse" data-parent="#accordion1" >View</a></td>
+                                </tr>
+                                <tr class="hide-table-padding collapse in p-3" id="collapseOne" >
+                                    <td></td>
+                                    <td colspan="6">
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <label class="radio-inline"><input type="radio" name="optradio" checked>Add</label>
+                                                    <label class="radio-inline"><input type="radio" name="optradio">Match</label>
+                                                    <label class="radio-inline"><input type="radio" name="optradio">Record transfer</label>
+                                                    <a href="#">Not sure?</a>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top: 20px;">
+                                                <div class="col-md-6" style="border-right: 1px solid #8d9096;">
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="optradio" checked> Check 2716 07/13/2020 $300.00 Frank Gianino</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="optradio"> Check 2685 06/15/2020 $300.00 Kyle Nguyen</label>
+                                                    </div>
+                                                    <div class="radio ">
+                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5" style="vertical-align: middle;">
+                                                    <button class="btn btn-default btn-findOthersRecords">Find other records</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td></td>
                                 </tr>
                                 </tbody>
                                 </table>
                             </div>
-                            <div class="tab-pane fade" id="reviewed">
+                            <div class="tab-pane fade" id="reviewed" style="background: #ffffff; padding: 10px">
+                                <div class="filterFunnel">
+                                    <a href="#" data-toggle="dropdown"><i class="fa fa-filter fa-2x">&nbsp;<i class="fa fa-caret-down"></i></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li style="padding:30px">
+                                            <form action="" method="" class="">
+                                                <div style="width: 180px;">
+                                                    <label for="">Rules</label>
+                                                    <select name="type" id="type" class="form-control" >
+                                                        <option value="">All dates</option>
+                                                        <option value="">Customs</option>
+                                                        <option value="">Today</option>
+                                                        <option value="">Yesterday</option>
+                                                        <option value="">This week</option>
+                                                        <option value="">This month</option>
+                                                        <option value="">This quarter</option>
+                                                        <option value="">This year</option>
+                                                        <option value="">Last month</option>
+                                                        <option value="">Last quarter</option>
+                                                        <option value="">Last year</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <div style="width: 180px;position:relative; display: inline-block;">
+                                                        <label for="type">Dates</label>
+                                                        <select name="type" id="type" class="form-control" >
+                                                            <option value="">All dates</option>
+                                                            <option value="">Customs</option>
+                                                            <option value="">Today</option>
+                                                            <option value="">Yesterday</option>
+                                                            <option value="">This week</option>
+                                                            <option value="">This month</option>
+                                                            <option value="">This quarter</option>
+                                                            <option value="">This year</option>
+                                                            <option value="">Last month</option>
+                                                            <option value="">Last quarter</option>
+                                                            <option value="">Last year</option>
+                                                        </select>
+                                                    </div>
+                                                    <div style="position: relative; display: inline-block;width: 120px;">
+                                                        <label for="">From</label>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                    <div style="position:relative; display: inline-block;margin-left: 10px;width: 120px;">
+                                                        <label for="">To</label>
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 20px">
+                                                    <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
+                                                    <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
+                                                </div>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span style="display: inline-block;margin-left: 10px;">All</span>
+                                <div class="icon-settings-container">
+                                    <i class="fa fa-print"></i>
+                                    <i class="fa fa-upload"></i>
+                                    <i class="fa fa-cog"></i>
+                                </div>
                                 <table id="reviewedTable" class="table table-striped table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
@@ -151,12 +322,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td>CHECK #2702 2702</td>
                                         <td>$-300.00</td>
                                         <td>Matched to: </td>
-                                        <td><a href="">Undo</a></td>
+                                        <td><a href="">View</a></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="tab-pane fade" id="excluded">
+                            <div class="tab-pane fade" id="excluded" style="background: #ffffff; padding: 10px">
+                                <div style="display: inline-block;margin-top: 50px">
+                                    <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
+                                </div>
+                                <div class="dropdown" style="position: relative;display: inline-block;margin: 15px 10px 10px 10px;">
+                                    <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
+                                        Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#" class="dropdown-item disabled">Undo</a></li>
+                                        <li><a href="#" class="dropdown-item disabled" >Delete</a></li>
+                                    </ul>
+                                </div>
+                                <div class="icon-settings-container">
+                                    <i class="fa fa-print"></i>
+                                    <i class="fa fa-cog"></i>
+                                </div>
                                 <table id="reviewedTable" class="table table-striped table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
@@ -369,11 +556,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(document).ready(function() {
         $('#forReview_table').DataTable({
             "paging": false,
+            "filter":false
         });
     } );
     $(document).ready(function() {
         $('#reviewedTable').DataTable({
             "paging": false,
+            "filter":false
         });
     } );
     $('.banking-sub-tab').click(function(){
@@ -383,6 +572,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(".custom-file-input").on("change", function() {
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+    // Expand row table
+    $(document).ready(function () {
+        $(document).on("click","#btnView",function () {
+            $(this).parents('tr').after();
+        });
     });
 </script>
 

@@ -319,7 +319,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Check #2714
                         </div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -396,7 +396,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                                 <tr id="tableLine">
                                     <td></td>
-                                    <td id="line-counter">2</td>
+                                    <td><span id="line-counter">2</span></td>
                                     <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
                                     <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
                                     <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
@@ -580,16 +580,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     } );
     // Add & Remove line in dataTable
     $(document).ready(function () {
-        //Add line
-        $(document).on("click","#add-four-line",function (e) {
-            for(var x = 1;x <= 4;x++){
-                $("#line-container").append($('#tableLine').last().clone());
-                var num = $('#line-container > tr').length;
-                e.preventDefault();
-                $('#line-counter').last().html(num);
-            }
+        jQuery(document).ready(function() {
+            var id = $('#line-container > tr').length;
+            jQuery("#add-four-line").click(function() {
+                for (var x = 1;x <= 4;x++){
+                    id++;
+                    var row = jQuery('#tableLine').clone(true);
+                    row.find("span").html(id);
+                    row.appendTo('#line-container');
+                }
+            });
         });
-        // Clear Lines
+            // Clear Lines
         $('#clear-all-line').click(function (e) {
             var num = $('#line-container > tr').length;
             if (num == 2){
@@ -597,18 +599,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }else{
                 for (var x = 1;x <= num-2;x++){
                     $("#tableLine").last().remove();
-                    var count = $('#line-container > tr').length;
-                    $('#line-counter').last().html(count);
+                    $('#line-counter').html(2);
                 }
             }
         });
         //Delete Line
-        $(document).on("click","#delete-line-row",function () {
-            $('#tableLine').last().remove();
+        $(document).on("click","#delete-line-row",function (e) {
+            var count = $('#line-container > tr').length;
+            if (count > 2){
+                $('#tableLine').last().remove();
+            }else{
+                e.preventDefault();
+            }
+
         });
 
         //Table input text show
-        $(document).on("click","#tableLine",function (e) {
+        $(document).on("click","#tableLine",function () {
+            $('#tableLine > td >input').hide();
             $('td > input', this).show();
         });
     });

@@ -261,7 +261,6 @@ button {
 }
 .banking-sub-active{
     background-color: transparent !important;
-    border-bottom: 5px solid #498002 !important;
     font-weight: bolder;
     text-decoration: none;
     font-size: 14px;
@@ -762,4 +761,25 @@ button {
     margin-right: 10px;
     color: grey;
     font-size: 20px;
+}
+.filterFunnel{
+    display: inline-block;
+}
+.sortAll,.sortRecognized{
+    display: inline-block;
+    border-bottom: 5px solid #2ca01c;
+    color: #2ca01c;
+    margin-left: 15px;
+    width: 100px;
+    text-align: center;
+    background: #f4f5f8;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.btn-findOthersRecords{
+    border-radius: 36px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }

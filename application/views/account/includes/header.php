@@ -80,7 +80,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </head>
 <!-- <body class="hold-transition <?php //echo !isset($body_classes)?'login-page':$body_classes ?>" style="background-image: url('<?php //echo urlUpload('/login-bg.'.setting('bg_img_type'), true) ?>');"> -->
-<!-- <body class="hold-transition <?php echo !isset($body_classes)?'login-page':$body_classes ?>" style="background-image: url('<?php //echo $assets ?>/login-background-video.mp4');"> -->
 <body>
   <video autoplay muted playsinline loop id="myVideo">
     <source src="<?php echo $assets ?>/login-background-video.mp4" type="video/mp4">

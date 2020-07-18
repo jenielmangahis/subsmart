@@ -52,52 +52,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 					<div class="row pt-3">
 						<div class="col-lg-7 pl-0">
-							<div class="bg-white p-4 rounded">
-								<h5 class="text-secondary mt-0">INVOICES</h5>
-								<div class="row px-3">
-									<div class="col-sm-12">
-										<h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span class="pl-3">Last 365 days</span></h6>
-									</div>
-									<div class="col-sm-12 mt-0">
-										<div class="pull-left">
-											<h3 class="mb-0"><strong>$0</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Overdue</h6>
+							<a href="<?php echo url('/accounting/invoices')?>">
+								<div class="bg-white p-4 rounded">
+									<h5 class="text-secondary mt-0">INVOICES</h5>
+									<div class="row px-3">
+										<div class="col-sm-12">
+											<h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span class="pl-3">Last 365 days</span></h6>
 										</div>
-										<div class="pull-right">
-											<h3 class="mb-0"><strong>$4</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Not due yet</h6>
+										<div class="col-sm-12 mt-0">
+											<div class="pull-left">
+												<h3 class="mb-0"><strong>$0</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Overdue</h6>
+											</div>
+											<div class="pull-right">
+												<h3 class="mb-0"><strong>$4</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Not due yet</h6>
+											</div>
+										</div>
+										<div class="col-sm-12 mt-1">
+											<div class="progress" style="height:30px">
+												<div class="progress-bar bg-secondary w-50"></div>
+												<div class="progress-bar bg-dark  w-50"></div>
+											</div>
 										</div>
 									</div>
-									<div class="col-sm-12 mt-1">
-										<div class="progress" style="height:30px">
-											<div class="progress-bar bg-secondary w-50"></div>
-											<div class="progress-bar bg-dark  w-50"></div>
+									<div class="row px-3 mt-3 pb-2">
+										<div class="col-sm-12">
+											<h6 class="font-weight-normal"><strong>$0 Paid</strong><span class="pl-3">Last 30 days</span></h6>
+										</div>
+										<div class="col-sm-12 mt-0">
+											<div class="pull-left">
+												<h3 class="mb-0"><strong>$0</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
+											</div>
+											<div class="pull-right">
+												<h3 class="mb-0"><strong>$0</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
+											</div>
+										</div>
+										<div class="col-sm-12 mt-1">
+											<div class="progress" style="height:30px">
+												<div class="progress-bar bg-success w-50"></div>
+												<div class="progress-bar bg-info  w-50"></div>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="row px-3 mt-3 pb-2">
-									<div class="col-sm-12">
-										<h6 class="font-weight-normal"><strong>$0 Paid</strong><span class="pl-3">Last 30 days</span></h6>
-									</div>
-									<div class="col-sm-12 mt-0">
-										<div class="pull-left">
-											<h3 class="mb-0"><strong>$0</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
-										</div>
-										<div class="pull-right">
-											<h3 class="mb-0"><strong>$0</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
-										</div>
-									</div>
-									<div class="col-sm-12 mt-1">
-										<div class="progress" style="height:30px">
-											<div class="progress-bar bg-success w-50"></div>
-											<div class="progress-bar bg-info  w-50"></div>
-										</div>
-									</div>
-								</div>
-							
-							</div>
+							</a>
 						</div>
 						<div class="col-lg-5 pr-0">
 							<div class="bg-white p-4 rounded h-100">
@@ -125,6 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 					<div class="row pt-3">
 						<div class="col-sm-12 px-0">
+							<a href="<?php echo url('/accounting/deposits')?>">
 							<div class="bg-white p-4 rounded text-secondary">
 								<h5 class="text-secondary mt-0">DEPOSITS</h5>
 								<h1 class="mb-0 d-block mt-4"><strong>$0.00</strong></h1>
@@ -154,6 +156,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									</div>
 								</div>
 							</div>
+							</a>
 						</div>
 					</div>
 				</div>
