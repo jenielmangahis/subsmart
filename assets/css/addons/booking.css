@@ -1,6 +1,6 @@
 /*Booking Page CSS*/
 .booking-tab-container{
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #dedede;
     padding-left: 0;
 }
 .booking-tab{
@@ -10,14 +10,39 @@
     height: 36px;
     font-size: 14px;
     color: #6b6c72;
+    position: relative;
+    bottom: 3px;
 }
 .booking-tab:hover{
     color: #404040;
     text-decoration: none;
     border-bottom: 5px solid grey;
 }
+.row-fluid {
+    display: block;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.form-cs-group {
+    margin-bottom: 35px;
+}
+.clear-both {
+  clear: both;
+}
+.ml-cs-20 {
+  position: relative;
+  left: 16px;
+}
+.cs15-padding {
+    padding: 0px 15px;
+    position: relative;
+    top: 25px;
+    margin-bottom: 12px;
+}
 .booking-tab-active{
-    padding: 4px 16px;
+    padding: 9px 16px;
     border-bottom: 5px solid #498002;
     font-weight: bolder;
     text-decoration: none;
@@ -68,7 +93,7 @@
     top: 0;
     left: 0;
     width: 80px;
-    height: 80px;    
+    height: 80px;
 }
 
 .card .dashboard-container-2 .service-items .service-item-cnt {

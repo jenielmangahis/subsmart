@@ -76,6 +76,7 @@ Chartist Chart-->
    $(document).ready(function() {
 		appendFavoriteReports();
         $('#all_sales_table').DataTable();
+        $('#manage_reports_table').DataTable();
 		var screenWidth = $( window ).width();
 		
 		setTimeout(function(){

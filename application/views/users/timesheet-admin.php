@@ -101,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tbody>
                                         <?php
                                             //print date('H:i');
-                                            date_default_timezone_set('UTC');
+                                            date_default_timezone_set('US/Eastern');
                                             //$current_time = date('Y-m-d H:i');
                                             $current_time_now = date('h:i a')." Manual Clock In";
 

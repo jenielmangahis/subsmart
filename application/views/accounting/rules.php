@@ -350,7 +350,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var num = $('.add-split-section').length;
             $('.splitNum').last().html(num);
         });
-        $(document).on("click","#deleteSplitLine",function (e) {
+        $(document).on("click","#deleteSplitLine",function () {
             var num = $('.add-split-section').length;
             if(num == 2){
                 $('.add-split-container').hide();

@@ -19,6 +19,7 @@
 
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>css/jquery.timepicker.css" rel="stylesheet" type="text/css">
      <!-- DataTables -->
     <!-- <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="<?php //echo $url->assets ?>plugins/switchery/switchery.min.css">

@@ -8,57 +8,57 @@ $(document).ready(function() {
 
             markup += '<td width="">';
                 markup += '<div class="time-cnt">';
-                    markup += '<input type="text" name="time_start['+click+']" value="8:00am" class="form-control time-input time_start ui-timepicker-input" autocomplete="off">';
+                    markup += '<input type="text" name="time['+click+'][time_start]" value="8:00am" class="form-control time-input time_start ui-timepicker-input" autocomplete="off">';
                     markup += '&nbsp;&nbsp; - &nbsp;&nbsp;';
-                    markup += '<input type="text" name="time_end['+click+']" value="10:00am" class="form-control time-input time_end ui-timepicker-input" autocomplete="off">';
+                    markup += '<input type="text" name="time['+click+'][time_end]" value="10:00am" class="form-control time-input time_end ui-timepicker-input" autocomplete="off">';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="mon['+click+']" value="Mon" class="checkbox-select" id="mon_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][mon]" value="Mon" class="checkbox-select" id="mon_'+click+'">';
                     markup += '<label for="mon_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="tue['+click+']" value="Tue" class="checkbox-select" id="tue_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][tue]" value="Tue" class="checkbox-select" id="tue_'+click+'">';
                     markup += '<label for="tue_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="wed['+click+']" value="Wed" class="checkbox-select" id="wed_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][wed]" value="Wed" class="checkbox-select" id="wed_'+click+'">';
                     markup += '<label for="wed_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="thu['+click+']" value="Thu" class="checkbox-select" id="thu_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][thu]" value="Thu" class="checkbox-select" id="thu_'+click+'">';
                     markup += '<label for="thu_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="fri['+click+']" value="Fri" class="checkbox-select" id="fri_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][fri]" value="Fri" class="checkbox-select" id="fri_'+click+'">';
                     markup += '<label for="fri_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="sat['+click+']" value="Sat" class="checkbox-select" id="sat_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][sat]" value="Sat" class="checkbox-select" id="sat_'+click+'">';
                     markup += '<label for="sat_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
 
             markup += '<td width="">';
                 markup += '<div class="checkbox checkbox-sm">';
-                    markup += '<input type="checkbox" name="sun['+click+']" value="Sun" class="checkbox-select" id="sun_'+click+'">';
+                    markup += '<input type="checkbox" name="time['+click+'][days][sun]" value="Sun" class="checkbox-select" id="sun_'+click+'">';
                     markup += '<label for="sun_'+click+'"></label>';
                 markup += '</div>';
             markup += '</td>';
@@ -73,6 +73,7 @@ $(document).ready(function() {
 
         markup += '<tr>';
         $("table tbody").append(markup);
+        $('.time-input').timepicker({ 'timeFormat': 'h:i A' });
     });
 
     $("#add-form-field-row").click(function() {
@@ -84,6 +85,64 @@ $(document).ready(function() {
         $("#field-name-container").hide();
         $("#add-form-field-row").show();
     }); 
+
+    $(".category-edit").click(function(){
+        $("#modalEditCategory").modal('show');
+        var cat_id = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        var url = base_url + '/booking/ajax_edit_category';
+
+        $(".modal-edit-category-container").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {cat_id:cat_id},
+               success: function(o)
+               {
+                  $(".modal-edit-category-container").html(o);
+               }
+            });
+        }, 1000);
+
+    });
+        
+    $(".service-item-edit").click(function(){
+        $("#modalEditServiceItem").modal('show');
+        var siid = $(this).attr("data-id");
+        
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        var url = base_url + '/booking/ajax_edit_service_item';
+
+        $(".modal-edit-service-item-container").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {siid:siid},
+               success: function(o)
+               {
+                  $(".modal-edit-service-item-container").html(o);
+               }
+            });
+        }, 1000);
+
+    });
+
+    $(".service-item-delete").click(function(){
+        var siid = $(this).attr("data-id");
+        $("#siid").val(siid);
+        $("#modalDeleteServiceItem").modal('show');
+    });
+
+    $(".category-delete").click(function(){
+        var cat_id = $(this).attr("data-id");
+        $("#cat_id").val(cat_id);
+        $("#modalDeleteCategory").modal('show');
+    });
+
+
 
 });   
 

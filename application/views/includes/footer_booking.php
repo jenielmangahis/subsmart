@@ -12,7 +12,6 @@
 <script src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js"></script>
 <!-- <script src="<?php //echo $url->assets ?>js/custom.js"></script> -->
 <script src="<?php echo $url->assets ?>js/custom_booking.js"></script>
-<script src="<?php echo $url->assets ?>js/coupons.js"></script>
 <!-- <script src="<?php //echo $url->assets ?>js/folders_files.js"></script> -->
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
@@ -33,7 +32,8 @@
 <script src="<?php echo $url->assets ?>plugins/jquery.validate.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/select2/dist/js/select2.full.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script src="<?php echo $url->assets ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script> -->
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
 
 <!-- dynamic assets goes  -->

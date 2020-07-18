@@ -56,51 +56,58 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                               </thead>
                               <tbody>
+
                                 <?php foreach( $category as $cat ){ ?>
                                     <tr>
                                       <td colspan="2" width="80%"><strong>Category Name:</strong> <?php echo $cat->name; ?></td>
                                       <td width="20%" style="">
-                                            <a style="margin-right: 15px;" class="category-edit" data-category-edit-modal="open" data-id="13526" href="#">
+                                            <a style="margin-right: 15px;" class="category-edit" data-category-edit-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);">
                                                 <span class="fa fa-edit"></span> edit
                                             </a>
-                                            <a class="category-delete" data-category-delete-modal="open" data-id="13526" href="#">
+                                            <a class="category-delete" data-category-delete-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);" data-name="<?php echo $cat->name; ?>">
                                                 <span class="fa fa-trash"></span>
                                             </a>
                                         </td>
                                     </tr>
 
-                                    <tr style="">
-                                        <td width="60%">
-                                            <div style="margin-left: 30px;" class="service-items">
-                                                <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" alt="..." class="img-thumbnail">
-                                                <div class="service-item-cnt">
-                                                    <div>Sample Item</div>
-                                                    <div>Price: $10.00/each</div>
-                                                    <div>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diem nonummy nibh euismod tin</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td width="20%">
-                                            <div class="onoffswitch">
-                                                <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox" id="product-status-15395" checked="checked">
-                                                <label class="onoffswitch-label" for="product-status-15395">
-                                                    <span class="onoffswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td width="20%" style="">
-                                            <a style="margin-right: 15px;" class="service-item-edit" data-category-edit-modal="open" data-id="13526" href="#">
-                                                <span class="fa fa-edit"></span> edit
-                                            </a>
-                                            <a class="service-item-delete" data-category-delete-modal="open" data-id="13526" href="#">
-                                                <span class="fa fa-trash"></span>
-                                            </a>
-                                        </td>
-                                    </tr>                                    
+                                    <?php if (array_key_exists($cat->id,$service_items)) { ?>
+                                    <?php 
+                                        $service_item = $service_items[$cat->id];
+                                    ?>
+                                        <?php foreach($service_item as $sitem) { ?>
+                                            <tr style="">
+                                                <td width="60%">
+                                                    <div style="margin-left: 30px;" class="service-items">
+                                                        <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" alt="..." class="img-thumbnail">
+                                                        <div class="service-item-cnt">
+                                                            <div><?= $sitem->name; ?></div>
+                                                            <div>Price: $<?= $sitem->price; ?>/<?= $sitem->price_unit; ?></div>
+                                                            <div><?= $sitem->description; ?></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td width="20%">
+                                                    <div class="onoffswitch">
+                                                        <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox" id="product-status-<?= $sitem->name; ?>" checked="checked">
+                                                        <label class="onoffswitch-label" for="product-status-<?= $sitem->name; ?>">
+                                                            <span class="onoffswitch-inner"></span>
+                                                            <span class="onoffswitch-switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td width="20%" style="">
+                                                    <a style="margin-right: 15px;" class="service-item-edit" data-category-edit-modal="open" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);">
+                                                        <span class="fa fa-edit"></span> edit
+                                                    </a>
+                                                    <a class="service-item-delete" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);" data-name="<?php echo $sitem->name; ?>">
+                                                        <span class="fa fa-trash"></span>
+                                                    </a>                                                    
+                                                </td>
+                                            </tr> 
+                                        <?php } ?>
+                                    <?php } ?>
+                                   
                                 <?php } ?>
-
-
 
                               </tbody>
                             </table>                                                                                
@@ -121,5 +128,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <?php include viewPath('includes/booking_modals'); ?>   
-
 <?php include viewPath('includes/footer_booking'); ?>
+<script>
+$(function(){
+    var base_url = "<?php echo base_url(); ?>";
+
+    /*$(".service-item-delete").click(function(){
+        var siid = $(this).attr("data-id");
+        $("#siid").val(siid);
+        $("#modalDeleteServiceItem").modal('show');
+    });*/
+});
+</script>

@@ -94,26 +94,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php //endif ?>
                                                 </td>
                                                 <td>
-                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                    <?php //if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Edit</a>
                                                     <?php //endif ?>
-                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                    <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php //echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Day</a>
-                                                    <?php //endif ?>
-                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                    <?php endif ?>
+                                                    <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php //echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Week</a>
-                                                    <?php //endif ?>
-                                                    <?php ////if (hasPermissions('users_edit')): ?>
+                                                    <?php endif ?>
+                                                    <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php //echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Month</a>
-                                                    <?php //endif ?>
+                                                    <?php endif ?>
                                                     <?php if (hasPermissions('users_view')): ?>
                                                         <a href="<?php echo url('users/view/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="View User"

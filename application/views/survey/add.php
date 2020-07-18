@@ -121,12 +121,20 @@
             <button class="btn btn-dark" data-toggle="modal" data-target="#modalSelectTheme">Select Theme</button>
           </div>
           
+
           <div id="workspace-text-card" class="col-xs-12 col-sm-6 card" style="display: none">
             <span class="h3" id="workspace-text">No workspace selected</span>
           </div>
         </div>
   
-        <p id="selected-template-text">Select Template:</p>
+  
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="templateToggleSwitch">
+          <label class="custom-control-label" for="templateToggleSwitch">Toggle this switch element</label>
+        </div>  
+
+        <div id="templateSection" style="display: none">
+          <p id="selected-template-text">Select Template:</p>
 
           <div class="accordion" id="accordionExample">
             <?php
@@ -179,6 +187,14 @@
               }
             ?>
           </div>
+        </div>
+        <script>
+          document.querySelector('#templateToggleSwitch').addEventListener('click',(e)=>{
+            console.log(e.target.checked);
+            if(e.target.checked) document.querySelector('#templateSection').style.display = 'block';
+            if(!e.target.checked) document.querySelector('#templateSection').style.display = 'none';
+          })
+        </script>
 
 
       </div>
@@ -409,24 +425,24 @@
     }
     
     e.target.innerHTML = '<span class="spinner-border spinner-border-sm m-0" role="status" aria-hidden="true"></span> Submitting';
-    // add survey
-    $.ajax({
-      url: surveyBaseUrl + 'survey/create',
-      data: surveyData,
-      dataType: 'json',
-      type: 'POST',
-      success: function(payload){
-        if(selectedTemplate){
-          submitQuestions(payload);
-          toastr["success"]("Survey with template added!");
-        }else{
-          toastr["success"]("Survey added!");
-        }
-      }
-    })
 
     setTimeout(() => {
-      window.location = '<?= base_url();?>survey/workspace';
+      // add survey
+      $.ajax({
+        url: surveyBaseUrl + 'survey/create',
+        data: surveyData,
+        dataType: 'json',
+        type: 'POST',
+        success: function(payload){
+          if(selectedTemplate){
+            submitQuestions(payload);
+            toastr["success"]("Survey with template added!");
+          }else{
+            toastr["success"]("Survey added!");
+          }
+          window.location = '<?= base_url();?>survey/result/'+payload.data.id;
+        }
+      })
     }, 5000);
 
   }
