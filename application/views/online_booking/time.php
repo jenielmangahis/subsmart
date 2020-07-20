@@ -50,62 +50,64 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $availability = $t->availability;
                                             $days = unserialize($t->days); 
                                         ?>
-                                        <tr id="tr_<?php echo $row; ?>">
-                                            <td width="">
-                                                <div class="time-cnt">
-                                                    <input type="text" name="time[<?php echo $row; ?>][time_start]" value="<?php echo $t->time_start; ?>" class="form-control time-input" autocomplete="off">
-                                                    &nbsp; - &nbsp;
-                                                    <input type="text" name="time[<?php echo $row; ?>][time_end]" value="<?php echo $t->time_end; ?>"" class="form-control time-input" autocomplete="off">
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][mon]" value="Mon" <?php echo( in_array("Mon", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="mon_0">
-                                                    <label for="mon_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][tue]" value="Tue" <?php echo( in_array("Tue", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="tue_0">
-                                                    <label for="tue_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][wed]" value="Wed" <?php echo( in_array("Wed", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="wed_0">
-                                                    <label for="wed_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][thu]" value="Thu" <?php echo( in_array("Thu", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="thu_0">
-                                                    <label for="thu_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][fri]" value="Fri" <?php echo( in_array("Fri", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="fri_0">
-                                                    <label for="fri_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][sat]" value="Sat" <?php echo( in_array("Sat", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="sat_0">
-                                                    <label for="sat_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <div class="checkbox checkbox-sm">
-                                                    <input type="checkbox" name="time[<?php echo $row; ?>][days][sun]" value="Sun" <?php echo( in_array("Sun", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="sun_0">
-                                                    <label for="sun_<?php echo $row; ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td width="">
-                                                <a class="time-slot-delete" data-id="<?php echo $t->id; ?>" href="javascript:void(0)">
-                                                    <span class="fa fa-trash"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        <?php if(is_array($days)) { ?>
+                                            <tr id="tr_<?php echo $row; ?>">
+                                                <td width="">
+                                                    <div class="time-cnt">
+                                                        <input type="text" name="time[<?php echo $row; ?>][time_start]" value="<?php echo $t->time_start; ?>" class="form-control time-input" autocomplete="off">
+                                                        &nbsp; - &nbsp;
+                                                        <input type="text" name="time[<?php echo $row; ?>][time_end]" value="<?php echo $t->time_end; ?>" class="form-control time-input" autocomplete="off">
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][mon]" value="Mon" <?php echo( in_array("Mon", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="mon_0">
+                                                        <label for="mon_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][tue]" value="Tue" <?php echo( in_array("Tue", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="tue_0">
+                                                        <label for="tue_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][wed]" value="Wed" <?php echo( in_array("Wed", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="wed_0">
+                                                        <label for="wed_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][thu]" value="Thu" <?php echo( in_array("Thu", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="thu_0">
+                                                        <label for="thu_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][fri]" value="Fri" <?php echo( in_array("Fri", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="fri_0">
+                                                        <label for="fri_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][sat]" value="Sat" <?php echo( in_array("Sat", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="sat_0">
+                                                        <label for="sat_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox" name="time[<?php echo $row; ?>][days][sun]" value="Sun" <?php echo( in_array("Sun", $days) ? 'checked="checked"' : '' ); ?> class="checkbox-select" id="sun_0">
+                                                        <label for="sun_<?php echo $row; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td width="">
+                                                    <a class="time-slot-delete" data-id="<?php echo $t->id; ?>" href="javascript:void(0)">
+                                                        <span class="fa fa-trash"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
                                     <?php $row++; } ?>
                                 <?php }else{ ?>
                                     <tr id="tr_0">
@@ -222,7 +224,12 @@ $(function(){
                data: $("#frm-time-slots").serialize(),
                success: function(o)
                {
-                  $(".modal-time-slot-msg").html("<p class='alert alert-info'><i class='fa fa-check'></i> Setting was successfully updated</p>");
+                    var obj = jQuery.parseJSON( o );
+                    if(obj.is_success == true) {
+                        $(".modal-time-slot-msg").html("<p class='alert alert-info'><i class='fa fa-check'></i> Timeslot was successfully updated</p>");
+                    } else {
+                        $(".modal-time-slot-msg").html("<p class='alert alert-danger'><i class='fa fa-check'></i> Timeslot update unsuccessfull</p>");
+                    }           
                }
             });
         }, 1000);

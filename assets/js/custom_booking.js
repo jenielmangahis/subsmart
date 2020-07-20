@@ -149,3 +149,11 @@ $(document).ready(function() {
 function deleteTimeSlotRow(row_id) {
     $('table#table-timeslots tr#tr_' + row_id).remove();
 }
+
+var loadPreviewImg=function(event){
+    $('#preview-img-container').attr('src', URL.createObjectURL(event.target.files[0]));
+};
+
+var loadEditPreviewImg=function(event){
+    $('#edit-preview-img-container').attr('src', URL.createObjectURL(event.target.files[0]));
+};

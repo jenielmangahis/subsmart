@@ -505,16 +505,18 @@ class Booking extends MY_Controller {
         $this->BookingTimeSlot_model->deleteAllUserTimeSlots($user['id']);
 
         foreach( $post['time'] as $t ){
-            $days = serialize($t['days']);
-            $data = array(
-                'user_id' => $user['id'],
-                'time_start' => $t['time_start'],
-                'time_end' => $t['time_end'],
-                'days' => $days,
-                'availability' => post('soonest_availability'),                
-                'date_created' => date("Y-m-d H:i:s")
-            );
-            $bookingTimeSlots = $this->BookingTimeSlot_model->create($data);
+        	if(!empty($t['days'])) {
+	            $days = serialize($t['days']);
+	            $data = array(
+	                'user_id' => $user['id'],
+	                'time_start' => $t['time_start'],
+	                'time_end' => $t['time_end'],
+	                'days' => $days,
+	                'availability' => post('soonest_availability'),                
+	                'date_created' => date("Y-m-d H:i:s")
+	            );
+	            $bookingTimeSlots = $this->BookingTimeSlot_model->create($data);
+        	}
         }
         
         $json_data = array('is_success' => true);

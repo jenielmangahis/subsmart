@@ -57,15 +57,25 @@
                     <?php 
                         $service_item_thumb = $service_item->image;
                         if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                            
                             $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg');
+                            if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                                $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
+                            } else {
+                                $service_item_thumb_img = base_url('uploads/service_item/'.$service_item_thumb);
+                            }
+
                         } else {
                             $service_item_thumb_img = base_url('uploads/'.$service_item_thumb);
                         }
                     ?>
 
-                    <img style="width: 153px;" class="img-responsive" data-fileupload="product-image" src="<?php echo $service_item_thumb_img; ?>">
+                    <img style="width: 153px;" id="edit-preview-img-container" class="img-responsive" data-fileupload="product-image" src="<?php echo $service_item_thumb_img; ?>">
                 </div>
-                <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="product-file" name="product-image" id="product-image" value="" type="file"></span>
+                <span class="btn btn-default fileinput-button vertical-top">
+                    <span class="fa fa-camera"></span> Add Image 
+                    <input data-fileupload="product-file" name="product-image" id="product-image" value="" type="file" onchange="loadEditPreviewImg(event)">
+                </span>
                 <!-- <a class="a-default margin-left" href="#" data-fileupload="product-delete"><span class="fa fa-trash"></span> Delete</a> -->
             </div>
             <div class="" data-fileupload="product-progressbar" style="display: none;">
