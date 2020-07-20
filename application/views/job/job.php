@@ -35,9 +35,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-6 text-right">
                                     <input type="hidden" id="jobId" name="jobId" value="<?php echo(!empty($job_data)) ? $job_data->jobs_id : 0; ?>">
                                     <?php if(empty($job_data)) : ?>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
                                     <?php else : ?>
-                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                    <button type="submit" class="btn btn-primary" id="editBtn">Edit</button>
                                     <?php endif;?>
                                     <a class="btn btn-default" id="cancelJobBtn" href="<?php echo url('job') ?>">Cancel</a>
                                 </div>
@@ -47,8 +47,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 text-left form-group">
                                     <label for="job_name">Job Title</label>
                                     <?php if(!empty($job_data)) : ?>
-                                        <label for="">: <?php echo $job_data->job_name; ?></label>
-                                        <input type="hidden" class="form-control" name="job_name" id="job_name" value="<?php echo $job_data->job_name; ?>" required/>
+                                        <input type="text" class="form-control" name="job_name" id="job_name" value="<?php echo $job_data->job_name; ?>" required/>
                                     <?php else: ?>
                                         <input type="text" class="form-control" name="job_name" id="job_name" required/>
                                     <?php endif; ?>
@@ -81,7 +80,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="exampleFormControlSelect1">Job Type</label>
                                     <select class="form-control" name="job_type" id="exampleFormControlSelect1" required>
                                     <?php foreach($job_settings as $job_set) : ?>
+                                        <?php if($job_set->setting_type == "Job Type") :?>
                                         <option value="<?php echo $job_set->job_settings_id; ?>"><?php echo $job_set->value; ?></option>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -112,10 +113,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <select class="form-control" id="job_priority" name="job_priority">
                                         <?php if(!empty($job_other_info)) : ?>
                                             <option value="<?php echo $job_other_info->priority; ?>" selected><?php echo ucwords($job_other_info->priority) . ' Priority'; ?></option>
+                                            <?php foreach($job_settings as $job_set) : ?>
+                                                <?php if($job_set->setting_type == "priority" && $job_set->value != $job_other_info->priority) :?>
+                                                    <option value="<?php echo $job_set->value; ?>"><?php echo $job_set->value; ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <?php foreach($job_settings as $job_set) : ?>
+                                                 <?php if($job_set->setting_type == "priority") :?>
+                                                    <option value="<?php echo $job_set->value; ?>"><?php echo $job_set->value; ?></option>
+                                                 <?php endif; ?>
+                                             <?php endforeach; ?>
                                         <?php endif; ?>
-                                        <option value="low">Low Priority</option>
-                                        <option value="medium">Medium Priority</option>
-                                        <option value="high">High Priority</option>
                                     </select>
                                 </div>
                                 <div class="col-md-1 form-group">
@@ -125,16 +134,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <select class="form-control" id="job_status" name="job_status">
                                         <?php if(!empty($job_other_info)) : ?>
                                             <option value="<?php echo $job_other_info->status; ?>" selected><?php echo ucwords($job_other_info->status); ?></option>
+                                            <?php foreach($job_settings as $job_set) : ?>
+                                                <?php if($job_set->setting_type == "Job Status" && $job_set->value != $job_other_info->status) :?>
+                                                <option value="<?php echo $job_set->value; ?>"><?php echo $job_set->value; ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <?php foreach($job_settings as $job_set) : ?>
+                                                <?php if($job_set->setting_type == "Job Status") :?>
+                                                <option value="<?php echo $job_set->value; ?>"><?php echo $job_set->value; ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
                                         <?php endif; ?>
-                                        <option value="New">New</option>
-                                        <option value="Scheduled">Scheduled</option>
-                                        <option value="Waiting on Customer">Waiting on Customer</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Invoiced">Invoiced</option>
-                                        <option value="Canceled">Canceled</option>   
-                                        <option value="Closed">Closed</option>
                                     </select>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                </div>
+                                <div class="col-md-6 text-left form-group">
+                                    <label for="exampleFormControlSelect1">Description:</label>
+                                    <textarea class="form-control" placeholder="Message" id="job_description" name="job_description" class="phone-input-contact" style="height: 95px;"></textarea>
                                 </div>
                             </div>
                             <hr style="border-top: 2px solid gray;">
@@ -316,7 +334,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <button class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button class="btn btn-primary col-md-12">Assign Tech</button>
+                                                <button type="button" class="btn btn-primary col-md-12"  data-toggle="modal" data-target="#exampleModal">Assign Employees</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button type="button" class="btn btn-default col-md-12 previewCurrentJobTable">Preview</button>
@@ -745,54 +763,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <!-- Modal New Customer -->
-            <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Assign Employees</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
                 </div>
             </div>
-
-            <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_source" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Source Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>

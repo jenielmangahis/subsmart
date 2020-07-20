@@ -75,22 +75,21 @@
             <a href="#submenuSetting" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-cogs" style="margin-right: 20px"></i>Settings</a>
                 <ul class="collapse list-unstyled" id="submenuSetting">
                     <li>
-                        <a href="<?php echo base_url();?>job/job_type">Job Type</a>
+                        <a href="<?php echo base_url();?>job/job_types">Job Type</a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>workorder/priority">Priority</a>
+                        <a href="#">Priority</a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>workorder">Status</a>
+                        <a href="#">Status</a>
                     </li>
                     <li>
-                        <a href="<?php echo base_url();?>job">Custom Form</a>
+                        <a href="#">Custom Form</a>
                     </li>
                 </ul>
         </li>
     </ul>
 </nav>
-
 
 <!-- Modal -->
 <div class="modal fade" id="addBtnModal" tabindex="-1" role="dialog" aria-labelledby="addBtnModalLabel" aria-hidden="true">

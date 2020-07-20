@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/invoice'); ?>
+    <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row margin-bottom-ter align-items-center">
                                 <div class="col-auto">
-                                    <h3 class="page-title">Invoices</h3>
+                                    <h2 class="page-title">Invoices</h2>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <form style="display: inline-flex;" class="form-inline form-search"
@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </table>  
                                 <?php } else { ?>
                                     <div class="page-empty-container">
-                                        <h5 class="page-empty-header">There are no invoices</h5>
+                                        <h5 class="page-empty-header">You haven't yet added your invoice</h5>
                                         <p class="text-ter margin-bottom">Manage your invoice.</p>
                                     </div>
                                 <?php } ?>

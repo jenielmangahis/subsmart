@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">   
                             <hr>                           
-                                <table class="table table-hover" style="width:100%;" id="jobTypeTable">
+                                <table class="table table-hover table-bordered table-striped" style="width:100%;" id="jobTypeTable">
                                     <thead>
                                         <tr>
                                             <th scope="col"><strong>Job Type</strong></th>

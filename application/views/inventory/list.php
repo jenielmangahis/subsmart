@@ -23,6 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="row">
+                                <input type="hidden" id="selectedIds">
                                 <?php if ($type == 'product' || empty($type)) : ?>
                                 <div class="col-md-12" id="onHandInventory">
                                     <div class="row pt-4">
@@ -34,9 +35,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row col-md-6 pt-2 pb-4">
                                             <label class="pt-2 pr-5" for="">Select</label>
                                             <div class="dropdown dropdown-inline margin-right-sec"><a
-                                                    class="btn btn-default dropdown-toggle" style="text-align: left;" data-toggle="dropdown"
+                                                    class="btn btn-default" style="text-align: left;" data-toggle="dropdown"
                                                     aria-expanded="true" href="<?php echo base_url('customer') ?>"><span style="margin-right:130px;"><?php echo getItemCategoryName($items_categories, $active_category); ?></span>
-                                                <span class="caret"></span></a>
+                                                <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></a>
                                                 <ul class="dropdown-menu btn-block" role="menu">
                                                     <?php foreach($items_categories as $cat) : ?>
                                                         <li role="presentation">
@@ -51,22 +52,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </ul>
                                             </div>
                                         </div>
+                                    <div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
+                                        <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
+                                            Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(200px, 46px, 0px);">
+                                            <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
+                                        </ul>
+                                    </div>
                                     <table class="table table-hover table-bordered table-striped" style="width:100%;" id="inventoryOnHandItems"> 
                                         <thead>
                                             <tr>
+                                                <th class="text-center"><input type="checkbox" class="form-control" id="inventoryItemCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Description</strong></th>
                                                 <th scope="col"><strong>Brand</strong></th>
                                                 <th scope="col"><strong>QTY-OH</strong></th>
                                                 <th scope="col"><strong>Qty-Ordered</strong></th>
                                                 <th scope="col"><strong>Locations</strong></th>
-                                                <th scope="col"><strong>Actions</strong></th>
+                                                <th scope="col" class="text-center"><strong>Actions</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach($items as $item) : ?>
                                             <?php if($item[1] != "header") : ?>
                                                 <tr>
+                                                    <td class="text-center"><input type="checkbox" class="inventoryItem" data-id="<?php echo $item[3]; ?>" value=""></td>
                                                     <td><?php echo $item[0]; ?></td>
                                                     <td><?php echo $item[1]; ?></td>
                                                     <td><?php echo $item[2]; ?></td>
@@ -74,12 +85,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td>&nbsp;</td>
                                                     <td>&nbsp;</td>
                                                     <td style="width:12%" class="pl-3">
-                                                        <a href="javascript:void(0)" class="btn btn-warning btn-sm editItemBtn" data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil"></span> Edit</a>&nbsp;
-                                                        <a href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="btn btn-danger btn-sm deleteJobCurrentForm"><span class="fa fa-trash"></span> Delete</a>
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                                <li role="separator" class="divider"></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                            </ul>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             <?php else : ?>
                                                 <tr style="background-color:#D3D3D3;">
+                                                    <td>&nbsp;</td>
                                                     <td colspan="6"><?php echo $item[0]; ?></td>
                                                     <td style="display: none"></td>
                                                     <td style="display: none"></td>
@@ -101,27 +121,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <button class="btn btn-primary" id="addNewServiceInventory">Add Services</button>
                                         </div>
                                     </div>
-                                    <table class="table table-hover" style="width:100%;" id="serviceItemsTable">
+                                    <div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
+                                        <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
+                                            Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(200px, 46px, 0px);">
+                                            <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
+                                        </ul>
+                                    </div>
+                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="serviceItemsTable">
                                         <thead>
                                             <tr>
+                                                <th class="text-center"><input type="checkbox" class="form-control" id="inventoryServiceCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Estimated Time</strong></th>
                                                 <th scope="col"><strong>Billing Type</strong></th>
+                                                <th scope="col" class="text-center"><strong>Actions</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         <?php foreach($items as $item) : ?>
                                             <?php if($item[1] != "header") : ?>
                                                 <tr>
+                                                    <td class="text-center"><input type="checkbox" class="inventoryService" data-id="<?php echo $item[3]; ?>" value=""></td>
                                                     <td><?php echo $item[0]; ?></td>
                                                     <td><?php echo $item[4]; ?></td>
                                                     <td><?php echo $item[6]; ?></td>
                                                     <td><?php echo $item[5]; ?></td>
+                                                    <td style="width:12%" class="pl-3">
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                                <li role="separator" class="divider"></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             <?php else : ?>
                                                 <tr style="background-color:#D3D3D3;">
-                                                    <td colspan="3"><?php echo $item[0]; ?></td>
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="4"><?php echo $item[0]; ?></td>
+                                                    <td style="display: none"></td>
                                                     <td style="display: none"></td>
                                                     <td style="display: none"></td>
                                                     <td>&nbsp;</td>
@@ -139,25 +184,50 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <button class="btn btn-primary" id="addNewFeesInventory">Add Fee</button>
                                         </div>
                                     </div>
-                                    <table class="table table-hover"  style="width:100%;" id="feesItemsTable">
+                                    <div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
+                                        <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
+                                            Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(200px, 46px, 0px);">
+                                            <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
+                                        </ul>
+                                    </div>
+                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="feesItemsTable">
                                         <thead>
                                             <tr>
+                                                <th class="text-center"><input type="checkbox" class="form-control" id="inventoryFeesCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Billing Type</strong></th>
+                                                <th scope="col" class="text-center"><strong>Actions</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         <?php foreach($items as $item) : ?>
                                             <?php if($item[1] != "header") : ?>
                                                 <tr>
+                                                    <td class="text-center"><input type="checkbox" class="inventoryFees" data-id="<?php echo $item[3]; ?>" value=""></td>
                                                     <td><?php echo $item[0]; ?></td>
                                                     <td><?php echo $item[4]; ?></td>
                                                     <td><?php echo $item[5]; ?></td>
+                                                    <td style="width:12%" class="pl-3">
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                                <li role="separator" class="divider"></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             <?php else : ?>
                                                 <tr style="background-color:#D3D3D3;">
-                                                    <td colspan="2"><?php echo $item[0]; ?></td>
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="3"><?php echo $item[0]; ?></td>
+                                                    <td style="display: none"></td>
                                                     <td style="display: none"></td>
                                                     <td>&nbsp;</td>
                                                 </tr>
@@ -258,7 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <input type="text" id="modelNumItem" name="model_number" class="form-control col-md-5" required>
                                         </div>
                                         <div class="row col-md-12 pt-4">
-                                            <label class="col-md-2 pt-2 pl-0 text-left">Item Category</label>
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Item Group</label>
                                             <select class="form-control col-md-5" name="item_category" id="exampleFormControlSelect1">
                                                 <?php foreach($items_categories as $cat) : ?>
                                                     <option value="<?php echo $cat->item_categories_id; ?>"><?php echo $cat->name; ?></option>

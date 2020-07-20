@@ -28,6 +28,7 @@ class Invoice extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             'assets/frontend/css/invoice/main.css',
+			"assets/css/accounting/sidebar.css",
         ));
 
 

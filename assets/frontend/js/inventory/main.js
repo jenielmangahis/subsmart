@@ -142,7 +142,7 @@ $(document).ready(function () {
 
   $("#serviceItemsTable, #feesItemsTable").DataTable({});
 
-  $("#inventoryOnHandItems").DataTable({
+  $("#inventoryOnHandItems, #serviceItemsTable, #feesItemsTable").DataTable({
     ordering: false,
     destroy: true,
   });
@@ -167,6 +167,43 @@ $(document).ready(function () {
       item_id: $(this).data("id"),
     };
     getItemById(param);
+  });
+
+  $("#inventoryItemCheckAll").click(function () {
+    $(".inventoryItem").not(this).prop("checked", this.checked);
+    var selectedIds = [];
+    $("input.inventoryItem").each(function () {
+      if ($(this).prop("checked")) selectedIds.push($(this).data("id"));
+    });
+    $("#selectedIds").val(selectedIds);
+  });
+
+  $("#inventoryServiceCheckAll").click(function () {
+    $(".inventoryService").not(this).prop("checked", this.checked);
+    var selectedIds = [];
+
+    $("input.inventoryService").each(function () {
+      if ($(this).prop("checked")) selectedIds.push($(this).data("id"));
+    });
+    $("#selectedIds").val(selectedIds);
+  });
+
+  $("#inventoryFeesCheckAll").click(function () {
+    $(".inventoryFees").not(this).prop("checked", this.checked);
+    var selectedIds = [];
+
+    $("input.inventoryFees").each(function () {
+      if ($(this).prop("checked")) selectedIds.push($(this).data("id"));
+    });
+    $("#selectedIds").val(selectedIds);
+  });
+
+  $(".deleteSelect").click(function () {
+    $.LoadingOverlay("show");
+    var param = {
+      ids: $("#selectedIds").val(),
+    };
+    deleteMultiple(param);
   });
 });
 
@@ -213,4 +250,15 @@ function populateItem(item) {
   $("#productUrlItem").val(item.url);
   $("#cogsItem").val(item.COGS);
   $("#modelNumItem").val(item.model);
+}
+
+function deleteMultiple(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "inventory/deleteMultiple",
+    data: param,
+    success: function (response) {
+      window.location.href = "";
+    },
+  });
 }
