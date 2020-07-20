@@ -168,6 +168,7 @@ class Job extends MY_Controller
             'job_type' => $this->input->post('job_type'),
             'priority' => $this->input->post('job_priority'),
             'status' => $this->input->post('job_status'),
+            'description' => $this->input->post('job_description'),
             'created_by' => $this->input->post('createdBy'),
             'created_date' => date('Y-m-d H:i:s')
         );
@@ -223,6 +224,7 @@ class Job extends MY_Controller
             'job_type' => $this->input->post('job_type'),
             'priority' => $this->input->post('job_priority'),
             'status' => $this->input->post('job_status'),
+            'description' => $this->input->post('job_description'),
             'created_by' => $this->input->post('createdBy'),
             'created_date' => date('Y-m-d H:i:s')
         );
@@ -436,6 +438,17 @@ class Job extends MY_Controller
         }
 
         redirect('job/new_job?job_num=' . $get['job_num']);
+    }
+    
+    function deleteMultiple() {
+        postAllowed();
+        $ids = explode(",",$this->input->post('ids'));
+        
+        foreach($ids as $id) {
+            $this->jobs_model->deleteJob($id);
+        }
+
+        echo json_encode(true);
     }
 }
 

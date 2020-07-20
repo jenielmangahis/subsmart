@@ -8,6 +8,8 @@ class Booking extends MY_Controller {
 
 		$this->page_data['page_title'] = 'Online Booking';
 
+		$this->load->helper(array('form', 'url'));
+
 		$this->load->model('BookingCategory_model');
 		$this->load->model('BookingServiceItem_model');
 		$this->load->model('BookingCoupon_model');
@@ -16,6 +18,14 @@ class Booking extends MY_Controller {
 	}
 
 	public function index() {
+
+		$total_category = $this->BookingCategory_model->countTotal();
+		$total_products = $this->BookingServiceItem_model->countTotal();
+		$total_timeslots = $this->BookingTimeSlot_model->countTotal();
+
+		$this->page_data['total_category']  = $total_category;
+		$this->page_data['total_products']  = $total_products;
+		$this->page_data['total_timeslots'] = $total_timeslots;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/index', $this->page_data);
 	}
@@ -304,6 +314,22 @@ class Booking extends MY_Controller {
         $user = $this->session->userdata('logged');        
         $post = $this->input->post();
 
+		$config['upload_path'] = './uploads/service_item/';
+		$config['allowed_types'] = 'gif|jpeg|jpg|png';
+		$config['max_size']	  = '100';
+		$config['max_width']  = '1024';
+		$config['max_height'] = '768';
+		$config['remove_spaces'] = TRUE;
+
+		$this->load->library('upload', $config);
+		if ( !$this->upload->do_upload('product-image')) {
+			$product_image = '';
+			//$error = array('error' => $this->upload->display_errors());
+		} else {
+			$data = array('upload_data' => $this->upload->data());
+			$product_image = $data['upload_data']['file_name'];
+		}
+
         if( !empty($post) ){
         	$this->load->model('BookingServiceItem_model');
 
@@ -314,7 +340,7 @@ class Booking extends MY_Controller {
         		'description' => post('description'),
         		'price' => post('price'),
         		'price_unit' => post('price_unit'),
-        		'image' => 'na',
+        		'image' => $product_image,
         		'date_created' => date("Y-m-d H:i:s")
         	);
         	$bookingServiceItem = $this->BookingServiceItem_model->create($data);
@@ -332,18 +358,46 @@ class Booking extends MY_Controller {
         $user = $this->session->userdata('logged');        
         $post = $this->input->post();
 
+		$config['upload_path'] = './uploads/service_item/';
+		$config['allowed_types'] = 'gif|jpeg|jpg|png';
+		$config['max_size']	  = '100';
+		$config['max_width']  = '1024';
+		$config['max_height'] = '768';
+		$config['remove_spaces'] = TRUE;
+
+		$this->load->library('upload', $config);
+		if ( !$this->upload->do_upload('product-image')) {
+			$product_image = '';
+		} else {
+			$data = array('upload_data' => $this->upload->data());
+			$product_image = $data['upload_data']['file_name'];
+		}                
+
         if( !empty($post) ) {
         	$service_item_id = $post['service_item_id'];
         	$siid = $this->BookingServiceItem_model->getById($service_item_id);
 
-        	if($siid) {
-	            $this->BookingServiceItem_model->update($siid->id, array(
+        	if($product_image != '') {
+        		$to_update = array(
 	            	'category_id' => post('category_id'),   
 	                'name' => post('name'),   
 	                'description' => post('description'),   
 	                'price' => post('price'),   
-	                'price_unit' => post('price_unit'),   
-	            ));
+	                'price_unit' => post('price_unit'),
+	                'image' => $product_image
+	            );
+        	} else {
+        		$to_update = array(
+	            	'category_id' => post('category_id'),   
+	                'name' => post('name'),   
+	                'description' => post('description'),   
+	                'price' => post('price'),   
+	                'price_unit' => post('price_unit')
+	            );
+        	}
+
+        	if($siid) {
+	            $this->BookingServiceItem_model->update($siid->id, $to_update);
 
 	            $this->session->set_flashdata('message', 'Service/Item was successfully updated');
 	            $this->session->set_flashdata('alert_class', 'alert-success'); 
@@ -362,8 +416,12 @@ class Booking extends MY_Controller {
     public function delete_category()
     {
     	$id = $this->BookingCategory_model->deleteCategory(post('cat_id'));
+    	$category_id = $this->BookingServiceItem_model->deleteServiceItemViaCategory(post('cat_id'));
 
 		$this->activity_model->add("Category #$id Deleted by User:".logged('name'));
+
+		/* Delete Service/items associated with category */
+		$this->activity_model->add("Service/Item #$category_id Deleted by User:".logged('name'));
 		
 		$this->session->set_flashdata('message', 'Booking Category has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');

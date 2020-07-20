@@ -360,10 +360,18 @@ class Inventory extends MY_Controller
         
         return $result;
     }
+
+    function deleteMultiple() {
+        postAllowed();
+        $ids = explode(",",$this->input->post('ids'));
+        
+        foreach($ids as $id) {
+            $this->items_model->delete($id);
+        }
+
+        echo json_encode(true);
+    }
 }
-
-
-
 /* End of file items.php */
 
 /* Location: ./application/controllers/items.php */

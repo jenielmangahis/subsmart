@@ -13,6 +13,7 @@ class Estimate extends MY_Controller
         $this->page_data['page']->title = 'My Estimates';
         $this->page_data['page']->menu = 'estimates';
         $this->load->model('Estimate_model', 'estimate_model');
+        $this->load->model('Jobs_model', 'jobs_model');
 
         $this->checkLogin();
 
@@ -20,13 +21,17 @@ class Estimate extends MY_Controller
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css'
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+			"assets/css/accounting/sidebar.css",
         ));
 
         add_footer_js(array(
-            'assets/frontend/js/estimate/estimate.js',
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js'
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+            'assets/frontend/js/estimate/estimate.js',
         ));
     }
 
@@ -35,7 +40,7 @@ class Estimate extends MY_Controller
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $employee_id = logged('company_id');
-
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $employee_id]);
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $employee_id);

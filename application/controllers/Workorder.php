@@ -20,6 +20,7 @@ class Workorder extends MY_Controller
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
         // $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('Jobs_model', 'jobs_model');
 
         $user_id = getLoggedUserID();
 
@@ -28,6 +29,7 @@ class Workorder extends MY_Controller
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'assets/frontend/css/workorder/main.css',
+			"assets/css/accounting/sidebar.css",
         ));
 
 
@@ -46,6 +48,7 @@ class Workorder extends MY_Controller
         $role = logged('role');
         $this->page_data['workorderStatusFilters'] = array ();
         $this->page_data['workorders'] = array ();
+        $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
 

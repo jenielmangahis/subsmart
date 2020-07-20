@@ -77,8 +77,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach($service_item as $sitem) { ?>
                                             <tr style="">
                                                 <td width="60%">
+                                                    <?php 
+                                                        
+                                                        $service_item_thumb = $sitem->image;
+                                                        if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                                                            $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
+                                                        } else {
+                                                            $service_item_thumb_img = base_url('uploads/'.$service_item_thumb);
+                                                        }
+                                                        
+                                                    ?>
                                                     <div style="margin-left: 30px;" class="service-items">
-                                                        <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>" alt="..." class="img-thumbnail">
+                                                        <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo $service_item_thumb_img; ?>" alt="..." class="img-thumbnail">
                                                         <div class="service-item-cnt">
                                                             <div><?= $sitem->name; ?></div>
                                                             <div>Price: $<?= $sitem->price; ?>/<?= $sitem->price_unit; ?></div>

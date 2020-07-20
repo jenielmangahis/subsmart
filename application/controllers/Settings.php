@@ -27,7 +27,7 @@ class Settings extends MY_Controller {
 
 	public function general()
 	{
-		ifPermissions('general_settings');
+		//ifPermissions('general_settings');
 		$this->page_data['page']->submenu = 'general';
 		$this->load->view('settings/general', $this->page_data);
 	}
@@ -35,7 +35,7 @@ class Settings extends MY_Controller {
 	public function generalUpdate()
 	{
 
-		ifPermissions('general_settings');
+		//ifPermissions('general_settings');
 
 		postAllowed();
 		
@@ -56,7 +56,7 @@ class Settings extends MY_Controller {
 
 	public function company()
 	{
-		ifPermissions('company_settings');
+		//ifPermissions('company_settings');
 		$this->page_data['page']->submenu = 'company';
 		$this->load->view('settings/company', $this->page_data);
 	}
@@ -64,7 +64,7 @@ class Settings extends MY_Controller {
 	public function companyUpdate()
 	{
 
-		ifPermissions('company_settings');
+		//ifPermissions('company_settings');
 
 		postAllowed();
 		
@@ -81,7 +81,7 @@ class Settings extends MY_Controller {
 
 	public function login_theme()
 	{
-		ifPermissions('login_theme');
+		//ifPermissions('login_theme');
 		$this->page_data['page']->submenu = 'login_theme';
 		$this->load->view('settings/login_theme', $this->page_data);
 	}
@@ -89,7 +89,7 @@ class Settings extends MY_Controller {
 	public function loginthemeUpdate()
 	{
 
-		ifPermissions('login_theme');
+		//ifPermissions('login_theme');
 
 		postAllowed();
 		
@@ -131,14 +131,14 @@ class Settings extends MY_Controller {
 
 	public function email_templates()
 	{
-		ifPermissions('email_templates');
+		//ifPermissions('email_templates');
 		$this->page_data['page']->submenu = 'email_templates';
 		$this->load->view('settings/email_templates/list', $this->page_data);
 	}
 
 	public function edit_email_templates($id)
 	{
-		ifPermissions('email_templates');
+		//ifPermissions('email_templates');
 		$this->page_data['page']->submenu = 'email_templates';
 		$this->page_data['template'] = $this->templates_model->getById($id);
 		$this->load->view('settings/email_templates/edit', $this->page_data);
@@ -147,7 +147,7 @@ class Settings extends MY_Controller {
 	public function update_email_templates($id)
 	{
 
-		ifPermissions('login_theme');
+	//	ifPermissions('login_theme');
 
 		postAllowed();
 		

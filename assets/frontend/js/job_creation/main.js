@@ -3,6 +3,12 @@ $(document).ready(function () {
     "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable, #jobTypeTable"
   ).DataTable({
     destroy: true,
+    columnDefs: [
+      {
+        targets: [0], //first column / numbering column
+        orderable: false, //set not orderable
+      },
+    ],
   });
 
   $("#job_customer").autocomplete({
@@ -59,7 +65,9 @@ $(document).ready(function () {
     $("#invoiceForms").hide();
   });
 
-  $("#newJobBtn, #cancelJobBtn, .deleteJobCurrentForm").click(function () {
+  $(
+    "#newJobBtn, #cancelJobBtn, .deleteJobCurrentForm, .editDeleteBeforeAfterBtn, .editDeleteBeforeAfterBtn #saveBtn, #editBtn"
+  ).click(function () {
     $.LoadingOverlay("show");
   });
 
@@ -321,6 +329,24 @@ $(document).ready(function () {
       };
       saveEstimate(param);
     }
+  });
+
+  $("#jobCheckbox").click(function () {
+    $("input:checkbox").not(this).prop("checked", this.checked);
+    var selectedIds = [];
+
+    $("input:checkbox").each(function () {
+      if ($(this).prop("checked")) selectedIds.push($(this).data("id"));
+    });
+    $("#selectedIds").val(selectedIds);
+  });
+
+  $(".deleteSelect").click(function () {
+    $.LoadingOverlay("show");
+    var param = {
+      ids: $("#selectedIds").val(),
+    };
+    deleteMultiple(param);
   });
 });
 
@@ -640,4 +666,15 @@ function dropdownAccounting(n) {
   } else {
     $(id).slideUp();
   }
+}
+
+function deleteMultiple(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/deleteMultiple",
+    data: param,
+    success: function (response) {
+      window.location.href = "";
+    },
+  });
 }

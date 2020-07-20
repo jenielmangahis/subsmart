@@ -53,10 +53,20 @@
             <label>Image</label>
             <div class="margin-bottom-sec">
                 <div class="product-edit__image-cnt"> 
-                    <img style="width: 153px;" class="img-responsive" data-fileupload="product-image" src="<?php echo base_url('/assets/dashboard/images/product-no-image.jpg') ?>">
+
+                    <?php 
+                        $service_item_thumb = $service_item->image;
+                        if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                            $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg');
+                        } else {
+                            $service_item_thumb_img = base_url('uploads/'.$service_item_thumb);
+                        }
+                    ?>
+
+                    <img style="width: 153px;" class="img-responsive" data-fileupload="product-image" src="<?php echo $service_item_thumb_img; ?>">
                 </div>
-                <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="product-file" name="product-image" type="file"></span>
-                <a class="a-default margin-left" href="#" data-fileupload="product-delete"><span class="fa fa-trash"></span> Delete</a>
+                <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="product-file" name="product-image" id="product-image" value="" type="file"></span>
+                <!-- <a class="a-default margin-left" href="#" data-fileupload="product-delete"><span class="fa fa-trash"></span> Delete</a> -->
             </div>
             <div class="" data-fileupload="product-progressbar" style="display: none;">
                 <div class="text">Uploading</div>
