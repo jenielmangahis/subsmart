@@ -45,9 +45,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row dashboard-container-2">
                             
                             <p class="">
-                                Place a booking form on your website and collect leads from your customers directly into Markate.
+                                Place a booking form on your website and collect leads from your customers directly into nSmarTrac.
                                 <br><br>
-                                1. Set your products on services<br>
+                                1. Set your items on services<br>
                                 2. Define your time slots<br>
                                 3. Customize the way the form looks and get notifications on new contact inquiries or check the leads online.<br>
                                 4. Copy/Paste the iframe or javascript code on a page on your website.

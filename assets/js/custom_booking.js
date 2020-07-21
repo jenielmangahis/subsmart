@@ -141,6 +141,48 @@ $(document).ready(function() {
         $("#cat_id").val(cat_id);
         $("#modalDeleteCategory").modal('show');
     });
+
+    $(".onoffswitch-checkbox-productStatus").click(function(){
+        var service_item_id = $(this).attr("data-product-id");
+        var url = base_url + '/booking/ajax_save_service_item_visible_status';
+
+        if($('#product-status-' + service_item_id).is(':checked')) {
+            //save to is_visible to 1 (checked)
+            var is_visible = 1;
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {service_item_id:service_item_id,is_visible:is_visible},
+               success: function(o)
+               {
+                    var obj = jQuery.parseJSON( o );
+                    if(obj.is_success == true) {
+                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times</button>Update Visible Status Successfull</div></div></div>');
+                    } else {
+                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-dangel"><button type="button" class="close" data-dismiss="alert">&times</button>Error Updating Visible Status</div></div></div>');
+                    }                  
+               }
+            });            
+        } else {
+            //save to is_visible to 0 (unchecked)
+            var is_visible = 0;
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {service_item_id:service_item_id,is_visible:is_visible},
+               success: function(o)
+               {
+                    var obj = jQuery.parseJSON( o );
+                    if(obj.is_success == true) {
+                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times</button>Update Visible Status Successfull</div></div></div>');
+                    } else {
+                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-dangel"><button type="button" class="close" data-dismiss="alert">&times</button>Error Updating Visible Status</div></div></div>');
+                    }                  
+               }
+            });            
+        }
+
+    });    
 });   
 
 function deleteTimeSlotRow(row_id) {

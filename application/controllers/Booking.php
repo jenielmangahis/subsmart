@@ -525,6 +525,34 @@ class Booking extends MY_Controller {
         echo json_encode($json_data);
     }
 
+    public function ajax_save_service_item_visible_status()
+    {
+        postAllowed();
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$service_item_id = $post['service_item_id'];
+        	$is_visible = $post['is_visible'];
+        	$siid = $this->BookingServiceItem_model->getById($service_item_id);
+
+    		$to_update = array(   
+                'is_visible' => $is_visible
+            );
+
+        	if($siid) {
+	            $this->BookingServiceItem_model->update($siid->id, $to_update);
+	            $is_success = true;
+        	} else {
+	            $is_success = false;
+        	}
+        }
+        
+        $json_data = array('is_success' => $is_success);
+
+        echo json_encode($json_data);
+    }    
+
     public function delete_time_slot()
     {
         $id = $this->BookingTimeSlot_model->deleteUserTimeSlot(post('tid'));
