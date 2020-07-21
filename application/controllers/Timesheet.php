@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-class Users extends MY_Controller {
+class Timesheet extends MY_Controller {
 
 
 
@@ -17,113 +17,41 @@ class Users extends MY_Controller {
             "assets/css/timesheet.css",
         ));
 
-		$this->page_data['page']->title = 'Users Management';
+		$this->page_data['page']->title = 'Timesheet Management';
 
 		$this->page_data['page']->menu = 'users';
 
 	}
 
-
-
-	public function businessprofile()
+	// added for tracking Timesheet of employees: Single Employee View
+	public function timesheet_user()
 	{	
-		$user = (object)$this->session->userdata('logged');		
-		$profiledata = $this->business_model->getByWhere(array('id'=>$user->id));		
-		$this->page_data['profiledata'] = $profiledata[0];
-		$this->load->view('businessprofile', $this->page_data);
-	}
-	
-	public function businessview()
-	{	
-		//ifPermissions('businessdetail');
-		$user = (object)$this->session->userdata('logged');		
-		//print_r($user);die;
-		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));		
-		$this->page_data['profiledata'] = $profiledata[0];
-		$this->load->view('business', $this->page_data);
-
-	}
-	public function businessdetail(){	
-		//ifPermissions('businessdetail');
+		$this->load->model('timesheet_model');
+		$this->load->model('users_model');
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		$this->page_data['users'] = $this->users_model->getUsers();
+		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		
-		$user = (object)$this->session->userdata('logged');
-		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
-		//dd($profiledata);die;
-		$this->page_data['userid'] = $user->id;
-		$this->page_data['profiledata'] = $profiledata[0];
-		
-		/* echo "<pre>"; print_r($this->page_data); die;  */
-		
-		$this->load->view('businessdetail', $this->page_data);
-	}
-	
-	public function savebusinessdetail(){
-		
-		$user = (object)$this->session->userdata('logged');	
-		/* echo "<pre>"; print_r($_POST); die; */
-		$pdata=$_POST;
-		unset($pdata['btn-continue']);
-		$bid=$pdata['id'];
-		
-		if($bid!=''){
-			$this->business_model->update($bid,$pdata);
-			$imbid=$pdata['user_id'];
-		}else{
-			$pdata['user_id'] = $user->id;
-			$imbid=$user->id;
-			$bid = $this->business_model->create($pdata);
-		}
-
-
-		if (!empty($_FILES['image']['name'])){
-
-			$path = $_FILES['image']['name'];
-			$ext = pathinfo($path, PATHINFO_EXTENSION);
-			$this->uploadlib->initialize([
-				'file_name' => 'businessimg_'.$imbid.'.'.$ext
-			]);
-			
-			$image = $this->uploadlib->uploadImage('image', '/users');
-
-			if($image['status']){
-				$this->business_model->update($bid, ['b_image' => $ext]);
-			}else{
-				copy(FCPATH.'uploads/users/default.png', 'uploads/users/businessimg_'.$user->id.'.png');
-			}
-		}else{
-			copy(FCPATH.'uploads/users/default.png', 'uploads/users/businessimg_'.$user->id.'.png');
-		}
-
-		// $this->activity_model->add('New User $'.$id.' Created by User:'.logged('name'), logged('id'));
-		$this->session->set_flashdata('alert-type', 'success');
-		$this->session->set_flashdata('alert', 'Business detail updated Successfully');	
-
-		redirect('users/businessview');
+		$this->load->view('users/timesheet-user', $this->page_data);
 	}
 
-	// added for tracking Timesheet of employees: Attendance View
+	// added for tracking Timesheet of employees: Attendance View / Admin View
 	public function timesheet()
 	{	
 		$this->load->model('timesheet_model');
-		//ifPermissions('users_list');
-
+		$this->load->model('users_model');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		
 		$this->page_data['users'] = $this->users_model->getUsers();
-		
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		
-		//$this->load->view('users/timesheet', $this->page_data);
 		$this->load->view('users/timesheet-admin', $this->page_data);
-		//$this->load->view('users/timesheet-user', $this->page_data);
 	}
 
 	// added for tracking Timesheet of employees: Schedule View
 	public function employee()
 	{	
 		$this->load->model('timesheet_model');
+		$this->load->model('users_model');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
@@ -135,6 +63,7 @@ class Users extends MY_Controller {
 	public function schedule()
 	{	
 		$this->load->model('timesheet_model');
+		$this->load->model('users_model');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
@@ -146,6 +75,7 @@ class Users extends MY_Controller {
 	public function list()
 	{	
 		$this->load->model('timesheet_model');
+		$this->load->model('users_model');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
@@ -157,6 +87,7 @@ class Users extends MY_Controller {
 	public function timelog()
 	{	
 		$this->load->model('timesheet_model');
+		$this->load->model('users_model');
 		//ifPermissions('users_list');
 
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
@@ -197,21 +128,7 @@ class Users extends MY_Controller {
 		$total_clockin = $this->timesheet_model->getTotalClockinMonth($data);
 	}
 
-	// added for tracking Timesheet of employees
-	public function timesheet_user()
-	{	
-		$this->load->model('timesheet_model');
-		//ifPermissions('users_list');
-
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		
-		$this->page_data['users'] = $this->users_model->getUsers();
-		
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-		
-		//$this->load->view('users/timesheet', $this->page_data);
-		$this->load->view('users/timesheet-user', $this->page_data);
-	}
+	
 
 	public function add_timesheet_entry()
 	{
@@ -235,18 +152,15 @@ class Users extends MY_Controller {
 	public function index()
 
 	{	
-
+		$this->load->model('users_model');
 		//ifPermissions('users_list');
-
-
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
 		$this->page_data['users'] = $this->users_model->getUsers();
 
 		// echo '<pre>';print_r($this->page_data);die;
 
-		$this->load->view('users/list', $this->page_data);
-
+		$this->load->view('users/timesheet-admin', $this->page_data);
 	}
 
 

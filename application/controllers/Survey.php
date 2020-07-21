@@ -74,10 +74,11 @@ class Survey extends MY_Controller
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
-      'workspace_id' => $this->input->post('workspace_id')
+      'workspace_id' => $this->input->post('workspace_id'),
+      'theme_id' => $this->input->post('theme_id')
     );
     $data = $this->survey_model->add($data);
-
+    
     $result = array(
       'success' => 1,
       'data' => $data
@@ -97,7 +98,7 @@ class Survey extends MY_Controller
 
     );
     
-    redirect('/survey/workspace', 'refresh');
+    redirect('/survey', 'refresh');
     echo json_encode($result);
     exit;
   }
@@ -321,8 +322,13 @@ class Survey extends MY_Controller
   }
 
   public function result($id){
+    $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
+    $this->page_data['survey_templates'] = json_decode($templates);
+    $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
+    $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
+    $this->page_data['survey_templates'] = $this->survey_model->getThemes();
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->load->view('survey/result', $this->page_data);
   }

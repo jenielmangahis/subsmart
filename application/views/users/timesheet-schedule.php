@@ -45,16 +45,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="padding-bottom: 20px;">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
-                        <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
-                        <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
-                    </div>
-                </div>
-                <!-- <div class="row align-items-center">
+
+                <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Employees</h1>
+                        <h1 class="page-title">Schedule View</h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol>
@@ -71,7 +65,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
+                <div class="row" style="padding-bottom: 20px;">
+                    <div class="col-md-12 banking-tab-container">
+                        <a href="<?php echo url('/users/timesheet')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="timesheet")?:'-active';?>" style="text-decoration: none">Attendance</a>
+                        <a href="<?php echo url('/users/timesheet/employee')?>" class="banking-tab">Employee</a>
+                        <a href="<?php echo url('/users/timesheet/schedule')?>" class="banking-tab">Schedule</a>
+                        <a href="<?php echo url('/users/timesheet/list')?>" class="banking-tab">List</a>
+                    </div>
+                </div>
             </div>
             <!-- end row -->
             <div class="row">
@@ -122,7 +124,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         ?>
                                         
                                         <?php foreach ($users as $row): ?>
-                                            <?php if (logged('id') === $row->id): ?>
+                                            <?php //if (logged('id') === $row->id): ?>
                                                 <?php //echo "<pre>";print_r($users);echo "</pre>";?>
                                                 <?php
                                                     $data['user_id'] = $row->id;
@@ -204,7 +206,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <input type="radio" name="clocked_in_<?php echo $row->id;?>" checked="checked" /><br />
                                                                         <span class="clocked_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                     <?php elseif( $clockin->action == 'Clock In' && $clockin_arr[0]->action != 'Clock In' && $clockin->timestamp != 0 ):?>
-                                                                        <input type="radio" name="clocked_in_<?php echo $row->id;?>" /><br />
+                                                                        <input type="radio" name="clocked_in_<?php echo $row->id;?>" style="visibility: hidden;" /><br />
                                                                         <span class="clocked_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                     <?php //else: ?>
                                                                         <!-- <input type="radio" name="clocked_in_<?php echo $row->id;?>" /><br />
@@ -227,7 +229,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <input type="radio" name="clocked_out_<?php echo $row->id;?>" checked="checked" /><br />
                                                                     <span class="clocked_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                 <?php elseif( $clockin->action == 'Clock Out' && $clockin_arr[0]->action != 'Clock Out' && $clockin->timestamp != 0 ):?>
-                                                                    <input type="radio" name="clocked_out_<?php echo $row->id;?>" /><br />
+                                                                    <input type="radio" name="clocked_out_<?php echo $row->id;?>" style="visibility: hidden;" /><br />
                                                                     <span class="clocked_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                 <?php //else: ?>
                                                                     <!-- <input type="radio" name="clocked_out_<?php echo $row->id;?>" /><br />
@@ -251,7 +253,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <input type="radio" name="lunched_in_<?php echo $row->id;?>" checked="checked" /><br />
                                                                         <span class="lunched_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                     <?php elseif( $clockin->action == 'Lunch In' && $clockin_arr[0]->action != 'Lunch In' && $clockin->timestamp != 0 ):?>
-                                                                        <input type="radio" name="lunched_in_<?php echo $row->id;?>" /><br />
+                                                                        <input type="radio" name="lunched_in_<?php echo $row->id;?>" style="visibility: hidden;" /><br />
                                                                         <span class="lunched_in_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                     <?php //else: ?>
                                                                         <!-- <input type="radio" name="lunched_in_<?php echo $row->id;?>" /><br />
@@ -275,7 +277,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <input type="radio" name="lunched_out_<?php echo $row->id;?>" checked="checked" /><br />
                                                                         <span class="lunched_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                     <?php elseif( $clockin->action == 'Lunch Out' && $clockin_arr[0]->action != 'Lunch Out' && $clockin->timestamp != 0 ):?>
-                                                                        <input type="radio" name="lunched_out_<?php echo $row->id;?>" /><br />
+                                                                        <input type="radio" name="lunched_out_<?php echo $row->id;?>" style="visibility: hidden;" /><br />
                                                                         <span class="lunched_out_<?php echo $row->id;?>"><?php echo date('h:i a', strtotime($clockin->timestamp)); ?></span><br />
                                                                     <?php //else: ?>
                                                                         <!-- <input type="radio" name="lunched_out_<?php echo $row->id;?>" /><br />
@@ -313,7 +315,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
                                                         </a>*/?>
                                                         <?php ////if (hasPermissions('users_edit')): ?>
-                                                            <?php //dd($clockin_arr); ?>
                                                             <form name="clockin_form" method="post">
                                                                 <input type="hidden" name="current_time_in" value="<?php echo date('Y-m-d H:i'); ?>" />
                                                                 <input type="hidden" name="clockin_user_id" value="<?php echo $row->id; ?>" />
@@ -375,7 +376,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <?php endif; ?>
                                                                 <!-- Clock Out-->
                                                                 <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 && $clockin_arr[0]->action == 'Clock Out' ):?>
+                                                                    <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 ):?>
                                                                         <a id="clockout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
                                                                         </a>
@@ -525,7 +526,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <!-- end of Modal -->
 
                                                 </tr>
-                                            <?php endif; ?>
+                                            <?php //endif; ?>
                                         <?php endforeach ?>
                                         </tbody>
                                     </table>
@@ -666,7 +667,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    //alert('User has Clocked In');
+                    alert('User has Clocked In');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -836,7 +837,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('Clocked Out');
+                    //alert('User has Clocked In');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');
@@ -924,7 +925,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     status: $("input[name='clockin_status']").val()
                 },*/
                 success: function(result) {
-                    alert('Clocked out for lunch');
+                    //alert('User has Lunched Out');
                     //updateClockIn();
                     window.location.reload();
                     //console.log('okay');

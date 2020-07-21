@@ -111,9 +111,12 @@
                 <label>Image</label>
                 <div class="margin-bottom-sec">
                     <div class="product-edit__image-cnt"> 
-                        <img style="width: 153px;" class="img-responsive" data-fileupload="product-image" src="<?php echo base_url('/assets/dashboard/images/product-no-image.jpg') ?>">
+                        <img style="width: 153px;" id="preview-img-container" class="img-responsive" data-fileupload="product-image" src="<?php echo base_url('/assets/dashboard/images/product-no-image.jpg') ?>">
                     </div>
-                    <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="product-file" name="product-image" value="" id="product-image" type="file"></span>
+                    <span class="btn btn-default fileinput-button vertical-top">
+                    	<span class="fa fa-camera"></span> Add Image 
+                    	<input data-fileupload="product-file" name="product-image" value="" id="product-image" type="file" onchange="loadPreviewImg(event)" >
+                    </span>
                     <!-- <a class="a-default margin-left" href="#" data-fileupload="product-delete"><span class="fa fa-trash"></span> Delete</a> -->
                 </div>
                 <div class="" data-fileupload="product-progressbar" style="display: none;">

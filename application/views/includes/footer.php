@@ -104,7 +104,12 @@
 		text-align: center;
 	}
 </style>
-
+<!-- taxes page -->
+<script src="<?php echo $url->assets ?>dashboard/js/custom.js"></script>
+<script src="<?php echo $url->assets ?>dashboard/js/popper.min.js"></script>
+<script src="<?php echo $url->assets ?>dashboard/js/slick.js"></script>
+<script src="https://kit.fontawesome.com/8db2e95406.js" crossorigin="anonymous"></script>
+<!-- taxes page -->
 </body>
 
 </html>

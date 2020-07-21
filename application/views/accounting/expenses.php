@@ -33,11 +33,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
-                                        <li><a href="#">Bill</a></li>
-                                        <li><a href="#">Expenses</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#bill-modal">Bill</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#expense-modal">Expenses</a></li>
                                         <li><a href="#">Check</a></li>
-                                        <li><a href="#">Vendor Credit</a></li>
-                                        <li><a href="#">Pay down credit card</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#vendorCredit-modal">Vendor Credit</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#payDown-modal">Pay down credit card</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -308,7 +308,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
 
-    </div>  <!--end of modal-->
+    </div>
+    <!--end of modal-->
+<!--    Edit Checks Modal-->
     <div class="full-screen-modal">
         <div id="edit-expensesCheck" class="modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
@@ -556,10 +558,526 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+<!--end of modal-->
+<!--    Bill modal-->
+    <div class="full-screen-modal">
+        <div id="bill-modal" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                            Bill
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="">Vendor</label>
+                                <select name="" id="" class="form-control select2">
+                                    <option value="">Abacus Accounting</option>
+                                    <option value="">Absolute Power</option>
+                                    <option value="">ADSC</option>
+                                </select>
+                            </div>
+                            <div class="col-md-9" style="text-align: right">
+                                <div>Balance Due</div>
+                                <div><h1>$0.00</h1></div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px;width: 80%;">
+                            <div class="col-md-3">
+                                <label for="">Mailing address</label>
+                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Terms</label>
+                                <select name="" id="" class="form-control select2">
+                                    <option value="">Due on receipt</option>
+                                    <option value="">Net 15</option>
+                                    <option value="">Net 30</option>
+                                    <option value="">Net 60</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="">Bill date</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="">Due date</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="">Bill no.</label>
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Permit no.</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <!--                        DataTables-->
+                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>CATEGORY</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>AMOUNT</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="line-container-bill">
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>Commission & fees</td>
+                                    <td>What did you pay for?</td>
+                                    <td></td>
+                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                </tr>
+                                <tr id="tableLine-bill">
+                                    <td></td>
+                                    <td><span id="line-counter-bill">2</span></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="addAndRemoveRow">
+                            <button type="button" class="add-remove-line" id="add-four-line-bill">Add lines</button>
+                            <button type="button" class="add-remove-line" id="clear-all-line-bill">Clear all lines</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Memo</label>
+                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                            <span>Maximum size: 20MB</span>
+                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer-check">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                            </div>
+                            <div class="col-md-2" style="text-align: center;">
+                                <div>
+                                    <a href="#" style="color: #ffffff;">Make recurring</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="dropdown" style="float: right;display: inline-block;position: relative;">
+                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="#">Save and new</a></li>
+                                        <li><a href="#">Save and close</a></li>
+                                    </ul>
+                                </div>
+                                <div class="" style="display: inline-block;float: right;margin-right: 10px;">
+                                    <button class="btn btn-transparent">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!--    end of modal-->
+<!--    Expense modal-->
+    <div class="full-screen-modal">
+        <div id="expense-modal" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                            Expenses
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="">Payee</label>
+                                <select name="" id="" class="form-control select2">
+                                    <option value="" disabled selected>Who did you pay?</option>
+                                    <option value="">Abacus Accounting</option>
+                                    <option value="">Absolute Power</option>
+                                    <option value="">ADSC</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Payment account <i class="fa fa-question-circle"></i></label>
+                                <select name="" id="" class="form-control select2">
+                                    <option value="" disabled selected>Who did you pay?</option>
+                                    <option value="">Abacus Accounting</option>
+                                    <option value="">Absolute Power</option>
+                                    <option value="">ADSC</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3" style="line-height: 100px">
+                                <span style="font-weight: bold">Balance</span>
+                                <span>$133,101.00</span>
+                            </div>
+                            <div class="col-md-3" style="text-align: right">
+                                <div>AMOUNT</div>
+                                <div><h1>$0.00</h1></div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px;width: 80%;">
+                            <div class="col-md-3">
+                                <label for="">Payment date</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Payment method</label>
+                                <select name="" id="" class="form-control select2">
+                                    <option value="" disabled selected>What did you pay?</option>
+                                    <option value="">Cash</option>
+                                    <option value="">Check</option>
+                                    <option value="">Credit Card</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="">Ref no.</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Permit no.</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <!--                        DataTables-->
+                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>CATEGORY</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>AMOUNT</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="line-container-expense">
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>Commission & fees</td>
+                                    <td>What did you pay for?</td>
+                                    <td></td>
+                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                </tr>
+                                <tr id="tableLine-expense">
+                                    <td></td>
+                                    <td><span id="line-counter-expense">2</span></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="addAndRemoveRow">
+                            <button type="button" class="add-remove-line" id="add-four-line-expense">Add lines</button>
+                            <button type="button" class="add-remove-line" id="clear-all-line-expense">Clear all lines</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Memo</label>
+                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                            <span>Maximum size: 20MB</span>
+                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer-check">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                            </div>
+                            <div class="col-md-2" style="text-align: center;">
+                                <div>
+                                    <a href="#" style="color: #ffffff;">Make recurring</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="dropdown" style="float: right;display: inline-block;position: relative;">
+                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="#">Save and close</a></li>
+                                    </ul>
+                                </div>
+                                <div class="" style="display: inline-block;float: right;margin-right: 10px;">
+                                    <button class="btn btn-transparent">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!--    end of modal-->
+<!--    Vendor Credit-->
+    <div class="full-screen-modal">
+        <div id="vendorCredit-modal" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                            Vendor Credit
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="">Vendor</label>
+                                <select name="" id="" class="form-control select2">
+                                    <option value="" disabled selected>Who did you pay?</option>
+                                    <option value="">Abacus Accounting</option>
+                                    <option value="">Absolute Power</option>
+                                    <option value="">ADSC</option>
+                                </select>
+                            </div>
+                            <div class="col-md-9" style="text-align: right">
+                                <div>CREDIT AMOUNT</div>
+                                <div><h1>$0.00</h1></div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px;width: 80%;">
+                            <div class="col-md-3">
+                                <label for="">Mailing address</label>
+                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Payment date</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="">Ref no.</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Permit no.</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <!--                        DataTables-->
+                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>CATEGORY</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>AMOUNT</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="line-container-vendorCredit">
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>Commission & fees</td>
+                                    <td>What did you pay for?</td>
+                                    <td></td>
+                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                </tr>
+                                <tr id="tableLine-vendorCredit">
+                                    <td></td>
+                                    <td><span id="line-counter-vendorCredit">2</span></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td><input type="text" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-vendorCredit"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="addAndRemoveRow">
+                            <button type="button" class="add-remove-line" id="add-four-line-vendorCredit">Add lines</button>
+                            <button type="button" class="add-remove-line" id="clear-all-line-vendorCredit">Clear all lines</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Memo</label>
+                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                            <span>Maximum size: 20MB</span>
+                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer-check">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                            </div>
+                            <div class="col-md-2" style="text-align: center;">
+                                <div>
+                                    <a href="#" style="color: #ffffff;">Make recurring</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="dropdown" style="float: right;">
+                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="#">Save and close</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!--    end of modal-->
+<!--    Paydown credit card modal-->
+    <div class="full-screen-modal">
+        <div id="payDown-modal" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                            Pay down credit card
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" style="margin-left: 20px;">
+                            <div class="col-md-6">
+                                <div class="header-form">
+                                    Record payments made to your balance
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Which credit card did you pay?</label>
+                                    <select name="" id="" class="form-control select2">
+                                        <option value="" disabled selected>Select credit card</option>
+                                        <option value=""><a href="#"><i class="fa fa-plus"></i> Add new</a></option>
+                                    </select>
+                                </div>
+                                <div class="form-group inline">
+                                    <label for="">How much did you pay?</label>
+                                    <input type="text" class="form-control" placeholder="Enter the amount">
+                                </div>
+                                <div class="form-group inline">
+                                    <label for="">Date of payment</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">What did you use to make this payment?</label>
+                                    <select name="" id="" class="form-control select2">
+                                        <option value="" disabled selected>Select bank account</option>
+                                        <option value=""><a href="#"><i class="fa fa-plus"></i> Add new</a></option>
+                                        <option value="">Cash on hand</option>
+                                        <option value="">Cash on hand:Cash on hand</option>
+                                        <option value="">Corporate Account (XXXXXX 5850)</option>
+                                        <option value="">Corporate Account (XXXXXX 5850)Te</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <a href="#"><i class="fa fa-caret-right" style="color: #333333;"></i> Memo and attachments</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding-right: 20px">
+                                <div style="float: right;">
+                                    <div class="amount-title">Total paid</div>
+                                    <div class="amount-data"><h2>$0.00</h2></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="privacy">
+                            <a href="#">Privacy</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer-check">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-5">
+                                <div class="dropdown" style="float: right;display: inline-block;">
+                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and close</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="#">Save and new</a></li>
+                                        <li><a href="#">Save and close</a></li>
+                                    </ul>
+                                </div>
+                                <div class="" style="display: inline-block;float: right;margin-right: 10px;">
+                                    <button class="btn btn-transparent">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 <!--    end of modal-->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
+    // select option
+    $('.select2').select2()
     // DataTable JS
     $(document).ready(function() {
         $('#expenses_table').DataTable({
@@ -578,15 +1096,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             "info":false
         });
     } );
-    // Add & Remove line in dataTable
+    // Add & Remove line in dataTable Check modal
     $(document).ready(function () {
         jQuery(document).ready(function() {
-            var id = $('#line-container > tr').length;
-            jQuery("#add-four-line").click(function() {
+            $("#add-four-line").click(function() {
+                var id = $('#line-container > tr').length;
                 for (var x = 1;x <= 4;x++){
                     id++;
-                    var row = jQuery('#tableLine').clone(true);
-                    row.find("span").html(id);
+                    var row = $('#tableLine').clone(true);
+                    row.find("#line-counter").html(id);
                     row.appendTo('#line-container');
                 }
             });
@@ -619,6 +1137,136 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('#tableLine > td >input').hide();
             $('td > input', this).show();
         });
+
+    });
+    // Bill modal js
+    $(document).ready(function () {
+        jQuery(document).ready(function() {
+            $("#add-four-line-bill").click(function() {
+                var id = $('#line-container-bill > tr').length;
+                for (var x = 1;x <= 4;x++){
+                    id++;
+                    var row = $('#tableLine-bill').clone(true);
+                    row.find("#line-counter-bill").html(id);
+                    row.appendTo('#line-container-bill');
+                }
+            });
+        });
+        // Clear Lines
+        $('#clear-all-line-bill').click(function (e) {
+            var num = $('#line-container-bill > tr').length;
+            if (num == 2){
+                e.preventDefault();
+            }else{
+                for (var x = 1;x <= num-2;x++){
+                    $("#tableLine-bill").last().remove();
+                    $('#line-counter-bill').html(2);
+                }
+            }
+        });
+        //Delete Line
+        $(document).on("click","#delete-row-bill",function (e) {
+            var count = $('#line-container-bill > tr').length;
+            if (count > 2){
+                $('#tableLine-bill').last().remove();
+            }else{
+                e.preventDefault();
+            }
+
+        });
+
+        //Table input text show
+        $(document).on("click","#tableLine-bill",function () {
+            $('#tableLine-bill > td >input').hide();
+            $('td > input', this).show();
+        });
+
+    });
+    // Expense modal js
+    $(document).ready(function () {
+        jQuery(document).ready(function() {
+            $("#add-four-line-expense").click(function() {
+                var id = $('#line-container-expense > tr').length;
+                for (var x = 1;x <= 4;x++){
+                    id++;
+                    var row = $('#tableLine-expense').clone(true);
+                    row.find("#line-counter-expense").html(id);
+                    row.appendTo('#line-container-expense');
+                }
+            });
+        });
+        // Clear Lines
+        $('#clear-all-line-expense').click(function (e) {
+            var num = $('#line-container-expense > tr').length;
+            if (num == 2){
+                e.preventDefault();
+            }else{
+                for (var x = 1;x <= num-2;x++){
+                    $("#tableLine-expense").last().remove();
+                    $('#line-counter-expense').html(2);
+                }
+            }
+        });
+        //Delete Line
+        $(document).on("click","#delete-row-expense",function (e) {
+            var count = $('#line-container-expense > tr').length;
+            if (count > 2){
+                $('#tableLine-expense').last().remove();
+            }else{
+                e.preventDefault();
+            }
+
+        });
+
+        //Table input text show
+        $(document).on("click","#tableLine-expense",function () {
+            $('#tableLine-expense > td >input').hide();
+            $('td > input', this).show();
+        });
+
+    });
+    // Vendor Credit modal js
+    $(document).ready(function () {
+        jQuery(document).ready(function() {
+            $("#add-four-line-vendorCredit").click(function() {
+                var id = $('#line-container-vendorCredit > tr').length;
+                for (var x = 1;x <= 4;x++){
+                    id++;
+                    var row = $('#tableLine-vendorCredit').clone(true);
+                    row.find("#line-counter-vendorCredit").html(id);
+                    row.appendTo('#line-container-vendorCredit');
+                }
+            });
+        });
+        // Clear Lines
+        $('#clear-all-line-vendorCredit').click(function (e) {
+            var num = $('#line-container-vendorCredit > tr').length;
+            if (num == 2){
+                e.preventDefault();
+            }else{
+                for (var x = 1;x <= num-2;x++){
+                    $("#tableLine-vendorCredit").last().remove();
+                    $('#line-counter-vendorCredit').html(2);
+                }
+            }
+        });
+        //Delete Line
+        $(document).on("click","#delete-row-vendorCredit",function (e) {
+            var count = $('#line-container-vendorCredit > tr').length;
+            if (count > 2){
+                $('#tableLine-vendorCredit').last().remove();
+            }else{
+                e.preventDefault();
+            }
+
+        });
+
+        //Table input text show
+        $(document).on("click","#tableLine-vendorCredit",function () {
+            $('#tableLine-vendorCredit > td >input').hide();
+            $('td > input', this).show();
+        });
+
     });
 </script>
 

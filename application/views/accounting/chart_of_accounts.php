@@ -14,6 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
 </style>
 <div class="wrapper" role="wrapper">
+	 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -87,10 +88,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										  </a>
 										  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 											Columns<br/>
-											<p class="p-padding"><input type="checkbox" name="chk_type" id="chk_type"> Type</p>
-											<p class="p-padding"><input type="checkbox" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
-											<p class="p-padding"><input type="checkbox" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
-											<p class="p-padding"><input type="checkbox" name="chk_balance" id="chk_balance"> Balance</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_type" id="chk_type"> Type</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_balance" id="chk_balance"> Balance</p>
 											<br/>
 											<p class="p-padding"><input type="checkbox" name="chk_other" id="chk_other"> Other</p>
 										  </div>
@@ -110,37 +111,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									</tr>
 									</thead>
 									<tbody>
-									<tr>
-										<td><input type="checkbox"></td>
-										<td contenteditable="true">Cash on hand</td>
-										<td>Bank</td>
-										<td>Cash on hand</td>
-										<td>111,111.00</td>
-										<td></td>
-										<td>
-										<div class="dropdown show">
-										  <a class="dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										   View Register
-										  </a>
-
-										  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-											<a class="dropdown-item" href="#">Connect Bank</a>
-											<a class="dropdown-item" href="<?php echo url('/accounting/chart_of_accounts/edit') ?>">Edit</a>
-											<a class="dropdown-item" href="#">Make Inactive (Reduce usage)</a>
-											<a class="dropdown-item" href="#">Run Report</a>
-										  </div> 
-										</div>
-										</td>
-									</tr>
 									<?php
 									  $i=1;
 									  foreach($this->chart_of_accounts_model->select() as $row)
 									  {
 									  echo "<tr>";
 									  echo "<td><input type='checkbox'></td>";
-									  echo "<td>".$row->name."</td>";
-									  echo "<td>".$row->account_id."</td>";
-									  echo "<td>".$row->acc_detail_id."</td>";
+									  echo "<td contenteditable='true'>".$row->name."</td>";
+									  echo "<td>".$this->account_model->getName($row->account_id)."</td>";
+									  echo "<td>".$this->account_detail_model->getName($row->acc_detail_id)."</td>";
 									  echo "<td>".$row->balance."</td>";
 									  echo "<td></td>";
 									  echo "<td>
@@ -151,7 +130,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 										  <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
 											<a class='dropdown-item' href='#'>Connect Bank</a>
-											<a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit').">Edit</a>
+											<a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit/'.$row->id).">Edit</a>
 											<a class='dropdown-item' href='#'>Make Inactive (Reduce usage)</a>
 											<a class='dropdown-item' href='#'>Run Report</a>
 										  </div> 
@@ -177,11 +156,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     </div>
     <!-- page wrapper end -->
-
+</div>
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $(document).ready(function() {
         $('#charts_of_account_table').DataTable();
     } );
+
+    function col_check()
+    {
+    	if($('#chk_balance').attr('checked'))
+    	{
+    		$('#chk_balance').removeAttr('checked');
+    	}
+    	else
+    	{
+    		$('#chk_balance').attr('checked',"checked");
+    	}
+    }
 </script>

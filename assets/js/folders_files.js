@@ -113,6 +113,15 @@ $('span[control="refresh_tops"]').click(function(){
     e.preventDefault();
 
     window.open(base_url + 'vault/download_file/' + selected);
+
+    get_most_download_files();
+  });
+
+// open search modal to search for files or folders
+  $('a[control="search"]').click(function(e){
+    e.preventDefault();
+
+    showFolderManagerSearch();
   });
 // -------------------------------------------------------------------------------------------------------------
 
@@ -194,6 +203,7 @@ $('span[control="refresh_tops"]').click(function(){
             hideUploading();
 
             getFoldersAndFiles(current_selected_folder);
+            get_recently_uploaded_files();
           }
         },
         error: function(jqXHR, textStatus, errorThrown){ 
@@ -460,6 +470,20 @@ function setFoldersAndFiles(folders, files){
   });
 }
 
+// Update preview count function
+function update_preview_count(){
+  $.ajax({
+    type: 'POST',
+    url: base_url + "vault/update_preview/" + selected,
+    success: function(){
+      get_most_previewd_files();  
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      showFolderManagerNotif(textStatus, errorThrown, 'error');
+    } 
+  });
+}
+
 // Functions to load tops
 function get_most_download_files(){
   $.ajax({
@@ -666,7 +690,9 @@ function showFileDetail(){
   var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
   var file_info = getfileExInfos(div.attr('fnm'));
 
-  if(file_info['isImage']){ 
+  if(file_info['isImage']){
+    update_preview_count();
+
     var fpath = div.attr('path');
 
     fpath = base_url + '/uploads/' + fpath;
@@ -799,6 +825,10 @@ function hideFolderManagerNotif(){
 
   current_alert_theme = '';
   $('#modal-folder-manager-alert').modal('hide');
+}
+
+function showFolderManagerSearch(){
+  $('#modal-folder-manager-search').modal('show');
 }
 
 function folderSelectedIsNotEmpty() {

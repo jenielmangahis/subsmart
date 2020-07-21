@@ -10,6 +10,31 @@ class Roles_model extends MY_Model {
 		parent::__construct();
 	}
 
+	/**
+     * @return mixed
+     */
+    public function getRoles()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $query = $this->db->get();
+
+        return $query->result();
+	}
+	
+	/**
+     * @return mixed
+     */
+    public function getRolesById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where("id", $id);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
 }
 
 /* End of file Roles_model.php */

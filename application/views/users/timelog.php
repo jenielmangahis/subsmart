@@ -62,10 +62,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         $data['user_id'] = $row->id;
                                                         $clockin_arr = $this->timesheet_model->getClockIn($data);
                                                         $clockout_arr = $this->timesheet_model->getClockOut($data);
+                                                        //echo "<pre>"; print_r($clockin_arr); echo "</pre>";
                                                     ?>
 
                                                     <?php foreach($clockin_arr as $k => $clockin): ?>
-                                                        <?php echo date('h:i a', strtotime($clockin->timestamp))." ClockIn"; ?>
+                                                        <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
+                                                            <?php if($clockin->action == "Clock In"):?>
+                                                                <?php echo date('h:i a', strtotime($clockin->timestamp))."In - "; ?>
+                                                            <?php else: ?>
+                                                                <?php echo date('h:i a', strtotime($clockin->timestamp))." Out"; ?>
+                                                            <?php endif;?>
+                                                            
+                                                        <?php endif; ?>
+                                                        
                                                     <?php endforeach; ?>
 
                                                 </td>
