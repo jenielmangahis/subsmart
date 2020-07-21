@@ -149,6 +149,8 @@ $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile'] = 'reconcile/index';
 $route['accounting/reconcile/edit'] = 'reconcile/edit';
 
+$route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';

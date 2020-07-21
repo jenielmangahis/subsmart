@@ -6,6 +6,8 @@ class Accounting extends MY_Controller {
     public function __construct()
     {
         parent::__construct();
+		$this->load->model('vendors_model');
+		$this->load->model('terms_model');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -187,5 +189,93 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
+    }
+	
+	/*** Vendors ***/
+	
+	public function addVendor()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Add Vendor";
+		
+		$new_data = array(
+			'title' => $this->input->post('title'),
+			'f_name' => $this->input->post('f_name'),
+			'm_name' => $this->input->post('m_name'),
+			'l_name' => $this->input->post('l_name'),
+			'suffix' => $this->input->post('suffix'),
+			'email' => $this->input->post('email'),
+			'company' => $this->input->post('company'),
+			'display_name' => $this->input->post('display_name'),
+			'to_display' => $this->input->post('to_display'),
+			'street' => $this->input->post('street'),
+			'city' => $this->input->post('city'),
+			'state' => $this->input->post('state'),
+			'zip' => $this->input->post('zip'),
+			'country' => $this->input->post('country'),
+			'phone' => $this->input->post('phone'),
+			'mobile' => $this->input->post('mobile'),
+			'fax' => $this->input->post('fax'),
+			'website' => $this->input->post('website'),
+			'billing_rate' => $this->input->post('billing_rate'),
+			'terms' => $this->input->post('terns'),
+			'opening_balance' => $this->input->post('opening_balance'),
+			'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
+			'account_number' => $this->input->post('account_number'),
+			'business_number' => $this->input->post('business_number'),
+			'default_expense_amount' => $this->input->post('default_expense_amount'),
+			'notes' => $this->input->post('notes'),
+			'status' => 1,
+			'created_by' => $this->input->post('created_by'),
+			'date_created' => $this->input->post('date_created'),
+			'date_modified' => $this->input->post('date_modified')
+		);
+		
+		$addQuery = $this->vendors_model->create($new_data);
+		
+		if($addQuery > 0){
+			
+			$new_id = $addQuery;
+			$vendor_id = mb_substr($this->input->post('company'), 0, 3) . $new_id;
+			$updateQuery = $this->vendors_model->update($new_id, array("vendor_id" =>$vendor_id));
+			
+			if($updateQuery > 0){
+				echo json_encode($updateQuery);
+			}
+		}
+		else{
+			echo json_encode(0);
+		}
+		
+    }
+	public function addTerms()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Add Vendor";
+		
+		$new_data = array(
+			'term_name' => $this->input->post('term_name'),
+			'status' => 1,
+			'created_by' => $this->input->post('created_by'),
+			'date_created' => $this->input->post('date_created'),
+			'date_modified' => $this->input->post('date_modified')
+		);
+		
+		$addQuery = $this->terms_model->create($new_data);
+		
+		if($addQuery > 0){
+			
+			$new_id = $addQuery;
+			$term_id = mb_substr($this->input->post('term_name'), 0, 3) . $new_id;
+			$updateQuery = $this->terms_model->update($new_id, array("term_id" =>$term_id));
+			
+			if($updateQuery > 0){
+				echo json_encode($updateQuery);
+			}
+		}
+		else{
+			echo json_encode(0);
+		}
+		
     }
 }

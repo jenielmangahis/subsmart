@@ -7,8 +7,10 @@ class Jobs_model extends MY_Model
     public $table_job_settings = 'job_settings';
     public $table_jobs_has_address = 'jobs_has_address';
     public $table_jobs_has_customers = 'jobs_has_customers';
+    public $table_jobs_has_employees = 'jobs_has_employees';
     public $table_credit_cards = 'credit_cards';
     public $table_estimates = 'estimates';
+    public $table_employees = 'employees';
 
 
     /**
@@ -212,6 +214,17 @@ class Jobs_model extends MY_Model
         $result = $query->num_rows();
 
         return $jobNum . "-" . ((intval($result) > 9) ? strval(intval($result) + 1) : "0" . strval(intval($result) + 1));
+    }
+
+    public function getAssignEmp($job_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_jobs_has_employees);
+        $this->db->where('jobs_id', $job_id);
+        $this->db->join("employees", 'jobs_has_employees.employees_id = employees.id');
+        $query = $this->db->get();
+
+        return $query->result_array();
     }
 }
 

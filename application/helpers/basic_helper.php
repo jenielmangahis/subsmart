@@ -847,7 +847,16 @@ if (!function_exists('getFiles')) {
 
 }
 
+if (!function_exists('searchFilesOrFolders')) {
 
+    function searchFilesOrFolders($keyword, $findfolders, $findfiles){
+        $CI = &get_instance();
+        $company_id = logged('company_id');
+        
+        $sql = 'select ';
+    }
+
+}
 
 function getFolderManagerView($isMain = true){
     $CI = &get_instance();

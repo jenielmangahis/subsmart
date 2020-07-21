@@ -22,4 +22,12 @@ class Account_detail_model extends MY_Model {
 	  }
 	  return $output;
 	 }
+
+	 function getName($acc_detail_id)
+	{
+		$this->db->select('acc_detail_name');
+	    $this->db->from('account_detail');
+	    $this->db->where('acc_detail_id', $acc_detail_id);
+	    return $this->db->get()->row()->acc_detail_name;
+	}
 }

@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $(
-    "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable, #jobTypeTable"
+    "#jobListTable, #addItemsTable, #currentFormsTable, #jobHistoryTable, #jobTypeTable, #assignEmpTable"
   ).DataTable({
     destroy: true,
     columnDefs: [
@@ -348,6 +348,24 @@ $(document).ready(function () {
     };
     deleteMultiple(param);
   });
+
+  $("#assign_role").change(function () {
+    var param = {
+      id: $("#assign_role").val(),
+    };
+    getEmpByRole(param);
+  });
+
+  $("#add_assign_emp").click(function () {
+    if ($("#jobId").val() != "0") {
+      var param = {
+        job_id: $("#jobId").val(),
+        role_id: $("#assign_role").val(),
+        emp_id: $("#assign_emp").val(),
+      };
+      addAssignEmp(param);
+    }
+  });
 });
 
 function getCustomers() {
@@ -675,6 +693,47 @@ function deleteMultiple(param) {
     data: param,
     success: function (response) {
       window.location.href = "";
+    },
+  });
+}
+
+function getEmpByRole(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/getEmpByRole",
+    data: param,
+    success: function (response) {
+      var result = jQuery.parseJSON(response);
+      $("#assign_emp").empty();
+      for (var i = 0; i < result.length; i++) {
+        $("#assign_emp").append(
+          '<option selected="selected" value="' +
+            result[i].id +
+            '">' +
+            result[i].title +
+            "</option>"
+        );
+      }
+    },
+  });
+}
+
+function addAssignEmp(param) {
+  var items = [];
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/saveAssignEmp",
+    data: param,
+    success: function (data) {
+      var result = jQuery.parseJSON(data);
+      for (var i = 0; i < result.length; i++) {
+        var item = [result[i].title, result[i].emp_role];
+        items.push(item);
+      }
+      $("#assignEmpTable").DataTable({
+        destroy: true,
+        data: items,
+      });
     },
   });
 }

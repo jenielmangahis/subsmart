@@ -13,6 +13,7 @@ class Job extends MY_Controller
         $this->load->library('paypal_lib');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('Roles_model', 'roles_model');
 
 
         add_css(array( 
@@ -57,10 +58,11 @@ class Job extends MY_Controller
 
     public function new_job() {
         $get = $this->input->get();
+        $comp_id = logged('company_id');
 
         $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('company_id');
-        
+        $this->page_data['emp_roles'] = $this->roles_model->getRoles();
+        $this->page_data['employees'] = $this->db->get_where($this->jobs_model->table_employees, array('company_id' => $comp_id))->result();
         if (empty($get['job_num'])) {
             $comp = array(
                 'company_id' => $comp_id
@@ -82,6 +84,7 @@ class Job extends MY_Controller
                 $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
                 $this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
                 $this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
+                $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
             }
             
            $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
@@ -449,6 +452,31 @@ class Job extends MY_Controller
         }
 
         echo json_encode(true);
+    }
+
+    function getEmpByRole() {
+        postAllowed();
+        $id = $this->input->post('id');
+        $result = $this->db->get_where($this->jobs_model->table_employees, array('role_id' => $id))->result_array();
+
+        echo json_encode($result);
+    }
+
+    function saveAssignEmp() {
+        postAllowed();
+        $id = $this->input->post('role_id');
+        $role = $this->page_data['emp_roles'] = $this->roles_model->getRolesById($this->input->post('role_id'));
+
+        $data = array(
+            'jobs_id' => $this->input->post('job_id'),
+            'employees_id' => $this->input->post('emp_id'),
+            'emp_role' => $role->title
+        );
+
+        $this->db->insert($this->jobs_model->table_jobs_has_employees, $data);
+        $data = $this->jobs_model->getAssignEmp($this->input->post('job_id'));
+
+        echo json_encode($data);
     }
 }
 

@@ -539,7 +539,7 @@
 }
 /*Check Expenses modal*/
 #edit-expensesCheck .modal-title{
-    font-size: 2.4rem;
+    font-size: 24px;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
@@ -607,7 +607,304 @@
 #edit-expensesCheck .modal-footer-check  .end{
     border-right: none;
 }
+/*Bill modal*/
+#bill-modal .modal-title{
+    font-size: 24px;
+    line-height: 50px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+}
+#bill-modal .modal-header{
+    border-bottom: 0;
+}
+#bill-modal .modal-footer-check{
+    padding: 10px;
+    background: #393A3D;
+}
+#bill-modal.remove-button{
+    border-radius: 36px;
+}
+#bill-modal .modal-footer-check .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+#bill-modal label{
+    font-weight: 700;
+}
+#bill-modal textarea{
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    font-size: 16px;
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    color: #363636;
+}
+#bill-modal .table-container{
+    background: #ffffff;
+    padding-top: 15px;
+}
+#bill-modal .add-remove-line{
+    border-radius: 5px;
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    width: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#bill-modal .modal-footer-check  .middle-links{
+    display: inline-block;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    border-right: 1px solid whitesmoke;
+}
+#bill-modal .modal-footer-check  .middle-links a{
+    color: #ffffff;
+}
+#bill-modal .modal-footer-check  .middle-links a:hover{
+    text-decoration: underline;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
+}
+#bill-modal .modal-footer-check  .end{
+    border-right: none;
+}
+/*Expense modal*/
+#expense-modal .modal-title{
+    font-size: 24px;
+    line-height: 50px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+}
+#expense-modal .modal-header{
+    border-bottom: 0;
+}
+#expense-modal .modal-footer-check{
+    padding: 10px;
+    background: #393A3D;
+}
+#expense-modal.remove-button{
+    border-radius: 36px;
+}
+#expense-modal .modal-footer-check .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+#expense-modal label{
+    font-weight: 700;
+}
+#expense-modal textarea{
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    font-size: 16px;
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    color: #363636;
+}
+#expense-modal .table-container{
+    background: #ffffff;
+    padding-top: 15px;
+}
+#expense-modal .add-remove-line{
+    border-radius: 5px;
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    width: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#expense-modal .modal-footer-check  .middle-links{
+    display: inline-block;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    border-right: 1px solid whitesmoke;
+}
+#expense-modal .modal-footer-check  .middle-links a{
+    color: #ffffff;
+}
+#expense-modal .modal-footer-check  .middle-links a:hover{
+    text-decoration: underline;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
+}
+#expense-modal .modal-footer-check  .end{
+    border-right: none;
+}
+/*Vendor Credit*/
+#vendorCredit-modal .modal-title{
+    font-size: 24px;
+    line-height: 50px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+}
+#vendorCredit-modal .modal-header{
+    border-bottom: 0;
+}
+#vendorCredit-modal .modal-footer-check{
+    padding: 10px;
+    background: #393A3D;
+}
+#vendorCredit-modal.remove-button{
+    border-radius: 36px;
+}
+#vendorCredit-modal .modal-footer-check .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+#vendorCredit-modal label{
+    font-weight: 700;
+}
+#vendorCredit-modal textarea{
+    box-shadow: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 2px;
+    font-size: 16px;
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    color: #363636;
+}
+#vendorCredit-modal .table-container{
+    background: #ffffff;
+    padding-top: 15px;
+}
+#vendorCredit-modal .add-remove-line{
+    border-radius: 5px;
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    width: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#vendorCredit-modal  .modal-footer-check  .middle-links{
+    display: inline-block;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    border-right: 1px solid whitesmoke;
+}
+#vendorCredit-modal  .modal-footer-check  .middle-links a{
+    color: #ffffff;
+}
+#vendorCredit-modal  .modal-footer-check  .middle-links a:hover{
+    text-decoration: underline;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
+}
+#vendorCredit-modal .modal-footer-check  .end{
+    border-right: none;
+}
+/*Paydown modal*/
+#payDown-modal .modal-title{
+    font-size: 24px;
+    color: #393A3D;
+    padding-left: 15px;
+    vertical-align: middle;
+    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
+    background: #f4f5f8;
+}
+#payDown-modal .modal-body{
+    background: #ffffff;
+}
+#payDown-modal .modal-header{
+    border-bottom: 0;
+    height: 56px;
+}
+#payDown-modal .modal-footer-check{
+    padding: 10px;
+    background: #393A3D;
+}
+#payDown-modal .remove-button{
+    border-radius: 36px;
+}
+#payDown-modal label{
+    color: #6b6c72;
+    line-height: 20px;
+    font-weight: 400;
+    font-size: 14px;
+}
+#payDown-modal .modal-footer-check .cancel-button{
+    border-radius: 36px;
+    background: transparent;
+    border:1px solid #6B6C72;
+}
+
+#payDown-modal .table-container{
+    background: #ffffff;
+    padding-top: 15px;
+}
+#payDown-modal .add-remove-line{
+    border-radius: 5px;
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+    width: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#payDown-modal  .modal-footer-check  .middle-links a{
+    color: #ffffff;
+}
+#payDown-modal  .modal-footer-check  .middle-links a:hover{
+    text-decoration: underline;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
+}
+#payDown-modal .modal-footer-check  .end{
+    border-right: none;
+}
+#payDown-modal .header-form{
+    margin-bottom: 15px;
+    color: #333333;
+}
+#payDown-modal .amount-title{
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 0;
+    font-family:  "Avenir Next forINTUIT",Avenir,sans-serif;
+}
+#payDown-modal .amount-data h2{
+    margin-top: 0;
+    font-weight: 500;
+    font-family:  "Avenir Next forINTUIT",Avenir,sans-serif;
+}
+/*Privacy*/
+.privacy{
+    font-family:  "Avenir Next forINTUIT",Avenir,sans-serif;
+    font-size: 10px;
+    text-align: center;
+    color: #393A3D;
+}
 /*Form inline*/
+.inline {
+    display: inline-block;
+}
 .form-inline-group{
     width: 100%;
 }

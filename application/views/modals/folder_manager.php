@@ -33,7 +33,8 @@
                     <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="delete" title="Delete Folder/File" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                     <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="add_file" title="Add File" data-toggle="tooltip"><i class="fa fa-file"></i></a>
                     <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="create_folder" title="Create Folder" data-toggle="tooltip"><i class="fa fa-plus"></i></a>
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right float-right" control="view" title="View Details" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="view" title="View Details" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right float-right" control="search" title="Search File/Folder" data-toggle="tooltip"><i class="fa fa-search"></i></a>
                 </div> 
             </div>
           </div>
@@ -198,6 +199,46 @@
         </ul>
         <div id="download_div" class="d-none">
           <a href="#" class="btn btn-sm btn-default pull-right" control="download" title="Download File" data-toggle="tooltip"><i class="fa fa-download"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="modal-folder-manager-search" class="modal" role="dialog">
+  <div class="modal-dialog modal-xl">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Search File/Folder</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body pt-3">
+        <div class="card">
+          <div class="card-header">
+            <form class="form-inline">
+              <input type="text" class="form-control" placeholder="Input Keyword" id="modal-folder-manager-search-keyword">
+              <div class="form-check ml-3">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="modal-folder-manager-search-check-folder" checked> Find Folder(s)
+                </label>
+              </div>
+              <div class="form-check ml-3">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="modal-folder-manager-search-check-file" checked> Find File(s)
+                </label>
+              </div>
+              <button type="button" class="btn btn-primary ml-3"><i class="fa fa-search">&ensp;Search</i></button>
+            </form>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-fluid">
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

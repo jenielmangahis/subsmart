@@ -101,16 +101,57 @@
             <p>By creating this survey, you can either use a pre-made template or make your own.  </p>
           </div>
           <div>
-            <button type="button" id="#btnSubmitSurvey" onclick="submitSurvey(event)" class="btn btn-primary btn-sm">Create Survey</button>
+            <!-- <button type="button" id="#btnSubmitSurvey" onclick="submitSurvey(event)" class="btn btn-primary btn-sm">Create Survey</button> -->
           </div>
         </div>
-        <div class="alert alert-light">
-          <span id="status-survey-name-text" class="text-danger"> <i class="fa fa-check-circle"></i> Survey Name</span><br/>
-          <span id="status-theme-text" class="text-danger"> <i class="fa fa-check-circle"></i> Theme</span><br/>
-          <span id="status-template-text" class="text-danger"> <i class="fa fa-check-circle"></i> Template (optional)</span><br/>
+        
+        <div class="container">
+          <div class="row">
+            <div class="col-3">
+              <div class="card text-center" style="height: 100%">
+                <h1 id="status-workspace-icon" class="text-danger">
+                  <i class="fa fa-table"></i>
+                </h1>
+                <h5 id="status-workspace-text" class="text-danger"> <i class="fa fa-check-circle"></i> Workspace</h5>
+                <span id="status-workspace-content"></span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="card text-center" style="height: 100%">
+                <h1 id="status-survey-name-icon" class="text-danger">
+                  <i class="fa fa-font"></i>
+                </h1>
+                <h5 id="status-survey-name-text" class="text-danger"> <i class="fa fa-check-circle"></i> Survey Name </h5>
+                <span id="status-workspace-content"></span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="card text-center" style="height: 100%">
+                <h1 id="status-theme-icon" class="text-danger">
+                  <i class="fa fa-paint-brush"></i>
+                </h1>
+                <h5 id="status-theme-text" class="text-danger"> <i class="fa fa-check-circle"></i> Theme</h5>
+                <span id="status-theme-content"></span>
+                <span>(Optional)</span>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="card text-center" style="height: 100%">
+                <h1 id="status-template-icon" class="text-danger">
+                  <i class="fa fa-th-list"></i>
+                </h1>
+                <h5 id="status-template-text" class="text-danger"> <i class="fa fa-check-circle"></i> Template</h5>
+                <span id="status-template-content"></span>
+                <span>(Optional)</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-center">
+            <button type="button" id="#btnSubmitSurvey" onclick="submitSurvey(event)" class="btn btn-success my-3 text-center px-5"><strong><i class="fa fa-plus-square-o"></i> Create Survey</strong></button>
+          </div>
         </div>
         <div class="form-group">
-          <label for="txtSurveyName">Survey Name</label>
+          <label for="txtSurveyName">Survey Name<span class="text-danger">*</span></label>
           <input type="text" name="txtSurveyName" id="txtSurveyName" class="form-control" placeholder="(e.g. Alexa's 18th Birthday review, etc.)">
         </div>
         <div class="row container">
@@ -129,7 +170,7 @@
   
   
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="templateToggleSwitch">
+          <input type="checkbox" class="custom-control-input" id="templateToggleSwitch" onchange="toggleTemplate()">
           <label class="custom-control-label" for="templateToggleSwitch">Toggle this switch element</label>
         </div>  
 
@@ -188,13 +229,7 @@
             ?>
           </div>
         </div>
-        <script>
-          document.querySelector('#templateToggleSwitch').addEventListener('click',(e)=>{
-            console.log(e.target.checked);
-            if(e.target.checked) document.querySelector('#templateSection').style.display = 'block';
-            if(!e.target.checked) document.querySelector('#templateSection').style.display = 'none';
-          })
-        </script>
+        
 
 
       </div>
@@ -262,25 +297,30 @@
               </div>
             </div>
             <div class="modal-body">
+              <div class="card theme-card">
+                <button class="btn btn-block btn-outline-dark" onclick="selectTheme(null)" data-dismiss="modal">
+                  No theme
+                </button>
+              </div>
               <div class="row">
                 <?php 
                   foreach($survey_themes as $key=>$theme){
                     ?>
                       <div data-id="<?php $theme->sth_rec_no?>" class="col-xs-12 " onclick="selectTheme(<?=$key?>)" data-dismiss="modal">
                         <div class="card theme-card" >
-                            <img src="<?= base_url()?>uploads/survey/themes/<?= $theme->sth_primary_image?>" style="<?= $theme->sth_primary_image_class?>" alt="<?= $theme->sth_primary_image?>" class="theme-image">
-                            <div class="theme-info">
-                              <div class="card-body">
-                                <h4 style="color: <?= $theme->sth_text_color?>"><?= $theme->sth_theme_name?></h4>
-                                <div class="color-slots">
-                                  <div class="color-slot" style="background-color: <?= $theme->sth_primary_color ?>"></div>
-                                  <div class="color-slot" style="background-color: <?= $theme->sth_secondary_color ?>"></div>
-                                  <div class="color-slot" style="background-color: <?= $theme->sth_tertiary_color ?>"></div>
-                                </div>
+                          <img src="<?= base_url()?>uploads/survey/themes/<?= $theme->sth_primary_image?>" style="<?= $theme->sth_primary_image_class?>" alt="<?= $theme->sth_primary_image?>" class="theme-image">
+                          <div class="theme-info">
+                            <div class="card-body">
+                              <h4 style="color: <?= $theme->sth_text_color?>"><?= $theme->sth_theme_name?></h4>
+                              <div class="color-slots">
+                                <div class="color-slot" style="background-color: <?= $theme->sth_primary_color ?>"></div>
+                                <div class="color-slot" style="background-color: <?= $theme->sth_secondary_color ?>"></div>
+                                <div class="color-slot" style="background-color: <?= $theme->sth_tertiary_color ?>"></div>
                               </div>
                             </div>
+                          </div>
                         </div>
-                    </div>
+                      </div>
                       <!-- <button class="btn btn-light btn-block" onclick="selectTheme(<?=$key?>)" data-dismiss="modal"><?=$theme->sth_theme_name?></button> -->
                     <?php
                   }
@@ -302,18 +342,29 @@
 <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
 <script type="text/javascript" src="<?=base_url()?>/assets/js/survey.js"></script>
 <script>
+  const statusWorkspace = document.querySelector('#status-workspace-text');
+  const statusWorkspaceIcon = document.querySelector('#status-workspace-icon');
+  const statusWorkspaceContent = document.querySelector('#status-workspace-content');
   const statusSurveyName = document.querySelector('#status-survey-name-text');
+  const statusSurveyNameIcon = document.querySelector('#status-survey-name-icon');
+  const statusSurveyNameContent = document.querySelector('#status-survey-name-content');
   const statusTemplate = document.querySelector('#status-template-text');
+  const statusTemplateIcon = document.querySelector('#status-template-icon');
+  const statusTemplateContent = document.querySelector('#status-template-content');
   const statusTheme = document.querySelector('#status-theme-text');
+  const statusThemeIcon = document.querySelector('#status-theme-icon');
+  const statusThemeContent = document.querySelector('#status-theme-content');
 
-  let url = new URL(window.location.href);
+  const url = new URL(window.location.href);
+  const workspaces = <?=json_encode($survey_workspaces)?> ;
+  const templates = <?=json_encode($survey_templates)?>;
+  const templateQuestions = <?=json_encode($survey_question_templates)?>;
+  const surveyThemes = <?=json_encode($survey_themes)?>;
   let cardIsLoading = false;
-  let templates = <?=json_encode($survey_templates)?>;
-  let templateQuestions = <?=json_encode($survey_question_templates)?>;
-  let surveyThemes = <?=json_encode($survey_themes)?>;
   let viewingTemplate = null;
   let selectedTemplate = null;
   let selectedWorkspace = null;
+  let selectedWorkspaceId = null;
   let selectedTheme = null;
   
   let searchedParams = url.searchParams;
@@ -323,12 +374,30 @@
     if(!searchedParams.get('ws')){
       $('#modalSelectWorkspace').modal('show');
       document.querySelector('#workspace-text-card').style.display = "block";
+    }else{
+      selectedWorkspace = workspaces.filter((workspace)=>{
+        return workspace.id == searchedParams.get('ws');
+      })[0];
+      
+      statusWorkspace.classList.remove("text-danger");
+      statusWorkspace.classList.add("text-success");
+      statusWorkspaceIcon.classList.remove("text-danger");
+      statusWorkspaceIcon.classList.add("text-success");
+      statusWorkspaceContent.innerHTML = "Selected Workspace: <strong>" + selectedWorkspace.name + "</strong>";
     }
 
     if(searchedParams.get('th')){
       selectedTemplate = templates.filter((template)=>{
         return template.id == searchedParams.get('th');
       })[0];
+      
+      statusTemplate.classList.remove("text-danger");
+      statusTemplate.classList.add("text-success");
+      statusTemplateIcon.classList.remove("text-danger");
+      statusTemplateIcon.classList.add("text-success");
+      statusTemplateContent.innerHTML = "Selected Template: <strong>"+selectedTemplate.name+"</strong>"
+      document.querySelector('#templateToggleSwitch').checked = true;
+      document.querySelector('#templateSection').style.display = 'block';
       document.querySelector('#selected-template-text').innerHTML = "Selected Template: <strong>"+selectedTemplate.name+"</strong>";
 
       selectedTheme = surveyThemes.filter(theme=>{
@@ -338,31 +407,79 @@
       document.querySelector('#imgSelectedTheme').src = `<?=base_url()?>uploads/survey/themes/${selectedTheme.sth_primary_image}`;
       document.querySelector('#imgSelectedTheme').alt = selectedTheme.sth_primary_image;
       document.querySelector('#imgSelectedTheme').style.display = "block";
+      statusTheme.classList.remove("text-danger");
+      statusTheme.classList.add("text-success");
+      statusThemeIcon.classList.remove("text-danger");
+      statusThemeIcon.classList.add("text-success");
+      statusThemeContent.innerHTML = `Selected Theme: <strong>${selectedTheme.sth_theme_name}</strong>`
     }
   })
 
-  document.querySelector('#txtSurveyName').addEventListener('change', ()=>{
-    console.log("this needs to be updated");
-    // console.log(statusSurveyName);
-    // statusSurveyName.class = "text-success";
-    // statusSurveyName.classlist.add = "text-success";
+  
+  document.querySelector('#txtSurveyName').addEventListener('change', (e)=>{
+    if(e.target.value === ''){
+      statusSurveyName.classList.remove("text-success");
+      statusSurveyName.classList.add("text-danger");
+      statusSurveyNameIcon.classList.remove("text-success");
+      statusSurveyNameIcon.classList.add("text-danger");
+      statusSurveyNameContent.innerHTML = ''
+    }else{
+      statusSurveyName.classList.remove("text-danger");
+      statusSurveyName.classList.add("text-success");
+      statusSurveyNameIcon.classList.remove("text-danger");
+      statusSurveyNameIcon.classList.add("text-success");
+      statusSurveyNameContent.innerHTML = `Name: ${e.target.value}`;
+    }
   })
 
-  selectTheme = id => {
-    selectedTheme = id;
-    document.querySelector('#theme-text').innerHTML = "Selected theme: <strong>"+ surveyThemes[id].sth_theme_name +"</strong>"
-    document.querySelector('#imgSelectedTheme').src = `<?=base_url()?>uploads/survey/themes/${surveyThemes[id].sth_primary_image}`;
-    document.querySelector('#imgSelectedTheme').alt = surveyThemes[id].sth_primary_image;
-    document.querySelector('#imgSelectedTheme').style.display = "block";
+  selectTheme = (id = null) => {
+    selectedTheme = surveyThemes[id].sth_rec_no;
+    if(selectedTheme === null){
+      statusTheme.classList.remove("text-success");
+      statusTheme.classList.add("text-danger");
+      statusThemeIcon.classList.remove("text-success");
+      statusThemeIcon.classList.add("text-danger");
+      statusThemeContent.innerHTML = ``
+      document.querySelector('#theme-text').innerHTML = "No Theme Selected";
+      document.querySelector('#imgSelectedTheme').src = "";
+      document.querySelector('#imgSelectedTheme').alt = "";
+      document.querySelector('#imgSelectedTheme').style.display = "none";
+      
+    }else{
+      statusTheme.classList.remove("text-danger");
+      statusTheme.classList.add("text-success");
+      statusThemeIcon.classList.remove("text-danger");
+      statusThemeIcon.classList.add("text-success");
+      statusThemeContent.innerHTML = `Selected Theme: <strong>${surveyThemes[id].sth_theme_name}</strong>`
+      document.querySelector('#theme-text').innerHTML = "Selected theme: <strong>"+ surveyThemes[id].sth_theme_name +"</strong>"
+      document.querySelector('#imgSelectedTheme').src = `<?=base_url()?>uploads/survey/themes/${surveyThemes[id].sth_primary_image}`;
+      document.querySelector('#imgSelectedTheme').alt = surveyThemes[id].sth_primary_image;
+      document.querySelector('#imgSelectedTheme').style.display = "block";
+      
+    }
+    console.log(typeof(selectedTheme))
+    console.log(selectedTheme)
+
+
   }
 
   selectWorkspace = (id, name) => {
     selectedWorkspace = id;
+    statusWorkspace.classList.remove("text-danger");
+    statusWorkspace.classList.add("text-success");
+    statusWorkspaceIcon.classList.remove("text-danger");
+    statusWorkspaceIcon.classList.add("text-success");
+    statusWorkspaceContent.innerHTML = "Selected Workspace: <strong>" + name + "</strong>";
     document.querySelector('#workspace-text').innerHTML = "Selected Workspace: <br/><strong>" + name + "</strong>";
   }
 
 
   selectTemplate = id => {
+    
+    statusTemplate.classList.remove("text-danger");
+    statusTemplate.classList.add("text-success");
+    statusTemplateIcon.classList.remove("text-danger");
+    statusTemplateIcon.classList.add("text-success");
     selectedTemplate = viewingTemplate;
     document.querySelector('#selected-template-text').innerHTML = "Selected Template: <strong>"+selectedTemplate.name+"</strong>";
     
@@ -375,7 +492,19 @@
     document.querySelector('#imgSelectedTheme').alt = surveyThemes[id].sth_primary_image;
     document.querySelector('#imgSelectedTheme').style.display = "block";
   }
-  
+
+  document.querySelector('#templateToggleSwitch').addEventListener('click',(e)=>{
+    if(e.target.checked) document.querySelector('#templateSection').style.display = 'block';
+    if(!e.target.checked) {
+      selectedTemplate = null
+      document.querySelector('#templateSection').style.display = 'none'
+      statusTemplate.classList.remove("text-success");
+      statusTemplate.classList.add("text-danger");
+      statusTemplateIcon.classList.remove("text-success");
+      statusTemplateIcon.classList.add("text-danger");
+    };
+  })
+
   viewTemplate = tempId => {
     let questionsContainer = document.querySelector('#template-questions-list');
     cardIsLoading = true;
@@ -412,38 +541,42 @@
   }
   
   submitSurvey = (e) => {
+    let errors = false
     surveyData = {
       'title': document.querySelector('#txtSurveyName').value,
       'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)? selectedWorkspace : 0,
-      'theme_id': selectedTheme === null ? 0 : selectedTheme
+      'theme_id': selectedTheme === null ? null : selectedTheme
     };
 
-    if(document.querySelector('#txtSurveyName').value === ""){
-      
-      toastr["error"]("Form title not yet added");
-      return;
-    }
     
-    e.target.innerHTML = '<span class="spinner-border spinner-border-sm m-0" role="status" aria-hidden="true"></span> Submitting';
+    if(document.querySelector('#txtSurveyName').value === ""){
+      errors = true
+    }
 
-    setTimeout(() => {
-      // add survey
-      $.ajax({
-        url: surveyBaseUrl + 'survey/create',
-        data: surveyData,
-        dataType: 'json',
-        type: 'POST',
-        success: function(payload){
-          if(selectedTemplate){
-            submitQuestions(payload);
-            toastr["success"]("Survey with template added!");
-          }else{
-            toastr["success"]("Survey added!");
+    if(errors === false){
+      e.target.innerHTML = '<span class="spinner-border spinner-border-sm m-0" role="status" aria-hidden="true"></span> Submitting';
+  
+      setTimeout(() => {
+        // add survey
+        $.ajax({
+          url: surveyBaseUrl + 'survey/create',
+          data: surveyData,
+          dataType: 'json',
+          type: 'POST',
+          success: function(payload){
+            if(selectedTemplate){
+              submitQuestions(payload);
+              toastr["success"]("Survey with template added!");
+            }else{
+              toastr["success"]("Survey added!");
+            }
+            window.location = '<?= base_url();?>survey/result/'+payload.data.id;
           }
-          window.location = '<?= base_url();?>survey/result/'+payload.data.id;
-        }
-      })
-    }, 5000);
+        })
+      }, 5000);
+    }else{
+      toastr["error"]("Please fill up the required fields");
+    }
 
   }
 

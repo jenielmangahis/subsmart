@@ -334,7 +334,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <button class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button type="button" class="btn btn-primary col-md-12"  data-toggle="modal" data-target="#exampleModal">Assign Employees</button>
+                                                <button type="button" class="btn btn-primary col-md-12" data-toggle="modal" data-target="#exampleModal">Assign Employees</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button type="button" class="btn btn-default col-md-12 previewCurrentJobTable">Preview</button>
@@ -743,7 +743,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body">                       
                             <table class="table table-hover table-bordered table-striped" style="width:100%;" id="currentFormsTable">
                                 <thead>
                                     <tr>
@@ -765,7 +765,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Assign Employees</h5>
@@ -774,11 +774,63 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <div class="col-md-12 text-left form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="job_customer">Role</label>
+                                <select class="form-control" id="assign_role" name="assign_role">
+                                    <?php if(!empty($emp_roles)) : ?>
+                                        <?php foreach($emp_roles as $role) : ?>
+                                            <?php if($role->title == "Tech") : ?>
+                                                <?php $default_role = $role->id; ?>
+                                                <option value="<?php echo $role->id; ?>" selected><?php echo $role->title; ?></option>
+                                            <?php endif; ?>
+                                            <?php if($role->title != "Tech") : ?>
+                                                <option value="<?php echo $role->id; ?>"><?php echo $role->title; ?></option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div>  
+                            <div class="col-md-4">
+                                <label for="job_customer">Employees</label>
+                                <select class="form-control" id="assign_emp" name="assign_emp">
+                                    <?php if(!empty($employees)) : ?>
+                                        <?php foreach($employees as $employee) : ?>
+                                            <?php if ($default_role == $employee->role_id) : ?>
+                                                <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                            </div> 
+                            <div class="col-md-4">
+                                <br>
+                                <button type="button" class="btn btn-primary mt-2" id="add_assign_emp">Assign Employee</button>
+                            </div>  
+                        </div>
+                    </div>  
+                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="assignEmpTable">
+                        <thead>
+                            <tr>
+                                <th scope="col"><strong>Name</strong></th>
+                                <th scope="col"><strong>Role</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($assignEmployees)) : ?>
+                            <?php foreach($assignEmployees as $emp) : ?>
+                                <tr>
+                                    <td class="pl-3"><?php echo $emp['title']; ?></td>
+                                    <td class="pl-3"><?php echo $emp['emp_role']; ?></td>                                
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php endif;?>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
                 </div>
             </div>

@@ -169,16 +169,16 @@
                       <div class="col-xs-12 col-sm-6 col-md-9 py-2">
                           <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-3">
-                              <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn-block btn btn-warning" target="_blank">Preview</a>
+                              <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn-block btn btn-warning" target="_blank"><i class="fa fa-eye"></i> Preview</a>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-3">
-                              <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class="btn-block btn btn-info">Share</a>
+                              <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class="btn-block btn btn-info"><i class="fa fa-share"></i> Share</a>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-3">
-                              <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class="btn-block btn btn-success">Edit Survey</a>
+                              <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class="btn-block btn btn-success"><i class="fa fa-edit"></i> Edit Survey</a>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-3">
-                              <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class="btn-block btn btn-danger">Delete</a>
+                              <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class="btn-block btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
                             </div>
                           </div>
                         
@@ -189,7 +189,7 @@
                               <div class="form-group">
                                 <div class="input-group">
                                   <input type="text" name="txtLink" id="txtLink" readonly class="form-control" value="<?=base_url()?>survey/<?=$survey->id?>?st=<?= url_title(strtolower($survey->title))?>">
-                                  <button onclick="copyLink()" id="btnCopyLink" class="btn btn-info">Copy Link</button>
+                                  <button onclick="copyLink()" id="btnCopyLink" class="btn btn-info"><i class="fa fa-copy"></i> Copy Link</button>
                                 </div>
                               </div>
                             <!-- </div> -->
@@ -202,7 +202,7 @@
                             ?>
                               <div class=" card survey-kpi-card" style="background-color: rgb(240, 240, 240);">
                                 <h6 class="mb-0 text-dark">We couldn't load your question data</h6>
-                                <p class="font-weight-normal text-dark">Sorry, this is embarrassing—but your data is safe. Either refresh the page, or you haven't added any question(s) yet.</p>
+                                <p class="font-weight-normal text-dark">Sorry, this is embarrassing—but your data is safe. Either refresh the page, or you haven't added any question(s) yet. </p>
                               </div>
                             <?php
                           }else{
@@ -658,9 +658,9 @@
         </div>
       </div>
       <!-- end row -->
+    </div>
+    <!-- end container-fluid -->
   </div>
-  <!-- end container-fluid -->
-</div>
 </div>
 <!-- page wrapper end -->
 

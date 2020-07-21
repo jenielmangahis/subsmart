@@ -84,6 +84,17 @@
     object-fit: cover;
   }
 
+  #welcome-image-container{
+    text-align: center;
+    padding-bottom: 210px;
+  }
+
+  #welcome-image{
+    height: 320px;
+    position: absolute;
+    left: 25%;
+  }
+
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -95,13 +106,12 @@
     <div class="card p-5">
       <div class="card-content">
         <div id="workspace-list">
-          <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4">
-              <div class="text-center">
-                <img src="assets/survey/wizard.jpg" alt="wizard" style="height: 300px">            
+
+          <div class="container">
+            <div class="col-xs-12">
+              <div id="welcome-image-container">
+                <img id="welcome-image" src="assets/survey/wizard.png" alt="wizard">            
               </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-8">
               <h1 class="text-center">
                 Welcome to Survey Wizard
               </h1>
@@ -115,6 +125,7 @@
               <p class="text-center">Quick Links<br/><a href="<?=base_url()?>survey/workspace">Workspaces</a> | <a href="<?=base_url()?>survey/themes">Themes</a> </p>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -210,12 +221,13 @@
                             </div>
                           </div>
                           <?php foreach ($workspace->surveys as $key => $survey): ?>
+                          
                             <div class="col-xs-12 col-sm-6 col-xl-3">
                               <!-- Card content for each survey -->
                               <div data-id="<?= $survey->id ?>" class="card survey-card border-0 shadow" >
-                                <!-- <a class="text-left" href="<?=base_url()?>survey/result/<?= $survey->id ?>"> -->
+                                <a class="text-left" href="<?=base_url()?>survey/result/<?= $survey->id ?>">
                                   <div class="card-body p-0">
-                                    <?php if($survey->survey_theme == null){
+                                    <?php if($survey->survey_theme == null || $survey->theme_id === null){
                                       ?>
                                         <img class="survey-card-image" style="width: 100%" src="https://via.placeholder.com/150" alt="">
                                       <?php
@@ -249,7 +261,7 @@
                                     
                                     </div>
                                   </div>
-                                <!-- </a> -->
+                                </a>
                               </div>
 
                             </div>
@@ -277,8 +289,8 @@
   <div id="template-list" class="w-100">
     <div class="card p-5">
       <div class="card-content">
-        <h4>Templates</h4>
-
+        <h4><i class="fa fa-th-list"></i> Templates</h4>
+        <p>Here are the list of templates that include all the questions at your disposal. </p>
         <div class="accordion" id="accordionExample">
           <?php      
             foreach($template_categories as $key => $category){

@@ -9,4 +9,11 @@ class Account_model extends MY_Model {
 	{
 		parent::__construct();
 	}
+	function getName($account_id)
+	{
+		$this->db->select('account_name');
+	    $this->db->from('account');
+	    $this->db->where('id', $account_id);
+	    return $this->db->get()->row()->account_name;
+	}
 }

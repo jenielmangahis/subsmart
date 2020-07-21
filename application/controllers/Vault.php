@@ -226,7 +226,22 @@ class Vault extends MY_Controller {
 		$path = '/uploads/' . $this->company_folder . $file->file_path;
 		$fc = file_get_contents($path);
 
+		$data = array(
+			'downloads_count' => $file->downloads_count + 1
+		);
+
+		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));
+
 		force_download($file->title, $fc);
+	}
+
+	public function update_preview($file_id){
+		$file = $this->vault_model->getById($file_id);
+		$data = array(
+			'previews_count' => $file->previews_count + 1
+		);
+
+		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));	
 	}
 
 }
