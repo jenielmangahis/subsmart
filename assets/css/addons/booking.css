@@ -13,6 +13,19 @@
     position: relative;
     bottom: 3px;
 }
+.pt-21 {
+    padding-top: 21px;
+}
+textarea.form-control.ft-instruction {
+    min-height: 115px;
+}
+.p-relative-bottom-36 {
+    position: relative;
+    bottom: 36px;
+}
+.input-group-addon.input-dollar {
+    padding-top: 14.5px !important;
+}
 .booking-tab:hover{
     color: #404040;
     text-decoration: none;
