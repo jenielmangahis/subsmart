@@ -106,8 +106,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </td>
                                                 <td width="20%">
                                                     <div class="onoffswitch">
-                                                        <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox" id="product-status-<?= $sitem->name; ?>" checked="checked">
-                                                        <label class="onoffswitch-label" for="product-status-<?= $sitem->name; ?>">
+                                                        <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox" id="product-status-<?= $sitem->id; ?>">
+                                                        <label class="onoffswitch-label" for="product-status-<?= $sitem->id; ?>">
                                                             <span class="onoffswitch-inner"></span>
                                                             <span class="onoffswitch-switch"></span>
                                                         </label>

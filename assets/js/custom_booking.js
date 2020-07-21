@@ -141,9 +141,6 @@ $(document).ready(function() {
         $("#cat_id").val(cat_id);
         $("#modalDeleteCategory").modal('show');
     });
-
-
-
 });   
 
 function deleteTimeSlotRow(row_id) {

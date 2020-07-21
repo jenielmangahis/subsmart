@@ -58,9 +58,9 @@
                         $service_item_thumb = $service_item->image;
                         if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
                             
-                            $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg');
+                            $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg'); 
                             if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-                                $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
+                                $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg'); 
                             } else {
                                 $service_item_thumb_img = base_url('uploads/service_item/'.$service_item_thumb);
                             }
