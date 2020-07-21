@@ -176,37 +176,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <label for="convert_lead_to_work_order"><span>Auto-Schedule a Work Order</span></label>
                                             </div>
                                         </div>
-                                        <div class="margin-top-ter hide" id="convert_lead_to_work_order_employees">
+                                        <?php   
+                                            $hide = 'hide';
+                                            if( $setting['convert_lead_to_work_order'] == 1){ 
+                                                $hide = '';
+                                            }
+                                        ?>
+                                        
+                                        <div class="margin-top-ter <?php echo $hide; ?>" id="convert_lead_to_work_order_employees">
                                             <label>Assign To</label>
                                             <ul class="employees clearfix pl-2">
-                                                <li>
-                                                    <div class="checkbox checkbox-sm">
-                                                        <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14278" checked="checked"  id="employee_id_14278" />
-                                                        <label for="employee_id_14278"><span>Alarm Direct</span>
-                                                         <span class="text-ter">(owner)</span>                            </label>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="checkbox checkbox-sm">
-                                                        <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14291"  id="employee_id_14291" />
-                                                        <label for="employee_id_14291"><span>Brannon Nguyen</span>
-                                                                                    </label>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="checkbox checkbox-sm">
-                                                        <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14281"  id="employee_id_14281" />
-                                                        <label for="employee_id_14281"><span>TC Nguyen</span>
-                                                                                    </label>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="checkbox checkbox-sm">
-                                                        <input type="checkbox" name="convert_lead_to_work_order_employees[]" value="14285"  id="employee_id_14285" />
-                                                        <label for="employee_id_14285"><span>Tommy Nguyen</span>
-                                                                                    </label>
-                                                    </div>
-                                                </li>
+                                                <?php foreach($employees as $e){ ?>
+                                                    <li>
+                                                        <div class="checkbox checkbox-sm">
+                                                            <?php 
+                                                                $is_checked = '';
+                                                                if( in_array($e->id, $aasignedUsers) ){
+                                                                    $is_checked = 'checked="checked"';
+                                                                }                                                                
+                                                            ?>
+                                                            <input type="checkbox" name="lead_work_order_employees[]" value="<?php echo $e->id; ?>" <?php echo $is_checked; ?>  id="<?php echo "eid_" . $e->id; ?>" />
+                                                            <label for="<?php echo "eid_" . $e->id; ?>"><span><?php echo $e->FName . ' ' . $e->LName; ?></span>
+                                                        </div>
+                                                    </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </div>
@@ -287,7 +280,7 @@ $(function(){
     $(".btn-update-setting").click(function(){
         $("#modalUpdateSetting").modal('show');
 
-        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Saving...</div>';
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Saving...</div>';
         var url = base_url + '/booking/_save_setting';
 
         $(".modal-setting-msg").html(msg);

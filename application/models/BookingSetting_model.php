@@ -31,7 +31,14 @@ class BookingSetting_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
-}
+
+    public function createSetting($data){
+        $this->db->insert($this->table,$data);
+        
+        $last_id = $this->db->insert_id();
+        return  $last_id;
+    }
+} 
 
 /* End of file BookingSetting_model.php */
 /* Location: ./application/models/BookingSetting_model.php */
