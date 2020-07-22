@@ -56,7 +56,19 @@ class Booking extends MY_Controller {
 	}
 
 	public function form() {
+
+		$default_form_fields = array(
+			'Full Name' => 'full_name',
+			'Contact Number' => 'contact_number',
+			'Email' => 'email',
+			'Address' => 'address',
+			'Message' => 'message',
+			'Preferred Time To Contact' => 'preferred_time_to_contact',
+			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
+		);
+
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['default_form_fields'] = $default_form_fields;
 		$this->load->view('online_booking/form', $this->page_data);
 	}
 

@@ -183,6 +183,15 @@ $(document).ready(function() {
         }
 
     });    
+
+    $(".select-form-field-visible").click(function(){
+        var field_name = $(this).attr("data-field-name");
+        if($('#is_visible_' + field_name).is(':checked')) {
+           $(".form-group-" + field_name).show();          
+        } else {
+           $(".form-group-" + field_name).hide();    
+        }
+    });        
 });   
 
 function deleteTimeSlotRow(row_id) {
