@@ -405,7 +405,7 @@
 
 <!-- Modal Add Form Field --> 
 <div class="modal fade" id="modalAddFormField" tabindex="-1" role="dialog" aria-labelledby="modalAddFormField" aria-hidden="true">
-  <?php echo form_open_multipart('booking/create_categor', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+  <?php echo form_open_multipart('booking/create_form', [ 'id' => 'frm-booking-add-field', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -414,12 +414,12 @@
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
-	      <div class="modal-body">
+	      <div class="modal-body body-add-form-field">
 	        <input type="text" name="field_name" id="field_name" value="" class="form-control" autocomplete="off">
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="submit" class="btn btn-primary">Add</button>
+	        <button type="button" class="btn btn-primary add-custom-field">Add</button>
 	      </div>
 	    </div>
 	  </div>
