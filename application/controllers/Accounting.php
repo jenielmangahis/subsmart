@@ -8,9 +8,10 @@ class Accounting extends MY_Controller {
         parent::__construct();
 		$this->load->model('vendors_model');
 		$this->load->model('terms_model');
+        $this->load->model('expenses_model');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
-            "assets/css/accounting/banking.css?v=".rand(),
+            "assets/css/accounting/accounting.css?v=".rand(),
             "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
@@ -18,7 +19,7 @@ class Accounting extends MY_Controller {
         ));
 
         add_footer_js(array(
-            "assets/js/accounting/main.js",
+            "assets/js/accounting/accounting.js?v=".rand(),
             "assets/plugins/dropzone/dist/dropzone.js",
         ));
 
@@ -246,7 +247,6 @@ class Accounting extends MY_Controller {
 		else{
 			echo json_encode(0);
 		}
-		
     }
 	public function addTerms()
     {
@@ -277,5 +277,92 @@ class Accounting extends MY_Controller {
 			echo json_encode(0);
 		}
 		
+    }
+//    Expenses
+
+    public function timeActivity(){
+        $new_data = array(
+            'date' => $this->input->post('date'),
+            'name' => $this->input->post('name'),
+            'customer' => $this->input->post('customer'),
+            'service' => $this->input->post('service'),
+            'billable' => $this->input->post('billable'),
+            'start_end_times' => $this->input->post('start_end_times'),
+            'time' => $this->input->post('time'),
+            'description' => $this->input->post('description')
+        );
+        $query = $this->expenses_model->timeActivity($new_data);
+        if ($query == true){
+            redirect('accounting/expenses');
+        }else{
+            redirect('accounting/expenses');
+        }
+    }
+
+    public function addBill(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'terms' => $this->input->post('terms'),
+            'bill_date' => $this->input->post('bill_date'),
+            'due_date' => $this->input->post('due_date'),
+            'bill_number' => $this->input->post('bill_num'),
+            'permit_number' => $this->input->post('permit_num'),
+        );
+        $query = $this->expenses_model->addBill($new_data);
+        if ($query == true){
+            redirect('accounting/expenses');
+        }else{
+            redirect('accounting/expenses');
+        }
+    }
+
+    public function addExpense(){
+	    $new_data = array(
+	        'vendor_id' => $this->input->post('vendor_id'),
+	        'payment_account' => $this->input->post('payment_account'),
+	        'payment_date' => $this->input->post('payment_date'),
+	        'payment_method' => $this->input->post('payment_method'),
+	        'ref_number' => $this->input->post('ref_num'),
+	        'permit_number' => $this->input->post('permit_num'),
+        );
+	    $query = $this->expenses_model->addExpense($new_data);
+        if ($query == true){
+            redirect('accounting/expenses');
+        }else{
+            redirect('accounting/expenses');
+        }
+    }
+
+    public function vendorCredit(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'payment_date' => $this->input->post('payment_date'),
+            'ref_number' => $this->input->post('ref_num'),
+            'permit_number' => $this->input->post('permit_num'),
+        );
+        $query = $this->expenses_model->vendorCredit($new_data);
+        if ($query == true){
+            redirect('accounting/expenses');
+        }else{
+            redirect('accounting/expenses');
+        }
+    }
+
+    public function payDown(){
+        $new_data = array(
+            'credit_card_id' => $this->input->post('credit_card_id'),
+            'amount' => $this->input->post('amount'),
+            'date_payment' => $this->input->post('date_payment'),
+            'payment_account' => $this->input->post('payment_account'),
+            'check_number' => $this->input->post('check_num'),
+        );
+        $query = $this->expenses_model->payDown($new_data);
+        if ($query == true){
+            redirect('accounting/expenses');
+        }else{
+            redirect('accounting/expenses');
+        }
     }
 }

@@ -228,13 +228,19 @@
                                 <a class="text-left" href="<?=base_url()?>survey/result/<?= $survey->id ?>">
                                   <div class="card-body p-0">
                                     <?php if($survey->survey_theme == null || $survey->theme_id === null){
-                                      ?>
-                                        <img class="survey-card-image" style="width: 100%" src="https://via.placeholder.com/150" alt="">
-                                      <?php
+                                        ?>
+                                          <img class="survey-card-image" style="width: 100%" src="https://via.placeholder.com/150" alt="">
+                                        <?php
                                     }else{
-                                      ?>
-                                      <img class="survey-card-image" src="<?=base_url()?>uploads/survey/themes/<?=$survey->survey_theme->sth_primary_image?>" alt="">
-                                      <?php
+                                      if($survey->background_image != null && $survey->use_background_image == true){
+                                        ?>
+                                          <img class="survey-card-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->background_image ?>" alt="<?= substr($survey->background_image, 0, 4)?>-image">
+                                        <?php
+                                      }else{
+                                        ?>
+                                          <img class="survey-card-image" src="<?=base_url()?>uploads/survey/themes/<?=$survey->survey_theme->sth_primary_image?>" alt="">
+                                        <?php
+                                      }
                                     }?>
                                     
                                   </div>
@@ -326,7 +332,17 @@
                                   <div class="card survey-card border-0 shadow" >
                                     <!-- <a class="text-left" href="<?=base_url()?>survey/result/<?= $survey->id ?>"> -->
                                       <div class="card-body p-0">
-                                        <img class="survey-card-image" src="<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>" alt="<?=$theme->sth_primary_image?>">
+                                        <?php
+                                          if(empty($template->background_image)){
+                                            ?>
+                                              <img class="survey-card-image" src="<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>" alt="<?=$theme->sth_primary_image?>">
+                                            <?php
+                                          }else{
+                                            ?>
+                                              <img class="survey-card-image" src="<?=base_url()?>assets/survey/template_images/<?=$template->background_image?>" alt="<?=$template->background_image?>">
+                                            <?php
+                                          }
+                                        ?>
                                       </div>
                                       <div class="card-footer">
                                         <h4><?=$template->name?></h4>
@@ -474,7 +490,7 @@
   let items = "";
 
   document.querySelector('#btnCreateByTemplate').addEventListener('click', ()=>{
-    window.location.href = `<?= base_url()?>survey/add?th=${1}`
+    window.location.href = `<?= base_url()?>survey/add?th=${viewingTemplate.id}`
   });
 
   viewTemplate = tempId => {

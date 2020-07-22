@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <ul class="dropdown-menu">
                                         <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#bill-modal">Bill</a></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#expense-modal">Expenses</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#expense-modal">Expense</a></li>
                                         <li><a href="#">Check</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#vendorCredit-modal">Vendor Credit</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#payDown-modal">Pay down credit card</a></li>
@@ -476,6 +476,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
+                    <form action="<?php echo site_url()?>accounting/timeActivity" method="post">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-5">
@@ -483,25 +484,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                        <tr>
                                            <td><label for="">Date</label></td>
                                            <td>
-                                               <input type="text" class="form-inline">
+                                               <input type="date" name="date" class="form-inline">
                                            </td>
                                        </tr>
                                        <tr>
                                            <td><label for="">Name</label></td>
                                            <td>
-                                               <input type="text" class="form-inline">
+                                               <input type="text" name="name" class="form-inline">
                                            </td>
                                        </tr>
                                        <tr>
                                            <td><label for="">Customer</label></td>
                                            <td>
-                                               <input type="text" class="form-inline">
+                                               <input type="text" name="customer" class="form-inline">
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td><label for="">Service</label></td>
+                                           <td>
+                                               <select name="service" id="" class="form-inline">
+                                                   <option disabled selected>Chose the service worked on</option>
+                                                   <option>Credit</option>
+                                                   <option>Discount</option>
+                                                   <option>Hours</option>
+                                                   <option>Installation</option>
+                                                   <option>Labor</option>
+                                                   <option>Material</option>
+                                               </select>
                                            </td>
                                        </tr>
                                        <tr>
                                            <td></td>
                                            <td>
-                                               <input type="checkbox">
+                                               <input type="checkbox" name="billable" value="1">
                                                <span>Billable (/hr)</span>
                                            </td>
                                        </tr>
@@ -512,20 +527,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <input type="checkbox">
+                                            <input type="checkbox" name="start_end_times" value="1">
                                             <span>Enter Start and End Times</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><label for="">Time</label></td>
                                         <td>
-                                            <input type="text" class="form-inline" placeholder="hh:mm">
+                                            <input type="time" name="time" class="form-inline" placeholder="hh:mm">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><label for="">Description</label></td>
                                         <td>
-                                            <textarea name="" id="" cols="60" rows="5"></textarea>
+                                            <textarea name="description" id="" cols="60" rows="5"></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -540,7 +555,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-6">
                                 <div style="right: 0;float: right;">
-                                    <button class="btn btn-default btn-transparent" style="display: inline-block">Save</button>
+                                    <button class="btn btn-default btn-transparent" type="submit" style="display: inline-block">Save</button>
                                     <div class="dropdown" style="display: inline-block">
                                         <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
                                         <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
@@ -551,8 +566,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+                    </form>
                 </div>
 
             </div>
@@ -572,14 +589,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
+                    <form action="<?php echo site_url()?>accounting/addBill" method="post">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <select name="" id="" class="form-control select2">
-                                    <option value="">Abacus Accounting</option>
-                                    <option value="">Absolute Power</option>
-                                    <option value="">ADSC</option>
+                                <select name="vendor_id" id="" class="form-control select2">
+                                    <option value="1">Abacus Accounting</option>
+                                    <option value="2">Absolute Power</option>
+                                    <option value="3">ADSC</option>
                                 </select>
                             </div>
                             <div class="col-md-9" style="text-align: right">
@@ -590,33 +608,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px;width: 80%;">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                                <textarea name="mailing_address" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Terms</label>
-                                <select name="" id="" class="form-control select2">
-                                    <option value="">Due on receipt</option>
-                                    <option value="">Net 15</option>
-                                    <option value="">Net 30</option>
-                                    <option value="">Net 60</option>
+                                <select name="terms" id="" class="form-control select2">
+                                    <option>Due on receipt</option>
+                                    <option>Net 15</option>
+                                    <option>Net 30</option>
+                                    <option>Net 60</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Bill date</label>
-                                <input type="text" class="form-control">
+                                <input type="date" name="bill_date" class="form-control">
                             </div>
                             <div class="col-md-2">
                                 <label for="">Due date</label>
-                                <input type="text" class="form-control">
+                                <input type="date" name="due_date" class="form-control">
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Bill no.</label>
-                                    <input type="text" class="form-control" value="">
+                                    <input type="text" name="bill_num" class="form-control" value="">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" name="permit_num" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -637,8 +655,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td>Commission & fees</td>
-                                    <td>What did you pay for?</td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                     <td style="text-align: center"><i class="fa fa-trash"></i></td>
                                 </tr>
@@ -664,11 +682,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
                                 <div class="fallback">
                                     <input name="file" type="file" multiple />
                                 </div>
-                            </form>
+<!--                            </form>-->
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -692,13 +710,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                                    <button class="btn btn-transparent">Save</button>
+                                    <button class="btn btn-transparent" type="submit">Save</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
+                </form>
             </div>
         </div>
     </div>
@@ -712,28 +729,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-header">
                         <div class="modal-title">
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Expenses
+                            Expense
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
+                    <form action="<?php echo site_url()?>accounting/addExpense" method="post">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
-                                <select name="" id="" class="form-control select2">
+                                <select name="vendor_id" id="" class="form-control select2" required>
                                     <option value="" disabled selected>Who did you pay?</option>
-                                    <option value="">Abacus Accounting</option>
-                                    <option value="">Absolute Power</option>
-                                    <option value="">ADSC</option>
+                                    <option value="1">Abacus Accounting</option>
+                                    <option value="2">Absolute Power</option>
+                                    <option value="3">ADSC</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment account <i class="fa fa-question-circle"></i></label>
-                                <select name="" id="" class="form-control select2">
+                                <select name="payment_account" id="" class="form-control select2" required>
                                     <option value="" disabled selected>Who did you pay?</option>
-                                    <option value="">Abacus Accounting</option>
-                                    <option value="">Absolute Power</option>
-                                    <option value="">ADSC</option>
+                                    <option>Cash on hand</option>
+                                    <option value="1">Cash on hand:Cash on hand</option>
+                                    <option value="2">Corporate Account (XXXXXX 5850)</option>
+                                    <option value="3">Corporate Account (XXXXXX 5850)Te</option>
+                                    <option >Investment Asset</option>
+                                    <option >Payroll Refunds</option>
+                                    <option >Uncategorized Asset</option>
+                                    <option >Undeposited Funds</option>
                                 </select>
                             </div>
                             <div class="col-md-3" style="line-height: 100px">
@@ -748,29 +771,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px;width: 80%;">
                             <div class="col-md-3">
                                 <label for="">Payment date</label>
-                                <input type="text" class="form-control">
+                                <input type="date" name="payment_date" class="form-control" required>
                             </div>
                             <div class="col-md-2">
 
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment method</label>
-                                <select name="" id="" class="form-control select2">
+                                <select name="payment_method" id="" class="form-control select2" required>
                                     <option value="" disabled selected>What did you pay?</option>
-                                    <option value="">Cash</option>
-                                    <option value="">Check</option>
-                                    <option value="">Credit Card</option>
+                                    <option>Cash</option>
+                                    <option>Check</option>
+                                    <option>Credit Card</option>
                                 </select>
                             </div>
                             <div class="col-md-2"></div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Ref no.</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" name="ref_num" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" name="permit_num" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -818,11 +841,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
                                 <div class="fallback">
                                     <input name="file" type="file" multiple />
                                 </div>
-                            </form>
+<!--                            </form>-->
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -837,7 +860,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;display: inline-block;position: relative;">
-                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -845,11 +868,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                                    <button class="btn btn-transparent">Save</button>
+                                    <button class="btn btn-transparent" type="submit">Save</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
 
             </div>
@@ -869,15 +893,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
+                    <form action="<?php echo site_url()?>accounting/vendorCredit" method="post" id="formVendorCredit">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <select name="" id="" class="form-control select2">
+                                <select name="vendor_id" id="" class="form-control select2" required>
                                     <option value="" disabled selected>Who did you pay?</option>
-                                    <option value="">Abacus Accounting</option>
-                                    <option value="">Absolute Power</option>
-                                    <option value="">ADSC</option>
+                                    <option value="1">Abacus Accounting</option>
+                                    <option value="2">Absolute Power</option>
+                                    <option value="3">ADSC</option>
                                 </select>
                             </div>
                             <div class="col-md-9" style="text-align: right">
@@ -888,21 +913,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px;width: 80%;">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                                <textarea name="mailing_address" id="memo" cols="30" rows="4" placeholder="" style="resize: none;" required></textarea>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment date</label>
-                                <input type="text" class="form-control">
+                                <input type="date" name="payment_date" class="form-control" required>
                             </div>
                             <div class="col-md-4"></div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Ref no.</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" name="ref_num" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" name="permit_num" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -950,11 +975,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
                                 <div class="fallback">
                                     <input name="file" type="file" multiple />
                                 </div>
-                            </form>
+<!--                            </form>-->
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -969,16 +994,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;">
-                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                        <li><a href="#">Save and close</a></li>
+                                        <li><a href="#" onclick="document.getElementById('formVendorCredit').submit();">Save and close</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
 
             </div>
@@ -998,6 +1024,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
+                    <form action="<?php echo site_url()?>accounting/payDown" method="post">
                     <div class="modal-body">
                         <div class="row" style="margin-left: 20px;">
                             <div class="col-md-6">
@@ -1006,29 +1033,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Which credit card did you pay?</label>
-                                    <select name="" id="" class="form-control select2">
+                                    <select name="credit_card_id" id="" class="form-control select2" required>
                                         <option value="" disabled selected>Select credit card</option>
-                                        <option value=""><a href="#"><i class="fa fa-plus"></i> Add new</a></option>
+                                        <option value=""><a href="#">&plus; Add new</a></option>
+                                        <option value="1">Sample credit card</option>
+                                        <option value="2">Sample credit card 2</option>
                                     </select>
                                 </div>
                                 <div class="form-group inline">
                                     <label for="">How much did you pay?</label>
-                                    <input type="text" class="form-control" placeholder="Enter the amount">
+                                    <input type="text" name="amount" class="form-control" id="amountSelector" placeholder="Enter the amount" required>
                                 </div>
                                 <div class="form-group inline">
                                     <label for="">Date of payment</label>
-                                    <input type="text" class="form-control">
+                                    <input type="date" name="date_payment" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">What did you use to make this payment?</label>
-                                    <select name="" id="" class="form-control select2">
+                                    <select name="payment_account" id="" class="form-control select2" required>
                                         <option value="" disabled selected>Select bank account</option>
-                                        <option value=""><a href="#"><i class="fa fa-plus"></i> Add new</a></option>
-                                        <option value="">Cash on hand</option>
-                                        <option value="">Cash on hand:Cash on hand</option>
-                                        <option value="">Corporate Account (XXXXXX 5850)</option>
-                                        <option value="">Corporate Account (XXXXXX 5850)Te</option>
+                                        <option value=""><a href="#">&plus; Add new</a></option>
+                                        <option value="1">Cash on hand</option>
+                                        <option value="2">Cash on hand:Cash on hand</option>
+                                        <option value="3">Corporate Account (XXXXXX 5850)</option>
+                                        <option value="4">Corporate Account (XXXXXX 5850)Te</option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox" id="showHiddenOption">
+                                    <span style="margin-left: 8px;vertical-align: 3px;">I made a payment with a check</span>
+                                </div>
+                                <div class="form-group" id="hiddenOption" style="display: none;">
+                                    <label for="checkNumber">Check no.</label>
+                                    <input type="number" name="check_num" class="form-control" id="checkNumber" style="height:36px!important;width: 80px;display: inline-block;">
+                                    <input type="checkbox" id="printLater">
+                                    <span>Print Later</span>
                                 </div>
                                 <div class="form-group">
                                     <a href="#"><i class="fa fa-caret-right" style="color: #333333;"></i> Memo and attachments</a>
@@ -1053,7 +1092,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-2"></div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;display: inline-block;">
-                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and close</button>
+                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and close</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -1062,7 +1101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                                    <button class="btn btn-transparent">Save</button>
+                                    <button class="btn btn-transparent" type="submit">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -1267,6 +1306,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('td > input', this).show();
         });
 
+    });
+
+    //Pay Down
+    $(document).ready(function () {
+       $('#showHiddenOption').click(function () {
+          $('#hiddenOption').toggle(this.checked);
+       });
+       $('#printLater').click(function () {
+          $('#checkNumber').prop("disabled",this.checked);
+       });
+
+        $("#amountSelector").change(function () {
+            if (!$.isNumeric($(this).val()))
+                $(this).val('0').trigger('change');
+            $(this).val(parseFloat($(this).val(),10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+        });
     });
 </script>
 

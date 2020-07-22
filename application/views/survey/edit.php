@@ -503,7 +503,7 @@
 											</li>
 											<li class="list-group-item">
 												<div class="d-flex w-100 justify-content-between">
-													<span>Survey Name</span>
+													<span>Survey Workspace</span>
 													<select name="selWorkspace" id="selWorkspace" class="custom-select">
 
 														<?php
@@ -539,10 +539,19 @@
 											</li>
 											<li class="list-group-item">
 												<div class="d-flex w-100 justify-content-between">
+													<span>Use Background Image</span>
+													<div class="form-check">
+														<input <?= ($survey->use_background_image == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="useBackgroundImage" data-id="<?= $survey->id ?>" id="useBackgroundImage<?= $survey->id ?>">
+													</div>
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
 													<span>Redirection Link</span>
 													<input type="text" <?= ($survey->canRedirectOnComplete == 0) ? "disabled" : "" ?> name="txtRedirectionLink" class="form-control" id="txtRedirectionLink" data-id="<?=$survey->id?>" value="<?= $survey->redirectionLink?>" placeholder="https://..">
 												</div>
 											</li>
+											
 											<li class="list-group-item">
 												<!-- <button class="btn btn-success btn-block">Save Changes</button> -->
 											</li>
@@ -740,6 +749,7 @@
 			"canRedirectOnComplete": (document.querySelector("#canRedirectOnComplete<?=$survey->id?>").checked) ? '1' : '0',
 			"isNewRespondentsClosed": (document.querySelector("#isNewRespondentsClosed<?=$survey->id?>").checked) ? '1' : '0',
 			"hasClosedDate": (document.querySelector("#hasClosedDate<?=$survey->id?>").checked) ? '1' : '0',
+			"useBackgroundImage": (document.querySelector("#useBackgroundImage<?=$survey->id?>").checked) ? '1' : '0',
 			"hasResponseLimit": (document.querySelector("#hasResponseLimit<?=$survey->id?>").checked) ? '1' : '0',
 			"closingDate": document.querySelector('#txtSchedDate').value,
 			"responseLimit": document.querySelector('#txtResponseLimit').value,
@@ -747,9 +757,6 @@
 			"closingMessage": document.querySelector('#txtClosingMessage').value,
 		}
 		let error = false;
-
-		console.log(formData);
-		return;
 			
 		
     $.ajax({

@@ -23,17 +23,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <?php include viewPath('includes/booking_tabs'); ?>
 
-                        <div class="row dashboard-container-1">
-                            <div class="col-md-8"><strong>Categories: <?= $total_category; ?>, Products: <?= $total_products; ?>, Time Slots: <?= $total_timeslots; ?></strong></div>
+                        <div class="row dashboard-container-1" style="padding-top: 40px !important;">
+                            <div class="col-md-8">
+                                <strong>
+                                    <button type="button" class="btn btn-secondary">
+                                        Categories: <span class="badge badge-light"><strong><?= $total_category; ?></strong></span>
+                                    </button>
+
+                                    <button type="button" class="btn btn-success">
+                                        Products: <span class="badge badge-light"><strong><?= $total_products; ?></strong></span>
+                                    </button>
+
+                                    <button type="button" class="btn btn-info">
+                                        Time Slots: <span class="badge badge-light"><strong><?= $total_timeslots; ?></strong></span>
+                                    </button>
+                                </strong>
+                            </div>
                             <div class="col-md-4 text-right"><a href="javascript:void(0);" target="_blank"><span class="fa fa-external-link fa-margin-right"></span> View Booking Page</a></div>
                         </div>       
                         <hr />
                         <div class="row dashboard-container-2">
                             
                             <p class="">
-                                Place a booking form on your website and collect leads from your customers directly into Markate.
+                                Place a booking form on your website and collect leads from your customers directly into nSmarTrac.
                                 <br><br>
-                                1. Set your products on services<br>
+                                1. Set your items on services<br>
                                 2. Define your time slots<br>
                                 3. Customize the way the form looks and get notifications on new contact inquiries or check the leads online.<br>
                                 4. Copy/Paste the iframe or javascript code on a page on your website.
@@ -41,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         </div>
                         <hr />
-                        <div><a href="<?php echo base_url('more/addon/booking/products') ?>" class="btn btn-success"> Edit Booking Plugin </a></div>                                  
+                        <div><a href="<?php echo base_url('more/addon/booking/products') ?>" class="btn btn-success"> Edit Booking </a></div>                                  
                     </div>
                     <!-- end card -->
                 </div>

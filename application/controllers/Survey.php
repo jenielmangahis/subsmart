@@ -75,7 +75,8 @@ class Survey extends MY_Controller
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
       'workspace_id' => $this->input->post('workspace_id'),
-      'theme_id' => $this->input->post('theme_id')
+      'theme_id' => $this->input->post('theme_id'),
+      'background_image' => $this->input->post('background_image')
     );
     $data = $this->survey_model->add($data);
     

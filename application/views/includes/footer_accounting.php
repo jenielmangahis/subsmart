@@ -39,11 +39,8 @@ Chartist Chart-->
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
-<!--Accounting JS/-->
-<script src="<?php echo $url->assets ?>js/accounting/main.js"></script>
-<!--Dropzone JS-->
-<script src="<?php echo $url->assets ?>plugins/dropzone/dist/dropzone.js"></script>
-
+<!--Accounting JS-->
+<?php echo put_footer_assets();?>
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 </script>
@@ -80,8 +77,8 @@ Chartist Chart-->
 		var screenWidth = $( window ).width();
 		
 		setTimeout(function(){
-			console.log(123);
-			console.log($("#sidebar").width());
+			//console.log(123);
+			//console.log($("#sidebar").width());
 			if(screenWidth > 768){
 				if($("#sidebar").width() == 40){
 						

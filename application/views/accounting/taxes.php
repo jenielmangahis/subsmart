@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
                <!-- Add Agency Sidebar -->
+    <!-- Add Agency Sidebar -->
     <div id="overlay-adjustment" class=""></div>
     <div id="side-menu-adjustment" class="main-side-nav">
         <div class="side-title">
@@ -112,11 +113,98 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
+
+                    <div class="btn-group">
+                        <a href="javascript:void(0);" class="btn-main" data-dismiss="modal">Cancel</a>
+                        <a href="javascript:void(0);" data-dismiss="modal" data-toggle="modal" data-target="#rcdpay" class="btn-main rcbtn">Record payment</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- End Recived Taxs -->
+
+    <!-- Record Payment -->
+    <div class="modal" id="rcdpay">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="reci-block">
+                    <h3>Review your sales tax <button type="button" class="close" data-dismiss="modal">&times;</button></h3>   
+
+                    <div class="sale-tax-wrp">
+                        <h4>File your sales tax</h4>
+
+                        <div class="tax-ttl">
+                            <div class="tax-head tx-dt">
+                                <div class="tax-left-bx">
+                                    <p>Total tax payment</p>
+                                </div>
+                                <div class="tax-right-bx">
+                                    <p>$0.00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="main-totl-bx">
+                            <div class="tax-left-bx">
+                                <h3>Tax due</h3>
+                            </div>
+                            <div class="tax-right-bx">
+                                <h3>$0.00</h3>
+                            </div>
+                        </div>
+
+                        <div class="step-taxa">
+                            <ul>
+                                <li>1. Download your full <a href="#">report</a>.</li>
+                                <li>2. Fill out the tax form on your tax agency's <a href="#">website</a>.</li>
+                                <li>3. Send the form and payment to your agency.</li>
+                                <li>4. Don't forget to record the payment!</li>
+                            </ul>
+                        </div>
+
+                        <div class="rcor-paybx">
+                            <h4>Record payment</h4>
+
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>Tax amount</label>
+                                        <input type="text" name="" placeholder="0.00" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>Payment date</label>
+                                        <input type="date" name="" placeholder="0.00" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="form-group">
+                                        <label>Bank account</label>
+                                        <select class="form-control">
+                                            <option>Sales</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cus-check">
+                              <input type="checkbox" id="html">
+                              <label for="html">Print check</label>
+                            </div>
+
+                            <div class="btn-group">
+                                <a href="javascript:void(0);" class="btn-main" data-dismiss="modal">Cancel</a>
+                                <a href="javascript:void(0);" data-dismiss="modal" data-toggle="modal" data-target="#rcdpay" class="btn-main rcbtn">Record payment</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Record Payment -->
 
     <!-- Taxs -->
     <section class="taxs-wrp">
@@ -152,8 +240,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <li><a href="#">Sales tax settings</a></li>
                                             <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Reports <i class="far fa-chevron-down"></i></a>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Tax liability report</a>
-                                                    <a class="dropdown-item" href="#">Taxable customer report</a>
+                                                    <a class="dropdown-item" href="tax-liability-report.html">Tax liability report</a>
+                                                    <a class="dropdown-item" href="taxable-customer-report.html">Taxable customer report</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -510,7 +598,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </section>
-    <!-- End Taxs -->
+    <!-- End Taxs -->   
             <!-- end row -->
             <div class="row">
                 

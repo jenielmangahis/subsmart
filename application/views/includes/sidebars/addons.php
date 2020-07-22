@@ -48,7 +48,8 @@
         <li class="submenus <?= $is_active_online_booking; ?>"><a href="<?php echo base_url('more/addon/booking') ?>" title="Online Booking" style="color: #fff;">
             <span class="fa fa-user"></span>Online Booking</a>
         </li>
-        <li class="submenus"><a href="#" title="Lead Contact Form" style="color: #fff;">
+        
+        <!-- <li class="submenus"><a href="#" title="Lead Contact Form" style="color: #fff;">
             <span class="fa fa-user"></span>Lead Contact Form</a>
         </li>
         <li class="submenus"><a href="#" title="Ask for Review" style="color: #fff;">
@@ -65,7 +66,7 @@
         </li>
         <li class="submenus"><a href="#" title="Proposal Kit" style="color: #fff;">
             <span class="fa fa-user"></span>Proposal Kit</a>
-        </li>
+        </li> -->
         
     </ul>
 </nav>

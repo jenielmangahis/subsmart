@@ -34,6 +34,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         <?php } ?>
 
+                        <div class="ajax-alert-container"></div>
+
                         <div class="row dashboard-container-1">
                             <div class="col-md-8"><strong>Set the products or services with prices users can book.</strong></div>
                             <div class="col-md-4 text-right">
@@ -106,8 +108,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </td>
                                                 <td width="20%">
                                                     <div class="onoffswitch">
-                                                        <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox" id="product-status-<?= $sitem->name; ?>" checked="checked">
-                                                        <label class="onoffswitch-label" for="product-status-<?= $sitem->name; ?>">
+                                                        <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox onoffswitch-checkbox-productStatus" data-product-id="<?= $sitem->id; ?>" id="product-status-<?= $sitem->id; ?>" <?= $sitem->is_visible == 1 ? 'checked=""' : ''; ?> >
+                                                        <label class="onoffswitch-label" for="product-status-<?= $sitem->id; ?>">
                                                             <span class="onoffswitch-inner"></span>
                                                             <span class="onoffswitch-switch"></span>
                                                         </label>
