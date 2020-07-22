@@ -163,9 +163,15 @@
     <div class="d-flex h-100 justify-content-center align-items-center">
       <?php
         if($survey_theme !== null){
-          ?>
-            <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
-          <?php
+          if($survey->background_image == null){
+            ?>
+              <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
+            <?php
+          }else{
+            ?>
+              <img class="theme-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->background_image ?>" alt="<?= substr($survey->background_image, 0, 4)?>-image">
+            <?php
+          }
         }
       ?>
 

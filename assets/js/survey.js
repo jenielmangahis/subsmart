@@ -501,6 +501,7 @@ $(document).ready(function(){
     var value = $(this).val();
     var id = $(this).data('id');
     
+    
     switch(value){
       case "description":
         if($(this).is(":checked")){
@@ -597,6 +598,31 @@ $(document).ready(function(){
                 $('#redirection-link-text').html("");
                 $('#txtRedirectionLink').prop('disabled', true);
                 toastr["success"]("Redirection Link Removed!");
+              }
+            });
+          }
+        }
+        break;
+      case "useBackgroundImage":
+        console.log(id)
+        console.log(value)
+        if(localStorage.getItem('cls_as')){
+          if($(this).is(":checked")){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Background Image Set!");
+              }
+            });
+          }else{
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Background Image Removed!");
               }
             });
           }

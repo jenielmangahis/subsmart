@@ -4,6 +4,7 @@
         "category": "Feedback",
         "name": "Online Contact Us Form Template",
         "theme_id": 3,
+        "background_image": "online-contact-us-form-wallpaper.jpg",
         "questions": [  
             {
                 "question": "Welcome! Online contact us form template",
@@ -85,6 +86,7 @@
         "name": "Get in Touch Template",
         "category": "Feedback",
         "theme_id": 11,
+        "background_image": "get-in-touch-wallpaper.jpg",
         "questions": [
             {
                 "question": "Interested in our product? Answer a few short questions and we'll get in touch with you!",
@@ -156,6 +158,7 @@
         "category": "Form",
         "name": "Self-Evaluation Form",
         "theme_id": 12,
+        "background_image": "self-evaluation-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "Employee Self Evaluation",
@@ -403,6 +406,7 @@
         "category": "Application",
         "name": "Membership Application",
         "theme_id": 5,
+        "background_image": "membership-application-wallpaper.jpg",
         "questions": [
             {
                 "question": "Interested in joining?",
@@ -483,6 +487,7 @@
         "category": "Form",
         "name": "Registration Form",
         "theme_id": 6,
+        "background_image": "registration-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "This is the registration form. Feel free to change the title here",
@@ -740,6 +745,7 @@
         "category": "Form",
         "name": "Event Feedback Form",
         "theme_id": 4,
+        "background_image": "event-feedback-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "We'd love to hear what you thought of the event!",
@@ -838,6 +844,7 @@
         "category": "Evaluation",
         "name": "Employee Engagement Application",
         "theme_id": 3,
+        "background_image": "employee-engagement-application-wallpaper.jpg",
         "questions": [
             {
                 "question": "What's it like working here?",
@@ -885,6 +892,7 @@
         "category": "Business",
         "name": "Customer Success Story Questionnaire Template",
         "theme_id": 5,
+        "background_image": "customer-success-story-questionnaire-template.jpg",
         "questions": [
             {
                 "question": "Hey there! We'd love to learn a bit more about how you use our product in your day-to-day work. Could you spare 10 minutes to tell us a bit about your business and how our product fits in?",
@@ -1057,6 +1065,7 @@
         "category": "Human Resources",
         "name": "Employee On-boarding Survey Template",
         "theme_id": 5,
+        "background_image": "employee-on-boarding-survey-wallpaper.jpg",
         "questions": [
             {
                 "question": "Hello. Welcome to the team. Help us improve our onboarding process by answering these quick questions about how it went for you.",
@@ -1076,7 +1085,7 @@
                 "active": "",
                 "required": "1",
                 "description": "1",
-                "description_label": "Remember, all your answers are anonymouse so please make sure the info you give us is accurate and honest.",
+                "description_label": "Remember, all your answers are anonymous so please make sure the info you give us is accurate and honest.",
                 "choices":[
                             "Less than a week",
                             "1-2 week",
@@ -1495,6 +1504,7 @@
         "category": "Marketing",
         "name": "Market Research Survey Template",
         "theme_id": 3,
+        "background_image": "market-research-survey-wallpaper.jpg",
         "questions": [
             {
                 "question": "Thanks for taking time out to tell us more about you and your beachwear preferences",
@@ -1862,6 +1872,7 @@
         "category": "Quizzes",
         "name": "Social Quizzes",
         "theme_id": 4,
+        "background_image": "social-quiz-wallpaper.jpg",
         "questions": [
             {
                 "question": "Are you the one?",
@@ -1924,6 +1935,7 @@
         "category": "Form",
         "name": "Donation Form",
         "theme_id": 3,
+        "background_image": "donation-survey-wallpaper.jpg",
         "questions": [
             {
                 "question": "Help us provide treatment, care and support to vulnerable children.",
@@ -2307,6 +2319,7 @@
         "category": "Form",
         "name": "Request Form",
         "theme_id": 3,
+        "background_image": "request-survey-wallpaper.jpg",
         "questions": [
             {
                 "question": "Need words? You've come to the write place. Tell us a bit more about the content you need created and we'll get writing. ",
@@ -2413,6 +2426,7 @@
         "category": "Questionnaires",
         "name": "Website Questionnaire",
         "theme_id": 6,
+        "background_image": "website-questionnaire-wallpaper.jpg",
         "questions": [  
             {
                 "question": "Thanks for agreeing to give us some feedback.",
@@ -2485,6 +2499,7 @@
         "category": "Form",
         "name": "Course Feedback Survey",
         "theme_id": 7,
+        "background_image": "course-feedback-wallpaper.jpg",
         "questions":[
             {
                 "question": "Can you help us make this course better for future students?",
@@ -2735,6 +2750,7 @@
         "category": "Form",
         "name": "Teacher Evaluation Form Template",
         "theme_id": 4,
+        "background_image": "teacher-evaluation-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "St. Beardyman's University Course Evaluation Form",
@@ -2867,6 +2883,7 @@
         "category": "Form",
         "name": "Online Event Registration Form Template",
         "theme_id": 4,
+        "background_image": "online-event-registration-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "The annual FormConf is almost here. Want to come?",
@@ -2945,6 +2962,7 @@
         "category": "Application",
         "name": "Job Application",
         "theme_id": 6,
+        "background_image": "job-application-wallpaper.jpg",
         "questions": [
             {
                 "question": "We're looking for a Growth Hacker. Are you the right person for the job?",
@@ -3090,6 +3108,7 @@
         "category": "Application",
         "name": "Volunteer Application",
         "theme_id": 5,
+        "background_image": "volunteer-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "So, you're interested in volunteering?",
@@ -3454,8 +3473,9 @@
     {
         "id": 20,
         "category": "Application",
-        "name": "Volunteer Application",
+        "name": "Customer Feedback Form Template",
         "theme_id": 12,
+        "background_image": "customer-feedback-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "Thanks for shopping with Waves Inc. We'd love to know a bit more about your experience with us.",
@@ -3592,10 +3612,11 @@
         ]
     },
     {
-        "id": 20,
+        "id": 21,
         "category": "Application",
         "name": "Vacation Request Form Template",
         "theme_id": 3,
+        "background_image": "vacation-request-form-wallpaper.jpg",
         "questions": [
             {
                 "question": "Planning your holidays? :)",
@@ -3677,14 +3698,5 @@
                 
                 
         ]
-    },{
-        "id": 20,
-        "category": "Application",
-        "name": "Vacation Request Form Template",
-        "theme_id": 5,
-        "questions": [
-            
-        ]
     }
-
 ]

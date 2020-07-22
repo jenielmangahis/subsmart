@@ -81,6 +81,28 @@
     object-fit: cover;
     max-height: 100%;
   }
+  
+
+  .survey-card {
+    padding: 0px;
+    transition:0.3s;
+    border-radius:10px;
+    background-size: cover;
+  }
+  .survey-card:hover {
+    transform: none;
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+    cursor: pointer;
+  }
+
+  .survey-title{
+    padding: 0 10px;
+  }
+  img.survey-card-image{
+    width: 100%; 
+    max-height: 150px; 
+    object-fit: cover;
+  }
 </style>
 <div class="wrapper" role="wrapper">
   <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -162,9 +184,11 @@
             <button class="btn btn-dark" data-toggle="modal" data-target="#modalSelectTheme">Select Theme</button>
           </div>
           
+          
 
           <div id="workspace-text-card" class="col-xs-12 col-sm-6 card" style="display: none">
             <span class="h3" id="workspace-text">No workspace selected</span>
+            <button class="btn btn-link btn-block btn-info text-white" data-toggle="modal" data-target="#modalSelectWorkspace">Change workspace</button>
           </div>
         </div>
   
@@ -207,11 +231,27 @@
                                   }
                                 }
                                 ?>
-                                  <div class="card template-card" onclick="viewTemplate(<?= $template->id?>)" data-toggle="modal" data-target="#modalViewTemplate">
-                                    <img class="template-image" src="<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>" alt="<?=$theme->sth_primary_image?>">
-                                    <div class="card-content template-card-content">
-                                      <h4 <?= empty($theme->sth_text_color) ? null : "style='color: $theme->sth_text_color '"?>><?=$template->name?></h4>
-                                      <span <?= empty($theme->sth_text_color) ? null : "style='color: $theme->sth_text_color '"?>><?= count($template->questions)?> question<?=(count($template-> questions) > 1)?"s":""?> </span>
+                                  <div class="col-xs-12 col-sm-6 col-xl-3" onclick="viewTemplate(<?=$template->id?>)" data-toggle="modal" data-target="#modalViewTemplate">
+                                    <div class="card survey-card border-0 shadow" >
+                                      <!-- <a class="text-left" href="<?=base_url()?>survey/result/<?= $survey->id ?>"> -->
+                                        <div class="card-body p-0">
+                                          <?php
+                                            if(empty($template->background_image)){
+                                              ?>
+                                                <img class="survey-card-image" src="<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>" alt="<?=$theme->sth_primary_image?>">
+                                              <?php
+                                            }else{
+                                              ?>
+                                                <img class="survey-card-image" src="<?=base_url()?>assets/survey/template_images/<?=$template->background_image?>" alt="<?=$template->background_image?>">
+                                              <?php
+                                            }
+                                          ?>
+                                        </div>
+                                        <div class="card-footer">
+                                          <h4><?=$template->name?></h4>
+                                          <span><?=$category?></span>
+                                        </div>
+                                      <!-- </a> -->
                                     </div>
                                   </div>
                                   
@@ -545,10 +585,13 @@
     surveyData = {
       'title': document.querySelector('#txtSurveyName').value,
       'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)? selectedWorkspace : 0,
-      'theme_id': selectedTheme === null ? null : selectedTheme
+      'theme_id': selectedTheme === null ? null : selectedTheme.sth_rec_no,
+      'background_image': (selectedTemplate.background_image != null) ? selectedTemplate.background_image : null
     };
 
-    
+    console.log(surveyData);
+    return;
+
     if(document.querySelector('#txtSurveyName').value === ""){
       errors = true
     }
@@ -573,7 +616,7 @@
             window.location = '<?= base_url();?>survey/result/'+payload.data.id;
           }
         })
-      }, 5000);
+      }, 2000);
     }else{
       toastr["error"]("Please fill up the required fields");
     }

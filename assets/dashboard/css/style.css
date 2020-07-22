@@ -8761,11 +8761,12 @@ a.backstep i{margin: 0 5px 0 0;}
 #side-menu-cus-tx .save-act .btn-cmn{display: inline-block;float: none;padding: 8px 25px;}
 #side-menu-cus-tx .save-act .savebtn{float: right;display: inline-block;}
 /* **** End Setting Tax Page **** */
-
+#rcdpay .modal-dialog,
 #revice-taxs .modal-dialog{
     max-width: 70%;
     margin: 0 auto;
 }
+#rcdpay .modal-dialog .modal-content,
 #revice-taxs .modal-dialog .modal-content{
     padding: 0;
     background: #fff;
@@ -8888,3 +8889,275 @@ a.backstep i{margin: 0 5px 0 0;}
 .add-link a:hover{text-decoration: underline;}
 
 p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padding: 0 15px;}
+
+
+/*taxes new popup*/
+
+.reci-block .btn-group{
+    width: 600px;
+    margin: 0 auto 60px;
+    display: block;
+}
+.reci-block .btn-group .btn-main{
+    padding: 8px 25px;
+    border: 2px solid #333;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    border-radius: 30px;
+    margin: 0 15px 0 0;
+}
+.reci-block .btn-group .rcbtn{
+    border-color: #278C19;
+    background: #278C19;
+    color: #fff;
+    margin: 0;
+}
+.sale-tax-wrp{
+    width: 650px;
+    margin: 0 auto;
+    padding: 60px 0;
+}
+.sale-tax-wrp h4{
+    font-size: 22px;
+    font-weight: 600;
+    color: #393a3d;
+    margin: 0 0 25px;
+}
+.sale-tax-wrp .tx-dt{padding: 10px 15px;}
+.step-taxa{
+    padding: 45px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.step-taxa li{
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    color: #393a3d;
+    margin: 0 0 10px;
+}
+.step-taxa li a{
+    color: #0077c5;
+}
+.step-taxa li:last-child{margin: 0;}
+.rcor-paybx{
+    padding: 30px 0;
+}
+.rcor-paybx h4{
+    font-size: 22px;
+    font-weight: 600;
+    color: #393a3d;
+    margin: 0 0 25px;
+}
+.rcor-paybx label{
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 10px;
+}
+.rcor-paybx .form-control{
+    padding: 10px 15px;
+    height: auto;
+    border-radius: 0;
+    border: 1px solid #babec5;
+    height: auto;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}
+.rcor-paybx .btn-group{
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    padding: 25px 0;
+    margin: 0;
+}
+
+.cus-check{padding: 15px 0;}
+.cus-check input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.cus-check label {
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    color: #646464;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.cus-check label:before {
+    content:'';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 2px solid #646464;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.cus-check input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 9px;
+    width: 6px;
+    height: 14px;
+    border: solid #646464;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+/* **** End Popus **** */
+
+/* **** Report Page **** */
+.edit-tax-wrp .report-lf h1{margin: 0 0 10px;}
+.reportbar {text-align: right;}
+.edit-tax-wrp .reportbar .btn-cmn{margin:0 15px 0 0 !important;float: none;display: inline-block;}
+.edit-tax-wrp .reportbar .btn-cmn:last-child{margin: 0;}
+.edit-tax-wrp .reportbar .btn-color{background: #108000;color: #fff;border-color: #108000;float: none;margin: 0;}
+
+.details-report-wrpper{
+    padding: 35px 0;
+    background: #fff;
+}
+
+.report-fream{
+    width: 860px;
+    margin: 0 auto;
+    border: 1px solid #e3eaf3;
+}
+.report-headact{
+    padding: 0 15px;
+    border-bottom: 1px solid #e3eaf3;
+    width: 100%;
+}
+.repo-left-ac li{display: inline-block;margin-right: 15px;}
+.repo-left-ac li:last-child{margin: 0;}
+.repo-left-ac li a{font-size: 14px;font-weight: normal;color: #6e8ba8;display: inline-block;padding: 10px 0;}
+.repo-left-ac li a i{margin-left: 5px;}
+.repo-left-ac li .dropdown-toggle::after{display: none;}
+.repo-left-ac li .dropdown-menu{
+    padding: 15px;
+    border-radius: 0;
+    border: 1px solid #e3eaf3;   
+    margin: -5px 0 0;
+}
+.repo-left-ac li .dropdown-menu h5{
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e1e1e;
+    margin: 0 0 10px;
+    display: block;
+}
+.repo-left-ac li .dropdown-menu .form-control{
+    padding: 5px 10px;
+    border: 1px solid #e3eaf3;
+    height: auto;
+    box-shadow: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+    margin: 0 0 10px !important;
+}
+.repo-left-ac li:hover .dropdown-menu{display: block;}
+
+.rad-cus [type="radio"]:checked,
+.rad-cus [type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+.rad-cus [type="radio"]:checked + label,
+.rad-cus [type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #646464;
+    font-size: 12px;
+    font-weight: normal;
+}
+.rad-cus [type="radio"]:checked + label:before,
+.rad-cus [type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    background: #fff;
+}
+.rad-cus [type="radio"]:checked + label:after,
+.rad-cus [type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #108000;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+.rad-cus [type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+.rad-cus [type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+.right-ac{text-align: right;}
+.report-center-box{
+    padding: 15px;
+}
+.report-title{
+    padding: 15px 0;
+}
+.report-title h3{
+    font-size: 24px;
+    font-weight: 300;
+    color: #333;
+    text-align: center;
+    margin: 0 auto 15px;
+    display: table;
+    cursor: pointer;
+}
+.report-title h3 a i{
+    opacity: 0;
+    visibility: hidden;
+    margin-left: 5px;
+    font-size: 18px;
+}
+.report-title h3:hover a i{
+    opacity: 1;
+    visibility: visible;
+}
+.report-title h4{
+    font-size: 15px;
+    font-weight: bold;
+    color: #333333;
+    text-transform: uppercase;
+    margin: 0;
+    text-align: center;
+}
+/* **** End Report Page **** */
