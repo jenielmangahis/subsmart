@@ -27,26 +27,26 @@
         <li class="submenus <?php if($this->uri->segment(2) == "api_connectors"){echo "active";}  ?> ">
             <a href="<?php echo base_url('tools/api_connectors'); ?>" title="Employees"><span class="fa fa-user"></span>Connectors</a>
         </li>
-        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
-            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>NiceJob</a>
-        </li>
         <li class="submenus <?php if($this->uri->segment(2) == "google_contacts"){echo "active";}  ?>">
             <a href="<?php echo base_url('tools/google_contacts'); ?>" title="Google Contacts"><span class="fa fa-user"></span>Google Contacts</a>
         </li>
-        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
-            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>Zapier</a>
+        <li class="submenus <?php if($this->uri->segment(2) == "quickbooks"){echo "active";}  ?>">
+            <a href="<?php echo base_url('tools/quickbooks'); ?>" title="Employees"><span class="fa fa-user"></span>Quickbooks Payroll</a>
         </li>
-        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
-            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>Quickbooks Payroll</a>
+        <li class="submenus <?php if($this->uri->segment(2) == "nicejob"){echo "active";}  ?>">
+            <a href="<?php echo base_url('tools/nicejob'); ?>" title="Employees"><span class="fa fa-user"></span>NiceJob</a>
         </li>
-        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
-            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>Mailchimp</a>
+        <li class="submenus <?php if($this->uri->segment(2) == "zapier"){echo "active";} ?>">
+            <a href="<?php echo base_url('tools/zapier'); ?>" title="Employees"><span class="fa fa-user"></span>Zapier</a>
         </li>
-        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
-            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>Active Campaign</a>
+        <li class="submenus <?php if($this->uri->segment(2) == "mailchimp"){echo "active";} ?>">
+            <a href="<?php echo base_url('tools/mailchimp'); ?>" title="Employees"><span class="fa fa-user"></span>Mailchimp</a>
         </li>
-        <li class="submenus <?php //if( $uri == '/users' ){ echo 'active';}?>">
-            <a href="<?php //echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>API Integration</a>
+        <li class="submenus <?php if($this->uri->segment(2) == "active_campaign"){echo "active";} ?>">
+            <a href="<?php echo base_url('tools/active_campaign'); ?>" title="Employees"><span class="fa fa-user"></span>Active Campaign</a>
+        </li>
+        <li class="submenus <?php if($this->uri->segment(2) == "api_integration"){echo "active";} ?>">
+            <a href="<?php echo base_url('tools/api_integration'); ?>" title="Employees"><span class="fa fa-user"></span>API Integration</a>
         </li>
         
     </ul>

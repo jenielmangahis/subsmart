@@ -1,0 +1,448 @@
+@media screen and (max-width: 991px){
+	.mobile-menu-open {
+	    position: relative;
+	    font-size: 28px;
+	    z-index: 1;
+	    color: #6a1f74;
+	}
+	.mobile-menu-open i {
+	    position: absolute;
+	    left: 15px;
+	    color: #fff;
+	    top: 18px;
+	}
+	.nav-new{display: none;}
+	header {	    
+	    padding: 0 0;
+	    z-index: inherit;
+	}
+	.call{
+		position: absolute;
+		right: 0;
+	}
+
+	.topbar{display: none;}
+	/*navbar-brand{display: block;height: auto;position:relative;z-index: 5;}*/
+	.navbar-brand img{width: 150px;}
+	header .navbar-expand-lg{padding: 0;}
+}
+
+/* **** Extra CSS **** */
+@media(min-width:1351px) and (max-width:1900px){
+	/* *** Home Page *** */
+	.banner-text h1{font-size: 50px;width: 85%;margin: 0 auto;}
+	img.reso-shp{right: 0;}
+	/* *** End Home Page *** */
+}
+
+@media(min-width:1025px) and (max-width:1350px){
+	/* *** Home Page *** */
+	.banner-text h1{font-size: 36px;line-height: 44px;width: 80%;margin: 0 auto;}
+	.category-list-bxs{padding: 0;}
+	.category-block h2{font-size: 28px;left: 0;right: 0;padding: 0 5px;word-break: normal;}
+	.small-bx h2{font-size: 14px;line-height:22px;}
+	.medium-bx h2{font-size: 22px;}
+
+	.resources-wrp h2,.involved-data h2{font-size: 37px;}
+	img.reso-shp{right: 0;width: 250px;top: 30px;}
+	.ethical-point h4{font-size: 26px;}
+	.cta-box{background-position: center;padding: 80px 0;}
+
+	.category-list{padding: 0;}
+	/* *** End Home Page *** */
+}
+
+@media(min-width:992px) and (max-width:1024px){
+	/* *** Home Page *** */
+	.banner-text h1{font-size: 36px;line-height: 44px;width: 80%;margin: 0 auto;}
+	.category-list-bxs{padding: 0;}
+	.category-block h2{font-size: 22px;left: 0;right: 0;padding: 0 5px;word-break: normal;line-height: 34px;}
+	.large-bx{height: 300px;}
+	.small-bx,.medium-bx{height: 135px;}
+	.small-bx h2{font-size: 12px;line-height:20px;word-break: break-all;}
+	.medium-bx h2{font-size: 18px;}
+
+	.resources-wrp h2,.involved-data h2{font-size: 37px;}
+	img.reso-shp{right: 0;width: 250px;top: 30px;}
+	.ethical-point h4{font-size: 26px;}
+	.cta-box{background-position: center;padding: 80px 0;}
+
+	.category-list{padding: 0;}
+	/* *** End Home Page *** */
+
+	/* *** Resources Profile Page *** */
+	.tagline-res h3{font-size: 42px;}
+	.left-part-resource h3{font-size:26px;}
+	.left-part-resource p{padding: 0;}
+	.resource-sidebar{padding: 0;}
+	.pdf-dwd-bx{padding: 30px;}
+	.permission-bx p{word-break: break-all;}
+	.related-prodtlst{padding: 0;}
+	.tagline-res li{padding: 8px 20px;margin: 0 5px 5px 0;font-size: 12px;}
+	.tagline-res{bottom: 25px;left: 15px;right: 15px;}
+	/* *** End Resources Profile Page *** */
+}
+
+@media(min-width:850px) and (max-width:991px){
+
+}
+
+@media(min-width:768px) and (max-width:991px){
+	/* *** Home Page *** */
+	.navbar-expand-lg .navbar-toggler{display: none;}
+	.collapse:not(.show){display: inline-block;}
+	.navbar-brand{margin: 0;display: inline-block;}
+	.navbar-nav{display: inline-block;float: right;}
+	.navbar-collapse{flex-basis: auto;}
+	.navbar-mainbg{padding: 10px 0;}
+	#navbarSupportedContent ul li a{padding: 10px 20px;}
+	.banner-text h1{font-size:32px;line-height: 38px;width: 80%;margin: 0 auto;}
+	.abtcnt p{width: 100%;font-size: 20px;line-height: 28px;}
+	.category-list-bxs{padding: 0;}
+	.large-bx{height: 250px;}
+	.small-bx,.medium-bx{height: 110px;}
+	.category-block h2{font-size: 20px;left: 0;right: 0;padding: 0 5px;word-break: normal;}
+	.small-bx h2{font-size: 12px;line-height:20px;}
+	.medium-bx h2{font-size: 20px;}
+
+	.involved-data h2{font-size: 32px;}
+	.involved-img{width: 45%;}
+	.involved-dtin{width: 55%;}
+
+	.resources-wrp h2{font-size: 32px;}
+	img.reso-shp{right: 0;width: 250px;top: 30px;}
+
+	.resources-box{padding: 30px 15px;}
+	.resources-box h4{word-break: normal;}
+	.resource-img img{margin: 0 auto 15px;}
+	.ethical-point h4{font-size: 22px;}
+
+	.cta-box{padding: 40px 0;background-position: center;}
+	.cta-box h2{font-size:32px;}
+	.cta-box p{font-size: 17px;}
+
+	.socialbx{text-align: center;}
+	.abt-footer img{width: 180px;}
+	/* *** End Home Page *** */
+
+	/* *** Resources Page *** */
+	.resources-wrp{padding: 40px 0;width: 100%;}
+	.rsou-cat-listing .col-sm-3,.rsou-cat-listing .col-sm-4{max-width: 100%;}
+	.category-list{padding: 0;}
+	/*.category-list{padding: 15px;position: fixed;top: 0;left: -280px;background: #fff;width: 280px;z-index: 120;min-height: 100vh;transition: .4s linear;}
+	.category-list ul{height: 90vh;overflow: auto;padding: 0 0 45px;}*/
+	.category-list h4 .close-btn{float: right;color: #484848;font-size: 18px;vertical-align: middle;}
+	/*.btn-filter{padding: 15px;width: 100%;position: fixed;bottom: 0;left: 0;font-size: 14px;font-weight: normal;color: #767676;background: #fff;text-align: center;z-index: 5;}
+	.btn-filter span{display: block;font-weight:600;color: #333;margin: 0 0 5px;}
+	.btn-filter span img{display: inline-block;margin-right: 5px;}
+	.filter-menu-open{left: 0;transition: .4s linear;}*/
+	.resource-cat-pg img.reso-shp{display: none;}
+	/*a.close-menus.close-btn,.btn-filter{display: block;}*/
+	.resource-cat-pg .small-bx h2{font-size: 10px;line-height: 18px}
+	.category-list li a{font-size: 12px;}
+	.category-list li a img{margin-right: 5px;}
+	/* *** End Resources Page *** */
+
+	/* *** Resources Profile Page *** */
+	.tagline-res h3{font-size: 42px;}
+	.left-part-resource h3{font-size: 24px;}
+	.left-part-resource p{padding: 0;}
+	.resource-sidebar{padding: 0;}
+	.pdf-dwd-bx{padding: 15px;}
+	.permission-bx p{word-break: break-all;}
+	.related-prodtlst{padding: 0;}
+	.tagline-res li{padding: 8px 20px;margin: 0 5px 5px 0;font-size: 12px;}
+	.tagline-res{bottom: 25px;left: 15px;right: 15px;}
+	/* *** End Resources Profile Page *** */
+
+	/* *** Code of Conducts Page *** */
+	.cod-block{width: 100%;}
+	.cod-block h2{font-size: 24px;margin: 0 0 10px;}
+	.cod-block h4{font-size: 15px;line-height: 24px;word-break: break-all;}
+	.cod-block h5{font-size: 15px;line-height: 22px;}
+	.cod-block h3{font-size: 20px;}
+	.inner-cod{padding: 0;}
+
+	.inner-banner-data h2{font-size: 36px;}
+	.intro-box h3{font-size: 18px;line-height: 30px;}
+	/* *** End Code of Conducts Page *** */
+}
+
+@media(min-width:576px) and (max-width:767px){
+	/* *** Home Page *** */
+	.category-list-bxs{padding: 0;}
+	.large-bx{height: 300px;}
+	.small-bx,.medium-bx{height: 135px;}
+	.category-block h2{font-size: 28px;}
+	.small-bx h2{font-size: 14px;line-height:22px;}
+	.medium-bx h2{font-size: 22px;}
+
+	.foot-cnt .apply-btn{padding: 8px 15px;font-size: 14px;}
+	.foot-txt p{font-size: 12px;}
+	/* *** End Home Page *** */
+}
+
+@media(min-width:448px) and (max-width:575px){
+	/* *** Home Page *** */
+	.category-list-bxs{padding: 0;}
+	.category-block{height: 175px;}
+	.category-list-bxs .col-sm-6{max-width: 50%;}
+	.category-block h2{font-size: 28px;}
+	.medium-bx h2{font-size: 26px;}
+	.small-bx h2{font-size: 14px;line-height: 22px;}
+	.category-list-bxs .btn-main{padding: 15px 25px;font-size: 15px;display: block;text-align: center;}
+
+	.involved-box{display: block;margin: 0 0 30px;}
+	.involved-img img{width: 100%;}
+	.involved-dtin h4{margin: 0 0 10px;}
+	.involved-dtin p{margin: 0 0 5px;}
+	.involved-dtin{padding: 30px;}
+	.resources-wrp .col-sm-4{max-width: 50%;}
+	.resources-wrp .btn-main{padding: 15px 25px;display: block;text-align: center;font-size: 15px;}
+
+	.abt-footer img{margin: 0 auto 15px;}
+	.foot-links li a, .abt-footer li a{text-align: center;display: block;}
+	.foot-links,.abt-footer{margin: 0 0 30px;}
+	.foot-cnt h4, .foot-links h4{text-align: center;margin: 0 0 15px;}
+	.foot-cnt p{text-align: center;}
+	.foot-cnt .apply-btn{margin: 0 auto;display: table;}
+	div#one {order:3;}
+	div#two {order:2;}
+	div#three {order:1;}
+	.copyfoot{text-align: center;}
+	.socialbx{padding: 30px 0;}
+	/* *** End Home Page *** */
+
+	/* *** About Page *** */
+	.abt-wrpper{padding: 40px 0;}
+	.abt-leftbar{padding: 30px 0;top: 0;}
+	.abt-leftbar ul{text-align: center;}
+	.abt-leftbar li{display: inline-block;margin: 0 10px 0 0;}
+	.abt-cmn-bx p,.intro-box h3{font-size: 18px;line-height: 28px;}
+	/* *** End About Page *** */
+}
+
+@media(min-width:448px) and (max-width:767px){
+	/* *** Home Page *** */
+	.navbar-mainbg{padding: 10px 0;}
+	.navbar-toggler{border-radius: 0;margin-right: 15px;outline: none;}
+	a.navbar-brand.navbar-logo img{padding-left: 15px;width: 200px;}
+	.modal-content{padding: 25px 0;}
+	#navbarSupportedContent li{margin: 0;}
+	#navbarSupportedContent ul{padding: 10px;}
+	.search-box .form-control{padding: 15px 0;font-size: 14px;}
+	.search-box h3{font-size: 28px;}
+	.banner-wrapper img{height: 190px;object-fit: cover;}
+	.banner-text h1{font-size: 30px;line-height: 38px;}
+	.abtcnt{padding: 40px 0 0;}
+	.abtcnt p{width: 100%;font-size: 18px;line-height: 27px;}
+
+	.get-involved-wrp{padding: 40px 0;}
+	.involved-data h2{font-size: 28px;}
+	.involved-data p{margin: 0 0 25px;font-size: 14px;line-height: 22px;}
+
+	.resources-wrp{overflow: hidden;}
+	.resources-wrp h2{font-size: 28px;}
+	img.reso-shp{width: 230px;right:-80px;}
+	.resources-wrp .col-sm-3{max-width: 50%;padding: 0 10px;}
+	.resource-img{min-height: 130px;}
+	.resources-box{padding: 15px;}
+	.resources-box h4{word-break: break-all;font-size: 14px;}
+	.resources-box p{font-size: 14px;}
+	.how-we-do-wrp{padding: 40px 0;}
+	.ethical-point h4{font-size: 16px;line-height: 24px;}
+
+	.cta-box{padding: 35px 0;background-position: center;}
+	.cta-box h2{font-size: 26px;}
+	.cta-box p{width: 100%;font-size: 16px;line-height: 24px;}
+	.cta-box .btn-main{font-size: 15px;padding: 12px 25px;}
+	/* *** End Home Page *** */
+
+	/* *** About Page *** */
+	.abt-wrpper{padding: 40px 0;}
+	.abt-cmn-bx p,.intro-box h3{font-size: 18px;line-height: 28px;}
+	.abt-cmn-bx .col-sm-6{max-width: 50%;}
+	.who-info h6,.who-info h5{font-size: 12px;}
+	/* *** End About Page *** */
+
+	/* *** Resources Page *** */
+	.resources-wrp{padding: 40px 0;width: 100%;}
+	.rsou-cat-listing .col-sm-3,.rsou-cat-listing .col-sm-4{max-width: 100%;}
+	.category-list{padding: 15px;position: fixed;top: 0;left: -280px;background: #fff;width: 280px;z-index: 120;min-height: 100vh;transition: .4s linear;}
+	.category-list ul{height: 90vh;overflow: auto;padding: 0 0 45px;}
+	.category-list h4 .close-btn{float: right;color: #484848;font-size: 18px;vertical-align: middle;}
+	.btn-filter{padding: 15px;width: 100%;position: fixed;bottom: 0;left: 0;font-size: 14px;font-weight: normal;color: #767676;background: #fff;text-align: center;z-index: 5;}
+	.btn-filter span{display: block;font-weight:600;color: #333;margin: 0 0 5px;}
+	.btn-filter span img{display: inline-block;margin-right: 5px;}
+	.filter-menu-open{left: 0;transition: .4s linear;}
+	.resource-cat-pg img.reso-shp{display: none;}
+	a.close-menus.close-btn,.btn-filter{display: block;}
+
+	.library-frm .btn-main{padding: 10px 40px;}
+	.shapbx{display: none;}
+	/* *** End Resources Page *** */
+
+	/* *** Resources Profile Page *** */
+	.tagline-res{bottom:15px;left: 15px;right: 15px;}
+	.tagline-res h3{font-size: 28px;}
+	.tagline-res li{padding: 8px 20px;font-size: 12px;margin: 0 5px 5px 0;}
+	.resource-details-wrp .resource-detail-img img{border-radius: 0;}
+	.left-part-resource h3{font-size: 22px;line-height: 30px;}
+	.left-part-resource p{padding: 0;font-size: 16px;}
+	.related-prodtlst{padding: 0;}
+	.related-prodtlst .col-md-4{max-width: 50%;}
+	.resource-sidebar{padding: 30px 0;}
+	.permission-bx p{word-break:break-all;}
+	/* *** End Resources Profile Page *** */
+
+	/* *** Signup Form Page *** */
+	.library-frm .col-sm-4{max-width: 100%;}
+	div#t1 {order: 2;}
+	div#t2 {order: 1;}
+	.lbl-frm-bx{margin: 0 0 25px;}
+	/* *** End Signup Form Page *** */
+
+	/* *** Code of Conducts Page *** */
+	.cod-block{width: 100%;}
+	.cod-block h2{font-size: 24px;margin: 0 0 10px;}
+	.cod-block h4{font-size: 15px;line-height: 24px;word-break: break-all;}
+	.cod-block h5{font-size: 15px;line-height: 22px;}
+	.cod-block h3{font-size: 20px;}
+	.inner-cod{padding: 0;}
+	/* *** End Code of Conducts Page *** */
+
+	/* *** Conference Values Page *** */
+	.abt-leftbar{display: none;}
+	.inner-banner-data h2{font-size: 24px;}
+	.inner-banner img.desktop-banner{display: none;}
+	.inner-banner img.mobile-banner{display: block;}
+	/* *** End Conference Values Page *** */
+}
+
+@media(max-width:447px){
+	/* *** Home Page *** */
+	.navbar-mainbg{padding: 10px 0;}
+	.navbar-toggler{border-radius: 0;margin-right: 15px;outline: none;}
+	a.navbar-brand.navbar-logo img{padding-left: 15px;width: 200px;}
+	.modal-content{padding: 25px 0;}
+	#navbarSupportedContent li{margin: 0;}
+	#navbarSupportedContent ul{padding: 10px;}
+	.search-box .form-control{padding: 15px 0;font-size: 14px;}
+	.search-box h3{font-size: 28px;}
+	.banner-wrapper img{height: 190px;object-fit: cover;}
+	.banner-text h1{font-size: 30px;line-height: 38px;}
+	.abtcnt{padding: 40px 0 0;}
+	.abtcnt p{width: 100%;font-size: 18px;line-height: 27px;}
+
+	.category-list-bxs{padding: 0;}
+	.category-block{height: 175px;}
+	.category-list-bxs .col-sm-6{max-width: 50%;}
+	.category-block h2{font-size: 28px;}
+	.medium-bx h2{font-size: 26px;}
+	.small-bx h2{font-size: 14px;line-height: 22px;}
+	.category-list-bxs .btn-main{padding: 15px 25px;font-size: 15px;display: block;text-align: center;}
+
+	.get-involved-wrp{padding: 40px 0;}
+	.involved-data h2{font-size: 28px;}
+	.involved-data p{margin: 0 0 25px;font-size: 14px;line-height: 22px;}
+
+	.involved-box{display: block;margin: 0 0 30px;}
+	.involved-img img{width: 100%;}
+	.involved-dtin h4{margin: 0 0 10px;}
+	.involved-dtin p{margin: 0 0 5px;}
+	.involved-dtin{padding: 30px;}
+
+	.resources-wrp{overflow: hidden;}
+	.resources-wrp h2{font-size: 26px;line-height: 34px;margin: 0 0 20px;}
+	img.reso-shp{width: 230px;right:-80px;}
+	.resources-wrp .col-sm-4{max-width: 50%;}
+	.resources-wrp .col-sm-3{max-width: 50%;padding: 0 10px;}
+	.resource-img{min-height: 130px;}
+	.resources-box{padding: 15px;}
+	.resources-box h4{word-break: break-all;font-size: 14px;}
+	.resources-box p{font-size: 14px;}
+	.resources-wrp .btn-main{padding: 15px 25px;display: block;text-align: center;font-size: 15px;}
+	.how-we-do-wrp{padding: 40px 0;}
+	.ethical-point h4{font-size: 16px;line-height: 24px;}
+
+	.cta-box{padding: 35px 0;background-position: center;}
+	.cta-box h2{font-size: 26px;}
+	.cta-box p{width: 100%;font-size: 16px;line-height: 24px;}
+	.cta-box .btn-main{font-size: 15px;padding: 12px 25px;}
+
+	.abt-footer img{margin: 0 auto 15px;}
+	.foot-links li a, .abt-footer li a{text-align: center;display: block;}
+	.foot-links,.abt-footer{margin: 0 0 30px;}
+	.foot-cnt h4, .foot-links h4{text-align: center;margin: 0 0 15px;}
+	.foot-cnt p{text-align: center;}
+	.foot-cnt .apply-btn{margin: 0 auto;display: table;}
+	div#one {order:3;}
+	div#two {order:2;}
+	div#three {order:1;}
+	.copyfoot{text-align: center;}
+	.socialbx{padding: 30px 0;}
+	/* *** End Home Page *** */
+
+	/* *** About Page *** */
+	.abt-wrpper{padding: 40px 0;}
+	.abt-leftbar{padding: 30px 0;top: 0;}
+	.abt-leftbar ul{text-align: center;}
+	.abt-leftbar li{display: inline-block;margin: 0 10px 0 0;}
+	.abt-cmn-bx p,.intro-box h3{font-size: 16px;line-height: 26px;}
+	.abt-cmn-bx .col-sm-6{max-width: 50%;}
+	.who-info h6,.who-info h5{font-size: 12px;}
+	/* *** End About Page *** */
+
+	/* *** Resources Page *** */
+	.resources-wrp{padding: 40px 0;width: 100%;}
+	.rsou-cat-listing .col-sm-3,.rsou-cat-listing .col-sm-4{max-width: 100%;}
+	.category-list{padding: 15px;position: fixed;top: 0;left: -280px;background: #fff;width: 280px;z-index: 120;min-height: 100vh;transition: .4s linear;}
+	.category-list ul{height: 90vh;overflow: auto;padding: 0 0 45px;}
+	.category-list h4 .close-btn{float: right;color: #484848;font-size: 18px;vertical-align: middle;}
+	.btn-filter{padding: 15px;width: 100%;position: fixed;bottom: 0;left: 0;font-size: 14px;font-weight: normal;color: #767676;background: #fff;text-align: center;z-index: 5;}
+	.btn-filter span{display: block;font-weight:600;color: #333;margin: 0 0 5px;}
+	.btn-filter span img{display: inline-block;margin-right: 5px;}
+	.filter-menu-open{left: 0;transition: .4s linear;}
+	.resource-cat-pg img.reso-shp{display: none;}
+	a.close-menus.close-btn,.btn-filter{display: block;}
+
+	.library-frm .btn-main{padding: 10px 40px;}
+	.shapbx{display: none;}
+	/* *** End Resources Page *** */
+
+	/* *** Resources Profile Page *** */
+	.tagline-res{bottom:15px;left: 15px;right: 15px;}
+	.tagline-res h3{font-size: 26px;}
+	.tagline-res li{padding: 5px 10px;font-size: 10px;margin: 0 5px 5px 0;}
+	.resource-details-wrp .resource-detail-img img{border-radius: 0;}
+	.left-part-resource h3{font-size: 22px;line-height: 30px;}
+	.left-part-resource p{padding: 0;font-size: 16px;}
+	.related-prodtlst{padding: 0;}
+	.related-prodtlst .col-md-4{max-width: 50%;}
+	.resource-sidebar{padding: 30px 0;}
+	.permission-bx p{word-break:break-all;}
+	/* *** End Resources Profile Page *** */
+
+	/* *** Signup Form Page *** */
+	.library-frm .col-sm-4{max-width: 100%;}
+	div#t1 {order: 2;}
+	div#t2 {order: 1;}
+	.lbl-frm-bx{margin: 0 0 25px;}
+	/* *** End Signup Form Page *** */
+
+	/* *** Code of Conducts Page *** */
+	.cod-block{width: 100%;}
+	.cod-block h2{font-size: 24px;margin: 0 0 10px;}
+	.cod-block h4{font-size: 15px;line-height: 24px;word-break: break-all;}
+	.cod-block h5{font-size: 15px;line-height: 22px;}
+	.cod-block h3{font-size: 20px;}
+	.inner-cod{padding: 0;}
+	/* *** End Code of Conducts Page *** */
+
+	/* *** Conference Values Page *** */
+	.abt-leftbar{display: none;}
+	.inner-banner-data h2{font-size: 24px;}
+	.inner-banner img.desktop-banner{display: none;}
+	.inner-banner img.mobile-banner{display: block;}
+	/* *** End Conference Values Page *** */
+}

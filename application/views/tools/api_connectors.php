@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/google_contacts'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">
@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/quickbooks'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">
@@ -104,7 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="addon_price">$10.00/month</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/nicejob'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">
@@ -138,7 +138,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="addon_price">$5.00/month</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/zapier'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">
@@ -172,7 +172,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="addon_price">$10.00/month</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/mailchimp'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">
@@ -206,7 +206,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="addon_price">$10.00/month</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/active_campaign'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">
@@ -240,7 +240,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="addon_price">$10.00/month</div>
 										</div>
 										<div class="col-sm-4 text-right">
-											<a href="#"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
+											<a href="<?php echo base_url('tools/api_integration'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
 										</div>
 									</div>
 									<div class="addon__switch">

@@ -47,11 +47,11 @@ const queueRenderPage = num => {
 
 // Get Document
 const url = '/PROJECTS/WEB-DEV/esign/nsmartrac/uploads/DocFiles/dummy.pdf';
+
 pdfjsLib
   .getDocument(url)
   .promise.then(pdfDoc_ => {
     pdfDoc = pdfDoc_;
-  
     document.querySelector('#page-count').textContent = pdfDoc.numPages;
 
     for (let index = 1; index <= pdfDoc.numPages; index++) {

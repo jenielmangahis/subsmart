@@ -116,6 +116,9 @@
 #print-checks-modal .modal-header{
     border-bottom: 0;
 }
+#print-checks-modal .modal-content{
+    height: 100%;
+}
 #print-checks-modal .modal-footer-print{
     padding: 10px;
     background: #393A3D;

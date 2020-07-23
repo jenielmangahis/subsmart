@@ -586,11 +586,9 @@
       'title': document.querySelector('#txtSurveyName').value,
       'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)? selectedWorkspace : 0,
       'theme_id': selectedTheme === null ? null : selectedTheme.sth_rec_no,
-      'background_image': (selectedTemplate.background_image != null) ? selectedTemplate.background_image : null
+      'background_image': selectedTemplate === null ? null : (selectedTemplate.background_image == null) ? null : selectedTemplate.background_image 
     };
-
-    console.log(surveyData);
-    return;
+    
 
     if(document.querySelector('#txtSurveyName').value === ""){
       errors = true

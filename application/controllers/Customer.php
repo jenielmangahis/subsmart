@@ -71,6 +71,8 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
 
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+
+            'assets/css/accounting/sales.css',
         ));
 
 
@@ -697,6 +699,14 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/add', $this->page_data);
 
+    }
+
+    public function add_advance()
+
+    {
+        $user_id = logged('id');
+        $this->page_data['plans'] = "";
+        $this->load->view('customer/add_advance', $this->page_data);
     }
 
 

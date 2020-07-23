@@ -16,6 +16,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</li>
                         </ol>
                     </div>
+                    <?php
+                        if(isset($api_enabled)){
+                            ?>
+                                <div class="col-sm-8">
+                                    <hr>
+                                    <div class="weight-medium text-md margin-bottom-sec"><b>Google Contact Status</b></div>
+                                    <span class="margin-bottom" style="color:#6a4a86;">You are connected </span>
+
+
+                                    <br><br>
+                                    <div class="weight-medium text-md margin-bottom-sec"><b>Google Account</b></div>
+                                    <span class="margin-bottom" style="color:#6a4a86;">  </span>
+                                    <br>
+                                    <a class="btn btn-success btn-md text-light" href="<?php echo base_url()?>tools/google_contact_disable">
+                                        <span class="fa fa-eject text-light"></span> Disconnect
+                                    </a>
+                                    <br><br>
+                                    <table class="table table-bordered dataTableCampaign">
+                                        <thead>
+                                        <tr>
+                                            <th>Contact Email</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($contacts as $contact) { ?>
+                                                <tr>
+                                                    <td><?= $contact->contact_email ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <!--<img src="/assets/img/api-tools/thumb_google_contacts.png" alt="google contacts">-->
+                                </div>
+                            <?php
+                        }else{
+                            ?>
+                            <div class="col-sm-8">
+                                <p class="margin-bottom">
+                                    Export your <span class="weight-medium">nSmarTrac Customers</span> to <span class="weight-medium">Google Contacts</span> so you can identify the customers on your phone Caller ID or on sending emails from Gmail.
+                                </p>
+                                <p class="margin-bottom">
+                                    <span class="weight-medium">Important Notice</span><br>
+                                    - in order to add new contacts we'll need write permission to your Google Contacts<br>
+                                    - please stay assured that Markate will only add contacts and it will not read and delete any existent contacts<br>
+                                </p>
+                                <hr>
+                                <div class="weight-medium text-lg margin-bottom-sec">Connect to Google Contacts</div>
+                                <a href="https://accounts.google.com/o/oauth2/auth?client_id=<?php echo $this->config->item('google_contact_client_id'); ?>&redirect_uri=<?php echo $this->config->item('google_contact_redirect_url'); ?>&scope=https://www.google.com/m8/feeds/&response_type=code"><img src="/assets/img/api-tools/btn_google_signin_dark_normal_web.png"></a>
                     <div class="col-sm-6">
 						<div class="float-right d-none d-md-block">
                             <div class="dropdown">
@@ -26,25 +76,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </a> -->
                                 <?php //endif ?>
                             </div>
-                        </div>
-						
-                    </div>
-					<div class="col-sm-8">
-						<p class="margin-bottom">
-						Export your <span class="weight-medium">Markate Customers</span> to <span class="weight-medium">Google Contacts</span> so you can identify the customers on your phone Caller ID or on sending emails from Gmail.
-					</p>
-					<p class="margin-bottom">
-						<span class="weight-medium">Important Notice</span><br>
-						- in order to add new contacts we'll need write permission to your Google Contacts<br>
-						- please stay assured that Markate will only add contacts and it will not read and delete any existent contacts<br>
-					</p>
-					<hr>
-					<div class="weight-medium text-lg margin-bottom-sec">Connect to Google Contacts</div>
-					<a href="#"><img src="/assets/img/api-tools/btn_google_signin_dark_normal_web.png"></a>
-					</div>
-					<div class="col-sm-4 text-right">
-						<!--<img src="/assets/img/api-tools/thumb_google_contacts.png" alt="google contacts">-->
-					</div>
+                            <div class="col-sm-4 text-right">
+                                <!--<img src="/assets/img/api-tools/thumb_google_contacts.png" alt="google contacts">-->
+                            </div>
+                            <?php
+                        }
+                    ?>
+
                 </div>
             </div>
             <!-- end row -->
@@ -58,4 +96,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+    $('.dataTableCampaign').DataTable({
+         'searching' : false,
+        "lengthChange": false
+    });
+</script>
 

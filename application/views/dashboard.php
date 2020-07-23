@@ -599,69 +599,77 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </nav>
     </div>
 </div>
-
 <div style="" class="floating-btn-div div1">
-	<label class="label"><a href="#">Notes</a></label>
-	<a href="#" class="float1">
-	<i class="fa fa-file my-float"></i>
-	</a>
-</div>
-<div style="" class="floating-btn-div div2">
-	<label class="label"><a href="#">Log Time</a></label>
-	<a href="#" class="float2">
-	<i class="fa fa-clock-o my-float"></i>
-</a>
-</div>
-<div style="" class="floating-btn-div div3">
 	<label class="label"><a href="#">Reschedule</a></label>
-	<a href="#" class="float3">
+	<a href="#" class="float1">
 	<i class="fa fa-calendar my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div4">
-	<label class="label"><a href="#">Change Order</a></label>
-	<a href="#" class="float4">
-	<i class="fa fa-edit my-float"></i>
-	</a>
-</div>
-<div style="" class="floating-btn-div div5">
-	<label class="label"><a href="#">Attach Photo</a></label>
-	<a href="#" class="float5">
-	<i class="fa fa-picture-o my-float"></i>
-	</a>
-</div>
-<div style="" class="floating-btn-div div6">
-	<label class="label"><a href="#">Change Status</a></label>
-	<a href="#" class="float6">
-	<i class="fa fa-flag my-float"></i>
-	</a>
-</div>
-<div style="" class="floating-btn-div div7">
-	<label class="label"><a href="#">Cancel Schedule</a></label>
-	<a href="#" class="float7">
-	<i class="fa fa-stop-circle my-float"></i>
-	</a>
-</div>
-<div style="" class="floating-btn-div div8">
+<div style="" class="floating-btn-div div2">
 	<label class="label"><a href="#">Request Signature</a></label>
-	<a href="#" class="float8">
+	<a href="#" class="float2">
 	<i class="fa fa-external-link my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div9">
-	<label class="label"><a href="#">Convert To Invoice</a></label>
-	<a href="#" class="float9">
-	<i class="fa fa-money my-float"></i>
+<div style="" class="floating-btn-div div3">
+	<label class="label"><a href="#">Notes</a></label>
+	<a href="#" class="float3">
+	<i class="fa fa-file my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div10">
+<div style="" class="floating-btn-div div4">
+	<label class="label"><a href="#">Log Time</a></label>
+	<a href="#" class="float4">
+	<i class="fa fa-clock-o my-float"></i>
+</a>
+</div>
+<div style="" class="floating-btn-div div5">
 	<label class="label"><a href="#">Convert To Estimate</a></label>
-	<a href="#" class="float10">
+	<a href="#" class="float5">
 	<i class="fa fa-calculator my-float"></i>
 	</a>
 </div>
+<div style="" class="floating-btn-div div6">
+	<label class="label"><a href="#">Convert To Invoice</a></label>
+	<a href="#" class="float6">
+	<i class="fa fa-money my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div7">
+	<label class="label"><a href="#">Change Order</a></label>
+	<a href="#" class="float7">
+	<i class="fa fa-edit my-float"></i>
+	</a>
+</div>
+
+<div style="" class="floating-btn-div div8">
+	<label class="label"><a href="#">Change Status</a></label>
+	<a href="#" class="float8">
+	<i class="fa fa-flag my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div9">
+	<label class="label"><a href="#">Cancel Schedule</a></label>
+	<a href="#" class="float9">
+	<i class="fa fa-stop-circle my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div10">
+	<label class="label"><a href="#">Attach Photo</a></label>
+	<a href="#" class="float10">
+	<i class="fa fa-picture-o my-float"></i>
+	</a>
+</div>
+<div style="" class="floating-btn-div div11">
+	<label class="label"><a href="#">Assign New Lead</a></label>
+	<a href="#" class="float11">
+	<i class="fa fa-picture-o my-float"></i>
+	</a>
+</div>
+
+
 <style type="text/css">
-.float1, .float2, .float3, .float4, .float5, .float6, .float7, .float8, .float9, .float10 {
+.float1, .float2, .float3, .float4, .float5, .float6, .float7, .float8, .float9, .float10, .float11 {
 	color: #2d1a3e;
     background-color: #fff;
     border-radius: 25px;
@@ -901,7 +909,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	color: #fff;
 	background-color: #ccc;
 }
-
+.float11{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:740px;
+	right:20px;
+	/*background-color:#0C9;*/
+	/*color:#FFF;*/
+	/*border-radius:50px;*/
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+.div11 {
+	width: 250px;
+	/*border: 1px solid #000;*/
+	position: fixed;
+	height: 50px;
+	bottom: 740px;
+	right: 20px;
+	text-align: center;
+	color: #fff;
+	background-color: #ccc;
+}
 .label{
 	margin-top: 15px;
 }
