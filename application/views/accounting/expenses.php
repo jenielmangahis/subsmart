@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#bill-modal">Bill</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#expense-modal">Expense</a></li>
-                                        <li><a href="#">Check</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck">Check</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#vendorCredit-modal">Vendor Credit</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#payDown-modal">Pay down credit card</a></li>
                                     </ul>
@@ -164,16 +164,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr style="cursor: pointer;" data-toggle="modal" data-target="#edit-expensesCheck">
+                                        <?php foreach ($vendors as $vendor): ?>
+                                        <tr>
                                             <td><input type="checkbox"></td>
-                                            <td>Test</td>
-                                            <td>Test</td>
-                                            <td>Test</td>
-                                            <td></td>
-                                            <td>Test</td>
-                                            <td></td>
-                                            <td><a href="">View</a></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck">Test</td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck">Test</td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck"></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck">Test</td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck"></td>
+                                            <td>
+                                                <a href="#" data-toggle="modal" data-target="#edit-expensesCheck">View/Edit</a>&nbsp;
+                                            </td>
                                         </tr>
+                                        <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -310,7 +314,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     </div>
     <!--end of modal-->
-<!--    Edit Checks Modal-->
+<!--    Add/Edit Checks Modal-->
     <div class="full-screen-modal">
         <div id="edit-expensesCheck" class="modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
@@ -327,6 +331,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
+                                <input type="hidden" id="vendorID" value="">
                                 <input type="text" list="payee-dropdown" class="select-text-dp">
                                 <datalist id="payee-dropdown">
                                     <option selected>Tyler Nguyen</option>
@@ -355,7 +360,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;">Tyler Nguyen</textarea>
+                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Payment date</label>

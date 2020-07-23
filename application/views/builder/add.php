@@ -16,7 +16,7 @@
     .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; }
     .portlet-content { padding: 0.4em; /* border: 1px solid #cccccc; */ }
     .input-draggable-parent-div { padding-top: 20px; padding-bottom: 20px; }
-    .col-form-label { line-height: 26px; font-weight: normal; font-size: 15px; }
+    .col-form-label { line-height: 26px; font-weight: 0px !important; font-size: 15px;  }
     .portlet-toggle {position: absolute; top: 20%; right: 10px; margin-top: -8px; }
     .portlet-header { padding: 0.2em 0.3em; /* margin-bottom: 0.5em; */ position: relative; }
     .input-main-box { width:100%; border: 1px solid #cccccc; padding:15px 5px 15px 3px; background:#cccccc85; }
@@ -27,7 +27,14 @@
     .wrapper {
     padding: 0px;
     padding-top: 68px;
-}
+} .form_builder_field {
+    width: 100% !important;
+    border-radius: 15px;
+    border: 2px solid #ddd;
+  }
+  .form_builder_area .form_builder_field .form_output .form-group {
+        margin-bottom: 10px !important;
+  }
 </style>
 <!-- page wrapper start -->
 <div class="wrapper">
@@ -66,8 +73,8 @@
   <input type="hidden" id="deletedQuestions" value="">
   <div class="form_builder">
     <div class="col-sm-12 mb-5 pl-0 pr-0">
-      <div class="col-sm-2" style="background:#32243d;height: 735px;">
-        <nav class="nav-sidebar border border-dark">
+      <div class="col-sm-2" style="background:#32243d;height: 735px;position:fixed;">
+        <nav class="nav-sidebar border border-dark mt-2">
           <ul class="nav pt-2">
               <li class="form_bal_textfield">
                   <a href="javascript:;">Text Field <i class="fa fa-plus-circle pull-right"></i></a>
@@ -105,15 +112,49 @@
           </ul>
       </nav>
       </div>
-      <div class="col-sm-10 border border-dark p-0" style="min-height: 735px;background:white;">
-            
-          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 699px;padding: 24px !important;">
+      <div class="col-sm-10 border border-dark p-0" style="min-height: 735px;background:white;float:right;">
 
-           
+            
+          <div class="p-1 pt-4 mt-0" style="border:1px solid #80808057;">
+            <div class="row">
+              <label class="col-sm-1 col-form-label text-right">Form Edit</label>
+              <div class="col-sm-5">
+                <select class="form-control" name="custome_forms">
+                  <option value="new">New Form</option>
+                  <?php foreach($forms as $job) { ?>
+                    <option value="<?php echo $job->forms_id; ?>" <?php echo (isset($selected_form_id) && $selected_form_id > 0 && $selected_form_id == $job->forms_id)?'selected="selected"':''; ?>><?php echo $job->form_title; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" onClick="getFormData()">  Go </button>
+              <a class="ml-3 mt-3 d-none" id="preview_url_formbuilder" href="<?php echo base_url('builder/demo/13'); ?>">Click to preview</a>
+            </div>
+            <div class="form-group row mt-3" style="margin-bottom: 10px !important;">
+              <label class="col-sm-1 col-form-label text-right">Form Title</label>
+              <div class="col-sm-5">
+                <input type="text" class="form-control" name="custom_forms_title">
+              </div>
+              <label class="col-sm-1 col-form-label text-right">Add to</label>
+              <div class="col-sm-2">
+                <select class="form-control" >
+                  <?php foreach($jobs as $job) { ?>
+                    <option value="<?php echo $job->jobs_id; ?>"><?php echo $job->job_name; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+              <div class="col-sm-1">
+                <button onclick="saveForm()" class="pull-right ml-2 btn btn-success">Save Form</button>
+              </div>
+            </div>
           </div>
           <button onclick="addGroup()" class="pull-left btn btn-default">Add Group</button>
           <button onclick="addGroupRepeater()" class="pull-left ml-2 btn btn-default">Add Repeater</button>
-          <button onclick="saveForm()" class="pull-right ml-2 btn btn-success">Save Form</button>
+          
+          <div id="main-drag-and-drop-area" class="portlet-content input-draggable-parent-div connectedSortable p-3 pb-5" style="height:auto;min-height: 580px;padding: 24px !important;margin-top:33px;">
+
+           
+          </div>
+         
       </div>
     </div>
   </div>  
@@ -306,8 +347,6 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
             setValiationError($(value).find('input[name="question_label"]'));
             formSubmitted = false;
           }
-
-
 
           var parameter = {};
           parameter['required'] = $(value).find('input[name="question_required"]').prop("checked");
@@ -638,7 +677,7 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
 <script>
   // form builder configuration
   function addOptions(e) {
-    $(e).parents('.option_div').append('<div class="col-sm-12 option" data-option-id="0"><label class="col-sm-2 col-form-label text-right option_text_label">Option 2</label> <input class="col-sm-4" type="text" name="option_text"><div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div></div>');
+    $(e).parents('.option_div').append('<div class="col-sm-12 option" data-option-id="0"><label class="col-sm-2 col-form-label text-right option_text_label">Option 2</label> <input class="col-sm-4 form-control" style="margin-left: 6px;" type="text" name="option_text"><div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> <a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a></div></div>');
     $(e).parents('.option_div').children('.option').each((key,value) => {
       $(e).parents('.option_div').children('.option').eq(key).find('.option_text_label').html('Option '+(key+1));
     });
@@ -663,29 +702,11 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
   }
 
     $( function() {
-        // $( ".column" ).sortable({
-        //   connectWith: ".column",
-        //   handle: ".portlet-header",
-        //   cancel: ".portlet-toggle",
-        //   placeholder: "portlet-placeholder ui-corner-all"
-        // });
   
-        // $( ".portlet" )
-        //   .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-        //   .find( ".portlet-header" )
-        //     .addClass( "ui-widget-header ui-corner-all" )
-        //     .prepend( "<!--<span class='ui-icon-minusthick portlet-toggle mr-5'><i class='fa fa-minus'></i></span><span class='ui-icon-minusthick portlet-toggle mr-1'><i class='fa fa-trash'></i></span>-->");
-    
-        // $( ".portlet-toggle" ).on( "click", function() {
-        //   var icon = $( this );
-        //   icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
-        //   icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-        // });
-
-        $( ".input-draggable-parent-div" ).sortable({
-          connectWith: ".connectedSortable",
-          placeholder: "portlet-placeholder"
-        }).disableSelection();
+        // $( ".input-draggable-parent-div" ).sortable({
+        //   connectWith: ".connectedSortable",
+        //   placeholder: "portlet-placeholder"
+        // }).disableSelection();
 
         $(".form_bal_textfield").draggable({
             helper: function () {
@@ -825,13 +846,13 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
           option_text = option_text + '<div class="col-sm-12 option" data-option-id="' + value.options_id + '"><label class="col-sm-2 col-form-label text-right option_text_label">'+value.options+'</label> <input class="col-sm-4" type="text" name="option_text" value="'+value.option_value+'"><div class="col-sm-1 text-left actions"><a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> '+((index > 0)?'<a class=" col-form-label remove_action" onClick="removeOptions(this)"><i class="fa fa-minus"></i></a>':'')+'</div></div>';
         });
       } else {
-          option_text = '<div class="col-sm-12 option" data-option-id="0"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>';
+          option_text = '<div class="col-sm-12 option" data-option-id="0"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4 form-control" style="margin-left: 6px;" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>';
       }
 
       var html = '<div data-field-id="selection_type-'+field+'" data-question-id="'+question_id+'" data-input-type="'+selection_type+'" class="input-main-box input-main-box-'+field+' h-auto w-auto question-box" data-input-box-type="single-input"> <div class="row"> <label class="col-sm-2 col-form-label text-right">Question / Label</label> <div class="col-sm-5"> <input value="'+question_label+'" name="question_label" class="form-control" type="text"> </div> <div class="col-sm-4 text-right">'+((selection_type == 'radio') ? 'Radio Input' : (selection_type == 'checkbox') ? 'Checkbox Input' : (selection_type == 'dropdown') ? 'Selection Input' : '') +'</div><div class="col-sm-1" style="text-align:right;padding-right:30px;"><i class="fa fa-times" style="font-size: 18px;" onClick=removeInput('+question_id+',this) ></i></div> </div> <div class="row"> <label class="col-sm-2 col-form-label text-right">Field Description</label> <div class="col-sm-5"> <input value="'+question_description+'" name="question_description" class="form-control" type="text"> </div> </div><div class="row"> <label class="col-sm-2 col-form-label text-right"></label> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="question_required" '+required+' > Required </div> <div class="col-sm-2 text-left"> <input class="" type="checkbox" name="allow_other" '+allow_other+'> Allow Other</div>';
 
       html = html + '<div class="col-sm-6  text-right pr-8" style="position: absolute; right: 0px; margin-top: 56px;padding-right:33px;" style="padding-right:32px !important;"><a href="#" onclick="showHide(this)">Styling</a></div> </div> <br><div class="row option_div "  data-removed-options="">'+option_text+'</div><div class="col-sm-12 styling pt-5 d-none"><label class="col-sm-1 col-form-label text-right"></label><label class="col-sm-11 col-form-label text-left" style="font-size: 19px;font-weight: bold;">Styling</label><div class="col-sm-12"><label class="col-sm-2 col-form-label text-right">Class</label><div class="col-sm-3 text-left"><input class="w-100" type="text" value="'+question_styling_class+'" name="question_styling_class"></div><label class="col-sm-2 col-form-label text-right">Max Length</label><div class="col-sm-3 text-left"><input class="w-100" type="number" value="'+question_styling_maxlength+'" name="question_styling_maxlength"></div></div><div class="col-sm-12 pt-1"><label class="col-sm-2 col-form-label text-right">Background</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_background_color+'" name="question_styling_background_color"></div><label class="col-sm-2 col-form-label text-right">Color</label><div class="col-sm-3 text-left"><input class="w-100" type="color" value="'+question_styling_font_color+'" name="question_styling_font_color"></div></div></div></div>';
-      // <div class="col-sm-12 option"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>
+      // <div class="col-sm-12 option"> <label class="col-sm-2 col-form-label text-right option_text_label">Option 1</label> <input class="col-sm-4 form-control" style="margin-left: 6px;" type="text" name="option_text"> <div class="col-sm-1 text-left actions"> <a class=" col-form-label add_action" onClick="addOptions(this)" ><i class="fa fa-plus"></i></a> </div> </div>
       return html;
     }
 
@@ -879,7 +900,7 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
 
       var generateField = randomKey();
 
-      $('#main-drag-and-drop-area').append('<div data-question-id="'+question_id+'" data-input-type="group" class=" input-main-box portlet question-box question-box-'+question_id+'" data-input-box-type="group" id="portlet-'+generateField+'"><div class="portlet-header"><div class="row"><label class="col-sm-2 col-form-label text-right">Group Label</label><div class="col-sm-5"><input class="form-control" name="group_label" type="text" value="'+question_label+'"></div></div><div class="row"><label class="col-sm-2 col-form-label text-right">Field Description</label><div class="col-sm-5"><input class="form-control" name="group_description" value="'+question_description+'" type="text"></div></div></div><div class="portlet-content input-draggable-parent-child-div connectedSortable"></div></div>');
+      $('#main-drag-and-drop-area').append('<div data-question-id="'+question_id+'" data-input-type="group" class=" pt-0 input-main-box portlet question-box question-box-'+question_id+'" data-input-box-type="group" id="portlet-'+generateField+'"><div class="portlet-header"><div class="row"><label class="col-sm-2 col-form-label text-right">Group Label</label><div class="col-sm-5"><input class="form-control" name="group_label" type="text" value="'+question_label+'"></div></div><div class="row"><label class="col-sm-2 col-form-label text-right">Field Description</label><div class="col-sm-5"><input class="form-control" name="group_description" value="'+question_description+'" type="text"></div></div></div><div class="portlet-content input-draggable-parent-child-div connectedSortable"></div></div>');
 
       // $( ".column" ).sortable({
       //   connectWith: ".column",
@@ -911,7 +932,7 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
 
       var generateField = randomKey();
 
-      $('#main-drag-and-drop-area').append('<div data-question-id="'+question_id+'" data-input-type="reperator" class=" input-main-box portlet question-box question-box-'+question_id+'" data-input-box-type="reperator" id="portlet-'+generateField+'"><div class="portlet-header"><div class="row"><label class="col-sm-2 col-form-label text-right">Group Label</label><div class="col-sm-5"><input class="form-control" name="group_label" type="text" value="'+question_label+'"></div><label class="col-sm-4 col-form-label text-right">Repeater</label></div><div class="row"><label class="col-sm-2 col-form-label text-right">Field Description</label><div class="col-sm-5"><input class="form-control" name="group_description" value="'+question_description+'" type="text"></div></div></div><div class="portlet-content input-draggable-parent-child-div connectedSortable"></div></div>');
+      $('#main-drag-and-drop-area').append('<div data-question-id="'+question_id+'" data-input-type="reperator" class=" pt-0 input-main-box portlet question-box question-box-'+question_id+'" data-input-box-type="reperator" id="portlet-'+generateField+'"><div class="portlet-header"><div class="row"><label class="col-sm-2 col-form-label text-right">Group Label</label><div class="col-sm-5"><input class="form-control" name="group_label" type="text" value="'+question_label+'"></div><label class="col-sm-4 col-form-label text-right">Repeater</label></div><div class="row"><label class="col-sm-2 col-form-label text-right">Field Description</label><div class="col-sm-5"><input class="form-control" name="group_description" value="'+question_description+'" type="text"></div></div></div><div class="portlet-content input-draggable-parent-child-div connectedSortable"></div></div>');
 
       // $( ".column" ).sortable({
       //   connectWith: ".column",
@@ -938,6 +959,37 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
       }).disableSelection();
     }
   </script>
+  <!--<div class="col-sm-12">
+    <div class="row">
+      <label class="col-sm-1 col-form-label text-right">Form Edit</label>
+      <div class="col-sm-5">
+        <select class="form-control" name="custome_forms">
+          <option value="new">New Form</option>
+          <?php foreach($forms as $job) { ?>
+            <option value="<?php echo $job->forms_id; ?>" <?php echo (isset($selected_form_id) && $selected_form_id > 0 && $selected_form_id == $job->forms_id)?'selected="selected"':''; ?>><?php echo $job->form_title; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" onClick="getFormData()">  Go </button>
+      <a class="ml-3 mt-3 d-none" id="preview_url_formbuilder" href="<?php echo base_url('builder/demo/13'); ?>">Click to preview</a>
+    </div>
+  </div>
+  <div class="col-sm-12 ">
+    <div class="form-group row ">
+      <label class="col-sm-1 col-form-label text-right">Form Title</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" name="custom_forms_title">
+      </div>
+      <label class="col-sm-1 col-form-label text-right">Add to</label>
+      <div class="col-sm-2">
+        <select class="form-control" >
+          <?php foreach($jobs as $job) { ?>
+            <option value="<?php echo $job->jobs_id; ?>"><?php echo $job->job_name; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+  </div>-->
 <style type="text/css">
   .validation-error-input {
       border: red 1px solid !important;
@@ -977,4 +1029,7 @@ var styling_var = '<div class="col-sm-2 text-right"> style="padding-right:32px !
     text-decoration: none;
     background-color: #8e8e8e;
   }
+  .ui-widget.ui-widget-content {
+    border: 1px solid #d3d3d3;
+}
 </style>

@@ -6,4 +6,18 @@ $(document).ready(function () {
         });
     }, 5000);
     $('.alert').css({"bottom":"50px","left":"20px","position":"absolute","z-index":"200","width":"auto"});
+
+    $(document).on('click','#edit-expensesCheck',function () {
+        var id = $(this).attr("vendroID");
+        $.ajax({
+            url:"/dashboard/getDesignationData",
+            method:"POST",
+            data:{id:id},
+            dataType:"json",
+            success:function (data) {
+                $('#des-id').val(data.des_id);
+                $('#designation').val(data.designation);
+            }
+        });
+    });
 });

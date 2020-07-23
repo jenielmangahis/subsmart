@@ -9,6 +9,7 @@ class Accounting extends MY_Controller {
 		$this->load->model('vendors_model');
 		$this->load->model('terms_model');
         $this->load->model('expenses_model');
+        $this->load->model('rules_model');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css?v=".rand(),
@@ -45,7 +46,7 @@ class Accounting extends MY_Controller {
 				array('/accounting/reports',array()), 
 				array("",	array('#','#')), 
 				array('#',	array()), 
-				array("",	array('/accounting/chart_of_accounts','#')), 
+				array("",	array('/accounting/chart_of_accounts','#')),
 			); 
 		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
     }
@@ -65,6 +66,7 @@ class Accounting extends MY_Controller {
     public function expenses()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['vendors'] = $this->vendors_model->getVendors();
         $this->load->view('accounting/expenses', $this->page_data);
     }
     public function vendors(){
@@ -279,6 +281,9 @@ class Accounting extends MY_Controller {
 		
     }
 //    Expenses
+    public function getVendor(){
+
+    }
 
     public function timeActivity(){
         $new_data = array(
@@ -365,4 +370,39 @@ class Accounting extends MY_Controller {
             redirect('accounting/expenses');
         }
     }
+
+    /***Rules***/
+    public function addRules(){
+        $new_data = array(
+            'rules_name' => $this->input->post('rules_name'),
+            'apply' => $this->input->post('apply'),
+            'banks' => $this->input->post('banks'),
+            'include' => $this->input->post('include'),
+            'transaction_type' => $this->input->post('trans_type'),
+            'payee' => $this->input->post('payee'),
+            'memo' => $this->input->post('memo'),
+            'auto' => $this->input->post('auto')
+        );
+        $rules_id = $this->rules_model->addRules($new_data);
+        if ($rules_id != null){
+            //Condition insertion
+            $description = $this->input->post('description');
+            $contain = $this->input->post('contain');
+            $comment = $this->input->post('comment');
+            $this->rules_model->addConditions($description,$contain,$comment,$rules_id);
+            //Category Insertion
+            $category = $this->input->post('category');
+            $percentage = $this->input->post('percentage');
+            $this->rules_model->addCategory($category,$percentage,$rules_id);
+
+            $this->session->set_flashdata('rules_added','New rules added');
+            redirect('accounting/rules');
+        }else{
+            $this->session->set_flashdata('rules_failed','Rules name already exist.');
+            redirect('accounting/rules');
+        }
+
+
+    }
+
 }

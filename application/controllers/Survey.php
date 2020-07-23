@@ -143,6 +143,34 @@ class Survey extends MY_Controller
     exit;
   }
 
+  public function uploadCustomBackgroundImage($id){
+    $path = 'uploads/survey/image_custom_background_db';
+    $config = [
+      'upload_path' 		=> $path,
+      'allowed_types' 	=> '*',
+      'overwrite' 		=> true
+    ];
+
+    
+    $_FILES['useCustomBackgroundImage']["name"] = "CB".$id.".". explode('.', $_FILES['useCustomBackgroundImage']['name'])[1];
+
+    $test = $this->upload->initialize($config);
+    if ( ! $this->upload->do_upload('useCustomBackgroundImage') ){
+
+    }else{
+      $upload_data = $this->upload->data();
+    }
+
+    $data["customBackgroundImage"] = $_FILES["useCustomBackgroundImage"]["name"];
+
+    $this->survey_model->update($id, $data);
+    
+    echo json_encode(array(
+      'success' => 1
+    ));
+    exit;
+  }
+
   public function addQuestion($id, $tid){
     $data = $this->survey_model->addQuestion($id, $tid);
     $result = array(

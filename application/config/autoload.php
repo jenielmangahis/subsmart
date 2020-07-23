@@ -151,6 +151,7 @@ $autoload['model'] = array(
 	'account_model',
 	'account_detail_model',
 	'accounts_has_account_details_model',
+	'wizard_apps_model'
 	'account_sub_account_model',
 	'accounts_has_sub_account_model',
 	'chart_of_accounts_model'

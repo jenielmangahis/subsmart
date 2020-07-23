@@ -232,10 +232,16 @@
                                           <img class="survey-card-image" style="width: 100%" src="https://via.placeholder.com/150" alt="">
                                         <?php
                                     }else{
-                                      if($survey->background_image != null && $survey->use_background_image == true){
-                                        ?>
-                                          <img class="survey-card-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->background_image ?>" alt="<?= substr($survey->background_image, 0, 4)?>-image">
-                                        <?php
+                                      if($survey->backgroundImage != null && $survey->useBackgroundImage == true){
+                                        if($survey->customBackgroundImage != ""){
+                                          ?>
+                                            <img class="survey-card-image" src="<?=base_url()?>uploads/survey/image_custom_background_db/<?=$survey->customBackgroundImage?>" alt="<?=substr($survey->backgroundImage, 0, 4)?>-image">
+                                          <?php
+                                        }else{
+                                          ?>
+                                            <img class="survey-card-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->backgroundImage ?>" alt="<?= substr($survey->backgroundImage, 0, 4)?>-image">
+                                          <?php
+                                        }
                                       }else{
                                         ?>
                                           <img class="survey-card-image" src="<?=base_url()?>uploads/survey/themes/<?=$survey->survey_theme->sth_primary_image?>" alt="">

@@ -1,10 +1,9 @@
-// @@@@@
 // global settings
-const surveyBaseUrl = "/nsmartrac/"; // local
-// const surveyBaseUrl = window.location.origin; // online
+// const surveyBaseUrl = "/nsmartrac/"; // local
+const surveyBaseUrl = `${window.location.origin}/` ; // online
 
 $(document).ready(function(){
-
+  console.log(surveyBaseUrl)
   $(document).on('submit', '#frm-add-survey', function(e){
     e.preventDefault();
     var url = $(this).attr('action');
@@ -501,7 +500,7 @@ $(document).ready(function(){
     var value = $(this).val();
     var id = $(this).data('id');
     
-    
+    console.log("checkbox");
     switch(value){
       case "description":
         if($(this).is(":checked")){
@@ -708,10 +707,10 @@ $(document).ready(function(){
   $('input[type="file"]').change(function(e){
       var value = $(this).val();
       var id = $(this).data('id');
-      var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
       var fileName = e.target.files[0].name;
       switch(e.target.name){
         case "image_background":
+          var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
           $.ajax({
             url: surveyBaseUrl + 'survey/question/upload/'+ id,
             type:'POST',
@@ -725,7 +724,24 @@ $(document).ready(function(){
             }
           });
           break;
+        case "useCustomBackgroundImage":  
+          var data = new FormData(document.querySelector('#form-upload-custom-image-background'));
+          if(localStorage.getItem('cls_as')){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/upload/custombackgroundimage/'+ id,
+              type:'POST',
+              data: data,
+              cache:false,
+              contentType: false,
+              processData: false,
+              success: function(res){
+                toastr["success"]("File uploaded for welcome message");
+              }
+            });
+          }
+          break;
         default:
+          var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
           $('.custom-file-label').html(fileName);
           $.ajax({
             url: surveyBaseUrl + 'survey/question/upload/'+ id,

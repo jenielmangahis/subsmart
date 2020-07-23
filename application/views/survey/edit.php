@@ -539,10 +539,18 @@
 											</li>
 											<li class="list-group-item">
 												<div class="d-flex w-100 justify-content-between">
-													<span>Use Background Image</span>
+													<span>Use Background Image <em class="text-muted"><small>NOTE: This works when a custom image is uploaded and existing</small></em></span>
 													<div class="form-check">
-														<input <?= ($survey->use_background_image == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="useBackgroundImage" data-id="<?= $survey->id ?>" id="useBackgroundImage<?= $survey->id ?>">
+														<input <?= ($survey->useBackgroundImage == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="useBackgroundImage" data-id="<?= $survey->id ?>" id="useBackgroundImage<?= $survey->id ?>">
 													</div>
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
+													<span>Background Image: <strong id="customImageBackgroundName"><?= ($survey->backgroundImage === "") ? "none" : $survey->backgroundImage?></strong></span>
+													<?= form_open('survey/upload/custombackgroundimage/'.$survey->id, array('id' => 'form-upload-custom-image-background'))?>
+														<input type="file" value="useCustomBackgroundImage" name="useCustomBackgroundImage" data-id="<?= $survey->id ?>" id="useCustomBackgroundImage<?= $survey->id ?>">
+													<?= form_close();?>
 												</div>
 											</li>
 											<li class="list-group-item">
@@ -767,9 +775,23 @@
       success: function(res){
 				document.querySelector('#survey-title').innerHTML = document.querySelector('#txtSurveyTitle').value;
 				document.querySelector('#redirection-link-text').innerHTML = "Redirection Link: <a href=" + document.querySelector('#txtRedirectionLink').value + "> " + document.querySelector('#txtRedirectionLink').value + " </a>";
+				
       }
 		});
-		
+
+		var customBackgroundImageFormData = new FormData(document.querySelector('#form-upload-custom-image-background'));
+		$.ajax({
+			url: surveyBaseUrl + 'survey/upload/custombackgroundimage/'+ id,
+			type:'POST',
+			data: customBackgroundImageFormData,
+			cache:false,
+			contentType: false,
+			processData: false,
+			success: function(res){
+				document.querySelector('#customImageBackgroundName').innerHTML = `CB<?=$survey->id?>.jpg`;
+			}
+		});
+
 		if(error == false){
 			toastr["success"]("Changes saved and published!");
 		}

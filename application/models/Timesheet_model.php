@@ -56,7 +56,7 @@ class Timesheet_model extends MY_Model {
         //$this->db->like('timestamp', $todaysDate);
         //$this->db->where('action', "Clock In");
         $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(6);
+        $this->db->limit(4);
         $query = $this->db->get();
         // $this->db->select('*');
         // $this->db->from($this->table);

@@ -16,6 +16,8 @@ class Booking extends MY_Controller {
 		$this->load->model('BookingCoupon_model');
 		$this->load->model('BookingSetting_model');
         $this->load->model('BookingTimeSlot_model');
+        $this->load->model('Users_model');
+        $this->load->model('BookingScheduleAssignedUser_model');
 	}
 
 	public function index() {
@@ -54,7 +56,19 @@ class Booking extends MY_Controller {
 	}
 
 	public function form() {
+
+		$default_form_fields = array(
+			'Full Name' => 'full_name',
+			'Contact Number' => 'contact_number',
+			'Email' => 'email',
+			'Address' => 'address',
+			'Message' => 'message',
+			'Preferred Time To Contact' => 'preferred_time_to_contact',
+			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
+		);
+
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['default_form_fields'] = $default_form_fields;
 		$this->load->view('online_booking/form', $this->page_data);
 	}
 
@@ -82,11 +96,18 @@ class Booking extends MY_Controller {
 
 	public function settings() {
 		$user = $this->session->userdata('logged');  
-		$setting = array();
-
 		$bookingSetting = $this->BookingSetting_model->findByUserId($user['id']);
 
+		$user 	   = $this->Users_model->getUser($user['id']);
+		$employees = $this->Users_model->findAllUsersByCompanyId($user->company_id);
+
+		$aasignedUsers = array();		
+		$setting       = array();
+
 		if( $bookingSetting ){
+
+			$bookingScheduleAssignedUsers = $this->BookingScheduleAssignedUser_model->findAllByBookingSettingId($bookingSetting->id);
+
 			$setting = array(
 				'page_title' => $bookingSetting->page_title,
 				'page_intro' => $bookingSetting->page_introduction,
@@ -103,6 +124,11 @@ class Booking extends MY_Controller {
 				'google_analytics_origin' => $bookingSetting->website_url,
 				'status' => $bookingSetting->widget_status
 			);
+
+			foreach( $bookingScheduleAssignedUsers as $b ){
+				$aasignedUsers[] = $b->user_id;
+			}
+
 		}else{
 			$setting = array(
 				'page_title' => '',
@@ -122,6 +148,8 @@ class Booking extends MY_Controller {
 			);
 		}
 
+		$this->page_data['aasignedUsers'] = $aasignedUsers;
+		$this->page_data['employees'] = $employees;
 		$this->page_data['setting'] = $setting;
 		$this->page_data['users']   = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/settings', $this->page_data);
@@ -470,6 +498,23 @@ class Booking extends MY_Controller {
 
         	$this->BookingSetting_model->update($userSetting->id, $data);
 
+        	$this->BookingScheduleAssignedUser_model->deleteAllBySettingId($userSetting->id);
+
+        	if( post('convert_lead_to_work_order') == 1 ){
+        		$assigned_batch_data = array();
+	        	foreach( $post['lead_work_order_employees'] as $key => $user_id ){
+	        		$assigned_batch_data[] = array(
+	        			'booking_setting_id' => $userSetting->id,
+	        			'user_id' => $user_id
+	        		);
+	        	}
+
+	        	if( !empty($assigned_batch_data) ){
+	        		$this->BookingScheduleAssignedUser_model->batchInsert($assigned_batch_data);
+	        	}
+        	}
+
+
         }else{
         	$data = array(
         		'user_id' => $user['id'],
@@ -489,7 +534,21 @@ class Booking extends MY_Controller {
         		'widget_status' => post('status')
         	);
 
-        	$bookingSetting = $this->BookingSetting_model->create($data);
+        	$last_id = $this->BookingSetting_model->createSetting($data);
+
+        	if( post('convert_lead_to_work_order') == 1 ){
+        		$assigned_batch_data = array();
+	        	foreach( $post['lead_work_order_employees'] as $key => $user_id ){
+	        		$assigned_batch_data[] = array(
+	        			'booking_setting_id' => $last_id,
+	        			'user_id' => $user_id
+	        		);
+	        	}
+
+	        	if( !empty($assigned_batch_data) ){
+	        		$this->BookingScheduleAssignedUser_model->batchInsert($assigned_batch_data);
+	        	}
+        	}        	
         }
 
         $json_data = array('is_success' => true);

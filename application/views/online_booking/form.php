@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         Select the fields that will be part of the form and required ones.
                                     </div>
                                     <div class="col-md-12" style="margin-top: 20px;">
-                                        <table class="table">
+                                        <table class="table tbl-custom-fields">
                                           <thead>
                                             <tr>
                                               <th width="40%" scope="col"><strong>Field</strong></th>
@@ -45,28 +45,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </tr>
                                           </thead>
                                           <tbody>
-                                            <tr>
-                                                <td width="60%">
-                                                    Name
-                                                </td>
-                                                <td width="20%">
-                                                    <div class="checkbox checkbox-sm">
-                                                        <input type="checkbox" name="visible[]" value="visible[]" class="checkbox-select" id="sun_0">
-                                                        <label for="visible_0"></label>
-                                                    </div>
-                                                </td>
-                                                <td width="20%" style="">
-                                                    <div class="checkbox checkbox-sm">
-                                                        <input type="checkbox" name="required[]" value="required[]" class="checkbox-select" id="vrequired_0">
-                                                        <label for="sun_0"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a class="form-field-delete" data-category-delete-modal="open" data-id="13526" href="#">
-                                                        <span class="fa fa-trash"></span>
-                                                    </a>                                                    
-                                                </td>
-                                            </tr>
+                                            <?php foreach($default_form_fields as $dff_key => $default_form_field) { ?>
+                                                <?php 
+                                                    $is_required = "";
+                                                    $is_visible = "checked=''";
+
+                                                    $is_required_disabled = "";
+                                                    $is_visible_disabled = "";
+
+                                                    if($default_form_field == 'full_name' || $default_form_field == 'contact_number') {
+                                                        $is_required = "checked=''";
+                                                        $is_visible = "checked=''";
+
+                                                        $is_required_disabled = "disabled=''";
+                                                        $is_visible_disabled = "disabled=''";
+                                                    }
+                                                ?>
+                                                <tr>
+                                                    <td width="60%">
+                                                        <?php echo $dff_key; ?>
+                                                    </td>
+                                                    <td width="20%">
+                                                        <div class="checkbox checkbox-sm">
+                                                            <input type="checkbox" name="is_visible[<?php echo $default_form_field; ?>][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="<?php echo $default_form_field; ?>" id="is_visible_<?php echo $default_form_field; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> >
+                                                            <label for="is_visible_<?php echo $default_form_field; ?>"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td width="20%" style="">
+                                                        <div class="checkbox checkbox-sm">
+                                                            <input type="checkbox" name="is_required[<?php echo $default_form_field; ?>][]" value="1" class="checkbox-select select-form-field-required" id="is_required_<?php echo $default_form_field; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> >
+                                                            <label for="is_required_<?php echo $default_form_field; ?>"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        &nbsp;                                                   
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+
                                           </tbody>
                                         </table>   
 
@@ -83,7 +99,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         </div>
 
-                                        <a style="padding-left: 9px;" id="add-form-field-row" data-time-slot="btn-add" href="javascript:void(0);"><span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field</a>                                                                               
+                                        <!-- <a style="padding-left: 9px;" id="add-form-field-row" data-time-slot="btn-add" href="javascript:void(0);"><span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field</a> -->
+                                        <a style="padding-left: 9px;" id="" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
+                                            <span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field
+                                        </a>                                                                               
                                     </div>
                                 </div>                                 
 
@@ -98,39 +117,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div style="background: rgb(255, 255, 255) none repeat scroll 0% 0%; padding: 30px;">
                                                 <div id="app" class="markate-widget-contact" style="color: rgb(34, 34, 34); font-size: 16px; font-family: &quot;roboto&quot;, Arial, Helvetica, sans-serif;">
                                                     <form name="widget-contact" method="post">
-                                                        <div class="form-group">
-                                                            <label>Name</label> <span class="form-required">*</span> 
-                                                            <input type="text" class="form-control">
+                                                        <div class="form-fileds-container">
+                                                            <div class="form-group form-group-full_name">
+                                                                <label>Full Name</label> <span class="form-required">*</span> 
+                                                                <input type="text" id="full_name" name="full_name" class="form-control">
+                                                            </div>
+                                                            <div class="form-group form-group-contact_number">
+                                                                <label>Contact Number</label> <span class="form-required">*</span> 
+                                                                <input type="tel" id="contact_number" name="contact_number" class="form-control">
+                                                            </div>
+                                                            <div class="form-group form-group-email">
+                                                                <label>Email</label>
+                                                                <input type="text" id="email" name="email" class="form-control">
+                                                            </div>
+                                                            <div class="form-group form-group-address">
+                                                                <label>Address</label>
+                                                                <input type="text" id="address" name="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
+                                                            </div>
+                                                            <div class="form-group form-group-message">
+                                                                <label>Message</label>
+                                                                <textarea style="min-height: 100px;" name="message" id="message" rows="2" class="form-control"></textarea>
+                                                            </div>
+                                                            <div class="form-group form-group-preferred_time_to_contact">
+                                                                <label>Preferred time to contact</label>
+                                                                <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
+                                                                    <option value="0" selected="selected">Any time</option> 
+                                                                    <option value="1">7am to 10am</option> 
+                                                                    <option value="2">10am to Noon</option> 
+                                                                    <option value="3">Noon to 4pm</option> 
+                                                                    <option value="4">4pm to 7pm</option>
+                                                                </select>
+                                                            </div>                                                        
+                                                            <div class="form-group form-group-how_did_you_hear_about_us">
+                                                                <label>How did you hear about us</label>
+                                                                <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label>Phone</label> <span class="form-required">*</span> 
-                                                            <input type="tel" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Email</label>
-                                                            <input type="text" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Address</label>
-                                                            <input type="text" id="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Message</label>
-                                                            <textarea rows="2" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Preferred time to contact</label>
-                                                            <select name="form.contactTime" class="form-control">
-                                                                <option value="0" selected="selected">Any time</option> 
-                                                                <option value="1">7am to 10am</option> 
-                                                                <option value="2">10am to Noon</option> 
-                                                                <option value="3">Noon to 4pm</option> 
-                                                                <option value="4">4pm to 7pm</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>How did you hear about us</label>
-                                                            <input type="text" class="form-control"></div>
                                                     </form> 
                                                     <hr class="card-hr"> 
                                                     <div class="widget-contact-submit"><button class="btn btn-primary btn-lg">Book Now</button></div>
@@ -158,5 +180,5 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
-</div>
+</div><?php include viewPath('includes/booking_modals'); ?>   
 <?php include viewPath('includes/footer_booking'); ?>

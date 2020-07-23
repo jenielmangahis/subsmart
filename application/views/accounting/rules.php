@@ -59,6 +59,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </table>
                         </div>
                     </div>
+                <?php
+
+
+                ?>
                 </div>
             </div>
             <!-- end row -->
@@ -75,65 +79,66 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h3 class="modal-title" id="myModalLabel2" >Create rules</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    <form action="">
+                    <form action="<?php echo site_url()?>accounting/addRules" method="post">
                     <div class="modal-body">
                         <div class="subheader">Rules only apply to unreviewed transactions.</div>
                             <div class="form-group">
                                 <label for="">What do you want to call this rule? *</label>
-                                <input type="text" class="form-control" placeholder="Name this rule">
+                                <input type="text" name="rules_name" class="form-control" placeholder="Name this rule">
                             </div>
                             <div class="form-group">
                                 <div>
                                     <label for="">Apply this to transactions that are</label>
                                 </div>
                                 <div class="tab-select">
-                                    <select name="" id="" class="form-control">
-                                        <option value="" selected>Money in</option>
-                                        <option value="">Money out</option>
+                                    <select name="apply" id="" class="form-control">
+                                        <option value="in" selected>Money in</option>
+                                        <option value="out">Money out</option>
                                     </select>
                                 </div>
                                 <span style="margin-right: 5px;margin-left: 5px;">in</span>
                                 <div class="tab-select">
                                     <div class="selectBox" onclick="showCheckboxes()">
-                                        <select name="" id="" class="form-control">
-                                            <option value="">No bank account selected</option>
+                                        <select name="banks" id="" class="form-control">
+                                            <option value="1">All bank accounts</option>
+                                            <option value="0">No bank account selected</option>
                                         </select>
                                         <div class="overSelect"></div>
                                     </div>
                                     <div id="checkboxes">
                                         <label for="one">
-                                            <input type="checkbox" id="one" /> First checkbox</label>
+                                            <input type="checkbox" id="one" checked /> First checkbox</label>
                                         <label for="two">
-                                            <input type="checkbox" id="two" /> Second checkbox</label>
+                                            <input type="checkbox" id="two" checked /> Second checkbox</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="" style="position: relative;display: inline-block;">and include the following:</label>
-                                <select name="" id="" class="form-control inline-select">
-                                    <option value="" selected>All</option>
-                                    <option value="">Any</option>
+                                <select name="include" id="" class="form-control inline-select">
+                                    <option value="all" selected>All</option>
+                                    <option value="any">Any</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <div class="addCondition-container">
                                     <div id="addCondition">
                                         <div class="tab-select">
-                                            <select name="" id="" class="form-control">
-                                                <option value="" selected>Description</option>
-                                                <option value="">Bank test</option>
-                                                <option value="">Amount</option>
+                                            <select name="description[]" id="" class="form-control">
+                                                <option selected>Description</option>
+                                                <option>Bank text</option>
+                                                <option>Amount</option>
                                             </select>
                                         </div>
                                         <div class="tab-select">
-                                            <select name="" id="" class="form-control" style="max-width: 140px">
-                                                <option value="" selected>Contain</option>
-                                                <option value="">Doesn't contain</option>
-                                                <option value="">Is exactly</option>
+                                            <select name="contain[]" id="" class="form-control" style="max-width: 140px">
+                                                <option  selected>Contain</option>
+                                                <option>Doesn't contain</option>
+                                                <option>Is exactly</option>
                                             </select>
                                         </div>
                                         <div class="tab-select" style="max-width: 140px">
-                                            <input type="text" class="form-control" placeholder="Enter Text">
+                                            <input type="text" name="comment[]" class="form-control" placeholder="Enter Text">
                                         </div>
                                         <div class="tab-select" id="deleteCondition" style="display: none;">
                                             <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
@@ -149,16 +154,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <label for="">Then assign</label>
                                 <div class="action-section">
                                     <span class="action-label">Transaction type</span>
-                                    <select name="" id="" class="form-control">
-                                        <option value="" selected>Expenses</option>
-                                        <option value="">Transfer</option>
-                                        <option value="">Check</option>
+                                    <select name="trans_type" id="" class="form-control">
+                                        <option selected>Expenses</option>
+                                        <option>Transfer</option>
+                                        <option>Check</option>
                                     </select>
                                 </div>
                                 <div class="action-section" >
                                     <div id="categoryDefault">
                                         <span class="action-label" style="margin-right: 70px">Category</span>
-                                        <input type="text" class="text-dropdown" list="categoryListDP" placeholder="Select category">
+                                        <input type="text" name="category[]" id="mainCategory" class="text-dropdown" list="categoryListDP" placeholder="Select category">
                                         <datalist id="categoryListDP">
                                             <option>Advertising</option>
                                             <option>Bad Debts</option>
@@ -175,11 +180,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text" >Percentage</span>
-                                                <input type="text" class="form-control" value="0" style="width: 205px">
+                                                <input type="text" name="percentage[]" class="form-control" style="width: 205px">
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text">Category</span>
-                                                <input type="text" class="text-dropdown" list="categoryListDP" style="width: 205px">
+                                                <input type="text" name="category[]" class="text-dropdown" list="categoryListDP" style="width: 205px">
                                                     <datalist id="categoryListDP">
                                                         <option>Advertising</option>
                                                         <option>Bad Debts</option>
@@ -195,11 +200,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text" >Percentage</span>
-                                                <input type="text" class="form-control" value="0" style="width: 205px">
+                                                <input type="text" name="percentage[]" class="form-control" value="0" style="width: 205px">
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text">Category</span>
-                                                <input type="text" class="text-dropdown" list="categoryListDP" style="width: 205px">
+                                                <input type="text" name="category[]" class="text-dropdown" list="categoryListDP" style="width: 205px">
                                                 <datalist id="categoryListDP">
                                                     <option>Advertising</option>
                                                     <option>Bad Debts</option>
@@ -215,7 +220,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="action-section">
                                     <span class="action-label">Payee</span>
-                                    <input type="text" class="text-dropdown" list="payeeListDP" placeholder="(Recommended)">
+                                    <input type="text" name="payee" class="text-dropdown" list="payeeListDP" placeholder="(Recommended)">
                                     <datalist id="payeeListDP">
                                         <option>Advertising</option>
                                         <option>Bad Debts</option>
@@ -224,7 +229,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="action-section" id="assignMore" style="display: none;">
                                     <span class="action-label">Add memo</span>
-                                    <textarea name="" id="" cols="30" rows="5" placeholder="Enter Text" style="resize: none;"></textarea>
+                                    <textarea name="memo" id="" cols="30" rows="5" placeholder="Enter Text" style="resize: none;"></textarea>
                                 </div>
                                 <div style="margin-top: 15px;">
                                     <a href="#" id="btnAssignMore"><i class="fa fa-plus"></i> Assign more</a>
@@ -236,7 +241,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <label for="">Automatically confirm transactions this rule applies to</label>
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="autoAddswitch">
+                                    <input type="checkbox" name="auto" class="custom-control-input" value="1" id="autoAddswitch">
                                     <label class="custom-control-label" for="autoAddswitch">Auto-add</label>
                                 </div>
                             </div>
@@ -251,6 +256,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+    <?php if ($this->session->flashdata('rules_added')){?>
+        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('rules_added');?>
+        </div>
+    <?php }elseif ($this->session->flashdata('rules_failed')){?>
+        <div class="alert alert-info alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('rules_failed');?>
+        </div>
+    <?php }?>
 <!--    end of modal-->
     <div class="full-screen-modal">
         <!--Modal for file upload-->
@@ -342,6 +358,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
            $('.add-split-container').show();
            $('#categoryDefault').hide();
            $('#btnAddLine').show();
+           $('#mainCategory').removeAttr('name');
         });
 
         $(document).on("click","#btnAddLine",function (e) {
@@ -356,6 +373,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $('.add-split-container').hide();
                 $('#categoryDefault').show();
                 $('#btnAddLine').hide();
+                $('#mainCategory').attr('name','category[]');
             }else{
                 $(".add-split-section").last().remove();
             }
