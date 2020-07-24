@@ -7,5 +7,6 @@
         <a href="<?php echo base_url('more/addon/booking/coupons') ?>" class="booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/coupons') ? "booking-tab-active" : "booking-tab";  ?>">Coupons</a>
         <a href="<?php echo base_url('more/addon/booking/settings') ?>" class="booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/settings') ? "booking-tab-active" : "booking-tab";  ?>">Settings</a>
         <a href="<?php echo base_url('more/addon/booking/preview') ?>" class="booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/preview') ? "booking-tab-active" : "booking-tab";  ?>">Web Integration</a>
+        <a href="<?php echo base_url('more/addon/inquiries') ?>" class="booking-tab <?= ($this->uri->uri_string() == 'more/addon/inquiries') ? "booking-tab-active" : "booking-tab";  ?>">Inquiry</a>
     </div>
 </div>
