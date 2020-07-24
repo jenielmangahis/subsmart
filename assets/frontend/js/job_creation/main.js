@@ -11,18 +11,12 @@ $(document).ready(function () {
     ],
   });
 
-  $("#job_customer").autocomplete({
-    source: getCustomers(),
-    change: function (event, ui) {
-      $("#job_customer_id").val(ui.item.id);
-    },
-  });
-
-  $("#job_location").autocomplete({
-    source: getAddresses(),
-    change: function (event, ui) {
-      $("#job_location_id").val(ui.item.id);
-    },
+  $("#job_customer").change(function () {
+    $("#customer_id").val($("#job_customer").val());
+    var param = {
+      id: $("#job_customer").val(),
+    };
+    getCustomerLocations(param);
   });
 
   $("#addInvoice").click(function () {
@@ -365,6 +359,20 @@ $(document).ready(function () {
       };
       addAssignEmp(param);
     }
+  });
+
+  $("#saveNewLocation").click(function () {
+    $.LoadingOverlay("show");
+    var param = {
+      user_id: $("#customer_id").val(),
+      address1: $("#address1").val(),
+      address2: $("#address1").val(),
+      city: $("#city").val(),
+      state: $("#state").val(),
+      postal_code: $("#postal_code").val(),
+    };
+
+    saveNewCustomerLocation(param);
   });
 });
 
@@ -734,6 +742,69 @@ function addAssignEmp(param) {
         destroy: true,
         data: items,
       });
+    },
+  });
+}
+
+function saveNewCustomerLocation(param) {
+  var items = [];
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/saveNewCustomerLocation",
+    data: param,
+    success: function (data) {
+      $.LoadingOverlay("hide");
+      $("#modalAddressLocation").modal("show");
+      $("#address1").val("");
+      $("#address2").val("");
+      $("#city").val("");
+      $("#state").val("");
+      $("#postal_code").val("");
+      var result = jQuery.parseJSON(data);
+      $("#customer_location").empty();
+      for (var i = 0; i < result.length; i++) {
+        $("#customer_location").append(
+          '<option selected="selected" value="' +
+            result[i].address_id +
+            '">' +
+            result[i].address1 +
+            " " +
+            result[i].city +
+            " " +
+            result[i].state +
+            " " +
+            result[i].postal_code +
+            "</option>"
+        );
+      }
+    },
+  });
+}
+
+function getCustomerLocations(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "job/getCustomerLocations",
+    data: param,
+    success: function (response) {
+      var result = jQuery.parseJSON(response);
+      $("#newLocationBtn").show();
+      $("#customer_location").empty();
+      for (var i = 0; i < result.length; i++) {
+        $("#customer_location").append(
+          '<option selected="selected" value="' +
+            result[i].address_id +
+            '">' +
+            result[i].address1 +
+            " " +
+            result[i].city +
+            " " +
+            result[i].state +
+            " " +
+            result[i].postal_code +
+            "</option>"
+        );
+      }
     },
   });
 }

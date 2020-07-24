@@ -8,6 +8,7 @@ class Before_after extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->checkLogin();
         $this->page_data['page']->title = 'Before/After';
         $this->page_data['page']->menu = 'before-after';
         $this->load->model('Before_after_model', 'before_after_model');

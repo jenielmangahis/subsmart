@@ -2251,7 +2251,7 @@
 	},
 	{
 		"id": 14,
-		"category": "Questionnaires",
+		"category": "Questionnaire",
 		"name": "Website Questionnaire",
 		"theme_id": 6,
 		"background_image": "website-questionnaire-wallpaper.jpg",

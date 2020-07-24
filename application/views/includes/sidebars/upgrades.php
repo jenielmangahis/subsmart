@@ -76,7 +76,7 @@
         <li class="submenus"><a href="#" title="Estimator" style="color: #fff;">
             <span class="fa fa-dollar"></span>&nbsp;&nbsp;Estimator</a>
         </li>
-        <li class="submenus"><a href="#" title="Wizard" style="color: #fff;">
+        <li class="submenus"><a href="<?php echo base_url(); ?>wizard" title="Wizard" style="color: #fff;">
             <span class="fa fa-bars"></span>&nbsp;Wizard</a>
         </li>
         <li class="submenus"><a href="#" title="Credit Report" style="color: #fff;">

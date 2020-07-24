@@ -50,10 +50,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php array_push($group, $photo->group_number);?>
                                         <tr>
                                             <td class="pl-3">
-                                                <img src="<?php echo base_url() . "uploads/" . $photo->before_image;  ?>" width="200px" height="150px;">
-                                                <img src="<?php echo base_url() . "uploads/" . $photo->after_image;  ?>" width="200px" height="150px;">
-                                                <br><span><strong style="margin-left:70px; margin-right:165px;">Before</strong></span>
-                                                <span><strong>After</strong></span>
+                                                <div class="row">
+                                                    <img src="<?php echo base_url() . "uploads/" . $photo->before_image;  ?>" width="200px" height="150px;">&nbsp;&nbsp;
+                                                    <img src="<?php echo base_url() . "uploads/" . $photo->after_image;  ?>" width="200px" height="150px;">
+                                                </div>
+                                                <div class="row">
+                                                    <span><strong style="margin-left:70px; margin-right:165px;">Before</strong></span>
+                                                    <span><strong>After</strong></span>
+                                                </div>
                                             </td>
                                             <td class="pl-3"><?php echo date_format(date_create($photo->created_at),"d-M-Y H:m"); ?></td>
                                             <td class="pl-3"><?php echo getLoggedFullName($photo->customer_id); ?></td>

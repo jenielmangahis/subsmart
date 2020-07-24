@@ -56,7 +56,7 @@ class Timesheet_model extends MY_Model {
         //$this->db->like('timestamp', $todaysDate);
         //$this->db->where('action', "Clock In");
         $this->db->order_by('timestamp', 'DESC');
-        $this->db->limit(4);
+        $this->db->limit(2);
         $query = $this->db->get();
         // $this->db->select('*');
         // $this->db->from($this->table);
@@ -264,15 +264,43 @@ class Timesheet_model extends MY_Model {
      */
     public function getTotalClockinDay($data){
         $user_id = $data['user_id'];
+        $date = $data['date'];
 
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('employees_id', $user_id);
         $this->db->where('action', "Clock In");
+        $this->db->like('timestamp', $date);
         $this->db->order_by('timestamp', 'DESC');
         $this->db->limit(1);
-        $query = $this->db->get();
-        return $query->result();
+        $query_clockin = $this->db->get();
+        $query_clockin = $query_clockin->result();
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employees_id', $user_id);
+        $this->db->where('action', "Clock Out");
+        $this->db->like('timestamp', $date);
+        $this->db->order_by('timestamp', 'DESC');
+        $this->db->limit(1);
+        $query_clockout = $this->db->get();
+        $query_clockout = $query_clockout->result();
+
+        if( !empty($query_clockin) && !empty($query_clockout)){
+            // Convert each date to its equivalent timestamp
+            $clockin_date = strtotime($query_clockin[0]->timestamp);
+            $clockout_date = strtotime($query_clockout[0]->timestamp);
+            // Divide the timestamp by (60*60) to get the number of hours.
+            //As the difference between two dates might be negative, we use absolute function, abs(), to get the value only. Then, we divided it by 60*60 to get the hours.
+            $totalhours = abs($clockout_date - $clockin_date)/(60*60);
+        }
+        else{
+            $totalhours = 0;
+        }
+
+        
+        //print_r($totalhours);
+        return $totalhours;
     }
 
     /**

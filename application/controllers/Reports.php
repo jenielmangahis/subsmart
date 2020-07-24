@@ -12,6 +12,7 @@ class Reports extends MY_Controller {
 
 	{
 		parent::__construct();
+        $this->checkLogin();
 
 		$this->page_data['page']->title = 'Reports';
 

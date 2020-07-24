@@ -138,11 +138,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                       data-target="#modalCreateEvent">Create Event</a></li>
                                                 <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
                                                        data-target="#modalCreateEvent">
                                                         Add Blocked Event</a></li>
+                                                <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
+                                                       data-target="#modalCreateEvent">
+                                                        Assign New Lead</a></li>
+                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                       data-target="#modalCreateEvent">Create Event</a></li>
+                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                       data-target="#modalCreateEvent">Cancel Schedule</a></li>
+                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                       data-target="#modalCreateEvent">Reschedule</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -169,8 +176,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Set Up a Schedule</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <p>loading...</p>

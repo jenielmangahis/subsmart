@@ -8,6 +8,7 @@ class Job extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->checkLogin();
         $this->page_data['page']->title = 'Job Management';
         $this->page_data['page']->menu = 'job';
         $this->load->library('paypal_lib');
@@ -63,6 +64,7 @@ class Job extends MY_Controller
         $this->page_data['items'] = $this->items_model->get();
         $this->page_data['emp_roles'] = $this->roles_model->getRoles();
         $this->page_data['employees'] = $this->db->get_where($this->jobs_model->table_employees, array('company_id' => $comp_id))->result();
+        $this->page_data['customers'] = $this->db->get_where($this->jobs_model->table_customers, array('company_id' => $comp_id))->result();
         if (empty($get['job_num'])) {
             $comp = array(
                 'company_id' => $comp_id
@@ -462,6 +464,14 @@ class Job extends MY_Controller
         echo json_encode($result);
     }
 
+    function getCustomerLocations() {
+        postAllowed();
+        $id = $this->input->post('id');
+        $result = $this->db->get_where($this->jobs_model->table_address, array('user_id' => $id))->result_array();
+
+        echo json_encode($result);
+    }
+
     function saveAssignEmp() {
         postAllowed();
         $id = $this->input->post('role_id');
@@ -475,6 +485,24 @@ class Job extends MY_Controller
 
         $this->db->insert($this->jobs_model->table_jobs_has_employees, $data);
         $data = $this->jobs_model->getAssignEmp($this->input->post('job_id'));
+
+        echo json_encode($data);
+    }
+
+    function saveNewCustomerLocation() {
+        postAllowed();
+
+        $data = array(
+            'user_id' => $this->input->post('user_id'),
+            'address1' => $this->input->post('address1'),
+            'address2' => $this->input->post('address2'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'postal_code' => $this->input->post('postal_code')
+        );
+
+        $this->db->insert($this->jobs_model->table_address, $data);
+        $data = $this->db->get_where($this->jobs_model->table_address, array('user_id' => $this->input->post('user_id')))->result_array();
 
         echo json_encode($data);
     }

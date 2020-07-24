@@ -310,29 +310,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <?php endif; ?>
                                                                 <?php endif; ?>
                                                                 <!-- Lunch In-->
-                                                                <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Lunch In' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                        <a id="lunchin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
+                                                                <?php //if( !empty($clockin_arr) ):?>
+                                                                    <?php //if( $clockin_arr[0]->action == 'Lunch In' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <!-- <a id="lunchin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
-                                                                        </a>
-                                                                    <?php else: ?>
-                                                                        <a id="lunchin_btn" style="display:;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
+                                                                        </a> -->
+                                                                    <?php //else: ?>
+                                                                        <!-- <a id="lunchin_btn" style="display:;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
-                                                                        </a>
-                                                                    <?php endif; ?>
-                                                                <?php endif; ?>
+                                                                        </a> -->
+                                                                    <?php //endif; ?>
+                                                                <?php //endif; ?>
                                                                 <!-- Lunch Out-->
-                                                                <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Lunch Out' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                        <a id="lunchout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                                <?php //if( !empty($clockin_arr) ):?>
+                                                                    <?php //if( $clockin_arr[0]->action == 'Lunch Out' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <!-- <a id="lunchout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
-                                                                        </a>
-                                                                    <?php else: ?>
-                                                                        <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                                        </a> -->
+                                                                    <?php //else: ?>
+                                                                        <!-- <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
-                                                                        </a>
-                                                                    <?php endif; ?>
-                                                                <?php endif; ?>
+                                                                        </a> -->
+                                                                    <?php //endif; ?>
+                                                                <?php //endif; ?>
                                                                 <!-- Clock Out-->
                                                                 <?php if( !empty($clockin_arr) ):?>
                                                                     <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 ):?>
@@ -752,7 +752,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             //alert('Clock In this user');
             //
             
-            console.log(values);
+            //console.log(values);
+            $.ajax({
+                type: "POST",
+                url: "<?php echo url('users/clock_in') ?>",
+                data: values,
+                /*data: {
+                    user_id: $("input[name='clockin_user_id']").val(),
+                    clock_in: $("input[name='current_time_in']").val(),
+                    status: $("input[name='clockin_status']").val()
+                },*/
+                success: function(result) {
+                    //alert('User has Clocked In');
+                    //updateClockIn();
+                    window.location.reload();
+                    //console.log('okay');
+                    //console.log(this);
+                    //var last_login = result['current_time_in'];
+                    //$(this).find('#last_login').append(last_login);
+                },
+                error: function(result) {
+                    //console.log(data);
+                    alert('error');
+                }
+            });
             
         })
 

@@ -174,8 +174,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <div class="table-container">
-                            <div class="dropdown" style="margin-top: 20px">
-                                <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
+                            <div class="dropdown " style="margin-top: 20px">
+                                <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px;">Filter
                                     <span class="fa fa-caret-down"></span>
                                 </button>
                                 <ul class="dropdown-menu">

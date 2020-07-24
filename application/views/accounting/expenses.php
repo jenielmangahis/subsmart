@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#bill-modal">Bill</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#expense-modal">Expense</a></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck">Check</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#vendorCredit-modal">Vendor Credit</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#payDown-modal">Pay down credit card</a></li>
                                     </ul>
@@ -45,44 +45,48 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="container-wrapper">
                             <div class="row">
                                 <div class="col-md-12" style="padding: 0 30px 10px;">
-                                    <div class="dropdown filter-btn" style="margin-top: 20px;margin-right:8px;display: inline-block;">
-                                        <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px 20px 20px 20px">Filter
+                                    <div class="dropdown filter-btn">
+                                        <button class="btn btn-default" type="button" data-toggle="dropdown">Filter
                                             <span class="fa fa-caret-down"></span>
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li style="padding: 30px 30px 30px 30px">
                                                 <form action="" method="" class="">
-                                                    <div class="">
-                                                        <label for="type">Type</label>
-                                                        <select name="type" id="type" class="form-control">
-                                                            <option value="">All transaction</option>
-                                                            <option value="">Expenses</option>
-                                                            <option value="">Bill</option>
-                                                            <option value="">Bill payments</option>
-                                                            <option value="">Check</option>
-                                                            <option value="">Recently paid</option>
-                                                            <option value="">Vendor credit</option>
-                                                            <option value="">Credit Card Payment</option>
-                                                        </select>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="type">Type</label>
+                                                            <select name="type" id="type" class="form-control">
+                                                                <option value="">All transaction</option>
+                                                                <option value="">Expenses</option>
+                                                                <option value="">Bill</option>
+                                                                <option value="">Bill payments</option>
+                                                                <option value="">Check</option>
+                                                                <option value="">Recently paid</option>
+                                                                <option value="">Vendor credit</option>
+                                                                <option value="">Credit Card Payment</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <div style="position: relative; display: inline-block;">
-                                                        <label for="">Status</label>
-                                                        <select name="status" id="type" class="form-control">
-                                                            <option value="">All statuses</option>
-                                                            <option value="">Open</option>
-                                                            <option value="">Overdue</option>
-                                                            <option value="">Paid</option>
-                                                        </select>
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <label for="">Status</label>
+                                                            <select name="status" id="type" class="form-control">
+                                                                <option value="">All statuses</option>
+                                                                <option value="">Open</option>
+                                                                <option value="">Overdue</option>
+                                                                <option value="">Paid</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="">Delivery Method</label>
+                                                            <select name="status" id="type" class="form-control">
+                                                                <option value="">Any</option>
+                                                                <option value="">Print later</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <div style="position:relative; display: inline-block;margin-left: 10px">
-                                                        <label for="">Delivery Method</label>
-                                                        <select name="status" id="type" class="form-control">
-                                                            <option value="">Any</option>
-                                                            <option value="">Print later</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="">
-                                                        <div style="position: relative; display: inline-block;">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
                                                             <label for="">Date</label>
                                                             <select name="status" id="type" class="form-control" style="width: 100%">
                                                                 <option value="">All statuses</option>
@@ -91,34 +95,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <option value="">Paid</option>
                                                             </select>
                                                         </div>
-                                                        <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                        <div class="col-md-3">
                                                             <label for="">From</label>
                                                             <input type="text" class="form-control">
                                                         </div>
-                                                        <div style="position:relative; display: inline-block;float: right;margin-left: 10px">
+                                                        <div class="col-md-3">
                                                             <label for="">To</label>
                                                             <input type="text" class="form-control">
                                                         </div>
                                                     </div>
-                                                    <div class="">
-                                                        <label for="">Payee</label>
-                                                        <select name="status" id="type" class="form-control" style="width: 100%">
-                                                            <option value="">All statuses</option>
-                                                            <option value="">Open</option>
-                                                            <option value="">Overdue</option>
-                                                            <option value="">Paid</option>
-                                                        </select>
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <label for="">Payee</label>
+                                                            <select name="payee" id="type" class="form-control" style="width: 100%">
+                                                                <option value="">All statuses</option>
+                                                                <option value="">Open</option>
+                                                                <option value="">Overdue</option>
+                                                                <option value="">Paid</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <div class="">
-                                                        <label for="">Category</label>
-                                                        <select name="status" id="type" class="form-control" style="width: 100%">
-                                                            <option value="">All statuses</option>
-                                                            <option value="">Open</option>
-                                                            <option value="">Overdue</option>
-                                                            <option value="">Paid</option>
-                                                        </select>
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <label for="">Category</label>
+                                                            <select name="category" id="type" class="form-control" style="width: 100%">
+                                                                <option value="">All statuses</option>
+                                                                <option value="">Open</option>
+                                                                <option value="">Overdue</option>
+                                                                <option value="">Paid</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <div class="">
+                                                    <div style="margin-top: 12px">
                                                         <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
                                                         <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
                                                     </div>
@@ -126,9 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="display-filterDate">
-                                        Last 365 Days
-                                    </div>
+                                    <span class="display-filterDate">365 Days</span>
                                 </div>
                             </div>
                             <div class="arrow-level-down">
@@ -165,18 +171,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </thead>
                                         <tbody>
                                         <?php foreach ($vendors as $vendor): ?>
+                                        <?php foreach ($checks as $check):?>
+                                            <?php if ($vendor->vendor_id == $check->vendor_id):?>
                                         <tr>
                                             <td><input type="checkbox"></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck">Test</td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck">Test</td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck"></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck">Test</td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck"></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo 'Check'?></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo $check->id; ?></td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo $vendor->f_name.'&nbsp;'.$vendor->l_name; ?></td>
                                             <td>
-                                                <a href="#" data-toggle="modal" data-target="#edit-expensesCheck">View/Edit</a>&nbsp;
+                                                <select name="category" id="" class="form-control select2">
+                                                    <option>test1</option>
+                                                    <option>test2</option>
+                                                    <option>test3</option>
+                                                </select>
+                                            </td>
+                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
+                                            <td style="text-align: right;">
+                                                <a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>
+                                                <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
+                                                    <span class="fa fa-caret-down" data-toggle="dropdown"></span>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li><a href="#">Copy</a></li>
+                                                        <li>
+                                                            <a href="#" type="submit" id="deleteCheck" data-id="<?php echo $check->id;?>">Delete</a>
+                                                        </li>
+                                                        <li><a href="#">Void</a></li>
+                                                    </ul>
+                                                </div>&nbsp;
                                             </td>
                                         </tr>
+                                            <?php endif;?>
+                                        <?php endforeach;?>
                                         <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -296,10 +322,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-3">
                                 <button class="btn btn-dark cancel-button" type="button">Cancel</button>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" style="text-align: center;">
                                 <a href="#" class="footer-links">Print setup</a>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" style="text-align: center;">
                                 <a href="#" class="footer-links">Order checks</a>
                             </div>
                             <div class="col-md-3">
@@ -323,58 +349,63 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-header">
                         <div class="modal-title">
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Check #2714
+                            Check #1
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
+                    <form action="" method="post" id="addEditCheckmodal">
+                        <input type="hidden" id="site_url" value="<?php echo site_url(); ?>">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
-                                <input type="hidden" id="vendorID" value="">
-                                <input type="text" list="payee-dropdown" class="select-text-dp">
-                                <datalist id="payee-dropdown">
-                                    <option selected>Tyler Nguyen</option>
-                                    <option>Tyler Nguyen</option>
-                                    <option>Tyler Nguyen</option>
-                                </datalist>
+                                <input type="hidden" name="check_id" id="checkID" value="">
+                                <select name="vendor_id" id="vendorID" class="form-control">
+                                    <option selected disabled>Select a payee</option>
+                                    <?php foreach ($vendors as $vendor):?>
+                                    <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Bank Account</label>
-                                <input type="text" list="bankAccountDp" class="select-text-dp">
-                                <datalist id="bankAccountDp">
-                                    <option>Cash on hand</option>
-                                    <option>Corporate Account(XXXXXX 5850)</option>
-                                    <option>Corporate Account(XXXXXX 5850)Te</option>
-                                </datalist>
+                                <select name="bank_id"  class="form-control select2">
+                                    <option value="1" selected>Cash on hand</option>
+                                    <option value="2">Corporate Account(XXXXXX 5850)</option>
+                                    <option value="3">Corporate Account(XXXXXX 5850)Te</option>
+                                </select>
                             </div>
                             <div class="col-md-3" style="line-height: 100px">
                                 <span style="font-weight: bold">Balance</span>
-                                <span>$-79,005.33</span>
+                                <span>$113,101.00</span>
                             </div>
                             <div class="col-md-3" style="text-align: right">
                                 <div>AMOUNT</div>
-                                <div><h1>$500.00</h1></div>
+                                <div><h1>$0.00</h1></div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                                <textarea name="mailing_address" id="mailing_address" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Payment date</label>
-                                <input type="text" class="form-control">
+                                <input type="date" name="payment_date" id="payment_date" class="form-control">
                             </div>
                             <div class="col-md-3"></div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Check no.</label>
-                                    <input type="text" class="form-control" value="2714">
+                                    <input type="text" name="check_num" id="check_number" class="form-control" value="1">
                                 </div>
                                 <div class="form-group">
-                                    <input type="checkbox">
+                                    <input type="checkbox" name="print_later" id="print_later" value="1">
                                     <label for="">Print later</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Permit no.</label>
+                                    <input type="text" name="permit_num" id="permit_number" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-2"></div>
@@ -423,11 +454,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">
+<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
                                 <div class="fallback">
                                     <input name="file" type="file" multiple />
                                 </div>
-                            </form>
+<!--                            </form>-->
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -452,7 +483,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <div class="dropdown" style="float: right">
-                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -462,11 +493,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
 
             </div>
         </div>
     </div>
+    <?php if ($this->session->flashdata('checked')){?>
+        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('checked');?>
+        </div>
+    <?php }elseif ($this->session->flashdata('check_failed')){?>
+        <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('check_failed');?>
+        </div>
+    <?php }elseif ($this->session->flashdata('checked_updated')){?>
+        <div class="alert alert-info alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('checked_updated');?>
+        </div>
+    <?php }elseif ($this->session->flashdata('checked_up_failed')){?>
+        <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('checked_up_failed');?>
+        </div>
+    <?php }?>
 <!--    end of modal-->
 <!--    Time Activity modal-->
     <div class="full-screen-modal">

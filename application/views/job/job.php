@@ -56,14 +56,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="job_customer">Customer</label>
                                     <?php if(!empty($job_other_info)) : ?>
                                         <label for="">: <?php echo getLoggedFullName($job_other_info->id); ?></label> 
-                                        <input type="hidden" id="job_customer_id" name="job_customer_id" value="<?php echo getLoggedFullName($job_other_info->id); ?>">
                                         <input type="hidden" id="job_owner_name" name="job_owner_name" value="<?php echo getLoggedName(); ?>">
                                         <input type="hidden" id="job_owner_email" name="job_owner_email" value="<?php echo getUserEmail(logged('id')); ?>">
                                         <input type="hidden" id="customer_id" name="customer_id" value="<?php echo $job_other_info->id; ?>">
                                         <input type="hidden" id="customer_email" name="customer_email" value="<?php echo getUserEmail($job_other_info->id); ?>">
                                     <?php else: ?>
-                                        <input id="job_customer" class="form-control" type="text" placeholder="Customer">
-                                        <input type="hidden" id="job_customer_id" name="job_customer_id">
+                                        <select class="form-control" id="job_customer" name="job_customer">
+                                            <?php if(!empty($customers)) : ?>
+                                                <option disabled selected>--Select--</option>
+                                                <?php foreach($customers as $customer) : ?>
+                                                    <option value="<?php echo $customer->user_id; ?>"><?php echo $customer->contact_name; ?></option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
                                         <input type="hidden" id="customer_id" name="customer_id" value="">
                                     <?php endif; ?>
                                 </div>
@@ -94,7 +99,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <label for="">: <?php echo getJobAddress($job_other_info->address_id); ?></label>
                                         <input type="hidden" id="job_location_id" name="job_location_id" value="<?php echo $job_other_info->address_id; ?>">
                                     <?php else: ?>
-                                        <input id="job_location" class="form-control" type="text" placeholder="Location">
+                                        <select class="form-control" id="customer_location" name="customer_location">
+                                        </select>
                                         <input type="hidden" id="job_location_id" name="job_location_id">
                                     <?php endif; ?>
                                 </div>
@@ -102,7 +108,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php if(empty($job_other_info)) : ?>
                                         <p>&nbsp;</p>
                                     <?php endif; ?>
-                                    <a href="#">
+                                    <a href="#" id="newLocationBtn" style="display:none;" data-toggle="modal" data-target="#modalAddressLocation">
                                         <span class="fa fa-plus fa-margin-right"></span>New Location
                                     </a>
                                 </div>
@@ -334,7 +340,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <button class="btn btn-primary col-md-12">Edit</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
-                                                <button type="button" class="btn btn-primary col-md-12" data-toggle="modal" data-target="#exampleModal">Assign Employees</button>
+                                                <button type="button" class="btn btn-primary col-md-12" data-toggle="modal" data-target="#assignEmployeeModal">Assign Employees</button>
                                             </div>
                                             <div class="col-md-6" style="margin-bottom:10px;">
                                                 <button type="button" class="btn btn-default col-md-12 previewCurrentJobTable">Preview</button>
@@ -763,77 +769,124 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Assign Employees</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12 text-left form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="job_customer">Role</label>
-                                <select class="form-control" id="assign_role" name="assign_role">
-                                    <?php if(!empty($emp_roles)) : ?>
-                                        <?php foreach($emp_roles as $role) : ?>
-                                            <?php if($role->title == "Tech") : ?>
-                                                <?php $default_role = $role->id; ?>
-                                                <option value="<?php echo $role->id; ?>" selected><?php echo $role->title; ?></option>
-                                            <?php endif; ?>
-                                            <?php if($role->title != "Tech") : ?>
-                                                <option value="<?php echo $role->id; ?>"><?php echo $role->title; ?></option>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
-                            </div>  
-                            <div class="col-md-4">
-                                <label for="job_customer">Employees</label>
-                                <select class="form-control" id="assign_emp" name="assign_emp">
-                                    <?php if(!empty($employees)) : ?>
-                                        <?php foreach($employees as $employee) : ?>
-                                            <?php if ($default_role == $employee->role_id) : ?>
-                                                <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
-                            </div> 
-                            <div class="col-md-4">
-                                <br>
-                                <button type="button" class="btn btn-primary mt-2" id="add_assign_emp">Assign Employee</button>
-                            </div>  
+            <!-- Modal Address -->
+            <div class="modal fade" id="modalAddressLocation" tabindex="-1" role="dialog"
+                 aria-labelledby="newLocationLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newLocationLabel">New Location</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </div>  
-                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="assignEmpTable">
-                        <thead>
-                            <tr>
-                                <th scope="col"><strong>Name</strong></th>
-                                <th scope="col"><strong>Role</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($assignEmployees)) : ?>
-                            <?php foreach($assignEmployees as $emp) : ?>
-                                <tr>
-                                    <td class="pl-3"><?php echo $emp['title']; ?></td>
-                                    <td class="pl-3"><?php echo $emp['emp_role']; ?></td>                                
-                                </tr>
-                            <?php endforeach; ?>
-                            <?php endif;?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+                        <div class="modal-body">                                
+                            <div class="row">
+                                <div class="col-md-12 text-left form-group">
+                                    <label for="job_name">Address 1</label>
+                                    <input type="text" class="form-control" name="address1" id="address1" placeholder="Address 1" required/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-left form-group">
+                                    <label for="address2">Address 2</label>
+                                    <input name="address2" id="address2" class="form-control" type="text" placeholder="Address 2">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-left form-group">
+                                    <label for="city">City</label>
+                                    <input name="city" id="city" class="form-control" type="text" placeholder="City">
+                                </div>
+                                <div class="col-md-4 text-left form-group">
+                                    <label for="state">State</label>
+                                    <input name="state" id="state" class="form-control" type="text" placeholder="State">
+                                </div>
+                                <div class="col-md-4 text-left form-group">
+                                    <label for="postal_code">Postal Code</label>
+                                    <input id="postal_code" name="postal_code" class="form-control" type="text" placeholder="Postal Code">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="saveNewLocation" data-dismiss="modal">Save</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="assignEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="assignEmployeeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="assignEmployeeModalLabel">Assign Employees</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12 text-left form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="job_customer">Role</label>
+                                    <select class="form-control" id="assign_role" name="assign_role">
+                                        <?php if(!empty($emp_roles)) : ?>
+                                            <?php foreach($emp_roles as $role) : ?>
+                                                <?php if($role->title == "Tech") : ?>
+                                                    <?php $default_role = $role->id; ?>
+                                                    <option value="<?php echo $role->id; ?>" selected><?php echo $role->title; ?></option>
+                                                <?php endif; ?>
+                                                <?php if($role->title != "Tech") : ?>
+                                                    <option value="<?php echo $role->id; ?>"><?php echo $role->title; ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>  
+                                <div class="col-md-4">
+                                    <label for="job_customer">Employees</label>
+                                    <select class="form-control" id="assign_emp" name="assign_emp">
+                                        <?php if(!empty($employees)) : ?>
+                                            <?php foreach($employees as $employee) : ?>
+                                                <?php if ($default_role == $employee->role_id) : ?>
+                                                    <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div> 
+                                <div class="col-md-4">
+                                    <br>
+                                    <button type="button" class="btn btn-primary mt-2" id="add_assign_emp">Assign Employee</button>
+                                </div>  
+                            </div>
+                        </div>  
+                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="assignEmpTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><strong>Name</strong></th>
+                                    <th scope="col"><strong>Role</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($assignEmployees)) : ?>
+                                <?php foreach($assignEmployees as $emp) : ?>
+                                    <tr>
+                                        <td class="pl-3"><?php echo $emp['title']; ?></td>
+                                        <td class="pl-3"><?php echo $emp['emp_role']; ?></td>                                
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php endif;?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- end container-fluid -->

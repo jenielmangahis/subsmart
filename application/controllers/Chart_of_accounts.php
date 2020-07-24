@@ -5,7 +5,9 @@ class Chart_of_accounts extends MY_Controller {
 	
 	public function __construct()
     {
-        parent::__construct();
+		parent::__construct();
+        $this->checkLogin();
+		
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
             "assets/css/accounting/accounting.modal.css?v='rand()'",
@@ -70,8 +72,9 @@ class Chart_of_accounts extends MY_Controller {
 		//$this->load->view('accounting/chart_of_accounts', $this->page_data);
 	}
 
-	public function edit()
+	public function edit($id)
 	{
+		$this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
 		$this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
 	}
 

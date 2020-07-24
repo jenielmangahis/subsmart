@@ -148,32 +148,68 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php endforeach; ?>
                                                     </td>
                                                     <!-- Sunday -->
-                                                    <td class="sunday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
-                                                    </td>
+
                                                     <!-- Monday -->
                                                     <td class="monday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('monday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
                                                     </td>
                                                     <!-- Tuesday -->
                                                     <td class="tuesday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('tuesday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
                                                     </td>
                                                     <!-- Wednesday -->
                                                     <td class="wednesday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('wednesday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
                                                     </td>
                                                     <!-- Thursday -->
                                                     <td class="thursday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('thursday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
                                                     </td>
                                                     <!-- Friday -->
                                                     <td class="friday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('friday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
                                                     </td>
                                                     <!-- Saturday -->
                                                     <td class="saturday">
-                                                        <?php //echo $row->FName.' '.$row->LName; ?>
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('saturday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
+                                                    </td>
+                                                    <td class="sunday">
+                                                        <?php 
+                                                            $data['date'] = date("Y-m-d",strtotime('sunday this week'));
+                                                            //echo $data['date'];
+                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin.' hrs';
+                                                        ?>
                                                     </td>
                                                     <!-- TOTAL -->
                                                     <td class="total">

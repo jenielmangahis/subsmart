@@ -599,6 +599,9 @@
                      </div>
                   </div>
                </div>
+
+
+
                <div class="docsWrapper ng-scope ng-isolate-scope" ng-if="taggerCtrl.shouldShowDocumentThumbnails()" envelope-data-manager="taggerCtrl.envelopeDataManager">
                   <div class="singleDocument ng-scope" data-qa="doc-thumbnail-list" ng-repeat="document in thumbCtrl.documents.getSorted() | filter: thumbCtrl.documentPreview_filter">
                      <button class="documentDescription accordion ng-scope open" ng-class="{
@@ -663,6 +666,72 @@
                      </div>
                   </div>
                </div>
+
+               <div class="docsWrapper ng-scope ng-isolate-scope" ng-if="taggerCtrl.shouldShowDocumentThumbnails()" envelope-data-manager="taggerCtrl.envelopeDataManager">
+                  <div class="singleDocument ng-scope" data-qa="doc-thumbnail-list" ng-repeat="document in thumbCtrl.documents.getSorted() | filter: thumbCtrl.documentPreview_filter">
+                     <button class="documentDescription accordion ng-scope open" ng-class="{
+                        'open': thumbCtrl.documentDrawerIsOpen(document),
+                        'closed': !thumbCtrl.documentDrawerIsOpen(document),
+                        'accordion-locked': document.isLocked()
+                        }" aria-expanded="true" aria-controls="documentPageSet-0" type="button" ng-if="!document.isSupplement() &amp;&amp; !document.isUploading()" ng-click="thumbCtrl.toggleDocumentDrawer(document)" ds-prepare-analytics="taggerSidebarDocuments" ds-analytics-data="{ 'action': 'View' }" data-qa="document-accordion">
+                     <span class="docName ng-binding" data-qa="doc-page-name">
+                     pdf.pdf
+                     </span>
+                     <i class="icon accordion-icon" data-qa="document-page-icon"> </i>
+                     <span class="docPages ng-binding" data-qa="uploaded-file-pages">
+                     Pages: 14
+                     </span>
+                     </button>
+                     <div id="documentPageSet-0" class="documentPageSet drawer down ng-scope full open" ng-class="thumbCtrl.documentDrawerIsOpen(document) ? 'full open' : 'closed'" ng-if="!document.isSupplement()">
+                        <div class="drawer-wrapper ng-scope" ng-if="thumbCtrl.documentDrawerIsOpen(document)">
+                           <br>
+                           <div class="documentPage ng-scope" data-qa="tagger-documents" ng-repeat="(pageIndex, page) in document.getPages() | orderBy : thumbCtrl.getPageSequence track by page.getId()" svg-view-angular-hook="" hook-name="'thumbnailImage'" hook-model="page">
+                              <img class="img" data-qa="indvidual-tagger-documents" ng-style="{
+                                 'min-height': 132 / page.get('width') * page.get('height')+ 'px'
+                                 }" alt="pdf.pdf - Page 1" lazy-load-item="thumbNails" lazy-load-url="page.getImageUrl()" should-unload="document.getPages().length > 100" src="https://app.docusign.com/page-image/accounts/5a4bea64-9f10-42d5-ae11-edd0b58f60d3/envelopes/093ea65e-5cc5-40e1-aa00-15986e27e398/documents/1/pages/1/page_image?lock_token=MTJhNzI5MjYtYmQ3YS00ODk1LTkxNGMtNWIxMWQ3MzE1MjM4&amp;cache_token=2245e9d6-0239-4910-8c1c-f6753cc0d4cb&amp;dpi=150" style="min-height: 170.824px;">
+                              <div class="bar-action">
+                                 <span class="pageNumber ng-binding">1</span>
+                                 <button class="btn btn-icon btn-minor btn-action ng-scope" ng-if="thumbCtrl.showPageEditingButtons()" ng-class="{disabled: !page.canDestroy()}" type="button" ng-click="page.canDestroy() &amp;&amp; thumbCtrl.destroyPage(page)" olive-tooltip="" title="Delete" data-qa="delete-page-1" ds-prepare-analytics="taggerSidebarDocuments" ds-analytics-data="{ 'action': 'Delete' }" olive-tooltip-initialized="true">
+                                 <span class="icon icon-trash"></span>
+                                 <span class="vh ng-binding">Delete - Page 1 -
+                                 pdf.pdf</span>
+                                 </button>
+                                 <button class="btn btn-icon btn-minor btn-action ng-scope" type="button" ng-class="{disabled: !page.canRotate()}" ng-if="thumbCtrl.showPageEditingButtons()" olive-tooltip="" title="Rotate" svg-view-angular-hook="" hook-name="'pageRotate'" data-qa="rotate-button" hook-model="page" ng-click="page.canRotate() &amp;&amp; hookCtrl.trigger('click', $event)" ds-prepare-analytics="taggerSidebarDocuments" ds-analytics-data="{ 'action': 'Rotate' }" olive-tooltip-initialized="true">
+                                 <span class="icon icon-rotate-right"></span>
+                                 <span class="vh ng-binding">Rotate - Page 1 -
+                                 pdf.pdf</span>
+                                 </button>
+                              </div>
+                              <div class="column-indicators">
+                              </div>
+                              <span class="pageNumber ng-binding">1</span>
+                           </div>
+                           <div class="documentPage ng-scope" data-qa="tagger-documents" ng-repeat="(pageIndex, page) in document.getPages() | orderBy : thumbCtrl.getPageSequence track by page.getId()" svg-view-angular-hook="" hook-name="'thumbnailImage'" hook-model="page">
+                              <img class="img" data-qa="indvidual-tagger-documents" ng-style="{
+                                 'min-height': 132 / page.get('width') * page.get('height')+ 'px'
+                                 }" alt="pdf.pdf - Page 2" lazy-load-item="thumbNails" lazy-load-url="page.getImageUrl()" should-unload="document.getPages().length > 100" src="https://app.docusign.com/page-image/accounts/5a4bea64-9f10-42d5-ae11-edd0b58f60d3/envelopes/093ea65e-5cc5-40e1-aa00-15986e27e398/documents/1/pages/2/page_image?lock_token=MTJhNzI5MjYtYmQ3YS00ODk1LTkxNGMtNWIxMWQ3MzE1MjM4&amp;cache_token=35dfbafe-e976-457a-a23a-e47e0074773d&amp;dpi=150" style="min-height: 170.824px;">
+                              <div class="bar-action">
+                                 <span class="pageNumber ng-binding">2</span>
+                                 <button class="btn btn-icon btn-minor btn-action ng-scope" ng-if="thumbCtrl.showPageEditingButtons()" ng-class="{disabled: !page.canDestroy()}" type="button" ng-click="page.canDestroy() &amp;&amp; thumbCtrl.destroyPage(page)" olive-tooltip="" title="Delete" data-qa="delete-page-2" ds-prepare-analytics="taggerSidebarDocuments" ds-analytics-data="{ 'action': 'Delete' }" olive-tooltip-initialized="true">
+                                 <span class="icon icon-trash"></span>
+                                 <span class="vh ng-binding">Delete - Page 2 -
+                                 pdf.pdf</span>
+                                 </button>
+                                 <button class="btn btn-icon btn-minor btn-action ng-scope" type="button" ng-class="{disabled: !page.canRotate()}" ng-if="thumbCtrl.showPageEditingButtons()" olive-tooltip="" title="Rotate" svg-view-angular-hook="" hook-name="'pageRotate'" data-qa="rotate-button" hook-model="page" ng-click="page.canRotate() &amp;&amp; hookCtrl.trigger('click', $event)" ds-prepare-analytics="taggerSidebarDocuments" ds-analytics-data="{ 'action': 'Rotate' }" olive-tooltip-initialized="true">
+                                 <span class="icon icon-rotate-right"></span>
+                                 <span class="vh ng-binding">Rotate - Page 2 -
+                                 pdf.pdf</span>
+                                 </button>
+                              </div>
+                              <div class="column-indicators">
+                              </div>
+                              <span class="pageNumber ng-binding">2</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               
                <div ng-switch="taggerCtrl.useSupplementalDocumentAttributes">
                   <div class="supplemental-documents-drawer drawer left drawer-properties ng-scope ng-isolate-scope closed" olive-drawer-initial-state="closed" olive-drawer-name="supplementalDocumentsPanel" olive-drawer-direction="left" olive-animation-weight="light" ng-switch-default="" supplemental-document-properties-panel="" sdpp-documents="taggerCtrl.getDocuments()" sdpp-recipients="taggerCtrl.envelope.recipients" olive-drawer-initialized="true" style="width: 0px;">
                      <div class="drawer-wrapper">
@@ -809,15 +878,6 @@
 </html>
 <script>
     var current_target = 0;
-    
-    // custome-fileup
-    // main-wrapper
-    
-    // all-recipients-wrp
-    // $('#custome-fileup').show();
-    // $("#add-recipeit").hide();
-    // $("#tagspreview").hide();
-    // $('#all-recipients-wrp').hide();
     
     $('.next-btn').click(function() {
         current_target = current_target + 1;

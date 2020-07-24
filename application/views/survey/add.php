@@ -308,24 +308,58 @@
             <div class="modal-content">
               <div id="modalSelectWorkspaceContent">
                 <div class="modal-header">
-                  <h3>
-                    Select workspace
-                  </h3>
+                  <div class="modal-title">
+                    <h3>
+                      Workspace
+                    </h3>
+                    <small>Select a workspace or create a new one.</small>
+                  </div>
                 </div>
-                <div class="modal-body">
-                  <?php foreach($survey_workspaces as $workspace){
-                    ?>
-                      <div class="card template-card p-3" data-dismiss="modal" onclick="selectWorkspace(<?= $workspace->id?>, '<?=$workspace->name?>')">
-                        <h4><?=$workspace->name?></h4>
-                        <span><?=count($workspace->surveys)?> survey<?=(count($workspace->surveys) > 1 )?"s":""?> registered to this workspace.</span>
-                      </div>
-                    <?php
-                  }?>
+                <div id="modal-body-workspace-selection" class="animate__animated animate__fadeIn ">
+                  <div class="modal-body p-3">
+                    <?php foreach($survey_workspaces as $workspace){
+                      ?>
+                        <div class="card template-card p-3" data-dismiss="modal" onclick="selectWorkspace(<?= $workspace->id?>, '<?=$workspace->name?>')">
+                          <h4><?=$workspace->name?></h4>
+                          <span><?=count($workspace->surveys)?> survey<?=(count($workspace->surveys) > 1 )?"s":""?> registered to this workspace.</span>
+                        </div>
+                      <?php
+                    }?>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-primary btn-block" onclick="createWorkspaceWindow()">Create new workspace</button>
+                    <script>
+                      createWorkspaceWindow = () => {
+                        document.querySelector("#modal-body-workspace-selection").classList.add('animate__fadeOut');
+                        document.querySelector("#modal-body-workspace-selection").classList.add('animate__faster');
+                        setTimeout(() => {
+                          document.querySelector("#modal-body-workspace-selection").style.display=  "none";
+                          document.querySelector("#modal-body-workspace-creation").style.display=  "block";
+                          document.querySelector("#modal-body-workspace-selection").classList.remove('animate__fadeOut');
+                        }, 500);
+                      }
+                    </script>
+                  </div>
+                </div>
+                <div id="modal-body-workspace-creation" class="animate__animated animate__fadeIn " style="display: none">
+                  <div class="modal-body p-3">
+                    <div class="form-group">
+                      <label for="txtWorkspaceName">Create new workspace</label>
+                      <input type="text" name="txtWorkspaceName" id="txtWorkspaceName" class="form-control">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-primary btn-block w-100" onclick="createAndUseWorkspace()">Create and use this workspace</button>
+                    <button class="btn btn-secondary btn-block w-100" onclick="selectWorkspaceWindow()">Return to selection</button>
+                  </div>
                 </div>
               </div>
             </div>
         </div>
       </div>
+      <script>
+
+      </script>
 
       <div id="modalSelectTheme" class="modal fade" >
         <div class="modal-dialog modal-dialog-scrollable">
@@ -406,8 +440,44 @@
   let selectedWorkspace = null;
   let selectedWorkspaceId = null;
   let selectedTheme = null;
+
+  let newWorkspaceId = null;
   
   let searchedParams = url.searchParams;
+
+
+  selectWorkspaceWindow = () => {
+    document.querySelector("#modal-body-workspace-creation").classList.add('animate__fadeOut');
+    document.querySelector("#modal-body-workspace-creation").classList.add('animate__faster');
+    setTimeout(() => {
+      document.querySelector("#modal-body-workspace-creation").style.display=  "none";
+      document.querySelector("#modal-body-workspace-selection").style.display=  "block";
+      document.querySelector("#modal-body-workspace-creation").classList.remove('animate__fadeOut');
+    }, 500);
+  }
+
+  createAndUseWorkspace = () => {
+    let data = {
+      "txtWorkspaceName": document.querySelector("#txtWorkspaceName").value
+    }
+    $.ajax({
+      url: surveyBaseUrl + 'survey/workspace/add',
+      data: data,
+      dataType: 'json',
+      type: 'POST',
+      success: function(payload){
+        toastr["success"]("Workspace added!");
+        $('#modalSelectWorkspace').modal("hide");
+        statusWorkspace.classList.remove("text-danger");
+        statusWorkspace.classList.add("text-success");
+        statusWorkspaceIcon.classList.remove("text-danger");
+        statusWorkspaceIcon.classList.add("text-success");
+        statusWorkspaceContent.innerHTML = "Selected Workspace: <strong>" + data.txtWorkspaceName + "</strong>";
+        newWorkspaceId = payload.id
+      }
+    })
+  }
+
 
   $(document).ready(()=>{
     
@@ -497,10 +567,7 @@
       document.querySelector('#imgSelectedTheme').style.display = "block";
       
     }
-    console.log(typeof(selectedTheme))
-    console.log(selectedTheme)
-
-
+    
   }
 
   selectWorkspace = (id, name) => {
@@ -584,9 +651,9 @@
     let errors = false
     surveyData = {
       'title': document.querySelector('#txtSurveyName').value,
-      'workspace_id': (searchedParams.get('ws'))?searchedParams.get('ws'):(selectedWorkspace)? selectedWorkspace : 0,
+      'workspace_id': (newWorkspaceId != null) ? newWorkspaceId : (searchedParams.get('ws')) ? searchedParams.get('ws'):(selectedWorkspace)? selectedWorkspace : 0,
       'theme_id': selectedTheme === null ? null : selectedTheme.sth_rec_no,
-      'background_image': selectedTemplate === null ? null : (selectedTemplate.background_image == null) ? null : selectedTemplate.background_image 
+      'backgroundImage': selectedTemplate === null ? null : (selectedTemplate.background_image == null) ? null : selectedTemplate.background_image 
     };
     
 
