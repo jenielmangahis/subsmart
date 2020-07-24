@@ -18,6 +18,7 @@ class Booking extends MY_Controller {
         $this->load->model('BookingTimeSlot_model');
         $this->load->model('Users_model');
         $this->load->model('BookingScheduleAssignedUser_model');
+        $this->load->model('BookingInquiry_model');
 	}
 
 	public function index() {
@@ -622,6 +623,24 @@ class Booking extends MY_Controller {
         $this->session->set_flashdata('alert_class', 'alert-success');
 
         redirect('more/addon/booking/time');
+    }
+
+    public function inquiries()
+    {
+    	$user      = $this->session->userdata('logged'); 
+    	$inquiries = $this->BookingInquiry_model->findAllByUserId($user['id']);
+
+    	$this->page_data['inquiries'] = $inquiries;
+		$this->load->view('online_booking/inquiries', $this->page_data);
+    }
+
+    public function ajax_get_inquiry_details()
+    {
+    	$id = post('iid');
+    	$inquiry = $this->BookingInquiry_model->findById($id);
+    	
+    	$this->page_data['inquiry'] = $inquiry;
+		$this->load->view('online_booking/ajax_get_inquiry_details', $this->page_data);
     }
 
 }
