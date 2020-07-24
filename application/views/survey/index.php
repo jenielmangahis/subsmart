@@ -119,7 +119,7 @@
                 What would you like to do?
               </p>
               <div class="text-center">
-                <button class="btn btn-small btn-block btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-wpforms"></i> Add new survey</a></button>
+                <button class="btn btn-small btn-block btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-wpforms"></i> Add new survey from scratch</a></button>
                 <button class="btn btn-small btn-block btn-secondary"><a class="text-white" href="<?=base_url()?>survey/themes/create"><i class="fa fa-paint-brush"></i> Add new themes</a></button>
               </div>
               <p class="text-center">Quick Links<br/><a href="<?=base_url()?>survey/workspace">Workspaces</a> | <a href="<?=base_url()?>survey/themes">Themes</a> </p>
@@ -135,7 +135,7 @@
   <div id="recent-survey-container" class="w-100">
     <div class="card p-5">
       <h4><i class="fa fa-folder-open"></i> Recently opened</h4>
-      <div id="recent-survey-opened-table" class="row"></div>
+      <div id="recent-survey-opened-table" class="row "></div>
     </div>
   </div>
   <!-- end of survey recent container -->
@@ -387,7 +387,7 @@
   <div class="modal fade" id="modalAddWorkspace" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <?= form_open('survey/workspace/add')?>
+        <?= form_open('survey/workspace/add?redirect')?>
           <div class="modal-header">
             <h5 class="modal-title">Add New Workspace</h5>
           </div>
@@ -461,7 +461,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button id="btnCreateByTemplate" class="btn btn-primary">Use this template</button>
+
+          <button class="btn btn-small btn-link"><a href="<?=base_url()?>survey/add">Add new survey from scratch instead</a></button>
+          <button id="btnCreateByTemplate" class="btn btn-primary btn-small">Use this template</button>
         </div>
       </div>
     </div>
@@ -540,38 +542,43 @@
   JSON.parse(localStorage.getItem('survey_ro')).map((item)=>{
     document.querySelector('#recent-survey-opened-table').innerHTML += `
     <div class="col-xs-12 col-sm-6 col-xl-3">
-      <div data-id="${item.id}" class="card survey-card border-0 shadow" style="background-image: url('<?=base_url()?>uploads/survey/themes/${item.survey_theme?.sth_primary_image}')">
+      <div data-id="${item.id}" class="card survey-card border-0 shadow" >
         <a class="text-left" href="<?=base_url()?>survey/result/${item.id}">
-          <div class="card-body">
-            <h5 class="card-title survey-title font-weight-bold" style="color: ${item.survey_theme?.sth_text_color}; border-left: 5px solid ${item.survey_theme?.sth_primary_color};">${item.title}</h5>
-            <small class="text-info" style="color: ${item.survey_theme?.sth_secondary_color}">Click for more info</small>
+          <div class="card-body p-0">
+            <img class="survey-card-image" style="width: 100%" src="${item.survey_theme == null || item.theme_id === null ? "https://via.placeholder.com/150" : (item.backgroundImage != null && item.useBackgroundImage === true) ? (item.backgroundImage != null && item.useBackgroundImage == true) ? "<?= base_url()?>uploads/survey/image_custom_background_db/"+item.customBackgroundImage : "<?= base_url()?>assets/survey/template_images/"+item.backgroundImage : "<?= base_url()?>uploads/survey/themes/"+item.survey_theme.sth_primary_image}" alt="template-image">
+          </div>
+          <div class="card-footer">
+            <h5 class="card-title survey-title font-weight-bold">${item.title}</h5>
           </div>
         </a>
-        
       </div>
-
     </div>
     `;
   })
 
+  
   
   recentSurveys.map((item)=>{
     document.querySelector('#recent-survey-added-table').innerHTML += `
     <div class="col-xs-12 col-sm-6 col-xl-3">
-      <div data-id="${item.id}" class="card survey-card border-0 shadow" style="background-image: url('<?=base_url()?>uploads/survey/themes/${item.survey_theme?.sth_primary_image}')">
+      <div data-id="${item.id}" class="card survey-card border-0 shadow" >
         <a class="text-left" href="<?=base_url()?>survey/result/${item.id}">
-          <div class="card-body">
-            <h5 class="card-title survey-title font-weight-bold" style="color: ${item.survey_theme?.sth_text_color}; border-left: 5px solid ${item.survey_theme?.sth_primary_color};">${item.title}</h5>
-            <small class="text-info" style="color: ${item.survey_theme?.sth_secondary_color}">Click for more info</small>
+          <div class="card-body p-0">
+            <img class="survey-card-image" style="width: 100%" src="${item.survey_theme == null || item.theme_id === null ? "https://via.placeholder.com/150" : (item.backgroundImage != null && item.useBackgroundImage === true) ? (item.backgroundImage != null && item.useBackgroundImage == true) ? "<?= base_url()?>uploads/survey/image_custom_background_db/"+item.customBackgroundImage : "<?= base_url()?>assets/survey/template_images/"+item.backgroundImage : "<?= base_url()?>uploads/survey/themes/"+item.survey_theme.sth_primary_image}" alt="template-image">
           </div>
+          <div class="card-footer">
+            <h5 class="card-title survey-title font-weight-bold">${item.title}</h5>
+          </div>          
         </a>
-        
       </div>
-
     </div>
     `;
   })
   
+
+  
+
+
 
   handleDeleteWorkspacePrompt = (id = null) => {
     deleteId = (id === null)? deleteId = null : deleteId = id 

@@ -21,4 +21,12 @@ class Chart_of_accounts_model extends MY_Model {
          $query = $this->db->get('chart_of_accounts');  
          return $query->result();  
       } 
+
+    public function getById($id)
+    {
+    	$this->db->from('chart_of_accounts');  
+    	$this->db->where('id',$id); 
+    	$result =  $this->db->get()->result();
+        return $result[0];
+    }
 }

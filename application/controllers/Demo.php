@@ -4,6 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Demo extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
+        $this->checkLogin();
+
 		$this->page_data['page']->title = 'nSmart - Demo';
 	}
 	public function index(){

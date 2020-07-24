@@ -238,9 +238,9 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php //echo url('/more/upgrades') ?>">
                             <i class="fa fa-video-camera"></i> Video Estimate
                         </a>
-                        <a class="dropdown-item" href="<?php echo url('/more/addons') ?>">
+                        <!-- <a class="dropdown-item" href="<?php //echo url('/more/addons') ?>">
                             <i class="fa fa-user-plus"></i> Add-on
-                        </a>
+                        </a> -->
                     </div>
                     <?php /*<div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <?php //if (hasPermissions('businessdetail')): ?><a class="dropdown-item"

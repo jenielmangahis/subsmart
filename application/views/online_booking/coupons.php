@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_booking'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/addons'); ?>
+    <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">

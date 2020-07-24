@@ -108,7 +108,6 @@
         <h1 class="m-0 text-left">Workspaces</h1>
         <div>
           <button class="btn btn-sm btn-primary"><a class="text-white" href="<?=base_url()?>survey/add"><i class="fa fa-wpforms"></i> Add new survey</a></button>
-          <button class="btn btn-sm btn-secondary"><a class="text-white" data-toggle="modal" data-target="#modalAddWorkspace"><i class="fa fa-table"></i> Add new workspace</a></button>
         </div>
       </div>
       <hr/>
@@ -214,14 +213,10 @@
                                     <div class="d-flex w-100 justify-content-center">
                                       <a href="survey/preview/<?= $survey->id ?>">
                                         <button class="btn btn-primary btn-sm" type="button" aria-haspopup="true" aria-expanded="false" style="background-color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_primary_color : ""?>; color: <?= $survey->survey_theme !== null ? $survey->survey_theme->sth_text_color : ""?>">
-                                        <!-- @L@ -->
-                                          <!-- <i class="fas fa-ellipsis-v"></i> -->
                                           <span class="material-icons">assessment</span> Preview
                                         </button>
                                       </a>
                                       <button class="btn btn-outline-info btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <!-- @L@ -->
-                                        <!-- <i class="fas fa-ellipsis-v"></i> -->
                                         <span class="material-icons">menu</span> Options
                                       </button>
                                       <div class="dropdown-menu">
@@ -256,7 +251,7 @@
   <div class="modal fade" id="modalAddWorkspace" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <?= form_open('survey/workspace/add')?>
+        <?= form_open('survey/workspace/add?redirect')?>
           <div class="modal-header">
             <h5 class="modal-title">Add New Workspace</h5>
           </div>

@@ -206,6 +206,9 @@
 #pay-bills-modal .modal-header{
     border-bottom: 0;
 }
+#pay-bills-modal .modal-content{
+    height: 100%;
+}
 #pay-bills-modal .modal-footer-print{
     padding: 10px;
     background: #393A3D;
@@ -402,6 +405,9 @@
     margin-bottom: 15px;
 }
 /*Process Steps*/
+#importRules .modal-content{
+    height: 100%;
+}
 #importRules .modal-body .progressSection{
     background-color: #f9fafb;
     border-bottom: 1px solid #e3eaf3;

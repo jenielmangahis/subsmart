@@ -434,12 +434,14 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
                                             </div>
                                             
 
-                                            <?php foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions)
-                                            {   ?>
-                                            <div class="col-md-6 margin-bottom-ter no-padding">
+                                            <?php foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) { 
+ 
+                                                 ?>
+
+                                            <div class="<?php echo (isset($valueSubQuestions->parameter->column_width) && $valueSubQuestions->parameter->column_width !='') ? $valueSubQuestions->parameter->column_width : '' ; ?> margin-bottom-ter no-padding">
                                                 <div class="form-group" id="customer_type_group">
                                                     <div class="col-md-12">
-                                                        <?php getInputHtml ($valueSubQuestions); ?>
+                                                        <?php getInputHtml($valueSubQuestions); ?>
                                                     </div>
                                                 </div>
                                             </div>

@@ -11,6 +11,8 @@ class Jobs_model extends MY_Model
     public $table_credit_cards = 'credit_cards';
     public $table_estimates = 'estimates';
     public $table_employees = 'employees';
+    public $table_customers = 'customers';
+    public $table_address = 'address';
 
 
     /**

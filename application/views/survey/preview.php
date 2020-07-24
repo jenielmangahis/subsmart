@@ -155,7 +155,19 @@
 
       if(strpos(uri_string(),'preview')){
         ?>
-          <div class="preview-notification-bar" style="background-color: <?=($survey_theme != null)? $survey_theme->sth_secondary_color : "#fff"?>; color: <?= ($survey_theme != null)? $survey_theme->sth_text_color: "#000"?>">You are currently in Preview mode. <a type="button" href="<?php echo base_url()?>survey/result/<?php echo $survey->id?>">Go back</a></div>
+          <div class="preview-notification-bar" style="background-color: <?=($survey_theme != null)? $survey_theme->sth_secondary_color : "#fff"?>; color: <?= ($survey_theme != null)? $survey_theme->sth_text_color: "#000"?>">You are currently in Preview mode. 
+          <?php
+            if(isset($_GET["src"]) && $_GET['src'] == "results" ){
+              ?>
+                <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="#">Refresh</a>
+              <?php
+            }else{
+              ?>
+                <a type="button" href="<?php echo base_url()?>survey/result/<?php echo $survey->id?>">Go back</a>
+              <?php
+            }
+          ?>
+          </div>
         <?php
       }
     ?>
@@ -163,13 +175,13 @@
     <div class="d-flex h-100 justify-content-center align-items-center">
       <?php
         if($survey_theme !== null){
-          if($survey->background_image == null){
+          if($survey->backgroundImage == null){
             ?>
               <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
             <?php
           }else{
             ?>
-              <img class="theme-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->background_image ?>" alt="<?= substr($survey->background_image, 0, 4)?>-image">
+              <img class="theme-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->backgroundImage ?>" alt="<?= substr($survey->backgroundImage, 0, 4)?>-image">
             <?php
           }
         }
@@ -525,9 +537,11 @@
                           <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
                           <?php
                             if(strpos(uri_string(), 'preview') !== false){
-                              ?>
-                                <p id="preview-end-note" class="border text-center rounded" >This is the end of the survey. <a id="from-top" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color:"#000"?>" href="#">Back to top</a> or <a style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color: "#000"?>" href="<?= ($survey->canRedirectOnComplete == true && $survey->redirectionLink != "") ? ($survey->redirectionLink) : (base_url()."survey/edit/". $survey->id) ?>">redirect to another page.</a></p>
-                              <?php
+                              if(!isset($_GET["src"]) && !$_GET['src'] == 'results'){
+                                ?>
+                                  <p id="preview-end-note" class="border text-center rounded" >This is the end of the survey. <a id="from-top" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color:"#000"?>" href="#">Back to top</a> or <a style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color: "#000"?>" href="<?= ($survey->canRedirectOnComplete == true && $survey->redirectionLink != "") ? ($survey->redirectionLink) : (base_url()."survey/edit/". $survey->id) ?>">redirect to another page.</a></p>
+                                <?php
+                              }
                             }else{
                               ?>
                               <div class="result-survey">

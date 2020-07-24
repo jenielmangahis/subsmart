@@ -74,6 +74,63 @@ class Expenses_model extends MY_Model
         }
 
     }
+    public function getCheck(){
+        $query = $this->db->get('accounting_check');
+        return $query->result();
+    }
+
+    public function addCheck($new_data){
+        $qry = $this->db->get_where('accounting_check',array(
+            'vendor_id' => $new_data['vendor_id']
+        ));
+        if ($qry->num_rows() == 0){
+
+            $data = array(
+                'vendor_id' => $new_data['vendor_id'],
+                'mailing_address' => $new_data['mailing_address'],
+                'bank_id' => $new_data['bank_id'],
+                'payment_date' => $new_data['payment_date'],
+                'check_number' => $new_data['check_num'],
+                'print_later' => $new_data['print_later'],
+                'permit_number' => $new_data['permit_number'],
+            );
+            $this->db->insert('accounting_check',$data);
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function editCheckData($update){
+        $qry = $this->db->get_where('accounting_check',array('id'=>$update['check_id']));
+        if ($qry->num_rows() == 1){
+            $data  = array(
+                'vendor_id' => $update['vendor_id'],
+                'mailing_address' => $update['mailing_address'],
+                'bank_id' => $update['bank_id'],
+                'payment_date' => $update['payment_date'],
+                'check_number' => $update['check_num'],
+                'print_later' => $update['print_later'],
+                'permit_number' => $update['permit_number'],
+            );
+            $this->db->where('id',$update['check_id']);
+            $this->db->update('accounting_check',$data);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+    public function deleteCheckData($id){
+        $qry  = $this->db->get_where('accounting_check',array('id'=>$id));
+        if ($qry->num_rows() == 1){
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_check');
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function vendorCredit($new_data){
         $qry = $this->db->get_where('accounting_vendor_credit',array(
             'vendor_id' => $new_data['vendor_id']

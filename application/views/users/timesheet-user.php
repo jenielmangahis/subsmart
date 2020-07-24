@@ -333,7 +333,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a id="clockin_btn" style="display:;" href="#" class="btn btn-sm btn-primary clockin_btn" title="Clock In" data-toggle="tooltip">
                                                                         <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock In
                                                                     </a>
-                                                                    <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                                    <!-- <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
                                                                         <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
                                                                     </a>
                                                                     <a id="lunchin_btn" style="display:;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
@@ -341,7 +341,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     </a>
                                                                     <a id="clockout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary clockout_btn" title="Clock Out" data-toggle="tooltip">
                                                                         <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Clock Out
-                                                                    </a>
+                                                                    </a> -->
                                                                 <?php endif; ?>
 
                                                                 <!-- The following are new timesheet actions -->
@@ -358,28 +358,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <?php endif; ?>
                                                                 <?php endif; ?>
                                                                 <!-- Lunch Out-->
-                                                                <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Lunch Out' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                        <a id="lunchout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                                <?php //if( !empty($clockin_arr) ):?>
+                                                                    <?php //if( $clockin_arr[0]->action == 'Lunch Out' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <!-- <a id="lunchout_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
-                                                                        </a>
-                                                                    <?php else: ?>
-                                                                        <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
+                                                                        </a> -->
+                                                                    <?php //else: ?>
+                                                                        <!-- <a id="lunchout_btn" style="display: ;" href="#" class="btn btn-sm btn-primary lunchout_btn" title="Lunch Out" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch Out
-                                                                        </a>
-                                                                    <?php endif; ?>
-                                                                <?php endif; ?>
+                                                                        </a> -->
+                                                                    <?php //endif; ?>
+                                                                <?php //endif; ?>
                                                                 <!-- Lunch In-->
-                                                                <?php if( !empty($clockin_arr) ):?>
-                                                                    <?php if( $clockin_arr[0]->action == 'Lunch In' && $clockin_arr[0]->timestamp != 0 ):?>
-                                                                        <a id="lunchin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
+                                                                <?php //if( !empty($clockin_arr) ):?>
+                                                                    <?php //if( $clockin_arr[0]->action == 'Lunch In' && $clockin_arr[0]->timestamp != 0 ):?>
+                                                                        <!-- <a id="lunchin_btn" style="display: none;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
-                                                                        </a>
-                                                                    <?php else: ?>
-                                                                        <a id="lunchin_btn" style="display:;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
+                                                                        </a> -->
+                                                                    <?php //else: ?>
+                                                                        <!-- <a id="lunchin_btn" style="display:;" href="#" class="btn btn-sm btn-primary lunchin_btn" title="Lunch In" data-toggle="tooltip">
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
-                                                                        </a>
-                                                                    <?php endif; ?>
+                                                                        </a> -->
+                                                                    <?php //endif; ?>
                                                                 <?php endif; ?>
                                                                 <!-- Clock Out-->
                                                                 <?php if( !empty($clockin_arr) ):?>

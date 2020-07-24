@@ -730,15 +730,22 @@ button {
 }
 
 /*Filter & Batch action btn CSS*/
+.filter-btn{
+    display: inline;
+}
+.filter-btn ul{
+    z-index: 200;
+    min-width: 500px;
+}
 .filter-btn button{
     border: 3px solid black;
     font-weight: 700;
     font-size: 15px;
     width: 120px;
+    border-radius: 36px;
 }
 .display-filterDate{
-    display: inline-block;
-    position: relative;
+    display: inline;
 }
 .batch-action-btn button{
     border: 3px solid black;

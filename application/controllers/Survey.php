@@ -71,12 +71,13 @@ class Survey extends MY_Controller
   }
 
   public function add($settings = null){
+    
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
       'workspace_id' => $this->input->post('workspace_id'),
       'theme_id' => $this->input->post('theme_id'),
-      'background_image' => $this->input->post('background_image')
+      'backgroundImage' => $this->input->post('backgroundImage')
     );
     $data = $this->survey_model->add($data);
     
@@ -468,12 +469,20 @@ class Survey extends MY_Controller
 
   public function addWorkspace(){
     // var_dump($this->input->post());
+    // exit;
     $data = array(
       "name" => $this->input->post('txtWorkspaceName'),
       "users" => json_encode(array(0))
     );
     $this->survey_model->addWorkspace($data);
-    redirect('survey/workspace');
+    $result = array(
+      'success' => 1,
+      'id' => $this->db->insert_id()
+    );
+    echo json_encode($result);
+    if(isset($_GET['redirect'])){
+      redirect('survey/workspace');
+    }
   }
 
   public function deleteWorkspace($id){

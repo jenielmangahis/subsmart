@@ -6,6 +6,7 @@ class Accounting extends MY_Controller {
     public function __construct()
     {
         parent::__construct();
+        $this->checkLogin();
 		$this->load->model('vendors_model');
 		$this->load->model('terms_model');
         $this->load->model('expenses_model');
@@ -22,6 +23,7 @@ class Accounting extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/accounting.js?v=".rand(),
             "assets/plugins/dropzone/dist/dropzone.js",
+            "https://cdn.jsdelivr.net/npm/sweetalert2@9"
         ));
 
 		$this->page_data['menu_name'] =
@@ -67,6 +69,7 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['vendors'] = $this->vendors_model->getVendors();
+        $this->page_data['checks'] = $this->expenses_model->getCheck();
         $this->load->view('accounting/expenses', $this->page_data);
     }
     public function vendors(){
@@ -320,6 +323,81 @@ class Accounting extends MY_Controller {
         }else{
             redirect('accounting/expenses');
         }
+    }
+
+    public function getCheckData(){
+        if (isset($_POST['id'])){
+            $query = $this->db->get_where('accounting_check',array(
+                'vendor_id' => $_POST['id']
+            ));
+            $vendors_detail = $this->db->get_where('accounting_vendors',array('vendor_id'=>$_POST['id']));
+            if ($query->row()->print_later == 1){
+                $print = true;
+            }else{
+                $print = false;
+            }
+            $std = new stdClass();
+            $std->check_id = $query->row()->id;
+            $std->vendor_id = $_POST['id'];
+            $std->vendor_name = $vendors_detail->row()->f_name.'&nbsp;'.$vendors_detail->row()->l_name;
+            $std->mailing = $query->row()->mailing_address;
+            $std->payment_date = $query->row()->payment_date;
+            $std->check_number = $query->row()->check_number;
+            $std->print_later = $print;
+            $std->permit_number = $query->row()->permit_number;
+
+            echo json_encode($std);
+        }
+    }
+    public function addCheck(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'bank_id' => $this->input->post('bank_id'),
+            'payment_date' => $this->input->post('payment_date'),
+            'check_num' => $this->input->post('check_num'),
+            'print_later' => $this->input->post('print_later'),
+            'permit_number' => $this->input->post('permit_num'),
+        );
+        $query = $this->expenses_model->addCheck($new_data);
+        if ($query == true){
+            $this->session->set_flashdata('checked','New Check added.');
+            redirect('accounting/expenses');
+        }else{
+            $this->session->set_flashdata('check_failed','Vendor already exist.');
+            redirect('accounting/expenses');
+        }
+    }
+
+    public function editCheckData(){
+	    $update = array(
+            'check_id' => $this->input->post('check_id'),
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'bank_id' => $this->input->post('bank_id'),
+            'payment_date' => $this->input->post('payment_date'),
+            'check_num' => $this->input->post('check_num'),
+            'print_later' => $this->input->post('print_later'),
+            'permit_number' => $this->input->post('permit_num'),
+        );
+	    $query = $this->expenses_model->editCheckData($update);
+	    if ($query == true){
+            $this->session->set_flashdata('checked_updated','Data Updated.');
+            redirect('accounting/expenses');
+        }else{
+            $this->session->set_flashdata('checked_up_failed','Something is wrong in the process.');
+            redirect('accounting/expenses');
+        }
+    }
+    public function deleteCheckData(){
+
+        $id = $this->input->post('id');
+        $this->expenses_model->deleteCheckData($id);
+//        if ($delete == true){
+//            redirect('accounting/expenses');
+//        }else{
+//            redirect('accounting/expenses');
+//        }
     }
 
     public function addExpense(){
