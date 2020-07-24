@@ -140,11 +140,7 @@ class Booking extends MY_Controller {
 
 		  $sort++;	
         }
-        echo "<pre>";
-        print_r($post);
-        print_r($post_data);
-        echo "</pre>";
-
+      
 
         if( !empty($post) ){
 

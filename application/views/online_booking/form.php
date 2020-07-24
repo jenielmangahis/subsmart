@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="row">
                             <div class="col-md-6">
-                                <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form" ; ?>" method="post">
+                                <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
                                     <div class="row dashboard-container-1">
                                         <div class="col-md-12" style="margin-bottom: 20px;">
                                             <strong>Customize the way the form looks and get notifications on new booking inquiries.</strong>
