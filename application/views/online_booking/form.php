@@ -20,7 +20,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
-                        <?php include viewPath('includes/booking_tabs'); ?>  
+                        <?php include viewPath('includes/booking_tabs'); ?> 
+
+                        <?php if($this->session->flashdata('message')) { ?>
+                            <div class="row dashboard-container-1">
+                                <div class="col-md-12">
+                                    <div class="alert <?php echo $this->session->flashdata('alert_class'); ?>">
+                                      <button type="button" class="close" data-dismiss="alert">&times</button>
+                                      <?php echo $this->session->flashdata('message'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>                         
 
                         <div class="row">
                             <div class="col-md-6">
@@ -46,63 +57,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </tr>
                                               </thead>
                                               <tbody>
-                                                 <?php if(!isset($booking_forms)){                                          foreach($default_form_fields as $dff_key => $default_form_field) { ?>
-                                                    <?php 
-                                                        $is_required = "";
-                                                        $is_visible = "checked=''";
-
-                                                        $is_required_disabled = "";
-                                                        $is_visible_disabled = "";
-
-                                                        if($default_form_field == 'full_name' || $default_form_field == 'contact_number') {
-                                                            $is_required = "checked=''";
+                                                <?php if(!isset($booking_forms)) { ?>                                       
+                                                    <?php foreach($default_form_fields as $dff_key => $default_form_field) { ?>
+                                                        <?php 
+                                                            $is_required = "";
                                                             $is_visible = "checked=''";
 
-                                                            $is_required_disabled = "disabled=''";
-                                                            $is_visible_disabled = "disabled=''";
-                                                        }
-                                                    ?>
-                                                    <tr>
-                                                        <td width="60%">
-                                                            <?php echo $dff_key; ?>
-                                                            <input type="hidden" id="is_field[<?php echo $default_form_field; ?>][]" name="is_field[<?php echo $default_form_field; ?>][]" value="<?php echo $dff_key; ?>">
-                                                        </td>
-                                                        <td width="20%">
-                                                            <div class="checkbox checkbox-sm">
-                                                                <input type="checkbox" name="is_visible[<?php echo $default_form_field; ?>][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="<?php echo $default_form_field; ?>" id="is_visible_<?php echo $default_form_field; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> >
-                                                                <label for="is_visible_<?php echo $default_form_field; ?>"></label>
-                                                            </div>
-                                                        </td>
-                                                        <td width="20%" style="">
-                                                            <div class="checkbox checkbox-sm">
-                                                                <input type="checkbox" name="is_required[<?php echo $default_form_field; ?>][]" value="1" data-id="is_required[<?php echo $default_form_field; ?>][]" class="checkbox-select select-form-field-required" id="is_required_<?php echo $default_form_field; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> >
-                                                                <label for="is_required_<?php echo $default_form_field; ?>"></label>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            &nbsp;                                                   
-                                                        </td>
-                                                    </tr>
-                                                 <?php }
-                                                   }else{
-                                                   $row_count=1;
-                                                 
-                                                 foreach($booking_forms as $dff_key => $booking_form) { ?>
-                                                    <?php 
+                                                            $is_required_disabled = "";
+                                                            $is_visible_disabled = "";
 
-                                                        if($booking_form->is_required ==1){
+                                                            if($default_form_field == 'full_name' || $default_form_field == 'contact_number') {
+                                                                $is_required = "checked=''";
+                                                                $is_visible = "checked=''";
+
+                                                                $is_required_disabled = "disabled=''";
+                                                                $is_visible_disabled = "disabled=''";
+                                                            }
+                                                        ?>
+                                                        <tr>
+                                                            <td width="60%">
+                                                                <?php echo $dff_key; ?>
+                                                                <input type="hidden" id="is_field[<?php echo $default_form_field; ?>][]" name="is_field[<?php echo $default_form_field; ?>][]" value="<?php echo $dff_key; ?>">
+                                                            </td>
+                                                            <td width="20%">
+                                                                <div class="checkbox checkbox-sm">
+                                                                    <input type="checkbox" name="is_visible[<?php echo $default_form_field; ?>][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="<?php echo $default_form_field; ?>" id="is_visible_<?php echo $default_form_field; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> >
+                                                                    <label for="is_visible_<?php echo $default_form_field; ?>"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td width="20%" style="">
+                                                                <div class="checkbox checkbox-sm">
+                                                                    <input type="checkbox" name="is_required[<?php echo $default_form_field; ?>][]" value="1" data-id="is_required[<?php echo $default_form_field; ?>][]" class="checkbox-select select-form-field-required" id="is_required_<?php echo $default_form_field; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> >
+                                                                    <label for="is_required_<?php echo $default_form_field; ?>"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                &nbsp;                                                   
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?> 
+
+                                                <?php } else { ?>
+                                                    <?php $row_count = 1; ?>
+                                                    <?php foreach($booking_forms as $dff_key => $booking_form) { ?>
+                                                    <?php 
+                                                        if($booking_form->is_required ==1) {
                                                             $is_required = "checked=''";
                                                         }else{
                                                             $is_required = "";
                                                         }    
 
-                                                        if($booking_form->is_visible ==1){
+                                                        if($booking_form->is_visible ==1) {
                                                             $is_visible = "checked=''";
                                                         }else{
                                                             $is_visible = "";
                                                         }
-
-
 
                                                         $is_required_disabled = "";
                                                         $is_visible_disabled = "";
@@ -136,11 +145,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <label for="is_required_<?php echo $booking_form->field_name; ?>"></label>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td width="20%">
                                                             <?php if($booking_form->is_default==1){ ?> 
-                                                                     &nbsp;
+                                                                    &nbsp;
                                                             <?php }else{ ?>
-                                                                   <td width="20%"><a href="javascript:void(0);" class="delete-custom-field" data-row="<?php echo $row_count; ?>"><i class="fa fa-trash"></i></a></td>';            
+                                                                   <a href="javascript:void(0);" class="delete-custom-field" data-field-name="<?php echo $booking_form->field_name; ?>" data-row="<?php echo $row_count; ?>"><i class="fa fa-trash"></i></a>          
                                                             <?php }?>
                                                         </td>
                                                     </tr>
@@ -216,6 +225,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <label>How did you hear about us</label>
                                                                 <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
                                                             </div>
+                                                            <?php foreach($booking_forms_custom as $form_custom) { ?>
+                                                                <div class="form-group form-group-<?php echo $form_custom->field_name; ?>">
+                                                                    <label><?php echo $form_custom->label; ?></label>
+                                                                    <input type="text" name="<?php echo $form_custom->field_name; ?>" id="<?php echo $form_custom->field_name; ?>" class="form-control">
+                                                                </div>
+                                                            <?php } ?>
                                                         </div>
                                                     </form> 
                                                     <hr class="card-hr"> 
@@ -270,6 +285,19 @@ $(function(){
         // });
        
     });
+
+    $(".delete-custom-field").click(function(){
+        var row = $(this).attr('data-row');
+        $(".custom-row-" + row).remove();
+        $(".custom-field-" + row).remove();
+
+        var field_name = $(this).attr("data-field-name");
+        if($('#is_visible_' + field_name).is(':checked')) {
+           $(".form-group-" + field_name).show();          
+        } else {
+           $(".form-group-" + field_name).hide();    
+        }
+    });    
 
 });
 </script>

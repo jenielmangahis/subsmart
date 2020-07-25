@@ -45,7 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>    
 
-                                <div class="row dashboard-container-1">
+                                <!-- <div class="row dashboard-container-1">
                                     <div class="col-md-12">
                                     <div style="margin-bottom: 5px;">Iframe Code</div>
                                     <div style="margin-bottom: 10px;">
@@ -56,7 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <a class="a-ter" data-clipboard="copy" data-ref="code.iframe" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
                                     </div>                                        
                                     </div>
-                                </div>                             
+                                </div>  -->                            
 
                             </div>
                             <div class="col-md-6">
@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>  
 
-                                <div class="row dashboard-container-1">
+                                <!-- <div class="row dashboard-container-1">
                                     <div class="col-md-12">
                                         <div style="margin-bottom: 5px;">Javascript Code</div>
                                         <div style="margin-bottom: 10px;">
@@ -85,7 +85,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a class="a-ter" data-clipboard="copy" data-ref="code.javascript" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
                                         </div>
                                     </div>
-                                </div> 
+                                </div> -->
                                 
                             </div>                       
 

@@ -27,6 +27,19 @@ class BookingForms_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllCustom($filters=array())
+    {
+        $user_id = logged('id');
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $user_id);
+        $this->db->where('is_default', 0);
+        $this->db->order_by('sort', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
     public function getById($id)
     {
         $user_id = logged('id');
@@ -43,8 +56,6 @@ class BookingForms_model extends MY_Model
 
     public function getByUserId($user_id)
     {
-        
-
         $this->db->select('*');
         $this->db->from($this->table);
 
