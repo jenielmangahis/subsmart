@@ -183,6 +183,8 @@ $route['booking/_save_setting'] = 'booking/ajax_save_setting';
 $route['booking/_save_time_slot'] = 'booking/ajax_save_time_slot';
 $route['booking/delete_time_slot'] = 'booking/delete_time_slot';
 $route['booking/ajax_save_service_item_visible_status'] = 'booking/ajax_save_service_item_visible_status';
+$route['more/addon/inquiries'] = 'booking/inquiries';
+$route['booking/_inquiry_details'] = 'booking/ajax_get_inquiry_details';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
