@@ -212,7 +212,7 @@ $(".add-custom-field").click(function(){
     var newRowNum = totalRows + 1;
 
     //Left Pane
-    var col1 = '<td width="60%">'+fieldName+'</td>';
+    var col1 = '<td width="60%">'+fieldName+' <input type="hidden" id="is_field['+fieldName+'][]" name="is_field['+fieldName+'][]" value="'+fieldName+'" /> </td>';
     var col2 = '<td width="20%"><div class="checkbox checkbox-sm"><input type="checkbox" name="is_visible['+fieldName+'][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="'+fieldName+'" id="is_visible_'+fieldName+'"><label for="is_visible_'+fieldName+'"></label></td>';
     var col3 = '<td width="20%"><div class="checkbox checkbox-sm"><input type="checkbox" name="is_required['+fieldName+'][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="'+fieldName+'" id="is_required_'+fieldName+'"><label for="is_required_'+fieldName+'"></label></td>';
     var col4 = '<td width="20%"><a href="javascript:void(0);" class="delete-custom-field" data-row="'+newRowNum+'"><i class="fa fa-trash"></i></a></td>';

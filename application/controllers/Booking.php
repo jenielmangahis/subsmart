@@ -12,6 +12,7 @@ class Booking extends MY_Controller {
 		$this->load->helper(array('form', 'url'));
 
 		$this->load->model('BookingCategory_model');
+		$this->load->model('BookingForms_model');
 		$this->load->model('BookingServiceItem_model');
 		$this->load->model('BookingCoupon_model');
 		$this->load->model('BookingSetting_model');
@@ -68,10 +69,106 @@ class Booking extends MY_Controller {
 			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
 		);
 
+		$user = $this->session->userdata('logged');  
+		$booking_forms = $this->BookingForms_model->getAll();
+
+		if($booking_forms){
+			$this->page_data['booking_forms'] = $booking_forms;
+		}
+
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['default_form_fields'] = $default_form_fields;
 		$this->load->view('online_booking/form', $this->page_data);
 	}
+
+	public function save_form()
+    {
+        postAllowed();
+
+        $user = $this->session->userdata('logged');        
+        $post = $this->input->post();
+
+        $default_form_fields = array(
+			'Full Name' => 'full_name',
+			'Contact Number' => 'contact_number',
+			'Email' => 'email',
+			'Address' => 'address',
+			'Message' => 'message',
+			'Preferred Time To Contact' => 'preferred_time_to_contact',
+			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
+		);
+
+ 		
+ 		if(isset($post['is_visible'])){
+        	$is_visible = $post['is_visible'];
+    	}
+
+
+        if(isset($post['is_required'])){
+       		$is_required = $post['is_required'];
+        }
+        $field_names = $post['is_field'];
+        $sort = 1;
+
+
+        foreach ($field_names as $key => $value) {
+        	if (in_array($key, $default_form_fields)) {
+			    $default_field = 1;
+			}else{
+				$default_field = 0;
+			}
+
+			if(!isset($is_required[''.$key.''][0])){
+				$is_required_value = 0;
+			}else{
+				$is_required_value = 1;
+			}
+
+			if(!isset($is_visible[''.$key.''][0])){
+				$is_visible_value = 0;
+			}else{
+				$is_visible_value = 1;
+			} 
+
+			$post_data[''.$sort.'']['field_name'] =  $key;
+			$post_data[''.$sort.'']['label'] = str_replace("_"," ", ucfirst($key));
+			$post_data[''.$sort.'']['type'] = 1;
+			$post_data[''.$sort.'']['is_required'] = $is_required_value;
+			$post_data[''.$sort.'']['is_visible'] = $is_visible_value;
+			$post_data[''.$sort.'']['is_default'] = $default_field;
+			$post_data[''.$sort.'']['sort'] = $sort; 	
+
+		  $sort++;	
+        }
+      
+
+        if( !empty($post) ){
+
+        	$this->BookingForms_model->deleteByUserId($user['id']);
+
+        	foreach ($post_data as $key => $value) {
+	        	$data = array(
+	        		'user_id' => $user['id'],
+	        		'field_name' => $value['field_name'],
+	        		'label' => $value['label'],
+	        		'type' => $value['type'],
+	        		'is_required' => $value['is_required'],
+	        		'is_visible' => $value['is_visible'],
+	        		'is_default' => $value['is_default'],
+	        		'sort' => $value['sort'],
+	        		'date_created' => date("Y-m-d H:i:s")
+	        	);
+	        	$bookingCoupon = $this->BookingForms_model->create($data);
+	        }
+
+	        	$this->session->set_flashdata('message', 'Form Updated Successful');
+        		$this->session->set_flashdata('alert_class', 'alert-success');     
+        	       	
+        }     
+
+        redirect('more/addon/booking/form');
+
+    }
 
 	public function coupons( $param = '' ) {
 		if( $param == '' ){
