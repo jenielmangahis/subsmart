@@ -2,7 +2,7 @@
 <footer class="footer">
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-12">Copyright © 2020 nSmartrac. All rights reserved.</div>
+			<div class="col-12 ft-booking-txt">Copyright © 2020 nSmartrac. All rights reserved.</div>
 		</div>
 	</div>
 </footer><!-- End Footer -->
@@ -39,10 +39,18 @@
 <!-- dynamic assets goes  -->
 <?php echo put_footer_assets(); ?>
 
-<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>	
+<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>
 
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
+	$(document).ready(function() {
+		$("img.product__img").hover(function() {
+			$(this).parent().find('div.product__img__hover').css("display", "block");
+		});
+		$("img.product__img").mouseleave(function() {
+			$(this).parent().find('div.product__img__hover').css("display", "none");
+		});
+	});
 </script>
 
 </body>

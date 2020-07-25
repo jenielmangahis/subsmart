@@ -1,0 +1,360 @@
+/* **** Online Booking **** */
+
+.right-menu {
+    float: right;
+    position: relative;
+    left: 6vw;
+}
+.left {
+    float: left;
+}
+.container-full-col {
+    padding: 0;
+    height: -webkit-fill-available;
+    background: white;
+    float: right;
+    position: fixed;
+    right: 0px;
+}
+.category-grid .product .product__img__cnt {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+.category-grid .product {
+    border: 1px solid #ccc;
+    margin-bottom: 30px;
+    background: #fff;
+    box-shadow: 1px 1px 2px rgba(34, 25, 25, 0.11);
+}
+.form-control-search {
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    height: 46px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    width: 100%;
+    display: block;
+    height: 46px !important;
+    padding: .375rem .75rem;
+}
+.coupon__code {
+    width: 65% !important;
+    float: left;
+    margin-right: 10px;
+}
+button.btn.btn-default.btn-md.coupon__btn {
+    height: 45px;
+    width: 25%;
+}
+.btn-primary-green {
+    color: #fff;
+    background-color: #44a73c;
+    border-color: #44a73c;
+}
+a.view-grid {
+    font-size: 17px;
+}
+.pos-rlt-cs {
+    position: relative;
+    right: 0px;
+    top: 11px;
+}
+.left-20 {
+    position: relative;
+    left: 20px;
+}
+.category-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.category-list .category-li {
+    margin-bottom: 20px;
+}
+.category-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.category-list .category__name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+.category-list .product-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.category-list .product {
+    min-height: 202px;
+    border: 1px solid #ccc;
+    margin-bottom: 30px;
+    background: #fff;
+    box-shadow: 1px 1px 2px rgba(34, 25, 25, 0.11);
+    position: relative;
+}
+.category-list .product .product__img__cnt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    z-index: 500;
+}
+.category-list .product .product__img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+.category-list .product .product__cnt {
+    padding: 20px 20px 20px 250px;
+    min-height: 200px;
+    position: relative;
+}
+.product .product__img__hover span {
+    display: inline-block;
+    background: #eaeaea;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #555;
+    border: 1px solid #ccc;
+}
+.category-list .product .product__name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.category-list .product .product__description {
+    color: #858585;
+    margin-bottom: 10px;
+    height: 52px;
+    overflow: hidden;
+}
+.category-list .product__price__cnt {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 30px 20px 250px;
+    height: 78px;
+}
+.product__qty-btn:active {
+    border: 2px solid #dbdbdb;
+    color: #858585;
+    background-color: #eaeaea;
+}
+button.btn.btn-green.btn-sm {
+    background: #45a73c;
+    padding: 12px 20px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+}
+.ft-booking-txt {
+    font-family: "Ubuntu","Trebuchet MS",sans-serif;
+    font-weight: 300;
+    font-size: 12pt;
+}
+.category-list .product__price__unit {
+    font-size: 14px;
+    margin-left: 5px;
+}
+.product__qty-btn:hover {
+    color: #858585;
+    border: 2px solid #dbdbdb;
+    background-color: #f2f2f2;
+}
+.category-list .product__price {
+    color: #259e57;
+    float: left;
+}
+.btn-group-sm > .btn, .btn-sm {
+    font-size: 12px;
+    line-height: 6px;
+    min-width: 40px;
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.category-list .product__view {
+    display: none;
+}
+.product__qty-box {
+    display: inline-block;
+    margin-right: 10px;
+}
+.product__qty, .product__qty:focus {
+    width: 56px;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 14px;
+    height: 30px;
+    border-radius: 2px;
+    vertical-align: top;
+    padding: 0 3px;
+    border: 2px solid #dbdbdb;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    border-radius: 0;
+}
+.product__qty-btn, .product__qty-btn:focus {
+    font-size: 10px;
+    line-height: 2px;
+    min-width: 30px;
+    height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #858585;
+    border: 2px solid #dbdbdb;
+    border-radius: 0;
+    background-color: #fff;
+}
+.category-list .product__actions {
+    float: right;
+}
+.product .product__img__hover {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+.search-booking-btn {
+    padding: 10px;
+    color: #363636;
+    background: #fff;
+    border: 1px solid #cccccc;
+    margin-top: 1px;
+    height: 44px;
+    min-width: 49px;
+}
+.widget-cnt-right {
+    margin: 30px;
+}
+.widget-cnt-right__child {
+    position: fixed;
+    width: 25%;
+    right: 0;
+    top: 0;
+    padding: 20px 30px 30px 30px;
+}
+.page-title-v2 {
+    font-size: 30px;
+    margin: 0;
+    line-height: initial;
+    font-weight: normal;
+    text-align: left;
+}
+.business {
+    margin-bottom: 60px;
+    position: relative;
+    min-height: 60px;
+}
+.business__logo {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background: #e5eaea;
+    z-index: 200;
+    object-fit: cover;
+}
+.business__cnt {
+    padding-left: 120px;
+}
+.business__cnt .business__name {
+    font-weight: 500;
+    padding-top: 10px;
+}
+.widget-cart {
+    max-height: 395px;
+    overflow-y: auto;
+    margin-right: -10px;
+    padding-right: 30px;
+}
+/* category-grid */
+.category-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.category-grid .category-li {
+    margin-bottom: 20px;
+}
+.category-grid .category__name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.category-grid .product-list {
+    list-style: none;
+}
+.category-grid .product {
+    border: 1px solid #ccc;
+    margin-bottom: 30px;
+    background: #fff;
+    box-shadow: 1px 1px 2px rgba(34, 25, 25, 0.11);
+}
+.category-grid .product .product__img__cnt {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+.category-grid .product .product__img {
+    width: 100%;
+}
+.category-grid .product .product__cnt {
+    padding: 20px;
+}
+.category-grid .product .product__name {
+    font-weight: 500;
+}
+.category-grid .product .product__description {
+    color: #858585;
+    margin-bottom: 10px;
+    height: 52px;
+    overflow: hidden;
+}
+.category-grid .product__price {
+    color: #259e57;
+    margin-bottom: 10px;
+}
+.category-grid .product__price__unit {
+    font-size: 14px;
+    margin-left: 5px;
+}
+.category-grid .product__actions {
+    margin: 0;
+}
+.category-grid .product__view {
+    display: none;
+}
+@media (max-width: 1300px) {
+  .sdv-qty {
+    margin-right: 10px;
+    position: relative;
+    left: 41px;
+  }
+  .sdv-grid {
+      margin: 0 auto;
+      display: block;
+      position: relative;
+      margin-top: 20px;
+  }
+}
+/* **** End Online Booking **** */
