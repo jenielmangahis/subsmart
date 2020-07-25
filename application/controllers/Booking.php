@@ -740,6 +740,16 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/ajax_get_inquiry_details', $this->page_data);
     }
 
+    public function front_items()
+	{
+		$this->load->view('online_booking/front_items', $this->page_data);
+	}
+
+	public function front_schedule()
+	{
+		$this->load->view('online_booking/front_items', $this->page_data);
+	}
+
 }
 
 /* End of file Booking.php */
