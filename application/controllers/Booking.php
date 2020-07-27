@@ -43,12 +43,12 @@ class Booking extends MY_Controller {
 		$this->page_data['category'] = $category;
 		$this->page_data['service_items'] = $service_items;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		
+
 		$this->load->view('online_booking/products', $this->page_data);
-	}	
+	}
 
 	public function time() {
-        $user = $this->session->userdata('logged');  
+        $user = $this->session->userdata('logged');
 
         $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByUserId($user['id']);
 
@@ -69,7 +69,7 @@ class Booking extends MY_Controller {
 			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
 		);
 
-		$user = $this->session->userdata('logged');  
+		$user = $this->session->userdata('logged');
 		$booking_forms = $this->BookingForms_model->getAll();
 		$booking_forms_custom = $this->BookingForms_model->getAllCustom();
 
@@ -87,7 +87,7 @@ class Booking extends MY_Controller {
     {
         postAllowed();
 
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         $default_form_fields = array(
@@ -99,7 +99,7 @@ class Booking extends MY_Controller {
 			'Preferred Time To Contact' => 'preferred_time_to_contact',
 			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
 		);
- 		
+
  		if(isset($post['is_visible'])){
         	$is_visible = $post['is_visible'];
     	}
@@ -129,7 +129,7 @@ class Booking extends MY_Controller {
 				$is_visible_value = 0;
 			}else{
 				$is_visible_value = 1;
-			} 
+			}
 
 			$post_data[''.$sort.'']['field_name'] =  $key;
 			$post_data[''.$sort.'']['label'] = str_replace("_"," ", ucfirst($key));
@@ -137,11 +137,11 @@ class Booking extends MY_Controller {
 			$post_data[''.$sort.'']['is_required'] = $is_required_value;
 			$post_data[''.$sort.'']['is_visible'] = $is_visible_value;
 			$post_data[''.$sort.'']['is_default'] = $default_field;
-			$post_data[''.$sort.'']['sort'] = $sort; 	
+			$post_data[''.$sort.'']['sort'] = $sort;
 
-		  $sort++;	
+		  $sort++;
         }
-      
+
 
         if( !empty($post) ){
 
@@ -163,9 +163,9 @@ class Booking extends MY_Controller {
 	        }
 
 	        	$this->session->set_flashdata('message', 'Form Updated Successful');
-        		$this->session->set_flashdata('alert_class', 'alert-success');     
-        	       	
-        }     
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+
+        }
 
         redirect('more/addon/booking/form');
 
@@ -173,7 +173,7 @@ class Booking extends MY_Controller {
 
 	public function coupons( $param = '' ) {
 		if( $param == '' ){
-			$param = 'active';			
+			$param = 'active';
 		}
 
 		if( $param == 'active' ){
@@ -194,13 +194,13 @@ class Booking extends MY_Controller {
 	}
 
 	public function settings() {
-		$user = $this->session->userdata('logged');  
+		$user = $this->session->userdata('logged');
 		$bookingSetting = $this->BookingSetting_model->findByUserId($user['id']);
 
 		$user 	   = $this->Users_model->getUser($user['id']);
 		$employees = $this->Users_model->findAllUsersByCompanyId($user->company_id);
 
-		$aasignedUsers = array();		
+		$aasignedUsers = array();
 		$setting       = array();
 
 		if( $bookingSetting ){
@@ -253,7 +253,7 @@ class Booking extends MY_Controller {
 		$this->page_data['users']   = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/settings', $this->page_data);
 	}
-	
+
 	public function preview() {
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/preview', $this->page_data);
@@ -263,14 +263,14 @@ class Booking extends MY_Controller {
     {
         postAllowed();
 
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( !empty($post) ){
 
         	if( $this->BookingCoupon_model->isCouponCodeExists(post('code')) ){
         		$this->session->set_flashdata('message', 'Coupon code already taken');
-        		$this->session->set_flashdata('alert_class', 'alert-danger');     
+        		$this->session->set_flashdata('alert_class', 'alert-danger');
         	}else{
         		if( post('discount_amount') !== null ){
 	        		$discount_amount = post('discount_amount');
@@ -293,9 +293,9 @@ class Booking extends MY_Controller {
 	        	$bookingCoupon = $this->BookingCoupon_model->create($data);
 
 	        	$this->session->set_flashdata('message', 'Add New Coupon Successful');
-        		$this->session->set_flashdata('alert_class', 'alert-success');     
-        	}        	
-        }     
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+        	}
+        }
 
         redirect('more/addon/booking/coupons');
 
@@ -306,7 +306,7 @@ class Booking extends MY_Controller {
 
     	$id = post('cid');
     	$coupon = $this->BookingCoupon_model->getById($id);
-    	
+
     	$this->page_data['coupon'] = $coupon;
 		$this->load->view('online_booking/ajax_edit_coupon', $this->page_data);
     }
@@ -316,7 +316,7 @@ class Booking extends MY_Controller {
     	$id = $this->BookingCoupon_model->deleteUserCoupon(post('cid'));
 
 		$this->activity_model->add("Coupon #$id Deleted by User:".logged('name'));
-		
+
 		$this->session->set_flashdata('message', 'Coupon has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -346,11 +346,11 @@ class Booking extends MY_Controller {
         		'date_valid_from' => date("Y-m-d",strtotime(post('valid_from'))),
         		'date_valid_to' => date("Y-m-d",strtotime(post('valid_to'))),
         		'used_per_coupon' => post('uses_max'),
-        		'status' => post('status'),        		
+        		'status' => post('status'),
     		));
 
     		$this->session->set_flashdata('message', 'Coupon was successfully updated');
-        	$this->session->set_flashdata('alert_class', 'alert-success');     
+        	$this->session->set_flashdata('alert_class', 'alert-success');
 
     	}else{
     		$this->session->set_flashdata('message', 'Coupon not found');
@@ -364,7 +364,7 @@ class Booking extends MY_Controller {
     {
         postAllowed();
 
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( !empty($post) ){
@@ -378,28 +378,28 @@ class Booking extends MY_Controller {
         	$bookingCoupon = $this->BookingCategory_model->create($data);
 
         	$this->session->set_flashdata('message', 'Add New Category Successful');
-        	$this->session->set_flashdata('alert_class', 'alert-success');       	
+        	$this->session->set_flashdata('alert_class', 'alert-success');
         }
 
-        redirect('more/addon/booking/products');    	
+        redirect('more/addon/booking/products');
     }
 
     public function ajax_edit_category()
     {
     	$id = post('cat_id');
     	$category = $this->BookingCategory_model->getById($id);
-    	
+
     	$this->page_data['category'] = $category;
     	$this->page_data['category_id'] = $id;
 		$this->load->view('online_booking/ajax_edit_category', $this->page_data);
-    }  
-    
+    }
+
     public function ajax_edit_service_item()
     {
     	$id = post('siid');
     	$service_item = $this->BookingServiceItem_model->getById($id);
     	$category = $this->BookingCategory_model->getAll();
-    	
+
     	$this->page_data['service_item'] = $service_item;
     	$this->page_data['category'] = $category;
     	$this->page_data['service_item_id'] = $id;
@@ -409,7 +409,7 @@ class Booking extends MY_Controller {
     public function update_category()
     {
     	postAllowed();
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( !empty($post) ) {
@@ -418,28 +418,28 @@ class Booking extends MY_Controller {
 
         	if($cat) {
 	            $this->BookingCategory_model->update($cat->id, array(
-	                'name' => post('category_name'),        
+	                'name' => post('category_name'),
 	            ));
 
 	            $this->session->set_flashdata('message', 'Category was successfully updated');
-	            $this->session->set_flashdata('alert_class', 'alert-success'); 
+	            $this->session->set_flashdata('alert_class', 'alert-success');
         	} else {
 	            $this->session->set_flashdata('message', 'Coupon not found');
 	            $this->session->set_flashdata('alert_class', 'alert-danger');
         	}
         } else {
             $this->session->set_flashdata('message', 'Post value is empty');
-            $this->session->set_flashdata('alert_class', 'alert-danger');        	
-        }   
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
 
-        redirect('more/addon/booking/products'); 	
-    }     
+        redirect('more/addon/booking/products');
+    }
 
     public function save_service_item()
     {
         postAllowed();
 
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
 		$config['upload_path'] = './uploads/service_item/';
@@ -474,16 +474,16 @@ class Booking extends MY_Controller {
         	$bookingServiceItem = $this->BookingServiceItem_model->create($data);
 
         	$this->session->set_flashdata('message', 'Add New Service/Item Successful');
-        	$this->session->set_flashdata('alert_class', 'alert-success');       	
+        	$this->session->set_flashdata('alert_class', 'alert-success');
         }
 
-        redirect('more/addon/booking/products');    	
-    }  
+        redirect('more/addon/booking/products');
+    }
 
     public function update_service_item()
     {
     	postAllowed();
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
 		$config['upload_path'] = './uploads/service_item/';
@@ -499,7 +499,7 @@ class Booking extends MY_Controller {
 		} else {
 			$data = array('upload_data' => $this->upload->data());
 			$product_image = $data['upload_data']['file_name'];
-		}                
+		}
 
         if( !empty($post) ) {
         	$service_item_id = $post['service_item_id'];
@@ -507,19 +507,19 @@ class Booking extends MY_Controller {
 
         	if($product_image != '') {
         		$to_update = array(
-	            	'category_id' => post('category_id'),   
-	                'name' => post('name'),   
-	                'description' => post('description'),   
-	                'price' => post('price'),   
+	            	'category_id' => post('category_id'),
+	                'name' => post('name'),
+	                'description' => post('description'),
+	                'price' => post('price'),
 	                'price_unit' => post('price_unit'),
 	                'image' => $product_image
 	            );
         	} else {
         		$to_update = array(
-	            	'category_id' => post('category_id'),   
-	                'name' => post('name'),   
-	                'description' => post('description'),   
-	                'price' => post('price'),   
+	            	'category_id' => post('category_id'),
+	                'name' => post('name'),
+	                'description' => post('description'),
+	                'price' => post('price'),
 	                'price_unit' => post('price_unit')
 	            );
         	}
@@ -528,18 +528,18 @@ class Booking extends MY_Controller {
 	            $this->BookingServiceItem_model->update($siid->id, $to_update);
 
 	            $this->session->set_flashdata('message', 'Service/Item was successfully updated');
-	            $this->session->set_flashdata('alert_class', 'alert-success'); 
+	            $this->session->set_flashdata('alert_class', 'alert-success');
         	} else {
 	            $this->session->set_flashdata('message', 'Service/Item not found');
 	            $this->session->set_flashdata('alert_class', 'alert-danger');
         	}
         } else {
             $this->session->set_flashdata('message', 'Post value is empty');
-            $this->session->set_flashdata('alert_class', 'alert-danger');        	
-        }   
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
 
-        redirect('more/addon/booking/products'); 	
-    }      
+        redirect('more/addon/booking/products');
+    }
 
     public function delete_category()
     {
@@ -550,19 +550,19 @@ class Booking extends MY_Controller {
 
 		/* Delete Service/items associated with category */
 		$this->activity_model->add("Service/Item #$category_id Deleted by User:".logged('name'));
-		
+
 		$this->session->set_flashdata('message', 'Booking Category has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
 		redirect('more/addon/booking/products');
-    }    
+    }
 
     public function delete_service_item()
     {
     	$id = $this->BookingServiceItem_model->deleteServiceItem(post('siid'));
 
 		$this->activity_model->add("Service/Item #$id Deleted by User:".logged('name'));
-		
+
 		$this->session->set_flashdata('message', 'Service/Item has been Deleted Successfully');
 		$this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -573,12 +573,12 @@ class Booking extends MY_Controller {
     {
     	postAllowed();
 
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         $userSetting = $this->BookingSetting_model->findByUserId($user['id']);
         if( $userSetting ){
-        	$data = array(        		
+        	$data = array(
         		'page_title' => post('page_title'),
         		'page_introduction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
@@ -647,7 +647,7 @@ class Booking extends MY_Controller {
 	        	if( !empty($assigned_batch_data) ){
 	        		$this->BookingScheduleAssignedUser_model->batchInsert($assigned_batch_data);
 	        	}
-        	}        	
+        	}
         }
 
         $json_data = array('is_success' => true);
@@ -658,7 +658,7 @@ class Booking extends MY_Controller {
     public function ajax_save_time_slot()
     {
         postAllowed();
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         $this->BookingTimeSlot_model->deleteAllUserTimeSlots($user['id']);
@@ -671,13 +671,13 @@ class Booking extends MY_Controller {
 	                'time_start' => $t['time_start'],
 	                'time_end' => $t['time_end'],
 	                'days' => $days,
-	                'availability' => post('soonest_availability'),                
+	                'availability' => post('soonest_availability'),
 	                'date_created' => date("Y-m-d H:i:s")
 	            );
 	            $bookingTimeSlots = $this->BookingTimeSlot_model->create($data);
         	}
         }
-        
+
         $json_data = array('is_success' => true);
 
         echo json_encode($json_data);
@@ -686,7 +686,7 @@ class Booking extends MY_Controller {
     public function ajax_save_service_item_visible_status()
     {
         postAllowed();
-        $user = $this->session->userdata('logged');        
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( !empty($post) ) {
@@ -694,7 +694,7 @@ class Booking extends MY_Controller {
         	$is_visible = $post['is_visible'];
         	$siid = $this->BookingServiceItem_model->getById($service_item_id);
 
-    		$to_update = array(   
+    		$to_update = array(
                 'is_visible' => $is_visible
             );
 
@@ -705,18 +705,18 @@ class Booking extends MY_Controller {
 	            $is_success = false;
         	}
         }
-        
+
         $json_data = array('is_success' => $is_success);
 
         echo json_encode($json_data);
-    }    
+    }
 
     public function delete_time_slot()
     {
         $id = $this->BookingTimeSlot_model->deleteUserTimeSlot(post('tid'));
 
         $this->activity_model->add("Time Slot #$id Deleted by User:".logged('name'));
-        
+
         $this->session->set_flashdata('message', 'Time slot has been Deleted Successfully');
         $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -725,7 +725,7 @@ class Booking extends MY_Controller {
 
     public function inquiries()
     {
-    	$user      = $this->session->userdata('logged'); 
+    	$user      = $this->session->userdata('logged');
     	$inquiries = $this->BookingInquiry_model->findAllByUserId($user['id']);
 
     	$this->page_data['inquiries'] = $inquiries;
@@ -736,7 +736,7 @@ class Booking extends MY_Controller {
     {
     	$id = post('iid');
     	$inquiry = $this->BookingInquiry_model->findById($id);
-    	
+
     	$this->page_data['inquiry'] = $inquiry;
 		$this->load->view('online_booking/ajax_get_inquiry_details', $this->page_data);
     }
@@ -748,7 +748,7 @@ class Booking extends MY_Controller {
 
 	public function front_schedule()
 	{
-		$this->load->view('online_booking/front_items', $this->page_data);
+		$this->load->view('online_booking/front_scheduler', $this->page_data);
 	}
 
 }

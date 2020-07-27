@@ -16,6 +16,56 @@
     position: fixed;
     right: 0px;
 }
+.sc-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.col-day {
+    display: block;
+    width:14.2%;
+    float: left;
+    text-align: center;
+}
+.container-availability button.unavailable {
+    background: #d4d4d4;
+    color: black;
+    cursor: not-allowed;
+    pointer-events:none;
+}
+.container-availability button {
+    padding: 10px;
+    display: block;
+    border: 1px solid #afacac;
+    margin: 0 auto;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
+}
+.container-availability button.active {
+    background: #1feaff;
+}
+span.txt-day {
+    display: block;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.container-availability {
+    border-top: 1px solid #afacac;
+    margin: 9px 22px;
+    padding-top: 10px;
+    display: block;
+    font-size: 13px;
+}
+span.txt-date {
+    display: block;
+    text-align: center;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+.sc-container {
+    border-top: 1px solid #afacac;
+}
 .category-grid .product .product__img__cnt {
     height: 250px;
     overflow: hidden;
@@ -83,6 +133,25 @@ a.view-grid {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 20px;
+}
+.opt-button {
+    position: absolute;
+    right: 0;
+    margin-right: 7px;
+    margin-top: 3px;
+}
+.opt-button a {
+    border: 1px solid green;
+    padding: 2px;
+    border-radius: 100px;
+    color: green;
+    width: 26px;
+    display: block;
+    text-align: center;
+}
+.opt-button a:hover {
+    background: green;
+    color: white;
 }
 .category-list .product-list {
     list-style: none;
