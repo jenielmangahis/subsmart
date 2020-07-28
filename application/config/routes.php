@@ -186,7 +186,8 @@ $route['booking/delete_time_slot'] = 'booking/delete_time_slot';
 $route['booking/ajax_save_service_item_visible_status'] = 'booking/ajax_save_service_item_visible_status';
 $route['more/addon/inquiries'] = 'booking/inquiries';
 $route['booking/_inquiry_details'] = 'booking/ajax_get_inquiry_details';
-$route['booking/products'] = 'booking/front_items';
+//$route['booking/products'] = 'booking/front_items';
+$route['booking/products/(:any)'] = 'booking/front_items/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';

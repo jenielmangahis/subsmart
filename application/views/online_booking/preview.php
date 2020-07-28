@@ -36,11 +36,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-12">
                                         <div style="margin-bottom: 5px;">Booking Page URL</div>
                                         <div style="margin-bottom: 10px;">
-                                            <textarea style="min-height: 100px !important;" class="input-focus form-control" rows="3" readonly="" id="code.pageUrl">https://www.nsmartrac.com/public/widget/booking/products/c47dc3fa8aa0b78a7f4</textarea>
+                                            <textarea style="min-height: 100px !important;" class="input-focus form-control" id="product-url" readonly="">
+                                                <?php echo base_url('/booking/products/' . $eid); ?></textarea>
                                         </div>
                                         <div class="c2c">
                                             <div class="c2c-confirm hide" data-clipboard="copied" data-ref="code.pageUrl">copied</div>
-                                            <a class="a-ter" data-clipboard="copy" data-ref="code.pageUrl" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
+                                            <a class="a-ter copy-clipboard" href="#"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
                                         </div>
                                     </div>
                                 </div>    
@@ -103,3 +104,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    $(".copy-clipboard").click(function(){
+      var copyText = document.getElementById("product-url");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+      document.execCommand("copy");
+    });
+});
+</script>

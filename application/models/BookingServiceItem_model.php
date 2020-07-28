@@ -104,6 +104,18 @@ class BookingServiceItem_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllUserProductsByCategoryId( $user_id , $category_id )
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('category_id', $category_id);
+        $this->db->where('user_id', $user_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 
 /* End of file BookingCoupon_modal.php */
