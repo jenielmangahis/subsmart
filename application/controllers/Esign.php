@@ -4,6 +4,12 @@ ini_set('max_input_vars', 30000);
 
 class Esign extends MY_Controller {
 
+	public function __construct()
+    {
+        parent::__construct();
+        $this->checkLogin();
+    }
+
 	public function index()
 	{
 		$this->load->model('Users_sign_model', 'Users_sign_model');

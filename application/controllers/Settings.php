@@ -6,6 +6,7 @@ class Settings extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->checkLogin();
 		$this->page_data['page']->title = 'Settings';
 		$this->page_data['page']->menu = 'settings';
 

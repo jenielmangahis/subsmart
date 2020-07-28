@@ -744,7 +744,7 @@ if (!function_exists('getCompanyFolder')){
             mkdir('./uploads/');
         }
 
-        if(empty($company->folder_name)){
+        if($company->folder_name == ''){
             $folder_name = generateRandomString();
             while(file_exists('./uploads/' . $folder_name . '/')){
                 $folder_name = generateRandomString();  
@@ -758,6 +758,10 @@ if (!function_exists('getCompanyFolder')){
                 $company_folder = $folder_name;
             }
         } else {
+            if(!file_exists('./uploads/' . $company->folder_name . '/')){
+                mkdir('./uploads/' . $company->folder_name . '/');    
+            }
+
             $company_folder = $company->folder_name;
         }
 
@@ -801,7 +805,7 @@ if (!function_exists('getFolders')) {
                  'select folder_id, count(*) as `total_files` from filevault group by folder_id'.
                ') e on e.folder_id = a.folder_id '.
 
-               'where a.company_id = ' . $company_id . ' ' . $parent_filter . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete <= 0 ' . $parent_filter . 
 
                'order by create_date ASC';
 
@@ -832,7 +836,7 @@ if (!function_exists('getFiles')) {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and folder_id = ' . $folder_id . ' ' . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete <= 0 and a.folder_id = ' . $folder_id . ' ' . 
 
                'order by created ASC';
 
@@ -849,13 +853,78 @@ if (!function_exists('getFiles')) {
 
 if (!function_exists('searchFilesOrFolders')) {
 
-    function searchFilesOrFolders($keyword, $findfolders, $findfiles){
+    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0){
         $CI = &get_instance();
         $company_id = logged('company_id');
         
-        $sql = 'select ';
+        $sql_folders = 'select '.
+
+                       'parent_id as in_folder, '.
+                       'concat("/root",path) as `full_path`, '.
+                       'folder_name as searched_title '.
+
+                       'from file_folders '.
+
+                       'where company_id = ' . $company_id . ' and softdelete <= 0 and (lower(folder_name) like "%'. $keyword .'%" '.
+                          'or lower(description) like "%'. $keyword .'%" '.
+                          'or lower(path) like "%'. $keyword .'%" '.
+                          'or create_date like "%'. $keyword .'%")';
+
+        $sql_files = 'select '.
+
+                     'folder_id as in_folder, '.
+                     'concat("/root",file_path) as `full_path`, '.
+                     'title as searched_title '.
+
+                     'from filevault '.
+
+                     'where company_id = ' . $company_id . ' and softdelete <= 0 and (lower(title) like "%'. $keyword .'%" '.
+                        'or lower(description) like "%'. $keyword .'%" '.
+                        'or lower(file_path) like "%'. $keyword .'%" '.
+                        'or created like "%'. $keyword .'%")';
+
+        $files_and_folders = array(
+            'folders' => array(),
+            'files' => array()
+        );
+
+        if($findfolders > 0){
+            $files_and_folders['folders'] = $CI->db->query($sql_folders)->result_array();
+        }
+
+        if($findfiles > 0){
+            $files_and_folders['files'] = $CI->db->query($sql_files)->result_array();
+        }
+
+        return $files_and_folders;
+
     }
 
+}
+
+if (!function_exists('getNewTasks')){
+
+    function getNewTasks(){
+        $CI = &get_instance();
+        $uid = logged('id');
+        $company_id = logged('company_id');
+
+        $sql = 'select '.
+
+               'a.task_id, '.
+               'a.subject, '.
+               'a.date_created '.
+
+               'from tasks a '.
+               'left join tasks_participants b on b.task_id = a.task_id '.
+
+               'where a.company_id = ' . $company_id . ' ' .
+                 'and b.user_id = ' . $uid . ' ' .
+                 'and b.is_assigned = 1 ' .
+                 'and a.view_count <= 0';
+
+        return $CI->db->query($sql)->result_array();    
+    }
 }
 
 function getFolderManagerView($isMain = true){

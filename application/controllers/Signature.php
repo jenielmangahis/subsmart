@@ -9,7 +9,8 @@ class Signature extends MY_Controller {
 
 
 	public function __construct(){
-		parent::__construct();
+        parent::__construct();
+        $this->checkLogin();
 		$this->page_data['page']->title = 'nSmart';
 	}
 

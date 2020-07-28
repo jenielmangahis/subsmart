@@ -13,6 +13,7 @@ class Timesheet extends MY_Controller {
 	{
 
 		parent::__construct();
+		$this->checkLogin();
 		add_css(array(
             "assets/css/timesheet.css",
         ));

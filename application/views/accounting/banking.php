@@ -188,7 +188,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td><input type="checkbox"></td>
                                     <td>06/29/2020</td>
-                                    <td>CHECK #2701 2701</td>
+                                    <td>CHECK #2701</td>
                                     <td>Mike Bell Jr</td>
                                     <td></td>
                                     <td>$320</td>
@@ -385,7 +385,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div id="addAccountModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <div class="modal-content">
+            <div class="modal-content" style="height: 100%;">
                 <div class="modal-header">
                     <h4 class="modal-title">Connect an account</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
@@ -450,7 +450,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="border-bottom: 0;">
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-2x"></i></button>
                 </div>
                 <div class="modal-body">

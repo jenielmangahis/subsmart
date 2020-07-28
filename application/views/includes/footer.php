@@ -45,7 +45,7 @@
 <!-- <script src="<?php //echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
 <script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
 <script src="<?php //echo $url->assets ?>jSignature-master/libs/modernizr.js"></script> -->
-<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>	
+<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>
 <!-- <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
 <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
 <script src="<?php echo $url->assets ?>js/sign.js"></script>

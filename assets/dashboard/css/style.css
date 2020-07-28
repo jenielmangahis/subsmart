@@ -8180,7 +8180,7 @@ body{
     color: #8d9096;
     margin: 0;
 }
-.shortcuts-box li{    
+.shortcuts-box li{
     border-top: 1px solid #e3e5e8;
 }
 .shortcuts-box li a{
@@ -8589,7 +8589,7 @@ a.backstep i{margin: 0 5px 0 0;}
 }
 #side-menu-edit,#side-menu-cus-tx,#side-menu-adjustment,
 #side-menu {
-    background: #fff;   
+    background: #fff;
     position: fixed;
     top: 0;
     font-size: 14px;
@@ -9051,7 +9051,7 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
 .repo-left-ac li .dropdown-menu{
     padding: 15px;
     border-radius: 0;
-    border: 1px solid #e3eaf3;   
+    border: 1px solid #e3eaf3;
     margin: -5px 0 0;
 }
 .repo-left-ac li .dropdown-menu h5{

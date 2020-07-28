@@ -73,7 +73,7 @@ $user_id = getLoggedUserID();
                 <?php ////if (hasPermissions('plan_list')): ?>
                     <li class="has-submenu">
                         <a href="<?php echo url('/workcalender') ?>">
-                            <i class="fa fa-bookmark" aria-hidden="true"></i><span>Schedule</span>
+                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>
                         </a>
                     </li>
                 <?php //endif ?>

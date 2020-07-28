@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <table id="dataTable1" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th>Last Login</th>
+                                            <th>Clock In - Out</th>
                                             <!-- <th>Id</th>
                                             <th>Image</th> -->
                                             <th>Name</th>
@@ -85,7 +85,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <!-- <img src="<?php //echo base_url('uploads/users/default.png');?>" width="40" height="40" alt="" class="img-avatar" /> -->
                                                 <!-- </td> -->
                                                 <td>
-                                                    <?php echo $row->FName.' '.$row->LName ?>
+                                                    <?php echo ucfirst($row->FName).' '.ucfirst($row->LName) ?>
                                                 </td>
                                                 <!-- <td><?php //echo $row->email ?></td>
                                                 <td><?php //echo $row->password_plain ?></td> -->

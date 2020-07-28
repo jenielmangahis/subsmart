@@ -120,6 +120,27 @@
 									class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                                 </div>
                             </li>
+                            <?php $newtasks = getNewTasks(); ?>
+                            <li class="dropdown notification-list list-inline-item ml-auto"><a
+                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href= role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-list-alt" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
+                                    <?php } ?></a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
+                                    <!-- item-->
+                                    <h6 class="dropdown-item-text"><?php if(count($newtasks) > 0){ echo 'New Tasks (' . count($newtasks) . ')'; } else { echo 'No New Tasks'; } ?></h6>
+                                    <div class="slimscroll notification-item-list">
+                                        <?php foreach ($newtasks as $key => $value) { ?>
+                                            <a href="<?php echo base_url('taskhub/view/' . $value['task_id']); ?>" class="dropdown-item notify-item active"><div class="notify-icon bg-success"></div><p class="notify-details"><?php echo $value['subject']; ?><span class="text-muted">
+                                                <?php
+                                                    $date_created = date_create($value['date_created']);
+                                                    echo date_format($date_created, "F d, Y h:i:s");
+                                                ?>
+                                            </span></p>
+                                        </a>
+                                        <?php } ?>
+                                    </div><!-- All--> <a href="<?php echo base_url('taskhub') ?>"
+                                    class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
+                                </div>
+                            </li>
                             <li class="dropdown notification-list list-inline-item">
                                 <div class="dropdown notification-list nav-pro-img">
                                     <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">

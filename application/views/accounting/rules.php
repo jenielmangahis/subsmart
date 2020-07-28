@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <table id="rules_table" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
-                                <th></th>
+                                <th><input type="checkbox"></th>
                                 <th>Priority</th>
                                 <th>Rule Name</th>
                                 <th>Conditions</th>
@@ -45,16 +45,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </tr>
                             </thead>
                             <tbody>
+                            <?php foreach ($rules as $rule): ?>
                             <tr>
-                                <td><input type="checkbox"></td>
-                                <td>Test</td>
+                                <td><input type="checkbox" value="<?php echo $rule->id;?>"></td>
+                                <td><?php echo $rule->rules_name;?></td>
                                 <td>Test</td>
                                 <td>Test</td>
                                 <td></td>
-                                <td>Test</td>
+                                <td><?php echo ($rule->auto==1)?"Auto":" ";?></td>
                                 <td></td>
-                                <td><a href="">Test</a></td>
+                                <td><a href="#">Test</a></td>
                             </tr>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>
                         </div>

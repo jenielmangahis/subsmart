@@ -58,4 +58,9 @@ class Rules_model extends MY_Model
         $this->db->insert_batch('accounting_category',$data);
         return true;
     }
+
+    public function getRules(){
+        $qry = $this->db->get('accounting_rules');
+        return $qry->result();
+    }
 }

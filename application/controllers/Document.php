@@ -13,7 +13,7 @@ class Document extends MY_Controller {
 	{
 
 		parent::__construct();
-
+		$this->checkLogin();
 		$this->page_data['page']->title = 'Company Management';
 
 		$this->page_data['page']->menu = 'companies';	

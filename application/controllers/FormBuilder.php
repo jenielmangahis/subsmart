@@ -8,6 +8,7 @@ class FormBuilder extends MY_Controller {
 	{
 
 		parent::__construct();
+		$this->checkLogin();
 		$this->load->library('form_builder');
 		$this->load->model('FormsBuilder_model', 'formsbuilder_model');
 		// $this->page_data['page']->title = 'Form Builder';

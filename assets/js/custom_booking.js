@@ -208,12 +208,16 @@ var loadEditPreviewImg=function(event){
 
 $(".add-custom-field").click(function(){
     var totalRows = $(".tbl-custom-fields tr").length;
+    //var fieldName = $("#field_name").val();
+    var fieldNameValue = $("#field_name").val();
     var fieldName = $("#field_name").val();
+    fieldName = fieldName.replace(/\s+/g, '_');
+    fieldName = fieldName.toLowerCase();
     var newRowNum = totalRows + 1;
 
     //Left Pane
-    var col1 = '<td width="60%">'+fieldName+'</td>';
-    var col2 = '<td width="20%"><div class="checkbox checkbox-sm"><input type="checkbox" name="is_visible['+fieldName+'][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="'+fieldName+'" id="is_visible_'+fieldName+'"><label for="is_visible_'+fieldName+'"></label></td>';
+    var col1 = '<td width="60%">'+fieldNameValue+' <input type="hidden" id="is_field['+fieldName+'][]" name="is_field['+fieldName+'][]" value="'+fieldNameValue+'" /> </td>';
+    var col2 = '<td width="20%"><div class="checkbox checkbox-sm"><input type="checkbox" checked="" name="is_visible['+fieldName+'][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="'+fieldName+'" id="is_visible_'+fieldName+'"><label for="is_visible_'+fieldName+'"></label></td>';
     var col3 = '<td width="20%"><div class="checkbox checkbox-sm"><input type="checkbox" name="is_required['+fieldName+'][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="'+fieldName+'" id="is_required_'+fieldName+'"><label for="is_required_'+fieldName+'"></label></td>';
     var col4 = '<td width="20%"><a href="javascript:void(0);" class="delete-custom-field" data-row="'+newRowNum+'"><i class="fa fa-trash"></i></a></td>';
     var newRow = '<tr class="custom-row-'+newRowNum+'">' + col1 + col2 + col3 + col4 + '</tr>';

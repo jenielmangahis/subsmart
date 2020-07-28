@@ -7,6 +7,7 @@ class Workstatus extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->checkLogin();
 		$this->page_data['page']->title = 'Work status Management';
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workstatus';
 	}

@@ -47,6 +47,9 @@
     width: 550px;
     margin-bottom: 72px;
 }
+#fileUpload .modal-content{
+    height: 100%;
+}
 #fileUpload .modal-footer-upload-file{
     padding: 8px 15px;
     background: #393A3D;
@@ -509,17 +512,6 @@
 #receiptModal .modal-body .form-element {
     margin-top: 20px;
 }
-.select-text-dp{
-    height: 46px;
-    box-shadow: none;
-    border: 2px solid #e0e0e0;
-    border-radius: 2px;
-    color: #363636;
-    font-size: 16px;
-    padding-left: 10px;
-    display: block;
-    width: 100%;
-}
 #receiptModal .modal-body .memo-textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
@@ -531,7 +523,12 @@
     color: #363636;
 }
 #receiptModal .modal-footer-uploadedReceipt{
+    position: fixed;
+    bottom: 0;
     padding: 10px;
+    height: auto;
+    width: 100%;
+    background: #ffffff;
 }
 #receiptModal .modal-footer-uploadedReceipt .btn-leftSide{
     background-color: transparent;

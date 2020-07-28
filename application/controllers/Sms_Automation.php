@@ -11,7 +11,7 @@ class Sms_Automation extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-
+		
 		$this->page_data['page']->title = 'SMS Automation';
 
 		$this->page_data['page']->menu = '';	

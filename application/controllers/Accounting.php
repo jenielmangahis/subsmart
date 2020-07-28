@@ -11,6 +11,7 @@ class Accounting extends MY_Controller {
 		$this->load->model('terms_model');
         $this->load->model('expenses_model');
         $this->load->model('rules_model');
+        $this->load->model('receipt_model');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css?v=".rand(),
@@ -116,6 +117,7 @@ class Accounting extends MY_Controller {
     public function rules()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rules'] = $this->rules_model->getRules();
         $this->load->view('accounting/rules', $this->page_data);
     }
 
@@ -483,4 +485,55 @@ class Accounting extends MY_Controller {
 
     }
 
+    /*** Receipt ***/
+    public function uploadReceiptImage(){
+        $img = $this->input->post('form_data');
+        $config = array(
+            'upload_path' => './uploads/Accounting/',
+            'allowed_types' => 'gif|jpg|png|jpeg',
+            'overwrite' => TRUE,
+            'max_size' => '5000',
+            'max_height' => '0',
+            'max_width' => '0',
+            'encrypt_name' => TRUE
+        );
+        $this->load->library('upload', $config);
+        if ($this->upload->do_upload()){
+            $data = array('form_data' => $this->upload->data());
+            $file = $this->upload->data();
+            $data = array(
+                'receipt_img' => $file['file_name']
+            );
+            $this->db->insert('accounting_receipts',$data);
+            echo json_encode($data);
+        }
+
+    }
+
+    public function updateReceipt(){
+        $new_data = array(
+            'document_type' => $this->input->post('document_type'),
+            'payee_id' => $this->input->post('payee_id'),
+            'bank_account' => $this->input->post('bank_account'),
+            'transaction_date' => $this->input->post('transaction_date'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'total_amount' => $this->input->post('total_amount'),
+            'memo' => $this->input->post('memo'),
+            'ref_number' => $this->input->post('ref_number')
+        );
+        $update = $this->receipt_model->updateReceipt($new_data);
+        if ($update == true){
+            $this->session->set_flashdata('receipt_updated','Receipt updated.');
+            redirect('accounting/receipts');
+        }else{
+            $this->session->set_flashdata('receipt_updateFailed','Something is wrong in the process.');
+            redirect('accounting/receipts');
+        }
+    }
+
+    public function deleteReceiptData(){
+        $id = $this->input->post('id');
+        $this->receipt_model->deleteReceiptData($id);
+    }
 }

@@ -18,8 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-8">
                                 <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="border: 2px grey dashed;">
-                                    <div class="fallback">
-                                        <input name="file" type="file" multiple />
+                                    <div class="fallback ">
+                                        <input name="file" id="receiptImg" type="file" multiple />
                                     </div>
                                 </form>
                             </div>
@@ -167,15 +167,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="receiptRow" data-toggle="modal" data-target="#receiptModal">
+                                        <tr class="receiptRow">
                                             <td><input type="checkbox"></td>
-                                            <td><img src="<?php echo base_url('assets/img/accounting/default-img.png') ?>" alt="Image" height="100" width="100"></td>
-                                            <td>CHECK #2701 2701</td>
-                                            <td>Mike Bell Jr</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><a href="">Review</a></td>
+                                            <td data-toggle="modal" data-target="#receiptModal"><img src="<?php echo base_url('assets/img/accounting/default-img.png') ?>" alt="Image" height="100" width="100"></td>
+                                            <td data-toggle="modal" data-target="#receiptModal"></td>
+                                            <td data-toggle="modal" data-target="#receiptModal"></td>
+                                            <td data-toggle="modal" data-target="#receiptModal"></td>
+                                            <td data-toggle="modal" data-target="#receiptModal"></td>
+                                            <td data-toggle="modal" data-target="#receiptModal"></td>
+                                            <td>
+                                                <a href="#" style="display: inline" data-toggle="modal" data-target="#receiptModal">Review</a>&nbsp;
+                                                <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
+                                                    <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li><a href="#" type="submit" id="deleteReceipt" data-id="">Delete</a></li>
+                                                    </ul>
+                                                </div>&nbsp;
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -228,8 +236,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h2>Upload receipt</h2>
                         <i class="fa fa-times fa-lg" data-dismiss="modal"></i>
                     </div>
+                    <form action="<?php echo site_url()?>accounting/updateReceipt" method="post">
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row" style="margin-bottom: 100px">
                             <div class="col-md-7">
                                 <div class="viewer-backdrop-container">
                                     <div class="viewer-backdrop">
@@ -244,62 +253,74 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="receiptDetailsContainer">
                                     <div class="step-header">Receipt details</div>
                                     <div class="step-header-text">Double-check the details and add any missing info.</div>
-                                    <form action="">
                                         <div class="form-group form-element">
                                             <span>Document Type</span>
-                                            <select name="" id="" class="form-control">
-                                                <option value="">Receipt</option>
-                                                <option value="">Bill</option>
+                                            <input type="hidden" id="receipt_id">
+                                            <select name="document_type" id="" class="form-control">
+                                                <option>Receipt</option>
+                                                <option>Bill</option>
                                             </select>
                                         </div>
                                         <hr>
                                         <div class="form-group">
                                             <label for="">Payee</label>
-                                            <input type="text" list="payeeList" class="select-text-dp" placeholder="Select a payee (optional)">
-                                            <datalist id="payeeList">
-                                                <option>&plus;&nbsp;Add new</option>
-                                            </datalist>
+                                            <select name="payee_id" id="" class="form-control select2">
+                                                <option disabled selected>Select payee (optional)</option>
+                                                <option disabled>&plus;&nbsp;Add new</option>
+                                                <option value="1">Betty Fuller</option>
+                                                <option value="2">Brian Boyden</option>
+                                                <option value="3">Ken Curry</option>
+                                                <option value="4">Mary Brown</option>
+                                                <option value="5">Patricia Motes</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Bank/Credit Account</label>
-                                            <input type="text" list="creditAccountList" class="select-text-dp" placeholder="Select an account">
-                                            <datalist id="creditAccountList">
-                                                <option>&plus;&nbsp;Add new</option>
-                                            </datalist>
+                                            <select name="bank_account" id="" class="form-control select2">
+                                                <option disabled>&plus;&nbsp;Add new</option>
+                                                <option>Billable Expenses</option>
+                                                <option>Gross Receipt</option>
+                                                <option>Guardian</option>
+                                                <option>Mary Brown</option>
+                                                <option>Sales</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Payment Date</label>
-                                            <input type="text" class="form-control" placeholder="Select a date">
+                                            <input type="date" name="transaction_date" class="form-control" placeholder="Select a date">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Account/Category</label>
-                                            <input type="text" list="accountCategoryList" class="select-text-dp" placeholder="Select an category">
-                                            <datalist id="accountCategoryList">
-                                                <option>Billable expenses income</option>
-                                                <option>Gross Receipts</option>
+                                            <select name="category" id="" class="form-control select2">
+                                                <option disabled>&plus;&nbsp;Add new</option>
+                                                <option>Commissions & Fees</option>
+                                                <option>Billable Expenses</option>
+                                                <option>Gross Receipt</option>
                                                 <option>Guardian</option>
-                                                <option>Refund-Allowances</option>
+                                                <option>Mary Brown</option>
                                                 <option>Sales</option>
-                                                <option>Sales of Product Income</option>
-                                                <option>&plus;&nbsp;Add new</option>
-                                            </datalist>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Description</label>
-                                            <input type="text" class="form-control" placeholder="Enter a description">
+                                            <input type="text" name="description" class="form-control" placeholder="Enter a description">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Total amount (Inclusive of tax)*</label>
-                                            <input type="text" class="form-control" placeholder="Enter amount">
+                                            <input type="text" name="total_amount" id="totalAmount" class="form-control" placeholder="Enter amount">
                                         </div>
                                         <div class="form-group">
                                             <label for="memo">Memo</label>
-                                            <textarea name="" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)"></textarea>
+                                            <textarea name="memo" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <a href="" style="font-weight: bolder;color: color: #0077c5;"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
+                                            <a href="#" style="font-weight: bolder;color: color: #0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
                                         </div>
-                                    </form>
+                                        <div class="form-group" id="refNumber" style="display: none">
+                                            <label for="">Ref no.</label>
+                                            <input type="text" name="ref_number" class="form-control">
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -308,15 +329,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button class="btn btn-default btn-leftSide">Cancel</button>
                         <button class="btn btn-default btn-leftSide" style="margin-left: 10px">Delete this receipt</button>
                         <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createRules"  style="border-radius: 36px 0 0 36px">Save and next</button>
+                            <button type="submit" class="btn btn-success"  style="border-radius: 36px 0 0 36px">Save and next</button>
                             <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
                                 <span class="fa fa-caret-down"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" class="dropdown-item disabled">Export rules</a></li>
-                                <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#importRules">Import rules</a></li>
+                                <li><a href="#" class="dropdown-item">Save and close</a></li>
                             </ul>
                         </div>
                     </div>
+                    </form>
                 </div>
 
             </div>
@@ -327,6 +348,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
+
     // DataTable JS
     $(document).ready(function() {
         $('#forReview_receipts_tbl').DataTable({
@@ -341,7 +363,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('.banking-sub-tab').click(function(){
         $(this).parent().addClass('banking-sub-active').siblings().removeClass('banking-sub-active')
     });
+    $("#totalAmount").change(function () {
+        if (!$.isNumeric($(this).val()))
+            $(this).val('0').trigger('change');
+        $(this).val(parseFloat($(this).val(),10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+    });
 
+    $('#toggleRefNumber').click(function () {
+       $('#refNumber').toggle();
+    });
 </script>
 
 

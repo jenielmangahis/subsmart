@@ -702,11 +702,17 @@ class Customer extends MY_Controller
     }
 
     public function add_advance()
-
     {
         $user_id = logged('id');
         $this->page_data['plans'] = "";
         $this->load->view('customer/add_advance', $this->page_data);
+    }
+
+    public function add_lead()
+    {
+        $user_id = logged('id');
+        $this->page_data['plans'] = "";
+        $this->load->view('customer/add_lead', $this->page_data);
     }
 
 
