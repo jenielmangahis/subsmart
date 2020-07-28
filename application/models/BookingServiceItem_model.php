@@ -62,7 +62,7 @@ class BookingServiceItem_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where('user_id', $user_id);
+        //$this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
@@ -82,7 +82,8 @@ class BookingServiceItem_model extends MY_Model
         return $num_rows;
     }       
 
-    public function deleteServiceItem($id){
+    public function deleteServiceItem($id)
+    {
         $user_id = logged('id');
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
     } 
@@ -91,6 +92,17 @@ class BookingServiceItem_model extends MY_Model
         $user_id = logged('id');
         $this->db->delete($this->table, array('user_id' => $user_id, 'category_id' => $id));        
     }   
+
+    public function getAllProductsByCategoryId( $category_id )
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('category_id', $category_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 
 }
 
