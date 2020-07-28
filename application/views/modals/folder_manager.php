@@ -29,12 +29,27 @@
                   <p id="folders_path"></p>
                 </div>
                 <div class="col-md-6 align-middle">
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="edit_permission" title="Edit Permission" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="delete" title="Delete Folder/File" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="add_file" title="Add File" data-toggle="tooltip"><i class="fa fa-file"></i></a>
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="create_folder" title="Create Folder" data-toggle="tooltip"><i class="fa fa-plus"></i></a>
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 float-right" control="view" title="View Details" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
-                    <a href="#" class="nodecontrol btn btn-sm btn-default pull-right float-right" control="search" title="Search File/Folder" data-toggle="tooltip"><i class="fa fa-search"></i></a>
+                  <div class="table-responsive mb-0">
+                    <table class="table table-borderless">
+                      <tbody>
+                        <tr>
+                          <td class="p-0 pb-1">
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit_permission" title="Edit Permission"><i class="fa fa-pencil"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="p-0 pb-1">
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
+                          </td>  
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div> 
             </div>
           </div>
@@ -207,7 +222,7 @@
 </div>
 
 <div id="modal-folder-manager-search" class="modal" role="dialog">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
 
     <!-- Modal content-->
     <div class="modal-content">
@@ -230,13 +245,59 @@
                   <input class="form-check-input" type="checkbox" id="modal-folder-manager-search-check-file" checked> Find File(s)
                 </label>
               </div>
-              <button type="button" class="btn btn-primary ml-3"><i class="fa fa-search">&ensp;Search</i></button>
+              <button type="button" class="btn btn-primary ml-3" id="btn-modal-folder-manager-search"><i class="fa fa-search">&ensp;Search</i></button>
             </form>
           </div>
           <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-fluid">
-              </table>
+            <div id="accordion">
+
+              <div class="card" id="search_folders_section">
+                <div class="card-header">
+                  <a class="card-link" data-toggle="collapse" href="#div_search_table_folders">
+                    <i class="fa fa-plus mr-2"></i>Folders
+                  </a>
+                </div>
+                <div id="div_search_table_folders" class="collapse">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="search_table_folders" class="table table-bordered table-sm">
+                        <thead>
+                          <tr>
+                            <th class="d-none">Folder Id</th>
+                            <th>Folder Path</th>
+                            <th>Folder Name</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" id="search_files_section">
+                <div class="card-header">
+                  <a class="collapsed card-link" data-toggle="collapse" href="#div_search_table_files">
+                    <i class="fa fa-plus mr-2"></i>Files
+                  </a>
+                </div>
+                <div id="div_search_table_files" class="collapse">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="search_table_files" class="table table-bordered table-sm">
+                        <thead>
+                          <tr>
+                            <th class="d-none">Folder Id</th>
+                            <th>File Path</th>
+                            <th>File Name</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

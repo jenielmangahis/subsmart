@@ -316,10 +316,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
                                                     <div class="dropdown">
-                                                        <a class="btn btn-primary btn-md"
-                                                           href="<?php echo url('customer/add_advance') ?>"><span
-                                                                    class="fa fa-plus"></span> New Customer</a>
-                                                        <?php //endif ?>
+                                                        <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
+                                                        <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>
                                                     </div>
                                                 </div>
                                                 <br/><br/><br/>

@@ -16,6 +16,12 @@ class Chart_of_accounts_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
+	public function updaterecords($id,$account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date)
+	{
+		$query="update chart_of_accounts set account_id = '$account_id', acc_detail_id = '$acc_detail_id', name ='$name', description ='$description', sub_acc_id = '$sub_acc_id', time ='$time', balance ='$balance', time_date ='$time_date' where id = $id";
+		echo $this->db->query($query);
+	}
+
 	public function select()  
       {  
          $query = $this->db->get('chart_of_accounts');  

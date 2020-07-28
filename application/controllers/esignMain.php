@@ -3,11 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class esignMain extends MY_Controller {
 
-	// public function __construct()
- //    {
- //        parent::__construct();
- //        $this->checkLogin();
- //    }
+	public function __construct()
+    {
+        parent::__construct();
+        $this->checkLogin();
+    }
 
 	public function index()
 	{

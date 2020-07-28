@@ -8,6 +8,7 @@ class Workcalender extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->checkLogin();
         $this->page_data['page']->title = 'Work calender';
         $this->page_data['page']->menu = 'Workcalender';
 
@@ -214,7 +215,6 @@ class Workcalender extends MY_Controller
 
     public function edit($id)
     {
-        $this->checkLogin();
 
         $company_id = logged('company_id');
         $user_id = logged('id');

@@ -34,18 +34,18 @@ $(document).ready(function(){
 // -------------------------------------------------------------------------------------------------------------
 // Load Tops events
 // -------------------------------------------------------------------------------------------------------------
-$('span[control="refresh_tops"]').click(function(){
-  $(this).addClass('fa-spin');
+  $('span[control="refresh_tops"]').click(function(){
+    $(this).addClass('fa-spin');
 
-  var top = $(this).attr('target');
-  if(top == 'most_downloads'){
-    get_most_download_files();
-  } else if(top == 'most_previews'){
-    get_most_previewd_files();
-  } else if(top == 'recent_uploads'){
-    get_recently_uploaded_files();
-  }
-});
+    var top = $(this).attr('target');
+    if(top == 'most_downloads'){
+      get_most_download_files();
+    } else if(top == 'most_previews'){
+      get_most_previewd_files();
+    } else if(top == 'recent_uploads'){
+      get_recently_uploaded_files();
+    }
+  });
 
 // -------------------------------------------------------------------------------------------------------------
 // Folder entry control events
@@ -79,10 +79,10 @@ $('span[control="refresh_tops"]').click(function(){
 
       if(current_process != ''){
         showFolderManagerNotif('Confirm Delete',
-                               'Delete' + confirm_text + '?<br>' + confirm_path, 'confirm');
+                               'Trash' + confirm_text + '?<br>' + confirm_path, 'confirm');
       }
     } else {
-      showFolderManagerNotif('Error','Please select a file or a folder to delete','error');
+      showFolderManagerNotif('Error','Please select a file or a folder to trash','error');
     }
   });
 
@@ -276,10 +276,15 @@ $('span[control="refresh_tops"]').click(function(){
     }
   });
 
+// Close folder manager alert modal
   $('#btn-modal-folder-manager-alert-cancel,#btn-modal-folder-manager-alert-ok').click(function(){
     hideFolderManagerNotif();
   });
 
+// Search for folders and files --------------------------------------------------------------------------------
+  $('#btn-modal-folder-manager-search').click(function(){
+    search_files_and_folders();
+  });
 // Document ready end ------------------------------------------------------------------------------------------
 });
 
@@ -311,6 +316,11 @@ function getFoldersAndFiles(parent_id = 0){
     },
     error: function(jqXHR, textStatus, errorThrown){
       showFolderManagerNotif(textStatus, errorThrown, 'error');
+    },
+    complete: function(jqXHR, textStatus){
+      if(modalIsOpen('#modal-folder-manager-search')){
+        hideFolderManagerSearch();
+      }
     }
   });
 }
@@ -437,6 +447,7 @@ function setFoldersAndFiles(folders, files){
     $('#folders_name').html(div.attr('fnm'));
   });
 
+// On double click folder or file
   $('tr.node > td, div.node').dblclick(function(){
     var tag = $(this).prop('tagName');
 
@@ -470,10 +481,96 @@ function setFoldersAndFiles(folders, files){
   });
 }
 
+// Search Files and Folders
+function search_files_and_folders(){
+  var keyword = $('#modal-folder-manager-search-keyword').val();
+
+  keyword = keyword.trim();
+  if(keyword == ''){
+    showFolderManagerNotif('Information','Please enter a keyword','info');
+  } else {
+    var search_folders = $('#modal-folder-manager-search-check-folder').prop('checked');
+    var search_files = $('#modal-folder-manager-search-check-file').prop('checked');
+
+    if(search_folders){
+      search_folders = 1;
+    } else {
+      search_folders = 0;
+    }
+
+    if(search_files){
+      search_files = 1;
+    } else {
+      search_files = 0;
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: base_url + "vault/search_files_and_folders",
+      data: {keyword: keyword, search_folders: search_folders, search_files: search_files},
+      success: function(data){
+        var result = jQuery.parseJSON(data);
+        var folders = result.folders;
+        var files = result.files;
+        var append_folders = '';
+        var append_files = '';
+
+        $('#search_table_folders tbody').empty();
+        $('#search_table_files tbody').empty();
+
+        $.each(folders, function(index, folder){
+          append_folders += '<tr>';
+          append_folders += '<td class="d-none">' + folder.in_folder + '</td>';
+          append_folders += '<td>' + folder.full_path + '</td>';
+          append_folders += '<td>' + folder.searched_title + '</td>';
+          append_folders += '</tr>';
+        });
+
+        $.each(files, function(index, file){
+          append_files += '<tr>';
+          append_files += '<td class="d-none">' + file.in_folder + '</td>';
+          append_files += '<td>' + file.full_path + '</td>';
+          append_files += '<td>' + file.searched_title + '</td>';
+          append_files += '</tr>';
+        });
+
+        $('#search_table_folders tbody').append(append_folders);
+        $('#search_table_files tbody').append(append_files);
+
+// On select and double click of row from tables on search
+        $('#search_table_folders tbody > tr > td, #search_table_files tbody > tr > td').click(function(){
+          var parent_row = $(this).parent('tr');
+
+          $('tr.table-primary').removeClass('table-primary');
+
+          parent_row.addClass('table-primary');
+        });
+
+        $('#search_table_folders tbody > tr > td, #search_table_files tbody > tr > td').dblclick(function(){
+          var folder_id = 0;
+          var parent_row = $(this).parent('tr');
+
+          $('tr.table-primary').removeClass('table-primary');
+
+          parent_row.addClass('table-primary');
+
+          folder_id = parent_row.children('td:eq(0)').html();
+          folder_id = folder_id.trim();
+
+          getFoldersAndFiles(folder_id);
+        });    
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        showFolderManagerNotif(textStatus, errorThrown, 'error');
+      }
+    });
+  }
+}
+
 // Update preview count function
 function update_preview_count(){
   $.ajax({
-    type: 'POST',
+    type: 'GET',
     url: base_url + "vault/update_preview/" + selected,
     success: function(){
       get_most_previewd_files();  
@@ -829,6 +926,10 @@ function hideFolderManagerNotif(){
 
 function showFolderManagerSearch(){
   $('#modal-folder-manager-search').modal('show');
+}
+
+function hideFolderManagerSearch(){
+  $('#modal-folder-manager-search').modal('hide');
 }
 
 function folderSelectedIsNotEmpty() {

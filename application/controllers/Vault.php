@@ -8,6 +8,7 @@ class Vault extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->checkLogin();
 		$this->page_data['page']->title = 'Files Management';
 		$this->page_data['page']->menu = 'vault';
 
@@ -136,6 +137,27 @@ class Vault extends MY_Controller {
 
 		$file_id = $_POST['file_id'];
 		$file = $this->vault_model->getById($file_id);
+		
+		$data = array(
+			'softdelete' => 1,
+			'softdelete_date' => date('Y-m-d h:i:s')	
+		);	
+
+		if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
+			$return['error'] = 'Error in deleting file';
+		}
+
+		echo json_encode($return);
+	}
+
+	public function remove(){
+		$return = array(
+			'folder_id' => 0,
+			'error' => ''
+		);		
+
+		$file_id = $_POST['file_id'];
+		$file = $this->vault_model->getById($file_id);
 
 		if($this->vault_model->trans_delete(array(), array('file_id' => $file_id))){
 			unlink('./uploads/' . $this->company_folder . $file->file_path);
@@ -242,6 +264,16 @@ class Vault extends MY_Controller {
 		);
 
 		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));	
+	}
+
+	public function search_files_and_folders(){
+		$keyword = $_GET['keyword'];
+		$search_folders = $_GET['search_folders'];
+		$search_files = $_GET['search_files'];
+
+		$files_and_folders = searchFilesOrFolders($keyword, $search_folders, $search_files);
+
+		echo json_encode($files_and_folders);
 	}
 
 }

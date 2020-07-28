@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/chart_of_accounts/update', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -33,6 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-12">
                                     <h3>Account</h3>
                                 </div>
+                                <input type="hidden" name="id" value="<?php echo $chart_of_accounts->id ?>">
                                 <div class="col-md-4 form-group">
                                      <label for="account_type">Account Type</label>
                                     <select name="account_type" id="account_type" class="form-control select2" required>

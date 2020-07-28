@@ -35,6 +35,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     th{
         text-align: center;
     }
+    td#name{
+        width: auto !important;
+    }
+
+    /* progress bars for audit */
+    .in-now{
+        background-color: #03fcf4 !important;
+    }
+    .out-now{
+        background-color: #ebe713 !important;
+    }
+    .not-logged-in-today{
+        background-color: #c71230 !important;
+    }
+    .employees{
+        background-color: #545ed6 !important;
+    }
+    .on-approved-leave{
+        background-color: #a3c95d !important;
+    }
+    .on-unapproved-leave{
+        background-color: #f5677e !important;
+    }
+    .on-leave{
+        background-color: #8f30bf !important;
+    }
+    .on-business-travel{
+        background-color: #5983de !important;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -80,27 +109,103 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+                            <h4 class="mt-0 header-title mb-5">Audit</h4>
+                            <div class="row">
+                                <div id="box1" class="card" style="width: 530px; height: 150px; font-size: 30px;">
+                                    <b>0</b> 
+                                    <span>In Now</span>
+                                      <div class="progress">
+                                        <div class="progress-bar in-now" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
+                                          50%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box2" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>0</b>
+                                    <span>Out Now</span>
+                                    <div class="progress">
+                                        <div class="progress-bar out-now" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
+                                          50%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box3" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>0</b>
+                                    <span>Not Logged In Today</span>
+                                    <div class="progress">
+                                        <div class="progress-bar not-logged-in-today" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
+                                            50%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box4" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>22</b>
+                                    <span>Employees</span>
+                                    <div class="progress">
+                                        <div class="progress-bar employees" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; color: #000;">
+                                            100%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box5" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>0</b>
+                                    <span>On Approved Leave</span>
+                                    <div class="progress">
+                                        <div class="progress-bar on-approved-leave" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:70%; color: #000;">
+                                            70%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box6" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>0</b>
+                                    <span>On Unapproved Leave</span>
+                                    <div class="progress">
+                                        <div class="progress-bar on-unapproved-leave" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:20%; color: #000;">
+                                            20%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box7" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>0</b>
+                                    <span>On Leave</span>
+                                    <div class="progress">
+                                        <div class="progress-bar on-leave" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width:15%; color: #000;">
+                                            15%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="box8" class="card" style="width: 400px; height: 150px; font-size: 30px;">
+                                    <b>0</b>
+                                    <span>On Business Travel</span>
+                                    <div class="progress">
+                                        <div class="progress-bar on-business-travel" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width:10%; color: #000;">
+                                            10%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <h4 class="mt-0 header-title mb-5">Timesheet</h4>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
+
                                     <table id="dataTable1" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th rowspan="2">ID</th>
+                                            <th rowspan="2"><b>ID</b></th>
                                             <!-- <th>Image</th> -->
-                                            <th rowspan="2">Name</th>
+                                            <th rowspan="2" style="width: 150px !important;"><b>Name</b></th>
                                             <?php /*<th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th>*/ ?>
                                             <!-- <th rowspan="2">Last Login</th> -->
                                             <!-- <th>Status</th> -->
-                                            <th rowspan="2">In</th>
-                                            <th rowspan="2">Out</th>
+                                            <th rowspan="2"><b>In</b></th>
+                                            <th rowspan="2"><b>Out</b></th>
 
-                                            <th colspan="2">Lunch</th>
+                                            <th colspan="2"><b>Lunch</b></th>
                                             <!-- <th>Out</th> -->
-                                            <th rowspan="2" style="width: 305px;">Action</th>
-                                            <th rowspan="2">Comments/Schedule</th>
+                                            <th rowspan="2" style="width: 150px;"><b>Action</b></th>
+                                            <th rowspan="2" style="width: 305px;"><b>Comments/Schedule</b></th>
                                             
                                         </tr>
                                         <tr>

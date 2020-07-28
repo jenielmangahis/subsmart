@@ -3,6 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Expenses extends MY_Controller {
 
+	public function __construct()
+    {
+        parent::__construct();
+        $this->checkLogin();
+    }
+
 	public function index()
 	{
 		$this->page_data['expenses'] = array();

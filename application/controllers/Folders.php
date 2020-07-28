@@ -9,7 +9,7 @@ class Folders extends MY_Controller {
 
 	public function __construct(){
 		parent::__construct();
-
+		$this->checkLogin();
 		$this->folders_with_files = array();
 		$this->selected_folder = 0;
 		$this->company_folder = getCompanyFolder();
@@ -253,7 +253,33 @@ class Folders extends MY_Controller {
 		echo json_encode($return);
 	}
 
-	public function delete(){ 
+	public function delete(){
+		$return = array(
+			'error' => ''
+		);
+
+		$folder_id = $_POST['folder_id'];
+		$parent_id = 0;
+
+		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id)->row();
+		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id)->row();
+		if(($files->filescount > 0) || ($folders->folderscount > 0)){
+			$return['error'] = 'Cannot delete folder. Folder is not empty.';
+		} else {			
+			$data = array(
+				'softdelete' => 1,
+				'softdelete_date' => date('Y-m-d h:i:s')
+			);
+
+			if(!$this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
+				$return['error'] = 'Error in deleting folder';
+			}
+		}
+
+		echo json_encode($return);	
+	}
+
+	public function remove(){ 
 		$return = array(
 			'error' => ''
 		);

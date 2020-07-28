@@ -6,6 +6,7 @@ class Source extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->checkLogin();
 		$this->page_data['page']->title = 'Source Management';
         $this->page_data['page']->menu = 'source';
         

@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Taskhub extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
-
+		$this->checkLogin();
 		$this->load->model(array('taskhub_model','taskhub_updates_model','taskhub_status_model','taskhub_participants_model'));
 		
 		$this->page_data['page']->menu = 'taskhub';
@@ -285,6 +285,10 @@ class Taskhub extends MY_Controller {
 			'order by `update_date` ASC '	
 		)->result();
 
+		$sql = 'update tasks set view_count = view_count + 1 where task_id = ' . $id;
+
+		$this->db->query($sql);
+		
 		$this->load->view('workcalender/taskhub/view', $this->page_data);	
 	}
 

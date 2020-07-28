@@ -128,6 +128,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $clockin_arr = $this->timesheet_model->getClockIn($data);
                                                     $clockout_arr = $this->timesheet_model->getClockOut($data);
                                                     //echo "<pre>";print_r($clockin_arr);echo "</pre>";
+                                                    //echo "Today is " . date("Y/m/d");
                                                 ?>
                                                 <tr class="timesheet_row">
                                                     <!-- Employee -->
@@ -147,15 +148,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     </td>
-                                                    <!-- Sunday -->
+                                                    
 
                                                     <!-- Monday -->
                                                     <td class="monday">
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('monday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin1 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin1.' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Tuesday -->
@@ -163,8 +164,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('tuesday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin2 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin2.' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Wednesday -->
@@ -172,8 +173,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('wednesday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin3 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin3.' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Thursday -->
@@ -181,8 +182,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('thursday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin4 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin4.' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Friday -->
@@ -190,8 +191,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('friday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin5 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin5.' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Saturday -->
@@ -199,21 +200,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('saturday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin6 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin6.' hrs';
                                                         ?>
                                                     </td>
+                                                    <!-- Sunday -->
                                                     <td class="sunday">
                                                         <?php 
                                                             $data['date'] = date("Y-m-d",strtotime('sunday this week'));
                                                             //echo $data['date'];
-                                                            $total_clockin = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin.' hrs';
+                                                            $total_clockin7 = $this->timesheet_model->getTotalClockinDay($data);
+                                                            echo $total_clockin7.' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- TOTAL -->
                                                     <td class="total">
-                                                        <?php //echo #total_hours?>
+                                                        <?php 
+                                                            //echo #total_hours
+                                                            $total_hours = $total_clockin1 + $total_clockin2 + $total_clockin3 + $total_clockin4 + $total_clockin5 + $total_clockin6 + $total_clockin7;
+                                                            echo $total_hours.' hrs';
+                                                        ?>
                                                     </td>
 
                                                 </tr>

@@ -12,6 +12,7 @@ class More extends MY_Controller {
 	{
 
 		parent::__construct();
+		$this->checkLogin();
 		$this->page_data['page']->title = 'More ';
 		$this->page_data['page']->menu = 'more';
 

@@ -78,6 +78,28 @@ class Chart_of_accounts extends MY_Controller {
 		$this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
 	}
 
+	public function update()
+	{
+		$id=$this->input->post('id');
+		$account_id=$this->input->post('account_type');
+		$acc_detail_id=$this->input->post('detail_type');
+		$name=$this->input->post('name');
+		$description=$this->input->post('description');
+		$sub_acc_id=$this->input->post('sub_account_type');
+		$time=$this->input->post('choose_time');
+		$balance=$this->input->post('balance');
+		$time_date=$this->input->post('time_date');
+		if($time != 'Other')
+		{
+			$time_date = '';
+		}
+
+		$this->chart_of_accounts_model->updaterecords($id,$account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date);
+		
+	    $this->session->set_flashdata('success', "Data updated successfully!"); 
+		redirect("accounting/chart_of_accounts");
+	}
+
 	public function fetch_acc_detail()
 	{
 		if($this->input->post('account_id'))
