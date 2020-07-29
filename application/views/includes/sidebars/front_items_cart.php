@@ -27,15 +27,18 @@
          <div class="widget-cart margin-bottom-sec" data-cart="cart">
             <div style="font-size: 18px; margin-bottom: 15px;">
                <span class="fa fa-shopping-cart fa-margin-right"></span> Cart Total:
-               $10.00    <span class="text-ter">(1 item)</span>
+               $<?php echo number_format($cart_data['total_cart_items'], 2); ?>    <span class="text-ter">(<?php echo count($cart_data['items']) ?> item(s))</span>
             </div>
             <div>
-               <div data-item-rowid="975e79cac5282d1bc137abac18fd8ed1" style="position: relative; margin-bottom: 10px;">
-                  <div style="color: #487ca6;">Sample Cleaning</div>
-                  <div class="text-ter" style="margin-bottom: 3px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">this is a sample description of category</div>
-                  <div>1 x $10.00/each</div>
-                  <a class="a-ter" data-cart="delete" data-id="975e79cac5282d1bc137abac18fd8ed1" href="#" style="position: absolute; top: 2px; right:0"><span class="fa fa-trash"></span></a>
-               </div>
+               <?php foreach($cart_data['items'] as $item){ ?>
+                <div style="position: relative; margin-bottom: 10px;">
+                  <div style="color: #487ca6;"><?php echo $item->name; ?></div>
+                  <div class="text-ter" style="margin-bottom: 3px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo $item->description; ?></div>
+                  <div><?php echo $item->ordered_qty; ?> x $<?php echo number_format($item->price,2); ?>/<?php echo $item->price_unit; ?></div>
+                  <a class="a-ter delete-cart-item" data-id="<?php echo $item->id; ?>" href="#" style="position: absolute; top: 2px; right:0"><span class="fa fa-trash"></span></a>
+                </div>
+               <?php } ?>
+               
             </div>
             <div class="validation validation-error margin-top-sec">
                Minimum booking amount is $50.00<br>

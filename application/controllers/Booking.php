@@ -10,7 +10,7 @@ class Booking extends MY_Controller {
 		$this->page_data['page_title'] = 'Online Booking';
 
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
-		$this->load->library('encrypt');
+		$this->load->library('session');
 
 		$this->load->model('BookingCategory_model');
 		$this->load->model('BookingForms_model');
@@ -755,20 +755,34 @@ class Booking extends MY_Controller {
 
 		$products = array();
 
+		$post = $this->input->post();
+		$search_query = '';
+		$filters      = array();
+
+		if( isset($post['search']) && $post['search'] !== '' ){
+			$filters['search'] = $post['search'];
+			$search_query      = $post['search'];
+		}
 		foreach( $categories as $c ){
-			$products[$c->id]['products'] = $this->BookingServiceItem_model->getAllUserProductsByCategoryId($user_id, $c->id);
+			$products[$c->id]['products'] = $this->BookingServiceItem_model->getAllUserProductsByCategoryId($user_id, $c->id, $filters);
 			$products[$c->id]['category'] = $c; 
 		}
-
-		$this->page_data['userProfile'] = $userProfile;
-		$this->page_data['products']    = $products;
-		$this->page_data['eid'] = $eid;
 
 		if( $this->input->get('style') != '' ){
 			$view = 'grid_items';
 		}else{
 			$view = 'front_items';
 		}
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		$this->page_data['search_query'] = $search_query;
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['products']     = $products;
+		$this->page_data['eid'] = $eid;
+
 		$this->load->view('online_booking/' . $view, $this->page_data);
 	}
 
@@ -786,8 +800,13 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/ajax_get_product_details', $this->page_data);
     }
 
+    /*Test encrypt*/
     public function generateProductUrl()
     {
+    	$cart_items = $this->session->userdata('cartItems');
+    	echo "<pre>";    	
+    	print_r($cart_items);
+    	exit;
     	$user = $this->session->userdata('logged');
     	$encrypted = hashids_encrypt($user['id'], '', 15);
     	$decrypted = hashids_decrypt($user['id'], '', 15);
@@ -795,6 +814,39 @@ class Booking extends MY_Controller {
     	echo "booking/products/" . $encrypted;
     	//echo "<br />" . $decrypted;
     	exit;
+    }
+
+    public function ajax_update_cart_item()
+    {
+    	$post       = $this->input->post();
+    	$cart_items = $this->session->userdata('cartItems');
+    	$key        = 'pid_' . $post['pid'];
+    	if( !empty($cart_items) ){
+    		if( isset($cart_items[$key]) ){
+    			$new_qty = $post['qty'] + $cart_items[$key];
+    			$cart_items[$key] = $new_qty;
+    		}else{
+    			$cart_items[$key] = $post['qty'];
+    		}
+    	}else{
+    		$cart_items[$key] = $post['qty'];
+    	}
+
+    	$this->session->set_userdata('cartItems',$cart_items);    	
+
+    	$this->session->set_flashdata('message', 'Cart was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+    }
+
+    public function ajax_delete_cart_item()
+    {
+    	$post = $this->input->post();
+    	$cart_items = $this->session->userdata('cartItems');
+    	$session_key = "pid_" . $post['pid'];
+    	unset($cart_items[$session_key]);
+
+    	$this->session->set_userdata('cartItems',$cart_items);    	
+
     }
 
 }

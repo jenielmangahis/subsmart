@@ -191,6 +191,8 @@ $route['booking/_inquiry_details'] = 'booking/ajax_get_inquiry_details';
 //$route['booking/products'] = 'booking/front_items';
 $route['booking/products/(:any)'] = 'booking/front_items/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
+$route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
+$route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
