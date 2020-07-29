@@ -173,7 +173,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach ($vendors as $vendor): ?>
                                         <?php foreach ($checks as $check):?>
                                             <?php if ($vendor->vendor_id == $check->vendor_id):?>
-                                        <tr>
+                                        <tr style="cursor: pointer;">
                                             <td><input type="checkbox"></td>
                                             <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
                                             <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo 'Check'?></td>
@@ -192,9 +192,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-caret-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Copy</a></li>
-                                                        <li>
-                                                            <a href="#" type="submit" id="deleteCheck" data-id="<?php echo $check->id;?>">Delete</a>
+                                                        <li><a href="#" id="copy">Copy</a></li>
+                                                        <li id="deleteCheck" data-id="<?php echo $check->id;?>">
+                                                            <a href="#" >Delete</a>
                                                         </li>
                                                         <li><a href="#">Void</a></li>
                                                     </ul>
@@ -542,7 +542,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                        <tr>
                                            <td><label for="">Date</label></td>
                                            <td>
-                                               <input type="date" name="date" class="form-inline">
+                                               <input type="date" name="date" class="form-inline" style="width: 45%">
                                            </td>
                                        </tr>
                                        <tr>
@@ -574,8 +574,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                        <tr>
                                            <td></td>
                                            <td>
-                                               <input type="checkbox" name="billable" value="1">
+                                               <input type="checkbox"  id="billable" value="1" >
                                                <span>Billable (/hr)</span>
+                                               <input type="hidden" class="form-control" name="billable" id="hideTextBox" style="display: inline-block; width: 60px;height: 36px">
+                                               <div style="display: none;" id="hideTaxable">
+                                                   <input type="checkbox" name="taxable">
+                                                   <span>Taxable</span>
+                                               </div>
                                            </td>
                                        </tr>
                                    </table>
@@ -585,14 +590,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <input type="checkbox" name="start_end_times" value="1">
+                                            <input type="checkbox" name="start_end_times" id="start_end_times" value="1">
                                             <span>Enter Start and End Times</span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr id="timeRow">
                                         <td><label for="">Time</label></td>
                                         <td>
-                                            <input type="time" name="time" class="form-inline" placeholder="hh:mm">
+                                            <input type="time" name="time" class="form-inline" id="time" placeholder="hh:mm" style="width: 35%">
+
+                                        </td>
+                                    </tr>
+                                    <tr id="startEndRow" style="display: none;">
+                                        <td><label for="">Time</label></td>
+                                        <td>
+                                            <div>
+                                                <input type="time" name="start_time" class="form-control"  style="width: 25%;display: inline-block;margin-bottom: 10px">
+                                                <span>Start time</span>
+                                            </div>
+                                            <div>
+                                                <input type="time" name="end_time" class="form-control" style="width: 25%;display: inline-block;margin-bottom: 10px">
+                                                <span>End time</span>
+                                            </div>
+                                            <div >
+                                                <input type="time" name="break" class="form-control" style="width: 30%;display: inline-block;" placeholder="hh:mm">
+                                                <span>Break</span>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -652,7 +675,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <select name="vendor_id" id="" class="form-control select2">
+                                <select name="vendor_id" id="" class="form-control select2-vendor">
+                                    <option></option>
+                                    <option disabled>&plus;&nbsp;Add new</option>
                                     <option value="1">Abacus Accounting</option>
                                     <option value="2">Absolute Power</option>
                                     <option value="3">ADSC</option>
@@ -1173,8 +1198,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
-    // select option
-    $('.select2').select2()
+    //select2 initialization
+    $('.select2-vendor').select2({
+        placeholder: 'Choose a vendor',
+        allowClear: true
+    });
     // DataTable JS
     $(document).ready(function() {
         $('#expenses_table').DataTable({
@@ -1381,6 +1409,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $(this).val(parseFloat($(this).val(),10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
         });
     });
+    //Billable Toggle
+    $('#billable').click(function () {
+       $('#hideTaxable').toggle(this.checked);
+        if($('#hideTextBox').attr('type') == 'hidden'){
+            $('#hideTextBox').attr('type','text');
+        }else{
+            $('#hideTextBox').attr('type','hidden');
+        }
+    });
+    //Start and End time toggle
+    $('#start_end_times').click(function () {
+       $('#startEndRow').toggle(this.checked);
+       if($('#timeRow').css('display')=='none'){
+           $('#timeRow').css('display','');
+       }else{
+           $('#timeRow').css('display','none');
+       }
+    });
+
 </script>
 
 

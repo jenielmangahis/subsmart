@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				<?php } ?>
             	</div>
             </div>
-				<?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+				<?php echo form_open_multipart('accounting/chart_of_accounts', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
 				<div class="row pt-2">
 					<div class="col-xl-12 px-0">
 						<div class="card p-0">
@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<div class="col-md-10"></div>
 									 <div class="col-md-2">
 										 <div class="dropdown">
-											<a href="" ><i class="fa fa-edit"></i></a>
+											<a href="#" class="editbtn"><i class="fa fa-edit"></i></a>
 											<a href="" ><i class="fa fa-print"></i></a>
 										   <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<i class="fa fa-cog"></i>
@@ -96,6 +96,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<p class="p-padding"><input type="checkbox" name="chk_other" id="chk_other"> Other</p>
 										  </div>
 										</div>
+									 </div>
+								 </div>
+								 <div class="row" style="margin-bottom: 20px ">
+								 	<div class="col-md-10"></div>
+									 <div class="col-md-2">
+									 	<button style="display: none;" type="button" id="save"  name="save" class="btn btn-primary"></button>
 									 </div>
 								 </div>
 								<table id="charts_of_account_table" class="table table-striped table-bordered" style="width:100%">
@@ -117,7 +123,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									  {
 									  echo "<tr>";
 									  echo "<td><input type='checkbox'></td>";
-									  echo "<td contenteditable='true'>".$row->name."</td>";
+									  echo "<td class='edit_field' data-id='".$row->id."'>".$row->name."</td>";
 									  echo "<td>".$this->account_model->getName($row->account_id)."</td>";
 									  echo "<td>".$this->account_detail_model->getName($row->acc_detail_id)."</td>";
 									  echo "<td>".$row->balance."</td>";
@@ -131,7 +137,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										  <div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>
 											<a class='dropdown-item' href='#'>Connect Bank</a>
 											<a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit/'.$row->id).">Edit</a>
-											<a class='dropdown-item' href='#'>Make Inactive (Reduce usage)</a>
+											<a class='dropdown-item' href='#' onClick='make_inactive(".$row->id.")'>Make Inactive (Reduce usage)</a>
 											<a class='dropdown-item' href='#'>Run Report</a>
 										  </div> 
 										</div>
@@ -175,4 +181,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     		$('#chk_balance').attr('checked',"checked");
     	}
     }
+
+
+    
+
+
+      $(document).ready(function () {
+      	$("#save").hide();
+          $('.editbtn').click(function () {
+              if ($("#save").html() == '') {
+                  	$(".edit_field").each(function() {
+                  		$("#save").show();
+				        $(this).prop('contenteditable', true);
+				    });
+                      
+              } else {
+              		  $("#save").hide();
+                      $(".edit_field").prop('contenteditable', false)
+              }
+    
+              $("#save").html($("#save").html() == '' ? 'Save' : '')
+    
+          });
+    
+      });
+
+      $("#save").click(function(){
+      	$("#save").hide();
+      	$(".edit_field").each(function() {
+	      	var id = $(this).data('id');
+	      	var acc_name = $(this).html();
+	      	    $.ajax({
+			     url:'<?php echo base_url(); ?>accounting/chart_of_accounts/update_name',
+			     method: 'post',
+			     data: {id: id,name:acc_name},
+			     dataType: 'json',
+			   });
+	    });
+      })
+
+      function make_inactive(id)
+      {
+      	$.ajax({
+			     url:'<?php echo base_url(); ?>accounting/chart_of_accounts/inactive',
+			     method: 'post',
+			     data: {id: id},
+			     dataType: 'json',
+			   });
+      }
 </script>
