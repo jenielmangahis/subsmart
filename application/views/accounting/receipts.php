@@ -17,11 +17,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-12 px-0">
                         <div class="row">
                             <div class="col-md-8">
-                                <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="border: 2px grey dashed;">
-                                    <div class="fallback ">
-                                        <input name="file" id="receiptImg" type="file" multiple />
+                                <div id="receiptDZ" class="dropzone" style="border: 2px dashed gray;background: #fff;">
+                                    <div class="dz-message" style="margin: 20px;">
+                                        <i class="fa fa-cloud-upload fa-2x" style="display: block;color: #909194;"></i>
+                                        <span style="font-size: 16px;color: #909194">Drag and drop files here or</span>
+                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div style="border: 2px solid #d4d7dc;padding: 10px 10px 10px 10px;width: 100%;height: 100%">
@@ -167,24 +169,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        <?php foreach ($receipts as $receipt): ?>
                                         <tr class="receiptRow">
-                                            <td><input type="checkbox"></td>
-                                            <td data-toggle="modal" data-target="#receiptModal"><img src="<?php echo base_url('assets/img/accounting/default-img.png') ?>" alt="Image" height="100" width="100"></td>
-                                            <td data-toggle="modal" data-target="#receiptModal"></td>
-                                            <td data-toggle="modal" data-target="#receiptModal"></td>
-                                            <td data-toggle="modal" data-target="#receiptModal"></td>
-                                            <td data-toggle="modal" data-target="#receiptModal"></td>
-                                            <td data-toggle="modal" data-target="#receiptModal"></td>
+                                            <td><input type="checkbox" value="<?php echo $receipt->id;?>"></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><img src="<?php echo base_url('uploads/accounting/').$receipt->receipt_img; ?>" alt="Image" height="100" width="100"></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->transaction_date == null || $receipt->transaction_date == "0000-00-00")?"Not found": $receipt->transaction_date; ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->description == null)?"Not found" : $receipt->description; ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->payee_id == 0)?"Not found": $receipt->payee_id ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->total_amount == null || $receipt->total_amount == 0.00)?"Not found" : $receipt->total_amount; ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->category == null)?"Not found":$receipt->category; ?></td>
                                             <td>
                                                 <a href="#" style="display: inline" data-toggle="modal" data-target="#receiptModal">Review</a>&nbsp;
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#" type="submit" id="deleteReceipt" data-id="">Delete</a></li>
+                                                        <li><a href="#" type="submit" id="deleteReceipt" data-id="<?php echo $receipt->id;?>">Delete</a></li>
                                                     </ul>
                                                 </div>&nbsp;
                                             </td>
                                         </tr>
+                                        <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -192,7 +196,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <table id="reviewed_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th><input type="checkbox"></th>
+                                            <th><input type="checkbox" ></th>
                                             <th>Receipt</th>
                                             <th>Transaction Date</th>
                                             <th>Description/Vendor</th>
@@ -242,7 +246,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-7">
                                 <div class="viewer-backdrop-container">
                                     <div class="viewer-backdrop">
-                                        <img src="<?php echo base_url('assets/img/accounting/default-img.png') ?>" alt="Image">
+                                        <input type="hidden" id="base_url" value="<?php echo base_url()?>uploads/accounting/">
+                                        <img src="" id="receiptImage" alt="Image">
                                     </div>
                                     <div class="label-imageContainer" style="margin-top: 15px;">
                                         <span>Added 5:57 PM 07/06/2020</span>
@@ -255,17 +260,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="step-header-text">Double-check the details and add any missing info.</div>
                                         <div class="form-group form-element">
                                             <span>Document Type</span>
-                                            <input type="hidden" id="receipt_id">
-                                            <select name="document_type" id="" class="form-control">
+                                            <input type="hidden" name="receipt_id" id="receipt_id">
+                                            <select name="document_type" id="documentType" class="form-control">
                                                 <option>Receipt</option>
                                                 <option>Bill</option>
                                             </select>
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                            <label for="">Payee</label>
-                                            <select name="payee_id" id="" class="form-control select2">
-                                                <option disabled selected>Select payee (optional)</option>
+                                            <label for="payeeID">Payee</label>
+                                            <select name="payee_id" id="payeeID" class="form-control select2">
+                                                <option disabled selected value="default">Select payee (optional)</option>
                                                 <option disabled>&plus;&nbsp;Add new</option>
                                                 <option value="1">Betty Fuller</option>
                                                 <option value="2">Brian Boyden</option>
@@ -275,8 +280,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Bank/Credit Account</label>
-                                            <select name="bank_account" id="" class="form-control select2">
+                                            <label for="bank_account">Bank/Credit Account</label>
+                                            <select name="bank_account" id="bank_account" class="form-control select2">
+                                                <option disabled selected value="default">Select an account</option>
                                                 <option disabled>&plus;&nbsp;Add new</option>
                                                 <option>Billable Expenses</option>
                                                 <option>Gross Receipt</option>
@@ -287,11 +293,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Payment Date</label>
-                                            <input type="date" name="transaction_date" class="form-control" placeholder="Select a date">
+                                            <input type="date" name="transaction_date" id="paymentDate" class="form-control" placeholder="Select a date">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Account/Category</label>
-                                            <select name="category" id="" class="form-control select2">
+                                            <label for="category">Account/Category</label>
+                                            <select name="category" id="category" class="form-control select2">
+                                                <option disabled selected value="default">Select a category</option>
                                                 <option disabled>&plus;&nbsp;Add new</option>
                                                 <option>Commissions & Fees</option>
                                                 <option>Billable Expenses</option>
@@ -303,7 +310,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Description</label>
-                                            <input type="text" name="description" class="form-control" placeholder="Enter a description">
+                                            <input type="text" name="description" id="description" class="form-control" placeholder="Enter a description">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Total amount (Inclusive of tax)*</label>
@@ -317,8 +324,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a href="#" style="font-weight: bolder;color: color: #0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
                                         </div>
                                         <div class="form-group" id="refNumber" style="display: none">
-                                            <label for="">Ref no.</label>
-                                            <input type="text" name="ref_number" class="form-control">
+                                            <label for="refNumber">Ref no.</label>
+                                            <input type="text" name="ref_number" id="refNumber" class="form-control">
                                         </div>
 
                                 </div>
@@ -343,6 +350,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+    <?php if ($this->session->flashdata('receipt_updated')){?>
+        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('receipt_updated');?>
+        </div>
+    <?php }elseif ($this->session->flashdata('receipt_updateFailed')){?>
+    <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <?php echo $this->session->flashdata('receipt_updateFailed');?>
+    </div>
+    <?php }?>
     <!--    end of modal-->
 	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>

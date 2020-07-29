@@ -1,9 +1,24 @@
+@font-face {
+    font-family: fontStyle;
+    src:url("/assets/css/accounting/fonts/Metropolis-Thin.otf");
+}
+body{
+    font-family: fontStyle;
+
+}
+body h1,h2,h3,h4,h5,h6{
+    font-family: fontStyle;
+
+}
 input[type='checkbox']{
     width: 15px;
     height: 15px;
 }
 button {
     height: 46px;
+}
+.btn-success{
+    background: #2ca01c;
 }
 .tile-container{
     -webkit-border-radius: 4px;
@@ -239,7 +254,7 @@ button {
 .banking-tab-active{
     padding: 4px 16px;
     border-bottom: 5px solid #498002;
-    font-weight: bolder;
+    font-weight: 700;
     text-decoration: none;
     line-height: 28px;
     height: 36px;

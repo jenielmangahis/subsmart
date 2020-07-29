@@ -3,9 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accounting extends MY_Controller {
 
+    private $upload_path = "./uploads/accounting/";
     public function __construct()
     {
         parent::__construct();
+
         $this->checkLogin();
 		$this->load->model('vendors_model');
 		$this->load->model('terms_model');
@@ -22,9 +24,9 @@ class Accounting extends MY_Controller {
         ));
 
         add_footer_js(array(
-            "assets/js/accounting/accounting.js?v=".rand(),
             "assets/plugins/dropzone/dist/dropzone.js",
-            "https://cdn.jsdelivr.net/npm/sweetalert2@9"
+            "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+            "assets/js/accounting/accounting.js?v=".rand()
         ));
 
 		$this->page_data['menu_name'] =
@@ -124,6 +126,7 @@ class Accounting extends MY_Controller {
     public function receipts()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->load->view('accounting/receipts', $this->page_data);
     }
     public function salesoverview()
@@ -285,10 +288,7 @@ class Accounting extends MY_Controller {
 		}
 		
     }
-//    Expenses
-    public function getVendor(){
-
-    }
+/*** Expenses ***/
 
     public function timeActivity(){
         $new_data = array(
@@ -297,7 +297,10 @@ class Accounting extends MY_Controller {
             'customer' => $this->input->post('customer'),
             'service' => $this->input->post('service'),
             'billable' => $this->input->post('billable'),
-            'start_end_times' => $this->input->post('start_end_times'),
+            'taxable' => $this->input->post('taxable'),
+            'start_time' => $this->input->post('start_time'),
+            'end_time' => $this->input->post('end_time'),
+            'break' => $this->input->post('break'),
             'time' => $this->input->post('time'),
             'description' => $this->input->post('description')
         );
@@ -395,11 +398,6 @@ class Accounting extends MY_Controller {
 
         $id = $this->input->post('id');
         $this->expenses_model->deleteCheckData($id);
-//        if ($delete == true){
-//            redirect('accounting/expenses');
-//        }else{
-//            redirect('accounting/expenses');
-//        }
     }
 
     public function addExpense(){
@@ -487,31 +485,65 @@ class Accounting extends MY_Controller {
 
     /*** Receipt ***/
     public function uploadReceiptImage(){
-        $img = $this->input->post('form_data');
-        $config = array(
-            'upload_path' => './uploads/Accounting/',
-            'allowed_types' => 'gif|jpg|png|jpeg',
-            'overwrite' => TRUE,
-            'max_size' => '5000',
-            'max_height' => '0',
-            'max_width' => '0',
-            'encrypt_name' => TRUE
-        );
-        $this->load->library('upload', $config);
-        if ($this->upload->do_upload()){
-            $data = array('form_data' => $this->upload->data());
-            $file = $this->upload->data();
-            $data = array(
-                'receipt_img' => $file['file_name']
+        if (! empty($_FILES)){
+            $config = array(
+                'upload_path' => './uploads/accounting/',
+                'allowed_types' => 'gif|jpg|png|jpeg',
+                'overwrite' => TRUE,
+                'max_size' => '5000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
             );
-            $this->db->insert('accounting_receipts',$data);
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
+            if ($this->upload->do_upload("file")){
+                $uploadData = $this->upload->data();
+                $data2 = array('receipt_img' => $uploadData['file_name']);
+                $this->db->insert('accounting_receipts',$data2);
+                echo json_encode($uploadData['file_name']);
+            }else{
+                echo $this->upload->display_errors();;
+            }
+
+        }
+    }
+
+    public function removeReceiptImage(){
+        $file = $this->input->post('file');
+        if ($file && file_exists($this->upload_path. $file)){
+            unlink( $this->upload_path. $file);
+            $this->db->where('receipt_img',$file);
+            $this->db->delete('accounting_receipts');
+        }else{
+           echo $this->upload->display_errors();
+        }
+    }
+
+    public function getReceiptData(){
+        if (isset($_POST['id'])){
+            $query = $this->db->get_where('accounting_receipts',array('id'=>$_POST['id']));
+
+            $data = new stdClass();
+            $data->id = $_POST['id'];
+            $data->receipt_img = $query->row()->receipt_img;
+            $data->document_type = (empty($query->row()->document_type))?"null":$query->row()->document_type;
+            $data->payee_id = ($query->row()->payee_id == 0)?"default":$query->row()->payee_id;
+            $data->bank_account = (empty($query->row()->bank_account))?"default":$query->row()->bank_account;
+            $data->transaction_date = $query->row()->transaction_date;
+            $data->description = (empty($query->row()->description))?"":$query->row()->description;
+            $data->category = (empty($query->row()->category))?"default":$query->row()->category;
+            $data->total_amount = (empty($query->row()->total_amount))?"":$query->row()->total_amount;
+            $data->memo = (empty($query->row()->memo))?"":$query->row()->memo;
+            $data->ref_number = (empty($query->row()->ref_number))?"":$query->row()->ref_number;
+
             echo json_encode($data);
         }
-
     }
 
     public function updateReceipt(){
         $new_data = array(
+            'receipt_id' => $this->input->post('receipt_id'),
             'document_type' => $this->input->post('document_type'),
             'payee_id' => $this->input->post('payee_id'),
             'bank_account' => $this->input->post('bank_account'),

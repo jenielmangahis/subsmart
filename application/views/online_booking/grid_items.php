@@ -36,15 +36,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                  <ul class="category-list">   
-                     <?php foreach($products as $key => $value){ ?>                  
-                      <li class="category-li">
+                  <ul class="category-grid">
+                  <?php foreach($products as $key => $value){ ?>            
+                    <li class="category-li">
                         <div class="category__name"><?php echo $value['category']->name; ?></div>
-                        <ul class="product-list">
+                        <ul class="row row-list product-list">
                           <?php foreach( $value['products'] as $p ){ ?>
-                            <li class="product-li">
-                              <div class="product" data-product-id="<?php echo $p->id; ?>">
-                                 <div class="product__img__cnt" data-product-id="<?php echo $p->id; ?>">
+                            <li class="col-lg-4 product-li">
+                              <div class="product" data-product-id="<?php echo $p->id; ?>">  
+                                 <div class="product__img__cnt" data-product-id="<?php echo $p->id; ?>">                                                             
                                     <div class="product__img__hover" style="display: none;"><span>Quick Look</span></div>
                                     <?php 
                                       $service_item_thumb = $p->image;
@@ -62,35 +62,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                           $service_item_thumb_img = base_url('uploads/'.$service_item_thumb);
                                       }
                                     ?>
-                                    <img class="product__img" src="<?php echo $service_item_thumb_img; ?>">
+                                    <img class="product__img" src="<?php echo $service_item_thumb_img; ?>">                                    
                                  </div>
                                  <div class="product__cnt">
                                     <div class="product__name" style="height: 25px;"><?php echo $p->name; ?></div>
                                     <div class="product__description">
                                        <p><?php echo $p->description; ?></p>
                                     </div>
-                                    <div class="product__price__cnt clearfix">
-                                       <div class="product__price">$<?php echo number_format($p->price, 2); ?><span class="product__price__unit">/each</span></div>
-                                       <div class="product__actions">
-                                          <div class="product__qty-box">
-                                             <button class="btn qty_minus product__qty-btn" data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-minus"></span></button>
-                                             <input class="form-control-qty product__qty" id="qty-input-<?php echo $p->id; ?>" type="text" name="qty[<?php echo $p->id; ?>]" value="1">
-                                             <button class="btn qty_plus product__qty-btn"  data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-plus"></span></button>
-                                          </div>
-                                          <button class="btn btn-green btn-sm" data-cart="add" data-product-id="22516">Add to Cart</button>
+                                    <div class="product__price">$<?php echo number_format($p->price, 2); ?><span class="product__price__unit">/each</span></div>
+                                    <div class="product__actions">
+                                       <div class="product__qty-box sdv-qty">
+                                          <button class="btn qty_minus product__qty-btn" data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-minus"></span></button>
+                                          <input class="form-control-qty product__qty" id="qty-input-<?php echo $p->id; ?>" type="text" name="qty[<?php echo $p->id; ?>]" value="1">
+                                          <button class="btn qty_plus product__qty-btn"  data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-plus"></span></button>
                                        </div>
+                                       <button class="btn btn-green btn-sm sdv-grid" data-cart="add" data-product-id="22516">Add to Cart</button>
                                     </div>
-                                 </div>
-                                 <div class="product__view">
-                                    <a href="#" data-product-modal="open" data-product-id="<?php echo $p->id; ?>">view more</a>
+                                    <div class="product__view">
+                                       <a href="#" data-product-modal="open" data-product-id="22516">view more</a>
+                                    </div>
                                  </div>
                               </div>
                            </li>
-                          <?php } ?>                           
+                          <?php } ?>
                         </ul>
                      </li>
                      <?php } ?>
-                  </ul>
+                   </ul>                  
                 </div>
             </div>
             <!-- end row -->
@@ -115,8 +113,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
     </div>
 </div>
-
 <script>
 var base_url = "<?php echo base_url(); ?>";
 </script>
 <?php include viewPath('includes/footer_front_booking'); ?>
+

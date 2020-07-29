@@ -22,8 +22,15 @@ class Chart_of_accounts_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
+	public function update_name($id,$name)
+	{
+		$query="update chart_of_accounts set name ='$name' where id = $id";
+		echo $this->db->query($query);
+	}
+
 	public function select()  
       {  
+      	 $this->db->where('active','1');
          $query = $this->db->get('chart_of_accounts');  
          return $query->result();  
       } 
@@ -35,4 +42,10 @@ class Chart_of_accounts_model extends MY_Model {
     	$result =  $this->db->get()->result();
         return $result[0];
     }
+
+    public function inactive($id)
+	{
+		$query="update chart_of_accounts set active = 0 where id = $id";
+		echo $this->db->query($query);
+	}
 }

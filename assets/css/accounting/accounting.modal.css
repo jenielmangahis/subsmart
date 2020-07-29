@@ -114,7 +114,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
 }
 #print-checks-modal .modal-header{
     border-bottom: 0;
@@ -204,7 +203,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
 }
 #pay-bills-modal .modal-header{
     border-bottom: 0;
@@ -269,7 +267,6 @@
 }
 .modal-right-side .modal.right .modal-body {
     padding: 0 30px 80px;
-    font-family: "Avenir Next LT Pro", "Avenir Next", Futura, sans-serif;
 }
 
 .modal-right-side .modal.right.fade .modal-dialog {
@@ -460,7 +457,6 @@
 #receiptModal .modal-header h2{
     margin-top: 0;
     padding-left: 10px;
-    font-family: "Avenir Next forINTUIT",Avenir,sans-serif;
     font-weight: 600;
     font-size: 18px;
     color: #fff;
@@ -469,12 +465,6 @@
     color: #fff;
     cursor: pointer;
     margin-top: 5px;
-}
-#receiptModal .modal-header{
-    font-family: "Avenir Next forINTUIT",Avenir,sans-serif;
-}
-#receiptModal .modal-body{
-    font-family: "Avenir Next forINTUIT",Avenir,sans-serif!important;
 }
 #receiptModal .modal-body .viewer-backdrop-container{
     width: 532px;
@@ -550,7 +540,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
 }
 #edit-expensesCheck .modal-header{
     border-bottom: 0;
@@ -623,7 +612,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
 }
 #bill-modal .modal-header{
     border-bottom: 0;
@@ -696,7 +684,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
 }
 #expense-modal .modal-header{
     border-bottom: 0;
@@ -769,7 +756,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
 }
 #vendorCredit-modal .modal-header{
     border-bottom: 0;
@@ -841,7 +827,6 @@
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
-    font-family: "Avenir Next forINTUIT", Avenir Next, Futura, sans-serif;
     background: #f4f5f8;
 }
 #payDown-modal .modal-body{
@@ -912,16 +897,13 @@
     font-size: 16px;
     font-weight: 400;
     margin-bottom: 0;
-    font-family:  "Avenir Next forINTUIT",Avenir,sans-serif;
 }
 #payDown-modal .amount-data h2{
     margin-top: 0;
     font-weight: 500;
-    font-family:  "Avenir Next forINTUIT",Avenir,sans-serif;
 }
 /*Privacy*/
 .privacy{
-    font-family:  "Avenir Next forINTUIT",Avenir,sans-serif;
     font-size: 10px;
     text-align: center;
     color: #393A3D;
