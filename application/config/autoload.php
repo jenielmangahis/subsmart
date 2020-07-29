@@ -155,3 +155,5 @@ $autoload['model'] = array(
 	'accounts_has_sub_account_model',
 	'chart_of_accounts_model'
 );
+
+$autoload['sparks'] = array('sk-hashids/1.0.5');

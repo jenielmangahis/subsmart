@@ -9,7 +9,7 @@ class Booking extends MY_Controller {
 
 		$this->page_data['page_title'] = 'Online Booking';
 
-		$this->load->helper(array('form', 'url', 'url_encryption_helper'));
+		$this->load->helper(array('form', 'url', 'url_encryption_helper', 'hashids_helper'));
 		$this->load->library('encrypt');
 
 		$this->load->model('BookingCategory_model');
@@ -257,7 +257,7 @@ class Booking extends MY_Controller {
 
 	public function preview() {
 		$user = $this->session->userdata('logged');
-    	$eid  = encode_url($user['id']);
+    	$eid = hashids_encrypt($user['id'], '', 15);
 
     	$this->page_data['eid']   = $eid;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -748,7 +748,7 @@ class Booking extends MY_Controller {
 
     public function front_items($eid)
 	{
-		$user_id = decode_url($eid);
+		$user_id = hashids_decrypt($eid, '', 15);
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
 		$categories  = $this->BookingCategory_model->getAllCategories();
@@ -788,8 +788,9 @@ class Booking extends MY_Controller {
     public function generateProductUrl()
     {
     	$user = $this->session->userdata('logged');
-    	$encrypted = encode_url($user['id']);
-    	$decrypted = decode_url($encrypted);
+    	$encrypted = hashids_encrypt($user['id'], '', 15);
+    	$decrypted = hashids_decrypt($user['id'], '', 15);
+    	echo $decrypted;exit;
     	echo "booking/products/" . $encrypted;
     	//echo "<br />" . $decrypted;
     	exit;
