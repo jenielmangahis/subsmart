@@ -9,7 +9,7 @@ class Booking extends MY_Controller {
 
 		$this->page_data['page_title'] = 'Online Booking';
 
-		$this->load->helper(array('form', 'url', 'url_encryption_helper', 'hashids_helper'));
+		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('encrypt');
 
 		$this->load->model('BookingCategory_model');
@@ -762,6 +762,7 @@ class Booking extends MY_Controller {
 
 		$this->page_data['userProfile'] = $userProfile;
 		$this->page_data['products']    = $products;
+		$this->page_data['eid'] = $eid;
 
 		if( $this->input->get('style') != '' ){
 			$view = 'grid_items';

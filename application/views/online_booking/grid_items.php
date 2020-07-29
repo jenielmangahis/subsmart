@@ -25,10 +25,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <button class="search-booking-btn"><span class="fa fa-search"></span></button>
                   </div>
                   <div class="col-3 left pl-0 pr-0 pos-rlt-cs left-20">
-                    <a class="view-grid" href="<?php echo base_url('booking/front_items?style=grid') ?>"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
+                    <a class="view-grid" href="<?php echo base_url('booking/products/'.$eid.'?style=grid') ?>"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
                   </div>
                   <div class="col-3 left pl-0 pr-0 pos-rlt-cs">
-                    <a class="view-grid active" href="<?php echo base_url('booking/front_items') ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
+                    <a class="view-grid active" href="<?php echo base_url('booking/products/'.$eid) ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
                   </div>
                 </div>
               </div>
