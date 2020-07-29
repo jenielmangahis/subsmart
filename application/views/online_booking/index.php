@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </button>
                                 </strong>
                             </div>
-                            <div class="col-md-4 text-right"><a href="javascript:void(0);" target="_blank"><span class="fa fa-external-link fa-margin-right"></span> View Booking Page</a></div>
+                            <div class="col-md-4 text-right"><a target="_blank" href="<?php echo base_url('/booking/products/' . $eid); ?>" target="_blank"><span class="fa fa-external-link fa-margin-right"></span> View Booking Page</a></div>
                         </div>       
                         <hr />
                         <div class="row dashboard-container-2">

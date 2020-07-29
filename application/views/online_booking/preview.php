@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="row dashboard-container-1">
                             <div class="col-md-8"><strong>Copy/Paste the iframe or javascript code on a page on your website.</strong></div>
-                            <div class="col-md-4 text-right"><a href="javascript:void(0);" target="_blank"><span class="fa fa-external-link fa-margin-right"></span> View Booking Page</a></div>
+                            <div class="col-md-4 text-right"><a target="_blank" href="<?php echo base_url('/booking/products/' . $eid); ?>" target="_blank"><span class="fa fa-external-link fa-margin-right"></span> View Booking Page</a></div>
                         </div>  
                              
                         <hr />
@@ -36,8 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-12">
                                         <div style="margin-bottom: 5px;">Booking Page URL</div>
                                         <div style="margin-bottom: 10px;">
-                                            <textarea style="min-height: 100px !important;" class="input-focus form-control" id="product-url" readonly="">
-                                                <?php echo base_url('/booking/products/' . $eid); ?></textarea>
+                                            <textarea style="min-height: 100px !important;" class="input-focus form-control" id="product-url" readonly=""><?php echo base_url('/booking/products/' . $eid); ?></textarea>
                                         </div>
                                         <div class="c2c">
                                             <div class="c2c-confirm hide" data-clipboard="copied" data-ref="code.pageUrl">copied</div>

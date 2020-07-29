@@ -21,7 +21,7 @@
             <img class="business__logo" src="<?php echo $profile_image; ?>">
             <div class="business__cnt">
                <div class="business__name"><?php echo $userProfile->FName . ' ' . $userProfile->LName; ?></div>
-               <div class="business__phone"><?php echo $userProfile->phone; ?></div>
+               <div class="business__phone"><?php echo isset($userProfile->phone) ? $userProfile->phone : ''; ?></div>
             </div>
          </div>
          <div class="widget-cart margin-bottom-sec" data-cart="cart">
