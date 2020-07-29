@@ -21,7 +21,10 @@ class Expenses_model extends MY_Model
                 'customer' => $new_data['customer'],
                 'service' => $new_data['service'],
                 'billable' => $new_data['billable'],
-                'start_end_times' => $new_data['start_end_times'],
+                'taxable' => $new_data['taxable'],
+                'start_time' => $new_data['start_time'],
+                'end_time' => $new_data['end_time'],
+                'break' => $new_data['break'],
                 'time' => $new_data['time'],
                 'description' => $new_data['description']
             );

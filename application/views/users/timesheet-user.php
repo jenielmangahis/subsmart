@@ -45,16 +45,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                <div class="row" style="padding-bottom: 20px;">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
-                        <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
-                        <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
-                    </div>
-                </div>
-                <!-- <div class="row align-items-center">
+                
+                <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Employees</h1>
+                        <h1 class="page-title">Attendance View</h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol>
@@ -71,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/users/timesheet')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="timesheet")?:'-active';?>" style="text-decoration: none">Attendance</a>
@@ -380,7 +374,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <i class="fa fa-clock-o"></i>&nbsp;&nbsp;&nbsp;Lunch In
                                                                         </a> -->
                                                                     <?php //endif; ?>
-                                                                <?php endif; ?>
+                                                                <?php //endif; ?>
                                                                 <!-- Clock Out-->
                                                                 <?php if( !empty($clockin_arr) ):?>
                                                                     <?php if( $clockin_arr[0]->action == 'Clock Out' && $clockin_arr[0]->timestamp != 0 && $clockin_arr[0]->action == 'Clock Out' ):?>

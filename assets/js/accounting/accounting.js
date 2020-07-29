@@ -1,14 +1,14 @@
 
 $(document).ready(function () {
-    // select option
-    $('.select2').select2()
+    // select2 option initialized
+    // $('.select2').select2();
     //Alert popup
     window.setTimeout(function() {
         $('.alert').fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();
         });
     }, 5000);
-    $('.alert').css({"bottom":"50px","left":"20px","position":"absolute","z-index":"200","width":"auto"});
+    $('.alert').css({"bottom":"100px","left":"30px","position":"absolute","z-index":"999","width":"auto"});
 
     // Expenses page Check modal
     $(document).on('click','#addCheck',function () {
@@ -41,63 +41,16 @@ $(document).ready(function () {
     });
 });
 
-//Upload Receipt image
-$(document).ready(function () {
-   $('#receiptImg').change(function () {
-      var file_data = $(this).prop('files')[0];
-      var form_data = new FormData();
-      form_data.append('file',file_data);
-      $.ajax({
-         url:"/accounting/uploadReceiptImage",
-         method:"POST",
-         data:{form_data:form_data},
-         contentType: false,
-          cache: false,
-          processData:false,
-          success: function (data) {
-            console.log(data);
-          }
-      });
-   });
-});
-
-// Delete Receipt
-$(document).on('click','#deleteReceipt',function () {
-    var id = $(this).attr('data-id');
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.value) {
-        $.ajax({
-            url:'/accounting/deleteReceiptData',
-            method:"POST",
-            data:{id:id},
-            success:function (data) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
-        });
-    }
-});
-});
 // Delete Check
 $(document).on('click','#deleteCheck',function () {
     var id = $(this).attr('data-id');
+    console.log(id);
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#2ca01c',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
@@ -117,6 +70,92 @@ $(document).on('click','#deleteCheck',function () {
     }
 });
 });
+
+//Upload Receipt image or Add receipt
+Dropzone.autoDiscover = false;
+var fname;
+    var receiptDropzone = new Dropzone("#receiptDZ", {
+        url:"/accounting/uploadReceiptImage",
+        acceptedFiles: "image/*",
+        addRemoveLinks:true,
+        init: function() {
+            this.on("success", function(file,response) {
+                fname = response;
+            });
+        },
+        removedfile:function (file) {
+            // var name = file.name;
+            var name = fname.replace(/\"/g, "");
+            $.ajax({
+                type:"POST",
+                url:"/accounting/removeReceiptImage",
+                data:{file:name},
+                dataType:'html'
+            });
+            //remove thumbnail
+            var previewElement;
+            return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+            }
+    });
+
+    // Get Receipt data
+$(document).on('click','#updateReceipt',function () {
+    var id = $(this).attr('data-id');
+    $.ajax({
+        url:"/accounting/getReceiptData",
+        type:"POST",
+        data:{id:id},
+        dataType:"json",
+        success:function (data) {
+            $('#receiptImage').attr('src',$('#base_url').val() + data.receipt_img);
+            $('#receipt_id').val(data.id);
+            $('#documentType option:contains('+ data.document_type+ ')').attr('selected',true);
+            $("#payeeID").val(data.payee_id).trigger('change');
+            $("#bank_account").val(data.bank_account).trigger('change');
+            $("#category").val(data.category).trigger('change');
+            $('#paymentDate').val(data.transaction_date);
+            $('#description').val(data.description);
+            $('#totalAmount').val(data.total_amount);
+            $('#memo').text(data.memo);
+            $('#refNumber').val(data.ref_number);
+
+
+        }
+
+    });
+});
+// Delete Receipt
+$(document).on('click','#deleteReceipt',function () {
+    var id = $(this).attr('data-id');
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.value) {
+        $.ajax({
+            url:'/accounting/deleteReceiptData',
+            method:"POST",
+            data:{id:id},
+            success:function (data) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        });
+    }
+});
+});
+
+
+
+
 
 
 
