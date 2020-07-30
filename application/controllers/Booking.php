@@ -444,6 +444,35 @@ class Booking extends MY_Controller {
         redirect('more/addon/booking/products');
     }
 
+    public function update_inquiry_status()
+    {
+    	postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$id = $post['inquiry_id'];
+        	$stat = $this->BookingInquiry_model->getById($id);
+
+        	if($stat) {
+	            $this->BookingInquiry_model->update($stat->id, array(
+	                'name' => post('status'),
+	            ));
+
+	            $this->session->set_flashdata('message', 'Status was successfully updated');
+	            $this->session->set_flashdata('alert_class', 'alert-success');
+        	} else {
+	            $this->session->set_flashdata('message', 'Inquiry not found');
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('more/addon/inquiries');
+    }
+
     public function save_service_item()
     {
         postAllowed();
@@ -748,6 +777,16 @@ class Booking extends MY_Controller {
 
     	$this->page_data['inquiry'] = $inquiry;
 		$this->load->view('online_booking/ajax_get_inquiry_details', $this->page_data);
+    }
+
+    public function ajax_change_inquiry_status()
+    {
+    	$id = post('iid');
+    	$inquiry = $this->BookingInquiry_model->findById($id);
+
+    	$this->page_data['inquiry'] = $inquiry;
+    	$this->page_data['inquiry_id'] = $id;
+		$this->load->view('online_booking/ajax_change_inquiry_status', $this->page_data);
     }
 
     public function front_items($eid)
