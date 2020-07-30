@@ -881,53 +881,16 @@ class Booking extends MY_Controller {
 		$user_id = hashids_decrypt($eid, '', 15);
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
-		$categories  = $this->BookingCategory_model->getAllCategories();
-
-		$products = array();
-
-		$post = $this->input->post();
-		$search_query = '';
-		$filters      = array();
-
-		foreach( $categories as $c ){
-			$products[$c->id]['products'] = $this->BookingServiceItem_model->getAllUserProductsByCategoryId($user_id, $c->id, $filters);
-			$products[$c->id]['category'] = $c; 
-		}
-
-		$schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
-
-		$default_days = array(
-			'0' => 'MON',
-			'1' => 'TUE',
-			'2' => 'WED',
-			'3' => 'THU',
-			'4' => 'FRI',
-			'5' => 'SAT',
-			'6' => 'SUN',
-		); 
-
-		foreach($schedules as $key => $value){
-			$days = unserialize($value->days);
-			echo "<pre>";
-		//	print_r($value);
-		//	print_r($days);
-			echo "</pre>";
-
-		}
-
-
 
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
-		$this->page_data['default_days'] = $default_days;
-		$this->page_data['schedules']    = $schedules; 
+		$this->page_data['week_start_date'] = date("Y-m-d");
 		$this->page_data['cart_data']    = $cart_data;
 		$this->page_data['userProfile']  = $userProfile;
-		$this->page_data['products']     = $products;
 		$this->page_data['eid'] = $eid;
 
-		$this->load->view('online_booking/front_scheduler', $this->page_data);
+		$this->load->view('online_booking/front_schedule', $this->page_data);
 	}
 
 
@@ -988,6 +951,70 @@ class Booking extends MY_Controller {
     	$this->session->set_userdata('cartItems',$cart_items);    	
 
     }
+
+    public function ajax_load_week_schedule()
+    {
+    	$post = $this->input->post();
+    	$user_id    = hashids_decrypt($post['eid'], '', 15);
+    	$start_date = $post['week_start_date'];
+    	$end_date   = date("Y-m-d", strtotime($start_date . " +7 days"));
+
+    	$start      = new \DateTime($start_date);
+        $end        = new \DateTime($end_date);
+        $interval   = \DateInterval::createFromDateString('1 day');
+        $period     = new \DatePeriod($start, $interval, $end);
+
+        $schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
+
+        $week_schedules = array();
+
+        foreach ($period as $dt) { 
+            $date = $dt->format("Y-m-d"); 
+            $week_schedules[$date] = array(); 
+
+            foreach( $schedules as $s ){
+            	$day = $dt->format("D");
+            	$days = unserialize($s->days);
+            	if( in_array($day, $days) ){
+            		$week_schedules[$date][] = ['id' => $s->id, 'time_start' => $s->time_start, 'time_end' => $s->time_end]; 
+            	}
+            }
+        }     
+
+        $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
+        $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
+
+        $this->page_data['eid'] = $post['eid'];
+        $this->page_data['prev_date'] = $prev_date;
+        $this->page_data['next_date'] = $next_date;
+        $this->page_data['week_schedules'] = $week_schedules;
+		$this->load->view('online_booking/ajax_load_week_schedule', $this->page_data);
+    }
+
+    public function ajax_user_set_schedule()
+    {
+    	$cart_items = $this->session->userdata('cartItems');
+    	$cart_items['schedule_id'] = post('sid');
+
+    	$this->session->set_userdata('cartItems',$cart_items);    	
+
+    }
+
+    public function front_booking_form($eid)
+	{	
+		$user_id = hashids_decrypt($eid, '', 15);
+		$user    = $this->session->userdata('logged');
+		$userProfile = $this->Users_model->getUser($user_id);
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_booking_form', $this->page_data);
+	}
 
 }
 

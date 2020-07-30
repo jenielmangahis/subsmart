@@ -203,6 +203,9 @@ $route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
 $route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
 $route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
+$route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule';
+$route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule';
+$route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
