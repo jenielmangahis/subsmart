@@ -174,7 +174,7 @@
         </div>
         <div class="form-group">
           <label for="txtSurveyName">Survey Name<span class="text-danger">*</span></label>
-          <input type="text" name="txtSurveyName" id="txtSurveyName" class="form-control" placeholder="(e.g. Alexa's 18th Birthday review, etc.)">
+          <input type="text" name="txtSurveyName" id="txtSurveyName" value="template choice test" class="form-control" placeholder="(e.g. Alexa's 18th Birthday review, etc.)">
         </div>
         <div class="row container">
           
@@ -662,7 +662,7 @@
     }
 
     if(errors === false){
-      e.target.innerHTML = '<span class="spinner-border spinner-border-sm m-0" role="status" aria-hidden="true"></span> Submitting';
+      e.target.innerHTML = '<span class="spinner-border spinner-border-sm m-0" role="status" aria-hidden="true"></span> <strong>Submitting </strong>';
   
       setTimeout(() => {
         // add survey
@@ -678,7 +678,8 @@
             }else{
               toastr["success"]("Survey added!");
             }
-            window.location = '<?= base_url();?>survey/result/'+payload.data.id;
+            e.target.innerHTML = '<strong><i class="fa fa-plus-square-o"></i> Create Survey</strong>';
+            window.location = '<?php echo base_url();?>survey/result/'+payload.data.id;
           }
         })
       }, 2000);
@@ -701,6 +702,7 @@
         "order": question.order,
         "required": question.required,
         "template_id": question.temp_id,
+        "choices": question.choices == null ? null :  question.choices
       }
 
       $.ajax({
@@ -714,10 +716,10 @@
       })
 
       if(question.choices){
-        question.choices.map(choice=>{
+        
           $.ajax({
-            url: surveyBaseUrl + 'survey/add/question/choice/'+payload.data.id+'/'+question.temp_id,
-            data: data,
+            url: surveyBaseUrl + 'survey/add/questions/template/choices/'+payload.data.id,
+            data: { "choices": data.choices },
             dataType: 'json',
             type: 'POST',
             success: function(res){
@@ -735,8 +737,6 @@
             }
           })
           
-          
-        })
       }
 
     })

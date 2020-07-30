@@ -109,6 +109,7 @@ class Survey extends MY_Controller
     $this->page_data['survey'] = $this->survey_model->view($id);
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
+    $this->page_data['survey_logic'] = $this->survey_model->getSurveyLogics($id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
     $this->page_data['qTemplate'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['themes'] = $this->survey_model->getThemes();
@@ -124,6 +125,7 @@ class Survey extends MY_Controller
         $this->survey_model->update($id, $data);
       }
     }else{
+      
       $data = array($settings => $value);
       $this->survey_model->update($id, $data);
     }
@@ -187,8 +189,7 @@ class Survey extends MY_Controller
 
   public function addAndUpdateQuestion($id, $tid){
     $data = $this->survey_model->addAndUpdateQuestion($id, $tid);
-    var_dump($_POST);
-    exit;
+    
     $result = array(
       'success' => 1,
       'data' => $data,
@@ -202,8 +203,6 @@ class Survey extends MY_Controller
 
   public function addAndUpdateQuestionChoices($id, $tid){
     $data = $this->survey_model->addAndUpdateQuestionChoices($id, $tid);
-    var_dump($_POST);
-    exit;
     $result = array(
       'success' => 1,
       'data' => $data,
@@ -215,9 +214,15 @@ class Survey extends MY_Controller
     exit;
   }
 
+  public function addTemplateChoices($survey_id){
+    $this->survey_model->saveTemplateQuestionChoices($survey_id, $this->input->post('choices'));
+    exit;
+  }
+
 
 
   public function updateQuestion(){
+    
     $id = $this->input->post('survey_id');
     if(isset($_POST['description_label'])){
       $description_label = $_POST['description_label'];
@@ -228,7 +233,9 @@ class Survey extends MY_Controller
       'question' => $this->input->post('question'),
       'description_label' => $description_label,
       'image_position' =>$this->input->post('image_position'),
-      'custom_button_text' => $this->input->post('txtCustomButtonText')
+      'custom_button_text' => $this->input->post('txtCustomButtonText'),
+      'correctAnswer' => $this->input->post('txtCorrectAnswerText'),
+      
     );
     $data = $this->survey_model->updateQuestion($id,$data, $_POST);
     $result = array(
@@ -295,7 +302,7 @@ class Survey extends MY_Controller
     ));
 
     $this->page_data['survey'] = $this->survey_model->view($id);
-    $this->page_data['questions'] = $this->survey_model->getQuestionsPreview($id);
+    $this->page_data['questions'] = $this->survey_model->getQuestions($id);
     $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
     $this->load->view('survey/preview', $this->page_data);
   }
@@ -468,8 +475,7 @@ class Survey extends MY_Controller
   }
 
   public function addWorkspace(){
-    // var_dump($this->input->post());
-    // exit;
+    
     $data = array(
       "name" => $this->input->post('txtWorkspaceName'),
       "users" => json_encode(array(0))
@@ -507,6 +513,31 @@ class Survey extends MY_Controller
     echo json_encode($result);
     exit;
   }
+
+  // survey logic
+
+  public function surveyLogicList($survey_id){
+    $logics = $this->survey_model->getSurveyLogics($survey_id);
+    echo json_encode($logics);
+    exit;
+  }
+
+  public function addLogicJump(){    
+
+    $data = array(
+      "si_survey_id" => $this->input->post('surveyId')
+    );
+    
+    $this->survey_model->addToSurveyLogic($data);
+
+    $result = array(
+      "success" => 1
+    );
+    echo json_encode($result);
+    exit;
+  }
+
+  
 
 
 

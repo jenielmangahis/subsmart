@@ -364,6 +364,49 @@ class Folders extends MY_Controller {
 			return $return;
 		}
 	}
+
+	public function getTrashRecords(){
+		$return = array(
+			'folders' => getFolders(-1, false, false, true, true),
+			'files' => getFiles(-1, true, true)
+		);
+
+		echo json_encode($return);
+	}
+
+	public function restoreFileOrFolder(){
+		$return = array(
+			'folder_id' => 0,
+			'error' => ''
+		);
+
+		$fid = $_POST['fid'];
+		$isFolder = $_POST['isFolder'];
+
+		$data = array(
+			'softdelete' => 0
+		);
+
+		if($isFolder == 1){
+			$f = $this->folders_model->getById($fid);
+			$folder_id = $f->parent_id;
+
+			if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
+				$return['error'] = 'Error restoring folder';
+			}
+		} else {
+			$f = $this->vault_model->getById($fid);
+			$folder_id = $f->folder_id;
+
+			if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
+				$return['error'] = 'Error restoring file';
+			}
+		}
+
+		$return['folder_id'] = $folder_id;
+
+		echo json_encode($return);
+	}
 }
 
 ?>

@@ -63,4 +63,16 @@ class Rules_model extends MY_Model
         $qry = $this->db->get('accounting_rules');
         return $qry->result();
     }
+    public function getRulesById($id){
+        $qry = $this->db->get_where('accounting_rules',array('id'=>$id));
+        return $qry->result();
+    }
+    public function getConditionById($id){
+        $qry = $this->db->get_where('accounting_conditions',array('rules_id'=>$id));
+        return $qry->result();
+    }
+    public function getCategoryById($id){
+        $qry = $this->db->get_where('accounting_category',array('rules_id'=> $id));
+        return $qry->result();
+    }
 }

@@ -771,7 +771,7 @@ if (!function_exists('getCompanyFolder')){
 
 if (!function_exists('getFolders')) {
 
-    function getFolders($parent_id = -1, $getallparent = false, $getallchild = false, $asArray = false)
+    function getFolders($parent_id = -1, $getallparent = false, $getallchild = false, $asArray = false, $trashed = false)
     {
         $CI = &get_instance();
         $company_id = logged('company_id');
@@ -783,6 +783,12 @@ if (!function_exists('getFolders')) {
             $parent_filter = 'and (a.parent_id = 0 or a.parent_id is null) ';
         } else if($getallchild){
             $parent_filter = 'and (a.parent_id <> 0 and a.parent_id is not null) ';
+        }
+
+        if(!$trashed){
+            $softdelete = '<= 0';
+        } else {
+            $softdelete = '>= 1';
         }
 
         $sql = 'select ' . 
@@ -797,15 +803,15 @@ if (!function_exists('getFolders')) {
                'left join business_profile c on c.id = a.company_id '.
                'left join('.
 
-                 'select parent_id, count(*) as `total_sub_folders` from file_folders group by parent_id'.
+                 'select parent_id, sum(if(softdelete = 1,0,1)) as `total_sub_folders` from file_folders group by parent_id'.
 
                ') d on d.parent_id = a.folder_id '.
                'left join('.
 
-                 'select folder_id, count(*) as `total_files` from filevault group by folder_id'.
+                 'select folder_id, sum(if(softdelete = 1,0,1)) as `total_files` from filevault group by folder_id'.
                ') e on e.folder_id = a.folder_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete <= 0 ' . $parent_filter . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . ' ' . $parent_filter . 
 
                'order by create_date ASC';
 
@@ -822,9 +828,15 @@ if (!function_exists('getFolders')) {
 
 if (!function_exists('getFiles')) {
 
-    function getFiles($folder_id, $asArray = false){
+    function getFiles($folder_id, $asArray = false, $trashed = false){
         $CI = &get_instance();
         $company_id = logged('company_id');
+
+        if(!$trashed){
+            $softdelete = '<= 0 and a.folder_id = ' . $folder_id . ' ';
+        } else {
+            $softdelete = '>= 1 ';
+        }
 
         $sql = 'select ' . 
 
@@ -836,7 +848,7 @@ if (!function_exists('getFiles')) {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete <= 0 and a.folder_id = ' . $folder_id . ' ' . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . 
 
                'order by created ASC';
 

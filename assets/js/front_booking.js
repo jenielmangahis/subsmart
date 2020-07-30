@@ -39,7 +39,48 @@ $(document).ready(function() {
              }
           });
       }, 1000);
+    });
 
+    $(".btn-add-cart").click(function(){
+      var pid = $(this).attr("data-id");
+      var qty = $("#qty-input-" + pid).val();
+      var url = base_url + '/booking/_add_cart_item';
+      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Adding item to cart...</div>';
+
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {pid:pid,qty:qty},
+             success: function(o)
+             {
+                location.reload();
+             }
+          });
+      }, 1000);
+    });
+
+    $(".delete-cart-item").click(function(){
+      var pid = $(this).attr("data-id");
+      var url = base_url + '/booking/_delete_cart_item';
+      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Updating cart items...</div>';
+
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {pid:pid},
+             success: function(o)
+             {
+                location.reload();
+             }
+          });
+      }, 1000);
+      
     });
 });
 

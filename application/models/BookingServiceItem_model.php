@@ -34,12 +34,6 @@ class BookingServiceItem_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
-            }
-        }
-
         $this->db->where('user_id', $id);
         $this->db->order_by('id', 'DESC');
 
@@ -104,16 +98,44 @@ class BookingServiceItem_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllUserProductsByCategoryId( $user_id , $category_id )
+    public function getAllUserProductsByCategoryId( $user_id , $category_id, $filters=array() )
     {
         $this->db->select('*');
         $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('name', $filters['search'], 'both');
+            }
+        }
 
         $this->db->where('category_id', $category_id);
         $this->db->where('user_id', $user_id);
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getUserCartSummary($cartData)
+    {
+        $total_cart = 0;
+        $items      = array();
+
+        if( !empty($cartData) ){
+            $cart_data = array();
+            foreach($cartData as $key => $qty){
+                $pid  = str_replace("pid_", "", $key);
+                $item = $this->getById($pid);
+                if( $item ){
+                    $item->ordered_qty = $qty;
+                    $items[]     = $item;
+                    $total_cart += $item->price * $qty;
+                } 
+            }
+        }
+
+        $cart_summary = ['total_cart_items' => $total_cart, 'items' => $items];
+        return $cart_summary;
     }
 
 }

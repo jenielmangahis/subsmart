@@ -88,10 +88,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										  </a>
 										  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 											Columns<br/>
-											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_type" id="chk_type"> Type</p>
-											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
-											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
-											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_check()" name="chk_balance" id="chk_balance"> Balance</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
+											<p class="p-padding"><input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance"> Balance</p>
 											<br/>
 											<p class="p-padding"><input type="checkbox" name="chk_other" id="chk_other"> Other</p>
 										  </div>
@@ -109,10 +109,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<tr>
 										<th></th>
 										<th>NAME</th>
-										<th>TYPE</th>
-										<th>DETAIL TYPE</th>
-										<th>NSMARTRAC BALANCE</th>
-										<th>BANK BALANCE</th>
+										<th class='type'>TYPE</th>
+										<th class='detailtype'>DETAIL TYPE</th>
+										<th class='nbalance'>NSMARTRAC BALANCE</th>
+										<th class='balance'>BANK BALANCE</th>
 										<th>Action</th>
 									</tr>
 									</thead>
@@ -124,10 +124,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									  echo "<tr>";
 									  echo "<td><input type='checkbox'></td>";
 									  echo "<td class='edit_field' data-id='".$row->id."'>".$row->name."</td>";
-									  echo "<td>".$this->account_model->getName($row->account_id)."</td>";
-									  echo "<td>".$this->account_detail_model->getName($row->acc_detail_id)."</td>";
-									  echo "<td>".$row->balance."</td>";
-									  echo "<td></td>";
+									  echo "<td class='type'>".$this->account_model->getName($row->account_id)."</td>";
+									  echo "<td class='detailtype'>".$this->account_detail_model->getName($row->acc_detail_id)."</td>";
+									  echo "<td class='nbalance'>".$row->balance."</td>";
+									  echo "<td class='balance'></td>";
 									  echo "<td>
 										<div class='dropdown show'>
 										  <a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
@@ -170,15 +170,60 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#charts_of_account_table').DataTable();
     } );
 
-    function col_check()
+    function col_type()
+    {
+    	if($('#chk_type').attr('checked'))
+    	{
+    		$('#chk_type').removeAttr('checked');
+    		$('.type').css('display','none');
+
+    	}
+    	else
+    	{
+    		$('#chk_type').attr('checked',"checked");
+    		$('.type').css('display','block');
+    	}
+    }
+    function col_detailtype()
+    {
+    	if($('#chk_detail_type').attr('checked'))
+    	{
+    		$('#chk_detail_type').removeAttr('checked');
+    		$('.detailtype').css('display','none');
+
+    	}
+    	else
+    	{
+    		$('#chk_detail_type').attr('checked',"checked");
+    		$('.detailtype').css('display','block');
+    	}
+    }
+    function col_nbalance()
+    {
+    	if($('#chk_nsmart_balance').attr('checked'))
+    	{
+    		$('#chk_nsmart_balance').removeAttr('checked');
+    		$('.nbalance').css('display','none');
+
+    	}
+    	else
+    	{
+    		$('#chk_nsmart_balance').attr('checked',"checked");
+    		$('.nbalance').css('display','block');
+    	}
+    }
+    function col_balance()
     {
     	if($('#chk_balance').attr('checked'))
     	{
     		$('#chk_balance').removeAttr('checked');
+    		$('.balance').css('display','none');
+
     	}
     	else
     	{
     		$('#chk_balance').attr('checked',"checked");
+    		$('.balance').css('display','block');
     	}
     }
 

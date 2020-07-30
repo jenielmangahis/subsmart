@@ -450,6 +450,15 @@ class Accounting extends MY_Controller {
     }
 
     /***Rules***/
+    public function edit_rules(){
+        $id = $this->input->get('id');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rules'] = $this->rules_model->getRulesById($id);
+        $this->page_data['conditions'] = $this->rules_model->getConditionById($id);
+        $this->page_data['categories'] = $this->rules_model->getCategoryById($id);
+        $this->load->view('accounting/rules/edit-rules', $this->page_data);
+    }
+
     public function addRules(){
         $new_data = array(
             'rules_name' => $this->input->post('rules_name'),
@@ -479,7 +488,6 @@ class Accounting extends MY_Controller {
             $this->session->set_flashdata('rules_failed','Rules name already exist.');
             redirect('accounting/rules');
         }
-
 
     }
 
@@ -568,4 +576,79 @@ class Accounting extends MY_Controller {
         $id = $this->input->post('id');
         $this->receipt_model->deleteReceiptData($id);
     }
+
+     /*chart_of_accounts start*/
+        public function add()
+    {
+        $this->load->view('accounting/chart_of_accounts/add', $this->page_data);
+    }
+
+    public function addChartofaccounts()
+    {
+        $account_id=$this->input->post('account_type');
+        $acc_detail_id=$this->input->post('detail_type');
+        $name=$this->input->post('name');
+        $description=$this->input->post('description');
+        $sub_acc_id=$this->input->post('sub_account_type');
+        $time=$this->input->post('choose_time');
+        $balance=$this->input->post('balance');
+        $time_date=$this->input->post('time_date');
+
+        $this->chart_of_accounts_model->saverecords($account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date);
+        
+        //$this->session->set_flashdata('error', "Please try again!");
+        $this->session->set_flashdata('success', "Data inserted successfully!"); 
+        redirect("accounting/chart_of_accounts");
+        //$this->load->view('accounting/chart_of_accounts', $this->page_data);
+    }
+
+    public function edit($id)
+    {
+        $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
+        $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
+    }
+
+    public function update()
+    {
+        $id=$this->input->post('id');
+        $account_id=$this->input->post('account_type');
+        $acc_detail_id=$this->input->post('detail_type');
+        $name=$this->input->post('name');
+        $description=$this->input->post('description');
+        $sub_acc_id=$this->input->post('sub_account_type');
+        $time=$this->input->post('choose_time');
+        $balance=$this->input->post('balance');
+        $time_date=$this->input->post('time_date');
+        if($time != 'Other')
+        {
+            $time_date = '';
+        }
+
+        $this->chart_of_accounts_model->updaterecords($id,$account_id,$acc_detail_id,$name,$description,$sub_acc_id,$time,$balance,$time_date);
+        
+        $this->session->set_flashdata('success', "Data updated successfully!"); 
+        redirect("accounting/chart_of_accounts");
+    }
+
+    public function fetch_acc_detail()
+    {
+        if($this->input->post('account_id'))
+        {
+            echo $this->accounts_has_account_details_model->fetch_acc_detail_id($this->input->post('account_id'));
+        }
+    }
+
+    public function update_name()
+    {
+        $id = $this->input->post('id');
+        $name = $this->input->post('name');
+        $this->chart_of_accounts_model->update_name($id,$name);
+    }
+
+    public function inactive()
+    {
+        $id = $this->input->post('id');
+        $this->chart_of_accounts_model->inactive($id);
+    }
+    /*chart_of_accounts end*/
 }

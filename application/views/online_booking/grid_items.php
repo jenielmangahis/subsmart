@@ -17,24 +17,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row">
               <div class="col-xl-12">
+                <?php echo form_open_multipart('booking/products/'.$eid.'?style=grid', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                 <div class="col-9 right-menu">
                   <div class="col-4 left pr-0 ml-4">
-                    <input type="text" class="form-control-search left" placeholder="Search...">
+                    <input type="text" class="form-control-search left" value="<?php echo $search_query; ?>" name="search" placeholder="Search...">
                   </div>
                   <div class="col-1 left pl-1">
-                    <button class="search-booking-btn"><span class="fa fa-search"></span></button>
+                    <button type="submit" class="search-booking-btn"><span class="fa fa-search"></span></button>
                   </div>
                   <div class="col-3 left pl-0 pr-0 pos-rlt-cs left-20">
-                    <a class="view-grid" href="<?php echo base_url('booking/front_items?style=grid') ?>"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
+                    <a class="view-grid" href="<?php echo base_url('booking/products/'.$eid.'?style=grid') ?>"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
                   </div>
                   <div class="col-3 left pl-0 pr-0 pos-rlt-cs">
-                    <a class="view-grid active" href="<?php echo base_url('booking/front_items') ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
+                    <a class="view-grid active" href="<?php echo base_url('booking/products/'.$eid) ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
                   </div>
                 </div>
+                <?php echo form_close(); ?>
               </div>
             </div>
             <!-- end row -->
             <div class="row">
+                <?php include viewPath('flash'); ?>
                 <div class="col-xl-12">
                   <ul class="category-grid">
                   <?php foreach($products as $key => $value){ ?>            
@@ -69,17 +72,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="product__description">
                                        <p><?php echo $p->description; ?></p>
                                     </div>
-                                    <div class="product__price">$<?php echo number_format($p->price, 2); ?><span class="product__price__unit">/each</span></div>
+                                    <div class="product__price">$<?php echo number_format($p->price, 2); ?><span class="product__price__unit">/<?php echo $p->price_unit; ?></span></div>
                                     <div class="product__actions">
                                        <div class="product__qty-box sdv-qty">
                                           <button class="btn qty_minus product__qty-btn" data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-minus"></span></button>
                                           <input class="form-control-qty product__qty" id="qty-input-<?php echo $p->id; ?>" type="text" name="qty[<?php echo $p->id; ?>]" value="1">
                                           <button class="btn qty_plus product__qty-btn"  data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-plus"></span></button>
                                        </div>
-                                       <button class="btn btn-green btn-sm sdv-grid" data-cart="add" data-product-id="22516">Add to Cart</button>
+                                       <button class="btn btn-green btn-sm btn-add-cart" data-id="<?php echo $p->id; ?>">Add to Cart</button>
                                     </div>
                                     <div class="product__view">
-                                       <a href="#" data-product-modal="open" data-product-id="22516">view more</a>
+                                       <a href="#" data-product-modal="open" data-product-id="<?php echo $p->id; ?>">view more</a>
                                     </div>
                                  </div>
                               </div>
@@ -99,22 +102,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 
-<!-- Modal Quick Look --> 
-<div class="modal fade" id="modalQuickLook" tabindex="-1" role="dialog" aria-labelledby="modalQuickLookTitle" aria-hidden="true">
-   <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body quick-look-body"></div>
-      </div>
-    </div>
-</div>
+<?php include viewPath('includes/booking_front_modals'); ?>  
+
 <script>
 var base_url = "<?php echo base_url(); ?>";
 </script>
+
 <?php include viewPath('includes/footer_front_booking'); ?>
 

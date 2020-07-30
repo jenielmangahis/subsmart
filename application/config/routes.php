@@ -78,6 +78,10 @@ $route['survey/upload/custombackgroundimage/(:any)'] = 'survey/uploadCustomBackg
 $route['survey/home'] = 'survey/index';
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
 
+// survey logic
+$route['survey/logic/list/(:any)'] = "survey/surveyLogicList/$1";
+$route['survey/logic/add'] = "survey/addLogicJump";
+
 // themes
 $route['survey/themes'] = 'survey/themeIndex';
 $route['survey/themes/create'] = 'survey/themeCreate';
@@ -88,14 +92,15 @@ $route['survey/themes/(:num)'] = 'survey/themeView/$1';
 $route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
 
 //question
-$route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/update/(:num)/(:any)/(:num)'] = 'survey/updateSurvey/$1/$2/$3';
+$route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/update/(:any)'] = 'survey/updateSurvey/$1';
 $route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
 $route['survey/add/questions/choices/(:num)/(:num)'] = 'survey/addAndUpdateQuestionChoices/$1/$2';
 $route['survey/add/questions/(:num)/(:num)'] = 'survey/addAndUpdateQuestion/$1/$2';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';
 $route['survey/delete/question/(:num)']['GET'] = 'survey/deleteQuestion/$1';
+$route['survey/add/questions/template/choices/(:num)'] = 'survey/addTemplateChoices/$1'; // new 
 $route['survey/order/question']['POST'] = 'survey/orderUpdate/$1';
 
 $route['survey/tribute/(:num)'] = 'survey/getQuestions/$1';
@@ -147,13 +152,13 @@ $route['accounting/products-and-services'] = 'accounting/products_and_services';
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
 
-$route['accounting/chart_of_accounts/create'] = 'chart_of_accounts/add';
-$route['accounting/chart_of_accounts/fetch_acc_detail'] = 'chart_of_accounts/fetch_acc_detail';
-$route['accounting/chart_of_accounts/add'] = 'chart_of_accounts/addChartofaccounts';
-$route['accounting/chart_of_accounts/edit/(:any)?'] = 'chart_of_accounts/edit/$1';
-$route['accounting/chart_of_accounts/update'] = 'chart_of_accounts/update';
-$route['accounting/chart_of_accounts/update_name'] = 'chart_of_accounts/update_name';
-$route['accounting/chart_of_accounts/inactive'] = 'chart_of_accounts/inactive';
+$route['accounting/chart_of_accounts/create'] = 'Accounting/add';
+$route['accounting/chart_of_accounts/fetch_acc_detail'] = 'Accounting/fetch_acc_detail';
+$route['accounting/chart_of_accounts/add'] = 'Accounting/addChartofaccounts';
+$route['accounting/chart_of_accounts/edit/(:any)?'] = 'Accounting/edit/$1';
+$route['accounting/chart_of_accounts/update'] = 'Accounting/update';
+$route['accounting/chart_of_accounts/update_name'] = 'Accounting/update_name';
+$route['accounting/chart_of_accounts/inactive'] = 'Accounting/inactive';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile'] = 'reconcile/index';
 $route['accounting/reconcile/edit'] = 'reconcile/edit';
@@ -191,6 +196,8 @@ $route['booking/_inquiry_details'] = 'booking/ajax_get_inquiry_details';
 //$route['booking/products'] = 'booking/front_items';
 $route['booking/products/(:any)'] = 'booking/front_items/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
+$route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
+$route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';

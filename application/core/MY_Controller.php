@@ -39,6 +39,10 @@ class MY_Controller extends CI_Controller {
 			'submenu' => '',
 		];
 
+		$company_id =  logged('company_id');
+		if(!empty($company_id)){
+			$company = getCompanyFolder();
+		}
 	}
 
 
