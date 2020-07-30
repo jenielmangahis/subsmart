@@ -310,6 +310,7 @@ button.btn.btn-green.btn-sm {
 }
 .widget-cnt-right {
     margin: 30px;
+    height: 100vh;
 }
 .widget-cnt-right__child {
     position: fixed;
