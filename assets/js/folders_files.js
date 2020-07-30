@@ -14,13 +14,13 @@ $(document).ready(function(){
   selected = 0;
   selected_isFolder = 1;
 
+  selected_trash = 0;
+  selected_trash_isFolder = 1;
+
   current_process = '';
   current_alert_theme = '';
 
   clear_process = true;
-
-  row_trace = 1;
-  col_trace = 1;
 
 // -------------------------------------------------------------------------------------------------------------
 // Load initial functions
@@ -99,9 +99,9 @@ $(document).ready(function(){
 
     if(selected != 0){
       if(selected_isFolder == 1){
-        showFolderDetails();
+        showFolderDetails(selected, selected_isFolder, false);
       } else {
-        showFileDetail();
+        showFileDetail(selected, selected_isFolder, false);
       }
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder to view','error');
@@ -122,6 +122,20 @@ $(document).ready(function(){
     e.preventDefault();
 
     showFolderManagerSearch();
+  });
+
+// open recycle bin
+  $('a[control="recycle"]').click(function(e){
+    e.preventDefault();
+
+    getTrashRecords();
+  });
+
+// restore selected trash
+  $('a[control="restore"]').click(function(e){
+    e.preventDefault();
+
+    restoreFileOrFolder();
   });
 // -------------------------------------------------------------------------------------------------------------
 
@@ -331,10 +345,10 @@ function setFoldersAndFiles(folders, files){
   selected = 0;
   selected_isFolder = 1;
 
-  row_trace = 1;
-  col_trace = 1;
+  var row_trace = 1;
+  var col_trace = 1;
+  var cur_count = 1;
 
-  var cur_count = 1; 
   var append = '<div class="row row-' + row_trace + '">';
   $.each(folders, function(index, folder){
     if(col_trace == 7){
@@ -475,7 +489,7 @@ function setFoldersAndFiles(folders, files){
         $('#fs_selected_file').val(selected);
         $('#modal-folder-manager').modal('hide');
       } else {
-        showFileDetail();
+        showFileDetail(selected, selected_isFolder, false);
       }
     }  
   });
@@ -783,16 +797,28 @@ function hideUploading(){
   }
 }
 
-function showFileDetail(){
-  var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+function showFileDetail(vS, vSiF, vIsTrash){
+  if($('#download_image_or_file').hasClass('d-none')){
+    $('#download_image_or_file').removeClass('d-none'); 
+  }
+
+  if(!vIsTrash){
+    var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+  } else {
+    $('#download_image_or_file').addClass('d-none');
+
+    var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]');
+  }
   var file_info = getfileExInfos(div.attr('fnm'));
 
   if(file_info['isImage']){
-    update_preview_count();
+    if(!vIsTrash){
+      update_preview_count();
+    }
 
     var fpath = div.attr('path');
 
-    fpath = base_url + '/uploads/' + fpath;
+    fpath = base_url + 'uploads/' + fpath;
 
     $('#view-image-date-created').text(div.attr('created_date'));
     $('#view-image-created-by').text(div.attr('created_by'));
@@ -801,19 +827,27 @@ function showFileDetail(){
     $('#modal-folder-manager-view-image-title').text(div.attr('fnm'));
     $('#modal-folder-manager-view-image').modal('show');
   } else {
-    showFolderDetails();
+    showFolderDetails(vS, vSiF, vIsTrash);
   }
 }
 
-function showFolderDetails(){
+function showFolderDetails(vS, vSiF, vIsTrash){
   if(!$('#download_div').hasClass('d-none')){
     $('#download_div').addClass('d-none');
   }
 
-  var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
-  var fpath = $('#folders_path').text();
+  if(!vIsTrash){
+    var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+  } else {
+    var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]'); 
+  }
 
-  fpath = fpath.trim() + div.attr('fnm');
+  if(!vIsTrash){
+    var fpath = $('#folders_path').text();
+    fpath = fpath.trim() + div.attr('fnm');
+  } else {
+    var fpath = '/root' + div.attr('path_temp');
+  }
 
   $('#view-folder-path').text(fpath);
   $('#view-folder-date-uploaded').text(div.attr('created_date'));
@@ -822,8 +856,10 @@ function showFolderDetails(){
   $('#modal-folder-manager-view-folder-title').text(div.attr('fnm'));
   $('#modal-folder-manager-view-folder').modal('show');
 
-  if((selected_isFolder == 0) && ($('#download_div').hasClass('d-none'))){
-    $('#download_div').removeClass('d-none');   
+  if(!vIsTrash){
+    if((selected_isFolder == 0) && ($('#download_div').hasClass('d-none'))){
+      $('#download_div').removeClass('d-none');   
+    }
   } 
 }
 
@@ -930,6 +966,202 @@ function showFolderManagerSearch(){
 
 function hideFolderManagerSearch(){
   $('#modal-folder-manager-search').modal('hide');
+}
+
+
+function getTrashRecords(vShowRecycleBin = true, vUpdateMain = false, vFolder_id = -1){
+  $.ajax({
+    type: 'GET',
+    url: base_url + "folders/getTrashRecords",
+    success: function(data){
+      var result = jQuery.parseJSON(data);
+      var folders = result.folders;
+      var files = result.files;
+
+      setTrashRecords(folders, files);
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      showFolderManagerNotif(textStatus, errorThrown, 'error');
+    },
+    complete: function(jqXHR, textStatus){
+      if(vShowRecycleBin){
+        showFolderManagerRecycleBin();
+      }
+
+      if((vUpdateMain) && (vFolder_id >= 0) && (vFolder_id == current_selected_folder)){
+        getFoldersAndFiles(vFolder_id);
+      }
+    }
+  });
+}
+
+function setTrashRecords(folders, files){
+  $('#recycle_bin').empty();
+
+  selected_trash = 0;
+  selected_trash_isFolder = 1;
+
+  var row_trash_trace = 1;
+  var col_trash_trace = 1;
+  var cur_trash_count = 1;
+
+  var append = '<div class="row row-' + row_trash_trace + '">';
+  $.each(folders, function(index, folder){
+    if(col_trash_trace == 7){
+      append += '</div>';
+
+      col_trash_trace = 1;
+      row_trash_trace++;
+
+      if(folders.length >= cur_trash_count){
+        append += '<div class="row row-' + row_trash_trace + ' mt-4">';
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="1" fid="'+ folder.folder_id +'">';
+          append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+          append += '<td style="width: 85%" class="pl-2">' + folder.folder_name + '</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="1" fid="'+ folder.folder_id +'">';
+        append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+        append += '<td style="width: 85%" class="pl-2">' + folder.folder_name + '</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+    }   
+
+    col_trash_trace++;
+    cur_trash_count++;
+  });
+
+  var ex_infos = [];
+
+  cur_trash_count = 1;
+  $.each(files, function(index, file){
+    ex_infos = getfileExInfos(file.title);
+
+    if(col_trash_trace == 7){
+      append += '</div>';
+
+      col_trash_trace = 1;
+      row_trash_trace++;
+
+      if(files.length >= cur_trash_count){
+        append += '<div class="row row-' + row_trash_trace + ' mt-4">';
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="0" fid="'+ file.file_id +'">';
+          append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+          append += '<td class="pl-2">' + file.title + '</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="0" fid="'+ file.file_id +'">';
+        append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+        append += '<td class="pl-2">' + file.title + '</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+    }   
+
+    col_trash_trace++;
+    cur_trash_count++;
+  });
+  
+  append += '</div>';
+
+  $('#recycle_bin').append(append);
+
+//On Select Trash Folder or File
+  $('tr.node_trash > td, div.node_trash').click(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node_trash');
+      var div = $('div.node_trash[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    var id = div.attr('fid');
+    var isFolder = div.attr('isFolder');
+    var proceed = ((selected_trash != id) || 
+                    ((selected_trash == id) && (selected_trash_isFolder != isFolder)));
+
+    if((selected_trash > 0) && (proceed)){
+      var prev_div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]');
+
+      if(prev_div.length){
+        prev_div.removeClass('bg-info');
+        prev_div.removeClass('text-white');
+      }  
+    }
+
+    div.addClass('bg-info');
+    div.addClass('text-white');
+
+    selected_trash = id;
+    selected_trash_isFolder = isFolder;
+  });
+
+// On double click trash folder or file
+  $('tr.node_trash > td, div.node_trash').dblclick(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node_trash');
+      var div = $('div.node_trash[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    selected_trash = div.attr('fid');
+    selected_trash_isFolder = div.attr('isFolder');
+
+    if(selected_trash_isFolder == 1){
+      showFolderDetails(selected_trash, selected_trash_isFolder, true);
+    } else {
+      showFileDetail(selected_trash, selected_trash_isFolder, true);
+    }  
+  });
+}
+
+function restoreFileOrFolder(){
+  if(selected_trash != 0){
+    $.ajax({
+      type: 'POST',
+      url: base_url + "folders/restoreFileOrFolder",
+      data: {fid:selected_trash,isFolder:selected_trash_isFolder},
+      success: function(data){
+        var result = jQuery.parseJSON(data);
+        if(result.error == ''){
+          getTrashRecords(false, true, result.folder_id);
+        } else {
+          showFolderManagerNotif('Error',result.error,'error');
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        showFolderManagerNotif(textStatus, errorThrown, 'error');
+      },
+      complete: function(jqXHR, textStatus){
+      }
+    });
+  } else {
+    showFolderManagerNotif('Error','Please select a file or folder to restore','error');
+  }
+}
+
+function showFolderManagerRecycleBin(){
+  $('#modal-folder-manager-recycle-bin').modal('show');  
 }
 
 function folderSelectedIsNotEmpty() {

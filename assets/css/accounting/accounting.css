@@ -1,6 +1,6 @@
 @font-face {
     font-family: fontStyle;
-    src:url("/assets/css/accounting/fonts/Metropolis-Thin.otf");
+    src:url("/assets/css/accounting/fonts/Depot-Regular.otf");
 }
 body{
     font-family: fontStyle;
@@ -806,4 +806,30 @@ button {
     transform: translateY(-50%);
 }
 
-
+/*Edit Rules CSS*/
+.edit-rules-container{
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background: #ffffff;
+    margin-top: 10px;
+}
+.edit-rules-container .form-group label{
+    display: block;
+}
+.form-inline{
+    color: #363636;
+    font-size: 16px;
+    border-radius: 2px;
+    height: 46px;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+    display: inline-block;
+    width: auto;
+    position: relative;
+    margin-right: 8px;
+    padding: 10px;
+}
+.form-inline:focus {
+    border: 2px solid #10d4ae;
+}

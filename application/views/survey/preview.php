@@ -11,7 +11,6 @@
     <link href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
     <link href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css">
-    <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
     <link href="<?= base_url()?>/assets/css/survey.css" rel="stylesheet">
     <style>
         html, body {
@@ -143,11 +142,19 @@
     </style>
   </head>
   <body>
-
+      <script>
+        console.log(<?= json_encode($questions)?>);
+      </script>
     <?php
       $image_half = null;
       $question_length = count($questions);
+      $scored_question_length = 0;
+
+
       foreach($questions as $question){
+        if($question->isScoreCounted == 1 ){
+          $scored_question_length++;
+        }
         if($question->template_id == 1 || $question->template_id == 19){
           $question_length--;
         }
@@ -157,10 +164,12 @@
         ?>
           <div class="preview-notification-bar" style="background-color: <?=($survey_theme != null)? $survey_theme->sth_secondary_color : "#fff"?>; color: <?= ($survey_theme != null)? $survey_theme->sth_text_color: "#000"?>">You are currently in Preview mode. 
           <?php
-            if(isset($_GET["src"]) && $_GET['src'] == "results" ){
-              ?>
-                <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="#">Refresh</a>
-              <?php
+            if(isset($_GET['src'])){
+              if($_GET['src'] == "results" ){
+                ?>
+                  <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="#">Refresh</a>
+                <?php
+              }
             }else{
               ?>
                 <a type="button" href="<?php echo base_url()?>survey/result/<?php echo $survey->id?>">Go back</a>
@@ -235,8 +244,9 @@
                         
                         
                         <!-- array of questions  -->
-                        <?php foreach($questions as $key => $question){ ?>                      
-                        <!-- <img class="image-set-background-image" src="https://picsum.photos/id/1005/5760/3840"> -->
+                        <?php foreach($questions as $key => $question){ ?>        
+
+                          <!-- <img class="image-set-background-image" src="https://picsum.photos/id/1005/5760/3840"> -->
                           <div id="question-<?= $key ?>" class="col-sm-3 <?= ($key != 0) ? "d-none" : "" ?> animate__animated animate__fadeIn" style="<?=($question->template_id != null && $question->template_id == 1)?"text-align: center;" :""?>">
 
                             <!-- image for welcome screen -->
@@ -271,9 +281,9 @@
                             <div class="<?=($question->template_id != null && $question->template_id == 1)?"text-align: center;" :""?>">
                                 <div class="mb-4">
                                     <h1 id="question" class="h3 mb-3 font-weight-bold unselectable" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">
-                                      <?php if($question->required == 1): ?>
+                                      <?php if($question->required == 1){ ?>
                                         <label class="text-danger" id="required-asterisk-<?= $question->id ?>"  style="color: red">*</label>
-                                      <?php endif; ?>
+                                      <?php }; ?>
                                       <?= $question->question ?>
                                     </h1>
                                     <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ''?>"><?= ($question->description == 1) ? $question->description_label : ""; ?></p>
@@ -283,8 +293,10 @@
 
                                 <!-- input -->
                                 <?php if($question->template_id == 15){ ?>
-                                  <!-- <select name="answer[]" class="form-control input-content " id="exampleFormControlSelect1"> -->
+                                  <select name="answer-<?=$question->id?>" class="form-control input-content " id="exampleFormControlSelect1">
                                 <?php }; ?>
+
+                                
                                 <?php //foreach ($question->questions as $key1 => $quest):?>
                                   <?php
                                     switch($question->template_id){
@@ -414,13 +426,14 @@
                                         break;
                                       case 15: //dropdown
                                         ?>
-                                          <select name="answer-<?=$question->id?>" class="form-control input-content " id="exampleFormControlSelect1">
                                             <?php
                                               foreach ($question->questions as $key1 => $quest){
-                                                echo $quest->survey_template_choice;
+                                                ?>
+                                                  <option value="<?=$quest->choices_label?>"><?=$quest->choices_label?></option>
+
+                                                <?php
                                               }
                                             ?>
-                                          </select>
                                         <?php
                                         break;
                                       case 16: //payment
@@ -495,15 +508,12 @@
                                   
                                   <?php if($question->required == 1): ?>
                                     <script>
-                                      document.getElementsByName('answer[]')[<?= $key1 ?>].setAttribute('required','required');
                                       <?php if($question->maxcharacters != 0){
                                         ?>
-                                          document.getElementsByName('answer[]')[<?= $key1 ?>].setAttribute('maxlength',`<?=$question->maxcharacters?>`);
                                         <?php
                                       }?>
                                       <?php if($question->mincharacters != 0){
                                         ?>
-                                          document.getElementsByName('answer[]')[<?= $key1 ?>].setAttribute('minlength',`<?=$question->mincharacters?>`);
                                         <?php
                                       }?>
                                     </script>
@@ -513,7 +523,7 @@
                                 <?php }; ?>
 
                                 <!-- next button -->
-                                <button id="btn-next" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
+                                <button id="btn-next" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
                                 <?php if($key >= 1){
                                   ?>
                                     <button id="btn-back" data-id="<?= $key ?>"  class="btn btn-md btn-outline-light mt-3">Go back</button>
@@ -529,43 +539,50 @@
 
                         <!-- completed message -->
                         <div id="question-<?= count($questions) ?>" class="col-sm-6 d-none animate__animated animate__fadeInRight">
+
                           <div class="result-survey">
                             <h1 class="font-weight-bold" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Survey completed!</h1>
                             <div class="line-separator" style="background-color: <?=  $survey_theme !== null ? $survey_theme->sth_secondary_color : "" ?>"></div>
-                            <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
-                          </div>
-                          <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
-                          <?php
-                            if(strpos(uri_string(), 'preview') !== false){
-                              if(!isset($_GET["src"]) && !$_GET['src'] == 'results'){
+                            
+                            <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
+                            <?php
+                              if(strpos(uri_string(), 'preview') !== false){
+                                if(isset($_GET["src"])){
+                                  ?>
+                                    <p id="preview-end-note" class="border text-center rounded" >This is the end of the survey. <a id="from-top" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color:"#000"?>" href="#">Back to top</a> or <a style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color: "#000"?>" href="<?= ($survey->canRedirectOnComplete == true && $survey->redirectionLink != "") ? ($survey->redirectionLink) : (base_url()."survey/edit/". $survey->id) ?>">redirect to another page.</a></p>
+                                  <?php
+                                }else{
+                                  ?>
+                                    <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
+                                    <a id="from-top" class="btn btn-block btn-outline " style="color: <?= $survey_theme->sth_text_color?>" href="#">Back to top</a>
+                                  <?php
+                                }
+                              }else{
                                 ?>
-                                  <p id="preview-end-note" class="border text-center rounded" >This is the end of the survey. <a id="from-top" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color:"#000"?>" href="#">Back to top</a> or <a style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color: "#000"?>" href="<?= ($survey->canRedirectOnComplete == true && $survey->redirectionLink != "") ? ($survey->redirectionLink) : (base_url()."survey/edit/". $survey->id) ?>">redirect to another page.</a></p>
+                                  <div class="result-survey">
+                                    <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
+                                    <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button><br/>
+                                    <a id="from-top" style="color: <?= $survey_theme->sth_text_color?>" href="#">I would like to check my answers once more</a>
+                                  </div>
                                 <?php
                               }
-                            }else{
-                              ?>
-                              <div class="result-survey">
-                                <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button><br/>
-                                <a id="from-top" style="color: <?= $survey_theme->sth_text_color?>" href="#">I would like to check my answers once more</a>
-                              </div>
-                              <?php
-                            }
-
-                          ?>
+                            ?>
+                          </div>
+                          
                         </div>
                         <!-- end of completed message -->
 
                       </div>
                     <?php
                   }
-                  ?>
-                  <?php
-                }
-              }
-              ?>
+                ?>
               <?php
             }
-          ?>
+          }
+        ?>
+        <?php
+      }
+    ?>
 
 
         </div>
@@ -620,10 +637,14 @@
 
     <script>
       const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = Math.floor(100000000 + Math.random() * 900000000);
       let pageNumber = 1;
       let numQuestions = <?=$question_length?>;
       let answeredFields = 0;
       let progress = 0;
+      let surveyScore = 0;
+      let scoredQuestionLength = <?=$scored_question_length?>;
+
 
       $(document).ready(function(){
         $("#t").timer({action:'start', seconds:0, });
@@ -635,10 +656,10 @@
           var data = new FormData(document.getElementById('form-survey'));
           var timer = $('#t').html();
           data.append('timer', parseInt(timer));
+          data.append('session', sessionId)
           // for (var pair of data.entries()) {
           //     console.log(pair[0]+ ', ' + pair[1]); 
           // }
-          
           var url = $('#form-survey').attr('href');
           
           $.ajax({
@@ -682,6 +703,7 @@
           var id = $(this).data('id');
           var next_id = 0;
           pageNumber = 1;
+          surveyScore = 0;
           $('#question-'+id+'').addClass('d-none');
           $('#question-'+ next_id +'').removeClass('d-none');
           $('#preview-end-note').addClass('d-none');
@@ -726,8 +748,7 @@
         });
 
         $(document).on('click', '#btn-next', function(e){
-          e.preventDefault();
-
+          e.preventDefault()
 
           var id = $(this).data('id');
           var tempid = $(this).data('temp-id');
@@ -736,14 +757,35 @@
           var data =  $(this).serializeArray();
           var regex = /\[[^\]]*\]/g;
           // var str = $('#question-'+next_id+' #question').html();
+          var value = $('#question-'+id+' [name*="answer"]').val();
+          let correctAnswer = $(this).data('correct-answer');
 
-          if(tempid === 12 || tempid === 1){
-            answeredFields = answeredFields;
-          }else{
-            if($('#question-'+id+' [name*="answer"]').val()){
-              answeredFields++;
+          console.log(value);
+          console.log(correctAnswer);
+          <?php
+            if(!isset($_GET["src"])){
+              if($survey->isScoreMonitored == 1){
+                ?>
+                  if(pageNumber == <?= count($questions)?>){
+                    setTimeout(() => {
+                      window.alert(`Your score is ${surveyScore} out of <?= $scored_question_length?>`)
+                    }, 1000);
+                  }else{
+                    if(value == correctAnswer){
+                      surveyScore++;
+                    }
+                  }
+                <?php
+              }
             }
+          ?>
+
+
+          
+          if(value){
+            answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;
           }
+        
 
           if(urlParams.get('mode') != 'preview'){
             if(isRequired && $('#question-'+id+' [name*="answer"]').val() == ""){

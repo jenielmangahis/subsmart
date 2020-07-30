@@ -3,7 +3,6 @@
 const surveyBaseUrl = `${window.location.origin}/` ; // online
 
 $(document).ready(function(){
-  console.log(surveyBaseUrl)
   $(document).on('submit', '#frm-add-survey', function(e){
     e.preventDefault();
     var url = $(this).attr('action');
@@ -126,7 +125,7 @@ $(document).ready(function(){
               var data = ``;
             }
           var append = `<div id="container-${res.data.id}" class="col-sm-12">
-               <div class="card">
+              <div class="card">
                   <div class="card-body p-0">
                   <form action="${surveyBaseUrl}/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
                       <div class="d-flex justify-content-between">
@@ -295,7 +294,6 @@ $(document).ready(function(){
 
   $(document).on('submit', '#frm-update-question', function(e){
     e.preventDefault();
-    console.log("ajsdfhasjkdf");
     var id = $(this).data('id');
     var action = $(this).attr('action');
     var choices_data = $("[action='"+action+"'] #choices .input-group");
@@ -379,6 +377,25 @@ $(document).ready(function(){
       case "txtSurveyTitle":
         if(localStorage.getItem('cls_as')){
           var data = {"title":value}
+          $.ajax({
+            url: surveyBaseUrl + 'survey/update/'+id,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(res){
+      
+              if(res.success == 1){
+                $('#survey-title').html(value);
+                toastr["success"]("Survey name changed");
+              }
+            }
+          });
+        }
+
+        break;
+      case "txtCorrectAnswerText":
+        if(localStorage.getItem('cls_as')){
+          var data = {"correctAnswer":value}
           $.ajax({
             url: surveyBaseUrl + 'survey/update/'+id,
             type: 'POST',
@@ -499,8 +516,9 @@ $(document).ready(function(){
   $(document).on('click', 'input[type="checkbox"]', function(e){
     var value = $(this).val();
     var id = $(this).data('id');
+    console.log(id)
+    console.log(value)
     
-    console.log("checkbox");
     switch(value){
       case "description":
         if($(this).is(":checked")){
@@ -553,6 +571,29 @@ $(document).ready(function(){
           });
         }
         break;
+      case "isScoreCounted":
+        if(localStorage.getItem('cls_as')){
+          if($(this).is(":checked")){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/question/'+value+'/'+id+'/1',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Survey scores are now enabled!");
+              }
+            });
+          }else{
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+value+'/'+id+'/0',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Survey scores are now disabled");
+              }
+            });
+          }
+        }
+        break;
       case "hasProgressBar":
         if(localStorage.getItem('cls_as')){
           if($(this).is(":checked")){
@@ -571,6 +612,29 @@ $(document).ready(function(){
               dataType: 'json',
               success: function(res){
                 toastr["success"]("Progress bar Removed!");
+              }
+            });
+          }
+        }
+        break;
+      case "isScoreMonitored":
+        if(localStorage.getItem('cls_as')){
+          if($(this).is(":checked")){
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/1',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("Scores are ready!");
+              }
+            });
+          }else{
+            $.ajax({
+              url: surveyBaseUrl + 'survey/update/'+id+'/'+value+'/0',
+              type:'GET',
+              dataType: 'json',
+              success: function(res){
+                toastr["success"]("No scores for now!");
               }
             });
           }
@@ -603,8 +667,6 @@ $(document).ready(function(){
         }
         break;
       case "useBackgroundImage":
-        console.log(id)
-        console.log(value)
         if(localStorage.getItem('cls_as')){
           if($(this).is(":checked")){
             $.ajax({

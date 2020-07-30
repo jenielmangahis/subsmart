@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
     // select2 option initialized
-    // $('.select2').select2();
+    $('.select2').select2();
     //Alert popup
     window.setTimeout(function() {
         $('.alert').fadeTo(500, 0).slideUp(500, function(){
@@ -9,6 +9,80 @@ $(document).ready(function () {
         });
     }, 5000);
     $('.alert').css({"bottom":"100px","left":"30px","position":"absolute","z-index":"999","width":"auto"});
+
+    // Rules page
+    //select2 initialisation
+    $('.select2-rules-category').select2({
+        placeholder: 'Select a category',
+        allowClear: true
+    });
+    $('.select2-rules-payee').select2({
+        placeholder: '(Recommended)',
+        allowClear: true
+    });
+    // Add and remove condition div
+    $('#btnAddCondition').click(function (e) {
+        $("#deleteCondition").show();
+        $("#addCondition").clone().appendTo($('.addCondition-container'));
+        e.preventDefault();
+    });
+    //Remove added condition
+    $(document).on("click","#btnDeleteCondition",function (e) {
+        e.preventDefault();
+        $("#addCondition").remove();
+        var check_count = jQuery("div[id='addCondition']").length;
+        if (check_count == 1){
+            $("#deleteCondition").hide();
+        }
+    });
+    //Assign More
+    $('#btnAssignMore').click(function () {
+        $('#assignMore').show();
+        $(this).hide();
+        $('#btnClear').show();
+    });
+    $('#btnClear').click(function () {
+        $('#assignMore').hide();
+        $(this).hide();
+        $('#btnAssignMore').show();
+    });
+    // Add Split Line
+    $('#btnAddSplit').click(function () {
+        $('.add-split-container').show();
+        $('#categoryDefault').hide();
+        $('#btnAddLine').show();
+        $('#mainCategory').removeAttr('name');
+
+        $('.select2-rules-category').select2({
+            placeholder: 'Select a category',
+            allowClear: true
+        });
+        $('.select2-rules-category').last().next().next().remove();
+    });
+
+    $(document).on("click","#btnAddLine",function () {
+        $(".add-split-container").append($('.add-split-section').first().clone());
+        var num = $('.add-split-section').length;
+        $('.splitNum').last().html(num);
+        $('.select2-rules-category').select2({
+            placeholder: 'Select a category',
+            allowClear: true
+        });
+        $('.select2-rules-category').last().next().next().remove();
+    });
+    //Delete split
+    $(document).on("click","#deleteSplitLine",function () {
+        var num = $('.add-split-section').length;
+        if(num == 2){
+            $('.add-split-container').hide();
+            $('#categoryDefault').show();
+            $('#btnAddLine').hide();
+            $('#mainCategory').attr('name','category[]');
+        }else{
+            $(".add-split-section").last().remove();
+        }
+    });
+
 
     // Expenses page Check modal
     $(document).on('click','#addCheck',function () {

@@ -289,6 +289,18 @@
     background-color: #FAFAFA;
     margin-bottom: 0;
 }
+.modal-right-side .modal-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #ffffff;
+}
+.modal-right-side .modal-footer .btn-default{
+    border: 2px solid black;
+    font-weight: bolder;
+    font-size: 16px;
+    color: rgb(57, 58, 61);
+}
 .modal-right-side .modal-body .subheader{
     font-size: 14px;
     color: #333333;
@@ -306,7 +318,7 @@
 .modal-right-side .modal-body .form-group input,select{
     border-radius: 3px;
 }
-.modal-right-side .modal-body .form-group .tab-select{
+.tab-select{
     display: inline-block;
     position: relative;
 }
@@ -354,19 +366,19 @@
     display: inline-block;
     max-width: 150px;
 }
-.modal-right-side .modal-body .form-group .action-section{
+.form-group .action-section{
     align-items: center;
     display: flex;
     margin-bottom: 16px;
 }
-.modal-right-side .modal-body .form-group .action-section .form-control{
+.form-group .action-section .form-control{
     max-width: 220px;
 }
-.modal-right-side .modal-body .form-group .action-section .action-label{
+.form-group .action-section .action-label{
     margin-right: 30px;
     width: 100px;
 }
-.modal-right-side .modal-body .form-group .action-section .text-dropdown{
+.form-group .action-section .text-dropdown{
     color: #363636;
     font-size: 16px;
     border-radius: 2px;
@@ -382,15 +394,15 @@
 .modal-right-side .modal-footer .btn {
     border-radius: 36px;
 }
-.modal-right-side .modal-body .form-group .action-section .add-split-container{
+.action-section .add-split-container{
     padding: 10px;
     display: none;
 }
-.modal-right-side .modal-body .form-group .action-section .add-split-container .split-content{
+.action-section .add-split-container .split-content{
     display: inline-block;
     position: relative;
 }
-.modal-right-side .modal-body .form-group .action-section .add-split-container .split-content .split-category-text{
+.action-section .add-split-container .split-content .split-category-text{
     display: block;
     font-size: small;
 }

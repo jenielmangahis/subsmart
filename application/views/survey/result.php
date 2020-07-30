@@ -666,8 +666,8 @@
 
                       <!-- preview section of the survey -->
                       <div class="col-sm-12 col-md-6">
-                      <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-outline-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
                         <iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 600px"></iframe>
+                        <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-outline-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
                       </div>
                     </div>                      
                     </div>
@@ -687,7 +687,7 @@
 <!-- page wrapper end -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script type="text/javascript" src="https://nsmartrac.com/assets/js/survey.js"></script>
+<!-- <script type="text/javascript" src="https://nsmartrac.com/assets/js/survey.js"></script> -->
 <script>
 
   // set storage

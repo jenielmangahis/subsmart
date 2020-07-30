@@ -53,7 +53,7 @@
                 </div> 
             </div>
           </div>
-          <div class="card-body" style="height: 64vh !important; overflow: auto">
+          <div class="card-body" style="<?php if(!$isMain){ echo 'height: 64vh !important; overflow: auto'; } ?>">
             <div id="folders_and_files">
                 
             </div>
@@ -185,7 +185,7 @@
               <td class="col-md-2 text-center font-weight-bold">Uploaded By : </td>
               <td class="text-center col-md-3" id="view-image-created-by"></td>
               <td class="col-md-2 border border-0 text-right pt-0">
-                <a href="#" class="btn btn-sm btn-default" control="download" title="Download File" data-toggle="tooltip"><i class="fa fa-download"></i></a>
+                <a href="#" class="btn btn-sm btn-default" control="download" title="Download File" data-toggle="tooltip" id="download_image_or_file"><i class="fa fa-download"></i></a>
               </td>
             </tr>
           </tbody>
@@ -300,6 +300,31 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="modal-folder-manager-recycle-bin" class="modal" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Recycle Bin</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body pt-2">
+        <nav class="navbar navbar-expand-sm bg-light navbar-light mb-2 justify-content-end">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="#" class="nodecontrol btn btn-sm btn-default nav-link" control="restore" title="Restore"><i class="fa fa-recycle" title="Restore"></i></a>
+            </li>
+          </ul>
+        </nav>
+        <div id="recycle_bin">   
         </div>
       </div>
     </div>

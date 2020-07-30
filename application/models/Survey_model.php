@@ -126,7 +126,6 @@ class Survey_model extends MY_Model {
 			'id'=> $insert_id,
 			'tid' => $tid,
 			'data' => $template->answer,
-			'test' => $test,
 			'question' => $template->question,
 			'template_title' => $template->type
 		);
@@ -135,9 +134,6 @@ class Survey_model extends MY_Model {
 
 	// new
 	public function addAndUpdateQuestionChoices($choices){
-		echo "<pre/>";
-		var_dump($choices);
-		exit;
 		foreach($choices as $choice){
 			$data_option = array(
 				'survey_template_choice' => $template->answer,
@@ -175,6 +171,17 @@ class Survey_model extends MY_Model {
 		return;
 	}
 
+	public function saveTemplateQuestionChoices($id, $choices){
+		foreach($choices as $choice){
+			$data_option = array(
+				"survey_template_id" => $id,
+				"choices_label" => $choice
+			);
+			$this->db->insert('survey_template_answer', $data_option);
+		}
+		return;
+	}
+
 	public function getQuestions($id){
 		$this->db->select('*');
 		$this->db->where('survey_id', $id);
@@ -183,18 +190,17 @@ class Survey_model extends MY_Model {
 
 			$check = array_map( function($data){
 				$this->db->select('*');
-				$this->db->where('survey_template_id', $data->id);
+				$this->db->where('survey_template_id', $data->survey_id);
 				$query = $this->db->get('survey_template_answer');
 				$data->questions = $query->result();
 
 				$this->db->select('*');
 				$this->db->where('id', $data->template_id);
 				$template = $this->db->get('survey_template_questions');
-
 				$data->template_title = $template->row()->type;
 				$data->template_icon = $template->row()->icon;
 				$data->template_color = $template->row()->color;
-
+				
 				$this->db->select('*');
 				$this->db->where('question_id', $data->id);
 				$survey_answer = $this->db->get('survey_answer');
@@ -242,32 +248,31 @@ class Survey_model extends MY_Model {
 				}
 				return $data;
 			}, $query->result());
-			// echo '<pre>';
-			// var_dump($check);
-			// exit;
+			
 		return $check;
 	}
 	public function getQuestionsPreview($id){
 		$this->db->select('*');
 		$this->db->where('survey_id', $id);
-			$this->db->order_by('order', 'ASC');
+		$this->db->order_by('order', 'ASC');
 		$query = $this->db->get('survey_questions');
 
 			$check = array_map( function($data){
+				
 				$this->db->select('*');
 				$this->db->where('survey_template_id', $data->id);
 				$query = $this->db->get('survey_template_answer');
 				$data->questions = $query->result();
-
 				$this->db->select('*');
 				$this->db->where('id', $data->template_id);
 				$template = $this->db->get('survey_template_questions');
+				
 
 				$data->template_title = $template->row()->type;
-					if($data->template_id == 3){
+				if($data->template_id == 3){
 					foreach ($data->questions as $key => $value) {
 						$token = array_map(function($data){
-							$test = '<div class="form-check input-content">
+						$test = '<div class="form-check input-content">
 						<input name="answer[]" value="'. $data->choices_label .'" class="form-check-input" type="radio" id="gridRadios'. $data->id .'">
 						<label class="form-check-label" for="gridRadios'. $data->id .'">
 							'.$data->choices_label.'
@@ -310,6 +315,7 @@ class Survey_model extends MY_Model {
 		$this->load->helper('file');
 		$this->load->library('upload');
 		foreach ($post as $key => $value) {
+			
 				if($key == 'timer'){
 					$this->db->select('*');
 					$this->db->where('id', $id);
@@ -328,7 +334,8 @@ class Survey_model extends MY_Model {
 						$datas = array(
 							'answer' => $value,
 							'survey_id' => $id,
-							'question_id' => (int)$question_id
+							'question_id' => (int)$question_id,
+							'session_id' => $post["session"]
 						);
 						$this->db->insert('survey_answer',$datas);
 					}
@@ -413,11 +420,12 @@ class Survey_model extends MY_Model {
 	public function addQuestionChoice($id, $tid){
 		$this->db->where('id', $tid);
 		$query1 = $this->db->get('survey_template_questions');
-
+		
 		$update_data = array(
-			'survey_template_id' => $id,
-			'survey_template_choice' => $query1->row()->answer
+			'survey_template_id' => $id
 		);
+		
+
 		$query = $this->db->insert('survey_template_answer', $update_data);
 		$insert_id = $this->db->insert_id();
 		if($tid == 4){
@@ -529,5 +537,22 @@ class Survey_model extends MY_Model {
 		$this->db->where('id', $id);
 		return $this->db->update('survey_workspaces', $workspaceChange);
 	}
+
+	// logic jumps
+	public function getSurveyLogics($survey_id){
+		$this->db->select('*');
+		$this->db->where('si_survey_id', $survey_id);
+		$query = $this->db->get('survey_logic');
+		return $query->result();
+		
+	}
+
+	public function addToSurveyLogic($data){
+		$this->db->insert('survey_logic', $data);
+		return $this->db->insert_id();
+	}
+	
+
+
 
 }
