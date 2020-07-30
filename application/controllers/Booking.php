@@ -473,6 +473,42 @@ class Booking extends MY_Controller {
         redirect('more/addon/inquiries');
     }
 
+    public function update_inquiry_details()
+    {
+    	postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$id = $post['inquiry_id'];
+        	$stat = $this->BookingInquiry_model->getById($id);
+
+        	if($stat) {
+	            $this->BookingInquiry_model->update($stat->id, array(
+	                'name' => post('name'),
+	                'phone' => post('phone'),
+	                'email' => post('email'),
+	                'address' => post('address'),
+	                'message' => post('message'),
+	                'preferred_time_to_contact' => post('preferred_time_to_contact'),
+	                'how_did_you_hear_about_us' => post('how_did_you_hear_about_us'),
+	                'status' => post('status')
+	            ));
+
+	            $this->session->set_flashdata('message', 'Inquiry info was successfully updated');
+	            $this->session->set_flashdata('alert_class', 'alert-success');
+        	} else {
+	            $this->session->set_flashdata('message', 'Inquiry not found');
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('more/addon/inquiries');
+    }    
+
     public function save_service_item()
     {
         postAllowed();
@@ -788,6 +824,17 @@ class Booking extends MY_Controller {
     	$this->page_data['inquiry_id'] = $id;
 		$this->load->view('online_booking/ajax_change_inquiry_status', $this->page_data);
     }
+
+    public function ajax_inquiry_edit_details()
+    {
+		$id = post('iid');
+        $post = $this->input->post();    
+        $inquiry = $this->BookingInquiry_model->findById($id);
+
+        $this->page_data['inquiry'] = $inquiry;
+        $this->page_data['inquiry_id'] = $id;
+        $this->load->view('online_booking/ajax_inquiry_edit_details', $this->page_data);	
+    }    
 
     public function front_items($eid)
 	{
