@@ -20,13 +20,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="opt-button">
                       <a href="#"><span class="fa fa-arrow-right"></span></a>
                     </div>
-                    <div class="col-day">
+
+                    <?php foreach ($default_days as $value) {   
+                            $x = 0; ?>
+                                  <div class="col-day">
+                                    <span class="txt-day"><?php echo $value ?></span>
+                                    <span class="txt-date">20-JUL</span>
+
+                           <?php foreach($schedules as $key => $schedule){
+                                  $days = unserialize($schedule->days); ?>
+
+                                    <div class="container-availability">
+                                    <?php foreach ($days as $day) {
+                                            if($value == strtoupper($day)){     ?>
+                                       <button class="active"><?php echo $schedule->time_start . " - ".$schedule->time_end; ?></button>
+                                    <?php  $x++;  }
+                                          }  ?>
+                                    </div>    
+                            <?php }?> 
+                                    <?php if($x==0){ ?>
+                                      <div class="container-availability">
+                                        <button class="unavailable">NOT AVAILABLE</button>
+                                      </div>
+                                    <?php  } ?>
+
+                                  </div>
+                    <?php }  ?> 
+                      
+
+                       
+
+                        
+
+
+                    
+
+
+
+                  <!--  <div class="col-day">
                       <span class="txt-day">MON</span>
                       <span class="txt-date">20-JUL</span>
                       <div class="container-availability">
                         <button class="unavailable">NOT AVAILABLE</button>
                       </div>
                     </div>
+
                     <div class="col-day">
                       <span class="txt-day">TUES</span>
                       <span class="txt-date">20-JUL</span>
@@ -68,7 +106,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <div class="container-availability">
                         <button class="active">8:00am-10:00am</button>
                       </div>
-                    </div>
+                    </div>-->
+
+
+
                   </div>
                 </div>
             </div>

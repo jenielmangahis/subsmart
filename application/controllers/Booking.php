@@ -894,10 +894,34 @@ class Booking extends MY_Controller {
 			$products[$c->id]['category'] = $c; 
 		}
 
+		$schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
+
+		$default_days = array(
+			'0' => 'MON',
+			'1' => 'TUE',
+			'2' => 'WED',
+			'3' => 'THU',
+			'4' => 'FRI',
+			'5' => 'SAT',
+			'6' => 'SUN',
+		); 
+
+		foreach($schedules as $key => $value){
+			$days = unserialize($value->days);
+			echo "<pre>";
+		//	print_r($value);
+		//	print_r($days);
+			echo "</pre>";
+
+		}
+
+
 
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
+		$this->page_data['default_days'] = $default_days;
+		$this->page_data['schedules']    = $schedules; 
 		$this->page_data['cart_data']    = $cart_data;
 		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['products']     = $products;
