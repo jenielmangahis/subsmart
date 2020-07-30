@@ -25,10 +25,14 @@ class Booking extends MY_Controller {
 
 	public function index() {
 
+		$user = $this->session->userdata('logged');
+    	$eid = hashids_encrypt($user['id'], '', 15);
+
 		$total_category = $this->BookingCategory_model->countTotal();
 		$total_products = $this->BookingServiceItem_model->countTotal();
 		$total_timeslots = $this->BookingTimeSlot_model->countTotal();
 
+		$this->page_data['eid']   = $eid;
 		$this->page_data['total_category']  = $total_category;
 		$this->page_data['total_products']  = $total_products;
 		$this->page_data['total_timeslots'] = $total_timeslots;
