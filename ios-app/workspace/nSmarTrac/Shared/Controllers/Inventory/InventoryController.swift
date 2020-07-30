@@ -225,6 +225,7 @@ extension InventoryController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 1
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return Utils.createHeader(AppTheme.defaultLightOpaque!, AppTheme.defaultColor, "A")
     }

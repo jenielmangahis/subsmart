@@ -7,12 +7,13 @@
               if(file_exists('uploads/users/user-profile/' . $profile_image) == FALSE || $profile_image == null) {
                   
                   $profile_image = base_url('/assets/dashboard/images/online-booking.png');
-                  if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-                      $profile_image = base_url('/assets/dashboard/images/online-booking.png');
-                  } else {
-                      $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
-                  }
-
+                  if(isset($service_item_thumb)){ 
+                    if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                        $profile_image = base_url('/assets/dashboard/images/online-booking.png');
+                    }else {
+                        $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
+                    } 
+                  }  
 
               } else {
                   $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
@@ -27,7 +28,8 @@
          <div class="widget-cart margin-bottom-sec" data-cart="cart">
             <div style="font-size: 18px; margin-bottom: 15px;">
                <span class="fa fa-shopping-cart fa-margin-right"></span> Cart Total:
-               $<?php echo number_format($cart_data['total_cart_items'], 2); ?>    <span class="text-ter">(<?php echo count($cart_data['items']) ?> item(s))</span>
+               $<span class="total_cart_amount"><?php echo number_format($cart_data['total_cart_items'], 2); ?></span>   <span class="text-ter">(<?php echo count($cart_data['items']) ?> item(s))</span>
+
             </div>
             <div>
                <?php foreach($cart_data['items'] as $item){ ?>
@@ -41,7 +43,7 @@
                
             </div>
             <div class="validation validation-error margin-top-sec">
-               Minimum booking amount is $50.00<br>
+               Minimum booking amount is $<span class="total_minimum">50.00</span><br>
             </div>
          </div>
          <div class="coupon">
@@ -52,7 +54,7 @@
          </div>
          <hr class="margin-top margin-bottom">
          <div class="text-right">
-            <a class="btn btn-primary-green disabled" data-form="continue" href="#">Continue »</a>
+            <a class="btn btn-primary-green" data-form="continue" href="#" onclick="javascript:continue_cart();">Continue »</a>
          </div>
       </div>
    </div>

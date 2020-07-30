@@ -42,6 +42,27 @@
 		8C391482247506CD002AB83D /* AddInvoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C391481247506CD002AB83D /* AddInvoiceController.swift */; };
 		8C391484247506EB002AB83D /* EditInvoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C391483247506EB002AB83D /* EditInvoiceController.swift */; };
 		8C3914862475082C002AB83D /* InvoiceFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3914852475082C002AB83D /* InvoiceFilterController.swift */; };
+		8C4E727B247D2A88001355DE /* MonthlyCloseoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E727A247D2A88001355DE /* MonthlyCloseoutController.swift */; };
+		8C4E727D247D2A98001355DE /* YearlyCloseoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E727C247D2A98001355DE /* YearlyCloseoutController.swift */; };
+		8C4E727F247D2AB4001355DE /* ProfitLossController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E727E247D2AB4001355DE /* ProfitLossController.swift */; };
+		8C4E7281247D2AED001355DE /* SalesLeaderboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7280247D2AED001355DE /* SalesLeaderboardController.swift */; };
+		8C4E7283247D2B76001355DE /* PaymentByMethodController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7282247D2B76001355DE /* PaymentByMethodController.swift */; };
+		8C4E7285247D2B90001355DE /* PaymentByMonthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7284247D2B90001355DE /* PaymentByMonthController.swift */; };
+		8C4E7287247D2BA0001355DE /* PaymentByItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7286247D2BA0001355DE /* PaymentByItemController.swift */; };
+		8C4E7289247D31C1001355DE /* PaymentByMaterialItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7288247D31C1001355DE /* PaymentByMaterialItemController.swift */; };
+		8C4E728B247D31DB001355DE /* PaymentByProductItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E728A247D31DB001355DE /* PaymentByProductItemController.swift */; };
+		8C4E728D247D31FB001355DE /* PaymentRepeatedByCustomerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E728C247D31FB001355DE /* PaymentRepeatedByCustomerController.swift */; };
+		8C4E728F247D3D37001355DE /* SalesDemographicsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E728E247D3D37001355DE /* SalesDemographicsController.swift */; };
+		8C4E7291247D3DDD001355DE /* AccountReceivableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7290247D3DDD001355DE /* AccountReceivableController.swift */; };
+		8C4E7293247D3DF5001355DE /* InvoiceByDateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7292247D3DF5001355DE /* InvoiceByDateController.swift */; };
+		8C4E7295247D3E11001355DE /* InvoiceAgingSummaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7294247D3E11001355DE /* InvoiceAgingSummaryController.swift */; };
+		8C4E7297247D3E41001355DE /* AccountReceivableCommVsResController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7296247D3E41001355DE /* AccountReceivableCommVsResController.swift */; };
+		8C4E7299247D3E6E001355DE /* ExpensesByCategoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E7298247D3E6E001355DE /* ExpensesByCategoryController.swift */; };
+		8C4E729B247D3E7F001355DE /* ExpensesByMonthByCategoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E729A247D3E7F001355DE /* ExpensesByMonthByCategoryController.swift */; };
+		8C4E729D247D3F1E001355DE /* ExpensesByMonthByCustomerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E729C247D3F1E001355DE /* ExpensesByMonthByCustomerController.swift */; };
+		8C4E729F247D3F33001355DE /* ExpensesByMonthByWorkOrderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E729E247D3F33001355DE /* ExpensesByMonthByWorkOrderController.swift */; };
+		8C4E72A1247D3F42001355DE /* ExpensesByMonthByVendorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E72A0247D3F42001355DE /* ExpensesByMonthByVendorController.swift */; };
+		8C4E72A3247D3F62001355DE /* EstimatesByMonthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4E72A2247D3F62001355DE /* EstimatesByMonthController.swift */; };
 		8C5820E0247336A000E21A8E /* Font Awesome 5 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5820DB2473369F00E21A8E /* Font Awesome 5 Brands-Regular-400.otf */; };
 		8C5820E1247336A000E21A8E /* Font Awesome 5 Duotone-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5820DC2473369F00E21A8E /* Font Awesome 5 Duotone-Solid-900.otf */; };
 		8C5820E2247336A000E21A8E /* Font Awesome 5 Pro-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8C5820DD2473369F00E21A8E /* Font Awesome 5 Pro-Regular-400.otf */; };
@@ -80,6 +101,21 @@
 		8C99399F24764B0600A0FECC /* AddCustomEstimateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C99399E24764B0600A0FECC /* AddCustomEstimateController.swift */; };
 		8C9939A124764B1400A0FECC /* EditCustomEstimateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9939A024764B1400A0FECC /* EditCustomEstimateController.swift */; };
 		8C9939A324764B6E00A0FECC /* EstimateOptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9939A224764B6E00A0FECC /* EstimateOptionController.swift */; };
+		8C9D2DFD247E3F59007AF2BA /* PaymentByCustomerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2DFC247E3F59007AF2BA /* PaymentByCustomerController.swift */; };
+		8C9D2DFF247E3FAF007AF2BA /* PaymentByCustomerGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2DFE247E3FAF007AF2BA /* PaymentByCustomerGroupController.swift */; };
+		8C9D2E01247E3FC9007AF2BA /* PaymentByCustomerSourceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E00247E3FC9007AF2BA /* PaymentByCustomerSourceController.swift */; };
+		8C9D2E03247E3FF9007AF2BA /* CustomerTaxByMonthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E02247E3FF9007AF2BA /* CustomerTaxByMonthController.swift */; };
+		8C9D2E05247E401B007AF2BA /* CustomerDemographicsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E04247E401B007AF2BA /* CustomerDemographicsController.swift */; };
+		8C9D2E07247E4031007AF2BA /* CustomerBySourceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E06247E4031007AF2BA /* CustomerBySourceController.swift */; };
+		8C9D2E09247E4062007AF2BA /* PayrollSummaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E08247E4062007AF2BA /* PayrollSummaryController.swift */; };
+		8C9D2E0B247E4085007AF2BA /* PayrollByEmployeeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E0A247E4085007AF2BA /* PayrollByEmployeeController.swift */; };
+		8C9D2E0D247E4091007AF2BA /* PayrollLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E0C247E4091007AF2BA /* PayrollLogController.swift */; };
+		8C9D2E0F247E40BE007AF2BA /* PercentSalesCommissionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E0E247E40BE007AF2BA /* PercentSalesCommissionController.swift */; };
+		8C9D2E11247E40E6007AF2BA /* TimesheetSummaryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E10247E40E6007AF2BA /* TimesheetSummaryController.swift */; };
+		8C9D2E13247E4118007AF2BA /* TimesheetEntriesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E12247E4118007AF2BA /* TimesheetEntriesController.swift */; };
+		8C9D2E15247E413C007AF2BA /* WorkOrderStatusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E14247E413C007AF2BA /* WorkOrderStatusController.swift */; };
+		8C9D2E17247E4161007AF2BA /* SalesTaxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E16247E4161007AF2BA /* SalesTaxController.swift */; };
+		8C9D2E19247E4171007AF2BA /* NonTaxableSalesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9D2E18247E4171007AF2BA /* NonTaxableSalesController.swift */; };
 		8CC2F3AF24727D0E007D466D /* ExpensesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC2F3AE24727D0E007D466D /* ExpensesController.swift */; };
 		8CC2F3B124727D4A007D466D /* ExpenseDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC2F3B024727D4A007D466D /* ExpenseDetailController.swift */; };
 		8CC2F3B324727D72007D466D /* AddExpensesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC2F3B224727D72007D466D /* AddExpensesController.swift */; };
@@ -183,6 +219,27 @@
 		8C391481247506CD002AB83D /* AddInvoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInvoiceController.swift; sourceTree = "<group>"; };
 		8C391483247506EB002AB83D /* EditInvoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInvoiceController.swift; sourceTree = "<group>"; };
 		8C3914852475082C002AB83D /* InvoiceFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceFilterController.swift; sourceTree = "<group>"; };
+		8C4E727A247D2A88001355DE /* MonthlyCloseoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCloseoutController.swift; sourceTree = "<group>"; };
+		8C4E727C247D2A98001355DE /* YearlyCloseoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearlyCloseoutController.swift; sourceTree = "<group>"; };
+		8C4E727E247D2AB4001355DE /* ProfitLossController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitLossController.swift; sourceTree = "<group>"; };
+		8C4E7280247D2AED001355DE /* SalesLeaderboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesLeaderboardController.swift; sourceTree = "<group>"; };
+		8C4E7282247D2B76001355DE /* PaymentByMethodController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByMethodController.swift; sourceTree = "<group>"; };
+		8C4E7284247D2B90001355DE /* PaymentByMonthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByMonthController.swift; sourceTree = "<group>"; };
+		8C4E7286247D2BA0001355DE /* PaymentByItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByItemController.swift; sourceTree = "<group>"; };
+		8C4E7288247D31C1001355DE /* PaymentByMaterialItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByMaterialItemController.swift; sourceTree = "<group>"; };
+		8C4E728A247D31DB001355DE /* PaymentByProductItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByProductItemController.swift; sourceTree = "<group>"; };
+		8C4E728C247D31FB001355DE /* PaymentRepeatedByCustomerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRepeatedByCustomerController.swift; sourceTree = "<group>"; };
+		8C4E728E247D3D37001355DE /* SalesDemographicsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesDemographicsController.swift; sourceTree = "<group>"; };
+		8C4E7290247D3DDD001355DE /* AccountReceivableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountReceivableController.swift; sourceTree = "<group>"; };
+		8C4E7292247D3DF5001355DE /* InvoiceByDateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceByDateController.swift; sourceTree = "<group>"; };
+		8C4E7294247D3E11001355DE /* InvoiceAgingSummaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceAgingSummaryController.swift; sourceTree = "<group>"; };
+		8C4E7296247D3E41001355DE /* AccountReceivableCommVsResController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountReceivableCommVsResController.swift; sourceTree = "<group>"; };
+		8C4E7298247D3E6E001355DE /* ExpensesByCategoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesByCategoryController.swift; sourceTree = "<group>"; };
+		8C4E729A247D3E7F001355DE /* ExpensesByMonthByCategoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesByMonthByCategoryController.swift; sourceTree = "<group>"; };
+		8C4E729C247D3F1E001355DE /* ExpensesByMonthByCustomerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesByMonthByCustomerController.swift; sourceTree = "<group>"; };
+		8C4E729E247D3F33001355DE /* ExpensesByMonthByWorkOrderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesByMonthByWorkOrderController.swift; sourceTree = "<group>"; };
+		8C4E72A0247D3F42001355DE /* ExpensesByMonthByVendorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesByMonthByVendorController.swift; sourceTree = "<group>"; };
+		8C4E72A2247D3F62001355DE /* EstimatesByMonthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimatesByMonthController.swift; sourceTree = "<group>"; };
 		8C5820DB2473369F00E21A8E /* Font Awesome 5 Brands-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 5 Brands-Regular-400.otf"; sourceTree = "<group>"; };
 		8C5820DC2473369F00E21A8E /* Font Awesome 5 Duotone-Solid-900.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 5 Duotone-Solid-900.otf"; sourceTree = "<group>"; };
 		8C5820DD2473369F00E21A8E /* Font Awesome 5 Pro-Regular-400.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Font Awesome 5 Pro-Regular-400.otf"; sourceTree = "<group>"; };
@@ -221,6 +278,21 @@
 		8C99399E24764B0600A0FECC /* AddCustomEstimateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCustomEstimateController.swift; sourceTree = "<group>"; };
 		8C9939A024764B1400A0FECC /* EditCustomEstimateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCustomEstimateController.swift; sourceTree = "<group>"; };
 		8C9939A224764B6E00A0FECC /* EstimateOptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimateOptionController.swift; sourceTree = "<group>"; };
+		8C9D2DFC247E3F59007AF2BA /* PaymentByCustomerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByCustomerController.swift; sourceTree = "<group>"; };
+		8C9D2DFE247E3FAF007AF2BA /* PaymentByCustomerGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByCustomerGroupController.swift; sourceTree = "<group>"; };
+		8C9D2E00247E3FC9007AF2BA /* PaymentByCustomerSourceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByCustomerSourceController.swift; sourceTree = "<group>"; };
+		8C9D2E02247E3FF9007AF2BA /* CustomerTaxByMonthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerTaxByMonthController.swift; sourceTree = "<group>"; };
+		8C9D2E04247E401B007AF2BA /* CustomerDemographicsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerDemographicsController.swift; sourceTree = "<group>"; };
+		8C9D2E06247E4031007AF2BA /* CustomerBySourceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerBySourceController.swift; sourceTree = "<group>"; };
+		8C9D2E08247E4062007AF2BA /* PayrollSummaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayrollSummaryController.swift; sourceTree = "<group>"; };
+		8C9D2E0A247E4085007AF2BA /* PayrollByEmployeeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayrollByEmployeeController.swift; sourceTree = "<group>"; };
+		8C9D2E0C247E4091007AF2BA /* PayrollLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayrollLogController.swift; sourceTree = "<group>"; };
+		8C9D2E0E247E40BE007AF2BA /* PercentSalesCommissionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentSalesCommissionController.swift; sourceTree = "<group>"; };
+		8C9D2E10247E40E6007AF2BA /* TimesheetSummaryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesheetSummaryController.swift; sourceTree = "<group>"; };
+		8C9D2E12247E4118007AF2BA /* TimesheetEntriesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesheetEntriesController.swift; sourceTree = "<group>"; };
+		8C9D2E14247E413C007AF2BA /* WorkOrderStatusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkOrderStatusController.swift; sourceTree = "<group>"; };
+		8C9D2E16247E4161007AF2BA /* SalesTaxController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesTaxController.swift; sourceTree = "<group>"; };
+		8C9D2E18247E4171007AF2BA /* NonTaxableSalesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonTaxableSalesController.swift; sourceTree = "<group>"; };
 		8CC2F3AE24727D0E007D466D /* ExpensesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesController.swift; sourceTree = "<group>"; };
 		8CC2F3B024727D4A007D466D /* ExpenseDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseDetailController.swift; sourceTree = "<group>"; };
 		8CC2F3B224727D72007D466D /* AddExpensesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpensesController.swift; sourceTree = "<group>"; };
@@ -555,6 +627,8 @@
 		8C804FEA247D01B00002E101 /* Taxes */ = {
 			isa = PBXGroup;
 			children = (
+				8C9D2E16247E4161007AF2BA /* SalesTaxController.swift */,
+				8C9D2E18247E4171007AF2BA /* NonTaxableSalesController.swift */,
 			);
 			path = Taxes;
 			sourceTree = "<group>";
@@ -562,6 +636,7 @@
 		8C804FEB247D01C60002E101 /* WorkOrders */ = {
 			isa = PBXGroup;
 			children = (
+				8C9D2E14247E413C007AF2BA /* WorkOrderStatusController.swift */,
 			);
 			path = WorkOrders;
 			sourceTree = "<group>";
@@ -569,6 +644,8 @@
 		8C804FEC247D11380002E101 /* Timesheet */ = {
 			isa = PBXGroup;
 			children = (
+				8C9D2E10247E40E6007AF2BA /* TimesheetSummaryController.swift */,
+				8C9D2E12247E4118007AF2BA /* TimesheetEntriesController.swift */,
 			);
 			path = Timesheet;
 			sourceTree = "<group>";
@@ -576,6 +653,10 @@
 		8C804FED247D11460002E101 /* Employees */ = {
 			isa = PBXGroup;
 			children = (
+				8C9D2E08247E4062007AF2BA /* PayrollSummaryController.swift */,
+				8C9D2E0A247E4085007AF2BA /* PayrollByEmployeeController.swift */,
+				8C9D2E0C247E4091007AF2BA /* PayrollLogController.swift */,
+				8C9D2E0E247E40BE007AF2BA /* PercentSalesCommissionController.swift */,
 			);
 			path = Employees;
 			sourceTree = "<group>";
@@ -583,6 +664,12 @@
 		8C804FEE247D11560002E101 /* Customers */ = {
 			isa = PBXGroup;
 			children = (
+				8C9D2DFC247E3F59007AF2BA /* PaymentByCustomerController.swift */,
+				8C9D2DFE247E3FAF007AF2BA /* PaymentByCustomerGroupController.swift */,
+				8C9D2E00247E3FC9007AF2BA /* PaymentByCustomerSourceController.swift */,
+				8C9D2E02247E3FF9007AF2BA /* CustomerTaxByMonthController.swift */,
+				8C9D2E04247E401B007AF2BA /* CustomerDemographicsController.swift */,
+				8C9D2E06247E4031007AF2BA /* CustomerBySourceController.swift */,
 			);
 			path = Customers;
 			sourceTree = "<group>";
@@ -590,6 +677,7 @@
 		8C804FEF247D11CD0002E101 /* Estimates */ = {
 			isa = PBXGroup;
 			children = (
+				8C4E72A2247D3F62001355DE /* EstimatesByMonthController.swift */,
 			);
 			path = Estimates;
 			sourceTree = "<group>";
@@ -597,6 +685,11 @@
 		8C804FF0247D11DB0002E101 /* Expenses */ = {
 			isa = PBXGroup;
 			children = (
+				8C4E7298247D3E6E001355DE /* ExpensesByCategoryController.swift */,
+				8C4E729A247D3E7F001355DE /* ExpensesByMonthByCategoryController.swift */,
+				8C4E729C247D3F1E001355DE /* ExpensesByMonthByCustomerController.swift */,
+				8C4E729E247D3F33001355DE /* ExpensesByMonthByWorkOrderController.swift */,
+				8C4E72A0247D3F42001355DE /* ExpensesByMonthByVendorController.swift */,
 			);
 			path = Expenses;
 			sourceTree = "<group>";
@@ -604,6 +697,10 @@
 		8C804FF1247D11E90002E101 /* Receivables */ = {
 			isa = PBXGroup;
 			children = (
+				8C4E7290247D3DDD001355DE /* AccountReceivableController.swift */,
+				8C4E7292247D3DF5001355DE /* InvoiceByDateController.swift */,
+				8C4E7294247D3E11001355DE /* InvoiceAgingSummaryController.swift */,
+				8C4E7296247D3E41001355DE /* AccountReceivableCommVsResController.swift */,
 			);
 			path = Receivables;
 			sourceTree = "<group>";
@@ -611,6 +708,13 @@
 		8C804FF2247D11F50002E101 /* Sales */ = {
 			isa = PBXGroup;
 			children = (
+				8C4E7282247D2B76001355DE /* PaymentByMethodController.swift */,
+				8C4E7284247D2B90001355DE /* PaymentByMonthController.swift */,
+				8C4E7286247D2BA0001355DE /* PaymentByItemController.swift */,
+				8C4E7288247D31C1001355DE /* PaymentByMaterialItemController.swift */,
+				8C4E728A247D31DB001355DE /* PaymentByProductItemController.swift */,
+				8C4E728C247D31FB001355DE /* PaymentRepeatedByCustomerController.swift */,
+				8C4E728E247D3D37001355DE /* SalesDemographicsController.swift */,
 			);
 			path = Sales;
 			sourceTree = "<group>";
@@ -618,6 +722,10 @@
 		8C804FF3247D11FA0002E101 /* PopularReports */ = {
 			isa = PBXGroup;
 			children = (
+				8C4E727A247D2A88001355DE /* MonthlyCloseoutController.swift */,
+				8C4E727C247D2A98001355DE /* YearlyCloseoutController.swift */,
+				8C4E727E247D2AB4001355DE /* ProfitLossController.swift */,
+				8C4E7280247D2AED001355DE /* SalesLeaderboardController.swift */,
 			);
 			path = PopularReports;
 			sourceTree = "<group>";
@@ -1050,42 +1158,57 @@
 				8CF0BEB724640567009A8D75 /* AddCustomerController.swift in Sources */,
 				8C0B2E2B2469224B009322A4 /* AddCustomerInvoiceController.swift in Sources */,
 				8CF60E0E2465485500FD9831 /* CustomerInvoicesController.swift in Sources */,
+				8C9D2E19247E4171007AF2BA /* NonTaxableSalesController.swift in Sources */,
 				8CF2B69F24600C3B000982D9 /* MaterialDropdownField.swift in Sources */,
 				8C853D422462AF9400DD8209 /* AppUser.swift in Sources */,
+				8C4E728F247D3D37001355DE /* SalesDemographicsController.swift in Sources */,
+				8C4E7287247D2BA0001355DE /* PaymentByItemController.swift in Sources */,
 				8C0B4C182471340000501048 /* CustomerFilterController.swift in Sources */,
 				8C5C4390246D263500B66BB6 /* BlockDetailController.swift in Sources */,
 				8C391484247506EB002AB83D /* EditInvoiceController.swift in Sources */,
 				8C38075F246ABC1600BD7FC8 /* ScheduleController.swift in Sources */,
+				8C4E729D247D3F1E001355DE /* ExpensesByMonthByCustomerController.swift in Sources */,
 				8CC2F3B524727D99007D466D /* EditExpensesController.swift in Sources */,
 				8CF2B6B924600D09000982D9 /* UINavigationBar+Gradient.swift in Sources */,
 				8C9939A324764B6E00A0FECC /* EstimateOptionController.swift in Sources */,
 				8CC2F3C324729BDE007D466D /* ScheduleTabController.swift in Sources */,
+				8C4E727D247D2A98001355DE /* YearlyCloseoutController.swift in Sources */,
 				8CF2B6C724602BBB000982D9 /* HomeController.swift in Sources */,
 				8CF72DFA2477AC0E002964DD /* AddEmployeeController.swift in Sources */,
 				8C13D46C245FEDB1008E23B8 /* AppDelegate.swift in Sources */,
+				8C9D2DFF247E3FAF007AF2BA /* PaymentByCustomerGroupController.swift in Sources */,
 				8C0350E5246B867B00B27E54 /* EditBlockTimeController.swift in Sources */,
 				8CF2B6B424600D09000982D9 /* UIViewController+Extensions.swift in Sources */,
 				8C0B2E25246921A6009322A4 /* AddCustomerScheduleController.swift in Sources */,
+				8C4E728B247D31DB001355DE /* PaymentByProductItemController.swift in Sources */,
+				8C4E7293247D3DF5001355DE /* InvoiceByDateController.swift in Sources */,
 				8C0350E3246B866900B27E54 /* AddBlockTimeController.swift in Sources */,
 				8CF72DF82477ABFD002964DD /* EmployeesController.swift in Sources */,
 				8C1DBA5F247BBB160057204D /* MessagesController.swift in Sources */,
+				8C4E729F247D3F33001355DE /* ExpensesByMonthByWorkOrderController.swift in Sources */,
 				8C853D3C2462AA3A00DD8209 /* CustomersController.swift in Sources */,
 				8CF2B69124600C1F000982D9 /* MyPickerView.swift in Sources */,
 				8C99399D24764ACA00A0FECC /* EditStandardEstimateController.swift in Sources */,
 				8C7EF243247B6B4300AB0150 /* MockSocket.swift in Sources */,
 				8CF2B6B724600D09000982D9 /* UIView+Designable.swift in Sources */,
 				8C5C438E246D25DB00B66BB6 /* WorkOrderDetailController.swift in Sources */,
+				8C4E7289247D31C1001355DE /* PaymentByMaterialItemController.swift in Sources */,
 				8CF60E0C2465484500FD9831 /* CustomerEstimatesController.swift in Sources */,
 				8C7EF254247B7D1C00AB0150 /* ChatController.swift in Sources */,
 				8C0B2E292469222A009322A4 /* AddCustomerCustomEstimateController.swift in Sources */,
 				8C9939A124764B1400A0FECC /* EditCustomEstimateController.swift in Sources */,
+				8C4E729B247D3E7F001355DE /* ExpensesByMonthByCategoryController.swift in Sources */,
 				8C853D3E2462AB2F00DD8209 /* App.swift in Sources */,
 				8C0350EF246B874100B27E54 /* WorkOrderController.swift in Sources */,
+				8C9D2DFD247E3F59007AF2BA /* PaymentByCustomerController.swift in Sources */,
 				8C3914862475082C002AB83D /* InvoiceFilterController.swift in Sources */,
 				8C7EF245247B6B7A00AB0150 /* MockMessage.swift in Sources */,
+				8C9D2E01247E3FC9007AF2BA /* PaymentByCustomerSourceController.swift in Sources */,
 				8C841B8B246963F10013834D /* AddQuickLinkController.swift in Sources */,
 				8CC2F3B324727D72007D466D /* AddExpensesController.swift in Sources */,
+				8C9D2E0F247E40BE007AF2BA /* PercentSalesCommissionController.swift in Sources */,
 				8CF60E082465463C00FD9831 /* CustomerDetailController.swift in Sources */,
+				8C9D2E09247E4062007AF2BA /* PayrollSummaryController.swift in Sources */,
 				8CC2F3C524729C35007D466D /* WorkOrderTabController.swift in Sources */,
 				8CC2F3B724727DD2007D466D /* MileageOptionController.swift in Sources */,
 				8CC2F3B124727D4A007D466D /* ExpenseDetailController.swift in Sources */,
@@ -1094,17 +1217,22 @@
 				8C3914782474F098002AB83D /* InventoryController.swift in Sources */,
 				8CF60E102465724E00FD9831 /* CustomerTabController.swift in Sources */,
 				8CF0BEB92464057D009A8D75 /* EditCustomerController.swift in Sources */,
+				8C9D2E15247E413C007AF2BA /* WorkOrderStatusController.swift in Sources */,
 				8C853D402462AC9300DD8209 /* APIClient.swift in Sources */,
 				8C7EF249247B6C5E00AB0150 /* BasicAudioController.swift in Sources */,
 				8CF2B69D24600C3B000982D9 /* MaterialTextField.swift in Sources */,
+				8C4E72A3247D3F62001355DE /* EstimatesByMonthController.swift in Sources */,
 				8CF0BEBB246406EA009A8D75 /* PageViewController.swift in Sources */,
 				8C0350E7246B869000B27E54 /* AddEventController.swift in Sources */,
 				8CF2B6BA24600D09000982D9 /* Extensions.swift in Sources */,
+				8C4E72A1247D3F42001355DE /* ExpensesByMonthByVendorController.swift in Sources */,
 				8C5C4388246D145A00B66BB6 /* LeadsController.swift in Sources */,
 				8C39147E24750682002AB83D /* InvoicesController.swift in Sources */,
 				8CF2B6BC24600D42000982D9 /* Globals.swift in Sources */,
+				8C4E727B247D2A88001355DE /* MonthlyCloseoutController.swift in Sources */,
 				8C38075C246A75B300BD7FC8 /* AddLeadController.swift in Sources */,
 				8CE94BC324724B6900FBD92D /* WorkOrderFilterController.swift in Sources */,
+				8C9D2E0D247E4091007AF2BA /* PayrollLogController.swift in Sources */,
 				8CC2F3B924727EC6007D466D /* AddMileageDistanceController.swift in Sources */,
 				8C1DBA63247BD9760057204D /* InboxController.swift in Sources */,
 				8CF2B6C924602CBA000982D9 /* MenuController.swift in Sources */,
@@ -1112,12 +1240,14 @@
 				8CF2B6A224600C3B000982D9 /* BaseFormController.swift in Sources */,
 				8CFAE8E924696D52003E80B7 /* AddContactController.swift in Sources */,
 				8C1DBA65247BD98D0057204D /* ComposeController.swift in Sources */,
+				8C9D2E11247E40E6007AF2BA /* TimesheetSummaryController.swift in Sources */,
 				8C9939912476412300A0FECC /* EstimatesController.swift in Sources */,
 				8CF72DFC2477AC28002964DD /* EditEmployeeController.swift in Sources */,
 				8CF2B6A124600C3B000982D9 /* ScrollViewController.swift in Sources */,
 				8C841B8D2469640A0013834D /* EditQuickLinkController.swift in Sources */,
 				8CF2B6B524600D09000982D9 /* UITextField+Extensions.swift in Sources */,
 				8CC2F3BD24728617007D466D /* AddMileageOdometerController.swift in Sources */,
+				8C4E728D247D31FB001355DE /* PaymentRepeatedByCustomerController.swift in Sources */,
 				8CE94BBF2472449E00FBD92D /* LeadsFilterController.swift in Sources */,
 				8C0B2E2E246961D0009322A4 /* QuickLinksController.swift in Sources */,
 				8C0B2E2324690622009322A4 /* AddOtherAddressController.swift in Sources */,
@@ -1127,24 +1257,38 @@
 				8C5C4392246D264700B66BB6 /* EventDetailController.swift in Sources */,
 				8CFAE8E524696CDA003E80B7 /* ContactsController.swift in Sources */,
 				8C39147A2474F0DA002AB83D /* AddInventoryController.swift in Sources */,
+				8C9D2E17247E4161007AF2BA /* SalesTaxController.swift in Sources */,
 				8C391480247506B8002AB83D /* InvoiceDetailController.swift in Sources */,
 				8C0350F3246B876400B27E54 /* EditWorkOrderController.swift in Sources */,
 				8CF2B6A024600C3B000982D9 /* VerticalStackController.swift in Sources */,
+				8C9D2E13247E4118007AF2BA /* TimesheetEntriesController.swift in Sources */,
+				8C4E727F247D2AB4001355DE /* ProfitLossController.swift in Sources */,
 				8CF1F1192464284B00A47582 /* OtherPageController.swift in Sources */,
+				8C4E7295247D3E11001355DE /* InvoiceAgingSummaryController.swift in Sources */,
 				8C39147C2474F0EF002AB83D /* EditInventoryController.swift in Sources */,
 				8C853D442462AF9F00DD8209 /* CacheManager.swift in Sources */,
 				8C99398D24763E9D00A0FECC /* AddItemVendorController.swift in Sources */,
+				8C4E7291247D3DDD001355DE /* AccountReceivableController.swift in Sources */,
+				8C9D2E05247E401B007AF2BA /* CustomerDemographicsController.swift in Sources */,
+				8C4E7299247D3E6E001355DE /* ExpensesByCategoryController.swift in Sources */,
 				8CF2B6B824600D09000982D9 /* UIView+Gradient.swift in Sources */,
+				8C9D2E07247E4031007AF2BA /* CustomerBySourceController.swift in Sources */,
+				8C9D2E0B247E4085007AF2BA /* PayrollByEmployeeController.swift in Sources */,
 				8CF2B69C24600C3B000982D9 /* BaseMaterialFormController.swift in Sources */,
+				8C4E7297247D3E41001355DE /* AccountReceivableCommVsResController.swift in Sources */,
 				8C5C438C246D148000B66BB6 /* EditLeadController.swift in Sources */,
+				8C4E7281247D2AED001355DE /* SalesLeaderboardController.swift in Sources */,
 				8CF2B685246002A2000982D9 /* LoginController.swift in Sources */,
 				8C0350E9246B86D200B27E54 /* EditEventController.swift in Sources */,
+				8C9D2E03247E3FF9007AF2BA /* CustomerTaxByMonthController.swift in Sources */,
 				8CC2F3BF24728641007D466D /* EditMileageOdometerController.swift in Sources */,
 				8C7EF24C247B6CF000AB0150 /* CustomMessageFlowLayout.swift in Sources */,
 				8CE94BC12472464400FBD92D /* ContactFilterController.swift in Sources */,
 				8C5C438A246D146F00B66BB6 /* LeadDetailController.swift in Sources */,
 				8CF2B6BE24600D7D000982D9 /* Utils.swift in Sources */,
+				8C4E7283247D2B76001355DE /* PaymentByMethodController.swift in Sources */,
 				8C99399B24764ABD00A0FECC /* AddStandardEstimateController.swift in Sources */,
+				8C4E7285247D2B90001355DE /* PaymentByMonthController.swift in Sources */,
 				8CF2B69E24600C3B000982D9 /* MaterialFormFieldToolbar.swift in Sources */,
 				8CF2B6B624600D09000982D9 /* UIFont+Extensions.swift in Sources */,
 				8C7EF250247B7B8700AB0150 /* SampleData.swift in Sources */,

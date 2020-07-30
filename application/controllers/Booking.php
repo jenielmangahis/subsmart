@@ -829,10 +829,36 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/' . $view, $this->page_data);
 	}
 
-	public function front_schedule()
-	{
+	public function front_schedule($eid)
+	{	
+		$user_id = hashids_decrypt($eid, '', 15);
+		$user = $this->session->userdata('logged');
+		$userProfile = $this->Users_model->getUser($user_id);
+		$categories  = $this->BookingCategory_model->getAllCategories();
+
+		$products = array();
+
+		$post = $this->input->post();
+		$search_query = '';
+		$filters      = array();
+
+		foreach( $categories as $c ){
+			$products[$c->id]['products'] = $this->BookingServiceItem_model->getAllUserProductsByCategoryId($user_id, $c->id, $filters);
+			$products[$c->id]['category'] = $c; 
+		}
+
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['products']     = $products;
+		$this->page_data['eid'] = $eid;
+
 		$this->load->view('online_booking/front_scheduler', $this->page_data);
 	}
+
 
 	public function ajax_get_product_details()
     {

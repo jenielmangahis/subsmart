@@ -106,8 +106,45 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/booking_front_modals'); ?>    
 
 
-<script>
-var base_url = "<?php echo base_url(); ?>";
+<script>  
+function continue_cart(){
+    var base_url = "<?php echo base_url(); ?>";
+    var eid = "<?php echo $eid; ?>"
+    var total_amount = $(".total_cart_amount").html();
+    var total_minimum = $(".total_minimum").html();
+
+    
+    var new_total_minimum = Number(total_minimum);
+    var new_total_amount = Number(total_amount);
+
+    if( new_total_amount < new_total_minimum ){
+     // alert("test");
+      window.location.href = base_url + "/booking/products_schedule/"+eid;
+    }else{
+     // alert("test2");
+    }
+}
+
+
+$(function(){
+    var base_url = "<?php echo base_url(); ?>";
+    var eid = "<?php echo $eid; ?>"
+
+    $(".btn-continue").click( function(){  
+
+      var total_amount = $(".total_cart_amount").html();
+      var total_minimum = $(".total_minimum").html();
+      if(total_minimum < total_amount ){
+        alert("test");
+        window.location.href = base_url + "/booking/products_schedule/"+eid;
+      }else{
+        alert("test2");
+      }
+       
+    });
+      
+
+});
 </script>
 
 <?php include viewPath('includes/footer_front_booking'); ?>
