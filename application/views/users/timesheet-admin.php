@@ -245,7 +245,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td width="60"><?php echo $row->id ?></td>
                                                     <td id="name">
                                                         <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
-                                                        <?php echo ucfirst($this->roles_model->getById($row->role)->title); ?>
+                                                        <?php 
+                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
+                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
+                                                            }
+                                                        ?>
                                                     </td>
 
                                                     <td class="clocked_in_<?php echo $row->id;?>" style="text-align: center;">

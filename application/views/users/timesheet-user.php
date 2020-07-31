@@ -88,6 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tr>
                                             <!-- <th>Id</th>
                                             <th>Image</th> -->
+                                            <th rowspan="2"><b>ID</b></th>
                                             <th rowspan="2">Name</th>
                                             <?php /*<th>Email</th>
                                             <th>Password</th>
@@ -136,9 +137,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                 ?>
                                                 <tr class="timesheet_row">
-
+                                                    <td width="60"><?php echo $row->id ?></td>
                                                     <td id="name">
-                                                        <?php echo $row->FName.' '.$row->LName; ?>
+                                                        <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
+                                                        <?php 
+                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
+                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
+                                                            }
+                                                        ?>
                                                     </td>
                                                     
                                                     <td id="last_login">

@@ -608,23 +608,70 @@ class Timesheet extends MY_Controller {
 
 	public function manual_clock_in()
 	{
+		date_default_timezone_set('US/Central');
 		$this->load->model('timesheet_model');
-		//$data = $this->input->post();
-		//dd($data);die;
-		$data = array(
+		/*print_r($this->input->post('clock_in_from'));
+		echo "<br />";
+		print_r($this->input->post('clock_in_to'));
+		$t1 = str_replace(':', ',', $this->input->post('clock_in_from'));
+		$t2 = str_replace(':', ',', $this->input->post('clock_in_to'));
+		echo $t1; echo $t2;
+		die;*/
+		/*$data = $this->input->post();
+		$date = $this->input->post('entry_date');
+		$time = $this->input->post('clock_in_from');
+		$clockin_datetime = */
+		$d1 = str_replace('/', ',', $this->input->post('entry_date'));
+		$t1 = str_replace(':', ',', $this->input->post('clock_in_from'));
+		$date1 = $t1.',0,'.$d1;
+		$fulldate1 = explode(',',$date1);
+		$h1 = $fulldate1[0];
+		$i1 = $fulldate1[1];
+		$s1 = $fulldate1[2];
+		$m1 = $fulldate1[3];
+		$d1 = $fulldate1[4];
+		$y1 = $fulldate1[5];
+		$clockin_datetime = date("Y-m-d h:i:s",mktime($h1,$i1,$s1,$m1,$d1,$y1));
+		$d2 = str_replace('/', ',', $this->input->post('entry_date'));
+		$t2 = str_replace(':', ',', $this->input->post('clock_in_to'));
+		$date2 = $t2.',0,'.$d2;
+		$fulldate2 = explode(',',$date2);
+		$h2 = $fulldate2[0];
+		$i2 = $fulldate2[1];
+		$s2 = $fulldate2[2];
+		$m2 = $fulldate2[3];
+		$d2 = $fulldate2[4];
+		$y2 = $fulldate2[5];
+		$clockout_datetime = date("Y-m-d h:i:s",mktime($h2,$i2,$s2,$m2,$d2,$y2));
+		//dd($clockin_datetime);echo "<br />";
+		//dd($clockout_datetime);
+		//die;
+
+		// for Clock In
+		$data_clockin = array(
 			'employees_id' => $this->input->post('clockin_user_id'),
 			'action' => 'Clock In',
-			'entry_type' => $this->input->post('entry_type'),
-			'timestamp' => $this->input->post('entry_date'),
-			'clock_in_from' => $this->input->post('clock_in_from'),
-			'clock_in_to' => $this->input->post('clock_in_to'),
-			'break_from' => $this->input->post('break_from'),
-			'break_to' => $this->input->post('break_to'),
+			'entry_type' => 'Manual Entry',
+			//'timestamp' => $this->input->post('entry_date'),
+			'timestamp' => $clockin_datetime,
 			'job_code' => $this->input->post('job_code'),
 			'notes' => $this->input->post('notes')
 		);
 		//dd($data);die;
-		$this->timesheet_model->manualClockIn($data);
+		$this->timesheet_model->manualClockIn($data_clockin);
+
+		// for Clock In
+		$data_clockout = array(
+			'employees_id' => $this->input->post('clockin_user_id'),
+			'action' => 'Clock Out',
+			'entry_type' => 'Manual Entry',
+			//'timestamp' => $this->input->post('entry_date'),
+			'timestamp' => $clockout_datetime,
+			'job_code' => $this->input->post('job_code'),
+			'notes' => $this->input->post('notes')
+		);
+		//dd($data);die;
+		$this->timesheet_model->manualClockIn($data_clockout);
 
 		/*$this->load->model('timesheet_model');
 		$data = array(
@@ -637,9 +684,9 @@ class Timesheet extends MY_Controller {
 		$this->timesheet_model->checkClockIn($data);*/
 
 		$this->session->set_flashdata('alert-type', 'success');
-		$this->session->set_flashdata('alert', 'New User Created Successfully');	
+		$this->session->set_flashdata('alert', 'New Time Log Added Successfully');	
 
-		redirect('users/timesheet');
+		redirect('users/timelog');
 
 	}
 

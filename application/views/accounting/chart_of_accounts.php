@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									 <div class="col-md-2">
 										 <div class="dropdown">
 											<a href="#" class="editbtn"><i class="fa fa-edit"></i></a>
-											<a href="" ><i class="fa fa-print"></i></a>
+											<a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
 										   <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<i class="fa fa-cog"></i>
 										  </a>

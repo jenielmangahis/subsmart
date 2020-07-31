@@ -17,6 +17,9 @@ input[type='checkbox']{
 button {
     height: 46px;
 }
+.btn{
+    border-radius: 36px;
+}
 .btn-success{
     background: #2ca01c;
 }

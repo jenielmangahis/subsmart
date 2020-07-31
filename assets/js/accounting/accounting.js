@@ -1,38 +1,41 @@
 
 $(document).ready(function () {
-    // select2 option initialized
-    $('.select2').select2();
     //Alert popup
     window.setTimeout(function() {
         $('.alert').fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();
         });
     }, 5000);
-    $('.alert').css({"bottom":"100px","left":"30px","position":"absolute","z-index":"999","width":"auto"});
+    $('.alert').css({"bottom":"60px","left":"30px","position":"absolute","z-index":"999","width":"auto"});
 
     // Rules page
     //select2 initialisation
     $('.select2-rules-category').select2({
         placeholder: 'Select a category',
-        allowClear: true
+        allowClear: true,
     });
     $('.select2-rules-payee').select2({
         placeholder: '(Recommended)',
         allowClear: true
     });
     // Add and remove condition div
-    $('#btnAddCondition').click(function (e) {
-        $("#deleteCondition").show();
-        $("#addCondition").clone().appendTo($('.addCondition-container'));
-        e.preventDefault();
+    $(document).on("click","#btnAddCondition",function () {
+        $('.addCondition-container').children($('.deleteCondition').show());
+        var $target = $('html,body');
+        $target.animate({scrollTop: $target.height()}, 1000);
+        var row = $('#addCondition').clone(true);
+        row.find("#conID").val("");
+        row.appendTo('.addCondition-container');
     });
     //Remove added condition
     $(document).on("click","#btnDeleteCondition",function (e) {
         e.preventDefault();
         $("#addCondition").remove();
         var check_count = jQuery("div[id='addCondition']").length;
-        if (check_count == 1){
-            $("#deleteCondition").hide();
+        var counter = $('#counterCondition').val();
+        console.log(check_count);
+        if (check_count == counter){
+            $('.addCondition-container').children($('.deleteCondition').hide());
         }
     });
     //Assign More
@@ -82,7 +85,37 @@ $(document).ready(function () {
             $(".add-split-section").last().remove();
         }
     });
-
+    //Delete Rules
+    $(document).on('click','#deleteRules',function () {
+        var id = $(this).attr('data-id');
+        console.log(id);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+            $.ajax({
+                url:'/accounting/deleteRulesData',
+                method:"POST",
+                data:{id:id},
+                success:function (data) {
+                    $('.displayRules').html(data);
+                    window.location.href= '/'+ url;
+                    Swal.fire(
+                        'Deleted!',
+                        'Rule has been deleted.',
+                        'success'
+                    )
+                }
+            });
+        }
+    });
+    });
 
     // Expenses page Check modal
     $(document).on('click','#addCheck',function () {
@@ -136,7 +169,7 @@ $(document).on('click','#deleteCheck',function () {
             success:function (data) {
                 Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Banking check has been deleted.',
                     'success'
                 )
             }

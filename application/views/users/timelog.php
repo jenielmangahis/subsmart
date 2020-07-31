@@ -44,8 +44,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Image</th> -->
                                             <th>Name</th>
                                             <!-- <th>Email</th>
-                                            <th>Password</th> -->
-                                            <th>Role</th>
+                                            <th>Password</th>
+                                            <th>Role</th> -->
                                             
                                             <th>Status</th>
                                             <th>Action</th>
@@ -66,7 +66,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     ?>
 
                                                     <?php foreach($clockin_arr as $k => $clockin): ?>
+
                                                         <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
+                                                            <?php echo '<b>'.date('d M Y', strtotime($clockin->timestamp)).'</b>&nbsp;&nbsp;&nbsp;&nbsp;'; ?>
                                                             <?php if($clockin->action == "Clock In"):?>
                                                                 <?php echo date('h:i a', strtotime($clockin->timestamp))."In - "; ?>
                                                             <?php else: ?>
@@ -85,12 +87,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <!-- <img src="<?php //echo base_url('uploads/users/default.png');?>" width="40" height="40" alt="" class="img-avatar" /> -->
                                                 <!-- </td> -->
                                                 <td>
-                                                    <?php echo ucfirst($row->FName).' '.ucfirst($row->LName) ?>
+                                                    <?php //echo ucfirst($row->FName).' '.ucfirst($row->LName) ?>
+                                                    <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
+                                                        <?php 
+                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
+                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
+                                                            }
+                                                        ?>
                                                 </td>
                                                 <!-- <td><?php //echo $row->email ?></td>
                                                 <td><?php //echo $row->password_plain ?></td> -->
-                                                <td><?php echo ucfirst($this->roles_model->getById($row->role)->title) ?></td>
-                                                
+                                                <!-- <td>
+                                                    <?php 
+                                                        //echo ucfirst($this->roles_model->getById($row->role)->title) ?>
+                                                            
+                                                        </td>
+                                                -->
                                                 <td>
                                                     <?php //if (logged('id') !== $row->id): ?>
                                                         <!-- <input type="checkbox" class="js-switch"

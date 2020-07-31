@@ -25,7 +25,7 @@ class Accounting extends MY_Controller {
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
-            "https://cdn.jsdelivr.net/npm/sweetalert2@9",
+            "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js?v=".rand()
         ));
 
@@ -52,7 +52,7 @@ class Accounting extends MY_Controller {
 				array("",	array('#','#')), 
 				array('#',	array()), 
 				array("",	array('/accounting/chart_of_accounts','#')),
-			); 
+			);
 		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
     }
 
@@ -61,7 +61,6 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('tools/business_tools', $this->page_data);
     }*/
-
     public function banking()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -73,51 +72,62 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['vendors'] = $this->vendors_model->getVendors();
         $this->page_data['checks'] = $this->expenses_model->getCheck();
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/expenses', $this->page_data);
     }
     public function vendors(){
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['vendors'] = $this->vendors_model->getVendors();
         $this->load->view('accounting/vendors', $this->page_data);
     }
 
     public function receivables()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/receivables', $this->page_data);
     }
 
     public function workers()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/workers', $this->page_data);
     }
 
     public function taxes()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/taxes', $this->page_data);
     }
 
     public function chart_of_accounts()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/chart_of_accounts', $this->page_data);
     }
 
     public function my_accountant()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/my_accountant', $this->page_data);
     }
 
     public function link_bank()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/banking', $this->page_data);
     }
 
     public function rules()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['rules'] = $this->rules_model->getRules();
         $this->load->view('accounting/rules', $this->page_data);
@@ -125,78 +135,91 @@ class Accounting extends MY_Controller {
 
     public function receipts()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->load->view('accounting/receipts', $this->page_data);
     }
     public function salesoverview()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/sales_overview', $this->page_data);
     }
     public function allsales()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/all_sales', $this->page_data);
     }
 	public function invoices()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Invoices";
         $this->load->view('accounting/invoices', $this->page_data);
     }
 	public function customers()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Customers";
         $this->load->view('accounting/customers', $this->page_data);
     }
 	public function deposits()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Deposits";
         $this->load->view('accounting/deposits', $this->page_data);
     }
 	public function products_and_services()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('accounting/products_and_services', $this->page_data);
     }
     public function audit_log()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/audit_log', $this->page_data);
     }
 	 public function payrolloverview()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/payroll_overview', $this->page_data);
     }	
 	 public function employees()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/employees', $this->page_data);
     }
 	public function contractors()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/contractors', $this->page_data);
     }
 	public function workerscomp()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/workers_comp', $this->page_data);
     }
 	public function reports()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
@@ -208,56 +231,139 @@ class Accounting extends MY_Controller {
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Add Vendor";
-		
-		$new_data = array(
-			'title' => $this->input->post('title'),
-			'f_name' => $this->input->post('f_name'),
-			'm_name' => $this->input->post('m_name'),
-			'l_name' => $this->input->post('l_name'),
-			'suffix' => $this->input->post('suffix'),
-			'email' => $this->input->post('email'),
-			'company' => $this->input->post('company'),
-			'display_name' => $this->input->post('display_name'),
-			'to_display' => $this->input->post('to_display'),
-			'street' => $this->input->post('street'),
-			'city' => $this->input->post('city'),
-			'state' => $this->input->post('state'),
-			'zip' => $this->input->post('zip'),
-			'country' => $this->input->post('country'),
-			'phone' => $this->input->post('phone'),
-			'mobile' => $this->input->post('mobile'),
-			'fax' => $this->input->post('fax'),
-			'website' => $this->input->post('website'),
-			'billing_rate' => $this->input->post('billing_rate'),
-			'terms' => $this->input->post('terns'),
-			'opening_balance' => $this->input->post('opening_balance'),
-			'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
-			'account_number' => $this->input->post('account_number'),
-			'business_number' => $this->input->post('business_number'),
-			'default_expense_amount' => $this->input->post('default_expense_amount'),
-			'notes' => $this->input->post('notes'),
-			'status' => 1,
-			'created_by' => $this->input->post('created_by'),
-			'date_created' => $this->input->post('date_created'),
-			'date_modified' => $this->input->post('date_modified')
-		);
-		
-		$addQuery = $this->vendors_model->create($new_data);
-		
-		if($addQuery > 0){
+		if (! empty($_FILES)){
+            $config = array(
+                'upload_path' => './uploads/accounting/',
+                'allowed_types' => 'gif|jpg|png|jpeg|docx|doc|pdf',
+                'max_size' => '20000',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
 			
-			$new_id = $addQuery;
-			$vendor_id = mb_substr($this->input->post('company'), 0, 3) . $new_id;
-			$updateQuery = $this->vendors_model->update($new_id, array("vendor_id" =>$vendor_id));
-			
-			if($updateQuery > 0){
-				echo json_encode($updateQuery);
+            if ($this->upload->do_upload("file")){
+				
+                $uploadData = $this->upload->data();
+            
+				$new_data = array(
+					'title' => $this->input->post('title'),
+					'f_name' => $this->input->post('f_name'),
+					'm_name' => $this->input->post('m_name'),
+					'l_name' => $this->input->post('l_name'),
+					'suffix' => $this->input->post('suffix'),
+					'email' => $this->input->post('email'),
+					'company' => $this->input->post('company'),
+					'display_name' => $this->input->post('display_name'),
+					'to_display' => $this->input->post('to_display'),
+					'street' => $this->input->post('street'),
+					'city' => $this->input->post('city'),
+					'state' => $this->input->post('state'),
+					'zip' => $this->input->post('zip'),
+					'country' => $this->input->post('country'),
+					'phone' => $this->input->post('phone'),
+					'mobile' => $this->input->post('mobile'),
+					'fax' => $this->input->post('fax'),
+					'website' => $this->input->post('website'),
+					'billing_rate' => $this->input->post('billing_rate'),
+					'terms' => $this->input->post('terns'),
+					'opening_balance' => $this->input->post('opening_balance'),
+					'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
+					'account_number' => $this->input->post('account_number'),
+					'business_number' => $this->input->post('business_number'),
+					'default_expense_amount' => $this->input->post('default_expense_amount'),
+					'notes' => $this->input->post('notes'),
+					'attachments' => $uploadData['file_name'],
+					'status' => 1,
+					'created_by' => $this->input->post('created_by'),
+					'date_created' => date("Y-m-d H:i:s"),
+					'date_modified' => date("Y-m-d H:i:s")
+				);
+				
+				$addQuery = $this->vendors_model->create($new_data);
+				
+				if($addQuery > 0){
+					
+					$new_id = $addQuery;
+					$vendor_id = mb_substr($this->input->post('company'), 0, 3) . $new_id;
+					$updateQuery = $this->vendors_model->update($new_id, array("vendor_id" =>$vendor_id));
+					
+					if($updateQuery > 0){
+						echo json_encode($updateQuery);
+					}
+				}
+				else{
+					echo json_encode(0);
+				}
+				
+			}else{
+				echo json_encode($this->upload->display_errors());
 			}
-		}
-		else{
-			echo json_encode(0);
-		}
+
+        }
     }
+	
+	public function deleteVendor(){
+
+        $id = $this->input->post('id');
+        $this->vendors_model->delete($id);
+    }
+	public function vendordetails()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Reports";
+		$id = $this->input->post('id');
+		
+		$this->page_data['vendor_details'] = $this->vendors_model->getById($id);
+        $this->load->view('accounting/vendor_details', $this->page_data);
+    }
+	public function editVendor()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Edit Vendor";
+		
+		$id =  $this->input->post('id');
+				$new_data = array(
+					'title' => $this->input->post('title'),
+					'f_name' => $this->input->post('f_name'),
+					'm_name' => $this->input->post('m_name'),
+					'l_name' => $this->input->post('l_name'),
+					'suffix' => $this->input->post('suffix'),
+					'email' => $this->input->post('email'),
+					'company' => $this->input->post('company'),
+					'display_name' => $this->input->post('display_name'),
+					'to_display' => $this->input->post('to_display'),
+					'street' => $this->input->post('street'),
+					'city' => $this->input->post('city'),
+					'state' => $this->input->post('state'),
+					'zip' => $this->input->post('zip'),
+					'country' => $this->input->post('country'),
+					'phone' => $this->input->post('phone'),
+					'mobile' => $this->input->post('mobile'),
+					'fax' => $this->input->post('fax'),
+					'website' => $this->input->post('website'),
+					'billing_rate' => $this->input->post('billing_rate'),
+					'terms' => $this->input->post('terns'),
+					'opening_balance' => $this->input->post('opening_balance'),
+					'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
+					'account_number' => $this->input->post('account_number'),
+					'business_number' => $this->input->post('business_number'),
+					'default_expense_amount' => $this->input->post('default_expense_amount'),
+					'notes' => $this->input->post('notes'),
+					'date_modified' => date("Y-m-d H:i:s")
+				);
+				
+				$editQuery = $this->vendors_model->update($id,$new_data);
+				
+				if($editQuery > 0){
+					echo json_encode(1);
+				}
+				else{
+					echo json_encode(0);
+				}
+
+    }
+	
+	
 	public function addTerms()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -456,6 +562,7 @@ class Accounting extends MY_Controller {
         $this->page_data['rules'] = $this->rules_model->getRulesById($id);
         $this->page_data['conditions'] = $this->rules_model->getConditionById($id);
         $this->page_data['categories'] = $this->rules_model->getCategoryById($id);
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/rules/edit-rules', $this->page_data);
     }
 
@@ -489,6 +596,67 @@ class Accounting extends MY_Controller {
             redirect('accounting/rules');
         }
 
+    }
+
+    public function editRules(){
+        $update = array(
+            'rules_id' => $this->input->post('rules_id'),
+            'rules_name' => $this->input->post('rules_name'),
+            'apply' => $this->input->post('apply'),
+            'banks' => $this->input->post('banks'),
+            'include' => $this->input->post('include'),
+            'transaction_type' => $this->input->post('trans_type'),
+            'payee' => $this->input->post('payee'),
+            'memo' => $this->input->post('memo'),
+            'auto' => $this->input->post('auto')
+        );
+        //Condition
+        $con_id = $this->input->post('con_id');
+        $description = $this->input->post('description');
+        $contain = $this->input->post('contain');
+        $comment = $this->input->post('comment');
+        //Category
+        $cat_id = $this->input->post('cat_id');
+        $category = $this->input->post('category');
+        $percentage = $this->input->post('percentage');
+
+        $rules_id = $this->rules_model->editRules($update,$con_id,$description,$contain,$comment,$cat_id,$category,$percentage);
+        if ($rules_id == true){
+            $this->session->set_flashdata('updated_rules','Rules has been updated.');
+            redirect('accounting/rules');
+        }else{
+            $this->session->set_flashdata('update_rules_failed','Something is wrong in the process.');
+            redirect('accounting/rules');
+        }
+    }
+
+    public function deleteRulesData(){
+        $id = $this->input->post('id');
+        $this->rules_model->deleteRulesData($id);
+        $rules = $this->rules_model->getRules();
+        $output = '';
+        foreach ($rules as $rule){
+            $output = '<tr>';
+            $output .= '<td><input type="checkbox" value="'.$rule->id.'"></td>';
+            $output .= '<td>'.$rule->rules_name.'</td>';
+            $output .= '<td></td>';
+            $output .= '<td></td>';
+            $output .= '<td></td>';
+            $output .= '<td></td>';
+            $output .= '<td>'.($rule->auto)?"Auto":"".'</td>';
+            $output .= '<td></td>';
+            $output .= '<td>';
+            $output .= '<a href="'.site_url().'accounting/edit_rules?id='.$rule->id.'" style="color: #0b97c4;">View/Edit</a>&nbsp;';
+            $output .= '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
+            $output .= '<span class="fa fa-chevron-down" data-toggle="dropdown"></span>';
+            $output .= '<ul class="dropdown-menu dropdown-menu-right">';
+            $output .= '<li><a href="#" id="deleteRules" data-id="'.$rule->id.'">Delete</a></li>';
+            $output .= '</ul>';
+            $output .= '</div>';
+            $output .= '</td>';
+            $output .= '</tr>';
+        }
+        echo $output;
     }
 
     /*** Receipt ***/
@@ -604,6 +772,7 @@ class Accounting extends MY_Controller {
 
     public function edit($id)
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
         $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
     }

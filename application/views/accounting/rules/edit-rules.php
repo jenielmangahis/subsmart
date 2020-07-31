@@ -19,49 +19,55 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href="<?php echo site_url()?>accounting/rules" style="color: #0b97c4"><i class="fa fa-arrow-left"></i>&nbsp;Back to rules</a>
                         </div>
                         <div class="edit-rules-container">
+                            <form action="<?php echo site_url()?>accounting/editRules" method="post">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Rule name</label>
-                                        <input type="text" class="form-control" placeholder="Name this rule">
+                                        <input type="hidden" name="rules_id" value="<?php echo $rules[0]->id;?>">
+                                        <input type="text" name="rules_name" class="form-control" value="<?php echo $rules[0]->rules_name;?>" placeholder="Name this rule">
                                     </div>
                                     <div class="form-group">
                                         <label for="">Apply this to transactions that are</label>
-                                        <select name="" id="" class="form-inline">
+                                        <select name="apply" id="" class="form-inline checkSelect">
+                                            <option><?php echo $rules[0]->apply_type;?></option>
                                             <option>Money out</option>
                                             <option>Money in</option>
                                         </select>
                                         <span style="margin-right: 8px;">in</span>
-                                        <select name="" id="" class="form-inline">
-                                            <option>All bank accounts</option>
-                                            <option>Corporate Account (XXX XXX 5850)</option>
+                                        <select name="banks" id="" class="form-inline checkSelect">
+                                            <option value="1">All bank accounts</option>
+                                            <option value="2">Corporate Account (XXX XXX 5850)</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <span>and include the following</span>
-                                        <select name="" id="" class="form-inline">
+                                        <select name="include" id="" class="form-inline checkSelect">
+                                            <option><?php echo $rules[0]->include;?></option>
                                             <option>Any</option>
                                             <option>All</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
+                                        <input type="hidden" id="counterCondition" value="<?php echo sizeof($conditions);?>">
                                         <div class="addCondition-container">
-                                            <?php foreach ($conditions as $condition): ?>
+                                            <?php foreach ($conditions as $cnt => $condition): ?>
                                             <div id="addCondition">
-                                                    <select name="description[]" id="conDescription" class="form-inline checkSelect">
+                                                <input type="hidden" name="con_id[]" id="conID" value="<?php echo $condition->id;?>">
+                                                    <select name="description[]" id="conDescription" class="form-inline">
                                                         <option selected><?php echo $condition->description; ?></option>
                                                         <option>Description</option>
                                                         <option>Bank text</option>
                                                         <option>Amount</option>
                                                     </select>
-                                                    <select name="contain[]" id="" class="form-inline checkSelect">
+                                                    <select name="contain[]" id="" class="form-inline">
                                                         <option selected><?php echo $condition->contain; ?></option>
                                                         <option>Contain</option>
                                                         <option>Doesn't contain</option>
                                                         <option>Is exactly</option>
                                                     </select>
                                                     <input type="text" name="comment[]" class="form-inline" value="<?php echo $condition->comment;?>" placeholder="Enter Text">
-                                                <div class="tab-select" id="deleteCondition" style="display: none;">
+                                                <div class="tab-select deleteCondition" id="deleteCondition" style="display: none;">
                                                     <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
                                                 </div>
                                             </div>
@@ -95,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <option>Bank Charges</option>
                                                     </select>
                                                 </div>
-                                                <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
+                                                <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Show split</a></span>
                                             </div>
                                             <!--Add Split Div-->
                                             <div class="add-split-container">
@@ -104,6 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         Split detail #<span class="splitNum">1</span>
                                                         <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
+                                                    <input type="hidden" name="cat_id[]" value="<?php echo $categories[0]->id?>">
                                                     <div class="split-content">
                                                         <span class="split-category-text" >Percentage</span>
                                                         <input type="text" name="percentage[]" value="<?php echo $categories[0]->percentage;?>" class="form-control" style="width: 205px">
@@ -127,6 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         Split detail #<span class="splitNum">2</span>
                                                         <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
                                                     </div>
+                                                    <input type="hidden" name="cat_id[]" value="<?php echo $categories[1]->id?>">
                                                     <div class="split-content">
                                                         <span class="split-category-text" >Percentage</span>
                                                         <input type="text" name="percentage[]" class="form-control" value="<?php echo $categories[1]->percentage;?>" style="width: 205px">
@@ -148,6 +156,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <?php if (sizeof($categories) > 2): ?>
                                                 <?php for ($x = 2;$x < sizeof($categories);$x++){ ?>
                                                         <?php $index = 2;?>
+                                                        <input type="hidden" name="cat_id[]" value="<?php echo $categories[$index]->id?>">
                                                 <div class="add-split-section">
                                                     <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
                                                         Split detail #<span class="splitNum"><?php echo $index + 1;?></span>
@@ -183,6 +192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div style="width: 220px;display: inline-block;">
                                                 <select name="payee" id="" class="form-control select2-rules-payee">
                                                     <option></option>
+                                                    <option selected><?php echo $rules[0]->payee?></option>
                                                     <option>Abacus Accounting</option>
                                                     <option>Absolute Power</option>
                                                     <option>ADSC</option>
@@ -191,7 +201,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="action-section" id="assignMore" style="display: none;">
                                             <span class="action-label">Add memo</span>
-                                            <textarea name="memo" id="" cols="30" rows="5" placeholder="Enter Text" style="resize: none;"></textarea>
+                                            <textarea name="memo" cols="30" rows="5" placeholder="Enter Text" style="resize: none;"><?php echo $rules[0]->memo;?></textarea>
                                         </div>
                                         <div style="margin-top: 15px;">
                                             <a href="#" id="btnAssignMore" style="color: #0b62a4;"><i class="fa fa-plus"></i> Assign more</a>
@@ -203,12 +213,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="form-group">
                                         <label for="">Automatically confirm transactions this rule applies to</label>
                                         <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="auto" class="custom-control-input" value="1" id="autoAddswitch" checked>
+                                            <input type="checkbox" name="auto" class="custom-control-input" value="1" id="autoAddswitch" <?php echo ($rules[0]->auto == 1)?"checked":""; ?>>
                                             <label class="custom-control-label" for="autoAddswitch">Auto-add</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-success" style="float: right">Save and exit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

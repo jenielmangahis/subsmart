@@ -360,8 +360,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-3">
                                 <label for="">Payee</label>
                                 <input type="hidden" name="check_id" id="checkID" value="">
-                                <select name="vendor_id" id="vendorID" class="form-control">
-                                    <option selected disabled>Select a payee</option>
+                                <select name="vendor_id" id="vendorID" class="form-control select2-payee">
+                                    <option></option>
                                     <?php foreach ($vendors as $vendor):?>
                                     <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
                                     <?php endforeach; ?>
@@ -369,7 +369,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Bank Account</label>
-                                <select name="bank_id"  class="form-control select2">
+                                <select name="bank_id"  class="form-control select2-account">
                                     <option value="1" selected>Cash on hand</option>
                                     <option value="2">Corporate Account(XXXXXX 5850)</option>
                                     <option value="3">Corporate Account(XXXXXX 5850)Te</option>
@@ -499,27 +499,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-    <?php if ($this->session->flashdata('checked')){?>
-        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('checked');?>
-        </div>
-    <?php }elseif ($this->session->flashdata('check_failed')){?>
-        <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('check_failed');?>
-        </div>
-    <?php }elseif ($this->session->flashdata('checked_updated')){?>
-        <div class="alert alert-info alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('checked_updated');?>
-        </div>
-    <?php }elseif ($this->session->flashdata('checked_up_failed')){?>
-        <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('checked_up_failed');?>
-        </div>
-    <?php }?>
 <!--    end of modal-->
 <!--    Time Activity modal-->
     <div class="full-screen-modal">
@@ -821,8 +800,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
-                                <select name="vendor_id" id="" class="form-control select2" required>
-                                    <option value="" disabled selected>Who did you pay?</option>
+                                <select name="vendor_id" id="" class="form-control select2-payee" required>
+                                    <option value=""></option>
                                     <option value="1">Abacus Accounting</option>
                                     <option value="2">Absolute Power</option>
                                     <option value="3">ADSC</option>
@@ -830,8 +809,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment account <i class="fa fa-question-circle"></i></label>
-                                <select name="payment_account" id="" class="form-control select2" required>
-                                    <option value="" disabled selected>Who did you pay?</option>
+                                <select name="payment_account" id="" class="form-control select2-account" required>
                                     <option>Cash on hand</option>
                                     <option value="1">Cash on hand:Cash on hand</option>
                                     <option value="2">Corporate Account (XXXXXX 5850)</option>
@@ -861,8 +839,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment method</label>
-                                <select name="payment_method" id="" class="form-control select2" required>
-                                    <option value="" disabled selected>What did you pay?</option>
+                                <select name="payment_method" id="" class="form-control select2-method" required>
+                                    <option value=""></option>
                                     <option>Cash</option>
                                     <option>Check</option>
                                     <option>Credit Card</option>
@@ -981,8 +959,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <select name="vendor_id" id="" class="form-control select2" required>
-                                    <option value="" disabled selected>Who did you pay?</option>
+                                <select name="vendor_id" id="" class="form-control select2-payee" required>
+                                    <option value=""></option>
                                     <option value="1">Abacus Accounting</option>
                                     <option value="2">Absolute Power</option>
                                     <option value="3">ADSC</option>
@@ -1116,8 +1094,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Which credit card did you pay?</label>
-                                    <select name="credit_card_id" id="" class="form-control select2" required>
-                                        <option value="" disabled selected>Select credit card</option>
+                                    <select name="credit_card_id" id="" class="form-control select2-credit-card" required>
+                                        <option value=""></option>
                                         <option value=""><a href="#">&plus; Add new</a></option>
                                         <option value="1">Sample credit card</option>
                                         <option value="2">Sample credit card 2</option>
@@ -1133,7 +1111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="">What did you use to make this payment?</label>
-                                    <select name="payment_account" id="" class="form-control select2" required>
+                                    <select name="payment_account" id="" class="form-control select2-bank-account" required>
                                         <option value="" disabled selected>Select bank account</option>
                                         <option value=""><a href="#">&plus; Add new</a></option>
                                         <option value="1">Cash on hand</option>
@@ -1153,7 +1131,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span>Print Later</span>
                                 </div>
                                 <div class="form-group">
-                                    <a href="#"><i class="fa fa-caret-right" style="color: #333333;"></i> Memo and attachments</a>
+                                    <a href="#" id="memoAttachPromt"><i class="fa fa-caret-right" style="color: #333333;"></i> Memo and attachments</a>
+                                </div>
+                                <div class="memoAttachContainer" style="display: none">
+                                    <div class="form-group">
+                                        <label for="">Memo</label>
+                                        <textarea name="" id="" cols="30" rows="5" class="form-control" style="width: 400px;height: auto!important;"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                        <span>Maximum size: 20MB</span>
+                                        <div class="fallback">
+                                            <input name="file" type="file" multiple />
+                                        </div>
+                                        <a href="#" style="color: #0b97c4;margin: 0 auto;">Show existing</a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6" style="padding-right: 20px">
@@ -1201,6 +1193,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     //select2 initialization
     $('.select2-vendor').select2({
         placeholder: 'Choose a vendor',
+        allowClear: true
+    });
+    $('.select2-payee').select2({
+        placeholder: 'Who did you pay?',
+        allowClear: true
+    });
+    $('.select2-account').select2({
+        allowClear: true
+    });
+    $('.select2-method').select2({
+        placeholder: 'What did you pay with?',
+        allowClear: true
+    });
+    $('.select2-credit-card').select2({
+        placeholder: 'Select credit card',
+        allowClear: true
+    });   $('.select2-bank-account').select2({
+        placeholder: 'Select bank account',
         allowClear: true
     });
     // DataTable JS
@@ -1426,6 +1436,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
        }else{
            $('#timeRow').css('display','none');
        }
+    });
+
+    //Memo and Attachmennt promt
+    $('#memoAttachPromt').click(function () {
+        $('.memoAttachContainer').toggle(this.checked);
+        var $target = $('.modal');
+        $target.animate({scrollTop: $target.height()}, 1000);
     });
 
 </script>
