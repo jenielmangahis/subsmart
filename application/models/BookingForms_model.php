@@ -38,7 +38,20 @@ class BookingForms_model extends MY_Model
         $this->db->order_by('sort', 'ASC');
         $query = $this->db->get();
         return $query->result();
-    }    
+    }   
+
+
+    public function getAllByUserId($user_id)
+    {
+        $id = $user_id;
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $id);
+        $this->db->order_by('sort', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }     
 
     public function getById($id)
     {

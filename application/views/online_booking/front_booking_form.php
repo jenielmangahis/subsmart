@@ -22,43 +22,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-6 left">
                   <form>
                     <div class="margin-bottom">
+
                       <div class="form-group-booking">
-                        <label>Name</label>
+                        <label>Full name</label>
                         <span class="form-required">*</span>
-                        <input type="text" class="form-control">
+                        <input type="text" id="full_name" name="full_name" class="form-control">
                       </div>
+
                       <div class="form-group-booking">
-                        <label>Phone</label>
+                        <label>Contact number</label>
                         <span class="form-required">*</span>
-                        <input type="text" class="form-control">
+                        <input type="text" name="contact_number" id="contact_number" class="form-control">
                       </div>
-                      <div class="form-group-booking">
-                        <label>Email</label>
-                        <span class="form-required">*</span>
-                        <input type="text" class="form-control">
-                      </div>
-                      <div class="form-group-booking">
-                        <label>Address</label>
-                        <input type="text" class="form-control">
-                      </div>
-                      <div class="form-group-booking">
-                        <label>Message</label>
-                        <textarea rows="2" class="form-control booking-txt-area"></textarea>
-                      </div>
-                      <div class="form-group-booking">
-                        <label>Preferred time to contact</label>
-                        <select name="contact-time" class="form-control">
-                          <option value="0" selected="selected">Any time</option>
-                          <option value="1">7am to 10am</option>
-                          <option value="2">10am to Noon</option>
-                          <option value="3">Noon to 4pm</option>
-                          <option value="4">4pm to 7pm</option>
-                        </select>
-                      </div>
-                      <div class="form-group-booking">
-                        <label>How did you hear about us</label>
-                        <input type="text" class="form-control">
-                      </div>
+
+                      <?php foreach ($forms as $key => $form) { ?>
+
+                          <?php if($form->is_visible == 1){ ?>
+                              <div class="form-group-booking">
+                                <label><?php echo $form->label; ?></label>
+                                <?php if($form->is_required == 1){ ?><span class="form-required">*</span> <?php } ?>
+                                    <?php if($form->field_name == "message" ){ ?>
+                                        <textarea rows="2" name="message" id="message" class="form-control booking-txt-area"></textarea>
+                                    <?php }elseif($form->field_name == "preferred_time_to_contact" ){ ?>      
+                                          <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
+                                            <option value="0" selected="selected">Any time</option>
+                                            <option value="1">7am to 10am</option>
+                                            <option value="2">10am to Noon</option>
+                                            <option value="3">Noon to 4pm</option>
+                                            <option value="4">4pm to 7pm</option>
+                                          </select> 
+                                    <?php }else{ ?>
+                                          <input type="text" id="<?php echo $form->field_name; ?>" name="<?php echo $form->field_name; ?>" class="form-control">
+                                    <?php }?>    
+                              </div>                          
+                          <?php } ?> 
+                        
+                       <?php }  ?>
+
                     </div>
                   </form>
                   <hr class="card-hr">

@@ -909,10 +909,12 @@ class Booking extends MY_Controller {
 		$userProfile = $this->Users_model->getUser($user_id);
 		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
 
+		$forms = $this->BookingForms_model->getAllByUserId($user_id);
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 		$uri_segment_method_name = $this->uri->segment(2);
 
+		$this->page_data['forms'] = $forms;
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['cart_data']    = $cart_data;
