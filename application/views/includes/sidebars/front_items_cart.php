@@ -74,7 +74,7 @@
           </div> -->
           <hr class="margin-top margin-bottom">
           <?php if($uri_segment_method_name != 'products') { ?>
-                  <a class="btn btn-default btn-back left" href="#">« Back</a>
+                  <a class="btn btn-default btn-back left" href="javascript:history.go(-1);">« Back</a>
           <?php } ?>
           <?php 
             $a_button_text_name = "Continue";
@@ -84,7 +84,7 @@
           ?>
           <div class="text-right">
             <?php if($is_cont_button_enable == false) { ?>
-              <a class="btn btn-primary-green" style="pointer-events: none; cursor: default;" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>
+              <a class="btn btn-primary-grey" style="pointer-events: none; cursor: default;" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>
             <?php } else { ?>
               <a class="btn btn-primary-green" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>              
             <?php } ?>

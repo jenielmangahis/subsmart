@@ -886,7 +886,7 @@ class Booking extends MY_Controller {
 		$user_id = hashids_decrypt($eid, '', 15);
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
-		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);		
 
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
@@ -992,6 +992,8 @@ class Booking extends MY_Controller {
         $interval   = \DateInterval::createFromDateString('1 day');
         $period     = new \DatePeriod($start, $interval, $end);
 
+		$cart_items = $this->session->userdata('cartItems');  
+
         $schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
 
         $week_schedules = array();
@@ -1012,6 +1014,15 @@ class Booking extends MY_Controller {
         $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
         $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
 
+        echo '<pre>';
+        print_r($cart_items);
+        echo '</pre>';
+
+        if(!empty($cart_items['schedule_data'])) {
+        	echo 'mayron';
+        }
+        exit;
+
         $this->page_data['eid'] = $post['eid'];
         $this->page_data['prev_date'] = $prev_date;
         $this->page_data['next_date'] = $next_date;
@@ -1021,11 +1032,12 @@ class Booking extends MY_Controller {
 
     public function ajax_user_set_schedule()
     {
+    	$post = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
     	$cart_items['schedule_id'] = post('sid');
+    	$cart_items['schedule_data'] = $post;
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
-
     }
 
 }

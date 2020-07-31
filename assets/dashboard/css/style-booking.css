@@ -104,6 +104,11 @@ button.btn.btn-default.btn-md.coupon__btn {
     background-color: #44a73c;
     border-color: #44a73c;
 }
+.btn-primary-grey {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
 a.view-grid {
     font-size: 17px;
 }
