@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row pt-4 enable-scroll">
                 <div class="col-6 left">
-                  <form>
+                  <form id="booking_form" name="booking_form" action="<?php echo base_url()."booking/save_booking_inquiry"; ?>" method="post">
                     <div class="margin-bottom">
 
                       <div class="form-group-booking">
@@ -93,3 +93,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer_front_booking'); ?>
+<script>
+$(function(){
+    var base_url = "<?php echo base_url(); ?>";
+
+    $(".btn-primary-green").click( function(){  
+        $("#booking_form").submit();
+    });
+
+});
+</script>
