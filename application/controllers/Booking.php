@@ -892,6 +892,12 @@ class Booking extends MY_Controller {
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 		$uri_segment_method_name = $this->uri->segment(2);
 
+		$is_cont_to_booking_form = false;
+		if(!empty($cart_items['schedule_data'])) {
+			$is_cont_to_booking_form = true;
+		}
+
+		$this->page_data['is_cont_to_booking_form'] = $is_cont_to_booking_form;
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['week_start_date'] = date("Y-m-d");
@@ -1104,15 +1110,12 @@ class Booking extends MY_Controller {
         $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
         $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
 
-        echo '<pre>';
-        print_r($cart_items);
-        echo '</pre>';
-
+        $selected_sched = array();
         if(!empty($cart_items['schedule_data'])) {
-        	echo 'mayron';
+        	$selected_sched = $cart_items['schedule_data'];
         }
-        exit;
 
+        $this->page_data['selected_sched'] = $selected_sched;
         $this->page_data['eid'] = $post['eid'];
         $this->page_data['prev_date'] = $prev_date;
         $this->page_data['next_date'] = $next_date;

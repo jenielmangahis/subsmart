@@ -39,6 +39,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_front_booking'); ?>
 <script>
 var base_url = "<?php echo base_url(); ?>";
+
+function continue_cart(){    
+    var eid = "<?php echo $eid; ?>";
+    window.location.href = base_url + "booking/front_booking_form/"+eid;
+}
+
 $(function(){
     function load_week_schedule(week_start_date, eid){
       var url = base_url + '/booking/_load_week_schedule';

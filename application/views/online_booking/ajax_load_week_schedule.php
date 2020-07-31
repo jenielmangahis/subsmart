@@ -7,8 +7,16 @@
   <span class="txt-date"><?php echo date("d-M", strtotime($date)); ?></span>
   <?php if( !empty($time) ){ ?>
   	<?php foreach($time as $t){ ?>
+		<?php 
+			$is_active = "";
+			if(!empty($selected_sched)) {
+				if($date == $selected_sched['date'] && $t['time_start'] == $selected_sched['time_start'] && $t['time_end'] == $selected_sched['time_end']) {
+					$is_active = 'active';
+				}
+			}
+		?>
   		<div class="container-availability">
-			<button class="btn-add-schedule" data-schedule-date="<?php echo $date; ?>" data-schedule-time-start="<?php echo $t['time_start']; ?>" data-schedule-time-end="<?php echo $t['time_end']; ?>" data-id="<?php echo $t['id']; ?>"><?php echo $t['time_start'] . ' - ' . $t['time_end']; ?></button>
+			<button class="btn-add-schedule <?php echo $is_active; ?>" data-schedule-date="<?php echo $date; ?>" data-schedule-time-start="<?php echo $t['time_start']; ?>" data-schedule-time-end="<?php echo $t['time_end']; ?>" data-id="<?php echo $t['id']; ?>"><?php echo $t['time_start'] . ' - ' . $t['time_end']; ?></button>
 		</div>
   	<?php } ?>
   <?php }else{ ?>
@@ -69,7 +77,8 @@ $(function(){
 			data: {sid:sid,date:date,time_start:time_start,time_end:time_end},
 			success: function(o)
 			{
-
+				//location.reload();
+				$(".btn-primary-grey").css({"background-color": "#44a73c","cursor":"grab","pointer-events": "auto"});
 			}
 		});
 	});

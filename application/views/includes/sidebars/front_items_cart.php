@@ -83,10 +83,18 @@
             }
           ?>
           <div class="text-right">
-            <?php if($is_cont_button_enable == false) { ?>
-              <a class="btn btn-primary-grey" style="pointer-events: none; cursor: default;" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>
-            <?php } else { ?>
-              <a class="btn btn-primary-green" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>              
+            <?php if($uri_segment_method_name == 'products') { ?>
+              <?php if($is_cont_button_enable == false) { ?>
+                <a class="btn btn-primary-grey" style="pointer-events: none; cursor: default;" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>
+              <?php } else { ?>
+                <a class="btn btn-primary-green" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>              
+              <?php } ?>
+            <?php }elseif($uri_segment_method_name == 'products_schedule') { ?>
+                <?php if($is_cont_to_booking_form == false) { ?>
+                  <a class="btn btn-primary-grey" id="schedule-next-link" style="pointer-events: none; cursor: default;" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>
+                <?php } else { ?>
+                  <a class="btn btn-primary-green" data-form="continue" href="javascript:void(0);" onclick="javascript:continue_cart();"><?php echo $a_button_text_name; ?> »</a>              
+                <?php } ?>              
             <?php } ?>
 
           </div>
