@@ -134,6 +134,45 @@ a.view-grid {
     font-weight: 500;
     margin-bottom: 20px;
 }
+.enable-scroll {
+    padding-bottom: 130px;
+}
+.ptc-4 {
+    padding-top: 28px;
+}
+.ptc-5 {
+    padding-top: 34px;
+}
+.form-group-booking {
+    margin-bottom: 20px !important;
+}
+.booking-txt-area {
+    min-height: 80px;
+}
+.opt-button-left {
+    position: absolute;
+    left: 0;
+    margin-right: 7px;
+    margin-top: 3px;
+}
+a.btn-back {
+    height: 49px;
+    padding-top: 12px;
+    min-width: 125px;
+}
+.opt-button-left a {
+    border: 1px solid green;
+    padding: 2px;
+    border-radius: 100px;
+    color: green;
+    width: 26px;
+    display: block;
+    text-align: center;
+}
+.opt-button-left a:hover {
+    background: green;
+    color: white;
+}
 .opt-button {
     position: absolute;
     right: 0;

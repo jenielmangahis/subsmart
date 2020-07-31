@@ -2,18 +2,18 @@
    <div class="widget-cnt-right">
       <div class="widget-cnt-right__child">
          <div class="business">
-            <?php 
+            <?php
               $profile_image = $userProfile->profile_img;
               if(file_exists('uploads/users/user-profile/' . $profile_image) == FALSE || $profile_image == null) {
-                  
+
                   $profile_image = base_url('/assets/dashboard/images/online-booking.png');
-                  if(isset($service_item_thumb)){ 
+                  if(isset($service_item_thumb)){
                     if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
                         $profile_image = base_url('/assets/dashboard/images/online-booking.png');
                     }else {
                         $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
-                    } 
-                  }  
+                    }
+                  }
 
               } else {
                   $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
@@ -40,7 +40,7 @@
                   <a class="a-ter delete-cart-item" data-id="<?php echo $item->id; ?>" href="#" style="position: absolute; top: 2px; right:0"><span class="fa fa-trash"></span></a>
                 </div>
                <?php } ?>
-               
+
             </div>
             <br />
             <?php if($booking_settings->minimum_price_for_entier_booking >= 1) { ?>
@@ -56,6 +56,7 @@
             <button class="btn btn-default btn-md coupon__btn" data-coupon="btn_submit" name="coupon_btn" type="submit">Apply</button>
          </div>
          <hr class="margin-top margin-bottom">
+         <a class="btn btn-default btn-back left" href="#">« Back</a>
          <div class="text-right">
             <a class="btn btn-primary-green" data-form="continue" href="#" onclick="javascript:continue_cart();">Continue »</a>
          </div>

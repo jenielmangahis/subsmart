@@ -1,6 +1,5 @@
-<div class="opt-button">
+<div class="opt-button-left">
   <a href="javascript:void(0);" class="prev-week-schedule"><span class="fa fa-arrow-left"></span></a>
-  <a href="javascript:void(0);" class="next-week-schedule"><span class="fa fa-arrow-right"></span></a>
 </div>
 <?php foreach($week_schedules as $date => $time){ ?>
 <div class="col-day">
@@ -10,16 +9,19 @@
   	<?php foreach($time as $t){ ?>
   		<div class="container-availability">
 			<button class="btn-add-schedule" data-id="<?php echo $t['id']; ?>"><?php echo $t['time_start'] . ' - ' . $t['time_end']; ?></button>
-		</div>	
+		</div>
   	<?php } ?>
   <?php }else{ ?>
   	<div class="container-availability">
 		<button class="unavailable">NOT AVAILABLE</button>
 	</div>
   <?php } ?>
-  
+
 </div>
 <?php } ?>
+<div class="opt-button">
+  <a href="javascript:void(0);" class="next-week-schedule"><span class="fa fa-arrow-right"></span></a>
+</div>
 <script>
 var base_url = "<?php echo base_url(); ?>";
 $(function(){
@@ -65,11 +67,9 @@ $(function(){
 			data: {sid:sid},
 			success: function(o)
 			{
-				
+
 			}
 		});
 	});
 });
 </script>
-
-
