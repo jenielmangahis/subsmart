@@ -134,7 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         </div>
                         <hr />
-                        <div style="text-align: right;"><a href="#" class="btn btn-success"> Continue >> </a></div>                                  
+                        <div style="text-align: right;"><a href="<?php echo base_url('more/addon/booking/time') ?>" class="btn btn-success"> Continue >> </a></div>                                  
                     </div>
                     <!-- end card -->
                 </div>

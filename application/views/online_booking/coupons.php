@@ -87,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><span class="fa fa-plus-square fa-margin-right"></span> Add Coupon</a>
                         <hr />
                         <div class="margin-top text-right">
-                            <a class="btn btn-primary" href="javascript:void(0);">Continue &raquo;</a>
+                            <a class="btn btn-primary" href="<?php echo base_url('more/addon/booking/settings') ?>">Continue &raquo;</a>
                         </div>
                     </div>
                     <!-- end card -->

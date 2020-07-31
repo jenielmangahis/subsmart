@@ -42,9 +42,12 @@
                <?php } ?>
                
             </div>
-            <div class="validation validation-error margin-top-sec">
-               Minimum booking amount is $<span class="total_minimum">50.00</span><br>
-            </div>
+            <br />
+            <?php if($booking_settings->minimum_price_for_entier_booking >= 1) { ?>
+              <div class="alert alert-danger">
+                Minimum booking amount is <strong>$<?php echo number_format($booking_settings->minimum_price_for_entier_booking,2); ?></strong>
+              </div>
+            <?php } ?>
          </div>
          <div class="coupon">
             <div class="coupon__code">

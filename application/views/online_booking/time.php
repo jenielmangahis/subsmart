@@ -189,7 +189,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <hr />
                         <div>
                             <button type="button" class="btn btn-success btn-save-time">Save</button>
-                            <a style="float: right;" href="#" class="btn btn-success"> Continue >> </a>
+                            <a style="float: right;" href="<?php echo base_url('more/addon/booking/form') ?>" class="btn btn-success"> Continue >> </a>
                         </div>                                  
                     </div>
                     <!-- end card -->

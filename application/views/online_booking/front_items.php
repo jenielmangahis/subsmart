@@ -112,7 +112,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       var eid = "<?php echo $eid; ?>"
       var total_amount = $(".total_cart_amount").html();
       var total_minimum = $(".total_minimum").html();
-
       
       var new_total_minimum = Number(total_minimum);
       var new_total_amount = Number(total_amount);

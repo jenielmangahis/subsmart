@@ -654,7 +654,7 @@ class Booking extends MY_Controller {
         if( $userSetting ){
         	$data = array(
         		'page_title' => post('page_title'),
-        		'page_introduction' => post('page_intro'),
+        		'page_instruction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
         		'appointment_per_time_slot' => post('time_slot_bookings'),
         		'minimum_price_for_entier_booking' => post('cart_total_min'),
@@ -692,7 +692,7 @@ class Booking extends MY_Controller {
         	$data = array(
         		'user_id' => $user['id'],
         		'page_title' => post('page_title'),
-        		'page_introduction' => post('page_intro'),
+        		'page_instruction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
         		'appointment_per_time_slot' => post('time_slot_bookings'),
         		'minimum_price_for_entier_booking' => post('cart_total_min'),
@@ -842,6 +842,7 @@ class Booking extends MY_Controller {
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
 		$categories  = $this->BookingCategory_model->getAllCategories();
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
 
 		$products = array();
 
@@ -867,6 +868,7 @@ class Booking extends MY_Controller {
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
+		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['search_query'] = $search_query;
 		$this->page_data['cart_data']    = $cart_data;
 		$this->page_data['userProfile']  = $userProfile;
