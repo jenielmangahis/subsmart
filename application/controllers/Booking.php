@@ -844,6 +844,8 @@ class Booking extends MY_Controller {
 		$categories  = $this->BookingCategory_model->getAllCategories();
 		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
 
+		$uri_segment_method_name = $this->uri->segment(2);
+
 		$products = array();
 
 		$post = $this->input->post();
@@ -868,6 +870,7 @@ class Booking extends MY_Controller {
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['search_query'] = $search_query;
 		$this->page_data['cart_data']    = $cart_data;
@@ -883,10 +886,14 @@ class Booking extends MY_Controller {
 		$user_id = hashids_decrypt($eid, '', 15);
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
 
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+		$uri_segment_method_name = $this->uri->segment(2);
 
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['week_start_date'] = date("Y-m-d");
 		$this->page_data['cart_data']    = $cart_data;
 		$this->page_data['userProfile']  = $userProfile;
@@ -895,6 +902,25 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/front_schedule', $this->page_data);
 	}
 
+    public function front_booking_form($eid)
+	{	
+		$user_id = hashids_decrypt($eid, '', 15);
+		$user    = $this->session->userdata('logged');
+		$userProfile = $this->Users_model->getUser($user_id);
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+		$uri_segment_method_name = $this->uri->segment(2);
+
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_booking_form', $this->page_data);
+	}	
 
 	public function ajax_get_product_details()
     {
@@ -1001,22 +1027,6 @@ class Booking extends MY_Controller {
     	$this->session->set_userdata('cartItems',$cart_items);    	
 
     }
-
-    public function front_booking_form($eid)
-	{	
-		$user_id = hashids_decrypt($eid, '', 15);
-		$user    = $this->session->userdata('logged');
-		$userProfile = $this->Users_model->getUser($user_id);
-
-		$cart_items = $this->session->userdata('cartItems');
-		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
-
-		$this->page_data['cart_data']    = $cart_data;
-		$this->page_data['userProfile']  = $userProfile;
-		$this->page_data['eid'] = $eid;
-
-		$this->load->view('online_booking/front_booking_form', $this->page_data);
-	}
 
 }
 
