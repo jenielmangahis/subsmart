@@ -42,7 +42,7 @@ var base_url = "<?php echo base_url(); ?>";
 
 function continue_cart(){    
     var eid = "<?php echo $eid; ?>";
-    window.location.href = base_url + "booking/front_booking_form/"+eid;
+    window.location.href = base_url + "booking/product_booking_form/"+eid;
 }
 
 $(function(){

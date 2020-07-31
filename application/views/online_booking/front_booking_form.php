@@ -18,21 +18,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="sc-name">Please input your contact details to complete this booking.</div>
                 </div>
             </div>
-            <div class="row pt-4 enable-scroll">
-                <div class="col-6 left">
-                  <form id="booking_form" name="booking_form" action="<?php echo base_url()."booking/save_booking_inquiry"; ?>" method="post">
+            <div class="row pt-4 enable-scroll">                
+                <div class="col-6 left">        
+                <form id="booking_form" name="booking_form" action="<?php echo base_url()."booking/save_booking_inquiry"; ?>" method="post">          
+                    <input type="hidden" name="eid" value="<?php echo $eid; ?>">
                     <div class="margin-bottom">
 
                       <div class="form-group-booking">
                         <label>Full name</label>
                         <span class="form-required">*</span>
-                        <input type="text" id="full_name" name="full_name" class="form-control">
+                        <input type="text" id="full_name" name="full_name" required="" class="form-control">
                       </div>
 
                       <div class="form-group-booking">
                         <label>Contact number</label>
                         <span class="form-required">*</span>
-                        <input type="text" name="contact_number" id="contact_number" class="form-control">
+                        <input type="text" name="contact_number" id="contact_number" required="" class="form-control">
                       </div>
 
                       <?php foreach ($forms as $key => $form) { ?>
@@ -59,21 +60,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         
                        <?php }  ?>
 
-                    </div>
-                  </form>
+                    </div>                  
                   <hr class="card-hr">
                   <div class="col-6 pl-1">
-                    <a class="btn btn-primary-green" data-form="continue" href="#" onclick="javascript:continue_cart();">Book now</a>
-                 </div>
-                </div>
+                    <button type="submit" class="btn btn-primary-green">Book now</button>
+                  </div>
+                </form>
+                </div>                
                 <div class="col-6 left">
                   <div class="margin-bottom ptc-4">
                     <div class="weight-bold">Scheduled Date and Time</div>
-                    <div>31-Jul-2020 8:00am-10:00am</div>
+                    <div>
+                    <?php 
+                      if( !empty($booking_schedule) ){
+                        echo date("d-M-Y", strtotime($booking_schedule['date'])) . ' ' . $booking_schedule['time_start'] . ' - ' . $booking_schedule['time_end']; 
+                      }else{
+                        echo "- Please select schedule -";
+                      }
+                    ?>
+                    </div>
                   </div>
                   <div class="margin-bottom pt-4">
                     <div class="weight-bold">Service & Items</div>
-                    <div>Items: 1, Total: $180.00</div>
+                    <div>
+                      <?php 
+                        if( $cart_data['total_cart_items'] > 0 ){
+                          echo "Items : " . $cart_data['total_cart_items'] . ', Total : $' . number_format($cart_data['total_amount'],2);
+                        }
+                      ?>
+                    </div>                    
                   </div>
                 </div>
             </div>
@@ -93,13 +108,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer_front_booking'); ?>
-<script>
-$(function(){
-    var base_url = "<?php echo base_url(); ?>";
-
-    $(".btn-primary-green").click( function(){  
-        $("#booking_form").submit();
-    });
-
-});
-</script>

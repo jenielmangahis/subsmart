@@ -62,6 +62,14 @@ class BookingInfo_model extends MY_Model
         return $query;
     }
 
+    public function save($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+
+        return  $last_id;
+    }
+
 }
 
 /* End of file BookingCoupon_model.php */

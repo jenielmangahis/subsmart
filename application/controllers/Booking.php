@@ -21,6 +21,8 @@ class Booking extends MY_Controller {
         $this->load->model('Users_model');
         $this->load->model('BookingScheduleAssignedUser_model');
         $this->load->model('BookingInquiry_model');
+        $this->load->model('BookingInfo_model');
+        $this->load->model('BookingWorkOrder_model');
 	}
 
 	public function index() {
@@ -164,7 +166,7 @@ class Booking extends MY_Controller {
 	        		'sort' => $value['sort'],
 	        		'date_created' => date("Y-m-d H:i:s")
 	        	);
-	        	$bookingCoupon = $this->BookingForms_model->create($data);
+	        	$bookingForm = $this->BookingForms_model->create($data);
 	        }
 
 	        	$this->session->set_flashdata('message', 'Form Updated Successful');
@@ -923,8 +925,9 @@ class Booking extends MY_Controller {
 		$this->page_data['forms'] = $forms;
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
-		$this->page_data['cart_data']    = $cart_data;
-		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['cart_data']        = $cart_data;
+		$this->page_data['booking_schedule'] = $cart_items['schedule_data'];
+		$this->page_data['userProfile']      = $userProfile;
 		$this->page_data['eid'] = $eid;
 
 		$this->load->view('online_booking/front_booking_form', $this->page_data);
@@ -1047,16 +1050,16 @@ class Booking extends MY_Controller {
     {
     	$post       = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
-    	$key        = 'pid_' . $post['pid'];
+    	$key        = $post['pid'];
     	if( !empty($cart_items) ){
-    		if( isset($cart_items[$key]) ){
-    			$new_qty = $post['qty'] + $cart_items[$key];
-    			$cart_items[$key] = $new_qty;
+    		if( isset($cart_items['products'][$key]) ){
+    			$new_qty = $post['qty'] + $cart_items['products'][$key];
+    			$cart_items['products'][$key] = $new_qty;
     		}else{
-    			$cart_items[$key] = $post['qty'];
+    			$cart_items['products'][$key] = $post['qty'];
     		}
     	}else{
-    		$cart_items[$key] = $post['qty'];
+    		$cart_items['products'][$key] = $post['qty'];
     	}
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
@@ -1127,10 +1130,67 @@ class Booking extends MY_Controller {
     {
     	$post = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
-    	$cart_items['schedule_id'] = post('sid');
     	$cart_items['schedule_data'] = $post;
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
+    }
+
+    public function save_product_booking()
+    {
+    	$post    = $this->input->post();
+    	$user_id = hashids_decrypt($post['eid'], '', 15);
+    	$user    = $this->Users_model->getUser($user_id);
+
+    	if( $user ){
+    		$data_booking_info = [
+	    		'user_id' => $user->id,
+	    		'name' => $post['full_name'],
+	    		'phone' => $post['contact_number'],
+	    		'email' => $post['email'],
+	    		'address' => $post['address'],
+	    		'message' => $post['message'],
+	    		'preferred_time_to_contact' => $post['preferred_time_to_contact'],
+	    		'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
+	    		'form_data' => '',
+	    		'status' => 1,
+	    		'date_created' => date("Y-m-d H:i:s")
+	    	];
+
+	    	$booking_info_id = $this->BookingInfo_model->save($data_booking_info);
+
+	    	if( $booking_info_id > 0 ){
+	    		$cart_items = $this->session->userdata('cartItems');
+				$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+				foreach( $cart_items['products'] as $pid =>  $qty ){
+					$data_booking_work_orders = [
+						'booking_info_id' => $booking_info_id,
+						'service_item_id' => $pid,
+						'quantity_ordered' => $qty,
+						'schedule_date' => $cart_items['schedule_data']['date'],
+						'schedule_time_from' => $cart_items['schedule_data']['time_start'],
+						'schedule_time_to' => $cart_items['schedule_data']['time_end'],
+						'date_created' => date("Y-m-d H:i:s")
+					];
+
+					$this->BookingWorkOrder_model->create($data_booking_work_orders);
+				}
+
+				$this->session->set_flashdata('message', 'Your product booking has been saved.');
+        		$this->session->set_flashdata('alert_class', 'alert-info');	
+
+	    	}else{
+	    		$this->session->set_flashdata('message', 'Canot save data. Please try again later.');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');	
+	    	}
+
+    	}else{
+    		$this->session->set_flashdata('message', 'Merchant not found');
+        	$this->session->set_flashdata('alert_class', 'alert-danger');
+    	}
+
+    	$this->session->unset_userdata('cartItems');
+
+        redirect('booking/products/'.$post['eid']);
     }
 
 }

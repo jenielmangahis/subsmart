@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class BookingWorkOrders_model extends MY_Model
+class BookingWorkOrder_model extends MY_Model
 {
     public $table = 'booking_work_orders';
     public $status_active = 1;

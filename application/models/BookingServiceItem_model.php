@@ -118,23 +118,25 @@ class BookingServiceItem_model extends MY_Model
 
     public function getUserCartSummary($cartData)
     {
-        $total_cart = 0;
-        $items      = array();
+        $total_amount = 0;
+        $items        = array();
 
         if( !empty($cartData) ){
             $cart_data = array();
-            foreach($cartData as $key => $qty){
-                $pid  = str_replace("pid_", "", $key);
-                $item = $this->getById($pid);
-                if( $item ){
-                    $item->ordered_qty = $qty;
-                    $items[]     = $item;
-                    $total_cart += $item->price * $qty;
-                } 
-            }
+            if( isset($cartData['products']) ){
+                foreach($cartData['products'] as $key => $qty){
+                    $pid  = str_replace("pid_", "", $key);
+                    $item = $this->getById($pid);
+                    if( $item ){
+                        $item->ordered_qty = $qty;
+                        $items[]     = $item;
+                        $total_amount += $item->price * $qty;
+                    } 
+                }
+            }            
         }
 
-        $cart_summary = ['total_cart_items' => $total_cart, 'items' => $items];
+        $cart_summary = ['total_cart_items' => count($items), 'total_amount' => $total_amount, 'items' => $items];
         return $cart_summary;
     }
 
