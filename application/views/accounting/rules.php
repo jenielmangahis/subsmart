@@ -44,18 +44,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="displayRules">
                             <?php foreach ($rules as $rule): ?>
                             <tr>
                                 <td><input type="checkbox" value="<?php echo $rule->id;?>"></td>
                                 <td><?php echo $rule->rules_name;?></td>
-                                <td>Test</td>
-                                <td>Test</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td><?php echo ($rule->auto==1)?"Auto":" ";?></td>
                                 <td></td>
                                 <td>
                                     <a href="<?php echo site_url()?>accounting/edit_rules?id=<?php echo $rule->id;?>" style="color: #0b97c4;">View/Edit</a>&nbsp;
+                                    <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
+                                        <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a href="#" id="deleteRules" data-id="<?php echo $rule->id;?>">Delete</a></li>
+                                        </ul>
+                                    </div>&nbsp;
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -72,7 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
 <!--    Modal for creating rules-->
     <div class="modal-right-side">
-        <div class="modal right fade" id="createRules" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal right fade" id="createRules" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -92,8 +98,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="tab-select">
                                     <select name="apply" id="" class="form-control">
-                                        <option value="in" selected>Money in</option>
-                                        <option value="out">Money out</option>
+                                        <option selected>Money in</option>
+                                        <option>Money out</option>
                                     </select>
                                 </div>
                                 <span style="margin-right: 5px;margin-left: 5px;">in</span>
@@ -116,14 +122,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <label for="" style="position: relative;display: inline-block;">and include the following:</label>
                                 <select name="include" id="" class="form-control inline-select">
-                                    <option value="all" selected>All</option>
-                                    <option value="any">Any</option>
+                                    <option selected>All</option>
+                                    <option>Any</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <div class="addCondition-container">
                                     <div id="addCondition">
                                         <div class="tab-select">
+                                            <input type="hidden" id="counterCondition" value="1">
                                             <select name="description[]" id="" class="form-control">
                                                 <option selected>Description</option>
                                                 <option>Bank text</option>
@@ -140,7 +147,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="tab-select" style="max-width: 140px">
                                             <input type="text" name="comment[]" class="form-control" placeholder="Enter Text">
                                         </div>
-                                        <div class="tab-select" id="deleteCondition" style="display: none;">
+                                        <div class="tab-select deleteCondition" id="deleteCondition" style="display: none;">
                                             <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
                                         </div>
                                     </div>
@@ -276,6 +283,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <?php echo $this->session->flashdata('rules_failed');?>
         </div>
     <?php }?>
+    <?php if ($this->session->flashdata('updated_rules')){?>
+        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('updated_rules');?>
+        </div>
+    <?php }elseif ($this->session->flashdata('update_rules_failed')){?>
+        <div class="alert alert-info alert-dismissible col-md-4" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->session->flashdata('update_rules_failed');?>
+        </div>
+    <?php }?>
 <!--    end of modal-->
     <div class="full-screen-modal">
         <!--Modal for file upload-->
@@ -316,7 +334,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
-
+    //dropdown checkbox
     var expanded = false;
     function showCheckboxes() {
         var checkboxes = document.getElementById("checkboxes");
@@ -337,5 +355,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
     } );
-
 </script>

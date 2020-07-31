@@ -428,7 +428,7 @@
 
 <!-- Modal View Inquiry --> 
 <div class="modal fade" id="modalViewInquiry" tabindex="-1" role="dialog" aria-labelledby="modalViewInquiryTitle" aria-hidden="true">
-   <div class="modal-dialog" role="document">
+   <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-list"></i> Inquiry</h5>
@@ -441,3 +441,48 @@
     </div>
 </div>
 
+<!-- Modal Change Status Inquiry --> 
+<div class="modal fade" id="modalViewChangeStatus" tabindex="-1" role="dialog" aria-labelledby="modalViewChangeStatus" aria-hidden="true">
+   <?php echo form_open_multipart('booking/update_inquiry_status', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-flag-o"></i> Update Status</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="inquiry-change-status-body"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>        
+      </div>
+    </div>
+    <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Edit Info Inquiry --> 
+<div class="modal fade" id="modalViewEditInquiryInfo" tabindex="-1" role="dialog" aria-labelledby="modalViewEditInquiryInfoTitle" aria-hidden="true">
+   <?php echo form_open_multipart('booking/update_inquiry_details', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-flag-o"></i> Update Status</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="inquiry-edit-info-body"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>        
+      </div>
+    </div>
+    <?php echo form_close(); ?>
+</div>

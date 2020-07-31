@@ -19,18 +19,28 @@
 
 .full-screen-modal .modal-container{
     margin: auto;
-    width: 50%;
+    width: 60%;
     border:1px solid gainsboro;
     padding: 10px;
     -moz-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
+    background: #ffffff;
 }
-
-.banks-img{
+.bank-img-container{
+    cursor: pointer;
+    border: 1px #dcdcdc solid;
+    margin-bottom: 20px;
+    padding: 15px 1px;
+    border-radius: 2px;
+}
+.bank-img-container:hover{
+    border: 1px #2ca01c solid;
+}
+.bank-img-container .banks-img{
     height: 84px;
-    width: 105px;
-    margin: 20px;
+    width: 125px;
+    margin: 0 auto;
 }
 .modal-container .centered-container{
     display: flex;
@@ -556,12 +566,13 @@
 #edit-expensesCheck .modal-header{
     border-bottom: 0;
 }
-#edit-expensesCheck .modal-footer-check{
+.modal-footer-check{
     padding: 10px;
     background: #393A3D;
     width: 100%;
     position: fixed;
     bottom: 0;
+    margin-top: 100px;
 }
 #edit-expensesCheck .remove-button{
     border-radius: 36px;
@@ -630,6 +641,7 @@
 }
 #bill-modal .modal-body{
     height: 100%;
+    margin-bottom: 100px;
 }
 #bill-modal .modal-footer-check{
     padding: 10px;
@@ -700,13 +712,6 @@
 #expense-modal .modal-header{
     border-bottom: 0;
 }
-#expense-modal .modal-footer-check{
-    padding: 10px;
-    background: #393A3D;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-}
 #expense-modal.remove-button{
     border-radius: 36px;
 }
@@ -771,13 +776,6 @@
 }
 #vendorCredit-modal .modal-header{
     border-bottom: 0;
-}
-#vendorCredit-modal .modal-footer-check{
-    padding: 10px;
-    background: #393A3D;
-    width: 100%;
-    bottom: 0;
-    position: fixed;
 }
 #vendorCredit-modal.remove-button{
     border-radius: 36px;
@@ -852,13 +850,6 @@
     border-bottom: 0;
     height: 56px;
 }
-#payDown-modal .modal-footer-check{
-    padding: 10px;
-    background: #393A3D;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-}
 #payDown-modal .remove-button{
     border-radius: 36px;
 }
@@ -919,6 +910,7 @@
     font-size: 10px;
     text-align: center;
     color: #393A3D;
+    margin-bottom: 100px;
 }
 /*Form inline*/
 .inline {

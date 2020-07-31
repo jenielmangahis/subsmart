@@ -34,18 +34,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>Message</th>
+                                    <th>Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach( $inquiries as $i ){ ?>
+                                    <?php 
+                                        $status = "";
+                                        if($i->status == 1) {
+                                            $status = "New";
+                                        }elseif($i->status == 2) {
+                                            $status = "Contacted";
+                                        }elseif($i->status == 3) {
+                                            $status = "Follow Up";
+                                        }elseif($i->status == 4) {
+                                            $status = "Assigned";
+                                        }elseif($i->status == 5) {
+                                            $status = "Closed";
+                                        }
+                                    ?>
                                     <tr>
                                         <td><?php echo $i->name; ?></td>
                                         <td><?php echo $i->phone; ?></td>
                                         <td><?php echo $i->email; ?></td>
                                         <td><?php echo $i->message; ?></td>
+                                        <td><?php echo $status; ?></td>
                                         <td class="text-right">
-                                            <a class="btn-view-inquiry margin-right-sec" data-id="<?php echo $i->id; ?>" href="javascript:void(0);"><span class="fa fa-list"></span> view</a>
+                                            <a class="btn-view-inquiry margin-right-sec" data-id="<?php echo $i->id; ?>" href="javascript:void(0);"><span class="fa fa-list"></span> View</a>
+                                            <a class="btn-edit-info-inquiry margin-right-sec" data-id="<?php echo $i->id; ?>" href="javascript:void(0);"><span class="fa fa-pencil-square-o"></span> Edit</a>
+                                            <a class="btn-change-status-inquiry margin-right-sec" data-id="<?php echo $i->id; ?>" href="javascript:void(0);"><span class="fa fa-flag-o"></span> Change Status</a>
+                                            
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -87,5 +106,49 @@ $(function(){
             });
         }, 1000);
     });
+
+    $(".btn-change-status-inquiry").click(function(){
+        var iid = $(this).attr("data-id");
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading...</div>';
+        var url = base_url + '/booking/_inquiry_change_status';
+
+        $("#modalViewChangeStatus").modal('show');
+
+        $(".inquiry-change-status-body").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {iid:iid},
+               success: function(o)
+               {
+                  $(".inquiry-change-status-body").html(o);
+               }
+            });
+        }, 1000);
+    });
+
+    
+    $(".btn-edit-info-inquiry").click(function(){
+        var iid = $(this).attr("data-id");
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading...</div>';
+        var url = base_url + '/booking/_inquiry_edit_details';
+
+        $("#modalViewEditInquiryInfo").modal('show');
+
+        $(".inquiry-edit-info-body").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {iid:iid},
+               success: function(o)
+               {
+                  $(".inquiry-edit-info-body").html(o);
+               }
+            });
+        }, 1000);
+    });
+
 });
 </script>

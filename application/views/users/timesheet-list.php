@@ -135,7 +135,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <!-- Employee -->
                                                     <td class="employee_name">
                                                         <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
-                                                        <?php echo ucfirst($this->roles_model->getById($row->role)->title); ?>
+                                                        <?php 
+                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
+                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
+                                                            }
+                                                        ?>
                                                     </td>
                                                     <!-- Status -->
                                                     <td class="status" style="text-align: center;">

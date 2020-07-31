@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('users/manual_clock_in', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('timesheet/manual_clock_in', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                            placeholder="hh:mm"/>
                                 </div>
 
-                                <div class="col-md-12">
+                                <?php /*<div class="col-md-12">
                                     <h3>Breaks</h3>
                                 </div>
                                 <div class="col-md-4 form-group">
@@ -79,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label for="formClient-Contact">To</label>
                                     <input type="text" class="form-control" name="break_to"
                                            placeholder="hh:mm"/>
-                                </div>
+                                </div>*/?>
 
 
                                 <!-- Job code hidden for now -->

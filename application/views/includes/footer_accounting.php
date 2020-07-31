@@ -1,4 +1,5 @@
 <!-- Footer -->
+<?php $this->load->view($alert) ?>
 <footer class="footer">
 	<div class="container-fluid">
 		<div class="row">

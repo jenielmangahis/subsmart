@@ -444,6 +444,71 @@ class Booking extends MY_Controller {
         redirect('more/addon/booking/products');
     }
 
+    public function update_inquiry_status()
+    {
+    	postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$id = $post['inquiry_id'];
+        	$stat = $this->BookingInquiry_model->getById($id);
+
+        	if($stat) {
+	            $this->BookingInquiry_model->update($stat->id, array(
+	                'name' => post('status'),
+	            ));
+
+	            $this->session->set_flashdata('message', 'Status was successfully updated');
+	            $this->session->set_flashdata('alert_class', 'alert-success');
+        	} else {
+	            $this->session->set_flashdata('message', 'Inquiry not found');
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('more/addon/inquiries');
+    }
+
+    public function update_inquiry_details()
+    {
+    	postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+        	$id = $post['inquiry_id'];
+        	$stat = $this->BookingInquiry_model->getById($id);
+
+        	if($stat) {
+	            $this->BookingInquiry_model->update($stat->id, array(
+	                'name' => post('name'),
+	                'phone' => post('phone'),
+	                'email' => post('email'),
+	                'address' => post('address'),
+	                'message' => post('message'),
+	                'preferred_time_to_contact' => post('preferred_time_to_contact'),
+	                'how_did_you_hear_about_us' => post('how_did_you_hear_about_us'),
+	                'status' => post('status')
+	            ));
+
+	            $this->session->set_flashdata('message', 'Inquiry info was successfully updated');
+	            $this->session->set_flashdata('alert_class', 'alert-success');
+        	} else {
+	            $this->session->set_flashdata('message', 'Inquiry not found');
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('more/addon/inquiries');
+    }    
+
     public function save_service_item()
     {
         postAllowed();
@@ -750,6 +815,27 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/ajax_get_inquiry_details', $this->page_data);
     }
 
+    public function ajax_change_inquiry_status()
+    {
+    	$id = post('iid');
+    	$inquiry = $this->BookingInquiry_model->findById($id);
+
+    	$this->page_data['inquiry'] = $inquiry;
+    	$this->page_data['inquiry_id'] = $id;
+		$this->load->view('online_booking/ajax_change_inquiry_status', $this->page_data);
+    }
+
+    public function ajax_inquiry_edit_details()
+    {
+		$id = post('iid');
+        $post = $this->input->post();    
+        $inquiry = $this->BookingInquiry_model->findById($id);
+
+        $this->page_data['inquiry'] = $inquiry;
+        $this->page_data['inquiry_id'] = $id;
+        $this->load->view('online_booking/ajax_inquiry_edit_details', $this->page_data);	
+    }    
+
     public function front_items($eid)
 	{
 		$user_id = hashids_decrypt($eid, '', 15);
@@ -790,10 +876,23 @@ class Booking extends MY_Controller {
 		$this->load->view('online_booking/' . $view, $this->page_data);
 	}
 
-	public function front_schedule()
-	{
-		$this->load->view('online_booking/front_scheduler', $this->page_data);
+	public function front_schedule($eid)
+	{	
+		$user_id = hashids_decrypt($eid, '', 15);
+		$user = $this->session->userdata('logged');
+		$userProfile = $this->Users_model->getUser($user_id);
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		$this->page_data['week_start_date'] = date("Y-m-d");
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_schedule', $this->page_data);
 	}
+
 
 	public function ajax_get_product_details()
     {
@@ -852,6 +951,70 @@ class Booking extends MY_Controller {
     	$this->session->set_userdata('cartItems',$cart_items);    	
 
     }
+
+    public function ajax_load_week_schedule()
+    {
+    	$post = $this->input->post();
+    	$user_id    = hashids_decrypt($post['eid'], '', 15);
+    	$start_date = $post['week_start_date'];
+    	$end_date   = date("Y-m-d", strtotime($start_date . " +7 days"));
+
+    	$start      = new \DateTime($start_date);
+        $end        = new \DateTime($end_date);
+        $interval   = \DateInterval::createFromDateString('1 day');
+        $period     = new \DatePeriod($start, $interval, $end);
+
+        $schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
+
+        $week_schedules = array();
+
+        foreach ($period as $dt) { 
+            $date = $dt->format("Y-m-d"); 
+            $week_schedules[$date] = array(); 
+
+            foreach( $schedules as $s ){
+            	$day = $dt->format("D");
+            	$days = unserialize($s->days);
+            	if( in_array($day, $days) ){
+            		$week_schedules[$date][] = ['id' => $s->id, 'time_start' => $s->time_start, 'time_end' => $s->time_end]; 
+            	}
+            }
+        }     
+
+        $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
+        $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
+
+        $this->page_data['eid'] = $post['eid'];
+        $this->page_data['prev_date'] = $prev_date;
+        $this->page_data['next_date'] = $next_date;
+        $this->page_data['week_schedules'] = $week_schedules;
+		$this->load->view('online_booking/ajax_load_week_schedule', $this->page_data);
+    }
+
+    public function ajax_user_set_schedule()
+    {
+    	$cart_items = $this->session->userdata('cartItems');
+    	$cart_items['schedule_id'] = post('sid');
+
+    	$this->session->set_userdata('cartItems',$cart_items);    	
+
+    }
+
+    public function front_booking_form($eid)
+	{	
+		$user_id = hashids_decrypt($eid, '', 15);
+		$user    = $this->session->userdata('logged');
+		$userProfile = $this->Users_model->getUser($user_id);
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_booking_form', $this->page_data);
+	}
 
 }
 
