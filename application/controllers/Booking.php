@@ -869,6 +869,7 @@ class Booking extends MY_Controller {
 			$view = 'front_items';
 		}
 
+		$coupon = $this->session->userdata('coupon');
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
@@ -876,6 +877,7 @@ class Booking extends MY_Controller {
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['search_query'] = $search_query;
 		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['coupon']    = $coupon;
 		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['products']     = $products;
 		$this->page_data['eid'] = $eid;
@@ -890,6 +892,7 @@ class Booking extends MY_Controller {
 		$userProfile = $this->Users_model->getUser($user_id);
 		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);		
 
+		$coupon = $this->session->userdata('coupon');
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 		$uri_segment_method_name = $this->uri->segment(2);
@@ -904,6 +907,7 @@ class Booking extends MY_Controller {
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['week_start_date'] = date("Y-m-d");
 		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['coupon']    = $coupon;
 		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['eid'] = $eid;
 
@@ -917,6 +921,7 @@ class Booking extends MY_Controller {
 		$userProfile = $this->Users_model->getUser($user_id);
 		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
 
+		$coupon = $this->session->userdata('coupon');
 		$forms = $this->BookingForms_model->getAllByUserId($user_id);
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
@@ -926,6 +931,7 @@ class Booking extends MY_Controller {
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['cart_data']        = $cart_data;
+		$this->page_data['coupon']    = $coupon;
 		$this->page_data['booking_schedule'] = $cart_items['schedule_data'];
 		$this->page_data['userProfile']      = $userProfile;
 		$this->page_data['eid'] = $eid;
@@ -944,8 +950,8 @@ class Booking extends MY_Controller {
 			'Full Name' => 'full_name',
 			'Contact Number' => 'contact_number',
 			'Email' => 'email',
-			'Address' => 'address',
-			'Message' => 'message',
+			'Addess' => 'address',
+			'Messarge' => 'message',
 			'Preferred Time To Contact' => 'preferred_time_to_contact',
 			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
 		);
@@ -1063,6 +1069,32 @@ class Booking extends MY_Controller {
     	}
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
+
+    	$this->session->set_flashdata('message', 'Cart was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+    }
+
+    public function ajax_update_cart_coupon()
+    {
+    	$post       = $this->input->post();
+    	$coupon_code     = $post['coupon_code'];
+    	$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
+    	if($coupon_exist){
+    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
+    		    echo "<pre>";
+                print_r($coupon);
+                echo "</pre>";
+
+               $coupon_details = array(
+					'coupon_name' => $coupon->coupon_name,
+					'coupon_amount' => $coupon->discount_from_total,
+					'coupon_code' => $coupon->coupon_code
+				);
+
+    		$cart_items['coupon'] = $coupon_details;
+    	}
+
+    	$this->session->set_userdata('coupon',$cart_items);    	
 
     	$this->session->set_flashdata('message', 'Cart was successfully updated');
         $this->session->set_flashdata('alert_class', 'alert-success');

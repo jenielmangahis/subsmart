@@ -202,6 +202,7 @@ $route['booking/products/(:any)'] = 'booking/front_items/$1';
 $route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
 $route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
+$route['booking/_add_cart_coupon'] = 'booking/ajax_update_cart_coupon';
 $route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
 $route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule';
 $route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule';
