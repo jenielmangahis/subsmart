@@ -60,6 +60,19 @@ class BookingCoupon_model extends MY_Model
         return $is_exists;
     }
 
+    public function getByCouponCode($coupon_code)
+    {
+        $user_id   = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $user_id);
+        $this->db->where('coupon_code', $coupon_code);
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function deleteUserCoupon($id){
         $user_id = logged('id');
 

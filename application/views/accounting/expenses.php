@@ -170,30 +170,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach ($vendors as $vendor): ?>
-                                        <?php foreach ($checks as $check):?>
-                                            <?php if ($vendor->vendor_id == $check->vendor_id):?>
+                                        <?php
+                                            $date = null;
+                                            $type = null;
+                                            $number = null;
+                                            $vendors_name = null;
+                                            $payee = null;
+                                            $category = null;
+                                            $description = null;
+                                            $total = null;
+                                            $category_id = null;
+                                            $modal = null;
+                                            $modal_id = null;
+                                            $data_id = null;
+                                        ?>
+                                        <?php foreach ($transactions as $transaction): ?>
+                                        <?php
+                                            foreach ($checks as $check){
+                                                if ($transaction->id == $check->transaction_id){
+                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $type = $transaction->type;
+                                                    $number = $check->check_number;
+                                                    $payee = $check->bank_id;
+                                                    $modal = "edit-expensesCheck";
+                                                    $modal_id = "editCheck";
+                                                    foreach ($vendors as $vendor){
+                                                        if ($vendor->id == $check->vendor_id){
+                                                            $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                                            $data_id = $vendor->id;
+                                                        }
+                                                    }
+                                                    if ($categories[0]->transaction_type_id == $check->id){
+                                                        $category = $categories[0]->category;
+                                                        $category_id = $categories[0]->id;
+                                                    }
+
+                                                }
+                                            }
+                                        ?>
                                         <tr style="cursor: pointer;">
                                             <td><input type="checkbox"></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo 'Check'?></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo $check->id; ?></td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"><?php echo $vendor->f_name.'&nbsp;'.$vendor->l_name; ?></td>
+                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $date;?></td>
+                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $type;?></td>
+                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $number;?></td>
+                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $vendors_name;?></td>
                                             <td>
-                                                <select name="category" id="" class="form-control select2">
-                                                    <option>test1</option>
-                                                    <option>test2</option>
-                                                    <option>test3</option>
+                                                <select name="category" id="expenseTransCategory" data-id="<?php echo $category_id;?>" class="form-control select2-tbl-category">
+                                                    <option><?php echo $category?></option>
+                                                    <option>Advertising</option>
+                                                    <option>Retained Earning</option>
+                                                    <option>Billable Expense Income</option>
+                                                    <option>Gross Receipts</option>
                                                 </select>
                                             </td>
-                                            <td data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>"></td>
+                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"></td>
                                             <td style="text-align: right;">
-                                                <a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="editCheck" data-id="<?php echo $vendor->vendor_id;?>" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>
+                                                <a href="#" data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-caret-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li><a href="#" id="copy">Copy</a></li>
-                                                        <li id="deleteCheck" data-id="<?php echo $check->id;?>">
+                                                        <li id="deleteCheck" data-id="<?php echo $data_id?>">
                                                             <a href="#" >Delete</a>
                                                         </li>
                                                         <li><a href="#">Void</a></li>
@@ -201,8 +238,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>&nbsp;
                                             </td>
                                         </tr>
-                                            <?php endif;?>
-                                        <?php endforeach;?>
                                         <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -360,6 +395,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-3">
                                 <label for="">Payee</label>
                                 <input type="hidden" name="check_id" id="checkID" value="">
+                                <input type="hidden" name="transaction_id" id="transID">
                                 <select name="vendor_id" id="vendorID" class="form-control select2-payee">
                                     <option></option>
                                     <?php foreach ($vendors as $vendor):?>
@@ -369,8 +405,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Bank Account</label>
-                                <select name="bank_id"  class="form-control select2-account">
-                                    <option value="1" selected>Cash on hand</option>
+                                <select name="bank_id" id="bank_account" class="form-control select2-account">
+                                    <option value="1">Cash on hand</option>
                                     <option value="2">Corporate Account(XXXXXX 5850)</option>
                                     <option value="3">Corporate Account(XXXXXX 5850)Te</option>
                                 </select>
@@ -435,9 +471,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr id="tableLine">
                                     <td></td>
                                     <td><span id="line-counter">2</span></td>
-                                    <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -454,11 +490,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
-                                <div class="fallback">
-                                    <input name="file" type="file" multiple />
+                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                <div class="dz-message" style="margin: 20px;border">
+                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                 </div>
-<!--                            </form>-->
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -725,9 +762,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr id="tableLine-bill">
                                     <td></td>
                                     <td><span id="line-counter-bill">2</span></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-bill" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-bill" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input-bill" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -744,11 +781,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
-                                <div class="fallback">
-                                    <input name="file" type="file" multiple />
+                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                <div class="dz-message" style="margin: 20px;border">
+                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                 </div>
-<!--                            </form>-->
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -883,9 +921,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr id="tableLine-expense">
                                     <td></td>
                                     <td><span id="line-counter-expense">2</span></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-expense" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-expense" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input-expense" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -902,11 +940,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
-                                <div class="fallback">
-                                    <input name="file" type="file" multiple />
+                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                <div class="dz-message" style="margin: 20px;border">
+                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                 </div>
-<!--                            </form>-->
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -1017,9 +1056,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr id="tableLine-vendorCredit">
                                     <td></td>
                                     <td><span id="line-counter-vendorCredit">2</span></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
-                                    <td><input type="text" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-row-vendorCredit"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -1036,11 +1075,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-<!--                            <form action="/file-upload" class="dropzone" method="post" enctype="multipart/form-data" style="width: 423px;">-->
-                                <div class="fallback">
-                                    <input name="file" type="file" multiple />
+                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                <div class="dz-message" style="margin: 20px;border">
+                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                 </div>
-<!--                            </form>-->
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -1191,10 +1231,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     //select2 initialization
-    $('.select2-vendor').select2({
-        placeholder: 'Choose a vendor',
-        allowClear: true
-    });
     $('.select2-payee').select2({
         placeholder: 'Who did you pay?',
         allowClear: true
@@ -1209,8 +1245,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('.select2-credit-card').select2({
         placeholder: 'Select credit card',
         allowClear: true
-    });   $('.select2-bank-account').select2({
+    });
+    $('.select2-bank-account').select2({
         placeholder: 'Select bank account',
+        allowClear: true
+    });
+    $('.select2-tbl-category').select2({
         allowClear: true
     });
     // DataTable JS

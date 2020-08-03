@@ -128,6 +128,7 @@ $(document).ready(function () {
         $('#permit_number').val(null);
     });
     $(document).on('click','#editCheck',function () {
+
         $('#addEditCheckmodal').attr('action',$('#site_url').val()+"accounting/editCheckData");
         var id = $(this).attr("data-id");
         $.ajax({
@@ -137,12 +138,17 @@ $(document).ready(function () {
             dataType:"json",
             success:function (data) {
                 $('#checkID').val(data.check_id);
+                $('#transID').val(data.transaction);
                 $("#vendorID option[value='" + data.vendor_id +"']").html(data.vendor_name).attr("selected",true);
+                $('#vendorID').next($('#select2-vendorID-container').attr('title',data.vendor_name).html(data.vendor_name));
+                $("#bank_account option[value='" + data.bank_account +"']").html(data.bank_account).attr("selected",true);
+                $('#bank_account').next($('#select2-bank_account-container').attr('title',data.bank_account).html(data.bank_account));
                 $('#mailing_address').text(data.mailing);
                 $('#payment_date').val(data.payment_date);
                 $('#check_number').val(data.check_number);
                 $('#print_later').attr("checked",data.print_later);
                 $('#permit_number').val(data.permit_number);
+                console.log(data.payment_date);
             }
         });
     });

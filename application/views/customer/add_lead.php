@@ -186,7 +186,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Name Suffix</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                        <option value="0"></option>
+                                                        <option value="DS">DS</option>
+                                                        <option value="Esq.">Esq.</option>
+                                                        <option value="II">II</option>
+                                                        <option value="III">III</option>
+                                                        <option value="IV">IV</option>
+                                                        <option value="Jr">Jr.</option>
+                                                        <option value="MA">MA</option>
+                                                        <option value="MBA">MBA</option>
+                                                        <option value="MD">MD</option>
+                                                        <option value="MS">MS</option>
+                                                        <option value="PhD">PhD</option>
+                                                        <option value="RN">RN</option>
+                                                        <option value="Sr">Sr</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -200,7 +213,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Direction</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                        <option value="0"></option>
+                                                        <option value="North">North</option>
+                                                        <option value="East">East</option>
+                                                        <option value="South">South</option>
+                                                        <option value="West">West</option>
+                                                        <option value="North East">North East</option>
+                                                        <option value="South East">South East</option>
+                                                        <option value="North West">North West</option>
+                                                        <option value="South West">South West</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -214,7 +235,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Type</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                        <option value=""></option>
+                                                        <option value="ALLEY">ALLEY</option>
+                                                        <option value="ARCH">ARCH</option>
+                                                        <option value="BOULEVARD">BOULEVARD</option>
+                                                        <option value="BUILDING">BUILDING</option>
+                                                        <option value="CENTER">CENTER</option>
+                                                        <option value="CIRCLE">CIRCLE</option>
+                                                        <option value="CLOSE">CLOSE</option>
+                                                        <option value="COURT">COURT</option>
+                                                        <option value="COVE">COVE</option>
+                                                        <option value="CRESCENT">CRESCENT</option>
+                                                        <option value="DALE">DALE</option>
+                                                        <option value="DRIVE">DRIVE</option>
+                                                        <option value="DRIVE">DRIVE</option>
+                                                        <option value="EXPRESSWAY">EXPRESSWAY</option>
+                                                        <option value="FREEWAY">FREEWAY</option>
+                                                        <option value="GARDEN">GARDEN</option>
+                                                        <option value="GROVE">GROVE</option>
+                                                        <option value="HEIGHTS">HEIGHTS</option>
+                                                        <option value="HIGHWAY">HIGHWAY</option>
+                                                        <option value="HILL">HILL</option>
+                                                        <option value="KNOLL">KNOLL</option>
+                                                        <option value="LANE">LANE</option>
+                                                        <option value="LOOP">LOOP</option>
+                                                        <option value="MALL">MALL</option>
+                                                        <option value="OVAL">OVAL</option>
+                                                        <option value="PARK">PARK</option>
+                                                        <option value="PARKWAY">PARKWAY</option>
+                                                        <option value="PATH">PATH</option>
+                                                        <option value="PIKE">PIKE</option>
+                                                        <option value="PLACE">PLACE</option>
+                                                        <option value="PLAZA">PLAZA</option>
+                                                        <option value="POINT">POINT</option>
+                                                        <option value="RISE">RISE</option>
+                                                        <option value="ROAD">ROAD</option>
+                                                        <option value="ROUTE">ROUTE</option>
+                                                        <option value="ROW">ROW</option>
+                                                        <option value="RUN">RUN</option>
+                                                        <option value="RURAL ROUTE">RURAL ROUTE</option>
+                                                        <option value="SQUARE">SQUARE</option>
+                                                        <option value="STREET">STREET</option>
+                                                        <option value="TERRACE">TERRACE</option>
+                                                        <option value="THRUWAY">THRUWAY</option>
+                                                        <option value="TRAIL">TRAIL</option>
+                                                        <option value="TURNPIKE">TURNPIKE</option>
+                                                        <option value="VIADUCT">VIADUCT</option>
+                                                        <option value="VIEW">VIEW</option>
+                                                        <option value="WALK">WALK</option>
+                                                        <option value="WAY">WAY</option>
+                                                        <option value="WYND">WYND</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -256,7 +326,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Country</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                        <option value="USA">USA</option>
+                                                        <option value="CANADA">CANADA</option>
                                                     </select>
                                                 </div>
                                             </div>

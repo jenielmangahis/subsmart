@@ -19,29 +19,16 @@ class Customer extends MY_Controller
     {
 
         parent::__construct();
-
-
         $this->page_data['page']->title = 'My Customers';
-
         $this->page_data['page']->menu = 'customers';
-
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
-
-
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->checkLogin();
-
-
         $this->load->library('session');
-
-
         $user_id = getLoggedUserID();
-
-
         // concept
-
         $uid = $this->session->userdata('uid');
-
 
         if (empty($uid)) {
 
@@ -146,46 +133,34 @@ class Customer extends MY_Controller
         }
 
         if ($role == 4) {
-
             if (!empty($status_index)) {
-
                 $this->page_data['tab_index'] = $status_index;
                 $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index));
             } else {
-
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')));
                 } elseif (!empty(get('type'))) {
-
                     $this->page_data['type'] = get('type');
-
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
                         $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
                     } else {
                         $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
                     }
-                } else {
-
+                } else{
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
                         $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
                     } else {
-//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
                         $this->page_data['customers'] = $this->customer_model->getAllByUserId();
                     }
-
-//                    $this->page_data['customers'] = $this->customer_model->getAllByUserId();
                 }
             }
-
             $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
         }
-
-//        print_r($this->page_data['statusCount']); die;
-
+        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea");
         $this->load->view('customer/list', $this->page_data);
 
     }
@@ -436,16 +411,10 @@ class Customer extends MY_Controller
 
 
     public function update($id)
-
     {
-
         $user = (object)$this->session->userdata('logged');
-
         $company_id = logged('company_id');
-
         $data = array(
-
-
             'customer_type' => post('customer_type'),
 
             'contact_name' => post('contact_name'),
@@ -711,8 +680,30 @@ class Customer extends MY_Controller
     public function add_lead()
     {
         $user_id = logged('id');
-        $this->page_data['plans'] = "";
+
         $this->load->view('customer/add_lead', $this->page_data);
+    }
+
+    public function add_leadtype_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+
+        if(empty($input['lead_id'])){
+            if($this->customer_ad_model->add($input,"ac_leadtypes")){
+                echo "Success";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_leadtypes")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+
+
+
     }
 
 

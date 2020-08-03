@@ -78,6 +78,7 @@ $(document).ready(function () {
     $("#itemGroups").hide();
     $("#newServiceInventory").hide();
     $("#newFeesInventory").hide();
+    $("#addLocationDiv").hide();
     $("#newItemInventory").fadeIn();
   });
 
@@ -142,7 +143,9 @@ $(document).ready(function () {
 
   $("#serviceItemsTable, #feesItemsTable").DataTable({});
 
-  $("#inventoryOnHandItems, #serviceItemsTable, #feesItemsTable").DataTable({
+  $(
+    "#inventoryOnHandItems, #serviceItemsTable, #feesItemsTable, #addNewLocationTable"
+  ).DataTable({
     ordering: false,
     destroy: true,
   });
@@ -161,6 +164,7 @@ $(document).ready(function () {
     $("#newFeesInventory").hide();
     $("#newItemInventory").fadeIn();
     $("#saveAddAnother").text("Edit");
+    $("#addLocationDiv").show();
     $("#save_close_item").hide();
     $.LoadingOverlay("show");
     var param = {
@@ -205,6 +209,35 @@ $(document).ready(function () {
     };
     deleteMultiple(param);
   });
+
+  $(document).on("click", "#seeLocation", function () {
+    $("#addLocationForm").hide();
+    $("#addLocationLabel").text("View Location");
+    var param = {
+      item_id: $(this).data("id"),
+    };
+
+    getItemLocationById(param);
+  });
+
+  $("#addLocationNewItem").click(function () {
+    $("#addLocationForm").show();
+    $("#addLocationLabel").text("Add Location");
+    var param = {
+      item_id: $("#itemId").val(),
+    };
+    getItemLocationById(param);
+  });
+
+  $("#saveAddLocation").click(function () {
+    $.LoadingOverlay("show");
+    var param = {
+      name: $("#itemLocation").val(),
+      item_id: $("#itemId").val(),
+      qty: $("#itemQuantity").val(),
+    };
+    addNewItemLocation(param);
+  });
 });
 
 function readURL(input) {
@@ -241,7 +274,6 @@ function getItemById(param) {
 }
 
 function populateItem(item) {
-  console.log(item.id);
   $("#itemName").val(item.title);
   $("#descriptionItem").val(item.description);
   $("#brandField").val(item.brand);
@@ -259,6 +291,47 @@ function deleteMultiple(param) {
     data: param,
     success: function (response) {
       window.location.href = "";
+    },
+  });
+}
+
+function addNewItemLocation(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "inventory/addNewItemLocation",
+    data: param,
+    success: function (response) {
+      var items = [];
+      $.LoadingOverlay("hide");
+      var result = jQuery.parseJSON(response);
+      for (var i = 0; i < result.length; i++) {
+        var item = [result[i].name, result[i].qty];
+        items.push(item);
+      }
+      $("#addNewLocationTable").DataTable({
+        destroy: true,
+        data: items,
+      });
+    },
+  });
+}
+
+function getItemLocationById(param) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "inventory/getItemLocations",
+    data: param,
+    success: function (response) {
+      var items = [];
+      var result = jQuery.parseJSON(response);
+      for (var i = 0; i < result.length; i++) {
+        var item = [result[i].name, result[i].qty];
+        items.push(item);
+      }
+      $("#addNewLocationTable").DataTable({
+        destroy: true,
+        data: items,
+      });
     },
   });
 }

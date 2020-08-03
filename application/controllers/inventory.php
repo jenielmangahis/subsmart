@@ -373,6 +373,29 @@ class Inventory extends MY_Controller
 
         echo json_encode(true);
     }
+
+    function addNewItemLocation() {
+        postAllowed();
+
+        $comp_id = logged('company_id');
+        $data = array(
+            'company_id' => $comp_id,
+            'qty' => $this->input->post('qty'),
+            'name' => $this->input->post('name'),
+            'item_id' => $this->input->post('item_id'),
+            'insert_date' => date('Y-m-d H:i:s')
+        );
+        $this->items_model->saveNewItemLocation($data);
+        $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
+
+        echo json_encode($result);
+    }
+
+    function getItemLocations() {
+        postAllowed();
+        $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
+        echo json_encode($result);
+    }
 }
 /* End of file items.php */
 

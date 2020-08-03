@@ -115,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 A notification text displayed to customer if min price is not met.<br>
                                                 The tag {{amount}} will be replaced with min price value.
                                             </div>
-                                            <input type="text" name="cart_total_min_alert" value="Minimum booking amount is <?php echo $setting['cart_total_min_alert']; ?>"  class="form-control" />
+                                            <input type="text" name="cart_total_min_alert" value="Minimum booking amount is <?php echo $setting['cart_total_min']; ?>"  class="form-control" />
                                         </div>
                                     </div>
                                 </div>

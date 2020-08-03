@@ -98,12 +98,12 @@ class Rules_model extends MY_Model
     }
     public function updateConditions($con_id,$description,$contain,$comment,$rules_id){
         for($x = 0; $x < count($description);$x++){
-            $data[] = [
-                'id'=> $con_id[$x],
-                'description' => $description[$x],
-                'contain'  => $contain[$x],
-                'comment' => $comment[$x]
-            ];
+//            $data[] = [
+//                'id'=> $con_id[$x],
+//                'description' => $description[$x],
+//                'contain'  => $contain[$x],
+//                'comment' => $comment[$x]
+//            ];
             if ($con_id[$x] == null){
                 $insert = array(
                     'rules_id' => $rules_id,
@@ -130,11 +130,11 @@ class Rules_model extends MY_Model
     }
     public function updateCategories($cat_id,$category,$percentage,$rules_id){
         for($x = 0; $x < count($category);$x++){
-            $data[] = [
-                'id'=> $cat_id[$x],
-                'category' => $category[$x],
-                'percentage'  => $percentage[$x],
-            ];
+//            $data[] = [
+//                'id'=> $cat_id[$x],
+//                'category' => $category[$x],
+//                'percentage'  => $percentage[$x],
+//            ];
             if ($cat_id[$x] == null){
                 $insert = array(
                     'rules_id' => $rules_id,

@@ -107,17 +107,4 @@ class Chart_of_accounts extends MY_Controller {
 			echo $this->accounts_has_account_details_model->fetch_acc_detail_id($this->input->post('account_id'));
 		}
 	}
-
-	public function update_name()
-	{
-		$id = $this->input->post('id');
-		$name = $this->input->post('name');
-		$this->chart_of_accounts_model->update_name($id,$name);
-	}
-
-	public function inactive()
-	{
-		$id = $this->input->post('id');
-		$this->chart_of_accounts_model->inactive($id);
-	}
 }

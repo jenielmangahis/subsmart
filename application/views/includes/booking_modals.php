@@ -197,7 +197,7 @@
                       <div class="">
                           <div class="input-group">
                               <div class="input-group-addon bold">%</div>
-                              <input type="text" name="discount_percent" value="" required="" class="form-control" autocomplete="off" />
+                              <input type="text" name="discount_percent" value="" class="form-control" />
                           </div>
                       </div>
                   </div>
@@ -205,7 +205,7 @@
                       <div class="">
                           <div class="input-group">
                               <div class="input-group-addon bold">$</div>
-                              <input type="text" name="discount_amount" value="" required="" class="form-control" autocomplete="off" />
+                              <input type="text" name="discount_amount" value="" class="form-control" autocomplete="off" />
                           </div>
                       </div>
                   </div>

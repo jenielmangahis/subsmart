@@ -47,10 +47,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <a class="btn btn-primary hide-toggle dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-chevron-down"></i>
                               </a>
-
+                              <form method="post" id="import_form" enctype="multipart/form-data">
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#">Import</a>
+                              <input type="file" name="file" id="file" required accept=".xls, .xlsx" />
+                                <input type="submit" name="import" value="Import" class="dropdown-item" />
                               </div>
+                              </form>
                             </div>
                         </div>
                     </div>
@@ -116,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<th>Action</th>
 									</tr>
 									</thead>
-									<tbody>
+									<tbody id="customer_data">
 									<?php
 									  $i=1;
 									  foreach($this->chart_of_accounts_model->select() as $row)
@@ -274,4 +276,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			     dataType: 'json',
 			   });
       }
+
+
+$(document).ready(function(){
+
+     load_data();
+
+     function load_data()
+     {
+      $.ajax({
+       url:"<?php echo base_url(); ?>accounting/chart_of_accounts/refresh",
+       method:"POST",
+       success:function(data){
+        $('#customer_data').html(data);
+       }
+      })
+     }
+
+     $('#import_form').on('submit', function(event){
+      event.preventDefault();
+      $.ajax({
+       url:"<?php echo base_url(); ?>accounting/chart_of_accounts/import",
+       method:"POST",
+       data:new FormData(this),
+       contentType:false,
+       cache:false,
+       processData:false,
+       success:function(data){
+        load_data();
+        console.log(data);
+       }
+      })
+     });
+
+    });
 </script>

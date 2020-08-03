@@ -21,6 +21,8 @@ class Booking extends MY_Controller {
         $this->load->model('Users_model');
         $this->load->model('BookingScheduleAssignedUser_model');
         $this->load->model('BookingInquiry_model');
+        $this->load->model('BookingInfo_model');
+        $this->load->model('BookingWorkOrder_model');
 	}
 
 	public function index() {
@@ -164,7 +166,7 @@ class Booking extends MY_Controller {
 	        		'sort' => $value['sort'],
 	        		'date_created' => date("Y-m-d H:i:s")
 	        	);
-	        	$bookingCoupon = $this->BookingForms_model->create($data);
+	        	$bookingForm = $this->BookingForms_model->create($data);
 	        }
 
 	        	$this->session->set_flashdata('message', 'Form Updated Successful');
@@ -654,7 +656,7 @@ class Booking extends MY_Controller {
         if( $userSetting ){
         	$data = array(
         		'page_title' => post('page_title'),
-        		'page_introduction' => post('page_intro'),
+        		'page_instruction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
         		'appointment_per_time_slot' => post('time_slot_bookings'),
         		'minimum_price_for_entier_booking' => post('cart_total_min'),
@@ -692,7 +694,7 @@ class Booking extends MY_Controller {
         	$data = array(
         		'user_id' => $user['id'],
         		'page_title' => post('page_title'),
-        		'page_introduction' => post('page_intro'),
+        		'page_instruction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
         		'appointment_per_time_slot' => post('time_slot_bookings'),
         		'minimum_price_for_entier_booking' => post('cart_total_min'),
@@ -842,6 +844,9 @@ class Booking extends MY_Controller {
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
 		$categories  = $this->BookingCategory_model->getAllCategories();
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
+
+		$uri_segment_method_name = $this->uri->segment(2);
 
 		$products = array();
 
@@ -864,11 +869,15 @@ class Booking extends MY_Controller {
 			$view = 'front_items';
 		}
 
+		$coupon = $this->session->userdata('coupon');
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['search_query'] = $search_query;
 		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['coupon']    = $coupon;
 		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['products']     = $products;
 		$this->page_data['eid'] = $eid;
@@ -881,18 +890,142 @@ class Booking extends MY_Controller {
 		$user_id = hashids_decrypt($eid, '', 15);
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);		
 
+		$coupon = $this->session->userdata('coupon');
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+		$uri_segment_method_name = $this->uri->segment(2);
 
+		$is_cont_to_booking_form = false;
+		if(!empty($cart_items['schedule_data'])) {
+			$is_cont_to_booking_form = true;
+		}
+
+		$this->page_data['is_cont_to_booking_form'] = $is_cont_to_booking_form;
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['week_start_date'] = date("Y-m-d");
 		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['coupon']    = $coupon;
 		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['eid'] = $eid;
 
 		$this->load->view('online_booking/front_schedule', $this->page_data);
 	}
 
+    public function front_booking_form($eid)
+	{	
+		$user_id = hashids_decrypt($eid, '', 15);
+		$user    = $this->session->userdata('logged');
+		$userProfile = $this->Users_model->getUser($user_id);
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
+
+		$coupon = $this->session->userdata('coupon');
+		$forms = $this->BookingForms_model->getAllByUserId($user_id);
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+		$uri_segment_method_name = $this->uri->segment(2);
+
+		$this->page_data['forms'] = $forms;
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
+		$this->page_data['cart_data']        = $cart_data;
+		$this->page_data['coupon']    = $coupon;
+		$this->page_data['booking_schedule'] = $cart_items['schedule_data'];
+		$this->page_data['userProfile']      = $userProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_booking_form', $this->page_data);
+	}	
+
+	public function save_booking_inquiry()
+    {
+        postAllowed();
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $default_form_fields = array(
+			'Full Name' => 'full_name',
+			'Contact Number' => 'contact_number',
+			'Email' => 'email',
+			'Addess' => 'address',
+			'Messarge' => 'message',
+			'Preferred Time To Contact' => 'preferred_time_to_contact',
+			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
+		);
+
+ 		if(isset($post['is_visible'])){
+        	$is_visible = $post['is_visible'];
+    	}
+
+
+        if(isset($post['is_required'])){
+       		$is_required = $post['is_required'];
+        }
+        $field_names = $post['is_field'];
+        $sort = 1;
+
+
+        foreach ($field_names as $key => $value) {
+        	if (in_array($key, $default_form_fields)) {
+			    $default_field = 1;
+			}else{
+				$default_field = 0;
+			}
+
+			if(!isset($is_required[''.$key.''][0])){
+				$is_required_value = 0;
+			}else{
+				$is_required_value = 1;
+			}
+
+			if(!isset($is_visible[''.$key.''][0])){
+				$is_visible_value = 0;
+			}else{
+				$is_visible_value = 1;
+			}
+
+			$post_data[''.$sort.'']['field_name'] =  $key;
+			$post_data[''.$sort.'']['label'] = str_replace("_"," ", ucfirst($key));
+			$post_data[''.$sort.'']['type'] = 1;
+			$post_data[''.$sort.'']['is_required'] = $is_required_value;
+			$post_data[''.$sort.'']['is_visible'] = $is_visible_value;
+			$post_data[''.$sort.'']['is_default'] = $default_field;
+			$post_data[''.$sort.'']['sort'] = $sort;
+
+		  $sort++;
+        }
+
+
+        if( !empty($post) ){
+
+        	$this->BookingForms_model->deleteByUserId($user['id']);
+
+        	foreach ($post_data as $key => $value) {
+	        	$data = array(
+	        		'user_id' => $user['id'],
+	        		'field_name' => $value['field_name'],
+	        		'label' => $value['label'],
+	        		'type' => $value['type'],
+	        		'is_required' => $value['is_required'],
+	        		'is_visible' => $value['is_visible'],
+	        		'is_default' => $value['is_default'],
+	        		'sort' => $value['sort'],
+	        		'date_created' => date("Y-m-d H:i:s")
+	        	);
+	        	$bookingCoupon = $this->BookingForms_model->create($data);
+	        }
+
+	        	$this->session->set_flashdata('message', 'Form Updated Successful');
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+
+        }
+
+        redirect('more/addon/booking/form');
+
+    }
 
 	public function ajax_get_product_details()
     {
@@ -923,19 +1056,45 @@ class Booking extends MY_Controller {
     {
     	$post       = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
-    	$key        = 'pid_' . $post['pid'];
+    	$key        = $post['pid'];
     	if( !empty($cart_items) ){
-    		if( isset($cart_items[$key]) ){
-    			$new_qty = $post['qty'] + $cart_items[$key];
-    			$cart_items[$key] = $new_qty;
+    		if( isset($cart_items['products'][$key]) ){
+    			$new_qty = $post['qty'] + $cart_items['products'][$key];
+    			$cart_items['products'][$key] = $new_qty;
     		}else{
-    			$cart_items[$key] = $post['qty'];
+    			$cart_items['products'][$key] = $post['qty'];
     		}
     	}else{
-    		$cart_items[$key] = $post['qty'];
+    		$cart_items['products'][$key] = $post['qty'];
     	}
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
+
+    	$this->session->set_flashdata('message', 'Cart was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+    }
+
+    public function ajax_update_cart_coupon()
+    {
+    	$post       = $this->input->post();
+    	$coupon_code     = $post['coupon_code'];
+    	$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
+    	if($coupon_exist){
+    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
+    		    echo "<pre>";
+                print_r($coupon);
+                echo "</pre>";
+
+               $coupon_details = array(
+					'coupon_name' => $coupon->coupon_name,
+					'coupon_amount' => $coupon->discount_from_total,
+					'coupon_code' => $coupon->coupon_code
+				);
+
+    		$cart_items['coupon'] = $coupon_details;
+    	}
+
+    	$this->session->set_userdata('coupon',$cart_items);    	
 
     	$this->session->set_flashdata('message', 'Cart was successfully updated');
         $this->session->set_flashdata('alert_class', 'alert-success');
@@ -964,6 +1123,8 @@ class Booking extends MY_Controller {
         $interval   = \DateInterval::createFromDateString('1 day');
         $period     = new \DatePeriod($start, $interval, $end);
 
+		$cart_items = $this->session->userdata('cartItems');  
+
         $schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
 
         $week_schedules = array();
@@ -984,6 +1145,12 @@ class Booking extends MY_Controller {
         $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
         $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
 
+        $selected_sched = array();
+        if(!empty($cart_items['schedule_data'])) {
+        	$selected_sched = $cart_items['schedule_data'];
+        }
+
+        $this->page_data['selected_sched'] = $selected_sched;
         $this->page_data['eid'] = $post['eid'];
         $this->page_data['prev_date'] = $prev_date;
         $this->page_data['next_date'] = $next_date;
@@ -993,28 +1160,70 @@ class Booking extends MY_Controller {
 
     public function ajax_user_set_schedule()
     {
+    	$post = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
-    	$cart_items['schedule_id'] = post('sid');
+    	$cart_items['schedule_data'] = $post;
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
-
     }
 
-    public function front_booking_form($eid)
-	{	
-		$user_id = hashids_decrypt($eid, '', 15);
-		$user    = $this->session->userdata('logged');
-		$userProfile = $this->Users_model->getUser($user_id);
+    public function save_product_booking()
+    {
+    	$post    = $this->input->post();
+    	$user_id = hashids_decrypt($post['eid'], '', 15);
+    	$user    = $this->Users_model->getUser($user_id);
 
-		$cart_items = $this->session->userdata('cartItems');
-		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+    	if( $user ){
+    		$data_booking_info = [
+	    		'user_id' => $user->id,
+	    		'name' => $post['full_name'],
+	    		'phone' => $post['contact_number'],
+	    		'email' => $post['email'],
+	    		'address' => $post['address'],
+	    		'message' => $post['message'],
+	    		'preferred_time_to_contact' => $post['preferred_time_to_contact'],
+	    		'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
+	    		'form_data' => '',
+	    		'status' => 1,
+	    		'date_created' => date("Y-m-d H:i:s")
+	    	];
 
-		$this->page_data['cart_data']    = $cart_data;
-		$this->page_data['userProfile']  = $userProfile;
-		$this->page_data['eid'] = $eid;
+	    	$booking_info_id = $this->BookingInfo_model->save($data_booking_info);
 
-		$this->load->view('online_booking/front_booking_form', $this->page_data);
-	}
+	    	if( $booking_info_id > 0 ){
+	    		$cart_items = $this->session->userdata('cartItems');
+				$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+				foreach( $cart_items['products'] as $pid =>  $qty ){
+					$data_booking_work_orders = [
+						'booking_info_id' => $booking_info_id,
+						'service_item_id' => $pid,
+						'quantity_ordered' => $qty,
+						'schedule_date' => $cart_items['schedule_data']['date'],
+						'schedule_time_from' => $cart_items['schedule_data']['time_start'],
+						'schedule_time_to' => $cart_items['schedule_data']['time_end'],
+						'date_created' => date("Y-m-d H:i:s")
+					];
+
+					$this->BookingWorkOrder_model->create($data_booking_work_orders);
+				}
+
+				$this->session->set_flashdata('message', 'Your product booking has been saved.');
+        		$this->session->set_flashdata('alert_class', 'alert-info');	
+
+	    	}else{
+	    		$this->session->set_flashdata('message', 'Canot save data. Please try again later.');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');	
+	    	}
+
+    	}else{
+    		$this->session->set_flashdata('message', 'Merchant not found');
+        	$this->session->set_flashdata('alert_class', 'alert-danger');
+    	}
+
+    	$this->session->unset_userdata('cartItems');
+
+        redirect('booking/products/'.$post['eid']);
+    }
 
 }
 

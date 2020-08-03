@@ -2638,3 +2638,11 @@ function generateRandomString($length = 10) {
     }
     return $randomString;
 }
+
+function getItemQtyOH($item_id) {
+    $CI =& get_instance();
+    $CI->load->model('Items_model', 'items_model');
+    $qty = $CI->items_model->countQty($item_id);
+
+    return $qty;
+}

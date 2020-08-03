@@ -81,9 +81,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td><?php echo $item[0]; ?></td>
                                                     <td><?php echo $item[1]; ?></td>
                                                     <td><?php echo $item[2]; ?></td>
+                                                    <td><?php echo getItemQtyOH($item[3]); ?></td>
                                                     <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <a href='#' data-id="<?php echo $item[3]; ?>" data-toggle="modal" id="seeLocation" data-target="#modalAddLocation">See Location</a> 
+                                                    </td>
                                                     <td style="width:12%" class="pl-3">
                                                         <div class="dropdown dropdown-btn text-center">
                                                             <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
@@ -335,6 +337,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
+                                        <div class="row col-md-12 pt-2" id="addLocationDiv">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Location</label>
+                                            <button type="button" class="btn btn-primary col-md-3" id="addLocationNewItem" data-toggle="modal" data-target="#modalAddLocation">Add Location</button>
+                                        </div>
                                         <div class="row col-md-12 pt-4">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Attach Image</label>
                                             <select class="form-control col-md-3" name="attach_img_item" id="attach_img_item">
@@ -485,21 +491,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+            <div class="modal fade" id="modalAddLocation" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addLocationLabel">Add Location</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12 text-left form-group" id="addLocationForm">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="job_customer">Location</label>
+                                    <input type="text" id="itemLocation" class="form-control col-md-12">
+
+                                </div>  
+                                <div class="col-md-4">
+                                    <label for="job_customer">Quantity</label>
+                                    <input type="number" id="itemQuantity" class="form-control col-md-12">
+
+                                </div> 
+                                <div class="col-md-3">
+                                    <br>
+                                    <button type="button" class="btn btn-primary mt-2" id="saveAddLocation">Add Location</button>
+                                </div>  
+                            </div>
+                        </div>  
+                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="addNewLocationTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><strong>Location</strong></th>
+                                    <th scope="col"><strong>Quantity</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($assignEmployees)) : ?>
+                                <?php foreach($assignEmployees as $emp) : ?>
+                                    <tr>
+                                        <td class="pl-3"><?php echo $emp['title']; ?></td>
+                                        <td class="pl-3"><?php echo $emp['emp_role']; ?></td>                                
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php endif;?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                     </div>
                 </div>
             </div>

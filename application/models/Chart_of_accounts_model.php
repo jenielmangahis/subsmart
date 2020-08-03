@@ -48,4 +48,9 @@ class Chart_of_accounts_model extends MY_Model {
 		$query="update chart_of_accounts set active = 0 where id = $id";
 		echo $this->db->query($query);
 	}
+
+	public function insert($data)
+	{
+	  $this->db->insert_batch('chart_of_accounts', $data);
+	}
 }

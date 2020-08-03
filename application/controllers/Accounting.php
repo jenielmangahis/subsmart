@@ -14,6 +14,7 @@ class Accounting extends MY_Controller {
         $this->load->model('expenses_model');
         $this->load->model('rules_model');
         $this->load->model('receipt_model');
+        $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css?v=".rand(),
@@ -63,7 +64,9 @@ class Accounting extends MY_Controller {
     }*/
     public function banking()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
@@ -72,6 +75,8 @@ class Accounting extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['vendors'] = $this->vendors_model->getVendors();
         $this->page_data['checks'] = $this->expenses_model->getCheck();
+        $this->page_data['transactions'] = $this->expenses_model->getTransaction();
+        $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/expenses', $this->page_data);
     }
@@ -226,7 +231,6 @@ class Accounting extends MY_Controller {
     }
 	
 	/*** Vendors ***/
-	
 	public function addVendor()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -307,14 +311,36 @@ class Accounting extends MY_Controller {
         $id = $this->input->post('id');
         $this->vendors_model->delete($id);
     }
-	public function vendordetails()
+	
+	public function allVendors()
+    {
+        echo json_encode($this->vendors_model->getVendors());
+    }
+	public function vendordetails($id)
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
-		$id = $this->input->post('id');
 		
 		$this->page_data['vendor_details'] = $this->vendors_model->getById($id);
         $this->load->view('accounting/vendor_details', $this->page_data);
+    }
+	public function invalidVendor()
+    {
+		$id =  $this->input->post('id');
+				$new_data = array(
+					'status' => 0,
+					'date_modified' => date("Y-m-d H:i:s")
+				);
+				
+				$editQuery = $this->vendors_model->update($id,$new_data);
+				
+				if($editQuery > 0){
+					echo json_encode(1);
+				}
+				else{
+					echo json_encode(0);
+				}
+
     }
 	public function editVendor()
     {
@@ -427,6 +453,9 @@ class Accounting extends MY_Controller {
             'due_date' => $this->input->post('due_date'),
             'bill_number' => $this->input->post('bill_num'),
             'permit_number' => $this->input->post('permit_num'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
         );
         $query = $this->expenses_model->addBill($new_data);
         if ($query == true){
@@ -450,7 +479,9 @@ class Accounting extends MY_Controller {
             $std = new stdClass();
             $std->check_id = $query->row()->id;
             $std->vendor_id = $_POST['id'];
+            $std->transaction = $query->row()->transaction_id;
             $std->vendor_name = $vendors_detail->row()->f_name.'&nbsp;'.$vendors_detail->row()->l_name;
+            $std->bank_account = $query->row()->bank_id;
             $std->mailing = $query->row()->mailing_address;
             $std->payment_date = $query->row()->payment_date;
             $std->check_number = $query->row()->check_number;
@@ -469,6 +500,9 @@ class Accounting extends MY_Controller {
             'check_num' => $this->input->post('check_num'),
             'print_later' => $this->input->post('print_later'),
             'permit_number' => $this->input->post('permit_num'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
         );
         $query = $this->expenses_model->addCheck($new_data);
         if ($query == true){
@@ -483,6 +517,7 @@ class Accounting extends MY_Controller {
     public function editCheckData(){
 	    $update = array(
             'check_id' => $this->input->post('check_id'),
+            'transaction_id' => $this->input->post('transaction_id'),
             'vendor_id' => $this->input->post('vendor_id'),
             'mailing_address' => $this->input->post('mailing_address'),
             'bank_id' => $this->input->post('bank_id'),
@@ -490,6 +525,9 @@ class Accounting extends MY_Controller {
             'check_num' => $this->input->post('check_num'),
             'print_later' => $this->input->post('print_later'),
             'permit_number' => $this->input->post('permit_num'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
         );
 	    $query = $this->expenses_model->editCheckData($update);
 	    if ($query == true){
@@ -514,6 +552,9 @@ class Accounting extends MY_Controller {
 	        'payment_method' => $this->input->post('payment_method'),
 	        'ref_number' => $this->input->post('ref_num'),
 	        'permit_number' => $this->input->post('permit_num'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
         );
 	    $query = $this->expenses_model->addExpense($new_data);
         if ($query == true){
@@ -530,6 +571,9 @@ class Accounting extends MY_Controller {
             'payment_date' => $this->input->post('payment_date'),
             'ref_number' => $this->input->post('ref_num'),
             'permit_number' => $this->input->post('permit_num'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
         );
         $query = $this->expenses_model->vendorCredit($new_data);
         if ($query == true){
@@ -819,5 +863,55 @@ class Accounting extends MY_Controller {
         $id = $this->input->post('id');
         $this->chart_of_accounts_model->inactive($id);
     }
+
+    public function import()
+     {
+        $this->page_data['page_title'] = "Import";
+      if(isset($_FILES["file"]["name"]))
+      {
+       $path = $_FILES["file"]["tmp_name"];
+       $object = PHPExcel_IOFactory::load($path);
+       foreach($object->getWorksheetIterator() as $worksheet)
+       {
+        $highestRow = $worksheet->getHighestRow();
+        $highestColumn = $worksheet->getHighestColumn();
+        for($row=1; $row<=$highestRow; $row++)
+        {
+         $account_id = $worksheet->getCellByColumnAndRow(0, $row)->getValue();
+         $acc_detail_id = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+         $name = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+         $description = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+         $sub_acc_id = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
+         $time = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+         $balance = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+         $time_date = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+         $data[] = array(
+          'account_id'   => $account_id,
+          'acc_detail_id'    => $acc_detail_id,
+          'name'  => $name,
+          'description'   => $description,
+          'sub_acc_id'  => $sub_acc_id,
+          'time'  => $time,
+          'balance'  => $balance,
+          'time_date'  => $time_date
+         );
+        }
+       }
+       $this->chart_of_accounts_model->insert($data);
+       echo 'Data Imported successfully';
+      } 
+     }
+
+     public function refresh()
+     {
+        $html = "";
+        $i=1;
+        foreach($this->chart_of_accounts_model->select() as $row)
+        {
+        $html .="<tr><td><input type='checkbox'></td><td class='edit_field' data-id='".$row->id."'>".$row->name."</td><td class='type'>".$this->account_model->getName($row->account_id)."</td><td class='detailtype'>".$this->account_detail_model->getName($row->acc_detail_id)."</td><td class='nbalance'>".$row->balance."</td><td class='balance'></td><td><div class='dropdown show'><a class='dropdown-toggle' href='#' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>View Register</a><div class='dropdown-menu' aria-labelledby='dropdownMenuLink'><a class='dropdown-item' href='#'>Connect Bank</a><a class='dropdown-item' href=".url('/accounting/chart_of_accounts/edit/'.$row->id).">Edit</a><a class='dropdown-item' href='#' onClick='make_inactive(".$row->id.")'>Make Inactive (Reduce usage)</a><a class='dropdown-item' href='#'>Run Report</a></div></div></td></tr>";
+        $i++;
+        }
+        echo $html;            
+     }
     /*chart_of_accounts end*/
 }

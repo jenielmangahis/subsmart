@@ -159,6 +159,8 @@ $route['accounting/chart_of_accounts/edit/(:any)?'] = 'Accounting/edit/$1';
 $route['accounting/chart_of_accounts/update'] = 'Accounting/update';
 $route['accounting/chart_of_accounts/update_name'] = 'Accounting/update_name';
 $route['accounting/chart_of_accounts/inactive'] = 'Accounting/inactive';
+$route['accounting/chart_of_accounts/import'] = 'Accounting/import';
+$route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile'] = 'reconcile/index';
 $route['accounting/reconcile/edit'] = 'reconcile/edit';
@@ -202,12 +204,19 @@ $route['booking/products/(:any)'] = 'booking/front_items/$1';
 $route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
 $route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
+$route['booking/_add_cart_coupon'] = 'booking/ajax_update_cart_coupon';
 $route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
 $route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule';
 $route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
+$route['booking/save_booking_inquiry'] = 'booking/save_product_booking';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
 $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
+
+//wizard
+$route['wizard/show_app'] = 'wizard/show_app';
+$route['wizard/del_app'] = 'wizard/del_app';
+//$route['wizard/getSubOptions'] = 'wizard/getSubOptions';

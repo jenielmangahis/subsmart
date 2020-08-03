@@ -1,0 +1,41 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+
+class Customer_advance_model extends MY_Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+    public function add($input,$tablename)
+    {
+        unset($input['lead_id']);
+        if ($this->db->insert($tablename, $input)) {
+            return $this->db->insert_id();
+        } else {
+            return false;
+        }
+    }
+
+    public function update_data($input,$tablename)
+    {
+        $id = $input['lead_id'];
+        unset($input['lead_id']);
+        if ($this->db->update($tablename, $input, array('lead_id' => $id))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename)
+    {
+        $this->db->order_by('lead_id', $sort);
+        if ($query = $this->db->get($tablename, $limit, $start)) {
+            return $query->result();
+        } else {
+             return false;
+        }
+
+    }
+}

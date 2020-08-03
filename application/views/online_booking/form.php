@@ -247,7 +247,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <hr />
                         <div>
                             <button class="btn btn-success">Save</button>
-                            <a style="float: right;" href="#" class="btn btn-success"> Continue >> </a>
+                            <a style="float: right;" href="<?php echo base_url('more/addon/booking/coupons') ?>" class="btn btn-success"> Continue >> </a>
                         </div>
 
                     </div>

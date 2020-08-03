@@ -332,25 +332,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Widget 1</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Widget 2</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget2">Widget 2</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Widget 3</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget3">Widget 3</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Educate</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#educate">Educate</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Messages</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#messages">Messages</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Internal Notes</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#notes">Internal Notes</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Invoices</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#invoices">Invoices</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Activity</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#activity">Activity</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#settings">Settings</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -358,6 +361,109 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="tab-content mt-4" >
                                                         <div class="tab-pane active standard-accordion" id="dashboard">
                                                             <div class="indata">
+                                                                <div class="profile module">
+                                                                    <h5>Profile Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                        <p></p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="customizable module">
+                                                                    <h5>Customizable Industry Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="alarm module">
+                                                                    <h5>Alarm Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="tech module">
+                                                                    <h5>Tech Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="access module">
+                                                                    <h5>Access Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="admin module">
+                                                                    <h5>Admin Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="office module">
+                                                                    <h5>Office Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="owner module">
+                                                                    <h5>Owner Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="contract module">
+                                                                    <h5>Contract Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="clients module">
+                                                                    <h5>Client Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="score module">
+                                                                    <h5>Score</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="documents module">
+                                                                    <h5>Documents</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="tasks module">
+                                                                    <h5>Tasks</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="dispute module">
+                                                                    <h5>Dispute Status</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="memos module">
+                                                                    <h5>Memo</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="invoices module">
+                                                                    <h5>Invoices</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="assigned module">
+                                                                    <h5>Assigned</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
                                                                 <div class="client modules">
                                                                     <div class="col-sm-6">
                                                                     <table class="widget_client" width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -988,119 +1094,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="clear"></div>
                                                         </div>
 
+                                                        <div class="tab-pane fade standard-accordion" id="settings">
+                                                            <div class="card">
+                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                                    <div class="col-lg-12 table-responsive">
+                                                                        <h6>Lead Types</h6>
+                                                                        <button data-toggle="modal" data-target="#modal_lead_type" class="btn btn-sm btn-default pull-right" title="Add Lead Type"  style="margin-bottom: 10px;">
+                                                                            <i class="fa fa-plus"></i>
+                                                                        </button>
+                                                                        <table id="leadtype" class="table table-bordered table-striped">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th>Lead Type Name</th>
+                                                                                <th>Action</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <?php foreach ($lead_types as $lead_type) { ?>
+                                                                                    <tr>
+                                                                                        <td><?= $lead_type->lead_name; ?></td>
+                                                                                        <td>
+                                                                                            <button class="btn btn-sm btn-default edit_leadtype" id="<?=  $lead_type->lead_id; ?>" data-name="<?=  $lead_type->lead_name; ?>" title="Edit Lead Type" data-toggle="tooltip">
+                                                                                                <i class="fa fa-pencil"></i>
+                                                                                            </button>
+                                                                                            <a href=""class="btn btn-sm btn-default" title="Delete Lead Type" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                <?php } ?>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
+                                                            <div class="card">
+                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                                    <div class="col-lg-12 table-responsive">
+                                                                        <h6>Sales Area</h6>
+                                                                        <button  class="btn btn-sm btn-default pull-right" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                            <i class="fa fa-plus"></i>
+                                                                        </button>
+                                                                        <table id="salesarea" class="table table-bordered table-striped">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th>Id</th>
+                                                                                <th>Action</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td>fsdf</td>
+                                                                                <td>
+                                                                                    <a href=""class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-
-
-                                                     <!--
-                                                    <?php //if (!empty($customers)) { ?>
-                                                        <table class="table table-hover table-to-list" data-id="work_orders">
-                                                            <thead>
-                                                            <tr>
-                                                                <th> Name</th>
-                                                                <th>Added</th>
-                                                                <th>Status</th>
-                                                                <th></th>
-                                                            </tr>
-                                                            </thead>
-
-                                                            <tbody>
-                                                            <?php foreach ($customers as $customer) { ?>
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="table-name">
-                                                                            <div class="checkbox checkbox-sm">
-                                                                                <input type="checkbox"
-                                                                                       name="id[<?php echo $customer->id ?>]"
-                                                                                       value="<?php echo $customer->id ?>"
-                                                                                       class="select-one"
-                                                                                       id="customer_id_<?php echo $customer->id ?>">
-                                                                                <label for="customer_id_<?php echo $customer->id ?>"> <a
-                                                                                            class="a-default"
-                                                                                            href="<?php echo base_url('customer/genview/' . $customer->id) ?>"><?php echo $customer->contact_name ?></a></label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-
-                                                                    <td>
-                                                                        <div class="table-nowrap">
-                                                                            <?php echo $customer->contact_email ?>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="table-nowrap">
-                                                                            <?php if (is_serialized($customer->phone)) { ?>
-                                                                                <?php echo unserialize($customer->phone)['number'] ?>
-                                                                                (<?php echo unserialize($customer->phone)['type'] ?>)
-                                                                            <?php } else { ?>
-                                                                                <?php echo $customer->phone; ?>
-                                                                            <?php } ?>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="text-right">
-                                                                        <div class="dropdown dropdown-btn open">
-                                                                            <button class="btn btn-default dropdown-toggle" type="button"
-                                                                                    id="dropdown-edit" data-toggle="dropdown"
-                                                                                    aria-expanded="true">
-                                                                                <span class="btn-label">Manage</span><span
-                                                                                        class="caret-holder"><span
-                                                                                            class="caret"></span></span>
-                                                                            </button>
-                                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                                                aria-labelledby="dropdown-edit">
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           href="<?php echo base_url('customer/view/' . $customer->id) ?>"><span
-                                                                                                class="fa fa-user icon"></span> View</a>
-                                                                                </li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           href="<?php echo base_url('customer/edit/' . $customer->id) ?>"><span
-                                                                                                class="fa fa-pencil-square-o icon"></span>
-                                                                                        Edit</a></li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           href="<?php echo base_url('customer/tickets/add?customer_id=' . $customer->id) ?>"><span
-                                                                                                class="fa fa-pencil-square-o icon"></span>
-                                                                                        Create Service Ticket</a></li>
-                                                                                <li role="separator" class="divider"></li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           href="<?php echo base_url('workcalender/?customer_id=' . $customer->id . '&action=open_event_modal') ?>"><span
-                                                                                                class="fa fa-calendar icon"></span> Schedule
-                                                                                        Appointment</a></li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           href="<?php echo base_url('invoice') ?>"><span
-                                                                                                class="fa fa-money icon"></span> Create
-                                                                                        Invoice</a></li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           href="<?php echo base_url('estimate/add?customer_id=' . $customer->id) ?>"><span
-                                                                                                class="fa fa-file-text-o icon"></span>
-                                                                                        Create Estimate</a></li>
-                                                                                <li role="separator" class="divider"></li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           data-inactive-modal="open"
-                                                                                                           data-customer-id="400604"
-                                                                                                           data-customer-info="Agnes Knox, "
-                                                                                                           href="#"><span
-                                                                                                class="fa fa-user-times icon"></span> Mark
-                                                                                        as inactive</a></li>
-                                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                           data-delete-modal="open"
-                                                                                                           data-customer-id="<?php echo $customer->id ?>"
-                                                                                                           onclick="return confirm('Do you really want to delete this item ?')"
-                                                                                                           data-customer-info="Agnes Knox, "
-                                                                                                           href="<?php echo base_url('customer/delete/' . $customer->id) ?>"><span
-                                                                                                class="fa fa-trash-o icon"></span> Delete
-                                                                                        customer</a></li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php } ?>
-                                                            </tbody>
-
-                                                        </table>
-                                                    <?php //} else { ?>
-                                                        <p class="text-center">No customers found.</p>
-                                                    <?php //} ?>
-                                                    -->
                                                 </div>
                                             </div>
                                         </div>
@@ -1120,35 +1174,125 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modal_lead_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Lead Type</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="leadTypeForm">
+            <div class="modal-body">
+
+                <div class="col-md-12">
+                    <div class="form-group" id="customer_type_group">
+                        <label for="">Lead Type Name</label><br/>
+                        <input type="text" class="form-control" name="lead_name" id="lead_name" required/>
+                        <input type="hidden" class="form-control" name="lead_id" id="lead_id" required/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <style>
     .hid-deskx {
         display: none !important;
     }
 
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial,Helvetica,sans-serif;
-        font-weight: 400;
-        font-size: 13px;
-    }
-
-
     .indata {
         border-top-left-radius: 0px!important;
     }
     .indata {
-        background-color: #f2f2f2;
-        width: 80%;
         float: left;
-        margin: -4px 0 0 10px;
+        margin:0 auto;
         padding-left: 6px;
         padding-right: 6px;
         padding-bottom: 10px;
         border-radius: 10px;
+        line-height: 1.4em;
     }
 
+    .module{
+        border: 1px solid #32243d;
+        width: 90%;
+        max-width: 480px;
+        float: left;
+        padding: 0 0 10px 38px;
+        height : 180px;
+        position: relative;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    @media only screen and (max-width: 900px){
+        #container2 { width: 90%; }
+    }
+
+    .profile {
+        /**background-color: #a4508b;
+        background-image: linear-gradient(326deg, #a4508b 0%, #5f0a87 74%); */
+        background-image: url('/assets/img/customer/profile2.png');
+    }
+    .customizable {
+        background-image: url('/assets/img/customer/cim2.png');
+    }
+    .alarm {
+        background-image: url('/assets/img/customer/alarm2.png');
+    }
+    .tech {
+        background-image: url('/assets/img/customer/tech2.png');
+    }
+    .access {
+        background-image: url('/assets/img/customer/access2.png');
+    }
+    .admin {
+        background-image: url('/assets/img/customer/admin2.png');
+    }
+    .office {
+        background-image: url('/assets/img/customer/office2.png');
+    }
+    .owner {
+        background-image: url('/assets/img/customer/owner2.png');
+    }
+    .contract {
+        background-image: url('/assets/img/customer/contract2.png');
+    }
+    .clients {
+        background-image: url('/assets/img/customer/client.png');
+    }
+    .score {
+        background-image: url('/assets/img/customer/scores.png');
+    }
+    .documents {
+        background-image: url('/assets/img/customer/documents.png');
+    }
+    .tasks {
+        background-image: url('/assets/img/customer/tasks.png');
+    }
+    .dispute {
+        background-image: url('/assets/img/customer/dispute.png');
+    }
+    .memos {
+        background-image: url('/assets/img/customer/memo.png');
+    }
+    .invoices {
+        background-image: url('/assets/img/customer/invoices.png');
+    }
+    .assigned {
+        background-image: url('/assets/img/customer/contracts.png');
+    }
 
     .client {
         background-image: url('https://app.creditrepaircloud.com/application/images/client_new.png');
@@ -1423,6 +1567,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
+    $(document).ready(function () {
+        $('#leadtype').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 5
+        });
+        $('#salesarea').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 5
+        });
+
+        $("#leadTypeForm").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_leadtype_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Updated"){
+                        alert("Updated Succesfully");
+                    }else{
+                        alert("Added Succesfully");
+                    }
+                    $('#modal_lead_type').modal('hide');
+                    $('[id="lead_name"]').val("");
+                    $('[id="lead_id"]').val("");
+                }
+            });
+        });
+
+        $(".edit_leadtype").on( "click", function( event ) {
+            var ID=this.id;
+            $('#modal_lead_type').modal('show');
+            $('[id="lead_name"]').val($(this).data('name'));
+            $('[id="lead_id"]').val(ID);
+        });
+    });
+
+
     $('#dataTable1').DataTable({
 
         columnDefs: [{
