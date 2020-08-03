@@ -1081,10 +1081,6 @@ class Booking extends MY_Controller {
     	$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
     	if($coupon_exist){
     		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
-    		    echo "<pre>";
-                print_r($coupon);
-                echo "</pre>";
-
                $coupon_details = array(
 					'coupon_name' => $coupon->coupon_name,
 					'coupon_amount' => $coupon->discount_from_total,
