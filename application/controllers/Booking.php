@@ -338,7 +338,6 @@ class Booking extends MY_Controller {
     {
     	postAllowed();
 
-    	echo "<pre>";
     	$post = $this->input->post();
 
     	$coupon = $this->BookingCoupon_model->getById(post('cid'));
@@ -458,7 +457,7 @@ class Booking extends MY_Controller {
 
         	if($stat) {
 	            $this->BookingInquiry_model->update($stat->id, array(
-	                'name' => post('status'),
+	                'status' => post('status'),
 	            ));
 
 	            $this->session->set_flashdata('message', 'Status was successfully updated');
@@ -810,10 +809,53 @@ class Booking extends MY_Controller {
 
     public function ajax_get_inquiry_details()
     {
+    	$inquiry_id = 0;
+    	$work_order_summary = array();
     	$id = post('iid');
     	$inquiry = $this->BookingInquiry_model->findById($id);
 
+    	if($inquiry) {
+    		$inquiry_id = $inquiry->id;
+
+    		$work_order_details = $this->BookingWorkOrder_model->getByBookingInfoId($inquiry_id);
+
+
+    		foreach($work_order_details as $wod) {
+    			$service_item_details = $this->BookingServiceItem_model->getById($wod->service_item_id);
+    			if($service_item_details) {
+    				$work_order_summary[$wod->id]['service_name'] = $service_item_details->name;
+    				$work_order_summary[$wod->id]['service_description'] = $service_item_details->description;
+    				$work_order_summary[$wod->id]['price'] = $service_item_details->price;
+    				$work_order_summary[$wod->id]['unit'] = $service_item_details->price_unit;
+    			} else {
+    				$work_order_summary[$wod->id]['service_name'] = '';
+    				$work_order_summary[$wod->id]['service_description'] = '';
+    				$work_order_summary[$wod->id]['price'] = '';
+    				$work_order_summary[$wod->id]['unit'] = '';
+    			}
+
+				$work_order_summary[$wod->id]['coupon_name'] = '';
+				$work_order_summary[$wod->id]['coupon_type'] = '';
+				$work_order_summary[$wod->id]['coupon_discount'] = '';
+    			if($wod->coupon_id != null || $wod->coupon_id != 0) {
+	    			$coupon_details = $this->BookingCoupon_model->getById($wod->coupon_id);
+	    			if($coupon_details) {
+	    				$work_order_summary[$wod->id]['coupon_name'] = $coupon_details->coupon_name;
+	    				$work_order_summary[$wod->id]['coupon_type'] = $coupon_details->discount_from_total_type;
+	    				$work_order_summary[$wod->id]['coupon_discount'] = $coupon_details->discount_from_total;
+	    			}
+    			}
+
+    			$work_order_summary[$wod->id]['schedule_date'] = $wod->schedule_date;
+    			$work_order_summary[$wod->id]['quantity_ordered'] = $wod->quantity_ordered;
+    			$work_order_summary[$wod->id]['schedule_time_from'] = $wod->schedule_time_from;
+    			$work_order_summary[$wod->id]['schedule_time_to'] = $wod->schedule_time_to;
+
+    		}
+    	}  	
+
     	$this->page_data['inquiry'] = $inquiry;
+    	$this->page_data['work_order_summary'] = $work_order_summary;
 		$this->load->view('online_booking/ajax_get_inquiry_details', $this->page_data);
     }
 
@@ -872,6 +914,10 @@ class Booking extends MY_Controller {
 		$coupon = $this->session->userdata('coupon');
 		$cart_items = $this->session->userdata('cartItems');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		/*echo '<pre>';
+		print_r($coupon);
+		echo '</pre>';*/
 
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
@@ -1078,37 +1124,47 @@ class Booking extends MY_Controller {
     {
     	$post       = $this->input->post();
     	$coupon_code     = $post['coupon_code'];
-    	$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
-    	if($coupon_exist){
-    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
-    		    echo "<pre>";
-                print_r($coupon);
-                echo "</pre>";
 
-               $coupon_details = array(
-					'coupon_name' => $coupon->coupon_name,
-					'coupon_amount' => $coupon->discount_from_total,
-					'coupon_code' => $coupon->coupon_code
-				);
+    	if(!empty($coupon_code) || $coupon_code != null) {
+	    	$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
+	    	if($coupon_exist){
+	    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
 
-    		$cart_items['coupon'] = $coupon_details;
+	                $coupon_details = array(
+						'coupon_name' => $coupon->coupon_name,
+						'coupon_amount' => $coupon->discount_from_total,
+						'coupon_code' => $coupon->coupon_code,
+						'type' => $coupon->discount_from_total_type,
+						'id' => $coupon->id,
+					);
+
+	    		$cart_items['coupon'] = $coupon_details;
+	    	}
+
+	    	$this->session->set_userdata('coupon',$cart_items);    	
+
+	    	$this->session->set_flashdata('message', 'Cart was successfully updated');
+	        $this->session->set_flashdata('alert_class', 'alert-success');
     	}
-
-    	$this->session->set_userdata('coupon',$cart_items);    	
-
-    	$this->session->set_flashdata('message', 'Cart was successfully updated');
-        $this->session->set_flashdata('alert_class', 'alert-success');
     }
 
     public function ajax_delete_cart_item()
     {
     	$post = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
+
     	$session_key = "pid_" . $post['pid'];
+    	$session_key_id = $post['pid'];
     	unset($cart_items[$session_key]);
+    	unset($cart_items['products'][$session_key_id]);
 
     	$this->session->set_userdata('cartItems',$cart_items);    	
-
+    }
+    
+    public function ajax_delete_coupon()
+    {
+    	//$post = $this->input->post();
+    	unset($_SESSION['coupon']);
     }
 
     public function ajax_load_week_schedule()
@@ -1169,9 +1225,29 @@ class Booking extends MY_Controller {
 
     public function save_product_booking()
     {
+    	$coupon_id  = null;
+    	$custom_fields = array();
     	$post    = $this->input->post();
     	$user_id = hashids_decrypt($post['eid'], '', 15);
     	$user    = $this->Users_model->getUser($user_id);
+    	$cart_items = $this->session->userdata('cartItems');
+    	$coupon = $this->session->userdata('coupon');
+
+    	$in_array = array(
+    					'full_name', 'contact_number','email',
+    					'address','message','preferred_time_to_contact',
+    					'how_did_you_hear_about_us','eid'
+    				);
+
+    	foreach($post as $p_key => $p) {
+			if (!in_array($p_key, $in_array)) {
+			    $custom_fields[$p_key] = $p;
+			}    		
+    	}
+
+    	if(isset($coupon)) {
+    		$coupon_id = $coupon['coupon']['id'];
+    	}
 
     	if( $user ){
     		$data_booking_info = [
@@ -1183,7 +1259,7 @@ class Booking extends MY_Controller {
 	    		'message' => $post['message'],
 	    		'preferred_time_to_contact' => $post['preferred_time_to_contact'],
 	    		'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
-	    		'form_data' => '',
+	    		'form_data' => serialize($custom_fields),
 	    		'status' => 1,
 	    		'date_created' => date("Y-m-d H:i:s")
 	    	];
@@ -1198,6 +1274,7 @@ class Booking extends MY_Controller {
 						'booking_info_id' => $booking_info_id,
 						'service_item_id' => $pid,
 						'quantity_ordered' => $qty,
+						'coupon_id' => $coupon_id,
 						'schedule_date' => $cart_items['schedule_data']['date'],
 						'schedule_time_from' => $cart_items['schedule_data']['time_start'],
 						'schedule_time_to' => $cart_items['schedule_data']['time_end'],

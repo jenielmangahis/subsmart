@@ -30,6 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
+                                    <th>id</th>
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Email</th>
@@ -55,6 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         }
                                     ?>
                                     <tr>
+                                        <td><?php echo $i->id; ?></td>
                                         <td><?php echo $i->name; ?></td>
                                         <td><?php echo $i->phone; ?></td>
                                         <td><?php echo $i->email; ?></td>

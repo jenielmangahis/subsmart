@@ -208,6 +208,7 @@ $route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule';
 $route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'booking/save_product_booking';
+$route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';

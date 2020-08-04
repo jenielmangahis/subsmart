@@ -110,3 +110,17 @@ var base_url = "<?php echo base_url(); ?>";
 
 <?php include viewPath('includes/footer_front_booking'); ?>
 
+<script>  
+  var base_url = "<?php echo base_url(); ?>";
+
+  function continue_cart(){    
+      var eid = "<?php echo $eid; ?>";
+      window.location.href = base_url + "booking/products_schedule/"+eid;
+  }
+
+  $(function(){
+
+  });
+
+</script>
+

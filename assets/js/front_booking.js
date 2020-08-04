@@ -63,7 +63,6 @@ $(document).ready(function() {
     });
 
      $(".btn-add-coupon").click(function(){
-     
       var coupon_code = $("#coupon_code").val();
       var url = base_url + '/booking/_add_cart_coupon';
       var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Adding item to cart...</div>';
@@ -77,7 +76,7 @@ $(document).ready(function() {
              data: {coupon_code:coupon_code},
              success: function(o)
              {
-               // location.reload();
+               location.reload();
              }
           });
       }, 1000);
@@ -90,6 +89,28 @@ $(document).ready(function() {
 
       $("#modalBookingInfo").modal("show");
       $(".booking-info").html(msg);
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {pid:pid},
+             success: function(o)
+             {
+                location.reload();
+             }
+          });
+      }, 1000);
+      
+    });
+    
+    $(".delete-coupon").click(function(){
+      var pid = $(this).attr("data-id");
+      var url = base_url + '/booking/_delete_coupon';
+      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Removing coupon...</div>';
+
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
+
       setTimeout(function () {
           $.ajax({
              type: "POST",

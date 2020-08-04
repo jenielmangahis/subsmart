@@ -73,8 +73,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 Valid: <?php echo date("Y-m-d", strtotime($c->date_valid_from)) . ' to ' . date("Y-m-d", strtotime($c->date_valid_to)) ?>
                                             </div>
                                         </td>
-                                        <td>dx123</td>
-                                        <td>$1.00</td>
+                                        <td><?php echo $c->coupon_code; ?></td>
+                                        <?php $discount_type = ""; ?>
+                                        <?php $discount_type = $c->discount_from_total_type == 1 ? '%' : '$'; ?>
+                                        <td><?php echo $c->discount_from_total . " " . $discount_type; ?></td>
                                         <td>Active</td>
                                         <td class="text-right">
                                             <a class="coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);"><span class="fa fa-edit"></span> edit</a>
