@@ -1125,6 +1125,18 @@ class Booking extends MY_Controller {
     	$post       = $this->input->post();
     	$coupon_code     = $post['coupon_code'];
 
+    	/*$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
+    	if($coupon_exist){
+    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
+               $coupon_details = array(
+					'coupon_name' => $coupon->coupon_name,
+					'coupon_amount' => $coupon->discount_from_total,
+					'coupon_code' => $coupon->coupon_code
+				);
+
+    		$cart_items['coupon'] = $coupon_details;
+    	}*/
+
     	if(!empty($coupon_code) || $coupon_code != null) {
 	    	$coupon_exist = $this->BookingCoupon_model->isCouponCodeExists($coupon_code);
 	    	if($coupon_exist){

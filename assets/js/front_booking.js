@@ -76,7 +76,7 @@ $(document).ready(function() {
              data: {coupon_code:coupon_code},
              success: function(o)
              {
-               location.reload();
+                location.reload();
              }
           });
       }, 1000);
