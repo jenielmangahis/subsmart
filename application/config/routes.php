@@ -214,6 +214,13 @@ $route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'booking/save_product_booking';
 $route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon';
 
+$route['nsmart_plans/index'] = 'Nsmart_Plans/index';
+$route['nsmart_plans/add_new_plan'] = 'Nsmart_Plans/add_new_plan';
+$route['nsmart_plans/create_plan'] = 'Nsmart_Plans/create_plan';
+$route['nsmart_plans/edit_plan/$1'] = 'Nsmart_Plans/edit_plan/$1';
+$route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
+$route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
+
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
