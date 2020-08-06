@@ -162,7 +162,9 @@ $route['accounting/chart_of_accounts/inactive'] = 'Accounting/inactive';
 $route['accounting/chart_of_accounts/import'] = 'Accounting/import';
 $route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
 $route['accounting/reconcile/create'] = 'reconcile/add';
-$route['accounting/reconcile'] = 'reconcile/index';
+$route['accounting/reconcile/save'] = 'reconcile/addReconcile';
+$route['accounting/reconcile/index'] = 'reconcile/index';
+$route['accounting/reconcile'] = 'reconcile/indexmain';
 $route['accounting/reconcile/edit'] = 'reconcile/edit';
 
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -210,6 +212,7 @@ $route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule';
 $route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'booking/save_product_booking';
+$route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';

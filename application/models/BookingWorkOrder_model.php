@@ -21,7 +21,7 @@ class BookingWorkOrder_model extends MY_Model
         }
 
         $this->db->where('user_id', $id);
-        $this->db->order_by('sort', 'ASC');
+        //$this->db->order_by('sort', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -53,6 +53,17 @@ class BookingWorkOrder_model extends MY_Model
         $query = $this->db->get();
         return $query;
     }
+
+    public function getByBookingInfoId($booking_info_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('booking_info_id', $booking_info_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }    
 
     public function deleteById($id){
 

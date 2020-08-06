@@ -8,7 +8,7 @@ class Timesheet_model extends MY_Model {
 
 
 
-	public $table = 'time_record';
+    public $table = 'time_record';
 
     /**
      * @return mixed
@@ -53,7 +53,7 @@ class Timesheet_model extends MY_Model {
         //$this->db->distinct();
         $this->db->from($this->table);
         $this->db->where('employees_id', $user_id);
-        //$this->db->like('timestamp', $todaysDate);
+        $this->db->like('timestamp', $todaysDate);
         //$this->db->where('action', "Clock In");
         $this->db->order_by('timestamp', 'DESC');
         $this->db->limit(2);

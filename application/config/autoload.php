@@ -156,5 +156,6 @@ $autoload['model'] = array(
 	'chart_of_accounts_model',
 	'wizard_apps_model',
 	'wizard_subapps_model',
-	'wizard_suboptions_model'
+	'wizard_suboptions_model',
+    'reconcile_model'
 );

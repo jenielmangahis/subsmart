@@ -14,7 +14,7 @@ class Esign extends MY_Controller {
 	{
 		$this->load->model('Users_sign_model', 'Users_sign_model');
 		$this->page_data['users'] = $this->Users_sign_model->getUser(logged('id'));
-
+		$this->checkLogin();
 		$parent_id = getLoggedUserID();
 		$cid=logged('company_id');
 		$user_id = logged('id');
@@ -76,12 +76,19 @@ class Esign extends MY_Controller {
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['file_id'] = $this->input->get('id');
+		$this->page_data['file_url'] = "";
+		if($this->page_data['file_id'] > 0) {
+			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
+			$this->page_data['file_url'] = $query->row()->docFile;
+		} 
+		
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 		$this->load->view('esign/files', $this->page_data);
 	}
 
 
 	public function recipients() {
+
 		if(isset($_POST['recipients']) && count($_POST['recipients'])>0 ) {
 			foreach($_POST['recipients'] as $key => $value) {
 				$id = $this->db->insert('user_docfile_recipients',[
@@ -91,7 +98,7 @@ class Esign extends MY_Controller {
 					'email' => $_POST['email'][$key],
 				]);
 			}
-			redirect('esign/Files?id='.$id.'&next_step=4');
+			redirect('esign/Files?id='.(isset($_POST['file_id'])?$_POST['file_id']:0).'&next_step=3');
 		}
 	}
 
@@ -140,6 +147,7 @@ class Esign extends MY_Controller {
 	}
 
 	public function fileSave(){
+
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		//$id = logged('id');
 		
@@ -148,16 +156,18 @@ class Esign extends MY_Controller {
 		// $location = "../../uploads/DocFiles";
 		// echo move_uploaded_file($filename, $location);
 
+		
 		if(isset($_FILES['docFile']) && $_FILES['docFile']['tmp_name'] != '') {
 				
 			$tmp_name = $_FILES['docFile']['tmp_name'];
+			$extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
 			// basename() may prevent filesystem traversal attacks;
 			// further validation/sanitation of the filename may be appropriate
 			$name = time()."_".rand(1,9999999)."_".basename($_FILES["docFile"]["name"]);
 			move_uploaded_file($tmp_name, "./uploads/DocFiles/$name");
 			$id = 0;
 			
-
+		
 
 			if($_POST['file_id'] > 0)
 			{
@@ -175,19 +185,16 @@ class Esign extends MY_Controller {
 				]);
 			}
 
-		
-
 			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
 			{
-			  redirect('esign/Files?id='.$id);
+				redirect('esign/Files?id='.$id);
 			}
 			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
 			{
-				
-				 redirect('esign/Files?id='.$id.'&next_step=2');
+				redirect('esign/Files?id='.$id.'&next_step=2');
 			}
-		} else if(isset($_POST['file_id']) && $_POST['file_id'] > 0) {
 
+		} else if (isset($_POST['file_id']) && $_POST['file_id'] > 0) {
 			
 			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
 			{

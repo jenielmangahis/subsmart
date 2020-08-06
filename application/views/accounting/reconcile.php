@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
 <style type="text/css">
     .hide-toggle::after {
         display: none;
@@ -139,13 +139,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-4">
                                     <ul class="nav nav-pills nav-fill" style="border: 5;">
                                       <li class="nav-item">
-                                        <a class="nav-link" href="#">Payments</a>
+                                        <a class="nav-link" href="#" onclick="payments()">Payments</a>
                                       </li>
                                       <li class="nav-item">
-                                        <a class="nav-link" href="#">Deposites</a>
+                                        <a class="nav-link" href="#" onclick="deposites()">Deposites</a>
                                       </li>
                                       <li class="nav-item">
-                                        <a class="nav-link active" href="#">All</a>
+                                        <a class="nav-link active" href="#" onclick="displayall()">All</a>
                                       </li>
                                     </ul>
                                 </div>
@@ -267,24 +267,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td contenteditable="true">07/01/2020</td>
-                                    <td>Check</td>
-                                    <td contenteditable="true">SVCCHRG</td>
-                                    <td>Bank Charges</td>
-                                    <td contenteditable="true">
-                                        <select class="form-control select2">
-                                          <option value="" disabled selected>Payee</option>
-                                          <option value="1">Option 1</option>
-                                          <option value="2">Option 2</option>
-                                          <option value="3">Option 3</option>
-                                        </select>
-                                    </td>
-                                    <td contenteditable="true">Service Charges</td>
-                                    <td contenteditable="true">20.00</td>
-                                    <td></td>
-                                    <td><input type="checkbox"></td>
-                                </tr>
+                            <?php
+                              $i=1;
+                              foreach($this->reconcile_model->select() as $row)
+                              {
+                                echo "<tr id='payments'>";
+                                echo "<td contenteditable='true'>".$row->first_date."</td>";
+                                echo "<td>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
+                                echo "<td contenteditable='true'>SVCCHRG</td>";
+                                echo "<td>".$row->expense_account."</td>";
+                                echo "<td contenteditable='true'>";
+                                    echo "<select class='form-control select2'>";
+                                    echo "<option value=' disabled selected>Payee</option>";
+                                    echo "<option value='1'>Option 1</option>";
+                                    echo "<option value='2'>Option 2</option>";
+                                    echo "<option value='2'>Option 3</option>";
+                                    echo  "</select>";
+                                echo "</td>";
+                                echo "<td contenteditable='true'>Service Charges</td>";
+                                echo  "<td contenteditable='true'>".$row->service_charge."</td>";
+                                echo  "<td></td>";
+                                echo "<td><input type='checkbox'></td>";
+                                echo "</tr>";
+                                echo "<tr id='deposites'>";
+                                echo "<td contenteditable='true'>".$row->second_date."</td>";
+                                echo "<td>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
+                                echo "<td contenteditable='true'>INTEREST</td>";
+                                echo "<td>".$row->income_account."</td>";
+                                echo "<td contenteditable='true'>";
+                                    echo "<select class='form-control select2'>";
+                                    echo "<option value=' disabled selected>Payee</option>";
+                                    echo "<option value='1'>Option 1</option>";
+                                    echo "<option value='2'>Option 2</option>";
+                                    echo "<option value='2'>Option 3</option>";
+                                    echo  "</select>";
+                                echo "</td>";
+                                echo "<td contenteditable='true'>Interest Earned</td>";
+                                echo  "<td contenteditable='true'></td>";
+                                echo  "<td>".$row->interest_earned."</td>";
+                                echo "<td><input type='checkbox'></td>";
+                                echo "</tr>";
+                              $i++;
+                              }
+                               ?>
                                 </tbody>
                             </table>
                         </div>
@@ -307,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#charts_of_account_table').DataTable();
     } );
 
-    $(".ex-button").click(function() {
+   /* $(".ex-button").click(function() {
         $('.ex-button').html('<i class="fa fa-chevron-up"></i>');
         $('.hide-col').css('color','#dddddd');
     });
@@ -317,7 +342,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('.ex-button').html('<i class="fa fa-chevron-down"></i>');
         $('.hide-col').css('color','black');
     }
-    });
+    });*/
 
 
     $(function(){
@@ -329,5 +354,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('.select2').select2()
     });
 
-
+    function payments()
+    {
+        $("#deposites").hide();
+        $("#payments").show();
+    }
+    function deposites()
+    {
+        $("#deposites").show();
+        $("#payments").hide();
+    }
+    function displayall()
+    {
+        $("#deposites").show();
+        $("#payments").show();
+    }
 </script>

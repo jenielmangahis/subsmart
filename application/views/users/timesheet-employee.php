@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Time Employee Overview</h1>
+                        <h1 class="page-title">Time Employee Overview </h1>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol> -->
@@ -140,10 +140,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <!-- Employee -->
                                                     <td class="employee_name">
                                                         <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
-                                                        <?php echo ucfirst($this->roles_model->getById($row->role)->title); ?>
+                                                        <?php 
+                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
+                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
+                                                            }
+                                                        ?>
                                                     </td>
                                                     <!-- Status -->
-                                                    <td class="status" style="text-align: center;">
+                                                    <?php if( !empty($clockin_arr) ):?>
+                                                        <td class="status" style="text-align: center; background: green;">
+                                                    <?php else: ?>
+                                                        <td class="status" style="text-align: center;">
+                                                    <?php endif; ?>
                                                         <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                             <?php if($clockin->action == "Clock In"): ?>
                                                                 <?php echo "In"; ?>

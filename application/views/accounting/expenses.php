@@ -33,10 +33,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#bill-modal">Bill</a></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#expense-modal">Expense</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Expense</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#vendorCredit-modal">Vendor Credit</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#vendorCredit-modal" id="addVendorCredit">Vendor Credit</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#payDown-modal">Pay down credit card</a></li>
                                     </ul>
                                 </div>
@@ -183,9 +183,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $modal = null;
                                             $modal_id = null;
                                             $data_id = null;
+                                            $delete = null;
                                         ?>
                                         <?php foreach ($transactions as $transaction): ?>
                                         <?php
+                                        // Check
                                             foreach ($checks as $check){
                                                 if ($transaction->id == $check->transaction_id){
                                                     $date = date("d/m/Y",strtotime($transaction->date_created));
@@ -194,16 +196,105 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $payee = $check->bank_id;
                                                     $modal = "edit-expensesCheck";
                                                     $modal_id = "editCheck";
+                                                    $data_id = $check->id;
                                                     foreach ($vendors as $vendor){
                                                         if ($vendor->id == $check->vendor_id){
                                                             $vendors_name = $vendor->f_name." ".$vendor->l_name;
-                                                            $data_id = $vendor->id;
+                                                            $delete = 'deleteCheck';
                                                         }
                                                     }
-                                                    if ($categories[0]->transaction_type_id == $check->id){
-                                                        $category = $categories[0]->category;
-                                                        $category_id = $categories[0]->id;
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$check->id));
+                                                    $check_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    foreach ($list_categories as $list){
+                                                        if ($list->id == $check_category_id){
+                                                            $category = $list->category_name;
+                                                            $category_id = $list->id;
+                                                        }
                                                     }
+
+                                                }
+                                            }
+//                                            Bill
+                                            foreach ($bills as $bill){
+                                                if ($transaction->id == $bill->transaction_id){
+                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $type = $transaction->type;
+                                                    $payee = $bill->vendor_id;
+                                                    $number = null;
+                                                    $modal = "bill-modal";
+                                                    $modal_id = "editBill";
+                                                    foreach ($vendors as $vendor){
+                                                        if ($vendor->vendor_id == $bill->vendor_id){
+                                                            $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                                            $data_id = $bill->id;
+                                                            $delete = 'deleteBill';
+                                                        }
+                                                    }
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$bill->id));
+                                                    $bill_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    foreach ($list_categories as $list){
+                                                        if ($list->id == $bill_category_id){
+                                                            $category = $list->category_name;
+                                                            $category_id = $list->id;
+                                                        }
+                                                    }
+
+
+                                                }
+                                            }
+//                                            Expense
+                                            foreach ($expenses as $expense){
+                                                if ($transaction->id == $expense->transaction_id){
+                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $type = $transaction->type;
+                                                    $payee = $expense->vendor_id;
+                                                    $number = null;
+                                                    $modal = "expense-modal";
+                                                    $modal_id = "editExpense";
+                                                    foreach ($vendors as $vendor){
+                                                        if ($vendor->vendor_id == $expense->vendor_id){
+                                                            $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                                            $data_id = $expense->id;
+                                                            $delete = 'deleteExpense';
+                                                        }
+                                                    }
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$expense->id));
+                                                    $expense_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    foreach ($list_categories as $list){
+                                                        if ($list->id == $expense_category_id){
+                                                            $category = $list->category_name;
+                                                            $category_id = $list->id;
+                                                        }
+                                                    }
+
+
+                                                }
+                                            }
+//                                            Vendor Credit
+                                            foreach ($vendor_credits as $vendor_credit){
+                                                if ($transaction->id == $vendor_credit->transaction_id){
+                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $type = $transaction->type;
+                                                    $payee = $vendor_credit->vendor_id;
+                                                    $number = null;
+                                                    $modal = "vendorCredit-modal";
+                                                    $modal_id = "editVendorCredit";
+                                                    foreach ($vendors as $vendor){
+                                                        if ($vendor->vendor_id == $vendor_credit->vendor_id){
+                                                            $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                                            $data_id = $vendor_credit->id;
+                                                            $delete = 'deleteVendorCredit';
+                                                        }
+                                                    }
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$vendor_credit->id));
+                                                    $vc_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    foreach ($list_categories as $list){
+                                                        if ($list->id == $vc_category_id){
+                                                            $category = $list->category_name;
+                                                            $category_id = $list->id;
+                                                        }
+                                                    }
+
 
                                                 }
                                             }
@@ -230,7 +321,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="fa fa-caret-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li><a href="#" id="copy">Copy</a></li>
-                                                        <li id="deleteCheck" data-id="<?php echo $data_id?>">
+                                                        <li id="<?php echo $delete?>" data-id="<?php echo $data_id?>">
                                                             <a href="#" >Delete</a>
                                                         </li>
                                                         <li><a href="#">Void</a></li>
@@ -253,6 +344,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <!-- end container-fluid -->
     </div>
+    <input type="hidden" id="site_url" value="<?php echo site_url(); ?>">
     <!-- page wrapper end -->
     <!-- Modal for Print Checks-->
     <div class="full-screen-modal">
@@ -384,19 +476,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-header">
                         <div class="modal-title">
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Check #1
+                            Check #<span id="checkNUmberHeader"></span>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
-                        <input type="hidden" id="site_url" value="<?php echo site_url(); ?>">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
                                 <input type="hidden" name="check_id" id="checkID" value="">
-                                <input type="hidden" name="transaction_id" id="transID">
-                                <select name="vendor_id" id="vendorID" class="form-control select2-payee">
+                                <input type="hidden" name="transaction_id" id="checktransID">
+                                <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
                                     <option></option>
                                     <?php foreach ($vendors as $vendor):?>
                                     <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
@@ -406,6 +497,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-3">
                                 <label for="">Bank Account</label>
                                 <select name="bank_id" id="bank_account" class="form-control select2-account">
+                                    <option></option>
                                     <option value="1">Cash on hand</option>
                                     <option value="2">Corporate Account(XXXXXX 5850)</option>
                                     <option value="3">Corporate Account(XXXXXX 5850)Te</option>
@@ -423,7 +515,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="mailing_address" id="mailing_address" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                                <textarea name="mailing_address" id="check_mailing_address" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Payment date</label>
@@ -459,21 +551,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody id="line-container">
-                                <tr>
+                                <tbody id="line-container-check">
+                                <tr id="tableLine">
                                     <td></td>
-                                    <td>1</td>
-                                    <td>Commission & fees</td>
-                                    <td>What did you pay for?</td>
-                                    <td></td>
-                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                    <td><span id="line-counter">1</span></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control checkCategory select2-check-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 <tr id="tableLine">
                                     <td></td>
                                     <td><span id="line-counter">2</span></td>
-                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input" style="display: none;"></td>
-                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input" style="display: none;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input" style="display: none;"></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control checkCategory select2-check-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control checkDescription" id="tbl-input" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control checkAmount" id="tbl-input" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-line-row"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -520,7 +630,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <div class="dropdown" style="float: right">
-                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -686,17 +796,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
-                    <form action="<?php echo site_url()?>accounting/addBill" method="post">
+                    <form action="" method="post" id="billForm">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <select name="vendor_id" id="" class="form-control select2-vendor">
+                                <input type="hidden" name="bill_id" id="billID">
+                                <input type="hidden" name="transaction_id" id="billTransId">
+                                <select name="vendor_id" id="billVendorID" class="form-control select2-vendor">
                                     <option></option>
                                     <option disabled>&plus;&nbsp;Add new</option>
-                                    <option value="1">Abacus Accounting</option>
-                                    <option value="2">Absolute Power</option>
-                                    <option value="3">ADSC</option>
+                                    <?php foreach ($vendors as $vendor):?>
+                                        <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-9" style="text-align: right">
@@ -707,11 +819,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px;width: 80%;">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="mailing_address" id="memo" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+                                <textarea name="mailing_address" id="billMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Terms</label>
-                                <select name="terms" id="" class="form-control select2">
+                                <select name="terms" id="billTerms" class="form-control select2-bill-terms">
+                                    <option></option>
                                     <option>Due on receipt</option>
                                     <option>Net 15</option>
                                     <option>Net 30</option>
@@ -720,20 +833,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-2">
                                 <label for="">Bill date</label>
-                                <input type="date" name="bill_date" class="form-control">
+                                <input type="date" name="bill_date" id="billDate" class="form-control">
                             </div>
                             <div class="col-md-2">
                                 <label for="">Due date</label>
-                                <input type="date" name="due_date" class="form-control">
+                                <input type="date" name="due_date" id="billDueDate" class="form-control">
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Bill no.</label>
-                                    <input type="text" name="bill_num" class="form-control" value="">
+                                    <input type="text" name="bill_num" id="billNumber" class="form-control" value="">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
-                                    <input type="text" name="permit_num" class="form-control">
+                                    <input type="text" name="permit_num" id="billPermitNumber" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -751,20 +864,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                                 </thead>
                                 <tbody id="line-container-bill">
-                                <tr>
+                                <tr id="tableLine-bill">
                                     <td></td>
-                                    <td>1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                    <td><span id="line-counter-bill">1</span></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control billCategory select2-bill-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control billDescription" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control billAmount" id="tbl-input-bill" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 <tr id="tableLine-bill">
                                     <td></td>
                                     <td><span id="line-counter-bill">2</span></td>
-                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input-bill" style="display: none;"></td>
-                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input-bill" style="display: none;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input-bill" style="display: none;"></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control billCategory select2-bill-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control billDescription" id="tbl-input-bill" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control billAmount" id="tbl-input-bill" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -776,7 +907,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
-                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                            <textarea name="memo" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
@@ -801,7 +932,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;display: inline-block;position: relative;">
-                                    <button type="button" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
+                                    <button type="button" class="btn btn-success" id="billSaved" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -833,12 +964,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
-                    <form action="<?php echo site_url()?>accounting/addExpense" method="post">
+                    <form action="" method="post" id="expenseForm">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
-                                <select name="vendor_id" id="" class="form-control select2-payee" required>
+                                <input type="hidden" id="expenseTransId">
+                                <input type="hidden" id="expenseId">
+                                <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
                                     <option value=""></option>
                                     <option value="1">Abacus Accounting</option>
                                     <option value="2">Absolute Power</option>
@@ -847,7 +980,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment account <i class="fa fa-question-circle"></i></label>
-                                <select name="payment_account" id="" class="form-control select2-account" required>
+                                <select name="payment_account" id="expensePaymentAccount" class="form-control select2-account" required>
                                     <option>Cash on hand</option>
                                     <option value="1">Cash on hand:Cash on hand</option>
                                     <option value="2">Corporate Account (XXXXXX 5850)</option>
@@ -870,14 +1003,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px;width: 80%;">
                             <div class="col-md-3">
                                 <label for="">Payment date</label>
-                                <input type="date" name="payment_date" class="form-control" required>
+                                <input type="date" name="payment_date" id="expensePaymentDate" class="form-control" required>
                             </div>
                             <div class="col-md-2">
 
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment method</label>
-                                <select name="payment_method" id="" class="form-control select2-method" required>
+                                <select name="payment_method" id="expensePaymentMethod" class="form-control select2-method" required>
                                     <option value=""></option>
                                     <option>Cash</option>
                                     <option>Check</option>
@@ -888,11 +1021,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Ref no.</label>
-                                    <input type="text" name="ref_num" class="form-control" required>
+                                    <input type="text" name="ref_num" id="expenseRefNumber" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
-                                    <input type="text" name="permit_num" class="form-control" required>
+                                    <input type="text" name="permit_num" id="expensePermitNumber" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -910,20 +1043,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                                 </thead>
                                 <tbody id="line-container-expense">
-                                <tr>
+                                <tr id="tableLine-expense">
                                     <td></td>
-                                    <td>1</td>
-                                    <td>Commission & fees</td>
-                                    <td>What did you pay for?</td>
-                                    <td></td>
-                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                    <td><span id="line-counter-expense">1</span></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 <tr id="tableLine-expense">
                                     <td></td>
                                     <td><span id="line-counter-expense">2</span></td>
-                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input-expense" style="display: none;"></td>
-                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input-expense" style="display: none;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input-expense" style="display: none;"></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -960,7 +1111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;display: inline-block;position: relative;">
-                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="button" data-dismiss="modal" id="expenseSaved" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -993,16 +1144,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
-                    <form action="<?php echo site_url()?>accounting/vendorCredit" method="post" id="formVendorCredit">
+                    <form action="" method="post" id="formVendorCredit">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <select name="vendor_id" id="" class="form-control select2-payee" required>
-                                    <option value=""></option>
-                                    <option value="1">Abacus Accounting</option>
-                                    <option value="2">Absolute Power</option>
-                                    <option value="3">ADSC</option>
+                                <input type="hidden" id="vendorCreditId">
+                                <input type="hidden" id="vcTransId">
+                                <select name="vendor_id" id="vcVendorId" class="form-control select2-vendor-credit" required>
+                                    <option></option>
+                                    <option disabled>&plus;&nbsp;Add new</option>
+                                    <?php foreach ($vendors as $vendor):?>
+                                        <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-9" style="text-align: right">
@@ -1013,21 +1167,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row" style="margin-top: 20px;width: 80%;">
                             <div class="col-md-3">
                                 <label for="">Mailing address</label>
-                                <textarea name="mailing_address" id="memo" cols="30" rows="4" placeholder="" style="resize: none;" required></textarea>
+                                <textarea name="mailing_address" id="vcMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;" required></textarea>
                             </div>
                             <div class="col-md-3">
                                 <label for="">Payment date</label>
-                                <input type="date" name="payment_date" class="form-control" required>
+                                <input type="date" name="payment_date" id="vcPaymentDate" class="form-control" required>
                             </div>
                             <div class="col-md-4"></div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Ref no.</label>
-                                    <input type="text" name="ref_num" class="form-control" required>
+                                    <input type="text" name="ref_num" id="vcRefNumber" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Permit no.</label>
-                                    <input type="text" name="permit_num" class="form-control" required>
+                                    <input type="text" name="permit_num" id="vcPermitNumber" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -1045,20 +1199,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </tr>
                                 </thead>
                                 <tbody id="line-container-vendorCredit">
-                                <tr>
+                                <tr id="tableLine-vendorCredit">
                                     <td></td>
-                                    <td>1</td>
-                                    <td>Commission & fees</td>
-                                    <td>What did you pay for?</td>
-                                    <td></td>
-                                    <td style="text-align: center"><i class="fa fa-trash"></i></td>
+                                    <td><span id="line-counter-vendorCredit">1</span></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control vcCategory select2-vc-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control vcDescription" id="" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control vcAmount" id="" style="display: none;"></td>
+                                    <td style="text-align: center"><a href="#" id="delete-row-vendorCredit"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 <tr id="tableLine-vendorCredit">
                                     <td></td>
                                     <td><span id="line-counter-vendorCredit">2</span></td>
-                                    <td><input type="text" name="category[]" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
-                                    <td><input type="text" name="description[]" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control" id="tbl-input-vendorCredit" style="display: none;"></td>
+                                    <td>
+                                        <div id="" style="display:none;">
+                                            <select name="category[]" id="" class="form-control vcCategory select2-vc-category">
+                                                <option></option>
+                                                <?php foreach ($list_categories as $list): ?>
+                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" name="description[]" class="form-control vcDescription" id="" style="display: none;"></td>
+                                    <td><input type="text" name="amount[]" class="form-control vcAmount" id="" style="display: none;"></td>
                                     <td style="text-align: center"><a href="#" id="delete-row-vendorCredit"><i class="fa fa-trash"></i></a></td>
                                 </tr>
                                 </tbody>
@@ -1095,7 +1267,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;">
-                                    <button type="submit" class="btn btn-success" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="button" class="btn btn-success" data-dismiss="modal" id="vcSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -1238,6 +1410,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('.select2-account').select2({
         allowClear: true
     });
+    $('.select2-bill-terms').select2({
+        placeholder: 'Choose a terms',
+        allowClear: true
+    });
     $('.select2-method').select2({
         placeholder: 'What did you pay with?',
         allowClear: true
@@ -1250,9 +1426,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         placeholder: 'Select bank account',
         allowClear: true
     });
-    $('.select2-tbl-category').select2({
+    $('.select2-vendor').select2({
+        placeholder: 'Choose a vendor',
         allowClear: true
     });
+    $('.select2-tbl-category').select2({
+        placeholder: 'Choose a vendor',
+        allowClear: true
+    });
+    $('.select2-vendor-credit').select2({
+        placeholder: 'Choose a vendor',
+        allowClear: true
+    });
+    $('.select2-vc-category').select2({
+        placeholder: 'Choose a category',
+        allowClear: true
+    });
+    $('.select2-check-category').select2({
+        placeholder: 'Choose a category',
+        allowClear: true
+    });
+    $('.select2-bill-category').select2({
+        placeholder: 'Choose a category',
+        allowClear: true
+    });
+    $('.select2-expense-category').select2({
+        placeholder: 'Choose a category',
+        allowClear: true
+    });
+
     // DataTable JS
     $(document).ready(function() {
         $('#expenses_table').DataTable({
@@ -1310,7 +1512,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Table input text show
         $(document).on("click","#tableLine",function () {
             $('#tableLine > td >input').hide();
-            $('td > input', this).show();
+            $('#tableLine > td >div').hide();
+            $('td > input,div', this).show();
         });
 
     });
@@ -1353,7 +1556,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Table input text show
         $(document).on("click","#tableLine-bill",function () {
             $('#tableLine-bill > td >input').hide();
-            $('td > input', this).show();
+            $('#tableLine-bill > td >div').hide();
+            $('td > input,div', this).show();
         });
 
     });
@@ -1396,7 +1600,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Table input text show
         $(document).on("click","#tableLine-expense",function () {
             $('#tableLine-expense > td >input').hide();
-            $('td > input', this).show();
+            $('#tableLine-expense > td >div').hide();
+            $('td > input,div', this).show();
         });
 
     });
@@ -1439,7 +1644,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Table input text show
         $(document).on("click","#tableLine-vendorCredit",function () {
             $('#tableLine-vendorCredit > td >input').hide();
-            $('td > input', this).show();
+            $('#tableLine-vendorCredit > td >div').hide();
+            $('td > input,div', this).show();
         });
 
     });

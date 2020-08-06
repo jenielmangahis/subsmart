@@ -9,7 +9,6 @@ class Customer_advance_model extends MY_Model {
     }
     public function add($input,$tablename)
     {
-        unset($input['lead_id']);
         if ($this->db->insert($tablename, $input)) {
             return $this->db->insert_id();
         } else {
@@ -17,20 +16,26 @@ class Customer_advance_model extends MY_Model {
         }
     }
 
-    public function update_data($input,$tablename)
+    public function update_data($input,$tablename,$update_id)
     {
-        $id = $input['lead_id'];
-        unset($input['lead_id']);
-        if ($this->db->update($tablename, $input, array('lead_id' => $id))) {
+        if($update_id == "lead_id"){
+            $id = $input['lead_id'];
+            unset($input['lead_id']);
+        }else if($update_id == "sa_id"){
+            $id = $input['sa_id'];
+            unset($input['sa_id']);
+        }
+
+        if ($this->db->update($tablename, $input, array($update_id => $id))) {
             return true;
         } else {
             return false;
         }
     }
 
-    public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename)
+    public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {
-        $this->db->order_by('lead_id', $sort);
+        $this->db->order_by($orderBy, $sort);
         if ($query = $this->db->get($tablename, $limit, $start)) {
             return $query->result();
         } else {

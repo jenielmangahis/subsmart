@@ -159,12 +159,10 @@ class Customer extends MY_Controller
             }
             $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
         }
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes");
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea");
+        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->load->view('customer/list', $this->page_data);
-
     }
-
 
     public function view($id)
     {
@@ -187,8 +185,6 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/mixedview', $this->page_data);
     }
-
-
     /**
      * @param $id
      */
@@ -211,8 +207,6 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/genview', $this->page_data);
     }
-
-
 
     /**
      * @param $id
@@ -295,67 +289,34 @@ class Customer extends MY_Controller
 
 
     public function save()
-
     {
-
-
         $user = (object)$this->session->userdata('logged');
-
         $company_id = logged('company_id');
-
-
-
         $data = array(
-
-
             'customer_type' => post('customer_type'),
-
             'contact_name' => post('contact_name'),
-
             'contact_email' => post('contact_email'),
-
             'mobile' => post('contact_mobile'),
-
             'phone' => post('contact_phone'),
-
             'notification_method' => post('notify_by'),
-
             'street_address' => post('street_address'),
-
             'suite_unit' => post('suite_unit'),
-
             'city	' => post('city'),
-
             'postal_code' => post('zip'),
-
             'state' => post('state'),
-
             'birthday' => post('birthday'),
-
             'source_id' => post('customer_source_id'),
-
             'comments' => post('notes'),
-
             'user_id' => $user->id,
-
             'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : NULL,
-
             'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
-
             'company_id' => $company_id,
-
             'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
-
         );
-
-
         // previously generated customer id
 
         // this id will be present on session if addition contact or service address has been added
-
         $cid = $this->session->userdata('customer_id');
-
-
         // if no addition contact or service address has been added
 
         // create() will be called insted of update()
@@ -687,23 +648,44 @@ class Customer extends MY_Controller
     public function add_leadtype_ajax(){
         $input = $this->input->post();
         // customer_ad_model
-
         if(empty($input['lead_id'])){
+            unset($input['lead_id']);
             if($this->customer_ad_model->add($input,"ac_leadtypes")){
                 echo "Success";
             }else{
                 echo "Error";
             }
         }else{
-            if($this->customer_ad_model->update_data($input,"ac_leadtypes")){
+            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
                 echo "Updated";
             }else{
                 echo "Error";
             }
         }
+    }
 
+    public function add_salesarea_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['sa_id'])){
+            unset($input['sa_id']);
+            if($this->customer_ad_model->add($input,"ac_salesarea")){
+                echo "Sales Area Added!";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_salesarea","sa_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
 
-
+    public function fetch_leadtype_data(){
+        $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadtypes","lead_id");
+        echo json_encode($lead_types);
     }
 
 

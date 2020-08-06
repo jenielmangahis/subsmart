@@ -117,17 +117,17 @@ class Estimate extends MY_Controller
     }
 
         $user_id = logged('id');
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
-        if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        } else {
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        }
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
 
         $employee_id = logged('company_id');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['employee_id' => $employee_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $employee_id]);
 
         $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);

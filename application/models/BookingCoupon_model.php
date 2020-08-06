@@ -51,6 +51,7 @@ class BookingCoupon_model extends MY_Model
 
         $this->db->where('user_id', $user_id);
         $this->db->where('coupon_code', $coupon_code);
+        $this->db->where('status', 1);
 
         $query = $this->db->get()->row();
         if( $query ){
@@ -69,6 +70,8 @@ class BookingCoupon_model extends MY_Model
 
         $this->db->where('user_id', $user_id);
         $this->db->where('coupon_code', $coupon_code);
+        $this->db->where('status', 1);
+        
         $query = $this->db->get()->row();
         return $query;
     }

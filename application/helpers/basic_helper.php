@@ -771,12 +771,21 @@ if (!function_exists('getCompanyFolder')){
 
 if (!function_exists('getFolders')) {
 
-    function getFolders($parent_id = -1, $getallparent = false, $getallchild = false, $asArray = false, $trashed = false)
+    function getFolders($parent_id = -1, 
+                        $getallparent = false, 
+                        $getallchild = false, 
+                        $asArray = false, 
+                        $trashed = false,
+                        $ofUser = false)
     {
         $CI = &get_instance();
+        $uid = logged('id');
         $company_id = logged('company_id');
 
         $parent_filter = '';
+        $softdelete = '';
+        $user_filter = '';
+
         if($parent_id >= 0){
             $parent_filter = 'and a.parent_id = ' . $parent_id . ' ';
         } else if($getallparent){
@@ -789,6 +798,10 @@ if (!function_exists('getFolders')) {
             $softdelete = '<= 0';
         } else {
             $softdelete = '>= 1';
+        }
+
+        if($ofUser){
+            $user_filter = 'and a.created_by = '. $uid . ' ';
         }
 
         $sql = 'select ' . 
@@ -811,7 +824,7 @@ if (!function_exists('getFolders')) {
                  'select folder_id, sum(if(softdelete = 1,0,1)) as `total_files` from filevault group by folder_id'.
                ') e on e.folder_id = a.folder_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . ' ' . $parent_filter . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . ' ' . $parent_filter . $user_filter . 
 
                'order by create_date ASC';
 
@@ -828,14 +841,22 @@ if (!function_exists('getFolders')) {
 
 if (!function_exists('getFiles')) {
 
-    function getFiles($folder_id, $asArray = false, $trashed = false){
+    function getFiles($folder_id, $asArray = false, $trashed = false, $ofUser = false){
         $CI = &get_instance();
+        $uid = logged('id');
         $company_id = logged('company_id');
+
+        $softdelete = '';
+        $user_filter = '';
 
         if(!$trashed){
             $softdelete = '<= 0 and a.folder_id = ' . $folder_id . ' ';
         } else {
             $softdelete = '>= 1 ';
+        }
+
+        if($ofUser){
+            $user_filter = 'and a.user_id = '. $uid . ' ';
         }
 
         $sql = 'select ' . 
@@ -848,7 +869,7 @@ if (!function_exists('getFiles')) {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . 
 
                'order by created ASC';
 
@@ -939,10 +960,16 @@ if (!function_exists('getNewTasks')){
     }
 }
 
-function getFolderManagerView($isMain = true){
+function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessFormTemplates = false){
     $CI = &get_instance();
 
-    return $CI->load->view('modals/folder_manager', array('isMain' => $isMain), TRUE);
+    $params = array(
+        'isMain' => $isMain,
+        'isMyLibrary' => $isMyLibrary,
+        'isBusinessFormTemplates' => $isBusinessFormTemplates
+    );
+
+    return $CI->load->view('modals/folder_manager', $params, TRUE);
 }
 
 function get_event_color($work_status)

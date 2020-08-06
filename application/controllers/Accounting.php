@@ -14,6 +14,7 @@ class Accounting extends MY_Controller {
         $this->load->model('expenses_model');
         $this->load->model('rules_model');
         $this->load->model('receipt_model');
+        $this->load->model('categories_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -77,6 +78,10 @@ class Accounting extends MY_Controller {
         $this->page_data['checks'] = $this->expenses_model->getCheck();
         $this->page_data['transactions'] = $this->expenses_model->getTransaction();
         $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
+        $this->page_data['bills'] = $this->expenses_model->getBill();
+        $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
+        $this->page_data['expenses'] = $this->expenses_model->getExpense();
+        $this->page_data['list_categories'] = $this->categories_model->getCategories();
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/expenses', $this->page_data);
     }
@@ -457,61 +462,149 @@ class Accounting extends MY_Controller {
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
         );
-        $query = $this->expenses_model->addBill($new_data);
-        if ($query == true){
-            redirect('accounting/expenses');
-        }else{
-            redirect('accounting/expenses');
-        }
+        $this->expenses_model->addBill($new_data);
+
     }
 
-    public function getCheckData(){
-        if (isset($_POST['id'])){
-            $query = $this->db->get_where('accounting_check',array(
-                'vendor_id' => $_POST['id']
-            ));
-            $vendors_detail = $this->db->get_where('accounting_vendors',array('vendor_id'=>$_POST['id']));
-            if ($query->row()->print_later == 1){
-                $print = true;
-            }else{
-                $print = false;
-            }
-            $std = new stdClass();
-            $std->check_id = $query->row()->id;
-            $std->vendor_id = $_POST['id'];
-            $std->transaction = $query->row()->transaction_id;
-            $std->vendor_name = $vendors_detail->row()->f_name.'&nbsp;'.$vendors_detail->row()->l_name;
-            $std->bank_account = $query->row()->bank_id;
-            $std->mailing = $query->row()->mailing_address;
-            $std->payment_date = $query->row()->payment_date;
-            $std->check_number = $query->row()->check_number;
-            $std->print_later = $print;
-            $std->permit_number = $query->row()->permit_number;
+    public function getBillData(){
+        $id = $this->input->post('id');
+        $bills = $this->db->get_where('accounting_bill',array('id'=> $id));
+        $vendors = $this->db->get_where('accounting_vendors',array('vendor_id' => $bills->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
 
-            echo json_encode($std);
-        }
+
+        $data = new stdClass();
+        $data->transaction_id = $bills->row()->transaction_id;
+        $data->vendor_id = $vendors->row()->id;
+        $data->bill_id = $bills->row()->id;
+        $data->vendor_name = $vendors->row()->f_name.'&nbsp;'.$vendors->row()->l_name;
+        $data->address = $bills->row()->mailing_address;
+        $data->terms = $bills->row()->terms;
+        $data->bill_date = $bills->row()->bill_date;
+        $data->due_date = $bills->row()->due_date;
+        $data->bill_number = $bills->row()->bill_number;
+        $data->permit_number = $bills->row()->permit_number;
+        $data->check_category = ($check_category->num_rows > 0)?true:false;
+        echo json_encode($data);
     }
-    public function addCheck(){
-        $new_data = array(
+
+    public function editBillData(){
+        $data = array(
+            'bill_id' => $this->input->post('bill_id'),
+            'transaction_id' => $this->input->post('transaction_id'),
             'vendor_id' => $this->input->post('vendor_id'),
             'mailing_address' => $this->input->post('mailing_address'),
-            'bank_id' => $this->input->post('bank_id'),
-            'payment_date' => $this->input->post('payment_date'),
-            'check_num' => $this->input->post('check_num'),
-            'print_later' => $this->input->post('print_later'),
+            'terms' => $this->input->post('terms'),
+            'bill_date' => $this->input->post('bill_date'),
+            'due_date' => $this->input->post('due_date'),
+            'bill_number' => $this->input->post('bill_num'),
             'permit_number' => $this->input->post('permit_num'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
         );
-        $query = $this->expenses_model->addCheck($new_data);
-        if ($query == true){
-            $this->session->set_flashdata('checked','New Check added.');
-            redirect('accounting/expenses');
+        $this->expenses_model->editBillData($data);
+    }
+
+    public function deleteBillData(){
+        $id = $this->input->post('id');
+        $this->expenses_model->deleteBillData($id);
+    }
+
+    public function getCheckData(){
+        $id = $this->input->post('id');
+        $query = $this->db->get_where('accounting_check',array(
+            'id' => $id
+        ));
+        $vendors_detail = $this->db->get_where('accounting_vendors',array('vendor_id'=>$query->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
+        if ($query->row()->print_later == 1){
+            $print = true;
         }else{
-            $this->session->set_flashdata('check_failed','Vendor already exist.');
-            redirect('accounting/expenses');
+            $print = false;
         }
+        $std = new stdClass();
+        $std->check_id = $id;
+        $std->vendor_id = $query->row()->vendor_id;
+        $std->transaction = $query->row()->transaction_id;
+        $std->vendor_name = $vendors_detail->row()->f_name.'&nbsp;'.$vendors_detail->row()->l_name;
+        $std->bank_account = $query->row()->bank_id;
+        $std->mailing = $query->row()->mailing_address;
+        $std->payment_date = $query->row()->payment_date;
+        $std->check_number = $query->row()->check_number;
+        $std->print_later = $print;
+        $std->permit_number = $query->row()->permit_number;
+        $std->check_category = ($check_category->num_rows() > 0)?true:false;
+
+
+        echo json_encode($std);
+
+    }
+    public function rowCategories(){
+        $id = $this->input->post('id');
+        $row = $this->input->post('row');
+        $cat_class = $this->input->post('cat_class');
+        $des_class = $this->input->post('des_class');
+        $amount_class = $this->input->post('amount_class');
+        $counter = $this->input->post('counter');
+        $remove = $this->input->post('remove_id');
+        $select = $this->input->post('select');
+        $get_categories = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
+        $result = $get_categories->result();
+        $categories = '';
+        $category_list = $this->categories_model->getCategories();
+        foreach ($result as $cnt => $data){
+            $category = ($data->category_id != null)?$data->category_id:"";
+            $description = ($data->description != null)?$data->description:"";
+            $amount = ($data->amount!=null)?$data->amount:"";
+            $cnt += 1;
+            $categories .= '<tr id="'.$row.'">';
+            $categories .= '<td></td>';
+            $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
+            $categories .= '<td>';
+            $categories .= '<div id="" style="display:none;">';
+            $categories .= '<select name="category[]" id="" class="form-control '.$cat_class.'&nssp;'.$select.'">';
+            foreach ($category_list as $list){
+                if ($list->id == $category){
+                    $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+                }
+            }
+            foreach ($category_list as $list){
+                $categories .= ' <option value="'.$list->id.'">'.$list->category_name.'</option>';
+            }
+            $categories .= '</select>';
+            $categories .= ' </div>';
+            $categories .= '</td>';
+            $categories .= '<td><input type="text" name="description[]" class="form-control '.$des_class.'" value="'.$description.'" id="tbl-input" style="display: none;"></td>';
+            $categories .= '<td><input type="text" name="amount[]" class="form-control '.$amount_class.'" value="'.$amount.'" id="tbl-input" style="display: none;"></td>';
+            $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+            $categories .= '</tr>';
+        }
+        echo $categories;
+    }
+    public function addCheck(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'bank_id' => $this->input->post('bank_account'),
+            'payment_date' => $this->input->post('payment_date'),
+            'check_num' => $this->input->post('check_number'),
+            'print_later' => $this->input->post('print_later'),
+            'permit_number' => $this->input->post('permit_number'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
+        );
+        $this->expenses_model->addCheck($new_data);
+
+
+//        if ($query == true){
+//            $this->session->set_flashdata('checked','New Check added.');
+//            redirect('accounting/expenses');
+//        }else{
+//            $this->session->set_flashdata('check_failed','Vendor already exist.');
+//            redirect('accounting/expenses');
+//        }
     }
 
     public function editCheckData(){
@@ -520,23 +613,24 @@ class Accounting extends MY_Controller {
             'transaction_id' => $this->input->post('transaction_id'),
             'vendor_id' => $this->input->post('vendor_id'),
             'mailing_address' => $this->input->post('mailing_address'),
-            'bank_id' => $this->input->post('bank_id'),
+            'bank_id' => $this->input->post('bank_account'),
             'payment_date' => $this->input->post('payment_date'),
-            'check_num' => $this->input->post('check_num'),
+            'check_num' => $this->input->post('check_number'),
             'print_later' => $this->input->post('print_later'),
-            'permit_number' => $this->input->post('permit_num'),
+            'permit_number' => $this->input->post('permit_number'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
         );
-	    $query = $this->expenses_model->editCheckData($update);
-	    if ($query == true){
-            $this->session->set_flashdata('checked_updated','Data Updated.');
-            redirect('accounting/expenses');
-        }else{
-            $this->session->set_flashdata('checked_up_failed','Something is wrong in the process.');
-            redirect('accounting/expenses');
-        }
+	    $this->expenses_model->editCheckData($update);
+
+//	    if ($query == true){
+//            $this->session->set_flashdata('checked_updated','Data Updated.');
+//            redirect('accounting/expenses');
+//        }else{
+//            $this->session->set_flashdata('checked_up_failed','Something is wrong in the process.');
+//            redirect('accounting/expenses');
+//        }
     }
     public function deleteCheckData(){
 
@@ -556,12 +650,51 @@ class Accounting extends MY_Controller {
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
         );
-	    $query = $this->expenses_model->addExpense($new_data);
-        if ($query == true){
-            redirect('accounting/expenses');
-        }else{
-            redirect('accounting/expenses');
-        }
+	    $this->expenses_model->addExpense($new_data);
+    }
+    public function getExpenseData(){
+        $id = $this->input->post('id');
+        $get_expense = $this->db->get_where('accounting_expense',array('id'=>$id));
+        $vendors = $this->db->get_where('accounting_vendors',array('vendor_id'=> $get_expense->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
+
+
+        $data = new stdClass();
+        $data->vendor_id = $get_expense->row()->vendor_id;
+        $data->vendor_name = $vendors->row()->f_name.'&nbsp;'.$vendors->row()->l_name;
+        $data->transaction_id = $get_expense->row()->transaction_id;
+        $data->expense_id = $id;
+        $data->payment_account = $get_expense->row()->payment_account;
+        $data->payment_date = $get_expense->row()->payment_date;
+        $data->payment_method = $get_expense->row()->payment_method;
+        $data->ref_number = $get_expense->row()->ref_number;
+        $data->permit_number = $get_expense->row()->permit_number;
+        $data->check_category = ($check_category->num_rows() > 0)?true:false;
+
+        echo json_encode($data);
+
+    }
+
+    public function updateExpenseData(){
+        $update = array(
+            'transaction_id' => $this->input->post('transaction_id'),
+            'expense_id' => $this->input->post('expense_id'),
+            'vendor_id' => $this->input->post('vendor_id'),
+            'payment_account' => $this->input->post('payment_account'),
+            'payment_date' => $this->input->post('payment_date'),
+            'payment_method' => $this->input->post('payment_method'),
+            'ref_number' => $this->input->post('ref_num'),
+            'permit_number' => $this->input->post('permit_num'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
+        );
+        $this->expenses_model->updateExpenseData($update);
+    }
+
+    public function deleteExpenseData(){
+        $id = $this->input->post('id');
+        $this->expenses_model->deleteExpenseData($id);
     }
 
     public function vendorCredit(){
@@ -569,18 +702,53 @@ class Accounting extends MY_Controller {
             'vendor_id' => $this->input->post('vendor_id'),
             'mailing_address' => $this->input->post('mailing_address'),
             'payment_date' => $this->input->post('payment_date'),
-            'ref_number' => $this->input->post('ref_num'),
-            'permit_number' => $this->input->post('permit_num'),
+            'ref_number' => $this->input->post('ref_number'),
+            'permit_number' => $this->input->post('permit_number'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
         );
-        $query = $this->expenses_model->vendorCredit($new_data);
-        if ($query == true){
-            redirect('accounting/expenses');
-        }else{
-            redirect('accounting/expenses');
-        }
+        $this->expenses_model->vendorCredit($new_data);
+    }
+    public function getVendorCredit(){
+        $id = $this->input->post('id');
+        $get_vc = $this->db->get_where('accounting_vendor_credit',array('id'=>$id));
+        $vendors = $this->db->get_where('accounting_vendors',array('vendor_id'=> $get_vc->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
+
+
+        $data = new stdClass();
+        $data->vc_id = $id;
+        $data->vendor_id = $get_vc->row()->vendor_id;
+        $data->vendor_name = $vendors->row()->display_name;
+        $data->transaction_id = $get_vc->row()->transaction_id;
+        $data->mailing_address = $get_vc->row()->mailing_address;
+        $data->payment_date = $get_vc->row()->payment_date;
+        $data->ref_number = $get_vc->row()->ref_number;
+        $data->permit_number = $get_vc->row()->permit_number;
+        $data->check_number = ($check_category->num_rows() > 0)?true:false;
+
+        echo json_encode($data);
+    }
+    public function updateVendorCredit(){
+        $update = array(
+            'vc_id' => $this->input->post('vc_id'),
+            'transaction_id' => $this->input->post('transaction_id'),
+            'vendor_id' => $this->input->post('vendor_id'),
+            'mailing_address' => $this->input->post('mailing_address'),
+            'payment_date' => $this->input->post('payment_date'),
+            'ref_number' => $this->input->post('ref_number'),
+            'permit_number' => $this->input->post('permit_number'),
+            'category' => $this->input->post('category'),
+            'description' => $this->input->post('description'),
+            'amount' => $this->input->post('amount')
+        );
+        $this->expenses_model->updateVendorCredit($update);
+    }
+
+    public function deleteVendorCredit(){
+        $id = $this->input->post('id');
+        $this->expenses_model->deleteVendorCredit($id);
     }
 
     public function payDown(){
@@ -792,6 +960,8 @@ class Accounting extends MY_Controller {
      /*chart_of_accounts start*/
         public function add()
     {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/chart_of_accounts/add', $this->page_data);
     }
 

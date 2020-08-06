@@ -13,35 +13,18 @@ class Vault extends MY_Controller {
 		$this->page_data['page']->menu = 'vault';
 
 		$this->company_folder = getCompanyFolder();
-
-		add_css(array( 
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-        ));
-
-        // JS to add only Job module
-        add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-            'assets/frontend/js/beforeafter/main.js'
-        ));
 	}
 
 	public function index()
 	{	
 		$this->page_data['folder_manager'] = getFolderManagerView();
-		$this->load->view('vault/list', $this->page_data);
+		$this->load->view('vault/shared_library', $this->page_data);
 	}
 
-	public function shared_library()
+	public function mylibrary()
 	{	
-		$this->page_data['folder_manager'] = getFolderManagerView();
-		$this->load->view('vault/shared_library', $this->page_data);
+		$this->page_data['folder_manager'] = getFolderManagerView(true, true);
+		$this->load->view('vault/list', $this->page_data);
 	}
 
 	public function beforeafter()
@@ -275,7 +258,6 @@ class Vault extends MY_Controller {
 
 		echo json_encode($files_and_folders);
 	}
-
 }
 
 /* End of file Permissions.php */

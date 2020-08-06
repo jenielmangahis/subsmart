@@ -136,7 +136,11 @@ class BookingServiceItem_model extends MY_Model
             }            
         }
 
-        $cart_summary = ['total_cart_items' => count($items), 'total_amount' => $total_amount, 'items' => $items];
+        $cart_summary = [
+                            'total_cart_items' => count($items), 
+                            'total_amount' => $total_amount, 
+                            'items' => $items
+                        ];
         return $cart_summary;
     }
 

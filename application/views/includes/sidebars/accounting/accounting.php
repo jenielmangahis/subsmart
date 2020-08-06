@@ -41,8 +41,9 @@
             </svg>
         </span>
         <li class="nav-header">
-			<button class="btn btn-tranparent acct-btn-add mx-auto" type="button" onclick="showAddBtnModal()"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
-		</li>
+            <button class="btn btn-tranparent acct-btn-add mx-auto" type="button" data-toggle="modal" data-target="#new-popup"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
+            <!-- onclick="showAddBtnModal()" -->
+        </li>
 
 		<?php  for($x=0;$x<count($menu_name);$x++){ ?>
 				<?php  if(count($menu_name[$x][1]) > 0){ ?>
@@ -66,22 +67,77 @@
 </nav>
 
 
-<!-- Modal -->
-<div class="modal fade" id="addBtnModal" tabindex="-1" role="dialog" aria-labelledby="addBtnModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-      </div>
-      <div class="modal-body">
-      </div>
-      <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+<!-- New Popup -->
+    <div id="new-popup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content add-new-data-block">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        <div class="new-listing">
+                            <h4>CUSTOMERS</h4>
+
+                            <ul>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="new-listing">
+                            <h4>Vendors</h4>
+
+                            <ul>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="new-listing">
+                            <h4>Employees</h4>
+
+                            <ul>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="new-listing">
+                            <h4>Other</h4>
+
+                            <ul>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Products</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pop-footer">
+                    <a href="#">Show Less</a>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+    <!-- End New Popup -->

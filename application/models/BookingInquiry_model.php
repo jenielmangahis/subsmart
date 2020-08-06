@@ -25,7 +25,7 @@ class BookingInquiry_model extends MY_Model
         $this->db->from($this->table);
 
         //$this->db->where('user_id', $user_id);
-
+        $this->db->order_by("id", "desc");
         $query = $this->db->get();
         return $query->result();
     }

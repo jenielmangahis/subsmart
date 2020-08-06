@@ -53,4 +53,14 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 	  $this->db->insert_batch('chart_of_accounts', $data);
 	}
+
+	public function getName($id)
+	{
+		$this->db->from('chart_of_accounts');  
+    	$this->db->where('id',$id); 
+    	$result =  $this->db->get()->result();
+        foreach ($result as $row) {
+		    return $row->name;
+		}
+	}
 }

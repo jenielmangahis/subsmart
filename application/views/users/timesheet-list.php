@@ -148,7 +148,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         ?>
                                                     </td>
                                                     <!-- Status -->
-                                                    <td class="status" style="text-align: center;">
+                                                    <?php if( !empty($clockin_arr) ):?>
+                                                        <td class="status" style="text-align: center; background: green;">
+                                                    <?php else: ?>
+                                                        <td class="status" style="text-align: center;">
+                                                    <?php endif; ?>
                                                         <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                             <?php if($clockin->action == "Clock In"): ?>
                                                                 <?php echo "In"; ?>

@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
     <!-- page wrapper start -->
@@ -31,7 +32,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </ul>
                                         </div>
                                     </div>
-
                                     <div class="tab-content mt-4" >
                                         <div class="tab-pane active standard-accordion" id="basic">
                                             <div class="col-sm-6">
@@ -1095,11 +1095,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
 
                                                         <div class="tab-pane fade standard-accordion" id="settings">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="alert alert-success" id="alert_box" style="display:none;">
+                                                                        <strong>Success!</strong> Data has been added!
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
                                                             <div class="card">
                                                                 <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                                     <div class="col-lg-12 table-responsive">
                                                                         <h6>Lead Types</h6>
-                                                                        <button data-toggle="modal" data-target="#modal_lead_type" class="btn btn-sm btn-default pull-right" title="Add Lead Type"  style="margin-bottom: 10px;">
+                                                                        <button data-toggle="modal" data-target="#modal_lead_type" class="btn btn-sm btn-default pull-right"  style="margin-bottom: 10px;">
                                                                             <i class="fa fa-plus"></i>
                                                                         </button>
                                                                         <table id="leadtype" class="table table-bordered table-striped">
@@ -1109,18 +1117,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 <th>Action</th>
                                                                             </tr>
                                                                             </thead>
-                                                                            <tbody>
-                                                                                <?php foreach ($lead_types as $lead_type) { ?>
-                                                                                    <tr>
-                                                                                        <td><?= $lead_type->lead_name; ?></td>
-                                                                                        <td>
-                                                                                            <button class="btn btn-sm btn-default edit_leadtype" id="<?=  $lead_type->lead_id; ?>" data-name="<?=  $lead_type->lead_name; ?>" title="Edit Lead Type" data-toggle="tooltip">
-                                                                                                <i class="fa fa-pencil"></i>
-                                                                                            </button>
-                                                                                            <a href=""class="btn btn-sm btn-default" title="Delete Lead Type" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                <?php } ?>
+                                                                            <tbody id="leadtype_table_data">
+
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -1131,7 +1129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                                     <div class="col-lg-12 table-responsive">
                                                                         <h6>Sales Area</h6>
-                                                                        <button  class="btn btn-sm btn-default pull-right" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                        <button data-toggle="modal" data-target="#modal_sales_area" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
                                                                             <i class="fa fa-plus"></i>
                                                                         </button>
                                                                         <table id="salesarea" class="table table-bordered table-striped">
@@ -1142,12 +1140,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                            <tr>
-                                                                                <td>fsdf</td>
-                                                                                <td>
-                                                                                    <a href=""class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                                                </td>
-                                                                            </tr>
+                                                                            <?php foreach ($sales_area as $sa) { ?>
+                                                                                <tr>
+                                                                                    <td><?= $sa->sa_name; ?></td>
+                                                                                    <td>
+                                                                                        <a href=""class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <?php } ?>
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -1162,9 +1162,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                        </div>
-
-
-
                     </div>
                     <!-- end card -->
                 </div>
@@ -1174,7 +1171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
 </div>
-<!-- Modal -->
+<!-- Lead Type Modal -->
 <div class="modal fade" id="modal_lead_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1205,8 +1202,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 </div>
 
+<!-- Sales Area Modal -->
+<div class="modal fade" id="modal_sales_area" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Sales Area</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="salesAreaForm">
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="form-group" id="customer_type_group">
+                            <label for="">Sales Area Name</label><br/>
+                            <input type="text" class="form-control" name="sa_name" id="lead_name" required/>
+                            <input type="hidden" class="form-control" name="sa_id" id="lead_id" required/>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <style>
+
     .hid-deskx {
         display: none !important;
     }
@@ -1567,8 +1594,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
+
     $(document).ready(function () {
-        $('#leadtype').DataTable({
+        var table_lt = $('#leadtype').DataTable({
             "lengthChange": false,
             "searching" : false,
             "pageLength": 5
@@ -1578,6 +1606,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             "searching" : false,
             "pageLength": 5
         });
+        display_leadtype_data();
+        function display_leadtype_data(){
+            table_lt.clear();
+            $.ajax({
+                type: "POST",
+                url: "/customer/fetch_leadtype_data",
+                data: {name : "leadtype"}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var lead_types_data = JSON.parse(data);
+                    for(var x=0;x<lead_types_data.length;x++){
+                        var html = '<tr role="row">';
+                        html += '<td class="sorting_1">'+lead_types_data[x].lead_name+'</td>';
+                        html += '<td>'+'<button class="btn btn-sm btn-default edit_leadtype" id="'+lead_types_data[x].lead_id+'" data-name="'+lead_types_data[x].lead_name+'" ><i class="fa fa-pencil"></i></button><a href="" class="btn btn-sm btn-default" title="Delete Lead Type" data-toggle="tooltip"><i class="fa fa-trash"></i></a>'+'</td></tr>';
+                        table_lt.rows.add($(html)).draw();
+                        //$('#leadtype_table_data').append(html);
+                        $('#leadTypeForm')[0].reset();
+                    }
+                    console.log(lead_types_data.length);
+                    console.log(lead_types_data);
+                }
+            });
+        }
+
+        function display_salesarea_data(){
+            table_lt.clear();
+            $.ajax({
+                type: "POST",
+                url: "/customer/fetch_leadtype_data",
+                data: {name : "leadtype"}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var lead_types_data = JSON.parse(data);
+                    for(var x=0;x<lead_types_data.length;x++){
+                        var html = '<tr role="row">';
+                        html += '<td class="sorting_1">'+lead_types_data[x].lead_name+'</td>';
+                        html += '<td>'+'<button class="btn btn-sm btn-default edit_leadtype" id="'+lead_types_data[x].lead_id+'" data-name="'+lead_types_data[x].lead_name+'" ><i class="fa fa-pencil"></i></button><a href="" class="btn btn-sm btn-default" title="Delete Lead Type" data-toggle="tooltip"><i class="fa fa-trash"></i></a>'+'</td></tr>';
+                        table_lt.rows.add($(html)).draw();
+                        //$('#leadtype_table_data').append(html);
+                        $('#leadTypeForm')[0].reset();
+                    }
+                    console.log(lead_types_data.length);
+                    console.log(lead_types_data);
+                }
+            });
+        }
+
+        $("body").delegate(".edit_leadtype", "click", function(){
+            //alert("Delegated Button Clicked");
+            var ID=this.id;
+            $('#modal_lead_type').modal('show');
+            $('[id="lead_name"]').val($(this).data('name'));
+            $('[id="lead_id"]').val(ID);
+        });
+
 
         $("#leadTypeForm").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -1592,11 +1675,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     if(data === "Updated"){
                         alert("Updated Succesfully");
                     }else{
-                        alert("Added Succesfully");
+                        document.getElementById('alert_box').style.display = "block";
+                        setTimeout(function () {
+                            document.getElementById('alert_box').style.display = 'none'
+                        }, 5000);
+                        display_leadtype_data();
                     }
                     $('#modal_lead_type').modal('hide');
                     $('[id="lead_name"]').val("");
                     $('[id="lead_id"]').val("");
+                }
+            });
+        });
+
+        $("#salesAreaForm").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_salesarea_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === "Updated"){
+                        alert("Updated Succesfully");
+                    }else{
+                        $('#alert_box').removeClass('invisible');
+                        if(data === "Sales Area Added!"){
+                            document.getElementById('alert_box').style.display = "block";
+                            setTimeout(function () {
+                                document.getElementById('alert_box').style.display = 'none'
+                            }, 5000);
+                        }
+                        // $('.toast').toast('show');
+                    }
+                    $('#modal_sales_area').modal('hide');
+                    $('#salesAreaForm')[0].reset();
+                    //$('[id="lead_name"]').val("");
+                    //$('[id="lead_id"]').val("");
                 }
             });
         });
@@ -1611,7 +1729,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
     $('#dataTable1').DataTable({
-
         columnDefs: [{
             orderable: true,
             className: 'select-checkbox',

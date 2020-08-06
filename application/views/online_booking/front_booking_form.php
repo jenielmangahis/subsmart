@@ -37,15 +37,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </div>
 
                       <?php foreach ($forms as $key => $form) { ?>
-
+                          <?php $is_required = ""; ?>
                           <?php if($form->is_visible == 1){ ?>
                               <div class="form-group-booking">
                                 <label><?php echo $form->label; ?></label>
-                                <?php if($form->is_required == 1){ ?><span class="form-required">*</span> <?php } ?>
+                                <?php if($form->is_required == 1){ ?><span class="form-required">*</span> <?php $is_required = "required=''"; } ?>
                                     <?php if($form->field_name == "message" ){ ?>
-                                        <textarea rows="2" name="message" id="message" class="form-control booking-txt-area"></textarea>
+                                        <textarea rows="2" name="message" id="message" <?php echo $is_required; ?> class="form-control booking-txt-area"></textarea>
                                     <?php }elseif($form->field_name == "preferred_time_to_contact" ){ ?>      
-                                          <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
+                                          <select <?php echo $is_required; ?> name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
                                             <option value="0" selected="selected">Any time</option>
                                             <option value="1">7am to 10am</option>
                                             <option value="2">10am to Noon</option>
@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <option value="4">4pm to 7pm</option>
                                           </select> 
                                     <?php }else{ ?>
-                                          <input type="text" id="<?php echo $form->field_name; ?>" name="<?php echo $form->field_name; ?>" class="form-control">
+                                          <input <?php echo $is_required; ?> type="text" id="<?php echo $form->field_name; ?>" name="<?php echo $form->field_name; ?>" class="form-control">
                                     <?php }?>    
                               </div>                          
                           <?php } ?> 
@@ -84,8 +84,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="weight-bold">Service & Items</div>
                     <div>
                       <?php 
+
+                        if(isset($coupon)) {
+                          if(isset($coupon['coupon']['type'])){
+                            if($coupon['coupon']['type'] == 1) {
+                              $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];
+                            } else {
+                              $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
+                            }
+                          }else {
+                            $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
+                          }  
+                        }else{
+                          $new_total_amount =  $cart_data['total_amount'] ;
+                        } 
+
                         if( $cart_data['total_cart_items'] > 0 ){
-                          echo "Items : " . $cart_data['total_cart_items'] . ', Total : $' . number_format($cart_data['total_amount'],2);
+                          echo "Items : " . $cart_data['total_cart_items'] . ', Total : $' . number_format($new_total_amount,2);
                         }
                       ?>
                     </div>                    

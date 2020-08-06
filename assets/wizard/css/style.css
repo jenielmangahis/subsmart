@@ -8652,3 +8652,384 @@ button{outline: none !important;}
     color: #646464;
 }
 /* **** End Build Wizard Page **** */
+
+/* **** Dropdown **** */
+.app-listing-wrp h4 i{margin-left: 5px;}
+.build-drop .dropdown-menu{
+    padding: 0;
+    min-width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    box-shadow: none;
+}
+.build-drop .dropdown-menu li{
+    display: block;
+    padding: 10px 15px;
+    font-size: 15px;
+    font-weight: normal;
+    color: #333;
+}
+.build-drop .dropdown-menu li:hover{
+    background: #f5f5f5;
+}
+
+/* **** End Dropdown **** */
+
+/* **** New ADD CSS **** */
+.sep-box i{
+    margin: 0 auto;
+    display: table;
+    font-size: 48px;
+    position: relative;
+    color: #969EA2;
+}
+.sep-box i:after{
+    position: absolute;
+    content: "\f067";
+    font-family: 'FontAwesome';
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+    line-height:20px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color:rgb(19, 107, 245);
+    left: 0;
+    right: 0;
+    top:45%;
+    margin: 0 auto;
+    display: table;
+    transform: translate(0,-50%);
+}
+.disabled-bx{
+    opacity: 0.50;
+    cursor: pointer;
+    position: relative;
+}
+.build-wizard-wrp:hover{opacity: 1;}
+.edit-btn{
+    position: absolute;
+    top:50%;
+    right: 30px;
+    padding: 10px 35px;
+    border-radius:10px;
+    border: 1px solid #e0e0e0;
+    font-size: 18px;
+    font-weight:700;
+    transform: translate(0,-50%);
+    color: #1e1e1e;
+    opacity: 0;
+    visibility: hidden;
+}
+.edit-btn:hover{
+    color: rgb(19, 107, 245);
+}
+.build-wizard-wrp:hover .edit-btn{
+    opacity: 1;
+    visibility: visible;
+}
+
+.choose-app-drop .form-group{
+    border-bottom: 1px solid #e0e0e0;
+    margin: 0;
+}
+.choose-app-drop .form-group .btn-chmail{
+    border-radius: 0;
+    border: none;
+}
+.choose-app-drop .form-group .btn-chmail i{
+    float: none;
+    margin: 0 10px 0 0;
+    vertical-align: middle;
+}
+.choose-app-drop .form-group .btn-chmail i.verify{
+    float: right;
+    color: rgb(19, 208, 171);
+    font-size: 14px;
+    margin: 7px 0 0;
+}
+.choose-app-drop .form-group .dropdown-toggle::after{display: none;}
+
+.choose-app-drop .form-group .dropdown-menu{
+    padding: 0;
+    min-width: 100%;
+}
+.choose-app-drop .form-group .dropdown-menu li a{
+    display: block;
+    padding: 10px 15px;
+    font-size: 15px;
+    font-weight: normal;
+    color: #333;
+}
+.choose-app-drop .form-group .dropdown-menu li a:hover{
+    background: #f7f7f7;
+}
+.choose-app-drop .form-group .dropdown-menu li a img{
+    display: inline-block;
+    width: 25px;
+    margin-right: 10px;
+}
+.choose-app-drop .form-group .dropdown-menu li a span{
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    color: #646464;
+}
+.filter-row{display: flex;align-items: center;}
+.filter-feild{
+    width: 33%;
+    margin: 0 10px;    
+}
+.filter-row .filter-feild:first-child{
+    margin-left: 0;
+}
+.filter-row .filter-feild:last-child{
+    margin-right: 0;
+    width: 10%;
+}
+.filter-feild .close-btn{
+    background-color: rgb(242, 242, 242);
+    padding: 10px 30px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: normal;
+    color: #111;
+    transition: .4s linear;
+}
+.filter-feild .close-btn:hover{
+    background: #111;
+    color: #fff;
+}
+.filter-setup{
+    padding: 35px;
+}
+.filter-setup h4{
+    font-size: 20px;
+    font-weight: bold;
+    color: #111;
+    margin: 0 0 25px;
+}
+.filter-setup h5{
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    margin: 0 0 15px;
+}
+.filter-setup .btn-chmail{
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(242, 242, 242);
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+}
+.filter-setup .dropdown-toggle::after{display: none;}
+.filter-setup .dropdown-menu{
+    padding: 0;
+    min-width: 100%;
+}
+.filter-setup .dropdown-menu li a{
+    display: block;
+    padding: 10px 15px;
+    font-size: 15px;
+    font-weight: normal;
+    color: #333;
+}
+.filter-setup .dropdown-menu li a:hover{
+    background: #f7f7f7;
+}
+.filter-setup .dropdown-menu li a img{
+    display: inline-block;
+    width: 25px;
+    margin-right: 10px;
+}
+.filter-setup .dropdown-menu li a span{
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    color: #646464;
+}
+.iner-dt h6{
+    padding: 10px 15px;
+    font-size: 17px;
+    font-weight:700;
+    color: #111;
+    margin: 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.searchbx-fi{
+    padding: 15px;
+}
+.search-dt{
+    position: relative;
+}
+
+.search-dt i{
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    font-size: 18px;
+    color: #111;
+}
+.filter-setup .form-control{
+    padding: 11px 15px 11px 15px;
+    background:rgb(242, 242, 242);
+    border-radius: 10px;
+    border: none;
+    height: auto;
+    box-shadow: none;
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+}
+.search-dt .form-control{
+    padding: 10px 15px 10px 40px;
+    background:rgb(242, 242, 242);
+    border-radius: 6px;
+    border: none;
+    height: auto;
+    box-shadow: none;
+    font-size: 15px;
+    font-weight: normal;
+    color: #333;
+}
+
+.filter-act{
+    padding: 15px 0;
+}
+.filter-act .ftl-actbtn{
+    display: inline-block;
+    padding: 5px 25px;
+    border-radius: 10px;
+    background-color: rgb(242, 242, 242);
+    color: rgb(19, 107, 245);
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 10px;
+    text-transform: uppercase;
+    transition: .4s linear;
+}
+.filter-act .ftl-actbtn i{margin-right: 5px;}
+.filter-act .ftl-actbtn:hover{
+    color: #fff;
+    background: rgb(19, 107, 245);
+}
+.btn-continue{
+    padding: 10px 15px;
+    width: 100%;
+    text-align: center;
+    background: rgb(19, 107, 245);
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    border: none;
+}
+
+.app-search-bar{
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.app-search-bar .search-dt .form-control{
+    background: #fff;
+    border: 2px solid #e0e0e0;
+}
+.app-search-bar .search-dt .form-control:focus{
+    background: #fff;
+    border-color: rgb(19, 107, 245);
+}
+.app-search-bar .search-dt i{top: 15px;}
+
+.list-app-serv{
+    padding: 30px 15px;
+}
+.list-app-serv h5{
+    font-size: 16px;
+    font-weight: bold;
+    color: #354147;
+    margin: 0 0 15px;
+}
+.list-app-serv li.disabled a{
+    cursor: not-allowed;
+    opacity: 0.30;
+}
+.list-app-serv li{display: block;}
+.list-app-serv li a{
+    padding: 10px;
+    border-radius: 10px;
+    display: block;
+    position: relative;
+}
+.list-app-serv li a h1 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    line-height: 20px;
+}
+.list-app-serv li a h1 i {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    margin-right: 15px;
+    color: #e6e6e6;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    text-align: center;
+    background: #fff;
+    font-size: 32px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.list-app-serv li a h1 i img {
+    width: 55px;
+    padding: 10px;
+}
+.list-app-serv li a h1 strong {
+    display: inline-block;
+    vertical-align: middle;
+}
+.list-app-serv li a h1 span {
+    display: block;
+    font-size: 14px;
+    color: #646464;
+    font-weight: normal;
+}
+.list-app-serv li a:hover{
+    background: rgba(19,107,245,0.10);
+}
+.list-app-serv li a:hover h1 span,
+.list-app-serv li a:hover h1{
+    color: rgba(19,107,245,1);
+}
+.list-app-serv li a label{
+    padding:3px 8px;
+    border-radius: 3px;
+    background: rgb(98, 212, 147);
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translate(0,-50%);
+}
+.show-mr-app{
+    padding: 15px 0;
+}
+.show-mr-app .show-btn{
+    padding: 5px 25px;
+    border-radius:10px;
+    background-color: rgb(242, 242, 242);
+    color: rgba(19,107,245,1);
+    display: table;
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+}

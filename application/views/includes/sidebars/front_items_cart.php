@@ -26,15 +26,25 @@
             </div>
          </div>
          <div class="widget-cart margin-bottom-sec" data-cart="cart">
-         
 
             <div style="font-size: 18px; margin-bottom: 15px;">
 
-               <?php if(isset($coupon)){
+                <?php 
+                  if(isset($coupon)) {
+                    
+                    if(isset($coupon['coupon']['type'])){ 
+                      if($coupon['coupon']['type'] == 1) {
+                        $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];
+                      }else {
                         $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
-                     }else{
-                        $new_total_amount =  $cart_data['total_amount'] ;
-                      }  ?>
+                      } 
+                    }else {
+                        $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
+                    }
+                  }else{
+                    $new_total_amount =  $cart_data['total_amount'] ;
+                  }  
+                ?>
                <span class="fa fa-shopping-cart fa-margin-right"></span> Cart Total:
                $<span class="total_cart_amount"><?php echo number_format($new_total_amount, 2); ?></span>   <span class="text-ter">(<?php echo count($cart_data['items']) ?> item(s))</span>
 
@@ -48,7 +58,7 @@
                     <div style="color: #487ca6;"><?php echo $item->name; ?></div>
                     <div class="text-ter" style="margin-bottom: 3px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo $item->description; ?></div>
                     <div><?php echo $item->ordered_qty; ?> x $<?php echo number_format($item->price,2); ?>/<?php echo $item->price_unit; ?></div>
-                    <a class="a-ter delete-cart-item" data-id="<?php echo $item->id; ?>" href="#" style="position: absolute; top: 2px; right:0"><span class="fa fa-trash"></span></a>
+                    <a class="a-ter delete-cart-item" data-id="<?php echo $item->id; ?>" href="javascript:void(0);" style="position: absolute; top: 2px; right:0"><span class="fa fa-trash"></span></a>
                   </div>
                   <?php 
                     $sub_total = $item->ordered_qty * $item->price;
@@ -61,7 +71,17 @@
                     <div style="position: relative; margin-bottom: 10px;">
                       <div style="color: #487ca6;"><?php echo "Coupon name: ". $coupon['coupon']['coupon_name']; ?></div>
                       <div class="text-ter" style="margin-bottom: 3px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo "Coupon code: ". $coupon['coupon']['coupon_code'] ; ?></div>
-                      <div><?php echo "$". number_format($coupon['coupon']['coupon_amount'],2). " off" ; ?></div>
+                      <?php if(isset($coupon['coupon']['type'])){
+                                if($coupon['coupon']['type'] == 1) { ?>
+                                <div><?php echo $coupon['coupon']['coupon_amount'] . "% off" ; ?></div>
+                          <?php } else { ?>
+                                 <div><?php echo "$". number_format($coupon['coupon']['coupon_amount'],2). " off" ; ?></div>
+                          <?php } ?>
+                      <?php } else { ?>
+                                <div><?php echo "$". number_format($coupon['coupon']['coupon_amount'],2). " off" ; ?></div>
+                      <?php } ?>
+                      
+                      <a class="a-ter delete-coupon" data-id="1" href="javascript:void(0);" style="position: absolute; top: 2px; right:0"><span class="fa fa-trash"></span></a>
                     </div>
                 <?php } ?>
                 <?php 
