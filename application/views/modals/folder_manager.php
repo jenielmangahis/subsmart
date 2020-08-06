@@ -20,6 +20,13 @@
       </div>
       <div class="modal-body" style="padding: 1rem !important">
 <?php } ?>
+        <?php if($isMyLibrary){ ?>
+          <input type="hidden" id="vault_type" value="mylibrary" />
+        <?php } else if($isBusinessFormTemplates){ ?>
+          <input type="hidden" id="vault_type" value="businessformtemplates" />  
+        <?php } else { ?>
+          <input type="hidden" id="vault_type" value="sharedlibrary" />
+        <?php } ?>
 
         <div class="card">
           <div class="card-header">        
@@ -57,25 +64,27 @@
             <div id="folders_and_files">
                 
             </div>
-            <div class="mt-5">
-              <div class="row">
-                <div class="col-md-4 border">
-                  <h6>Top 10 Most Downloads<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_downloads" title="Reload Top 10 Most Downloads"></span><span class="float-right">Count</span></h6>
-                  <ul class="list-group list-group-flush" id="most_downloads">
-                  </ul>
-                </div>
-                <div class="col-md-4 border">
-                  <h6>Top 10 Most Previews<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_previews" title="Reload Top 10 Most Previews"></span><span class="float-right">Count</span></h6>
-                  <ul class="list-group list-group-flush" id="most_previews">
-                  </ul>
-                </div>
-                <div class="col-md-4 border">
-                  <h6>Most Recent Uploads<span class="fa fa-refresh ml-2" control="refresh_tops" target="recent_uploads" title="Reload Most Recent Uploads"></span><span class="float-right">Days since uploaded</span></h6>
-                  <ul class="list-group list-group-flush" id="recent_uploads">
-                  </ul>
+            <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && ($isMain))){ ?>
+              <div class="mt-5">
+                <div class="row">
+                  <div class="col-md-4 border">
+                    <h6>Top 10 Most Downloads<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_downloads" title="Reload Top 10 Most Downloads"></span><span class="float-right">Count</span></h6>
+                    <ul class="list-group list-group-flush" id="most_downloads">
+                    </ul>
+                  </div>
+                  <div class="col-md-4 border">
+                    <h6>Top 10 Most Previews<span class="fa fa-refresh ml-2" control="refresh_tops" target="most_previews" title="Reload Top 10 Most Previews"></span><span class="float-right">Count</span></h6>
+                    <ul class="list-group list-group-flush" id="most_previews">
+                    </ul>
+                  </div>
+                  <div class="col-md-4 border">
+                    <h6>Most Recent Uploads<span class="fa fa-refresh ml-2" control="refresh_tops" target="recent_uploads" title="Reload Most Recent Uploads"></span><span class="float-right">Days since uploaded</span></h6>
+                    <ul class="list-group list-group-flush" id="recent_uploads">
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
+            <?php } ?>
           </div>
         </div>
 

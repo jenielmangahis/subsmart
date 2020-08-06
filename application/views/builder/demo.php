@@ -159,9 +159,43 @@ function getInputHtml($valueQuestions){
 
           break;
       case "phone":
-          echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
+        //   echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
 
-          echo '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+        //   echo '<input maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'" id="'.$questionId.' " '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+
+
+            echo '<div class="col-sm-4 address-box no-padding">';
+                echo '<div class="form-group" id="customer_type_group">';
+                    echo '<div class="col-md-12 mt-3" >';
+                        echo '<input placeholder="555-555-5555" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'phone\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
+
+            echo '<div class="col-sm-2 address-box no-padding">';
+                echo '<div class="form-group" id="customer_type_group">';
+                    echo '<div class="col-md-12 mt-3" >';
+                        echo '<input placeholder="Ext" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'ext\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
+
+            echo '<div class="col-sm-2 address-box no-padding">';
+                echo '<div class="form-group" id="customer_type_group">';
+                    echo '<div class="col-md-12 mt-3 text-right" >';
+                        echo '<label for="'.$questionName.'"  style="padding-top: 8px;">Type </label>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
+
+            echo '<div class="col-sm-4 address-box no-padding">';
+                echo '<div class="form-group" id="customer_type_group">';
+                    echo '<div class="col-md-12 mt-3" >';
+                        echo '<select maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'ext\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"> <option value="-">Select Phone Type</option> <option value="cell">Cell</option> </select>';
+                        // echo '<input placeholder="Country" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'ext\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
 
           break;
       case "email":
@@ -176,20 +210,78 @@ function getInputHtml($valueQuestions){
         $questionName1 = 'question['.$valueQuestions->Questions_id.']['.'address'.']';
         $questionName2 = 'question['.$valueQuestions->Questions_id.']['.'phone'.']';
         
-        echo '<div class="col-md-12 form-group">';
+//      
 
-        echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
-            echo '<div class="col-md-2 form-group float-left">';
-                echo '<label for="Address">Address</label>';
-                echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
-                    echo '<option value="" >Select Address</option>';
-                    if(isset($basic_details['address'])) {
-                        foreach($basic_details['address'] as $keyOptions=>$addressOptions)  {
-                            echo '<option value="'.$addressOptions->address_id.'" >'.$addressOptions->address1.' '.$addressOptions->address2.', '.$addressOptions->city.', '.$addressOptions->state.'. '.$addressOptions->zip.' '.$addressOptions->state.'</option>';
-                        }
-                    }
-                echo '</select>';
+
+        echo '<div class="col-sm-6 no-padding">';
+            echo '<div class="form-group" id="customer_type_group">';
+                echo '<div class="col-md-12" >';
+                    echo '<input placeholder="Street (Address 1)" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'address1\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                echo '</div>';
+            echo '</div>';
         echo '</div>';
+
+        echo '<div class="col-sm-6 address-box no-padding">';
+            echo '<div class="form-group" id="customer_type_group">';
+                echo '<div class="col-md-12" >';
+                    echo '<input placeholder="Address 2" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'address2\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="col-sm-4 address-box no-padding">';
+            echo '<div class="form-group" id="customer_type_group">';
+                echo '<div class="col-md-12 mt-3" >';
+                    echo '<input placeholder="City" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'city\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="col-sm-2 address-box no-padding">';
+            echo '<div class="form-group" id="customer_type_group">';
+                echo '<div class="col-md-12 mt-3" >';
+                    echo '<input placeholder="State" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'state\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="col-sm-2 address-box no-padding">';
+            echo '<div class="form-group" id="customer_type_group">';
+                echo '<div class="col-md-12 mt-3" >';
+                    echo '<input placeholder="Zip Code" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'zipcode\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="col-sm-4 address-box no-padding">';
+            echo '<div class="form-group" id="customer_type_group">';
+                echo '<div class="col-md-12 mt-3" >';
+                    echo '<input placeholder="Country" maxlength="'.$questionParameterMaxLength.'" type="text" class="form-control '.$questionParameterClass.'" name="'.$questionName.'[\'country\']" id="'.$questionId.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'"/>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+
+        //enmding
+        
+        
+        // echo '<div class="col-md-12 form-group">';
+
+        // echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+        //     echo '<div class="col-md-2 form-group float-left">';
+        //         echo '<label for="Address">Address</label>';
+        //         echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
+        //             echo '<option value="" >Select Address</option>';
+        //             if(isset($basic_details['address'])) {
+        //                 foreach($basic_details['address'] as $keyOptions=>$addressOptions)  {
+        //                     echo '<option value="'.$addressOptions->address_id.'" >'.$addressOptions->address1.' '.$addressOptions->address2.', '.$addressOptions->city.', '.$addressOptions->state.'. '.$addressOptions->zip.' '.$addressOptions->state.'</option>';
+        //                 }
+        //             }
+        //         echo '</select>';
+        // echo '</div>';
+
+
+
             // echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
             //     echo '<div class="col-md-6 form-group float-left">';
             //         echo '<label for="'.$questionName1.'">'.$valueQuestions->question.'</label>';
@@ -214,8 +306,8 @@ function getInputHtml($valueQuestions){
             //         }
             //     echo '</select>';
             // echo '</div>';
-        echo "</div>";
-    echo "</div>";
+    //     echo "</div>";
+    // echo "</div>";
           break;
       case "date-picker":
           echo '<label for="'.$questionName.'">'.$valueQuestions->question.' '.(($valueQuestions->description != '')?'<small>('.$valueQuestions->description.')</small>':'').'</label>';
@@ -338,18 +430,18 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
         $questionName2 = 'question['.$valueQuestions->Questions_id.']['.'phone'.']';
         
         echo '<div class="col-md-12 form-group">';
-        echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
-            echo '<div class="col-md-6 form-group float-left">';
-                echo '<label for="'.$questionName1.'">'.$valueQuestions->question.'</label>';
-                echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
-                    echo '<option value="" >Select Address</option>';
-                    if(isset($basic_details['address'])) {
-                        foreach($basic_details['address'] as $keyOptions=>$addressOptions)  {
-                            echo '<option value="'.$addressOptions->address_id.'" >'.$addressOptions->address1.' '.$addressOptions->address2.', '.$addressOptions->city.', '.$addressOptions->state.'. '.$addressOptions->zip.' '.$addressOptions->state.'</option>';
-                        }
-                    }
-                echo '</select>';
-            echo '</div>';
+        // echo '<div class="col-md-12" style="border:2px solid #98989859;border-radius:5px;float:left;"><h5 class="text-left">'.$valueQuestions->question.'</h5>';
+        //     echo '<div class="col-md-6 form-group float-left">';
+        //         echo '<label for="'.$questionName1.'">'.$valueQuestions->question.'</label>';
+        //         echo '<select name="'.$questionName1.'" id="'.$questionId.'" class="form-control '.$questionParameterClass.'" '.$questionParameterRequire.' style="background:'.$questionParameterBackground.';color:'.$questionParameterColor.'">';
+        //             echo '<option value="" >Select Address</option>';
+        //             if(isset($basic_details['address'])) {
+        //                 foreach($basic_details['address'] as $keyOptions=>$addressOptions)  {
+        //                     echo '<option value="'.$addressOptions->address_id.'" >'.$addressOptions->address1.' '.$addressOptions->address2.', '.$addressOptions->city.', '.$addressOptions->state.'. '.$addressOptions->zip.' '.$addressOptions->state.'</option>';
+        //                 }
+        //             }
+        //         echo '</select>';
+        //     echo '</div>';
 
             // echo '<div class="col-md-6 form-group float-left">';
             //     echo '<label for="'.$questionName2.'"> Phone </label>';
@@ -435,17 +527,34 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
                                             
 
                                             <?php foreach($valueQuestions->questions as $keySubQuestions => $valueSubQuestions) { 
- 
-                                                 ?>
+                                                
+                                                if($valueSubQuestions->q_type == 'address') { ?>
+                                                    
+                                                     <!-- <div class="col-sm-12 margin-bottom-ter no-padding"> -->
+                                                        <!-- <div class="form-group" id="customer_type_group"> -->
+                                                            <!-- <div class="col-md-12"> -->
+                                                            <?php getInputHtml($valueSubQuestions); ?>         
+                                                            <!-- </div> -->
+                                                        <!-- </div> -->
+                                                    <!-- </div> -->
+                                                    
 
-                                            <div class="<?php echo (isset($valueSubQuestions->parameter->column_width) && $valueSubQuestions->parameter->column_width !='') ? $valueSubQuestions->parameter->column_width : '' ; ?> margin-bottom-ter no-padding">
-                                                <div class="form-group" id="customer_type_group">
-                                                    <div class="col-md-12">
-                                                        <?php getInputHtml($valueSubQuestions); ?>
+
+                                                <?php } else if($valueSubQuestions->q_type == 'phone') { 
+                                                    
+                                                    getInputHtml($valueSubQuestions);
+                                                
+                                                } else { ?>
+
+                                                    <div class="<?php echo (isset($valueSubQuestions->parameter->column_width) && $valueSubQuestions->parameter->column_width !='') ? $valueSubQuestions->parameter->column_width : '' ; ?> margin-bottom-ter no-padding">
+                                                        <div class="form-group" id="customer_type_group">
+                                                            <div class="col-md-12">
+                                                                <?php getInputHtml($valueSubQuestions); ?>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
+                                                <?php } ?>
                                             <?php } ?>
                                         </div>
 
@@ -463,7 +572,7 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
                                     <button type="submit" class="btn btn-flat btn-primary">Save</button>
                                     <a href="<?php echo url('customer') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
-                            </>
+                            </div>
                         </div>
                     </div>
                     <!-- end card -->
@@ -471,152 +580,7 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
             </div>
 
             <?php echo form_close(); ?>
-
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceGroup" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Group</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Additional Contact -->
-            <div class="modal fade" id="modalAdditionalContacts" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_source" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Source Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modalAddNewCustomerTypes" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Customer Type</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_customer_types" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Type</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div class="modal fade" id="modalAddNewGroup" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <b class="modal-title" id="exampleModalLabel">Add New Group</b>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" style="padding:30px 30px 10px 30px;">
-                            <form id="frm_add_new_group" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Group Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control" required 
-                                           autocomplete="off">
-                                </div>
-                                <div class="form-group">
-                                    <label>Description</label> <span class="form-required">*</span>
-                                    <textarea class="form-control" required name="description" autocomplete="off"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -674,8 +638,21 @@ function getInputRepeaterHtml($keySubQuestions, $valueQuestions) {
 });
 </script>
 <style>
- .select2-container--open{       z-index: 0;}
- span.select2-selection.select2-selection--single {
+.select2-container--open{       z-index: 0;}
+span.select2-selection.select2-selection--single {
     font-size: 16px;
 }
+
+.card-body .margin-bottom-ter {
+    margin-bottom:0px !important;
+}
+
+.card-body .margin-bottom-ter .form-group {
+    margin-bottom:10px !important;
+}
+
+.card-body .address-box .form-group {
+    margin-bottom:0px !important;
+}
+
 </style>

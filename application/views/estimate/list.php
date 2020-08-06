@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/job'); ?>
+    <?php include viewPath('includes/sidebars/estimate'); ?>
     <?php include viewPath('includes/notifications'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
@@ -291,38 +291,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Select Job</h5>
+        <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="col-md-12 row">
-            <div class="col-md-9 form-group" style="z-index:2;">
-                <label for="exampleFormControlSelect1">Select Job</label>
-                <select class="form-control" id="selectExistingJob">
-                <option value="" selected disabled hidden>Select</option>
-                <?php foreach($jobs as $job) : ?>
-                    <option value="<?php echo $job->job_number; ?>">Job <?php echo $job->job_number; ?></option>
-                <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-3 form-group" style="margin-top: 6px;">
-                <label for="exampleFormControlSelect1"></label><br>
-                <a class="btn btn-primary" id="btnExistingJob" href="javascript:void(0)">
-                    GO
-                </a>
-            </div>
-            <div class="col-md-12 text-center form-group" style="margin-top: 6px;">
-                <label for="exampleFormControlSelect1">Or</label>
-            </div>
-            <div class="col-md-12 text-center form-group" style="margin-top: 6px;">
-                <a class="btn btn-primary" href="<?php echo base_url('job/new_job') ?>">
-                    New Job
-                </a>
-            </div>
+      <div class="modal-body text-center">
+        <p class="text-lg margin-bottom">
+            What type of estimate you want to create
+        </p>
+        <div class="margin-bottom">
+            <div class="help help-sm">Create a regular estimate with items</div>
+            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
+        </div>
+        <div class="margin-bottom">
+            <div class="help help-sm">Customers can select all or only certain options</div>
+            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+        </div>
+        <div>
+            <div class="help help-sm">Customers can select only one package</div>
+            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=3') ?>"><span class="fa fa-cubes"></span> Packages Estimate</a>
         </div>
       </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
     </div>
   </div>
 </div>

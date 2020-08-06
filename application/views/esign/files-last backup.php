@@ -90,46 +90,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			<input type="hidden" value="3" name="next_step" />
 			<input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
 			<div class="card p-0 mb-0">
-			<div class="site_content">
-            <div class="content_wrap" style="position: relative;">
-                <!-- ngIf: taggerCtrl.doneLoading() --><div class="content_sidebar content_sidebar-left resizable ng-scope ng-isolate-scope" ng-show="markupPalettesCtrl.showMarkupPalettes()" style="overflow-x: hidden;" ng-class="{'file-drop': markupPalettesCtrl.showDeleteDropZone}" ng-mouseenter="hookCtrl.trigger('mouseenter', $event)" ng-mouseleave="hookCtrl.trigger('mouseleave', $event)" ng-mouseup="hookCtrl.trigger('mouseup', $event)" ng-if="taggerCtrl.doneLoading()" markup-palettes="" mp-moderator="taggerCtrl.envelopeModerator">
-    <div class="resize-horizontal resize-right resize-line ng-scope" svg-view-angular-hook="" hook-name="'paletteResizerHandle'" ng-mousedown="hookCtrl.trigger('mousedown', $event); $event.preventDefault();"></div>
+			    <div class="site_content">
+                    <div class="content_wrap" style="position: relative;">
+                        <div class="content_sidebar content_sidebar-left resizable ng-scope ng-isolate-scope" ng-show="markupPalettesCtrl.showMarkupPalettes()" style="overflow-x: hidden;" ng-class="{'file-drop': markupPalettesCtrl.showDeleteDropZone}" ng-mouseenter="hookCtrl.trigger('mouseenter', $event)" ng-mouseleave="hookCtrl.trigger('mouseleave', $event)" ng-mouseup="hookCtrl.trigger('mouseup', $event)" ng-if="taggerCtrl.doneLoading()" markup-palettes="" mp-moderator="taggerCtrl.envelopeModerator">
+                            <div class="resize-horizontal resize-right resize-line ng-scope" svg-view-angular-hook="" hook-name="'paletteResizerHandle'" ng-mousedown="hookCtrl.trigger('mousedown', $event); $event.preventDefault();"></div>
+                            
+                            <div class="sidebar_footer ng-scope" ng-if="markupPalettesCtrl.showSearchBar()"></div>
 
-    <!-- ngIf: markupPalettesCtrl.showDeleteDropZone -->
+                            <div class="sidebar-fields sidebar-flex">
+                                <div class="sidebar_main ng-scope" data-callout="tagger-sidebar" svg-view-angular-hook="" hook-name="'tabListPanel'" role="region" aria-label="Fields Palette" id="left-panel-tagger">
+                                    <div class="sidebar-fields ng-scope ng-isolate-scope" data-callout="send-fields" olive-scroll-shadow="fields" tab-palette="" tp-envelope="markupPalettesCtrl.envelope" tp-query="markupPalettesCtrl.tabQuery" ng-if="markupPalettesCtrl.tabPaletteIsSelected()" olive-scroll-shadow-initialized="true" style="box-shadow: rgba(0, 0, 0, 0.18) 0px -7px 7px -7px inset;">
+                                        <div class="sidebar_group l-flex-between ng-scope" data-callout="send-fields" ng-if-start="!tabPaletteCtrl.isExpressSend()">
+                                            <h5><span ng-if="!tabPaletteCtrl.paletteTypeIsSelected('search')" tabindex="-1" data-qa="search-results-tagger" class="ng-binding ng-scope">Standard Fields</span></h5>
+                                        </div>
 
-    <!-- ngIf: markupPalettesCtrl.showSearchBar() --><div class="sidebar_footer ng-scope" ng-if="markupPalettesCtrl.showSearchBar()">
-    </div><!-- end ngIf: markupPalettesCtrl.showSearchBar() -->
-
-    <div class="sidebar-fields sidebar-flex">
-        <div class="sidebar_main ng-scope" data-callout="tagger-sidebar" svg-view-angular-hook="" hook-name="'tabListPanel'" role="region" aria-label="Fields Palette" id="left-panel-tagger">
-            
-            <!-- ngIf: markupPalettesCtrl.tabPaletteIsSelected() --><div class="sidebar-fields ng-scope ng-isolate-scope" data-callout="send-fields" olive-scroll-shadow="fields" tab-palette="" tp-envelope="markupPalettesCtrl.envelope" tp-query="markupPalettesCtrl.tabQuery" ng-if="markupPalettesCtrl.tabPaletteIsSelected()" olive-scroll-shadow-initialized="true" style="box-shadow: rgba(0, 0, 0, 0.18) 0px -7px 7px -7px inset;">
-    <!-- express send start -->
-    <!-- ngIf: tabPaletteCtrl.isExpressSend() -->
-    <!-- express send end -->
-
-    <!-- ngIf: !tabPaletteCtrl.isExpressSend() --><div class="sidebar_group l-flex-between ng-scope" data-callout="send-fields" ng-if-start="!tabPaletteCtrl.isExpressSend()">
-        <h5>
-            <!-- ngIf: !tabPaletteCtrl.paletteTypeIsSelected('search') --><span ng-if="!tabPaletteCtrl.paletteTypeIsSelected('search')" tabindex="-1" data-qa="search-results-tagger" class="ng-binding ng-scope">
-                Standard Fields
-            </span><!-- end ngIf: !tabPaletteCtrl.paletteTypeIsSelected('search') -->
-        </h5>
-        <!-- ngIf: tabPaletteCtrl.showNewTabButton() -->
-        <!-- ngIf: tabPaletteCtrl.showFeatureWallButton() -->
-    </div>
-
-    <!-- Spinner -->
-    <!-- ngIf: tabPaletteCtrl.loadingCustom || tabPaletteCtrl.loadingSmartContracts -->
-
-    <!-- Empty State -->
-    <!-- ngIf: tabPaletteCtrl.showEmptyState() -->
-
-    <!-- ngRepeat: tabGroup in tabPaletteCtrl.tabGroups --><div class="sidebar_item ng-scope" ng-repeat="tabGroup in tabPaletteCtrl.tabGroups" ng-if-end="">
-        <!-- ngIf: tabGroup.title -->
-
-        <div class="menu-fields">
-            <ul class="menu_list">
-                <!-- ngRepeat: archetypeConf in tabGroup track by (archetypeConf.archetype.cid || archetypeConf.customTab.cid) --><!-- ngIf: archetypeConf.display --><li class="menu_listItem ng-scope ng-isolate-scope" ng-class="{'menu_listItem-disabledFeature' : !tpiCtrl.isEnabled()}" ng-repeat="archetypeConf in tabGroup track by (archetypeConf.archetype.cid || archetypeConf.customTab.cid)" ng-if="archetypeConf.display" tab-palette-item="" tpi-archetype="archetypeConf.archetype" tpi-paywall="archetypeConf.paywall" tpi-envelope="tabPaletteCtrl.envelope" tpi-custom-tab="archetypeConf.customTab" tpi-notary="archetypeConf.notary" tpi-seal="archetypeConf.seal">
+                                        <div class="sidebar_item ng-scope" ng-repeat="tabGroup in tabPaletteCtrl.tabGroups" ng-if-end="">
+                                            <div class="menu-fields">
+                                                <ul class="menu_list">
+                            <li class="menu_listItem ng-scope ng-isolate-scope" ng-class="{'menu_listItem-disabledFeature' : !tpiCtrl.isEnabled()}" ng-repeat="archetypeConf in tabGroup track by (archetypeConf.archetype.cid || archetypeConf.customTab.cid)" ng-if="archetypeConf.display" tab-palette-item="" tpi-archetype="archetypeConf.archetype" tpi-paywall="archetypeConf.paywall" tpi-envelope="tabPaletteCtrl.envelope" tpi-custom-tab="archetypeConf.customTab" tpi-notary="archetypeConf.notary" tpi-seal="archetypeConf.seal">
     <style>
         /* This prevents the disabled button in hover-state from reverting to the non-disabled styling. */
         .menu_listItem-disabledFeature .menu_item.disabled:hover {

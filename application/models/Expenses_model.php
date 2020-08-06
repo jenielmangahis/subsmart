@@ -8,6 +8,64 @@ class Expenses_model extends MY_Model
         parent::__construct();
     }
 
+    public function getTransaction(){
+        $qry = $this->db->get('accounting_expense_transaction');
+        return $qry->result();
+    }
+    public function getExpenseCategory(){
+        $qry = $this->db->get('accounting_expense_category');
+        return $qry->result();
+    }
+
+    public function transaction($type,$update,$update_id){
+        $id = 0;
+        if ($update == true){
+            $new_update = array(
+              'date_modified' => date('Y-m-d H:i:s')
+            );
+            $this->db->where('id',$update_id);
+            $this->db->update('accounting_expense_transaction',$new_update);
+        }else{
+            $data = array(
+                'type' => $type,
+                'date_created' => date('Y-m-d H:i:s'),
+                'date_modified' => date('Y-m-d H:i:s')
+            );
+            $this->db->insert('accounting_expense_transaction',$data);
+            $id = $this->db->insert_id();
+        }
+
+        return $id;
+    }
+
+    public function expenseCategory($trans_id,$cu,$new_data){
+        $category = $new_data['category'];
+        $description = $new_data['description'];
+        $amount = $new_data['amount'];
+        if ($cu == true){
+            for ($x = 0; $x < count($category);$x++){
+                $update = array(
+                    'category_id' => $category[$x],
+                    'description' => $description[$x],
+                    'amount' => $amount[$x]
+                );
+                $this->db->where('transaction_type_id',$trans_id);
+                $this->db->update('accounting_expense_category',$update);
+            }
+        }else{
+            for ($x = 0;$x < count($category);$x++){
+                $data[] = [
+                    'transaction_type_id' => $trans_id,
+                    'category_id' => $category[$x],
+                    'description' => $description[$x],
+                    'amount' => $amount[$x]
+                ];
+            }
+            $this->db->insert_batch('accounting_expense_category',$data);
+        }
+
+    }
+
     public function timeActivity($new_data){
         $qry = $this->db->get_where('accounting_time_activity',array(
             'customer' => $new_data['customer']
@@ -35,12 +93,19 @@ class Expenses_model extends MY_Model
         }
     }
 
+    public function getBill(){
+        $qry = $this->db->get('accounting_bill');
+        return $qry->result();
+    }
     public function addBill($new_data){
+        $type = "Bill";
+        $trans_id = $this->transaction($type,false,null);
         $qry = $this->db->get_where('accounting_bill',array(
             'vendor_id' => $new_data['vendor_id']
         ));
         if ($qry->num_rows() == 0){
             $data = array(
+                'transaction_id' => $trans_id,
                 'vendor_id' => $new_data['vendor_id'],
                 'mailing_address' => $new_data['mailing_address'],
                 'terms' => $new_data['terms'],
@@ -50,19 +115,67 @@ class Expenses_model extends MY_Model
                 'permit_number' => $new_data['permit_number'],
             );
             $this->db->insert('accounting_bill',$data);
+            $trans_bill = $this->db->insert_id();
+            $this->expenseCategory($trans_bill,false,$new_data);
             return true;
         }else{
             return false;
         }
     }
 
+    public function editBillData($data){
+        $this->transaction(null,true,$data['transaction_id']);
+        $qry = $this->db->get_where('accounting_bill',array('id'=>$data['bill_id']));
+        if ($qry->num_rows() == 1){
+            $update  = array(
+                'vendor_id' => $data['vendor_id'],
+                'mailing_address' => $data['mailing_address'],
+                'terms' => $data['terms'],
+                'bill_date' => $data['bill_date'],
+                'due_date' => $data['due_date'],
+                'bill_number' => $data['bill_number'],
+                'permit_number' => $data['permit_number'],
+            );
+            $this->db->where('id',$data['bill_id']);
+            $this->db->update('accounting_bill',$update);
+            $this->expenseCategory($data['bill_id'],true,$data);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function deleteBillData($id){
+        $qry  = $this->db->get_where('accounting_bill',array('id'=>$id));
+        if ($qry->num_rows() == 1){
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_bill');
+            //Transaction table
+            $this->db->where('id',$qry->row()->transaction_id);
+            $this->db->delete('accounting_expense_transaction');
+            //Expense Category table
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_expense_category');
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function getExpense(){
+        $qry = $this->db->get('accounting_expense');
+        return $qry->result();
+    }
     public function addExpense($new_data){
+        $type = "Expense";
+        $trans_id = $this->transaction($type,false,null);
         $qry = $this->db->get_where('accounting_expense',array(
             'vendor_id' => $new_data['vendor_id']
         ));
         if ($qry->num_rows() == 0){
-
             $data = array(
+                'transaction_id' => $trans_id,
                 'vendor_id' => $new_data['vendor_id'],
                 'payment_account' => $new_data['payment_account'],
                 'payment_date' => $new_data['payment_date'],
@@ -71,11 +184,50 @@ class Expenses_model extends MY_Model
                 'permit_number' => $new_data['permit_number'],
             );
             $this->db->insert('accounting_expense',$data);
+            $trans_expense = $this->db->insert_id();
+            $this->expenseCategory($trans_expense,false,$new_data);
             return true;
         }else{
             return false;
         }
 
+    }
+    public function updateExpenseData($data){
+        $this->transaction(null,true,$data['transaction_id']);
+        $qry = $this->db->get_where('accounting_expense',array('id'=>$data['expense_id']));
+        if ($qry->num_rows() == 1){
+            $update  = array(
+                'vendor_id' => $data['vendor_id'],
+                'payment_account' => $data['payment_account'],
+                'payment_date' => $data['payment_date'],
+                'payment_method' => $data['payment_method'],
+                'ref_number' => $data['ref_number'],
+                'permit_number' => $data['permit_number'],
+            );
+            $this->db->where('id',$data['expense_id']);
+            $this->db->update('accounting_expense',$update);
+            $this->expenseCategory($data['expense_id'],true,$data);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function deleteExpenseData($id){
+        $qry  = $this->db->get_where('accounting_expense',array('id'=>$id));
+        if ($qry->num_rows() == 1){
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_expense');
+            //Transaction table
+            $this->db->where('id',$qry->row()->transaction_id);
+            $this->db->delete('accounting_expense_transaction');
+            //Expense Category table
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_expense_category');
+            return true;
+        }else{
+            return false;
+        }
     }
     public function getCheck(){
         $query = $this->db->get('accounting_check');
@@ -83,12 +235,14 @@ class Expenses_model extends MY_Model
     }
 
     public function addCheck($new_data){
+        $type = "Check";
+        $trans_id = $this->transaction($type,false,null);
         $qry = $this->db->get_where('accounting_check',array(
-            'vendor_id' => $new_data['vendor_id']
+            'check_number' => $new_data['check_num']
         ));
         if ($qry->num_rows() == 0){
-
             $data = array(
+                'transaction_id' => $trans_id,
                 'vendor_id' => $new_data['vendor_id'],
                 'mailing_address' => $new_data['mailing_address'],
                 'bank_id' => $new_data['bank_id'],
@@ -98,12 +252,14 @@ class Expenses_model extends MY_Model
                 'permit_number' => $new_data['permit_number'],
             );
             $this->db->insert('accounting_check',$data);
-            return true;
+            $check_id = $this->db->insert_id();
+            $this->expenseCategory($check_id,false,$new_data);
         }else{
             return false;
         }
     }
     public function editCheckData($update){
+        $this->transaction(null,true,$update['transaction_id']);
         $qry = $this->db->get_where('accounting_check',array('id'=>$update['check_id']));
         if ($qry->num_rows() == 1){
             $data  = array(
@@ -113,10 +269,11 @@ class Expenses_model extends MY_Model
                 'payment_date' => $update['payment_date'],
                 'check_number' => $update['check_num'],
                 'print_later' => $update['print_later'],
-                'permit_number' => $update['permit_number'],
+                'permit_number' => $update['permit_number']
             );
             $this->db->where('id',$update['check_id']);
             $this->db->update('accounting_check',$data);
+            $this->expenseCategory($update['check_id'],true,$update);
             return true;
         }else{
             return false;
@@ -128,19 +285,32 @@ class Expenses_model extends MY_Model
         if ($qry->num_rows() == 1){
             $this->db->where('id',$id);
             $this->db->delete('accounting_check');
+            //Transaction table
+            $this->db->where('id',$qry->row()->transaction_id);
+            $this->db->delete('accounting_expense_transaction');
+            //Expense Category table
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_expense_category');
             return true;
         }else{
             return false;
         }
     }
 
+    public function getVendorCredit(){
+        $qry = $this->db->get('accounting_vendor_credit');
+        return $qry->result();
+    }
+
     public function vendorCredit($new_data){
+        $type = "Vendor Credit";
+        $trans_id = $this->transaction($type,false,null);
         $qry = $this->db->get_where('accounting_vendor_credit',array(
-            'vendor_id' => $new_data['vendor_id']
+            'transaction_id' => $new_data['transaction_id']
         ));
         if ($qry->num_rows() == 0){
-
             $data = array(
+                'transaction_id' => $trans_id,
                 'vendor_id' => $new_data['vendor_id'],
                 'mailing_address' => $new_data['mailing_address'],
                 'payment_date' => $new_data['payment_date'],
@@ -148,11 +318,52 @@ class Expenses_model extends MY_Model
                 'permit_number' => $new_data['permit_number'],
             );
             $this->db->insert('accounting_vendor_credit',$data);
+            $trans_credit = $this->db->insert_id();
+            $this->expenseCategory($trans_credit,false,$new_data);
             return true;
         }else{
             return false;
         }
 
+    }
+
+    public function updateVendorCredit($update){
+        $this->transaction(null,true,$update['transaction_id']);
+        $qry = $this->db->get_where('accounting_vendor_credit',array('id'=>$update['vc_id']));
+        if ($qry->num_rows() == 1){
+            $data  = array(
+                'vendor_id' => $update['vendor_id'],
+                'mailing_address' => $update['mailing_address'],
+                'payment_date' => $update['payment_date'],
+                'ref_number' => $update['ref_number'],
+                'permit_number' => $update['permit_number'],
+            );
+            $this->db->where('id',$update['vc_id']);
+            $this->db->update('accounting_vendor_credit',$data);
+            $this->expenseCategory($update['vc_id'],true,$update);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    public function deleteVendorCredit($id){
+        $qry  = $this->db->get_where('accounting_vendor_credit',array('id'=>$id));
+        if ($qry->num_rows() == 1){
+            //Vendor credit table
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_vendor_credit');
+            //Transaction table
+            $this->db->where('id',$qry->row()->transaction_id);
+            $this->db->delete('accounting_expense_transaction');
+            //Expense Category table
+            $this->db->where('id',$id);
+            $this->db->delete('accounting_expense_category');
+            return true;
+        }else{
+            return false;
+        }
     }
     public function payDown($new_data){
         $qry = $this->db->get_where('accounting_paydown',array(

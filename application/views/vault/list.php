@@ -9,9 +9,9 @@
          <div class="page-title-box">
             <div class="row align-items-center">
                <div class="col-sm-6">
-                  <h1 class="page-title">Files</h1>
+                  <h1 class="page-title">My Library</h1>
                   <ol class="breadcrumb">
-                     <li class="breadcrumb-item active">Manage Files</li>
+                     <li class="breadcrumb-item active">My foldes and files</li>
                   </ol>
                </div>
                <div class="col-sm-6">
@@ -36,6 +36,7 @@
 <!-- page wrapper end -->
 
 <?php include viewPath('includes/footer'); ?>
+<script src="<?php echo $url->assets ?>js/folders_files.js"></script>
 <script>
    $(document).ready( function () {
 

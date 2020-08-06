@@ -81,6 +81,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="card-body">
                             <h4 class="mt-0 header-title mb-5">Timesheet</h4>
+                            <!-- Date Selector -->
+                            <div class="row">
+                                <div class="col-lg-3" style="">
+                                    <input type="text" class="form-control entry_date" name="timesheet_date" placeholder="Select Date">
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="dataTable1" class="table table-bordered table-striped">
@@ -142,7 +148,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         ?>
                                                     </td>
                                                     <!-- Status -->
-                                                    <td class="status" style="text-align: center;">
+                                                    <?php if( !empty($clockin_arr) ):?>
+                                                        <td class="status" style="text-align: center; background: green;">
+                                                    <?php else: ?>
+                                                        <td class="status" style="text-align: center;">
+                                                    <?php endif; ?>
                                                         <?php foreach($clockin_arr as $k => $clockin ): ?>
                                                             <?php if($clockin->action == "Clock In"): ?>
                                                                 <?php echo "In"; ?>

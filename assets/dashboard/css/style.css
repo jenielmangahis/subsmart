@@ -9161,3 +9161,160 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     text-align: center;
 }
 /* **** End Report Page **** */
+
+/* **** New Popup **** */
+.btn-newadd{
+    padding: 12px 40px;
+    background: #fff;
+    border: 2px solid #333;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    display: table;
+    border-radius: 30px;
+    margin: 35px 0;
+    outline: none;
+}
+#new-popup .modal-dialog {
+    max-width: 850px;
+    margin: 40px auto;
+}
+.add-new-data-block{
+    padding: 15px 15px 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: none;
+    border: none;
+}
+.new-listing h4{
+    font-size: 17px;
+    font-weight:600;
+    color: #000;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 10px 15px;
+}
+.new-listing li{display: block;}
+.new-listing li a{
+    padding: 10px 15px;
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}
+.new-listing li a:hover{
+    background: #f5f5f5;
+}
+
+.pop-footer{
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    text-align: right;
+}
+.pop-footer a{
+    display: table;
+    padding: 8px 25px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0077c5;
+    float: right;
+    border: 2px solid transparent;
+}
+.pop-footer a:focus,
+.pop-footer a:hover{
+    color: #0077c5;
+    border-color: #0077c5;
+}
+/* **** End New Popup **** */
+
+/* **** Reconile Page ***** */
+.recon-wrpper{
+    padding: 20px 15px;
+    width: 100%;
+}
+.breadcrumb-pager {width: 100%;margin: 0 0 15px;}
+.breadcrumb-pager li{
+    display: inline-block;
+    margin-right: 30px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #717171;
+    position: relative;
+}
+.breadcrumb-pager li:after{
+    position: absolute;
+    content: '>';
+    font-size: 15px;
+    color: #0077c5;
+    top: 0;
+    right:-20px;
+}
+.breadcrumb-pager li a{
+    color: #0077c5;
+}
+.breadcrumb-pager li:last-child{margin: 0;}
+.breadcrumb-pager li:last-child:after{display: none;}
+
+.recon-head .row{display: flex;align-items: center;}
+.recon-head .left-taxs h1{
+    font-weight: 600;
+    margin: 0;font-size: 30px;
+}
+
+.recon-box{
+    padding: 35px;
+    background: #fff;
+    margin: 30px 0 0;
+}
+.recon-box h3{
+    font-size: 20px;
+    font-weight: 300;
+    color: #333;
+    margin: 0 0 15px;
+}
+.recon-box label{
+    display: block;
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+.recon-box .form-control{
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    height: auto;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: normal;
+}
+.info-bx h4{
+    padding: 20px 20px;
+    border: 1px solid #0397e6;
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    margin: 15px 0 0;
+    display: table;
+}
+.info-bx h4 i{
+    color: #0397e6;
+    margin-right:10px;
+    font-size: 17px;
+    vertical-align: middle;
+}
+.recon-box .btn-main{
+    padding: 8px 35px;
+    background: #2ca01c;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 30px;
+    display: table;
+    border: none;
+    margin: 30px 0 0;
+}
+.recon-box .btn-main:hover{
+    opacity: 0.80;
+}
+/* **** End Reconile Page ***** */

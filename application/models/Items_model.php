@@ -7,6 +7,7 @@ class Items_model extends MY_Model
     public $table = 'items';
     public $table_categories = 'item_categories';
     public $table_invoice = 'invoice_has_items';
+    public $table_has_location = 'items_has_storage_loc';
 
     public function __construct()
     {
@@ -117,6 +118,33 @@ class Items_model extends MY_Model
     public function delete($id)
     {
         $this->db->delete($this->table, array("id" => $id));
+    }
+
+    public function getLocationByItemId($id) 
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_has_location);
+        $this->db->where('item_id', $id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    
+    public function saveNewItemLocation($data = array()) {
+        if(!empty($data)){     
+            $insert = $this->db->insert($this->table_has_location, $data);
+            return $insert?$this->db->insert_id():false;
+        }
+        return false;
+    }
+
+    public function countQty($item_id) {
+        $items = $this->getLocationByItemId($item_id);
+        $qty = 0;
+        for($i=0;$i<count($items);$i++) {
+            $qty += intval($items[$i]['qty']);
+        }
+
+        return $qty;
     }
     
 }

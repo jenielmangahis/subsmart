@@ -99,9 +99,9 @@ $(document).ready(function(){
 
     if(selected != 0){
       if(selected_isFolder == 1){
-        showFolderDetails(selected, selected_isFolder, false);
+        showFolderDetails(selected, selected_isFolder, false, false);
       } else {
-        showFileDetail(selected, selected_isFolder, false);
+        showFileDetail(selected, selected_isFolder, false, false);
       }
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder to view','error');
@@ -304,9 +304,18 @@ $(document).ready(function(){
 
 // Functions below ---------------------------------------------------------------------------------------------
 function getFoldersAndFiles(parent_id = 0){
+  var vUrl = base_url + "folders/getFoldersFiles/" + parent_id;
+  var vType = $('#vault_type').val();
+  
+  vType = vType.trim();
+
+  if(vType == 'mylibrary'){
+    vUrl += "/1";
+  } 
+
   $.ajax({
     type: 'GET',
-    url: base_url + "folders/getFoldersFiles/" + parent_id,
+    url: vUrl,
     success: function(data){
         var result = jQuery.parseJSON(data);
         var folders = result.folders;
@@ -314,11 +323,15 @@ function getFoldersAndFiles(parent_id = 0){
         var paths = result.folders_path;
         var fname = result.folders_name;
 
-        setFoldersAndFiles(folders, files);
-
         $('#folders_name').html(fname);
         $('#folders_path').empty();
         $('#folders_path').append(paths);
+
+        if(vType == 'mylibrary'){
+          setFoldersAndFiles_MyLibrary(folders, files);
+        } else {
+          setFoldersAndFiles(folders, files);
+        }
 
         $('a[control="gotofolder"]').click(function(e){
           e.preventDefault();
@@ -339,6 +352,7 @@ function getFoldersAndFiles(parent_id = 0){
   });
 }
 
+//setFoldersAndFiles - Shared Library
 function setFoldersAndFiles(folders, files){
   $('#folders_and_files').empty();
 
@@ -489,10 +503,108 @@ function setFoldersAndFiles(folders, files){
         $('#fs_selected_file').val(selected);
         $('#modal-folder-manager').modal('hide');
       } else {
-        showFileDetail(selected, selected_isFolder, false);
+        showFileDetail(selected, selected_isFolder, false, false);
       }
     }  
   });
+}
+
+//setFoldersAndFiles - My Library
+function setFoldersAndFiles_MyLibrary(folders, files){
+  $('#folders_and_files').empty();
+
+  var append = '<div class="table-responsive"><table class="table table-bordered table-sm" id="mylibrary_main"><thead><tr>';
+
+  append += '<th class="d-none"></th>';
+  append += '<th style="width:5%" class="text-center font-weight-bold">Type</th>';
+  append += '<th style="width:25%" class="font-weight-bold">Title</th>';
+  append += '<th style="width:70%" class="font-weight-bold">Path</th>';
+  append += '</tr></thread><tbody>';
+
+  var first_folder = true;
+
+  $.each(folders, function(index, folder){
+    append += '<tr class="node">';
+      append += '<td class="d-none" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +
+                '" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'"></td>';
+
+      if(first_folder){
+        append += '<td rowspan="@folders@row@span" class="text-center align-top font-weight-bold">Folders</td>';
+        first_folder = !first_folder;
+      } 
+
+      append += '<td class="fname">' + folder.folder_name + '</td>';
+      append += '<td class="fpath">/root/' + folder.path + '</td>';
+
+    append += '</tr>';
+  });
+
+  append += '<tr><td colspan="3"></td></tr>';
+  
+  var first_file = true;
+
+  $.each(files, function(index, file){
+    append += '<tr class="node">';
+      append += '<td class="d-none" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +
+                '" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'"></td>';
+
+      if(first_file){
+        append += '<td rowspan="@files@row@span" class="text-center align-top font-weight-bold">Files</td>';
+        first_file = !first_file;
+      } 
+
+      append += '<td class="fname">' + file.title + '</td>';
+      append += '<td class="fpath">/root' + file.file_path + '</td>';
+
+    append += '</tr>';
+  });
+
+  append += '</tbody></table></div>';
+  append = append.replace('@folders@row@span', folders.length);
+  append = append.replace('@files@row@span', files.length);
+
+  $('#folders_and_files').append(append);
+
+  //On Select Folder or File
+  $('#mylibrary_main > tbody > tr.node > td').click(function(){
+    var tr = $(this).parent('tr');
+    var td = tr.children('td:eq(0)');
+    var fid = td.attr('fid');
+    var ftype = td.attr('isFolder');
+    var fname = td.attr('fnm');
+    var fpath = tr.children('td.fpath').text();
+
+    if($('tr.node.table-primary').length){
+      $('tr.node.table-primary').removeClass('table-primary');
+    }
+
+    tr.addClass('table-primary');
+
+    $('#folders_name').text(fname);
+    $('#folders_path').text(fpath);
+
+    selected = fid;
+    selected_isFolder = ftype;
+    
+  }).dblclick(function(){
+    var tr = $(this).parent('tr');
+    var td = tr.children('td:eq(0)');
+    var fid = td.attr('fid');
+    var ftype = td.attr('isFolder');
+
+    selected = fid;
+    selected_isFolder = ftype;
+
+    if(ftype == 1){
+      current_selected_folder = fid;
+
+      getFoldersAndFiles(fid);
+    } else {
+      showFileDetail(selected, selected_isFolder, false, true);  
+    }  
+  });   
 }
 
 // Search Files and Folders
@@ -797,18 +909,24 @@ function hideUploading(){
   }
 }
 
-function showFileDetail(vS, vSiF, vIsTrash){
+function showFileDetail(vS, vSiF, vIsTrash, vIsMyLibrary){
   if($('#download_image_or_file').hasClass('d-none')){
     $('#download_image_or_file').removeClass('d-none'); 
   }
 
-  if(!vIsTrash){
-    var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+  var fnm = '';
+  var fpath = '';
+
+  if((!vIsTrash) && (!vIsMyLibrary)){
+    var div = $('div[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
+  } else if(vIsMyLibrary){
+    var div = $('td[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
   } else {
     $('#download_image_or_file').addClass('d-none');
 
-    var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]');
+    var div = $('div.node_trash[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
   }
+
   var file_info = getfileExInfos(div.attr('fnm'));
 
   if(file_info['isImage']){
@@ -816,8 +934,7 @@ function showFileDetail(vS, vSiF, vIsTrash){
       update_preview_count();
     }
 
-    var fpath = div.attr('path');
-
+    fpath = div.attr('path');
     fpath = base_url + 'uploads/' + fpath;
 
     $('#view-image-date-created').text(div.attr('created_date'));
@@ -827,17 +944,19 @@ function showFileDetail(vS, vSiF, vIsTrash){
     $('#modal-folder-manager-view-image-title').text(div.attr('fnm'));
     $('#modal-folder-manager-view-image').modal('show');
   } else {
-    showFolderDetails(vS, vSiF, vIsTrash);
+    showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary);
   }
 }
 
-function showFolderDetails(vS, vSiF, vIsTrash){
+function showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary){
   if(!$('#download_div').hasClass('d-none')){
     $('#download_div').addClass('d-none');
   }
 
-  if(!vIsTrash){
-    var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+  if((!vIsTrash) && (!vIsMyLibrary)){
+    var div = $('div[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
+  } else if(vIsMyLibrary){ 
+    var div = $('td[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
   } else {
     var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]'); 
   }
@@ -1128,9 +1247,9 @@ function setTrashRecords(folders, files){
     selected_trash_isFolder = div.attr('isFolder');
 
     if(selected_trash_isFolder == 1){
-      showFolderDetails(selected_trash, selected_trash_isFolder, true);
+      showFolderDetails(selected_trash, selected_trash_isFolder, true, false);
     } else {
-      showFileDetail(selected_trash, selected_trash_isFolder, true);
+      showFileDetail(selected_trash, selected_trash_isFolder, true, false);
     }  
   });
 }

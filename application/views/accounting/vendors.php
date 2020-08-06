@@ -102,14 +102,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>Test</td>
-                                        <td>Test</td>
-                                        <td>Test</td>
-                                        <td></td>
-                                        <td><a href="">Create bill</a> <span class="caret"></span></td>
-                                    </tr>
+										<!--<?php if(count($vendors) > 0) { ?>
+											<?php for($x = 0 ; $x < count($vendors) ; $x++) { ?>
+												<tr>
+													<td><input type="checkbox"></td>
+													<td><?php echo $vendors[$x]->company; ?></td>
+													<td><?php echo $vendors[$x]->phone; ?></td>
+													<td><?php echo $vendors[$x]->email; ?></td>
+													<td><?php echo $vendors[$x]->opening_balance; ?></td>
+													<td><a href="">Create bill</a> <span class="caret"></span></td>
+												</tr>
+											<?php } ?>
+										<?php }else{ ?>
+											<tr><td cols="6">No data available.</td></tr>
+										<?php } ?>-->
                                     </tbody>
                                 </table>
                             </div>
@@ -459,10 +465,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--    end of modal-->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
 <script>
     // DataTable JS
     $(document).ready(function() {
+		 getAllVendors();
         $('#vendors_table').DataTable({
             "paging": false,
         });
@@ -473,6 +479,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         } );
     } );
+function getAllVendors(){
+	var htmlData;
+	console.log(123);
+   $.ajax({
+		type: "GET",
+		url: "accounting/allVendors",
+		dataType: "json",
+		success:
+			function(data) {
+				htmlData = "";
+				if(data.length > 0){
+					/*$("#vendors_table tbody").empty();
+					for(var x=0;x < data.length;x++){
+						$("#vendors_table tbody").append();
+					}
+					$("#usersTable").show();
+					$("#nousers").hide();
+					$('#usersTable').DataTable();*/
+					htmlData = '<tr>';
+						htmlData += '<td>';
+						htmlData += '</td>';
+					htmlData += '</tr>';
+					$("#vendors_table tbody").append(htmlData);
+				}else{
+					htmlData = '<tr>';
+						htmlData += '<td>';
+							htmlData += '<div class="alert alert-info" role="alert">No available data.</div>;
+						htmlData += '</td>';
+					$("#vendors_table tbody").append(htmlData);
+				}
+			},
+		error:
+		function(data){
+			console.log("false");		
+		}
+	});		
+}
 </script>
 <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -496,4 +539,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     });
   }, false);
 })();
+
 </script>
+
+<?php include viewPath('includes/footer_accounting'); ?>

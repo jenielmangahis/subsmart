@@ -59,12 +59,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-Contact">From</label>
                                     <input type="text" class="form-control" name="clock_in_from"
-                                           placeholder="hh:mm"/>
+                                           placeholder="hh:mm" onchange="validateHhMm(this);"/>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-Contact">To</label>
                                     <input type="text" class="form-control" name="clock_in_to"
-                                           placeholder="hh:mm"/>
+                                           placeholder="hh:mm" onchange="validateHhMm(this);"/>
                                 </div>
 
                                 <?php /*<div class="col-md-12">
@@ -193,6 +193,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             ;
         ;
 
+    }
+
+    // for validating hours inputs
+    function validateHhMm(inputField) {
+        var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField.value);
+
+        if (isValid) {
+            inputField.style.backgroundColor = '#bfa';
+        } else {
+            inputField.style.backgroundColor = '#fba';
+            alert('Invalid Input. Must be 00:00 format.');
+        }
+
+        return isValid;
     }
 
 </script>

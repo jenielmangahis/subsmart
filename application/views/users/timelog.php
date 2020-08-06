@@ -34,6 +34,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="card-body">
                             <h4 class="mt-0 header-title mb-5">List of Employees</h4>
+                            <!-- Date Selector -->
+                            <div class="row">
+                                <div class="col-lg-3" style="">
+                                    <input type="text" class="form-control entry_date" name="timelog_date" placeholder="Select Date">
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="dataTable1" class="table table-bordered table-striped">
@@ -42,12 +48,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Clock In - Out</th>
                                             <!-- <th>Id</th>
                                             <th>Image</th> -->
-                                            <th>Name</th>
+                                            <th style="width: 150px !important;">Name</th>
                                             <!-- <th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th> -->
                                             
-                                            <th>Status</th>
+                                            <th style="width: 150px !important;">Status</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -115,11 +121,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php //endif ?>
                                                 </td>
                                                 <td>
-                                                    <?php //if (hasPermissions('users_edit')): ?>
+                                                    <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Edit</a>
-                                                    <?php //endif ?>
+                                                    <?php endif ?>
                                                     <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php //echo url('users/edit/' . $row->id) ?>"
                                                            class="btn btn-sm btn-default" title="Edit User"
@@ -135,11 +141,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                            class="btn btn-sm btn-default" title="Edit User"
                                                            data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Month</a>
                                                     <?php endif ?>
-                                                    <?php if (hasPermissions('users_view')): ?>
+                                                    <?php //if (hasPermissions('users_view')): ?>
                                                         <a href="<?php echo url('users/view/' . $row->id) ?>"
-                                                           class="btn btn-sm btn-default" title="View User"
-                                                           data-toggle="tooltip"><i class="fa fa-eye"></i>Edit</a>
-                                                    <?php endif ?>
+                                                           class="btn btn-sm btn-default" title="Cannot Edit or Delete this Record"
+                                                           data-toggle="tooltip"><i class="fa fa-eye"></i>View</a>
+                                                    <?php //endif ?>
                                                     <?php if (hasPermissions('users_delete')): ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id): ?>
                                                             <a href="<?php echo url('users/delete/' . $row->id) ?>"
@@ -178,6 +184,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     $(document).ready(function () {
         $('#dataTable1').DataTable();
+
+        $(".entry_date").datepicker();
     });
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
@@ -211,6 +219,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         })
 
     }
-
-
 </script>

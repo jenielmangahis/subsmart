@@ -1310,7 +1310,7 @@ class Booking extends MY_Controller {
     	}
 
     	$this->session->unset_userdata('cartItems');
-
+    	$this->session->unset_userdata('coupon');
         redirect('booking/products/'.$post['eid']);
     }
 

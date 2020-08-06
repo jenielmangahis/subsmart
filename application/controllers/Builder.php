@@ -11,10 +11,12 @@ class Builder extends MY_Controller {
 		$this->page_data['page']->title = 'Builder';
 		$this->page_data['page']->menu = 'roles';
 		$this->load->model('Builder_model', 'builder_model');
+
 	}
 
 	public function index($id = '')
 	{
+
 		$this->page_data['jobs'] = $this->builder_model->get_jobs();
 		$this->page_data['forms'] = $this->builder_model->get_forms();
 		
@@ -51,7 +53,7 @@ class Builder extends MY_Controller {
 	}
 
 	function saveform() {
-
+		
 		if($this->input->post('deletedQuestions') != '') {
 			$DELETE_QUESTIONS = explode(",",$this->input->post('deletedQuestions'));
 			
@@ -73,6 +75,8 @@ class Builder extends MY_Controller {
 			);
 			$this->db->insert( $this->builder_model->table_custom_forms, $data);
 			$form_id = $this->db->insert_id();
+			$this->db->query("CREATE TABLE ".str_replace(" ", "", $this->input->post('form_title'))." (
+				id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY)");
 		} else {
 			$form_id = $this->input->post('form_id');
 			$data = array(
@@ -110,6 +114,8 @@ class Builder extends MY_Controller {
 					} else {
 						$this->db->insert( $this->builder_model->table_questions, $data);
 						$parentQuestionId = $this->db->insert_id();
+						$this->db->query("ALTER TABLE ".str_replace(" ", "", $this->input->post('form_title'))."
+						ADD ".str_replace(" ", "", $value['question'])." TEXT;");
 					}
 					if(isset($value['questions']))
 					{
@@ -136,6 +142,8 @@ class Builder extends MY_Controller {
 							} else {
 								$this->db->insert( $this->builder_model->table_questions, $data);
 								$lastQuestionId = $this->db->insert_id();
+								$this->db->query("ALTER TABLE ".str_replace(" ", "", $this->input->post('form_title'))."
+						ADD ".str_replace(" ", "", $valueSubQuestions['question'])." TEXT;");
 							}
 
 							if(isset($valueSubQuestions['options']))
@@ -223,6 +231,8 @@ class Builder extends MY_Controller {
 							} else {
 								$this->db->insert( $this->builder_model->table_questions, $data);
 								$lastQuestionId = $this->db->insert_id();
+								$this->db->query("ALTER TABLE ".str_replace(" ", "", $this->input->post('form_title'))."
+						ADD ".str_replace(" ", "", $valueSubQuestions['question'])." TEXT;");
 							}
 
 							if(isset($valueSubQuestions['options']))
@@ -285,6 +295,8 @@ class Builder extends MY_Controller {
 					} else {
 						$this->db->insert( $this->builder_model->table_questions, $data);
 						$lastQuestionId = $this->db->insert_id();
+						$this->db->query("ALTER TABLE ".str_replace(" ", "", $this->input->post('form_title'))."
+						ADD ".str_replace(" ", "", $value['question'])." TEXT;");
 					}
 
 					if(isset($value['options']))
@@ -376,7 +388,6 @@ class Builder extends MY_Controller {
 
 
 		}
-
 		redirect('builder/demo/'.$this->input->post('form_id'));
 
 	}
@@ -488,6 +499,40 @@ class Builder extends MY_Controller {
 		$this->load->view('roles/add', $this->page_data);
 	}
 
+	function ModifyColumn($table,$columnname,$datatype)
+	{
+		$query = "ALTER TABLE ". $table."
+		MODIFY COLUMN ". $columnname ." ".$datatype;
+		
+		$result = ExecuteQuery($query,"Column successfully modified");
+		return $result;
+	}
+
+	function AddColumn($table,$columnname,$datatype)
+	{
+		$query = "ALTER TABLE ". $table."
+		ADD ". $columnname ." ".$datatype;
+		
+		$result = ExecuteQuery($query,"Column Added successfully");
+		return $result;
+	}
+
+	function DropColumn($table,$columnname)
+	{
+		$query = "ALTER TABLE ". $table."
+		DROP COLUMN ". $columnname;
+		
+		$result = ExecuteQuery($query,"Column deleted successfully");
+		return $result;
+	}
+
+	function DropTable($table)
+	{
+		$query = "DROP TABLE ". $table;
+		
+		$result = ExecuteQuery($query,"Table deleted successfully");
+		return $result;
+	}
 }
 
 /* End of file Roles.php */

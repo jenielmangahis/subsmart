@@ -159,8 +159,12 @@ $route['accounting/chart_of_accounts/edit/(:any)?'] = 'Accounting/edit/$1';
 $route['accounting/chart_of_accounts/update'] = 'Accounting/update';
 $route['accounting/chart_of_accounts/update_name'] = 'Accounting/update_name';
 $route['accounting/chart_of_accounts/inactive'] = 'Accounting/inactive';
+$route['accounting/chart_of_accounts/import'] = 'Accounting/import';
+$route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
 $route['accounting/reconcile/create'] = 'reconcile/add';
-$route['accounting/reconcile'] = 'reconcile/index';
+$route['accounting/reconcile/save'] = 'reconcile/addReconcile';
+$route['accounting/reconcile/index'] = 'reconcile/index';
+$route['accounting/reconcile'] = 'reconcile/indexmain';
 $route['accounting/reconcile/edit'] = 'reconcile/edit';
 
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -214,3 +218,8 @@ $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
 $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
+
+//wizard
+$route['wizard/show_app'] = 'wizard/show_app';
+$route['wizard/del_app'] = 'wizard/del_app';
+//$route['wizard/getSubOptions'] = 'wizard/getSubOptions';

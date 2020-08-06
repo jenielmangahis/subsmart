@@ -86,11 +86,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <?php 
 
                         if(isset($coupon)) {
-                          if($coupon['coupon']['type'] == 1) {
-                            $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];
-                          } else {
+                          if(isset($coupon['coupon']['type'])){
+                            if($coupon['coupon']['type'] == 1) {
+                              $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];
+                            } else {
+                              $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
+                            }
+                          }else {
                             $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
-                          }
+                          }  
                         }else{
                           $new_total_amount =  $cart_data['total_amount'] ;
                         } 

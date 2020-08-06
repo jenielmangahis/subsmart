@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('reconcile/save', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -35,9 +35,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-6 form-group">
                                      <label for="account_type">Account</label>
-                                    <select name="account_type" id="account_type" class="form-control select2" required>
+                                    <select name="chart_of_accounts_id" id="chart_of_accounts_id" class="form-control select2" required>
                                         <option value="">Select Account Type</option>
-                                       
+                                        <?php foreach ($this->chart_of_accounts_model->select() as $row): ?>
+                                            <option value="<?php echo $row->id ?>"><?php echo $row->name ?></option>
+                                        <?php endforeach ?>
                                     </select>
                                 </div>
                             </div>
@@ -54,8 +56,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-2 form-group">
                                     <label for="name">Ending Balance</label>
-                                    <input type="text" class="form-control" name="name" id="name" required
-                                           placeholder="Enter Name"
+                                    <input type="text" class="form-control" name="ending_balance" id="ending_balance" required
+                                           placeholder="Enter Ending Balance"
                                            autofocus/>
                                 </div>
                                 <div class="col-md-2 form-group">
@@ -72,21 +74,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                  <div class="col-md-3 form-group">
                                     <label for="name">Date</label>
                                     <div class="col-xs-10 date_picker">
-                                        <input type="text" id="ending_date" class="form-control" name="ending_date" placeholder="">
+                                        <input type="text" id="first_date" class="form-control" name="first_date" placeholder="">
                                   </div>
                                     
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label for="name">Service Charge</label>
-                                    <input type="text" class="form-control" name="name" id="name" required
-                                           placeholder="Enter Name"
+                                    <input type="text" class="form-control" name="service_charge" id="service_charge" required
+                                           placeholder="Enter Service Charge"
                                            autofocus/>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label for="name">Expense account</label>
-                                    <select name="account_type" id="account_type" class="form-control select2" required>
+                                    <select name="expense_account" id="expense_account" class="form-control select2" required>
                                         <option value="">Select Account Type</option>
-                                       
+                                       <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
+                                            <option value="<?php echo $row_sub->sub_acc_name ?>" ><?php echo $row_sub->sub_acc_name ?></option>
+                                        <?php endforeach ?>
                                     </select>
                                 </div>
                             </div>
@@ -97,27 +101,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                  <div class="col-md-3 form-group">
                                     <label for="name">Date</label>
                                     <div class="col-xs-10 date_picker">
-                                        <input type="text" id="ending_date" class="form-control" name="ending_date" placeholder="">
+                                        <input type="text" id="second_date" class="form-control" name="second_date" placeholder="">
                                   </div>
                                     
                                 </div>
                                 <div class="col-md-3 form-group">
-                                    <label for="name">Service Charge</label>
-                                    <input type="text" class="form-control" name="name" id="name" required
-                                           placeholder="Enter Name"
+                                    <label for="name">Interest earned</label>
+                                    <input type="text" class="form-control" name="interest_earned" id="interest_earned" required
+                                           placeholder="Enter Interest"
                                            autofocus/>
                                 </div>
                                 <div class="col-md-3 form-group">
-                                    <label for="name">Expense account</label>
-                                    <select name="account_type" id="account_type" class="form-control select2" required>
+                                    <label for="name">Income account</label>
+                                    <select name="income_account" id="income_account" class="form-control select2" required>
                                         <option value="">Select Account Type</option>
-                                       
+                                        <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
+                                            <option value="<?php echo $row_sub->sub_acc_name ?>" ><?php echo $row_sub->sub_acc_name ?></option>
+                                        <?php endforeach ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary">Start Reconciling</button>
+                                    <button type="button" id="submit" class="btn btn-flat btn-primary">Start Reconciling</button>
                                 </div>
                             </div>
                         </div>
@@ -180,4 +186,28 @@ $(function(){
            language: "de"
         });
     });
+
+$('#submit').on('click', function() {
+  var chart_of_accounts_id = $('#chart_of_accounts_id').val();
+  var ending_balance = $('#ending_balance').val();
+  var ending_date = $('#ending_date').val();
+  var first_date = $('#first_date').val();
+  var service_charge = $('#service_charge').val();
+  var expense_account = $('#expense_account').val();
+  var second_date = $('#second_date').val();
+  var interest_earned = $('#interest_earned').val();
+  var income_account = $('#income_account').val();
+  if(chart_of_accounts_id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/save') ?>",
+        method: "POST",
+        data: {chart_of_accounts_id:chart_of_accounts_id,ending_balance:ending_balance,ending_date:ending_date,first_date:first_date,service_charge:service_charge,expense_account:expense_account,second_date:second_date,interest_earned:interest_earned,income_account:income_account},
+        success:function(data)
+        {
+            location.href = "<?php echo url('accounting/reconcile') ?>"
+        }
+    })
+  }
+});
 </script>

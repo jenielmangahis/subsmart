@@ -42,7 +42,7 @@ class Rules_model extends MY_Model
                 'comment' => $comment[$x]
             ];
         }
-        $this->db->insert_batch('accounting_conditions',$data);
+        $this->db->insert_batch('accounting_rules_conditions',$data);
         return true;
     }
 
@@ -53,7 +53,7 @@ class Rules_model extends MY_Model
                 'percentage'  => $percentage[$x],
             ];
         }
-        $this->db->insert_batch('accounting_category',$data);
+        $this->db->insert_batch('accounting_rules_category',$data);
         return true;
     }
 
@@ -66,16 +66,16 @@ class Rules_model extends MY_Model
         return $qry->result();
     }
     public function getConditionById($id){
-        $qry = $this->db->get_where('accounting_conditions',array('rules_id'=>$id));
+        $qry = $this->db->get_where('accounting_rules_conditions',array('rules_id'=>$id));
         return $qry->result();
     }
     public function getCategoryById($id){
-        $qry = $this->db->get_where('accounting_category',array('rules_id'=> $id));
+        $qry = $this->db->get_where('accounting_rules_category',array('rules_id'=> $id));
         return $qry->result();
     }
 
     public function editRules($update,$con_id,$description,$contain,$comment,$cat_id,$category,$percentage){
-        $qry = $this->db->get_where('accounting_rules',array('id'=>$update['rules_id']));
+        $qry = $this->db->get_where('accounting_rules_conditions',array('id'=>$update['rules_id']));
         if ($qry->num_rows() == 1){
             $data = array(
                 'rules_name' => $update['rules_name'],
@@ -98,12 +98,12 @@ class Rules_model extends MY_Model
     }
     public function updateConditions($con_id,$description,$contain,$comment,$rules_id){
         for($x = 0; $x < count($description);$x++){
-            $data[] = [
-                'id'=> $con_id[$x],
-                'description' => $description[$x],
-                'contain'  => $contain[$x],
-                'comment' => $comment[$x]
-            ];
+//            $data[] = [
+//                'id'=> $con_id[$x],
+//                'description' => $description[$x],
+//                'contain'  => $contain[$x],
+//                'comment' => $comment[$x]
+//            ];
             if ($con_id[$x] == null){
                 $insert = array(
                     'rules_id' => $rules_id,
@@ -111,9 +111,9 @@ class Rules_model extends MY_Model
                     'contain'  => $contain[$x],
                     'comment' => $comment[$x]
                 );
-                $query = $this->db->get_where('accounting_conditions',array('rules_id'=>$rules_id,'description' => $description[$x],'contain'  => $contain[$x], 'comment' => $comment[$x]));
+                $query = $this->db->get_where('accounting_rules_conditions',array('rules_id'=>$rules_id,'description' => $description[$x],'contain'  => $contain[$x], 'comment' => $comment[$x]));
                 if ($query->num_rows() == 0){
-                    $this->db->insert('accounting_conditions',$insert);
+                    $this->db->insert('accounting_rules_conditions',$insert);
                 }
             }else{
                 $update = array(
@@ -122,7 +122,7 @@ class Rules_model extends MY_Model
                     'comment' => $comment[$x]
                 );
                 $this->db->where('id',$con_id[$x]);
-                $this->db->update('accounting_conditions',$update);
+                $this->db->update('accounting_rules_conditions',$update);
             }
 
         }
@@ -130,20 +130,20 @@ class Rules_model extends MY_Model
     }
     public function updateCategories($cat_id,$category,$percentage,$rules_id){
         for($x = 0; $x < count($category);$x++){
-            $data[] = [
-                'id'=> $cat_id[$x],
-                'category' => $category[$x],
-                'percentage'  => $percentage[$x],
-            ];
+//            $data[] = [
+//                'id'=> $cat_id[$x],
+//                'category' => $category[$x],
+//                'percentage'  => $percentage[$x],
+//            ];
             if ($cat_id[$x] == null){
                 $insert = array(
                     'rules_id' => $rules_id,
                     'category' => $category[$x],
                     'percentage'  => $percentage[$x],
                 );
-                $query = $this->db->get_where('accounting_category',array('rules_id'=>$rules_id,'category' => $category[$x],'percentage'  => $percentage[$x]));
+                $query = $this->db->get_where('accounting_rules_category',array('rules_id'=>$rules_id,'category' => $category[$x],'percentage'  => $percentage[$x]));
                 if ($query->num_rows() == 0){
-                    $this->db->insert('accounting_category',$insert);
+                    $this->db->insert('accounting_rules_category',$insert);
                 }
             }else{
                 $update = array(
@@ -151,7 +151,7 @@ class Rules_model extends MY_Model
                     'percentage' => $percentage[$x]
                 );
                 $this->db->where('id',$cat_id[$x]);
-                $this->db->update('accounting_category',$update);
+                $this->db->update('accounting_rules_category',$update);
             }
         }
         return true;
@@ -162,9 +162,9 @@ class Rules_model extends MY_Model
         $this->db->delete('accounting_rules');
 //        Delete Conditions
         $this->db->where('rules_id',$id);
-        $this->db->delete('accounting_conditions');
+        $this->db->delete('accounting_rules_conditions');
         //        Delete Categories
         $this->db->where('rules_id',$id);
-        $this->db->delete('accounting_category');
+        $this->db->delete('accounting_rules_category');
     }
 }
