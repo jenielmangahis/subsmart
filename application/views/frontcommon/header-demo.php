@@ -51,13 +51,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="header-top">
 			<div class="container">
 				<div class="row align-items-center">
-					<div class="col-md-10 desktop-only">
-						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> AND START TO CREATE A BETTER AUTOMATED COMPANY</p>
+					<div class="col-md-9 desktop-only">
+						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 pl-4 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
 					</div>
 					<div class="col-md-10 mobile-only">
-              			<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b></p>
-            		</div>
-					<div class="col-md-2 text-md-right desktop-only">
+        			<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
+      		</div>
+					<div class="col-md-3 text-md-right desktop-only">
+            <ul class="account-menu">
+              <li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
+              <li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
+            </ul>
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
@@ -78,10 +82,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 						<div style="margin-left: auto;text-align: right;">
 						<nav class="site-nav-menu1 ml-auto d-none d-md-block">
-							<ul class="">
+							<!-- <ul class="">
 								<li class="active"><a href="<?php echo url('/login') ?>">Login</a></li>
 								<li><a class="m-0" href="<?php echo url('/registration') ?>">Sign Up</a></li>
-							</ul>
+							</ul> -->
 						</nav>
 						<nav class="site-nav-menu ml-auto">
 							<ul class="over-write-menu" style="margin-top:8px;">

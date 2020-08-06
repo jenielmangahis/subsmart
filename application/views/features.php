@@ -153,9 +153,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <img class="img-responsive w-110" alt="work orders" src="<?php echo $url->assets ?>frontend/images/invoice-home.png">
                 </div>
                 <div class="col-sm-6 systemInfo pt-4 mt-2 pl-5">
-                    <h3>
-                        Create and assign <br/> work orders
-                    </h3>
+                    <h3>Manage Jobs <br/> with Ease</h3>
                     <p>Two simple steps that will help you increase productivity:</p>
                     <br/>
                     <ol class="feature__list">
@@ -174,7 +172,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-sm-6 systemInfo text-right pt-5">
                     <h3>Automate appointment scheduling</h3>
                     <p>
-                        Now you can schedule appointments for both your customers and employees, without barely lifting a finger.
+                        Now you can schedule appointments for both your customers and employees while barely lifting a finger.
                     </p>
                 </div>
                 <div class="col-sm-6 pl-3">
@@ -201,7 +199,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <br/>
                     <ol class="feature__list">
                         <li>
-                            Add your logo, terms and conditions. Attach work orders.
+                            Add your logo and other business details for easy identification.
                         </li>
                         <li>
                             Track and record payments like never before. With card, cash and check options available, you have everything you’ll ever need.
@@ -246,21 +244,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<section class="dyk">
-    <div class="container">
-        <div class="text-center">
-            <div class="circle-down"><span class="fa fa-chevron-down"></span></div>
-        </div>
-        <h2>STATISTIC</h2>
-        <p>
-            <!-- Business that use our proud platform realized a <br><span>10x increase</span> in productivity. -->
-            Businesses that uses CRM systems improved productivity by <span>50%</span>.
-        </p>
-    </div>
-    <div class="dyk__btn">
-        <a class="btn btn-violet btn-xl" href="<?php echo url('registration') ?>">Try it now for free</a>
     </div>
 </section>
 <section class="group-section-3" id="group-insights">
@@ -308,12 +291,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6 systemInfo pt-4 mt-2">
-                    <h3>Run exclusive deals <br/> and campaigns</h3>
-                    <p>Creating deals just got a whole lot easier.</p>
+                    <h3>Run exclusive <br/> promotional campaigns</h3>
+                    <p>Creating promotions just got a whole lot easier.</p>
                     <br/>
                     <ol class="feature__list">
                         <li>
-                            Effortlessly make a deal with nSmarTrac and promote it on your website.
+                            Effortlessly creating promotional content with nSmarTrac and share it on your website.
                         </li>
                         <li>
                             Customers can book and appointment and seal the deal instantly.
@@ -443,6 +426,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
+    </div>
+</section>
+<section class="dyk">
+    <div class="container">
+        <div class="text-center">
+            <div class="circle-down"><span class="fa fa-chevron-down"></span></div>
+        </div>
+        <h2>STATISTIC</h2>
+        <p>
+            <!-- Business that use our proud platform realized a <br><span>10x increase</span> in productivity. -->
+            Businesses that uses CRM systems improved productivity by <span>50%</span>.
+        </p>
+    </div>
+    <div class="dyk__btn">
+        <a class="btn btn-violet btn-xl" href="<?php echo url('registration') ?>">Try it now for free</a>
     </div>
 </section>
 <section class="cta">

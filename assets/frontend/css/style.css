@@ -568,9 +568,10 @@ span.widget-desc {
  .header-top p {
    margin-bottom: 0;
    color: #fff;
-   font-size: 12px;
+   font-size: 11px;
    line-height: 1;
    margin: 0px !important;
+   padding-left: 0px;
  }
  .header-top p  span{
     color:#fada97
@@ -4269,7 +4270,7 @@ font-size: 12px;
    .slicknav_btn {
     position: absolute;
     right: 10px;
-    top: 76px;
+    top: 90px;
     font-size: 12px;
     z-index: 999999;
   }
@@ -4357,4 +4358,34 @@ font-size: 12px;
 
 .widget-footer-container .tradingview-widget-container {
   margin: auto !important;
+}
+/* Login CSS Top Bar */
+ul.account-menu {
+  float: left;
+  font-size: 14px;
+  position: relative;
+  top: 4px;
+  left: 50px;
+}
+span.text-center-b {
+  color: white !important;
+  display: block;
+}
+ul.account-menu li {
+  float: left;
+  margin-right: 25px;
+  list-style: none;
+}
+ul.account-menu li a {
+  color: white;
+  font-size: 13px;
+}
+@media(max-width:1180px) {
+  ul.account-menu {
+    float: left;
+    font-size: 14px;
+    position: relative;
+    top: 4px;
+    left: 10px;
+  }
 }
