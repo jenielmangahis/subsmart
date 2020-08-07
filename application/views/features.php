@@ -136,7 +136,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-sm-6 systemInfo text-right pt-2">
                     <h3 class="pt-2">
-                        Manage customers and <br/> send notifications
+                        Manage Customers and <br/> Send Notifications
                     </h3>
                     <p>
                         With nSmarTrac, customer information is stored within the intuitive dashboard. So you can easily find addresses with directions and maps for clear navigation.
@@ -170,7 +170,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6 systemInfo text-right pt-5">
-                    <h3>Automate appointment scheduling</h3>
+                    <h3>Automate Appointment Scheduling</h3>
                     <p>
                         Now you can schedule appointments for both your customers and employees while barely lifting a finger.
                     </p>
@@ -194,15 +194,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <img class="img-responsive" alt="invoices" src="<?php echo $url->assets ?>frontend/images/invoice-home.png">
                 </div>
                 <div class="col-sm-6 systemInfo pl-4 mt-2 pt-3 pl-4">
-                    <h3 class="mb-25">Send custom estimates <br/> and invoices</h3>
+                    <h3 class="mb-25">Send Custom Estimates <br/> and Invoices</h3>
                     <p>nSmarTrac lets you build custom estimates and send invoices from the palm of your hand.</p>
                     <br/>
                     <ol class="feature__list">
                         <li>
                             Add your logo and other business details for easy identification.
-                        </li>
-                        <li>
-                            Track and record payments like never before. With card, cash and check options available, you have everything you’ll ever need.
                         </li>
                     </ol>
                 </div>
@@ -211,8 +208,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6 systemInfo text-right pt-5">
-                    <h3>Get paid online</h3>
+                    <h3>Get Paid Online</h3>
                     <ol class="feature__list">
+                        <li>
+                            Track and record payments like never before. With card, cash and check options available, you have everything you’ll ever need.
+                        </li>
                         <li>
                             Through nSmarTrac, payments are safely and securely deposited through our Square, Paypal and Wepay integrated processors.
                             <img class="img-responsive margin-top img-30" src="<?php echo $url->assets ?>frontend/images/payments-img.png">
@@ -230,7 +230,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <img class="img-responsive" alt="expenses" src="<?php echo $url->assets ?>frontend/images/mileage.png">
                 </div>
                 <div class="col-sm-6 systemInfo pt-4 pl-4">
-                    <h3>Track expenses</h3>
+                    <h3>Track Expenses</h3>
                     <p>What used to be a stressful, time-consuming task just got a whole lot easier. nSmarTrac lets you:</p>
                     <br/>
                     <ol class="feature__list">
@@ -255,7 +255,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <img class="img-responsive w-110" alt="reports" src="<?php echo $url->assets ?>frontend/images/chart.png">
             </div>
             <div class="col-sm-6 systemInfo pt-4 pl-5">
-                <h3>Get instant insights</h3>
+                <h3>Get Instant Insights</h3>
                 <p>nSmarTrac provides users with valuable reports and insights that paint a clearer picture of where your business is now and where its going.</p>
             </div>
         </div>
@@ -275,7 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-sm-6 systemInfo pl-5 pt-5 mt-3">
                     <h3>
-                        Create a front end service directory
+                        Create a Front End Service Directory
                     </h3>
                     <ol class="feature__list">
                         <li>
@@ -291,7 +291,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="feature">
             <div class="row">
                 <div class="col-sm-6 systemInfo pt-4 mt-2">
-                    <h3>Run exclusive <br/> promotional campaigns</h3>
+                    <h3>Run Exclusive <br/> Promotional Campaigns</h3>
                     <p>Creating promotions just got a whole lot easier.</p>
                     <br/>
                     <ol class="feature__list">
@@ -315,7 +315,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-sm-6 systemInfo pl-5 pt-5">
                     <h3>
-                        Personalized postcards for your customers
+                        Personalized Postcards For Your Customers
                     </h3>
                     <ol class="feature__list">
                         <li>
