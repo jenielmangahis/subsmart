@@ -2517,25 +2517,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="eCommerce-product-div">
                             <div class="image-price-container">
                                 <div class="price-container-title-v2">Industry Specific</div>
-                                <div class="price-container default-product">
-                                    <div class="pricing-section">
-                                        <div class="price">
-                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">399.99</span>
-                                            <span class="as"></span><span class="ac"></span>
-                                        </div>
-                                        <div class="red-price-text">
-                                            <span class="ct">$</span><span class="aw">249.99</span>
-                                            <span class="as"></span><span class="ac"></span>
-                                        </div>
-                                        <span class="per red-price-month">/mo</span>
-                                    </div>
-                                    <!--
+                                <div class="price-container-freelancer">
                                     <div class="pricing-section mbc-20">
                                         <div class="price">
                                           <p>Contact Us for a Demo</p>
                                         </div>
 
-                                    </div> -->
+                                    </div>
                                     <p class="offer-text" style="position: relative;right: 10px;"><span class="high-attention-text">Save 50%
                                             for 3 months</span></p>
                                     <p class="payroll_text">+20 License</p>
@@ -2825,36 +2813,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Campaign Blast</strong></span>
                                 </li>
                             </ul>
-                            <ul data-list="1" class="bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Business analytics & <br/> &nbsp; &nbsp; insights</strong></span>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Batch invoices & <br/> &nbsp; &nbsp; expenses</strong></span>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Automate <br/> &nbsp; &nbsp; workflows</strong></span>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Customize access by <br/> &nbsp; &nbsp; role</strong></span>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Dedicated account <br/> &nbsp; &nbsp; manager</strong></span>
-                                </li>
-                            </ul>
-                            <ul data-list="1" class="bsc-margin">
-                                <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>On-demand online <br/> &nbsp; &nbsp; training</strong></span>
-                                </li>
-                            </ul>
                             <ul data-list="1" class="desc-ul hidden">
                                 <li>
                                     <i class="arrow-down" aria-hidden="true"></i>
@@ -2954,10 +2912,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <br/>
                         <div class="addon__list-row">
-                            <div class="addon__price-b">
+                            <div class="addon__price">
                                 <div class="addon__price-base"><span class="addon__price-currency">$</span>15</div>
-                                <div class="addon__price-label-b">Wizard</div>
-                                <div class="addon__price-label-b">Add-Ons</div>
+                                <div class="addon__price-label">Add-Ons</div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">

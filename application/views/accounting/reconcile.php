@@ -269,7 +269,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tbody>
                             <?php
                               $i=1;
-                              foreach($this->reconcile_model->select() as $row)
+                              foreach($rows as $row)
                               {
                                 echo "<tr id='payments'>";
                                 echo "<td contenteditable='true'>".$row->first_date."</td>";

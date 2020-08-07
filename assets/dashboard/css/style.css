@@ -9176,8 +9176,21 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     outline: none;
 }
 #new-popup .modal-dialog {
-    max-width: 850px;
-    margin: 40px auto;
+    max-width: 950px;
+    width: 100%;
+    margin: 0 auto;
+    position: absolute;
+    top:120px;
+    left: 30px;
+}
+#new-popup .modal-dialog:before{
+    position: absolute;
+    content: '';
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #fff;
+    top: -10px;
+    left: 60px;
 }
 .add-new-data-block{
     padding: 15px 15px 0;
@@ -9210,6 +9223,7 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     padding: 15px 0;
     border-top: 1px solid #e0e0e0;
     text-align: right;
+    margin: 15px 0 0;
 }
 .pop-footer a{
     display: table;
@@ -9318,3 +9332,145 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     opacity: 0.80;
 }
 /* **** End Reconile Page ***** */
+
+/* **** Dashboard Last Sections **** */
+.dash-last-wrpper{
+    padding: 35px 35px;
+    background: #fff;
+}
+.com-newlat{
+    border: 1px solid #959899;
+    border-radius: 10px;
+    margin: 0 0 30px;
+    min-height: 300px;
+}
+.news-hed{
+    padding: 25px 0;
+    display: flex;
+}
+.news-hed img{
+    margin: 0 15px;
+}
+.news-hed h4{
+    width: 100%;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 300;
+    color: #45a2f3;
+    margin: 0;
+    padding: 0 0 5px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid #959899;
+}
+
+.inner-news{
+    padding: 0 15px 15px;
+}
+.inner-news p{
+    font-size: 14px;
+    font-weight: 300;
+    color: #333;
+    margin: 0 0 5px;
+}
+.spot-box{
+    padding: 15px;
+    border: 1px solid #959899;
+    border-radius: 10px;
+    margin: 0 0 30px;
+    display: flex;
+}
+.spot-img{
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #333;
+}
+.spot-img img{width: 100%;}
+.spot-head{
+    padding: 15px;
+}
+.spot-head h4{
+    font-size: 16px;
+    font-weight: 300;
+    color: #45a2f3;
+    letter-spacing: 2px;
+    margin: 0 0 15px;
+}
+.corpo-box{
+    border: 1px solid #959899;
+    border-radius: 10px;
+    margin: 0 0 30px;
+    min-height: 250px;
+}
+.corpo-box h4{
+    padding: 10px 15px;
+    border-bottom: 1px solid #959899;
+    display: block;
+    margin: 0;
+    font-weight: 500;
+    font-size: 18px;
+    color: #333;
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(216,216,216,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(216,216,216,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(216,216,216,1) 100%);
+    border-radius: 10px 10px 0 0;
+}
+.state-box{
+    min-height: auto;
+}
+.state-box table{margin: 0;}
+.state-box table thead th{
+    padding: 5px 15px;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    background: #336699;
+    text-align: center;
+}
+.state-box table tbody td{
+    padding: 10px 15px;
+    font-size: 18px;
+    font-weight: 300;
+    color: #45a2f3;
+    text-align: center;
+    border: none;
+    border-right:1px solid #959899;
+}
+.state-box table tbody td:last-child{
+    border: none;
+}
+.top-ins-in{
+    padding: 15px;
+}
+.insl-bx h5{
+    font-size: 14px;
+    font-weight: normal;
+    color: #45a2f3;
+    margin: 0 0 15px;
+}
+.insl-bx li{
+    display: block;
+    padding: 3px 0;
+    font-size: 14px;
+    font-weight: 300;
+    color: #333;
+}
+.insl-bx li strong{
+    width: 40px;
+}
+.insl-bx li span{
+    color: green;
+}
+.view-all-bx{
+    padding: 10px 15px;
+    display: table;
+    width: 100%;
+}
+.view-all-bx a{
+    font-size: 14px;
+    font-weight: 500;
+    color: #45a2f3;
+    float: right;
+}
+/* **** End Dashboard Last Sections **** */

@@ -63,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-md-5 col-sm-5">
                                                             <div class="form-group">
                                                                 <label>Account</label>
-                                                                <select class="form-control">
+                                                                <select class="form-control" id="selectid">
                                                                     <?php
                                                                        $i=1;
                                                                        foreach($this->chart_of_accounts_model->select() as $row)
@@ -84,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
 
-                                                    <button class="btn-main">Resume reconciling</button>
+                                                    <button id="resume" class="btn-main">Resume reconciling</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -102,3 +102,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
+<script type="text/javascript">
+$('#resume').click(function(){
+    var id = document.getElementById("selectid").value;
+    if(id!='')
+      {
+        var url = "<?php echo url('accounting/reconcile/')?>";
+        location.href = url+id;
+      }
+})
+</script>

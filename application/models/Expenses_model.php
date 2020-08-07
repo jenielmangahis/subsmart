@@ -53,17 +53,34 @@ class Expenses_model extends MY_Model
                 $this->db->update('accounting_expense_category',$update);
             }
         }else{
-            for ($x = 0;$x < count($category);$x++){
-                $data[] = [
-                    'transaction_type_id' => $trans_id,
-                    'category_id' => $category[$x],
-                    'description' => $description[$x],
-                    'amount' => $amount[$x]
-                ];
+            if ($category != null || $category != 0){
+                for ($x = 0;$x < count($category);$x++){
+                    $data[] = [
+                        'transaction_type_id' => $trans_id,
+                        'category_id' => $category[$x],
+                        'description' => $description[$x],
+                        'amount' => $amount[$x]
+                    ];
+                }
+                $this->db->insert_batch('accounting_expense_category',$data);
             }
-            $this->db->insert_batch('accounting_expense_category',$data);
         }
 
+    }
+
+    public function expensesAttachment($id,$type,$file_name){
+        $attachment = $file_name['file_name'];
+        if ($attachment != null){
+            for($x = 0;$x < count($attachment);$x++){
+                $data = array(
+                    'expenses_id' => $id,
+                    'type' => $type,
+                    'date_created' => date('Y-m-d H:i:s')
+                );
+                $this->db->where('attachment',$attachment[$x]);
+                $this->db->update('accounting_expense_attachment',$data);
+            }
+        }
     }
 
     public function timeActivity($new_data){
@@ -254,6 +271,7 @@ class Expenses_model extends MY_Model
             $this->db->insert('accounting_check',$data);
             $check_id = $this->db->insert_id();
             $this->expenseCategory($check_id,false,$new_data);
+            $this->expensesAttachment($check_id,$type,$new_data);
         }else{
             return false;
         }

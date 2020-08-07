@@ -77,13 +77,14 @@
                             <h4>CUSTOMERS</h4>
 
                             <ul>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Invoice</a></li>
+                                <li><a href="#">Receive payment</a></li>
+                                <li><a href="#">Estimate</a></li>
+                                <li><a href="#">Credit memo</a></li>
+                                <li><a href="#">Sales receipt</a></li>
+                                <li><a href="#">Refund receipt</a></li>
+                                <li><a href="#">Delayed credit</a></li>
+                                <li><a href="#">Delayed charge</a></li>
                             </ul>
                         </div>
                     </div>
@@ -92,13 +93,14 @@
                             <h4>Vendors</h4>
 
                             <ul>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Expense</a></li>
+                                <li><a href="#">Check</a></li>
+                                <li><a href="#">Bill</a></li>
+                                <li><a href="#">Pay bills</a></li>
+                                <li><a href="#">Purchase order</a></li>
+                                <li><a href="#">Vendor credit</a></li>
+                                <li><a href="#">Credit card credit</a></li>
+                                <li><a href="#">Print checks</a></li>
                             </ul>
                         </div>
                     </div>
@@ -107,13 +109,9 @@
                             <h4>Employees</h4>
 
                             <ul>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Payroll</a></li>
+                                <li><a href="#">Single time activity</a></li>
+                                <li><a href="#">Weekly timesheet</a></li>
                             </ul>
                         </div>
                     </div>
@@ -122,13 +120,13 @@
                             <h4>Other</h4>
 
                             <ul>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Bank deposit</a></li>
+                                <li><a href="#">Transfer</a></li>
+                                <li><a href="#">Journal entry</a></li>
+                                <li><a href="#">Statement</a></li>
+                                <li><a href="#">Inventory qty adjustment</a></li>
+                                <li><a href="#">Pay down credit card</a></li>
+                                <li><a href="#">Apply for Capital</a></li>
                             </ul>
                         </div>
                     </div>

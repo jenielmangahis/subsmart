@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-
 <?php include viewPath('includes/header'); ?>
 
 <style>
@@ -13,29 +11,44 @@
   .custom-signaturepad .sigPad  {
     width: 100% !important;
   }
-  div[wrapper__section] {
-    margin-left: 0px;
-  }
-  div[wrapper__section] .container-fluid .page-title-box .page-title {
-    color: #fff;
-  }
-  div[wrapper__section] .container-fluid .page-title-box .breadcrumb .breadcrumb-item {
-    color: #fff;
-  }
-  
 </style>
+<style>
 
-<div class="wrapper" role="wrapper">
-    
+.my-div-container .card { 
+    padding:3px !important;
+    border:0px ;
+}
+
+.my-div-container .card .card-body { 
+    padding:0px !important;
+}
+
+.my-div-container .card .card-body .row { 
+    padding:0px !important;
+}
+
+.my-div-container .card .card-body .row .form-group {  padding-left:5px; padding-right:5px; margin-bottom:0px !important; }
+
+body { background: white !important; }
+.my-div-container .card .card-body .row .form-group .box-title { margin:0px; }
+.float-left { float:left !important; }
+.remove-padding { padding:0px !important; }
+.one-row-label { line-height: 46px;margin-bottom: 0px !important; }
+#table_body tr td { padding: 3px 7px !important; }
+
+label { margin-bottom:0px !important; }
+</style>
+<div class="wrapper " role="wrapper">
+    <?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
+        <div class="container-fluid my-div-container">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Demo Form</h1>
+                        <h1 class="page-title">Workorder</h1>
                         <ol class="breadcrumb">
-                          <li class="breadcrumb-item active">ALARM SYSTEM DEMO AGREEMENT</li>
+                            <li class="breadcrumb-item active"><h5>ALARM SYSTEM WORKORDER AGREEMENT</h5></li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
@@ -55,10 +68,6 @@
             <!-- end row -->
             <?php echo form_open_multipart('workorder/save', ['class' => 'form-validate require-validation', 'id' => 'workorder_form', 'autocomplete' => 'off']); ?>
 
-
-
-            
-            
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
@@ -67,24 +76,17 @@
                                 <?php echo date('m/d/Y') ?>, by and between ADI, (the "Company") and the
                                 ("Customer") as the address shown below (the "Premise/Monitored Location") </p>
 
-                              <?php $this->form_builder->create_form($form); ?>
-                              
-
-                            <?php /* ?>
                             <!-- ====== CUSTOMER ====== -->
                             <div class="row">
-
-                              
-                              <hr style="margin-bottom: 500px !important;">
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="form-group col-md-12">
                                             <h5 class="box-title">Customer</h5>
                                         </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="">Customer Type</label><br/>
+                                        <div class="col-md-3 form-group">
+                                            <label class="col-md-6 float-left one-row-label pl-0">Customer Type</label>
                                             <select name="customer[customer_type]"
-                                                    class="form-control"
+                                                    class="form-control float-left col-md-6"
                                                     id="customer_type">
                                                 <?php foreach (get_config_item('customer_types') as $key => $customer_type) { ?>
                                                     <option value="<?php echo $customer_type ?>">
@@ -93,10 +95,10 @@
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="customer_install_type">Install Type </label><br/>
+                                        <div class="col-md-3 form-group">
+                                            <label for="customer_install_type" class="col-md-5 float-left one-row-label">Install Type </label>
                                             <select name="customer[install_type]"
-                                                    class="form-control"
+                                                    class="form-control float-left col-md-7"
                                                     id="customer_install_type">
                                                 <?php foreach (get_config_item('install_types') as $key => $install_type) { ?>
                                                     <option value="<?php echo $install_type ?>">
@@ -106,9 +108,17 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4 form-group" style="display: none">
-                                            <label for="customer_company_name">
+                                            <label for="customer_company_name" >
                                                 Company Name </label>
                                             <input type="text" class="form-control" name="customer[company_name]"
+                                                   id="customer_company_name"
+                                                   required placeholder="Enter Company Name"/>
+                                        </div>
+                                        <div class="col-md-1 form-group"></div>
+                                        <div class="col-md-5 form-group">
+                                            <label for="customer_company_name" class="col-md-7 float-left one-row-label">
+                                                If Takeover Company Name </label>
+                                            <input type="text" class="form-control float-left col-md-5" name="customer[company_name]"
                                                    id="customer_company_name"
                                                    required placeholder="Enter Company Name"/>
                                         </div>
@@ -116,168 +126,102 @@
 
                                     <div class="row">
                                         <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[last_name]" id="last_name" required placeholder="Enter Last Name"/>
                                             <label for="last_name">Last Name</label>
-                                            <input type="text" class="form-control" name="customer[last_name]"
-                                                   id="last_name"
-                                                   required placeholder="Enter Last Name"/>
                                         </div>
                                         <div class="col-md-3 form-group">
-                                            <label for="first_name">First Name</label>
-                                            <input type="text" class="form-control" name="customer[first_name]"
-                                                   id="first_name"
-                                                   required placeholder="Enter First Name"
-                                                   autofocus
-                                                   onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                            <input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" autofocus onChange="jQuery('#customer_name').text(jQuery(this)
+                                            .val());"/><label for="first_name">First Name</label>
                                         </div>
-                                        <div class="col-md-2 form-group">
-                                            <label for="contact_mobile">Mobile</label>
-                                            <input type="text" class="form-control" name="customer[contact_mobile]"
-                                                   id="contact_mobile"
-                                                   placeholder="Enter Mobile"/>
+                                        <div class="col-md-1 form-group">
+                                            <input type="text" class="form-control" name="customer[contact_mobile]" id="contact_mobile"  placeholder="Enter Mobile"/>
+                                            <label for="contact_mobile">Mi</label>
 
                                         </div>
 
                                         <div class="col-md-2 form-group">
+                                            <input type="text" class="form-control" name="customer[contact_dob]"  id="customer_contact_dob" placeholder="Enter DOB"/>
                                             <label for="contact_dob">DOB</label>
-                                            <input type="text" class="form-control" name="customer[contact_dob]"
-                                                   id="customer_contact_dob"
-                                                   placeholder="Enter DOB"/>
                                         </div>
 
-                                        <div class="col-md-2 form-group">
+                                        <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[contact_ssn]" id="contact_ssn" required placeholder="Enter SSN"/>
                                             <label for="contact_ssn">SSN</label>
-                                            <input type="text" class="form-control" name="customer[contact_ssn]"
-                                                   id="contact_ssn"
-                                                   required
-                                                   placeholder="Enter SSN"/>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <span class="help help-sm">Spouse</span>
+                                        
+                                        <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[spouse_last_name]" id="spouse_last_name" required placeholder="Enter Last Name"  autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                            <label for="spouse_last_name">Last Name - Spouse</label>
                                         </div>
                                         <div class="col-md-3 form-group">
-                                            <label for="spouse_last_name">Last Name</label>
-                                            <input type="text" class="form-control" name="customer[spouse_last_name]"
-                                                   id="spouse_last_name"
-                                                   required placeholder="Enter Last Name"
-                                                   autofocus
-                                                   onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                                        </div>
-                                        <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[spouse_first_name]" id="spouse_first_name" required placeholder="Enter First Name" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                             <label for="spouse_first_name">First Name</label>
-                                            <input type="text" class="form-control" name="customer[spouse_first_name]"
-                                                   id="spouse_first_name"
-                                                   required placeholder="Enter First Name"
-                                                   autofocus
-                                                   onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                         </div>
-                                        <div class="col-md-2 form-group">
-                                            <label for="spouse_contact_mobile">Mobile</label>
-                                            <input type="text" class="form-control"
-                                                   name="customer[spouse_contact_mobile]"
-                                                   id="spouse_contact_mobile"
-                                                   placeholder="Enter Mobile"/>
-
+                                        <div class="col-md-1 form-group">
+                                            <input type="text" class="form-control" name="customer[spouse_contact_mobile]" id="spouse_contact_mobile" placeholder="Enter Mobile"/>
+                                            <label for="spouse_contact_mobile">Mi</label>
                                         </div>
 
                                         <div class="col-md-2 form-group">
+                                            <input type="text" class="form-control" name="customer[spouse_contact_dob]" id="customer_spouse_contact_dob" placeholder="Enter DOB"/>
                                             <label for="contact_dob">DOB</label>
-                                            <input type="text" class="form-control" name="customer[spouse_contact_dob]"
-                                                   id="customer_spouse_contact_dob"
-                                                   placeholder="Enter DOB"/>
                                         </div>
 
-                                        <div class="col-md-2 form-group">
+                                        <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[spouse_contact_ssn]" id="spouse_contact_ssn" required placeholder="Enter SSN"/>
                                             <label for="spouse_contact_ssn">SSN</label>
-                                            <input type="text" class="form-control" name="customer[spouse_contact_ssn]"
-                                                   id="spouse_contact_ssn"
-                                                   required
-                                                   placeholder="Enter SSN"/>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[monitored_location]" id="monitored_location" required placeholder="Enter Monitored Location"/>
                                             <label for="monitored_location">Monitored Location</label>
-                                            <input type="text" class="form-control" name="customer[monitored_location]"
-                                                   id="monitored_location"
-                                                   required placeholder="Enter Monitored Location"/>
                                         </div>
                                         <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[city]" id="city" required placeholder="Enter City"/>
                                             <label for="city">City</label>
-                                            <input type="text" class="form-control" name="customer[city]"
-                                                   id="city"
-                                                   required placeholder="Enter City"/>
                                         </div>
-                                        <div class="col-md-2 form-group">
+                                        <div class="col-md-1 form-group">
+                                            <input type="text" class="form-control" name="customer[state]" id="state" placeholder="Enter State"/>
                                             <label for="state">State</label>
-                                            <input type="text" class="form-control" name="customer[state]"
-                                                   id="state"
-                                                   placeholder="Enter State"/>
-
                                         </div>
 
                                         <div class="col-md-2 form-group">
+                                            <input type="text" class="form-control" name="customer[zip]" id="zip" placeholder="Enter ZIP"/>
                                             <label for="zip">ZIP</label>
-                                            <input type="text" class="form-control" name="customer[zip]"
-                                                   id="zip"
-                                                   placeholder="Enter ZIP"/>
                                         </div>
 
-                                        <div class="col-md-2 form-group">
+                                        <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[cross_street]" id="cross_street" required placeholder="Enter Cross Street"/>
                                             <label for="cross_street">Cross Street</label>
-                                            <input type="text" class="form-control" name="customer[cross_street]"
-                                                   id="cross_street"
-                                                   required
-                                                   placeholder="Enter Cross Street"/>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-4 form-group">
-                                            <label for="contact_phone">Phone Number</label>
-                                            <div class="input-group phone-input">
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default dropdown-toggle"
-                                                            data-toggle="dropdown" aria-expanded="false"><span
-                                                                class="type-text">Type</span> <span
-                                                                class="caret"></span></button>
-													<ul class="dropdown-menu" role="menu">
-														<li><a class="changePhoneType" href="javascript:;"
-                                                               data-type-value="mobile">Mobile</a></li>
-														<li><a class="changePhoneType" href="javascript:;"
-                                                               data-type-value="home">Home</a></li>
-														<li><a class="changePhoneType" href="javascript:;"
-                                                               data-type-value="work">Work</a></li>
-													</ul>
-												</span>
-                                                <input type="hidden" name="customer[contact_phone][type]"
-                                                       class="type-input"
-                                                       value="mobile"/>
-                                                <input type="text" name="customer[contact_phone][number]"
-                                                       class="form-control"
-                                                       placeholder="Enter Phone"/>
+                                        <div class="col-md-3 form-group">
+                                            <div class="input-group phone-input mb-0">
+                                                <input type="hidden" name="customer[contact_phone][type]" class="type-input" value="mobile"/>
+                                                <input type="text" name="customer[contact_phone][number]" class="form-control" placeholder="Enter Phone"/>
                                             </div>
-
+                                            <label for="contact_phone">Phone Number</label>
                                         </div>
-                                        <div class="col-md-4 form-group">
+                                        <div class="col-md-3 form-group">
+                                            <input type="text" class="form-control" name="customer[email]" id="email" required placeholder="Enter Email"/>
                                             <label for="email">Email</label>
-                                            <input type="text" class="form-control" name="customer[email]"
-                                                   id="email"
-                                                   required placeholder="Enter Email"/>
                                         </div>
-                                        <div class="col-md-4 form-group">
+                                        <div class="col-md-3 form-group">
+                                            <input type="password" class="form-control" name="customer[password]" id="password" placeholder="Enter Password"/>
                                             <label for="password">Password</label>
-                                            <input type="password" class="form-control" name="customer[password]"
-                                                   id="password"
-                                                   placeholder="Enter Password"/>
                                         </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="">Notification Type</label><br/>
+                                        <div class="col-md-3 form-group"></div>
+                                        <div class="col-md-3 form-group">
+                                            <label for="" class="col-md-6 pl-0 float-left one-row-label">Notification Type</label>
                                             <select name="customer[notification_type][]"
-                                                    id="customer_notification_type_email" class="form-control">
+                                                    id="customer_notification_type_email" class="form-control float-left col-md-6">
                                                 <option>Select Notification Type</option>
                                                 <?php foreach (get_config_item('notification_types') as $key => $notification_type) { ?>
                                                     <option value="<?= $notification_type; ?>"><?php echo $notification_type ?> </option>
@@ -294,225 +238,223 @@
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Emergency Call List</h5>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="1st_call_verification_name">1st Call Verification Name</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[1st_call_verification_name]"
-                                               id="1st_call_verification_name"
-                                               required placeholder="Enter 1st Call Verification Name"/>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[1st_call_verification_name]" id="1st_call_verification_name" required placeholder="Enter 1st Call Verification Name"/>
+                                    <label for="1st_call_verification_name">1st Call Verification Name</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <div class="input-group phone-input mb-0">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style><span class="type-text">Type</span> <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu"> <li><a class="changePhoneType" href="javascript:;" data-type-value="mobile">Mobile</a></li> <li><a class="changePhoneType" href="javascript:;" data-type-value="home">Home</a></li> <li><a class="changePhoneType" href="javascript:;" data-type-value="work">Work</a></li> </ul>
+                                        </span>
+                                        <input type="hidden" name="emergency_call_list[phone][type][]"
+                                                class="type-input"
+                                                value="mobile"/>
+                                        <input type="text" name="emergency_call_list[phone][number][]"
+                                                class="form-control"
+                                                placeholder="Enter Phone"/>
+                                    </div>
+                                    <div>
+                                        <label style="float:left;">Phone Number</label>
+                                        <label style="float:right;">Type</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
-                                        <div class="input-group phone-input">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default dropdown-toggle"
-                                                        data-toggle="dropdown" aria-expanded="false"><span
-                                                            class="type-text">Type</span> <span
-                                                            class="caret"></span></button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="mobile">Mobile</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="home">Home</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="work">Work</a></li>
-                                                </ul>
-                                            </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
-                                                   class="type-input"
-                                                   value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
-                                                   class="form-control"
-                                                   placeholder="Enter Phone"/>
-                                        </div>
-
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[relation][]" id="emergency_call_relation" required placeholder="Enter Relation"/>
+                                    <label for="emergency_call_relation">Relation</label>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
-                                               id="emergency_call_relation"
-                                               required placeholder="Enter Relation"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_carrier_name">Carrier Name</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[carrier_name][]"
-                                               id="emergency_carrier_name"
-                                               required placeholder="Enter Carrier Name"/>
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[carrier_name][]" id="emergency_carrier_name" required placeholder="Enter Carrier Name"/>
+                                    <label for="emergency_carrier_name">Carrier Name</label>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="2nd_call_verification_name">2nd Call Verification Name</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[2nd_call_verification_name]"
-                                               id="2nd_call_verification_name"
-                                               required placeholder="Enter 2nd Call Verification Name"/>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[2nd_call_verification_name]" id="2nd_call_verification_name" required placeholder="Enter 2nd Call Verification Name"/>
+                                    <label for="2nd_call_verification_name">2nd Call Verification Name</label>
+                                </div>
+                                <div class="col-md-3 form-group">                                        
+                                    <div class="input-group phone-input mb-0">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-expanded="false"><span
+                                                        class="type-text">Type</span> <span
+                                                        class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="mobile">Mobile</a></li>
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="home">Home</a></li>
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="work">Work</a></li>
+                                            </ul>
+                                        </span>
+                                        <input type="hidden" name="emergency_call_list[phone][type][]"
+                                                class="type-input"
+                                                value="mobile"/>
+                                        <input type="text" name="emergency_call_list[phone][number][]"
+                                                class="form-control"
+                                                placeholder="Enter Phone"/>
+                                    </div>
+                                    <div>
+                                        <label style="float:left;">Phone Number</label>
+                                        <label style="float:right;">Type</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
-                                        <div class="input-group phone-input">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default dropdown-toggle"
-                                                        data-toggle="dropdown" aria-expanded="false"><span
-                                                            class="type-text">Type</span> <span
-                                                            class="caret"></span></button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="mobile">Mobile</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="home">Home</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="work">Work</a></li>
-                                                </ul>
-                                            </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
-                                                   class="type-input"
-                                                   value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
-                                                   class="form-control"
-                                                   placeholder="Enter Phone"/>
-                                        </div>
-
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[relation][]"
+                                            id="emergency_call_relation"
+                                            required placeholder="Enter Relation"/>
+                                    <label for="emergency_call_relation">Relation</label>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
-                                               id="emergency_call_relation"
-                                               required placeholder="Enter Relation"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_carrier_name">Carrier Name</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[carrier_name][]"
-                                               id="emergency_carrier_name"
-                                               required placeholder="Enter Carrier Name"/>
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control"
+                                            name="emergency_call_list[carrier_name][]"
+                                            id="emergency_carrier_name"
+                                            required placeholder="Enter Carrier Name"/>
+                                    <label for="emergency_carrier_name">Carrier Name</label>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_call_emergency_contact_1">Emergency Contact</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[emergency_contact_1]"
-                                               id="emergency_call_emergency_contact_1"
-                                               required placeholder="Enter Emergency Contact"/>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control"
+                                            name="emergency_call_list[emergency_contact_1]"
+                                            id="emergency_call_emergency_contact_1"
+                                            required placeholder="Enter Emergency Contact"/>
+                                    <label for="emergency_call_emergency_contact_1">Emergency Contact</label>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <div class="input-group phone-input mb-0">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-expanded="false"><span
+                                                        class="type-text">Type</span> <span
+                                                        class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="mobile">Mobile</a></li>
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="home">Home</a></li>
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="work">Work</a></li>
+                                            </ul>
+                                        </span>
+                                        <input type="hidden" name="emergency_call_list[phone][type][]"
+                                                class="type-input"
+                                                value="mobile"/>
+                                        <input type="text" name="emergency_call_list[phone][number][]"
+                                                class="form-control"
+                                                placeholder="Enter Phone"/>
+                                    </div>
+                                    <div>
+                                        <label style="float:left;">Phone Number</label>
+                                        <label style="float:right;">Type</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
-                                        <div class="input-group phone-input">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default dropdown-toggle"
-                                                        data-toggle="dropdown" aria-expanded="false"><span
-                                                            class="type-text">Type</span> <span
-                                                            class="caret"></span></button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="mobile">Mobile</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="home">Home</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="work">Work</a></li>
-                                                </ul>
-                                            </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
-                                                   class="type-input"
-                                                   value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
-                                                   class="form-control"
-                                                   placeholder="Enter Phone"/>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
-                                               id="emergency_call_relation"
-                                               required placeholder="Enter Relation"/>
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[relation][]"
+                                            id="emergency_call_relation"
+                                            required placeholder="Enter Relation"/>
+                                    <label for="emergency_call_relation">Relation</label>
                                 </div>
                                 <div class="col-md-3">
                                 </div>
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_call_emergency_contact_2">Emergency Contact</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[emergency_contact_2]"
-                                               id="emergency_call_emergency_contact_2"
-                                               required placeholder="Enter Emergency Contact"/>
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control"
+                                            name="emergency_call_list[emergency_contact_2]"
+                                            id="emergency_call_emergency_contact_2"
+                                            required placeholder="Enter Emergency Contact"/>
+                                    <label for="emergency_call_emergency_contact_2">Emergency Contact</label>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
-                                        <div class="input-group phone-input">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default dropdown-toggle"
-                                                        data-toggle="dropdown" aria-expanded="false"><span
-                                                            class="type-text">Type</span> <span
-                                                            class="caret"></span></button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="mobile">Mobile</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="home">Home</a></li>
-                                                    <li><a class="changePhoneType" href="javascript:;"
-                                                           data-type-value="work">Work</a></li>
-                                                </ul>
-                                            </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
-                                                   class="type-input"
-                                                   value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
-                                                   class="form-control"
-                                                   placeholder="Enter Phone"/>
-                                        </div>
-
+                                <div class="col-md-3 form-group">                                        
+                                    <div class="input-group phone-input mb-0">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-expanded="false"><span
+                                                        class="type-text">Type</span> <span
+                                                        class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="mobile">Mobile</a></li>
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="home">Home</a></li>
+                                                <li><a class="changePhoneType" href="javascript:;"
+                                                        data-type-value="work">Work</a></li>
+                                            </ul>
+                                        </span>
+                                        <input type="hidden" name="emergency_call_list[phone][type][]"
+                                                class="type-input"
+                                                value="mobile"/>
+                                        <input type="text" name="emergency_call_list[phone][number][]"
+                                                class="form-control"
+                                                placeholder="Enter Phone"/>
+                                    </div>
+                                    <div>
+                                        <label style="float:left;">Phone Number</label>
+                                        <label style="float:right;">Type</label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
-                                               id="emergency_call_relation"
-                                               required placeholder="Enter Relation"/>
-                                    </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" class="form-control" name="emergency_call_list[relation][]" id="emergency_call_relation" required placeholder="Enter Relation"/>
+                                    <label for="emergency_call_relation">Relation</label>
                                 </div>
                             </div>
 
                             <!-- ====== CUSTOMER ACCOUNT INFORMATION ====== -->
-                          
-
-                            <!-- ====== EQUIPMENT ====== -->
                             <div class="row">
+                                <div class="form-group col-md-12">
+                                    <h5 class="box-title">Customer Account Information</h5>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label for="street_address" class="col-md-5 float-left one-row-label pl-0"> Plan Type:</label>
+                                    <select name="plan_type" id="plan_type" class="form-control float-left col-md-7">
+                                        <option>Select Plan Type</option>
+                                        <?php if (count($plans) > 0) { ?>    
+                                            <?php foreach ($plans as $pn) { ?>
+                                                <option value="<?= $pn->id; ?>">
+                                                    <?php echo $pn->plan_name ?>
+                                                </option>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="customer_company_name" class="col-md-5 float-left one-row-label"> If Landline Company Name </label>
+                                    <input type="text" class="form-control float-left col-md-7" name="customer[company_name]" id="customer_company_name" required placeholder="Enter Company Name"/>
+                                </div>
+                                <div class="form-group col-md-3"></div>
+                                <div class="form-group col-md-3">
+
+                                    <label class="col-md-5 float-left one-row-label pl-0">Account Type</label>
+                                    <select name="account_type"
+                                            class="form-control float-left col-md-7"
+                                            id="account_type[name]">
+                                        <option>--SELECT--</option>
+                                        <?php foreach (get_config_item('account_types') as $key => $account_type) { ?>
+                                            <option value="<?php echo $account_type ?>">
+                                                <?php echo $account_type ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="form-group mt-2" style="display: none">
+                                        <input name="account_type[other]"
+                                                type="text" class="form-control"
+                                                placeholder="Write it here..." required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="customer_company_name" class="col-md-5 float-left one-row-label"> If Other Write out </label>
+                                    <input type="text" class="form-control float-left col-md-7" name="customer[company_name]" id="customer_company_name" required placeholder="Enter Company Name"/>
+                                </div>
+                                <div class="form-group col-md-3"></div>
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Equipment</h5>
                                 </div>
-                                <div class="c__custom c__custom_width col-md-4">
-                                    <div class="col-md-12">
-                                        <label>Panel Type</label>
-                                    </div>
-                                    <select class="form-control" name="panel_type[]" id="panel_type">
+
+                                <div class="form-group  col-md-3">
+                                    <label class="col-md-5 float-left one-row-label pl-0">Panel Type</label>
+                                    <select class="form-control float-left col-md-7" name="panel_type[]" id="panel_type">
                                         <option>--SELECT--</option>
                                         <?php foreach (get_config_item('panel_types') as $key => $panel_type) { ?>
                                             <option value="<?php echo $panel_type ?>">
@@ -521,374 +463,89 @@
                                         <?php } ?>
                                     </select>
                                 </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="panel_location"> Panel Location:</label>
-                                        <input type="text" class="form-control" name="panel_location"
-                                               id="panel_location" placeholder=""/>
-                                    </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="panel_location" class="col-md-5 float-left one-row-label "> Panel Location:</label>
+                                    <input type="text" class="form-control float-left col-md-7" name="panel_location"
+                                            id="panel_location" placeholder=""/>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="panel_communication"> Panel Communication:</label>
-                                        <select name="panel_communication"
-                                                class="form-control"
-                                                id="customer_type">
-                                            <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
-                                                <option value="<?php echo $panel_communication ?>">
-                                                    <?php echo $panel_communication ?>
-                                                </option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
+                                <!-- <div class="col-md-4"></div> -->
+                                <div class="col-md-6 form-group">
+                                    <label for="panel_communication" class="col-md-5 float-left one-row-label pl-0"> Panel Communication:</label>
+                                    <select name="panel_communication" class="form-control float-left col-md-4" id="customer_type">
+                                        <option>--SELECT--</option>
+                                        <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
+                                            <option value="<?php echo $panel_communication ?>">
+                                                <?php echo $panel_communication ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
-
                             </div>
 
-                            <!-- ====== JOB ====== -->
+                            <!-- ====== EQUIPMENT ====== -->
+                            <?php /* ?>
                             <div class="row">
+                                
                                 <div class="form-group col-md-12">
-                                    <h5 class="box-title">Job</h5>
+                                    <h5 class="box-title">Additional Equipment/Services</h5>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="date_w_issued"> Date Issued:</label>
-                                        <div class='input-group date datepicker'>
-                                            <input type='text'
-                                                   name="date_issued" class="form-control" id="date_w_issued"/>
-                                        </div>
+                                
+                                <div class="col-md-3 form-group">
+                                    <div class="col-md-6 pl-0" style="float:left;">
+                                        <label for="last_name">Type</label>
+                                        <select name="panel_communication" class="form-control" id="customer_type">
+                                            <option>--SELECT--</option>
+                                        </select>
                                     </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="job_type_id"> Job Type:</label>
-                                        <select class="form-control" name="job_type_id" id="job_type_id">
-                                            <option>Select Job Type</option>
-                                            <?php foreach (get_job_types() as $jobType) { ?>
-                                                <option value="<?php echo $jobType->id ?>">
-                                                    <?php echo $jobType->title ?>
-                                                </option>
-                                            <?php } ?>
+                                    <div class="col-md-6 pr-0 pl-0" style="float:left;">
+                                        <label for="last_name">Description</label>
+                                        <select name="panel_communication" class="form-control" id="customer_type">
+                                            <option>--SELECT--</option>
                                         </select>
                                     </div>
                                 </div>
+                            
+                                <div class="col-md-9 form-group">
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="status_id"> Status:</label>
-                                        <select class="form-control" name="status_id" id="status_id" required>
-                                            <option>Select Status</option>
-                                            <?php if (!empty($workstatus)) { ?>
-                                                <?php foreach ($workstatus as $status) { ?>
-                                                    <option value="<?php echo $status->id ?>">
-                                                        <?php echo $status->title ?>
-                                                    </option>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </select>
+                                    <div class="col-md-1 form-group" style="float:left;">
+                                        <label for="last_name">Qty</label>
+                                        <input type="text" class="form-control" name="customer[company_name]" id="customer_company_name" required value="1"/>
+                                    </div>
+
+                                    <div class="col-md-4 form-group" style="float:left;">
+                                        <label for="last_name">Location</label>
+                                        <input type="text" class="form-control" name="customer[company_name]" id="customer_company_name" required />
+                                    </div>
+                                    
+                                    <div class="col-md-1 form-group" style="float:left;">
+                                        <label for="last_name">Cost</label>
+                                        <input type="text" class="form-control" name="customer[company_name]" id="customer_company_name" required />
+                                    </div>
+
+                                    <div class="col-md-2 form-group" style="float:left;">
+                                        <label for="last_name">Discount</label>
+                                        <input type="text" class="form-control" name="customer[company_name]" id="customer_company_name" required />
+                                    </div>
+
+                                    <div class="col-md-2 form-group" style="float:left;">
+                                        <label for="last_name">Tax</label>
+                                        <input type="text" class="form-control" name="customer[company_name]" id="customer_company_name" required />
+                                    </div>
+
+                                    <div class="col-md-2 form-group" style="float:left;">
+                                        <label for="last_name">Total</label>
+                                        <input type="text" class="form-control" name="customer[company_name]" id="customer_company_name" required />
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="job_priority"> Priority:</label>
-                                        <select class="form-control" name="job_priority" id="job_priority">
-                                            <option>Not Set</option>
-                                            <?php foreach (get_priority_list() as $priority) { ?>
-                                                <option value="<?php echo $priority->id ?>">
-                                                    <?php echo $priority->title ?>
-                                                </option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- ====== ENHANCED SERVICES ====== -->
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <h5 class="box-title">Enhanced Services</h5>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="panel-group">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" href="#collapse1">Cameras <i
-                                                                class="fa fa-angle-down"
-                                                                style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse1" class="panel-collapse collapse">
-                                                <table class="table">
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>WO</th>
-                                                        <th>WI</th>
-                                                        <th>Doorbell Cam</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Honeywell</td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[honeywell][wo]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[honeywell][wi]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[honeywell][doorbell_cam]"
-                                                                   placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>AVYCON</td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[avycon][wo]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[avycon][wi]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[avycon][doorbell_cam]"
-                                                                   placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Other</td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[other][wo]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[other][wi]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="ip_cameras[other][doorbell_cam]"
-                                                                   placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="panel-group">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" href="#collapse2">Doorlocks: <i
-                                                                class="fa fa-angle-down"
-                                                                style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse2" class="panel-collapse collapse">
-                                                <div class="panel-body">
-                                                    <table class="table">
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Brass</th>
-                                                            <th>Nickel</th>
-                                                            <th>Bronze</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Deadbolt</td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="doorlocks[deadbolt][brass]"
-                                                                       placeholder=""/>
-                                                            </td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="doorlocks[deadbolt][nickal]"
-                                                                       placeholder=""/>
-                                                            </td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="doorlocks[deadbolt][bronze]"
-                                                                       placeholder=""/>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Handle</td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="doorlocks[handle][brass]" placeholder=""/>
-                                                            </td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="doorlocks[handle][nickal]" placeholder=""/>
-                                                            </td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="doorlocks[handle][bronze]" placeholder=""/>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="panel-group">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" href="#collapse3">DVR <i
-                                                                class="fa fa-angle-down"
-                                                                style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse3" class="panel-collapse collapse">
-                                                <table class="table">
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>4 Channel</th>
-                                                        <th>8 Channel</th>
-                                                        <th>16 Channel</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Honeywell</td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[honeywell][4_channel]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[honeywell][8_channel]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[honeywell][16_channel]"
-                                                                   placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>AVYCON</td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[avycon][4_channel]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[avycon][8_channel]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[avycon][16_channel]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Other</td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[other][4_channel]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[other][8_channel]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="dvr_nvr[other][16_channel]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="panel-group">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" href="#collapse4">AUTOMATION <i
-                                                                class="fa fa-angle-down"
-                                                                style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse4" class="panel-collapse collapse">
-                                                <table class="table">
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Thermostats</th>
-                                                        <th>Lights & Bulbs</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="automation[thermostats][]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="automation[light_bulbs][]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="automation[thermostats][]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="automation[light_bulbs][]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="automation[thermostats][]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="automation[light_bulbs][]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="panel-group">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a data-toggle="collapse" href="#collapse5">PERS <i
-                                                                class="fa fa-angle-down"
-                                                                style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse5" class="panel-collapse collapse">
-                                                <table class="table">
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>Fall Detection</th>
-                                                        <th>W/O Fall Protection</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="pers[fall_detection][]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="pers[wo_fall_detection][]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="pers[fall_detection][]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="pers[wo_fall_detection][]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="pers[fall_detection][]" placeholder=""/>
-                                                        </td>
-                                                        <td><input type="text" class="form-control"
-                                                                   name="pers[wo_fall_detection][]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
+                                
+                                <div class="col-md-2 form-group">
+                                    <button class="btn btn-xs btn-primary">Add Items</button>
                                 </div>
                             </div>
+                            <?php */ ?>
+
+
 
                             <!-- ====== Additional Equipment/Services ====== -->
                             <div class="row">
@@ -906,13 +563,13 @@
 
                                                 $estimate_items = [];
                                             } ?>
-                                            <div class="col-md-12 table-responsive">
+                                            <div class="col-md-12 table-responsive pl-0 pr-0 mb-0">
                                                 <table class="table table-hover">
                                                     <input type="hidden" name="count" value="0" id="count">
                                                     <thead>
                                                     <tr>
-                                                        <th>DESCRIPTION</th>
                                                         <th>Type</th>
+                                                        <th>DESCRIPTION</th>                                                
                                                         <th width="100px">Quantity</th>
                                                         <th>LOCATION</th>
                                                         <th width="100px">COST</th>
@@ -930,24 +587,24 @@
                                                         foreach ($estimate_items as $row) { ?>
 
                                                             <tr>
-                                                                <td>
+                                                            <td><select name="item_type[]" class="form-control">
+
+                                                                    <option value="material" <?php if ($row['item_type'] == 'material') echo 'selected'; ?>>
+                                                                        Material
+                                                                    </option>
+                                                                    <option value="product" <?php if ($row['item_type'] == 'product') echo 'selected'; ?>>
+                                                                        Product
+                                                                    </option>
+                                                                    <option value="service" <?php if ($row['item_type'] == 'service') echo 'selected'; ?>>
+                                                                        Service
+                                                                    </option>
+                                                                    </select></td><td>
                                                                     <input type="text" class="form-control getItems"
                                                                            onKeyup="getItems(this)" name="item[]"
                                                                            value="<?php echo $row['item']; ?>">
                                                                     <ul class="suggestions"></ul>
                                                                 </td>
-                                                                <td><select name="item_type[]" class="form-control">
-
-                                                                        <option value="material" <?php if ($row['item_type'] == 'material') echo 'selected'; ?>>
-                                                                            Material
-                                                                        </option>
-                                                                        <option value="product" <?php if ($row['item_type'] == 'product') echo 'selected'; ?>>
-                                                                            Product
-                                                                        </option>
-                                                                        <option value="service" <?php if ($row['item_type'] == 'service') echo 'selected'; ?>>
-                                                                            Service
-                                                                        </option>
-                                                                    </select></td>
+                                                                
                                                                 <td>
                                                                     <input type="text" class="form-control quantity"
                                                                            name="quantity[]"
@@ -1025,7 +682,7 @@
                                                     <?php } ?>
                                                     </tbody>
                                                 </table>
-                                                <a href="#" class="btn btn-primary" id="add_another">Add Items</a>
+                                               &nbsp; <a href="#" class="btn btn-primary" id="add_another">Add Items</a>
                                             </div>
                                         </div><br/>
 
@@ -1098,13 +755,13 @@
 
                                         <div class="row" id="plansItemDiv">
 
-                                            <div class="col-md-12 table-responsive">
-                                                <table class="table table-hover">
+                                            <div class="col-md-12 table-responsive pl-0 pr-0 mb-0">
+                                                <table class="table table-hover mb-0">
                                                     <input type="hidden" name="count" value="0" id="count">
                                                     <thead>
                                                     <tr>
-                                                        <th>DESCRIPTION</th>
                                                         <th>Type</th>
+                                                        <th>DESCRIPTION</th>
                                                         <th width="100px">Quantity</th>
                                                         <th>LOCATION</th>
                                                         <th width="100px">COST</th>
@@ -1115,15 +772,16 @@
                                                     </thead>
                                                     <tbody id="table_body">
                                                     <tr>
+                                                        <td><select name="item_type[]" class="form-control">
+                                                            <option value="product">Product</option>
+                                                            <option value="material">Material</option>
+                                                            <option value="service">Service</option>
+                                                        </select></td>
                                                         <td><input type="text" class="form-control getItems"
                                                                    onKeyup="getItems(this)" name="item[]">
                                                             <ul class="suggestions"></ul>
                                                         </td>
-                                                        <td><select name="item_type[]" class="form-control">
-                                                                <option value="product">Product</option>
-                                                                <option value="material">Material</option>
-                                                                <option value="service">Service</option>
-                                                            </select></td>
+                                                        
                                                         <td><input type="text" class="form-control quantity"
                                                                    name="quantity[]"
                                                                    data-counter="0" id="quantity_0" value="1"></td>
@@ -1142,7 +800,7 @@
                                                     </tr>
                                                     </tbody>
                                                 </table>
-                                                <a href="#" class="btn btn-primary" id="add_another">Add Items</a>
+                                                <a href="#" class="btn btn-primary" style="margin-left:5px;" id="add_another">Add Items</a>
                                             </div>
                                         </div><br/>
 
@@ -1152,16 +810,16 @@
 
                             <!-- ====== TOTAL / BILLING ====== -->
                             <div class="row">
-                                <div class="col-sm-12 col-md-6">
+                                <div class="col-sm-12 col-md-5 pl-0">
                                     <div class="form-group col-md-12">
                                         <h5 class="box-title">Total</h5>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 pl-0">
 
-                                        <table class="table table-bordered">
+                                        <table class="table">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                <td class="d-flex align-items-center">$ <input type="text"
+                                                <td class="d-flex align-items-center remove-padding">$ <input type="text"
                                                                                                value="<?php echo !empty($estimate_eqpt_cost) ? $estimate_eqpt_cost['eqpt_cost'] : 0.00; ?>"
                                                                                                name="eqpt_cost"
                                                                                                id="eqpt_cost"
@@ -1171,7 +829,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Sales Tax</td>
-                                                <td class="d-flex align-items-center">$ <input type="text"
+                                                <td class="d-flex align-items-center remove-padding">$ <input type="text"
                                                                                                value="<?php echo !empty($estimate_eqpt_cost) ? $estimate_eqpt_cost['sales_tax'] : 0.00; ?>"
                                                                                                name="sales_tax"
                                                                                                id="sales_tax"
@@ -1187,7 +845,7 @@
                                                        onfocusout="cal_total_due()"
                                                        class="form-control">
                                                 <td>One Time Program and Setup</td>
-                                                <td class="d-flex align-items-center">$ <input type="text"
+                                                <td class="d-flex align-items-center remove-padding">$ <input type="text"
                                                                                                value="<?php echo !empty($estimate_eqpt_cost) ? $estimate_eqpt_cost['one_time'] : 0.00; ?>"
                                                                                                name="one_time"
                                                                                                id="one_time"
@@ -1197,7 +855,7 @@
                                             </tr>
                                             <tr>
                                                 <td>Monthly Monitoring</td>
-                                                <td class="d-flex align-items-center">$ <input type="text"
+                                                <td class="d-flex align-items-center remove-padding">$ <input type="text"
                                                                                                value="<?php echo !empty($estimate_eqpt_cost) ? $estimate_eqpt_cost['m_monitoring'] : 0.00; ?>"
                                                                                                name="m_monitoring"
                                                                                                id="m_monitoring"
@@ -1217,25 +875,25 @@
                                     <!-- <button class="btn btn-block btn-lg btn-primary">Import</button>-->
                                 </div>
 
-                                <div class="col-sm-12 col-md-6">
+                                <div class="col-sm-12 col-md-7">
                                     <div class="form-group col-md-12">
                                         <h5 class="box-title">Billing Information</h5>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <label for="billing_date">Billing Date</label>
-                                            <select name="billing_date" id="billing_date" class="form-control">
+                                        <div class="col-md-4 ">
+                                            <label for="billing_date" style="width:fit-content;" class="col-md-6 float-left one-row-label pl-0 pr-0">Billing Date</label>
+                                            <select name="billing_date" id="billing_date" class="form-control float-left col-md-6">
                                                 <option>--SELECT--</option>
                                                 <?php foreach (range(1, 31) as $date) { ?>
                                                     <option value="<?php echo $date ?>"><?php echo $date ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="payment_type"> Payment Type:</label>
+
+                                        <div class="col-md-4 pl-0 form-group">
+                                                <label class="col-md-8 float-left one-row-label pl-0 pr-0"> Payment Type:</label>
                                                 <select name="payment_type"
-                                                        class="form-control"
+                                                class="form-control float-left col-md-4 pl-0 pr-0" 
                                                         id="payment_type">
                                                     <option>--SELECT--</option>
                                                     <?php foreach (get_config_item('payment_types') as $key => $payment_type) { ?>
@@ -1246,30 +904,27 @@
                                                 </select>
                                                 <!--                                                <input type="text" class="form-control" name="payment_type"-->
                                                 <!--                                                       id="payment_type" placeholder=""/>-->
-                                            </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="billing_freq"> Billing Frequency:</label>
-                                                <select name="billing_freq"
-                                                        class="form-control"
-                                                        id="billing_freq">
-                                                    <option>--SELECT--</option>
-                                                    <?php foreach (get_config_item('billing_frequency') as $key => $billing_frequency) { ?>
-                                                        <option value="<?php echo $billing_frequency ?>">
-                                                            <?php echo $billing_frequency ?>
-                                                        </option>
-                                                    <?php } ?>
-                                                </select>
-                                                <!--                                                <input type="text" class="form-control" name="billing_freq"-->
-                                                <!--                                                       id="billing_freq" placeholder=""/>-->
-                                            </div>
+
+                                        <div class="col-md-4 form-group">
+                                            <label for="billing_freq" style="font-size: 15px;" class="col-md-8 float-left one-row-label pl-0 pr-0"> Billing Frequency:</label>
+                                            <select name="billing_freq"
+                                                    class="form-control float-left col-md-4 pl-0 pr-0"
+                                                    id="billing_freq">
+                                                <option>--SELECT--</option>
+                                                <?php foreach (get_config_item('billing_frequency') as $key => $billing_frequency) { ?>
+                                                    <option value="<?php echo $billing_frequency ?>">
+                                                        <?php echo $billing_frequency ?>
+                                                    </option>
+                                                <?php } ?>
+                                            </select>
+                                            <!--                                                <input type="text" class="form-control" name="billing_freq"-->
+                                            <!--                                                       id="billing_freq" placeholder=""/>-->
                                         </div>
                                     </div>
                                     <div class="row">
-
                                         <div class="col-md-12">
-                                            Credit Card Type:<br>
+                                            Credit Card Type:
                                             <div class="checkbox checkbox-sec margin-right mr-4">
                                                 <input type="radio" name="card[radio_credit_card]" value="Visa"
                                                        checked="checked"
@@ -1291,36 +946,28 @@
                                                        id="radio_credit_cardMasterDiscover">
                                                 <label for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
                                             </div>
-
                                         </div>
-                                        <div class=" col-md-12 mt-5">
+                                        <div class=" col-md-12">
                                             <div class="row"
                                                  style="border:none; margin-bottom:20px; padding-bottom:0px;">
                                                 <div class=" col-md-6">
                                                     <label for="card_no">Card Number</label>
-                                                    <input type="text" class="form-control card-number required"
-                                                           name="card[card_no]"
-                                                           id="card_no" placeholder="" required/>
+                                                    <input type="text" class="form-control card-number required" name="card[card_no]" id="card_no" placeholder="" required/>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 pl-0">
                                                     <label for="datepicker_exp_date">Exp. Date</label>
                                                     <div class="form-group">
-                                                        <div class='input-group date datepicker'>
-                                                            <input type='text' name="card[exp_date]"
-                                                                   class="form-control"
-                                                                   id="card_exp_date"/>
+                                                        <div class='input-group date datepicker p-0'>
+                                                            <input type='text' name="card[exp_date]" class="form-control" id="card_exp_date"/>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class=" col-md-2">
+                                                <div class=" col-md-2 pl-0">
                                                     <label for="cvv">CVV#</label>
-                                                    <input type="text" class="form-control card-cvc required"
-                                                           name="card[cvv]"
-                                                           id="cvv" placeholder="" required/>
+                                                    <input type="text" class="form-control card-cvc required" name="card[cvv]" id="cvv" placeholder="" required/>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -1695,7 +1342,7 @@
 
                                 </div>
                             </div>
-                            <?php */ ?>
+
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
@@ -1733,13 +1380,14 @@
                 </div>
                 <?php echo form_close(); ?>
                 <!-- end row -->
-            </div> 
+            </div>
             <!-- end container-fluid -->
         </div>
         <!-- page wrapper end -->
     </div>
 </div>
 
+<?php echo $file_selection; ?>
 <?php include viewPath('includes/footer'); ?>
 
 <script>
@@ -1762,6 +1410,7 @@
             $(this).closest('.phone-input').find('.type-input').val($(this).data('type-value'));
         });
 
+
         $('#user_agreementupload').change(function (e) {
 
             var file = this.files[0];
@@ -1783,6 +1432,3 @@
 
     });
 </script>
-=======
-<?php $this->form_builder->create_form($form); ?>
->>>>>>> Stashed changes

@@ -38,6 +38,9 @@
 <!-- Include calender js files -->
 <!-- <script src="<?php //echo base_url() ?>calender/assets/js/calendar.js"></script> -->
 <!-- dynamic assets goes  -->
+<script type="text/javascript">
+	window.base_url = <?php echo json_encode(base_url()); ?>;
+</script>
 <?php echo put_footer_assets(); ?>
 
 
@@ -45,22 +48,22 @@
 <script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
 <script src="<?php //echo $url->assets ?>jSignature-master/libs/modernizr.js"></script> -->
 <script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>
-<!-- <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
-<script src="<?php echo $url->assets ?>js/sign_new.js"></script>
+<script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
+<!-- <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
 <script src="<?php echo $url->assets ?>js/sign.js"></script>
-<script src="<?php echo $url->assets ?>js/sign2.js"></script>
+<script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
 <script>
-	jQuery(document).ready(function () {
-		jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
-		jQuery("#CustomerSign").on("click touchstart", function () {
-			var canvas = document.getElementById("CustomerSign");
-			var dataURL = canvas.toDataURL("image/png");
-			jQuery("#saveSignatureDB").val(dataURL);
-		});
-	});
-</script> -->
-<script type="text/javascript">
-	window.base_url = <?php echo json_encode(base_url()); ?>;
+    jQuery(document).ready(function () {
+        jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
+        jQuery("#CustomerSign").on("click touchstart", function () {
+            var canvas = document.getElementById("CustomerSign");
+            var dataURL = canvas.toDataURL("image/png");
+            jQuery("#saveSignatureDB").val(dataURL);
+        });
+
+
+    });
+
 </script>
 
 

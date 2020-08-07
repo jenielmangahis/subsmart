@@ -39,29 +39,29 @@ class Estimate extends MY_Controller
     {
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $employee_id = logged('company_id');
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $employee_id]);
+            $company_id = logged('company_id');
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $employee_id);
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $company_id);
             } else {
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $employee_id);
+                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $employee_id);
+                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id);
 
                 } else {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($employee_id);
+                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
                 }
             }
 
-            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($employee_id);
+            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
         }
 
         if ($role == 4) {
@@ -75,14 +75,14 @@ class Estimate extends MY_Controller
             } elseif (!empty(get('order'))) {
 
                 $this->page_data['order'] = get('order');
-                $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $employee_id);
+                $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $employee_id);
+                    $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } else {
                     $this->page_data['estimates'] = $this->estimate_model->getAllByUserId();
                 }
@@ -125,9 +125,9 @@ class Estimate extends MY_Controller
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
 
-        $employee_id = logged('company_id');
+        $company_id = logged('company_id');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $employee_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);
@@ -183,12 +183,12 @@ class Estimate extends MY_Controller
 
         //echo '<pre>';print_r($data);die;
 
-        $employee_id = logged('company_id');
+        $company_id = logged('company_id');
 
         $id = $this->estimate_model->create([
 
             'user_id' => $user->id,
-            'employee_id' => $employee_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'job_location' => post('job_location'),
             'job_name' => post('job_name'),
@@ -215,7 +215,7 @@ class Estimate extends MY_Controller
 
     public function edit($id)
     {
-        $employee_id = logged('company_id');
+        $company_id = logged('company_id');
         $user_id = logged('id');
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -230,7 +230,7 @@ class Estimate extends MY_Controller
 
         $this->page_data['estimate'] = $this->estimate_model->getById($id);
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['employee_id' => $employee_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->load->view('estimate/edit', $this->page_data);
     }
 
@@ -283,12 +283,12 @@ class Estimate extends MY_Controller
 
         //echo '<pre>';print_r($data);die;
 
-        $employee_id = logged('company_id');
+        $company_id = logged('company_id');
 
         $id = $this->estimate_model->update($id, [
 
             'user_id' => $user->id,
-            'employee_id' => $employee_id,
+            'company_id' => $company_id,
             'customer_id' => post('customer_id'),
             'job_location' => post('job_location'),
             'job_name' => post('job_name'),
@@ -324,29 +324,29 @@ class Estimate extends MY_Controller
     {
         $role = logged('role');
         if ($role == 2 || $role == 3) {
-            $employee_id = logged('employee_id');
+            $company_id = logged('company_id');
 
             if (!empty($tab)) {
                 $this->page_data['tab'] = $tab;
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $employee_id);
+                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $company_id);
             } else {
 
                 // search
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $employee_id);
+                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $employee_id);
+                    $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id);
 
                 } else {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($employee_id);
+                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
                 }
             }
 
-            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($employee_id);
+            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
         }
 
         if ($role == 4) {
@@ -360,14 +360,14 @@ class Estimate extends MY_Controller
             } elseif (!empty(get('order'))) {
 
                 $this->page_data['order'] = get('order');
-                $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $employee_id);
+                $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
 
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $employee_id);
+                    $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } else {
                     $this->page_data['estimates'] = $this->estimate_model->getAllByUserId();
                 }

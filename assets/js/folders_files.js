@@ -9,7 +9,8 @@ $(document).ready(function(){
       }, 0);
   });
   
-  current_selected_folder = 0;
+  vType = $('#vault_type').val();
+  vType = vType.trim();
 
   selected = 0;
   selected_isFolder = 1;
@@ -17,10 +18,12 @@ $(document).ready(function(){
   selected_trash = 0;
   selected_trash_isFolder = 1;
 
+  current_selected_folder = 0;
   current_process = '';
   current_alert_theme = '';
 
   clear_process = true;
+  is_initial = true;
 
 // -------------------------------------------------------------------------------------------------------------
 // Load initial functions
@@ -97,11 +100,13 @@ $(document).ready(function(){
   $('a[control="view"]').click(function(e){
     e.preventDefault();
 
+    vIsMyLibrary = (vType == 'mylibrary');
+
     if(selected != 0){
       if(selected_isFolder == 1){
-        showFolderDetails(selected, selected_isFolder, false, false);
+        showFolderDetails(selected, selected_isFolder, false, vIsMyLibrary);
       } else {
-        showFileDetail(selected, selected_isFolder, false, false);
+        showFileDetail(selected, selected_isFolder, false, vIsMyLibrary);
       }
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder to view','error');
@@ -305,10 +310,7 @@ $(document).ready(function(){
 // Functions below ---------------------------------------------------------------------------------------------
 function getFoldersAndFiles(parent_id = 0){
   var vUrl = base_url + "folders/getFoldersFiles/" + parent_id;
-  var vType = $('#vault_type').val();
   
-  vType = vType.trim();
-
   if(vType == 'mylibrary'){
     vUrl += "/1";
   } 
@@ -323,7 +325,12 @@ function getFoldersAndFiles(parent_id = 0){
         var paths = result.folders_path;
         var fname = result.folders_name;
 
-        $('#folders_name').html(fname);
+        if(!is_initial){
+          $('#folders_name').html(fname);
+        } else {
+          is_initial = !is_initial;
+        }
+
         $('#folders_path').empty();
         $('#folders_path').append(paths);
 
@@ -513,6 +520,9 @@ function setFoldersAndFiles(folders, files){
 function setFoldersAndFiles_MyLibrary(folders, files){
   $('#folders_and_files').empty();
 
+  selected = 0;
+  selected_isFolder = 1;
+
   var append = '<div class="table-responsive"><table class="table table-bordered table-sm" id="mylibrary_main"><thead><tr>';
 
   append += '<th class="d-none"></th>';
@@ -583,7 +593,7 @@ function setFoldersAndFiles_MyLibrary(folders, files){
     tr.addClass('table-primary');
 
     $('#folders_name').text(fname);
-    $('#folders_path').text(fpath);
+    //$('#folders_path').text(fpath);
 
     selected = fid;
     selected_isFolder = ftype;
@@ -630,9 +640,14 @@ function search_files_and_folders(){
       search_files = 0;
     }
 
+    var vUrl = base_url + "vault/search_files_and_folders";
+    if(vType == 'mylibrary'){
+      vUrl += "/1";
+    }
+
     $.ajax({
       type: 'GET',
-      url: base_url + "vault/search_files_and_folders",
+      url: vUrl,
       data: {keyword: keyword, search_folders: search_folders, search_files: search_files},
       success: function(data){
         var result = jQuery.parseJSON(data);
@@ -718,23 +733,25 @@ function get_most_download_files(){
       var sAppend = '';
       var sFile_Info = [];
 
-      $('#most_downloads').empty();
-      $.each(result, function(index, file){
-        sFile_Info = getfileExInfos(file.title); 
-        sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
-        sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.downloads_count + '</span></li>';  
-        nCur++;
-      });
+      if($('#most_downloads').length){
+        $('#most_downloads').empty();
+        $.each(result, function(index, file){
+          sFile_Info = getfileExInfos(file.title); 
+          sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
+          sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.downloads_count + '</span></li>';  
+          nCur++;
+        });
 
-      if(nCur < 10){
-        var i;
-        for (i = nCur; i <= 10 ; i++) {
-          sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+        if(nCur < 10){
+          var i;
+          for (i = nCur; i <= 10 ; i++) {
+            sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+          }
         }
-      }
 
-      $('#most_downloads').append(sAppend);
-      $('span[target="most_downloads"]').removeClass('fa-spin');
+        $('#most_downloads').append(sAppend);
+        $('span[target="most_downloads"]').removeClass('fa-spin');
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       $('span[target="most_downloads"]').removeClass('fa-spin');
@@ -753,23 +770,25 @@ function get_most_previewd_files(){
       var sAppend = '';
       var sFile_Info = [];
 
-      $('#most_previews').empty();
-      $.each(result, function(index, file){
-        sFile_Info = getfileExInfos(file.title); 
-        sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
-        sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.previews_count + '</span></li>';  
-        nCur++;
-      });
+      if($('#most_previews').length){
+        $('#most_previews').empty();
+        $.each(result, function(index, file){
+          sFile_Info = getfileExInfos(file.title); 
+          sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
+          sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.previews_count + '</span></li>';  
+          nCur++;
+        });
 
-      if(nCur < 10){
-        var i;
-        for (i = nCur; i <= 10 ; i++) {
-          sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+        if(nCur < 10){
+          var i;
+          for (i = nCur; i <= 10 ; i++) {
+            sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+          }
         }
-      }
 
-      $('#most_previews').append(sAppend);
-      $('span[target="most_previews"]').removeClass('fa-spin');
+        $('#most_previews').append(sAppend);
+        $('span[target="most_previews"]').removeClass('fa-spin');
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       $('span[target="most_previews"]').removeClass('fa-spin');
@@ -788,23 +807,25 @@ function get_recently_uploaded_files(){
       var sAppend = '';
       var sFile_Info = [];
 
-      $('#recent_uploads').empty();
-      $.each(result, function(index, file){
-        sFile_Info = getfileExInfos(file.title); 
-        sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
-        sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.days + '</span></li>';  
-        nCur++;
-      });
+      if($('#recent_uploads').length){
+        $('#recent_uploads').empty();
+        $.each(result, function(index, file){
+          sFile_Info = getfileExInfos(file.title); 
+          sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
+          sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.days + '</span></li>';  
+          nCur++;
+        });
 
-      if(nCur < 10){
-        var i;
-        for (i = nCur; i <= 10 ; i++) {
-          sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+        if(nCur < 10){
+          var i;
+          for (i = nCur; i <= 10 ; i++) {
+            sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+          }
         }
-      }
 
-      $('#recent_uploads').append(sAppend);
-      $('span[target="recent_uploads"]').removeClass('fa-spin');
+        $('#recent_uploads').append(sAppend);
+        $('span[target="recent_uploads"]').removeClass('fa-spin');
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       $('span[target="recent_uploads"]').removeClass('fa-spin');

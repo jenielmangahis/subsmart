@@ -359,20 +359,6 @@ label{
   font-weight: 500;
   color: #8f69b1;
 }
-.addon__price-b {
-  background: #fff;
-  width: 147px;
-  height: 150px;
-  border-radius: 50%;
-  box-shadow: 6px 6px 29px 0px rgba(0,0,0,0.08);
-  position: absolute;
-  top: 70px;
-  left: -220px;
-  margin-top: -90px;
-  text-align: center;
-  font-weight: 500;
-  color: #8f69b1;
-}
 .addon__price-currency {
   font-size: 40px;
   line-height: 70px;
@@ -381,10 +367,6 @@ label{
 }
 .addon__price-label {
   font-size: 18px;
-  text-transform: uppercase;
-}
-.addon__price-label-b {
-  font-size: 15px;
   text-transform: uppercase;
 }
 .addon__list {

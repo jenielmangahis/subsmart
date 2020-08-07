@@ -30,7 +30,8 @@
             <div style="font-size: 18px; margin-bottom: 15px;">
 
                 <?php 
-                  if(isset($coupon)) {                  
+                  if(isset($coupon)) {
+                    
                     if(isset($coupon['coupon']['type'])){ 
                       if($coupon['coupon']['type'] == 1) {
                         $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];

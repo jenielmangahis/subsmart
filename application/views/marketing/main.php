@@ -106,7 +106,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="card-price bottom-txt">$0.90/postcard</div>
                         </div>
                     </a>
-                    <a href="#" class="card border-gr"> <img class="marketing-img" alt="Campaign Blast" src="<?php echo base_url('/assets/dashboard/images/finder.png') ?>" data-holder-rendered="true">
+                    <a href="#" class="card border-gr"> <img
+                                class="marketing-img" alt="Campaign Blast"
+                                src="<?php echo base_url('/assets/dashboard/images/finder.png') ?>"
+                                data-holder-rendered="true">
                         <div class="card-body align-left">
                             <h5 class="card-title mb-0">Campaign Blast</h5>
                             <p class="card-text mt-txt">Send our jumbo postcards (8.3" x 5.8") to your next potential customer by choosing specific areas and using our numerous filters to ensure you are targeting to the right market for your business.</p>

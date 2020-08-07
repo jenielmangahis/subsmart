@@ -481,7 +481,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
-                    <div class="modal-body">
+                    <div class="modal-body" style="margin-bottom: 100px">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
@@ -600,18 +600,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
-                                <div class="dz-message" style="margin: 20px;border">
+                            <div id="checkAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
+                                <div class="dz-message" style="margin: 20px;">
                                     <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                    <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-4">
-                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
                                 <button class="btn btn-dark cancel-button" type="reset">Revert</button>
                             </div>
                             <div class="col-md-5">
@@ -1690,7 +1691,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         var $target = $('.modal');
         $target.animate({scrollTop: $target.height()}, 1000);
     });
-
 </script>
 
 

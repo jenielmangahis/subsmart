@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Accounting extends MY_Controller {
 
     private $upload_path = "./uploads/accounting/";
+    private $expenses_path = "./uploads/accounting/expenses/";
     public function __construct()
     {
         parent::__construct();
@@ -511,6 +512,50 @@ class Accounting extends MY_Controller {
         $this->expenses_model->deleteBillData($id);
     }
 
+    public function rowCategories(){
+        $id = $this->input->post('id');
+        $row = $this->input->post('row');
+        $cat_class = $this->input->post('cat_class');
+        $des_class = $this->input->post('des_class');
+        $amount_class = $this->input->post('amount_class');
+        $counter = $this->input->post('counter');
+        $remove = $this->input->post('remove_id');
+        $select = $this->input->post('select');
+        $get_categories = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
+        $result = $get_categories->result();
+        $categories = '';
+        $category_list = $this->categories_model->getCategories();
+        foreach ($result as $cnt => $data){
+            $category = ($data->category_id != null)?$data->category_id:"";
+            $description = ($data->description != null)?$data->description:"";
+            $amount = ($data->amount!=null)?$data->amount:"";
+            $cnt += 1;
+            $categories .= '<tr id="'.$row.'">';
+            $categories .= '<td></td>';
+            $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
+            $categories .= '<td>';
+            $categories .= '<div id="" style="display:none;">';
+            $categories .= '<select name="category[]" id="" class="form-control '.$cat_class.' '.$select.'">';
+            $categories .= '<option></option>';
+            foreach ($category_list as $list){
+                if ($list->id == $category){
+                    $categories .= '<option value="'.$list->id.'" selected>'.$list->category_name.'</option>';
+                }
+            }
+            foreach ($category_list as $list){
+                $categories .= ' <option value="'.$list->id.'">'.$list->category_name.'</option>';
+            }
+            $categories .= '</select>';
+            $categories .= ' </div>';
+            $categories .= '</td>';
+            $categories .= '<td><input type="text" name="description[]" class="form-control '.$des_class.'" value="'.$description.'"  style="display: none;"></td>';
+            $categories .= '<td><input type="text" name="amount[]" class="form-control '.$amount_class.'" value="'.$amount.'"  style="display: none;"></td>';
+            $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+            $categories .= '</tr>';
+        }
+        echo $categories;
+    }
+
     public function getCheckData(){
         $id = $this->input->post('id');
         $query = $this->db->get_where('accounting_check',array(
@@ -540,48 +585,6 @@ class Accounting extends MY_Controller {
         echo json_encode($std);
 
     }
-    public function rowCategories(){
-        $id = $this->input->post('id');
-        $row = $this->input->post('row');
-        $cat_class = $this->input->post('cat_class');
-        $des_class = $this->input->post('des_class');
-        $amount_class = $this->input->post('amount_class');
-        $counter = $this->input->post('counter');
-        $remove = $this->input->post('remove_id');
-        $select = $this->input->post('select');
-        $get_categories = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
-        $result = $get_categories->result();
-        $categories = '';
-        $category_list = $this->categories_model->getCategories();
-        foreach ($result as $cnt => $data){
-            $category = ($data->category_id != null)?$data->category_id:"";
-            $description = ($data->description != null)?$data->description:"";
-            $amount = ($data->amount!=null)?$data->amount:"";
-            $cnt += 1;
-            $categories .= '<tr id="'.$row.'">';
-            $categories .= '<td></td>';
-            $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
-            $categories .= '<td>';
-            $categories .= '<div id="" style="display:none;">';
-            $categories .= '<select name="category[]" id="" class="form-control '.$cat_class.'&nssp;'.$select.'">';
-            foreach ($category_list as $list){
-                if ($list->id == $category){
-                    $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-                }
-            }
-            foreach ($category_list as $list){
-                $categories .= ' <option value="'.$list->id.'">'.$list->category_name.'</option>';
-            }
-            $categories .= '</select>';
-            $categories .= ' </div>';
-            $categories .= '</td>';
-            $categories .= '<td><input type="text" name="description[]" class="form-control '.$des_class.'" value="'.$description.'" id="tbl-input" style="display: none;"></td>';
-            $categories .= '<td><input type="text" name="amount[]" class="form-control '.$amount_class.'" value="'.$amount.'" id="tbl-input" style="display: none;"></td>';
-            $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
-            $categories .= '</tr>';
-        }
-        echo $categories;
-    }
     public function addCheck(){
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
@@ -593,18 +596,41 @@ class Accounting extends MY_Controller {
             'permit_number' => $this->input->post('permit_number'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('check_filename'),
         );
         $this->expenses_model->addCheck($new_data);
+    }
+    /*** Attachment for Expense Transaction***/
+    public function expensesTransactionAttachment(){
+        if (! empty($_FILES)){
+            $config = array(
+                'upload_path' => './uploads/accounting/expenses/',
+                'allowed_types' => 'gif|jpg|png|jpeg',
+                'overwrite' => TRUE,
+                'max_size' => '20000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
+            if ($this->upload->do_upload("file")){
+                $uploadData = $this->upload->data();
+                $data = array('attachment'=> $uploadData['file_name']);
+                $this->db->insert('accounting_expense_attachment',$data);
+                echo json_encode($uploadData['file_name']);
+            }
+        }
+    }
 
-
-//        if ($query == true){
-//            $this->session->set_flashdata('checked','New Check added.');
-//            redirect('accounting/expenses');
-//        }else{
-//            $this->session->set_flashdata('check_failed','Vendor already exist.');
-//            redirect('accounting/expenses');
-//        }
+    public function removeTransactionAttachment(){
+        $file = $this->input->post('file');
+        if ($file && file_exists($this->expenses_path. $file)){
+            unlink( $this->expenses_path. $file);
+            $this->db->where('attachment',$file);
+            $this->db->delete('accounting_expense_attachment');
+        }
     }
 
     public function editCheckData(){
@@ -620,17 +646,10 @@ class Accounting extends MY_Controller {
             'permit_number' => $this->input->post('permit_number'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('check_filename'),
         );
 	    $this->expenses_model->editCheckData($update);
-
-//	    if ($query == true){
-//            $this->session->set_flashdata('checked_updated','Data Updated.');
-//            redirect('accounting/expenses');
-//        }else{
-//            $this->session->set_flashdata('checked_up_failed','Something is wrong in the process.');
-//            redirect('accounting/expenses');
-//        }
     }
     public function deleteCheckData(){
 

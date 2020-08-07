@@ -213,6 +213,86 @@
         <?php echo form_close(); ?>
     <?php } ?>
 
+
+
+
+    <?php /* if(isset($next_step) && $next_step == 0) { ?>
+
+<?php echo form_open_multipart('esign/fileSave', [ 'id' => 'upload_file', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <input type="hidden" value="0" name="next_step" />
+    <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
+    <header style="margin-top: 81px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="left-part">
+                        <a class="back-step"></a>
+                        <p>Upload a Document and Add Envelope Recipients</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="right-part">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-question-circle-o"></i></a></li>
+                            <li class="dropdown"><a href="#" class="acdrop dropdown-toggle" data-toggle="dropdown">Actions <i class="fa fa-caret-down"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">HTML</a></li>
+                                    <li><a href="#">CSS</a></li>
+                                    <li><a href="#">JavaScript</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="recent-view">Recipient Preview </a></li>
+                            <li><a href="<?php echo base_url('esign/Files?next_step=1');?>" class="recent-view next-btn">next</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- Main Wrapper -->
+    <section class="main-wrapper"  id="custome-fileup" style="background: white;padding-bottom: 15px;">
+        <div class="container">
+        <h1>Add Documents to the Envelope</h1>
+
+            <div class="custome-fileup" >
+            
+                <div class="upload-btn-wrapper">
+                    <button class="btn">
+                        <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
+                        <span>Upload</span>
+                    </button>
+                    <input type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel"/>
+                </div>
+
+                <!-- <div class="dropdown">
+                    <button class="btn-upl dropdown-toggle" type="button" data-toggle="dropdown">Get from Cloud
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic1.png" alt=""> Box</a></li>
+                        <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic2.png" alt=""> Dropbox</a></li>
+                        <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic3.png" alt=""> Google Drive</a></li>
+                        <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic4.png" alt=""> One Drive</a></li>
+                    </ul>
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer --->
+    <footer>
+        <div class="container-fluid">
+            <ul>
+                <!-- <li><a href="#">Send Now</a></li> -->
+                <li><a href="#" onClick="uploadOrNext(true)" class="next-btn">next</a></li>
+            </ul>
+        </div>
+    </footer>
+    <!-- End Footer --->
+<?php echo form_close(); ?>
+<?php } */ ?>
+
     <?php if(isset($next_step) && $next_step == 2) { ?>
 
         <?php echo form_open_multipart('esign/recipients', [ 'id' => 'upload_file', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>

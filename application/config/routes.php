@@ -163,7 +163,7 @@ $route['accounting/chart_of_accounts/import'] = 'Accounting/import';
 $route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
-$route['accounting/reconcile/index'] = 'reconcile/index';
+$route['accounting/reconcile/(:any)'] = 'reconcile/index/$1';
 $route['accounting/reconcile'] = 'reconcile/indexmain';
 $route['accounting/reconcile/edit'] = 'reconcile/edit';
 

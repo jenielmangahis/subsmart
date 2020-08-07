@@ -3,10 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/job'); ?>
+    <?php include viewPath('includes/sidebars/workorder'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-        <div class="card">
+        <div class="card"> 
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
                     <div class="col">
@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                              <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
                             </a>
-                            <a class="btn btn-primary btn-md" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
+                            <a class="btn btn-primary btn-md" href="<?php echo base_url('/workorder/add') ?>">
                                 <span class="fa fa-plus"></span> &nbsp; New Work Order
                             </a>
                         </div>
@@ -250,7 +250,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-
 
     <!-- MODAL CLONE WORKORDER -->
     <div class="modal fade" id="modalCloneWorkorder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

@@ -261,8 +261,8 @@ class Folders extends MY_Controller {
 		$folder_id = $_POST['folder_id'];
 		$parent_id = 0;
 
-		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id)->row();
-		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id)->row();
+		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id . ' and softdelete <= 0')->row();
+		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id . ' and softdelete <= 0')->row();
 		if(($files->filescount > 0) || ($folders->folderscount > 0)){
 			$return['error'] = 'Cannot delete folder. Folder is not empty.';
 		} else {			
@@ -399,16 +399,26 @@ class Folders extends MY_Controller {
 		if($isFolder == 1){
 			$f = $this->folders_model->getById($fid);
 			$folder_id = $f->parent_id;
+			$folder = $this->folders_model->getById($folder_id);
 
-			if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
-				$return['error'] = 'Error restoring folder';
+			if($folder->softdelete <= 0){
+				if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
+					$return['error'] = 'Error restoring folder';
+				}
+			} else {
+				$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';	
 			}
 		} else {
 			$f = $this->vault_model->getById($fid);
 			$folder_id = $f->folder_id;
+			$folder = $this->folders_model->getById($folder_id);
 
-			if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
-				$return['error'] = 'Error restoring file';
+			if($folder->softdelete <= 0){
+				if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
+					$return['error'] = 'Error restoring file';
+				}
+			} else {
+				$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';
 			}
 		}
 

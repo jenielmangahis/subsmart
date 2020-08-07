@@ -159,5 +159,3 @@ $autoload['model'] = array(
 	'wizard_suboptions_model',
     'reconcile_model'
 );
-
-$autoload['sparks'] = array('sk-hashids/1.0.5');

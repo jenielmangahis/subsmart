@@ -20,7 +20,12 @@
       </div>
       <div class="modal-body" style="padding: 1rem !important">
 <?php } ?>
-        <?php if($isMyLibrary){ ?>
+        <?php 
+              $default_tag = 'Welcome ' . $company_name;
+
+              if($isMyLibrary){ 
+                $default_tag = 'Hello ' . $user_fname . ' ' . $user_lname;
+        ?>
           <input type="hidden" id="vault_type" value="mylibrary" />
         <?php } else if($isBusinessFormTemplates){ ?>
           <input type="hidden" id="vault_type" value="businessformtemplates" />  
@@ -32,7 +37,9 @@
           <div class="card-header">        
             <div class="row">
                 <div class="col-md-6">
-                  <h5 id="folders_name">Root</h5>
+                  <h5 id="folders_name">
+                    <?php echo $default_tag; ?>    
+                  </h5>
                   <p id="folders_path"></p>
                 </div>
                 <div class="col-md-6 align-middle">

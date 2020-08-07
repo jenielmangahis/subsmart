@@ -1,4 +1,5 @@
-
+var check_filename = [];
+var dropzone = null;
 $(document).ready(function () {
     //Alert popup
     // function alert_success() {
@@ -121,7 +122,7 @@ $(document).ready(function () {
                         'Deleted!',
                         'Rule has been deleted.',
                         'success'
-                    )
+                    );
                 }
             });
         }
@@ -209,10 +210,17 @@ $(document).ready(function () {
                 permit_number:permit_number,
                 category:category,
                 description:description,
-                amount:amount
+                amount:amount,
+                check_filename:check_filename
             },
             success:function (data) {
-                $('#alert_message').html('New Check has been added.')
+                Swal.fire(
+                    'Good job!',
+                    'New check expense has been added!',
+                    'success'
+                );
+                $('#checkNUmberHeader').next().next($('.dz-preview').remove());
+                $('#checkNUmberHeader').next($('.dz-message').css({"display":"inherit"}));
             }
         });
     });
@@ -221,7 +229,7 @@ $(document).ready(function () {
         $('#addEditCheckmodal').attr('action',$('#site_url').val()+"accounting/editCheckData");
         var id = $(this).attr("data-id");
         $('#checkSaved').attr('id','checkUpdate');
-        var container = $('#line-container-check');
+        var container = '#line-container-check';
         var row = 'tableLine';
         var cat_class = 'checkCategory';
         var des_class = 'checkDescription';
@@ -285,9 +293,9 @@ $(document).ready(function () {
             success:function (data) {
                 Swal.fire(
                     'Good job!',
-                    'New check expense has been added!',
+                    'Check expense has been updated!',
                     'success'
-                )
+                );
             }
         });
     });
@@ -306,20 +314,48 @@ $(document).ready(function () {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-            $.ajax({
-                url:'/accounting/deleteCheckData',
-                method:"POST",
-                data:{id:id},
-                success:function (data) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Banking check has been deleted.',
-                        'success'
-                    )
-                }
-            });
-        }
+                $.ajax({
+                    url:'/accounting/deleteCheckData',
+                    method:"POST",
+                    data:{id:id},
+                    success:function (data) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Banking check has been deleted.',
+                            'success'
+                        );
+                    }
+                });
+            }
     });
+    });
+
+    //Check modal Dropzone
+    $(document).ready(function () {
+        var fname;
+        var list = [];
+        var checkDropzone = new Dropzone('div#checkAttachment', {
+            url:'/accounting/expensesTransactionAttachment',
+            acceptedFiles: "image/*",
+            addRemoveLinks:true,
+            init: function() {
+                this.on("success", function(file,response) {
+                    fname = response;
+                    check_filename.push(response.replace(/\"/g, ""));
+                });
+            },
+            removedfile:function (file) {
+                var name = fname.replace(/\"/g, "");
+                $.ajax({
+                    type:"POST",
+                    url:'/accounting/removeTransactionAttachment',
+                    data:{file:name}
+                });
+                //remove thumbnail
+                var previewElement;
+                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+            }
+        });
     });
 
     //Bill Modal
@@ -396,7 +432,7 @@ $(document).ready(function () {
                     'Good job!',
                     'Bill expense has been added.!',
                     'success'
-                )
+                );
             }
         });
     });
@@ -735,32 +771,35 @@ $(document).ready(function () {
 
 });
 
-//Upload Receipt image or Add receipt
+
+    //Upload Receipt image or Add receipt
 Dropzone.autoDiscover = false;
-var fname;
-var receiptDropzone = new Dropzone("#receiptDZ", {
-    url:"/accounting/uploadReceiptImage",
-    acceptedFiles: "image/*",
-    addRemoveLinks:true,
-    init: function() {
-        this.on("success", function(file,response) {
-            fname = response;
-        });
-    },
-    removedfile:function (file) {
-        // var name = file.name;
-        var name = fname.replace(/\"/g, "");
-        $.ajax({
-            type:"POST",
-            url:"/accounting/removeReceiptImage",
-            data:{file:name},
-            dataType:'html'
-        });
-        //remove thumbnail
-        var previewElement;
-        return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-    }
+$(document).ready(function () {
+    var fname;
+    var accountingDropzone = new Dropzone('div#receiptDZ', {
+        url:'/accounting/uploadReceiptImage',
+        acceptedFiles: "image/*",
+        addRemoveLinks:true,
+        init: function() {
+            this.on("success", function(file,response) {
+                fname = response;
+            });
+        },
+        removedfile:function (file) {
+            var name = fname.replace(/\"/g, "");
+            $.ajax({
+                type:"POST",
+                url:'/accounting/removeReceiptImage',
+                data:{file:name},
+                dataType:'html'
+            });
+            //remove thumbnail
+            var previewElement;
+            return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+        }
+    });
 });
+
 
 // Get Receipt data
 $(document).on('click','#updateReceipt',function () {
@@ -782,10 +821,7 @@ $(document).on('click','#updateReceipt',function () {
             $('#totalAmount').val(data.total_amount);
             $('#memo').text(data.memo);
             $('#refNumber').val(data.ref_number);
-
-
         }
-
     });
 });
 // Delete Receipt

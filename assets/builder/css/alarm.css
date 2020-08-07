@@ -1,0 +1,7 @@
+body {
+	background-color:red !important;
+}
+.form-control{resize: none;}
+textarea.form-control{
+	height: auto !important;
+}

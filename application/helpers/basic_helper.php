@@ -886,10 +886,19 @@ if (!function_exists('getFiles')) {
 
 if (!function_exists('searchFilesOrFolders')) {
 
-    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0){
+    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0, $ofUser = false){
         $CI = &get_instance();
+        $uid = logged('id');
         $company_id = logged('company_id');
         
+        $user_filter_folder = '';
+        $user_filter_file = '';
+
+        if($ofUser){
+            $user_filter_folder = 'and created_by = ' . $uid . ' ';
+            $user_filter_file = 'and user_id = '. $uid . ' ';
+        }
+
         $sql_folders = 'select '.
 
                        'parent_id as in_folder, '.
@@ -898,7 +907,8 @@ if (!function_exists('searchFilesOrFolders')) {
 
                        'from file_folders '.
 
-                       'where company_id = ' . $company_id . ' and softdelete <= 0 and (lower(folder_name) like "%'. $keyword .'%" '.
+                       'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_folder .
+                          'and (lower(folder_name) like "%'. $keyword .'%" '.
                           'or lower(description) like "%'. $keyword .'%" '.
                           'or lower(path) like "%'. $keyword .'%" '.
                           'or create_date like "%'. $keyword .'%")';
@@ -911,7 +921,8 @@ if (!function_exists('searchFilesOrFolders')) {
 
                      'from filevault '.
 
-                     'where company_id = ' . $company_id . ' and softdelete <= 0 and (lower(title) like "%'. $keyword .'%" '.
+                     'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_file .
+                        'and (lower(title) like "%'. $keyword .'%" '.
                         'or lower(description) like "%'. $keyword .'%" '.
                         'or lower(file_path) like "%'. $keyword .'%" '.
                         'or created like "%'. $keyword .'%")';
@@ -963,10 +974,18 @@ if (!function_exists('getNewTasks')){
 function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessFormTemplates = false){
     $CI = &get_instance();
 
+    $user_fname = logged('FName');
+    $user_lname = logged('LName');
+
+    $company = getCompany();
+
     $params = array(
         'isMain' => $isMain,
         'isMyLibrary' => $isMyLibrary,
-        'isBusinessFormTemplates' => $isBusinessFormTemplates
+        'isBusinessFormTemplates' => $isBusinessFormTemplates,
+        'company_name' => $company->b_name,
+        'user_fname' => $user_fname,
+        'user_lname' => $user_lname
     );
 
     return $CI->load->view('modals/folder_manager', $params, TRUE);
@@ -1586,10 +1605,10 @@ function get_estimate_status_total($status = 0, $count_only = false)
     }
 
     if ($count_only) {
-        return count($CI->estimate_model->getByWhere(array('employee_id' => logged('id'))));
+        return count($CI->estimate_model->getByWhere(array('company_id' => logged('id'))));
     }
 
-    return $CI->estimate_model->getByWhere(array('employee_id' => logged('id')));;
+    return $CI->estimate_model->getByWhere(array('company_id' => logged('id')));;
 }
 
 

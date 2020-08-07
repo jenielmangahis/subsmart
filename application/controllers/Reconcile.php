@@ -47,10 +47,11 @@ class Reconcile extends MY_Controller {
 		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
     }
 	
-	public function index()
+	public function index($id)
 	{
 		$this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['rows']  =  $this->reconcile_model->selectonwhere($id);
 		$this->load->view('accounting/reconcile', $this->page_data);
 	}
 
