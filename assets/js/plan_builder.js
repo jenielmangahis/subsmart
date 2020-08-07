@@ -5,4 +5,11 @@ $(function(){
 
         $("#modalDeletePlan").modal("show");
     });
+
+    $(".btn-delete-plan-heading").click(function(){
+    	var phid = $(this).attr("data-id");
+        $("#phid").val(phid);
+
+        $("#modalDeletePlanHeading").modal("show");
+    });
 });

@@ -221,6 +221,13 @@ $route['nsmart_plans/edit_plan/$1'] = 'Nsmart_Plans/edit_plan/$1';
 $route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
 $route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
 
+$route['plan_headings/index'] = 'Plan_Headings/index';
+$route['plan_headings/add_new_headings'] = 'Plan_Headings/add_new_headings';
+$route['plan_headings/create_plan_headings'] = 'Plan_Headings/create_plan_headings';
+$route['plan_headings/edit_plan_headings/$1'] = 'Plan_Headings/edit_plan_headings/$1';
+$route['plan_headings/update_plan_headings'] = 'Plan_Headings/update_plan_headings';
+$route['plan_headings/delete_plan_heading'] = 'Plan_Headings/delete_plan_heading';
+
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
