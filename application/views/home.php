@@ -330,7 +330,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-md-7">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><a href="#">eSign</a></h5>
-                                                    <p class="card-text"> Easily get all the signatures you need without ever leaving nSmarTrac. Legally Signatures Empower You to Sign Documents Online. Create an eSignature, Format Documents, Store Signed Documents. Start Signing Today. eSign From Any Device. Clean And Paperless.</p>
+                                                    <p class="card-text"> Easily get all the signatures you need without ever leaving nSmarTrac. Legally signatures empower you to sign documents online. Create an eSignature, format documents, store signed documents. Start signing today. eSign from any device. Clean and paperless.</p>
                                                 </div>
                                             </div>
                                         </div>
