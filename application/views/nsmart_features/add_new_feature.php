@@ -41,12 +41,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           
                           <div class="form-group">
                             <label>Select Plans</label>
-                              <div class="input-group-text" style="margin-bottom: 10px; margin-left: 15px;">
-                                <input type="checkbox" aria-label="Checkbox for following text input">&nbsp;&nbsp;Simple Start
-                              </div>  
-                              <div class="input-group-text" style="margin-bottom: 10px; margin-left: 15px;">
-                                <input type="checkbox" aria-label="Checkbox for following text input">&nbsp;&nbsp;Issentials
-                              </div>                          
+                              <?php foreach($plans as $pln) { ?>
+                                      <div class="input-group-text" style="margin-bottom: 10px; margin-left: 15px;">
+                                        <input type="checkbox" aria-label="Checkbox for following text input">
+                                          &nbsp;&nbsp;<?php echo $pln->plan_name; ?>
+                                      </div> 
+                              <?php } ?>                         
                           </div>
                           
 

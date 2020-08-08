@@ -14,6 +14,7 @@ class Nsmart_Features extends MY_Controller {
 
 		$this->load->model('NsmartPlan_model');
 		$this->load->model('PlanHeadings_model');
+		$this->load->model('NsmartPlan_model');
 	}
 
 	public function index() {
@@ -32,8 +33,10 @@ class Nsmart_Features extends MY_Controller {
 	public function add_new_feature() {
 
 		$planHeadings   = $this->PlanHeadings_model->getAll();
-		
+		$plans   = $this->NsmartPlan_model->getAll();
+
 		$this->page_data['planHeadings'] = $planHeadings;
+		$this->page_data['plans'] = $plans;
 		$this->load->view('nsmart_features/add_new_feature', $this->page_data);
 	}	
 
