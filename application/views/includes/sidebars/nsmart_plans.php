@@ -36,9 +36,13 @@
         <?php 
             $is_active_plans    = "";
             $is_active_features = "";
-            if($this->uri->uri_string() == 'index') {
+            if($this->uri->uri_string() == 'nsmart_plans/index') {
                 $is_active_plans = "active";
-            }elseif($this->uri->uri_string() == 'features') {
+            }elseif($this->uri->uri_string() == 'nsmart_features/index') {
+                $is_active_features = "active";
+            }elseif($this->uri->uri_string() == 'plan_headings/add_new_headings') {
+                $is_active_features = "active";
+            }elseif($this->uri->uri_string() == 'nsmart_features/add_new_feature') {
                 $is_active_features = "active";
             }
         ?>
@@ -46,7 +50,7 @@
             <span class="fa fa-cubes"></span>Plans</a>
         </li>
         
-        <li class="submenus <?= $is_active_features; ?>"><a href="<?php echo base_url('more/addon/booking') ?>" title="Features" style="color: #fff;">
+        <li class="submenus <?= $is_active_features; ?>"><a href="<?php echo base_url('nsmart_features/index') ?>" title="Features" style="color: #fff;">
             <span class="fa fa-list"></span>Features</a>
         </li>
     </ul>
