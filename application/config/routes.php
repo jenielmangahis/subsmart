@@ -228,6 +228,10 @@ $route['plan_headings/edit_plan_headings/$1'] = 'Plan_Headings/edit_plan_heading
 $route['plan_headings/update_plan_headings'] = 'Plan_Headings/update_plan_headings';
 $route['plan_headings/delete_plan_heading'] = 'Plan_Headings/delete_plan_heading';
 
+$route['nsmart_features/index'] = 'Nsmart_Features/index';
+$route['nsmart_features/add_new_feature'] = 'Nsmart_Features/add_new_feature';
+$route['nsmart_features/create_feature'] = 'Nsmart_Features/create_feature';
+
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';

@@ -36,30 +36,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;">Plan</th>
-                                    <th style="width: 30%;">Description</th>
-                                    <th style="width: 8%;">Price</th>
-                                    <th style="width: 15%;">Discount Price</th>
-                                    <th style="width: 5%;">Is Active</th>
+                                    <th style="width: 20%;">Features</th>
+                                    <th style="width: 30%;">Plans</th>
                                     <th style="width: 15%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php //foreach( $nSmartPlans as $p ){ ?>
-                                    <?php 
-                                        $cell = 'cell-active';
-                                    ?>
+                                <?php foreach( $data_features as $heading => $data ){ ?>
                                     <tr>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td class="<?= $cell; ?>">-</td>
-                                        <td>
-                                            -
-                                        </td>
+                                        <td colspan="3"><b><?= $heading; ?></b></td>
                                     </tr>
-                                <?php //} ?>
+                                    <?php foreach( $data as $modules ){ ?>
+                                        <tr>
+                                            <td><?= $modules['feature_name']; ?></td>
+                                            <td>
+                                                <?php 
+                                                    echo implode(",", $modules['plans']);
+                                                ?>
+                                            </td>
+                                            <td><a href="<?php echo base_url('nsmart_plans/edit_plan/'.$modules['feature_id']); ?>"><i class="fa fa-pencil"></i> Edit</a></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>

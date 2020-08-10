@@ -122,7 +122,7 @@ class Nsmart_Plans extends MY_Controller {
 	        redirect('nsmart_plans/edit_plan/'.$post['plan_id']);
 
         }else{
-        	$this->session->set_flashdata('message', 'Please enter plan name');
+        	$this->session->set_flashdata('message', 'Cannot find data');
 	        $this->session->set_flashdata('alert_class', 'alert-danger');
 
 	        redirect('nsmart_plans/index');

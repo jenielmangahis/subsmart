@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card" style="min-height: 400px !important;">
                         <hr />
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('nsmart_feature/create_feature', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                        <?php echo form_open_multipart('nsmart_features/create_feature', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 
                           <div class="form-group">
                               <label>Feature Name</label> <span class="form-required">*</span>
@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <label>Select Plans</label>
                               <?php foreach($plans as $pln) { ?>
                                       <div class="input-group-text" style="margin-bottom: 10px; margin-left: 15px;">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
+                                        <input type="checkbox" name="plans[<?= $pln->nsmart_plans_id; ?>]" aria-label="Checkbox for following text input">
                                           &nbsp;&nbsp;<?php echo $pln->plan_name; ?>
                                       </div> 
                               <?php } ?>                         

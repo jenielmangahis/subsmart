@@ -1,13 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class PlanHeadings_model extends MY_Model
+class NsmartFeature_model extends MY_Model
 {
-    public $table = 'plan_headings';
-    public $status_active   = 1;
-    public $status_inactive = 0;
-    public $discount_percent = 1;
-    public $discount_amount   = 0;
+    public $table = 'nsmart_features';
 
     public function getAll($filters=array())
     {
@@ -43,14 +39,14 @@ class PlanHeadings_model extends MY_Model
         return $query;
     }
 
-    public function isTitle($title)
+    public function isFeatureNameExists($feature_name)
     {
         $is_exists = false;
 
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where('title', $title);
+        $this->db->where('feature_name', $feature_name);
 
         $query = $this->db->get()->row();
         if( $query ){
@@ -59,7 +55,15 @@ class PlanHeadings_model extends MY_Model
 
         return $is_exists;
     }
+
+    public function save($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+
+        return  $last_id;
+    }
 }
 
-/* End of file PlanHeadings_model.php */
-/* Location: ./application/models/PlanHeadings_model.php */
+/* End of file NsmartFeature_model.php */
+/* Location: ./application/models/NsmartFeature_model.php */

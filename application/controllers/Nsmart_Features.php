@@ -14,18 +14,24 @@ class Nsmart_Features extends MY_Controller {
 
 		$this->load->model('NsmartPlan_model');
 		$this->load->model('PlanHeadings_model');
-		$this->load->model('NsmartPlan_model');
+		$this->load->model('NsmartFeature_model');
+		$this->load->model('NsmartPlanModules_model');
 	}
 
 	public function index() {
 
-		$nSmartPlans   = $this->NsmartPlan_model->getAll();
-		$option_status = $this->NsmartPlan_model->getPlanStatus();
-		$option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
-		
-		$this->page_data['option_status'] = $option_status;
-		$this->page_data['option_discount_types'] = $option_discount_types;
-		$this->page_data['nSmartPlans'] = $nSmartPlans;
+		$planHeadings = $this->PlanHeadings_model->getAll();
+		$data_features = array();
+		foreach( $planHeadings as $ph ){
+			$modules = $this->NsmartPlanModules_model->getAllByPlanHeadingId($ph->id);
+			foreach( $modules as $m ){
+				$data_features[$ph->title][$m->nsmart_feature_id]['feature_name'] = $m->feature_name; 
+				$data_features[$ph->title][$m->nsmart_feature_id]['feature_id'] = $m->nsmart_feature_id;  
+				$data_features[$ph->title][$m->nsmart_feature_id]['plans'][] = $m->plan_name;
+			}
+		}
+
+		$this->page_data['data_features'] = $data_features;
 		$this->load->view('nsmart_features/index', $this->page_data);
 
 	}
@@ -40,8 +46,48 @@ class Nsmart_Features extends MY_Controller {
 		$this->load->view('nsmart_features/add_new_feature', $this->page_data);
 	}	
 
+	public function create_feature() {
+		postAllowed();
 
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['feature_name'] != '' ){
+        	$data_feature = [
+        		'feature_name' => $post['feature_name'],
+        		'feature_description' => $post['feature_description'],
+        		'plan_heading_id' => $post['feature_heading'],
+        		'date_created' => date("Y-m-d H:i:s")
+        	];
+
+        	$nsmart_feature_id = $this->NsmartFeature_model->save($data_feature);
+        	if( $nsmart_feature_id > 0 ){
+        		foreach( $post['plans'] as $id => $value ){
+        			$data_plan_modules = [
+        				'nsmart_plans_id' => $id,
+        				'nsmart_feature_id' => $nsmart_feature_id,
+        				'plan_heading_id' => $post['feature_heading']
+        			];
+
+        			$nsPlanFeature = $this->NsmartPlanModules_model->create($data_plan_modules);
+        		}
+
+        		$this->session->set_flashdata('message', 'Add new plan feature was successful');
+        		$this->session->set_flashdata('alert_class', 'alert-success');
+
+        	}else{
+        		$this->session->set_flashdata('message', 'Cannot save feature.');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');
+        	}
+
+        }else{
+        	$this->session->set_flashdata('message', 'Please enter feature name');
+        	$this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('nsmart_features/add_new_feature');
+	}
 }
 
 /* End of file Nsmart_Features.php */
-/* Location: ./application/controllers/Nsmart_Plan_Builder.php */
+/* Location: ./application/controllers/Nsmart_Features.php */
