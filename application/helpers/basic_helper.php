@@ -744,27 +744,28 @@ if (!function_exists('getCompanyFolder')){
             mkdir('./uploads/');
         }
 
-        if($company->folder_name == ''){
-            $folder_name = generateRandomString();
-            while(file_exists('./uploads/' . $folder_name . '/')){
-                $folder_name = generateRandomString();  
+        if($company) {
+            if($company->folder_name == ''){
+                $folder_name = generateRandomString();
+                while(file_exists('./uploads/' . $folder_name . '/')){
+                    $folder_name = generateRandomString();  
+                }
+
+                $data = array('folder_name' => $folder_name);
+
+                if($CI->business_model->trans_update($data, array('id' => $company->id))){
+                    mkdir('./uploads/' . $folder_name . '/');
+
+                    $company_folder = $folder_name;
+                }
+            } else {
+                if(!file_exists('./uploads/' . $company->folder_name . '/')){
+                    mkdir('./uploads/' . $company->folder_name . '/');    
+                }
+
+                $company_folder = $company->folder_name;
             }
-
-            $data = array('folder_name' => $folder_name);
-
-            if($CI->business_model->trans_update($data, array('id' => $company->id))){
-                mkdir('./uploads/' . $folder_name . '/');
-
-                $company_folder = $folder_name;
-            }
-        } else {
-            if(!file_exists('./uploads/' . $company->folder_name . '/')){
-                mkdir('./uploads/' . $company->folder_name . '/');    
-            }
-
-            $company_folder = $company->folder_name;
-        }
-
+        } 
         return $company_folder;
     }
 }
@@ -776,7 +777,8 @@ if (!function_exists('getFolders')) {
                         $getallchild = false, 
                         $asArray = false, 
                         $trashed = false,
-                        $ofUser = false)
+                        $ofUser = false,
+                        $ofCategorized = false)
     {
         $CI = &get_instance();
         $uid = logged('id');
@@ -785,6 +787,7 @@ if (!function_exists('getFolders')) {
         $parent_filter = '';
         $softdelete = '';
         $user_filter = '';
+        $category_filter = '';
 
         if($parent_id >= 0){
             $parent_filter = 'and a.parent_id = ' . $parent_id . ' ';
@@ -804,12 +807,17 @@ if (!function_exists('getFolders')) {
             $user_filter = 'and a.created_by = '. $uid . ' ';
         }
 
+        if($ofCategorized){
+            $category_filter = 'and a.category_id is not null ';
+        }
+
         $sql = 'select ' . 
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name as c_folder, '.
-               '(ifnull(d.total_sub_folders,0) + ifnull(e.total_files,0)) as `total_contents` '.
+               '(ifnull(d.total_sub_folders,0) + ifnull(e.total_files,0)) as `total_contents`, '.
+               'f.category_name '.
 
                'from file_folders a '.
                'left join users b on b.id = a.created_by '.
@@ -824,7 +832,9 @@ if (!function_exists('getFolders')) {
                  'select folder_id, sum(if(softdelete = 1,0,1)) as `total_files` from filevault group by folder_id'.
                ') e on e.folder_id = a.folder_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . ' ' . $parent_filter . $user_filter . 
+               'left join file_folders_categories f on f.category_id = a.category_id '.
+
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . ' ' . $parent_filter . $user_filter . $category_filter .
 
                'order by create_date ASC';
 
@@ -841,13 +851,14 @@ if (!function_exists('getFolders')) {
 
 if (!function_exists('getFiles')) {
 
-    function getFiles($folder_id, $asArray = false, $trashed = false, $ofUser = false){
+    function getFiles($folder_id, $asArray = false, $trashed = false, $ofUser = false, $ofCategorized = false){
         $CI = &get_instance();
         $uid = logged('id');
         $company_id = logged('company_id');
 
         $softdelete = '';
         $user_filter = '';
+        $category_filter = '';
 
         if(!$trashed){
             $softdelete = '<= 0 and a.folder_id = ' . $folder_id . ' ';
@@ -859,17 +870,23 @@ if (!function_exists('getFiles')) {
             $user_filter = 'and a.user_id = '. $uid . ' ';
         }
 
+        if($ofCategorized){
+            $category_filter = 'and a.category_id is not null ';
+        }
+
         $sql = 'select ' . 
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
-               'c.folder_name '.
+               'c.folder_name, '.
+               'd.category_name '.
 
                'from filevault a '.
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
+               'left join file_folders_categories d on d.category_id = a.category_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . $category_filter . 
 
                'order by created ASC';
 
@@ -1285,50 +1302,52 @@ function is_serialized($value, &$result = null)
     $length = strlen($value);
     $end = '';
 
-    switch ($value[0]) {
-        case 's':
-            if ($value[$length - 2] !== '"') {
-                return false;
-            }
-        case 'b':
-        case 'i':
-        case 'd':
-            // This looks odd but it is quicker than isset()ing
-            $end .= ';';
-        case 'a':
-        case 'O':
-            $end .= '}';
-
-            if ($value[1] !== ':') {
-                return false;
-            }
-
-            switch ($value[2]) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    break;
-
-                default:
+    if ($value) {
+        switch ($value[0]) {
+            case 's':
+                if ($value[$length - 2] !== '"') {
                     return false;
-            }
-        case 'N':
-            $end .= ';';
+                }
+            case 'b':
+            case 'i':
+            case 'd':
+                // This looks odd but it is quicker than isset()ing
+                $end .= ';';
+            case 'a':
+            case 'O':
+                $end .= '}';
 
-            if ($value[$length - 1] !== $end[0]) {
+                if ($value[1] !== ':') {
+                    return false;
+                }
+
+                switch ($value[2]) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                        break;
+
+                    default:
+                        return false;
+                }
+            case 'N':
+                $end .= ';';
+
+                if ($value[$length - 1] !== $end[0]) {
+                    return false;
+                }
+                break;
+
+            default:
                 return false;
-            }
-            break;
-
-        default:
-            return false;
+        }
     }
 
     if (($result = @unserialize($value)) === false) {
@@ -1780,8 +1799,10 @@ function total_invoice_amount($invoices)
 {
     $grand_total = 0;
     foreach ($invoices as $invoice) {
-        $totals = unserialize($invoice->invoice_totals);
-        $grand_total += floatval($totals['grand_total']);
+        if ($invoice->invoice_totals) {
+            $totals = unserialize($invoice->invoice_totals);
+            $grand_total += floatval($totals['grand_total']);
+        }
     }
 
     return number_format($grand_total, 2, '.', ',');

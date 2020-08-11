@@ -165,8 +165,9 @@ $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
 $route['accounting/reconcile/(:any)'] = 'reconcile/index/$1';
 $route['accounting/reconcile'] = 'reconcile/indexmain';
-$route['accounting/reconcile/edit'] = 'reconcile/edit';
-
+$route['accounting/reconcile/edit/(:any)'] = 'reconcile/edit/$1';
+$route['accounting/reconcile/update/(:any)'] = 'reconcile/update/$1';
+$route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
 // [Addons - Booking]
@@ -231,8 +232,6 @@ $route['plan_headings/delete_plan_heading'] = 'Plan_Headings/delete_plan_heading
 $route['nsmart_features/index'] = 'Nsmart_Features/index';
 $route['nsmart_features/add_new_feature'] = 'Nsmart_Features/add_new_feature';
 $route['nsmart_features/create_feature'] = 'Nsmart_Features/create_feature';
-
-$route['notification/calendar_notification_counter'] = 'Notification_Counter/calendar_notification_counter';
 
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
