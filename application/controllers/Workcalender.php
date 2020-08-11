@@ -11,6 +11,7 @@ class Workcalender extends MY_Controller
         $this->checkLogin();
         $this->page_data['page']->title = 'Work calender';
         $this->page_data['page']->menu = 'Workcalender';
+        $this->page_data['module'] = 'calendar'; 
 
         // $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Workzone_model', 'workzone_model');

@@ -40,6 +40,15 @@
 <!-- dynamic assets goes  -->
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
+	var nav_badges  = '';
+	<?php 
+		if( isset($module) ){
+			if( $module == 'calendar' ){
+				echo "nav_badges = 'calendar';";
+			}
+		} 
+
+	?>
 </script>
 <?php echo put_footer_assets(); ?>
 
@@ -52,6 +61,7 @@
 <!-- <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
 <script src="<?php echo $url->assets ?>js/sign.js"></script>
 <script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
+<script src="<?php echo $url->assets ?>js/sidebar_badges.js"></script>
 <script>
     jQuery(document).ready(function () {
         jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});

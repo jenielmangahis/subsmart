@@ -9,6 +9,7 @@ class Settings extends MY_Controller {
 		$this->checkLogin();
 		$this->page_data['page']->title = 'Settings';
 		$this->page_data['page']->menu = 'settings';
+		$this->page_data['module'] = 'calendar'; 
 
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',

@@ -26,7 +26,7 @@
         <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'schedule' || $page->menu === 'Workcalender' ))  ? "active" : ""; ?>">
             <a href="<?php echo base_url('workcalender') ?>"
                         title="Schedule">
-                <span class="fa fa-calendar"></span>Schedule
+                <span class="fa fa-calendar"></span>Schedule <span class="total-schedule"></span>
             </a>
         </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
@@ -39,13 +39,13 @@
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
                 <span class="fa fa-gear"></span>
-                Taskhub
+                Taskhub <span class="total-taskhub"></span>
             </a>
         </li>
         <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
-            <a href="#" title="Online Booking">
+            <a href="<?php echo base_url('more/addon/booking') ?>" title="Online Booking">
                 <span class="fa fa-gear"></span>
-                Online Booking
+                Online Booking <span class="total-online-booking"></span>
             </a>
         </li>
     </ul>
