@@ -252,3 +252,7 @@ $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
 $route['wizard/show_app'] = 'wizard/show_app';
 $route['wizard/del_app'] = 'wizard/del_app';
 //$route['wizard/getSubOptions'] = 'wizard/getSubOptions';
+
+//Settings
+$route['settings/schedule'] = 'Settings/schedule';
+$route['settings/notifications'] = 'Settings/notifications';

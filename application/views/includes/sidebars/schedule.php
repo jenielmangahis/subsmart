@@ -37,12 +37,12 @@
         <?php // additional menus for Schedule ?>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
-                <span class="fa fa-gear"></span><span class="total-taskhub left-sidebar-badge"></span> Taskhub
+                <span class="fa fa-clipboard"></span><span class="total-taskhub left-sidebar-badge"></span> Taskhub
             </a>
         </li>
         <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
             <a href="<?php echo base_url('more/addon/booking') ?>" title="Online Booking">
-                <span class="fa fa-gear"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
+                <span class="fa fa-book"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
             </a>
         </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">

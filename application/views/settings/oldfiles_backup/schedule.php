@@ -131,7 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                     <hr class="card-hr" style="border-bottom: solid 2px #dfdfdf !important;">
                                     <div class="pt-3 pb-3">
-                                        <a class="link-modal-open" href="<?php echo base_url('settings') .'/notifications' ?>">Manage schedule notifications</a>
+                                        <a class="link-modal-open" href="<?php echo base_url('schedule') .'/settings/preferences/notifications' ?>">Manage schedule notifications</a>
                                     </div>
                                     <hr class="card-hr" style="border-bottom: solid 2px #dfdfdf !important;">
                                     <div class="pt-3">
