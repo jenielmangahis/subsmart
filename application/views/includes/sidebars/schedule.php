@@ -34,24 +34,22 @@
                 <span class="fa fa-calendar"></span><span class="total-schedule left-sidebar-badge"></span> Schedule
             </a>
         </li>
+        <?php // additional menus for Schedule ?>
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
+                <span class="fa fa-gear"></span><span class="total-taskhub left-sidebar-badge"></span> Taskhub
+            </a>
+        </li>
+        <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
+            <a href="<?php echo base_url('more/addon/booking') ?>" title="Online Booking">
+                <span class="fa fa-gear"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
+            </a>
+        </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
                 <span class="fa fa-gear"></span>
                 Settings
             </a>
-        </li>
-        <?php // additional menus for Schedule ?>
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
-                <span class="fa fa-gear"></span><span class="total-taskhub left-sidebar-badge"></span> 
-                Taskhub
-            </a>
-        </li>
-        <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
-            <a href="<?php echo base_url('more/addon/booking') ?>" title="Online Booking">
-                <span class="fa fa-gear"></span><span class="total-online-booking left-sidebar-badge"></span>
-                Online Booking
-            </a>
-        </li>
+        </li>        
     </ul>
 </nav>
