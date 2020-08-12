@@ -1,5 +1,7 @@
 <!-- Footer -->
-<?php $this->load->view($alert) ?>
+<!--<div class="loader">-->
+<!--	<img src="--><?php //echo base_url(); ?><!--/assets/img/loader.svg" />-->
+<!--</div>-->
 <footer class="footer">
 	<div class="container-fluid">
 		<div class="row">
@@ -40,6 +42,7 @@ Chartist Chart-->
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
+<script src="<?php echo $url->assets ?>js/accounting/vendors.js"></script>
 <!--Accounting JS-->
 <?php echo put_footer_assets();?>
 <script type="text/javascript">

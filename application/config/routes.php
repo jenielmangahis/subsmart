@@ -66,6 +66,14 @@ $route['services/(:any)?/(:any)?'] = 'service/$1/$2';
 $route['services/(:any)?'] = 'service/$1';
 $route['services'] = 'service';
 
+// form builder pages - Gene
+$route['formbuilder'] = 'formbuilder';
+$route['formbuilder/create'] = 'formbuilder/create';
+$route['formbuilder/edit/(:num)'] = 'formbuilder/edit/$1';
+
+// form builder functions - Gene
+$route['formbuilder/form/add'] = 'formbuilder/addForm';
+
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
 $route['survey/(:num)']['GET'] = 'survey/preview/$1';
@@ -218,14 +226,14 @@ $route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon';
 $route['nsmart_plans/index'] = 'Nsmart_Plans/index';
 $route['nsmart_plans/add_new_plan'] = 'Nsmart_Plans/add_new_plan';
 $route['nsmart_plans/create_plan'] = 'Nsmart_Plans/create_plan';
-$route['nsmart_plans/edit_plan/$1'] = 'Nsmart_Plans/edit_plan/$1';
+$route['nsmart_plans/edit_plan/(:any)'] = 'Nsmart_Plans/edit_plan/$1';
 $route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
 $route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
 
 $route['plan_headings/index'] = 'Plan_Headings/index';
 $route['plan_headings/add_new_headings'] = 'Plan_Headings/add_new_headings';
 $route['plan_headings/create_plan_headings'] = 'Plan_Headings/create_plan_headings';
-$route['plan_headings/edit_plan_headings/$1'] = 'Plan_Headings/edit_plan_headings/$1';
+$route['plan_headings/edit_plan_headings/(:any)'] = 'Plan_Headings/edit_plan_headings/$1';
 $route['plan_headings/update_plan_headings'] = 'Plan_Headings/update_plan_headings';
 $route['plan_headings/delete_plan_heading'] = 'Plan_Headings/delete_plan_heading';
 

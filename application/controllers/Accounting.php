@@ -19,8 +19,8 @@ class Accounting extends MY_Controller {
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
-            "assets/css/accounting/accounting.css?v=".rand(),
-            "assets/css/accounting/accounting.modal.css?v=".rand(),
+            "assets/css/accounting/accounting.css",
+            "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -29,7 +29,7 @@ class Accounting extends MY_Controller {
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
-            "assets/js/accounting/accounting.js?v=".rand()
+            "assets/js/accounting/accounting.js"
         ));
 
 		$this->page_data['menu_name'] =
@@ -66,7 +66,6 @@ class Accounting extends MY_Controller {
     }*/
     public function banking()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/dashboard', $this->page_data);
@@ -83,11 +82,9 @@ class Accounting extends MY_Controller {
         $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
         $this->page_data['expenses'] = $this->expenses_model->getExpense();
         $this->page_data['list_categories'] = $this->categories_model->getCategories();
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/expenses', $this->page_data);
     }
     public function vendors(){
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['vendors'] = $this->vendors_model->getVendors();
         $this->load->view('accounting/vendors', $this->page_data);
@@ -95,22 +92,18 @@ class Accounting extends MY_Controller {
 
     public function receivables()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/receivables', $this->page_data);
     }
 
     public function workers()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/workers', $this->page_data);
     }
 
     public function taxes()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/taxes', $this->page_data);
     }
@@ -124,21 +117,18 @@ class Accounting extends MY_Controller {
 
     public function my_accountant()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/my_accountant', $this->page_data);
     }
 
     public function link_bank()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/banking', $this->page_data);
     }
 
     public function rules()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['rules'] = $this->rules_model->getRules();
         $this->load->view('accounting/rules', $this->page_data);
@@ -146,91 +136,78 @@ class Accounting extends MY_Controller {
 
     public function receipts()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->load->view('accounting/receipts', $this->page_data);
     }
     public function salesoverview()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/sales_overview', $this->page_data);
     }
     public function allsales()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/all_sales', $this->page_data);
     }
 	public function invoices()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Invoices";
         $this->load->view('accounting/invoices', $this->page_data);
     }
 	public function customers()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Customers";
         $this->load->view('accounting/customers', $this->page_data);
     }
 	public function deposits()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Deposits";
         $this->load->view('accounting/deposits', $this->page_data);
     }
 	public function products_and_services()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('accounting/products_and_services', $this->page_data);
     }
     public function audit_log()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/audit_log', $this->page_data);
     }
 	 public function payrolloverview()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/payroll_overview', $this->page_data);
     }	
 	 public function employees()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/employees', $this->page_data);
     }
 	public function contractors()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/contractors', $this->page_data);
     }
 	public function workerscomp()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/workers_comp', $this->page_data);
     }
 	public function reports()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
@@ -239,22 +216,31 @@ class Accounting extends MY_Controller {
 	/*** Vendors ***/
 	public function addVendor()
     {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Add Vendor";
-		if (! empty($_FILES)){
-            $config = array(
-                'upload_path' => './uploads/accounting/',
-                'allowed_types' => 'gif|jpg|png|jpeg|docx|doc|pdf',
-                'max_size' => '20000',
-                'encrypt_name' => true
-            );
+		$id = logged('id');
+		$filePath = "uploads/accounting/vendors".$id;
+		$file_name = "";
+		
+		if (file_exists($filePath)) {
+			$config['upload_path']  =  "uploads/accounting/vendors".$id;
+		} else {
+			mkdir("uploads/accounting/vendors".$id);
+			$config['upload_path']  =  "uploads/accounting/vendors".$id;
+		}
+		$config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
+		$config['max_size']        = '20000';
+		$config['encrypt_name']    = true;
+		
+		$this->load->library('upload', $config);
+			
+		if ($this->upload->do_upload('attachFiles'))
+        {
+			$image = $this->upload->data();
+			$file_name = $image['file_name'];
+		}
+
             $config = $this->uploadlib->initialize($config);
             $this->load->library('upload',$config);
-			
-            if ($this->upload->do_upload("file")){
-				
-                $uploadData = $this->upload->data();
-            
+
 				$new_data = array(
 					'title' => $this->input->post('title'),
 					'f_name' => $this->input->post('f_name'),
@@ -275,16 +261,16 @@ class Accounting extends MY_Controller {
 					'fax' => $this->input->post('fax'),
 					'website' => $this->input->post('website'),
 					'billing_rate' => $this->input->post('billing_rate'),
-					'terms' => $this->input->post('terns'),
+					'terms' => $this->input->post('terms'),
 					'opening_balance' => $this->input->post('opening_balance'),
 					'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
 					'account_number' => $this->input->post('account_number'),
 					'business_number' => $this->input->post('business_number'),
 					'default_expense_amount' => $this->input->post('default_expense_amount'),
 					'notes' => $this->input->post('notes'),
-					'attachments' => $uploadData['file_name'],
+					'attachments' => $file_name,
 					'status' => 1,
-					'created_by' => $this->input->post('created_by'),
+					'created_by' => logged('id'),
 					'date_created' => date("Y-m-d H:i:s"),
 					'date_modified' => date("Y-m-d H:i:s")
 				);
@@ -294,8 +280,9 @@ class Accounting extends MY_Controller {
 				if($addQuery > 0){
 					
 					$new_id = $addQuery;
-					$vendor_id = mb_substr($this->input->post('company'), 0, 3) . $new_id;
-					$updateQuery = $this->vendors_model->update($new_id, array("vendor_id" =>$vendor_id));
+					$comp = mb_substr($this->input->post('company'), 0, 3);
+					$vendor_id = strtolower($comp) . $new_id;
+					$updateQuery = $this->vendors_model->update($new_id, array("vendor_id" => $vendor_id));
 					
 					if($updateQuery > 0){
 						echo json_encode($updateQuery);
@@ -304,12 +291,6 @@ class Accounting extends MY_Controller {
 				else{
 					echo json_encode(0);
 				}
-				
-			}else{
-				echo json_encode($this->upload->display_errors());
-			}
-
-        }
     }
 	
 	public function deleteVendor(){
@@ -325,9 +306,9 @@ class Accounting extends MY_Controller {
 	public function vendordetails($id)
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Reports";
+        $this->page_data['page_title'] = "Vendor Details";
 		
-		$this->page_data['vendor_details'] = $this->vendors_model->getById($id);
+		$this->page_data['vendor_details'] = $this->vendors_model->getVendorDetails($id);
         $this->load->view('accounting/vendor_details', $this->page_data);
     }
 	public function invalidVendor()
@@ -395,6 +376,67 @@ class Accounting extends MY_Controller {
 
     }
 	
+	public function createBill()
+    {
+		$id = logged('id');
+		$filePath = "uploads/accounting/vendors/bill".$id;
+		$file_name = "";
+		
+		if (file_exists($filePath)) {
+			$config['upload_path']  =  "uploads/accounting/vendors/bill".$id;
+		} else {
+			mkdir("uploads/accounting/vendors/bill".$id);
+			$config['upload_path']  =  "uploads/accounting/vendors/bill".$id;
+		}
+		$config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
+		$config['max_size']        = '20000';
+		$config['encrypt_name']    = true;
+		
+		$this->load->library('upload', $config);
+			
+		if ($this->upload->do_upload('attachFiles'))
+        {
+			$image = $this->upload->data();
+			$file_name = $image['file_name'];
+		}
+
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
+
+				$new_data = array(
+					'vendor_id' => $this->input->post('vendor_id'),
+					'mailing_address' => $this->input->post('mailing_address'),
+					'terms' => $this->input->post('terms'),
+					'bill_date' => $this->input->post('bill_date'),
+					'due_date' => $this->input->post('due_date'),
+					'bill_number' => $this->input->post('bill_number'),
+					'permit_number' => $this->input->post('permit_number'),
+					'category' => $this->input->post('category'),
+					'description' => $this->input->post('description'),
+					'amount' => $this->input->post('amount'),
+					'total' => $this->input->post('total'),
+					'memo' => $this->input->post('memo'),
+					'attachments' => $file_name,
+					'created_by' => logged('id'),
+					'date_created' => date("Y-m-d H:i:s"),
+					'date_modified' => date("Y-m-d H:i:s")
+				);
+				
+				$addQuery = $this->expense_model->create($new_data);
+				
+				if($addQuery > 0){
+					echo json_encode(1);
+				}
+				else{
+					echo json_encode(0);
+				}
+    }
+	
+	public function getVendorData($id)
+    {	
+		$data = $this->vendors_model->getVendorDetails($id);
+        echo json_encode($data);
+    }
 	
 	public function addTerms()
     {
@@ -457,11 +499,12 @@ class Accounting extends MY_Controller {
             'terms' => $this->input->post('terms'),
             'bill_date' => $this->input->post('bill_date'),
             'due_date' => $this->input->post('due_date'),
-            'bill_number' => $this->input->post('bill_num'),
-            'permit_number' => $this->input->post('permit_num'),
+            'bill_number' => $this->input->post('bill_number'),
+            'permit_number' => $this->input->post('permit_number'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('filename')
         );
         $this->expenses_model->addBill($new_data);
 
@@ -473,10 +516,9 @@ class Accounting extends MY_Controller {
         $vendors = $this->db->get_where('accounting_vendors',array('vendor_id' => $bills->row()->vendor_id));
         $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
 
-
         $data = new stdClass();
         $data->transaction_id = $bills->row()->transaction_id;
-        $data->vendor_id = $vendors->row()->id;
+        $data->vendor_id = $vendors->row()->vendor_id;
         $data->bill_id = $bills->row()->id;
         $data->vendor_name = $vendors->row()->f_name.'&nbsp;'.$vendors->row()->l_name;
         $data->address = $bills->row()->mailing_address;
@@ -485,7 +527,7 @@ class Accounting extends MY_Controller {
         $data->due_date = $bills->row()->due_date;
         $data->bill_number = $bills->row()->bill_number;
         $data->permit_number = $bills->row()->permit_number;
-        $data->check_category = ($check_category->num_rows > 0)?true:false;
+        $data->check_category = ($check_category->num_rows() > 0)?true:false;
         echo json_encode($data);
     }
 
@@ -498,18 +540,32 @@ class Accounting extends MY_Controller {
             'terms' => $this->input->post('terms'),
             'bill_date' => $this->input->post('bill_date'),
             'due_date' => $this->input->post('due_date'),
-            'bill_number' => $this->input->post('bill_num'),
-            'permit_number' => $this->input->post('permit_num'),
+            'bill_number' => $this->input->post('bill_number'),
+            'permit_number' => $this->input->post('permit_number'),
+            'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
         );
-        $this->expenses_model->editBillData($data);
+        $query = $this->expenses_model->editBillData($data);
+		if($query){
+			echo json_encode(1);
+		}
+		else{
+			echo json_encode(0);
+		}
     }
 
     public function deleteBillData(){
         $id = $this->input->post('id');
-        $this->expenses_model->deleteBillData($id);
+        $query = $this->expenses_model->deleteBillData($id);
+		
+		if($query){
+			echo json_encode(1);
+		}
+		else{
+			echo json_encode(0);
+		}
     }
 
     public function rowCategories(){
@@ -521,6 +577,7 @@ class Accounting extends MY_Controller {
         $counter = $this->input->post('counter');
         $remove = $this->input->post('remove_id');
         $select = $this->input->post('select');
+        $preview = $this->input->post('preview');
         $get_categories = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
         $result = $get_categories->result();
         $categories = '';
@@ -528,32 +585,88 @@ class Accounting extends MY_Controller {
         foreach ($result as $cnt => $data){
             $category = ($data->category_id != null)?$data->category_id:"";
             $description = ($data->description != null)?$data->description:"";
-            $amount = ($data->amount!=null)?$data->amount:"";
+            $amount = ($data->amount!=null)?$data->amount:0;
             $cnt += 1;
             $categories .= '<tr id="'.$row.'">';
             $categories .= '<td></td>';
             $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
             $categories .= '<td>';
+            foreach ($category_list as $list){
+                if ($list->id == $category){
+                    $categories .= '<input type="hidden" name="categories_id[]" class="categories_id" value="'.$data->id.'">';
+                    $categories .= '<span id="category-preview'.$preview.'">'.$list->category_name.'</span>';
+                }
+            }
             $categories .= '<div id="" style="display:none;">';
-            $categories .= '<select name="category[]" id="" class="form-control '.$cat_class.' '.$select.'">';
+            $categories .= '<input type="hidden" id="prevent_process" value="true">';
+            $categories .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
             $categories .= '<option></option>';
+            $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
             foreach ($category_list as $list){
                 if ($list->id == $category){
                     $categories .= '<option value="'.$list->id.'" selected>'.$list->category_name.'</option>';
                 }
             }
             foreach ($category_list as $list){
-                $categories .= ' <option value="'.$list->id.'">'.$list->category_name.'</option>';
+                if($list->id != $category){
+                    $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+                }
             }
             $categories .= '</select>';
             $categories .= ' </div>';
             $categories .= '</td>';
-            $categories .= '<td><input type="text" name="description[]" class="form-control '.$des_class.'" value="'.$description.'"  style="display: none;"></td>';
-            $categories .= '<td><input type="text" name="amount[]" class="form-control '.$amount_class.'" value="'.$amount.'"  style="display: none;"></td>';
+            $categories .= '<td><span id="description-preview'.$preview.'">'.$description.'</span>';
+            $categories .= '<input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value="'.$description.'"  style="display: none;">';
+            $categories .= '</td>';
+            $categories .= '<td><span id="amount-preview'.$preview.'">'.$amount.'</span>';
+            $categories .= '<input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="'.$amount.'"  style="display: none;">';
+            $categories .= '</td>';
             $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
             $categories .= '</tr>';
         }
+
         echo $categories;
+    }
+
+    public function defaultCategoryRow(){
+        $row = $this->input->post('row');
+        $cat_class = $this->input->post('cat_class');
+        $des_class = $this->input->post('des_class');
+        $amount_class = $this->input->post('amount_class');
+        $counter = $this->input->post('counter');
+        $remove = $this->input->post('remove_id');
+        $select = $this->input->post('select');
+        $preview = $this->input->post('preview');
+        $category_list = $this->categories_model->getCategories();
+        $default = '';
+        for ($x = 1;$x <= 2;$x++){
+            $default .= '<tr id="'.$row.'">';
+            $default .= '<td></td>';
+            $default .= '<td><span id="'.$counter.'">'.$x.'</span></td>';
+            $default .= '<td>';
+            $default .= '<span id="category-preview'.$preview.'"></span>';
+            $default .= '<div id="" style="display:none;">';
+            $default .= '<input type="hidden" id="prevent_process" value="true">';
+            $default .= '<select name="category[]" id="" class="form-control '.$cat_class.' '.$select.'">';
+            $default .= '<option></option>';
+            $default .= '<option value="0" disabled id="add-expense-categories">&plus; Add Category</option>';
+            foreach ($category_list as $list){
+                $default .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+            }
+            $default .= '</select>';
+            $default .= '</div>';
+            $default .= '</td>';
+            $default .= '<td><span id="description-preview'.$preview.'"></span>';
+            $default .= '<input type="text" name="description[]" class="form-control '.$des_class.'" value=""  style="display: none;">';
+            $default .= '</td>';
+            $default .= '<td><span id="amount-preview'.$preview.'"></span>';
+            $default .= '<input type="text" name="amount[]" class="form-control '.$amount_class.'" value=""  style="display: none;">';
+            $default .= '</td>';
+            $default .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+            $default .= '</tr>';
+        }
+        echo $default;
+
     }
 
     public function getCheckData(){
@@ -579,8 +692,7 @@ class Accounting extends MY_Controller {
         $std->check_number = $query->row()->check_number;
         $std->print_later = $print;
         $std->permit_number = $query->row()->permit_number;
-        $std->check_category = ($check_category->num_rows() > 0)?true:false;
-
+        $std->check_category = $check_category->num_rows();
 
         echo json_encode($std);
 
@@ -597,7 +709,7 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('check_filename'),
+            'file_name' => $this->input->post('filename')
         );
         $this->expenses_model->addCheck($new_data);
     }
@@ -625,12 +737,14 @@ class Accounting extends MY_Controller {
     }
 
     public function removeTransactionAttachment(){
-        $file = $this->input->post('file');
-        if ($file && file_exists($this->expenses_path. $file)){
-            unlink( $this->expenses_path. $file);
-            $this->db->where('attachment',$file);
+        $file = $this->input->post('name');
+        $index = $this->input->post('index');
+        if ($file && file_exists($this->expenses_path. $file[$index])){
+            unlink( $this->expenses_path. $file[$index]);
+            $this->db->where('attachment',$file[$index]);
             $this->db->delete('accounting_expense_attachment');
         }
+
     }
 
     public function editCheckData(){
@@ -644,6 +758,7 @@ class Accounting extends MY_Controller {
             'check_num' => $this->input->post('check_number'),
             'print_later' => $this->input->post('print_later'),
             'permit_number' => $this->input->post('permit_number'),
+            'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
@@ -667,7 +782,8 @@ class Accounting extends MY_Controller {
 	        'permit_number' => $this->input->post('permit_num'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('filename')
         );
 	    $this->expenses_model->addExpense($new_data);
     }
@@ -702,8 +818,9 @@ class Accounting extends MY_Controller {
             'payment_account' => $this->input->post('payment_account'),
             'payment_date' => $this->input->post('payment_date'),
             'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('ref_num'),
-            'permit_number' => $this->input->post('permit_num'),
+            'ref_number' => $this->input->post('ref_number'),
+            'permit_number' => $this->input->post('permit_number'),
+            'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount')
@@ -725,7 +842,8 @@ class Accounting extends MY_Controller {
             'permit_number' => $this->input->post('permit_number'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('filename')
         );
         $this->expenses_model->vendorCredit($new_data);
     }
@@ -734,7 +852,6 @@ class Accounting extends MY_Controller {
         $get_vc = $this->db->get_where('accounting_vendor_credit',array('id'=>$id));
         $vendors = $this->db->get_where('accounting_vendors',array('vendor_id'=> $get_vc->row()->vendor_id));
         $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
-
 
         $data = new stdClass();
         $data->vc_id = $id;
@@ -745,7 +862,7 @@ class Accounting extends MY_Controller {
         $data->payment_date = $get_vc->row()->payment_date;
         $data->ref_number = $get_vc->row()->ref_number;
         $data->permit_number = $get_vc->row()->permit_number;
-        $data->check_number = ($check_category->num_rows() > 0)?true:false;
+        $data->check_category = ($check_category->num_rows() > 0)?true:false;
 
         echo json_encode($data);
     }
@@ -758,11 +875,18 @@ class Accounting extends MY_Controller {
             'payment_date' => $this->input->post('payment_date'),
             'ref_number' => $this->input->post('ref_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('filename')
         );
-        $this->expenses_model->updateVendorCredit($update);
+        $query = $this->expenses_model->updateVendorCredit($update);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
 
     public function deleteVendorCredit(){
@@ -793,7 +917,6 @@ class Accounting extends MY_Controller {
         $this->page_data['rules'] = $this->rules_model->getRulesById($id);
         $this->page_data['conditions'] = $this->rules_model->getConditionById($id);
         $this->page_data['categories'] = $this->rules_model->getCategoryById($id);
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->load->view('accounting/rules/edit-rules', $this->page_data);
     }
 
@@ -979,7 +1102,6 @@ class Accounting extends MY_Controller {
      /*chart_of_accounts start*/
         public function add()
     {
-        $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/chart_of_accounts/add', $this->page_data);
     }

@@ -50,8 +50,8 @@
                                 <div class="row">
                                     <div class="col-md-7">
                                         <div class="margin-bottom-sec">
-                                            <label>From:</label> <?php echo $user->name ?> 
-                                            <input type="hidden" name="from_name" value="<?php echo $user->name ?>">
+                                            <label>From:</label> <?php echo $user->FName . ' ' . $user->LName ?> 
+                                            <input type="hidden" name="from_name" value="<?php echo $user->FName . ' ' . $user->LName ?>">
                                             <input type="hidden" name="from_email" value="<?php echo $user->email ?>">
                                         </div>
                                         <div class="form-group">
@@ -80,15 +80,16 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Subject</label>
-                                            <input type="text" name="mail_subject" value="Invoice from <?php echo $user->name ?> (Invoice #<?php echo $invoice->invoice_number ?>)" class="form-control" autocomplete="off">
+                                            <input type="text" name="mail_subject" value="Invoice from <?php echo $user->FName . ' ' . $user->LName  ?> (Invoice #<?php echo $invoice->invoice_number ?>)" class="form-control" autocomplete="off">
                                         </div>
                                         <div>
                                             <label>Email Body</label>
                                             <textarea id="send-email" name="mail_msg">
-                                            <p style="font-size: 28px;" data-mce-style="font-size: 28px;">Invoice from <?php echo $user->name ?> (Invoice #<?php echo $invoice->invoice_number ?>)</p>
+                                            <p style="font-size: 28px;" data-mce-style="font-size: 28px;">Invoice from <?php echo $user->FName . ' ' . $user->LName  ?> (Invoice #<?php echo $invoice->invoice_number ?>)</p>
                                             <p>Dear <?php echo get_customer_by_id($invoice->customer_id)->contact_name ?>,<br></p>
                                             <p>Thank you for your business! <br>Please find the attached invoice #<?php echo $invoice->invoice_number ?> with this email. <br><br>
-                                                <strong>Amount due: $<?php echo number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
+                                                <!-- <strong>Amount due: $<?php echo number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online. -->
+                                                <strong>Amount due: $<?php echo number_format(0, 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
                                             </p>
                                             <p><br></p>
                                             <table class="mce-item-table" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -115,7 +116,7 @@
                                             </table>
                                             <p><br></p>
                                             <p>If you have any questions, please call us at 
-                                                <strong><?php echo $user->phone ?></strong> <br><br>Thanks,<br><?php echo $user->name ?>
+                                                <strong><?php echo $user->phone ?></strong> <br><br>Thanks,<br><?php echo $user->FName . ' ' . $user->LName  ?>
                                             </p>
                                             </textarea>
                                         </div>

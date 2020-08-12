@@ -8,7 +8,7 @@ class Wizard_apps_model extends MY_Model {
 	function fetch_data($query)
 	 {
 	  $this->db->like('app_name', $query);
-	  $query = $this->db->get('wizard_apps');
+	  $query = $this->db->where('defaultdata', '1')->get('wizard_apps');
 	  if($query->num_rows() > 0)
 	  {
 	   foreach($query->result_array() as $row)
@@ -25,24 +25,38 @@ class Wizard_apps_model extends MY_Model {
 
 	 function show_app($id)
 	 {
-	 	$q="SELECT * FROM wizard_apps where show_app = 1 and id= $id";
-	 	$prequery = $this->db->query($q);
-		if($prequery->num_rows() == 0)
+	 	// $q="SELECT * FROM wizard_apps where show_app = 1 and id= $id";
+	 	// $prequery = $this->db->query($q);
+		// if($prequery->num_rows() == 0)
+		// {
+		//  	$query="update wizard_apps set show_app = 1 where id = $id";
+		// 	echo $this->db->query($query);
+		// } 
+
+		
+		$query = $this->db->where('defaultdata', '1')->where('id', $id)->get('wizard_apps');
+		if($query->num_rows() > 0)
 		{
-		 	$query="update wizard_apps set show_app = 1 where id = $id";
-			echo $this->db->query($query);
+			foreach($query->result_array() as $row)
+			{
+				$qu = "INSERT INTO `wizard_apps` (`app_name`, `app_img`, `show_app`, `defaultdata`) VALUES ('".$row["app_name"]."', '".$row["app_img"]."', '1', '0')";
+				echo $this->db->query($qu);
+			}
 		}
+		
 	 }
 
 	 function del_app($id)
 	 {
-	 	$query="update wizard_apps set show_app = 0 where id = $id";
+		 // $query="update wizard_apps set show_app = 0 where id = $id";
+		$query = "delete from wizard_apps where id = $id";
 		echo $this->db->query($query);
 	 }
 
 	 function getApps()
 	 {
-	 	$this->db->where('show_app','1');
+		$this->db->where('show_app','1');
+		$this->db->where('defaultdata','0');
 	 	$query = $this->db->get('wizard_apps');  
         return $query->result();
 	 }

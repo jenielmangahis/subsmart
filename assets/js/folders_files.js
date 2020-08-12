@@ -66,7 +66,12 @@ $(document).ready(function(){
     e.preventDefault();
     
     if(selected != 0){ 
-      var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+      if(vType == 'mylibrary'){
+        var div = $('td[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+      } else {
+        var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');  
+      }
+      
       var confirm_text = '';
       var confirm_path = $('#folders_path').text();
 
@@ -313,6 +318,8 @@ function getFoldersAndFiles(parent_id = 0){
   
   if(vType == 'mylibrary'){
     vUrl += "/1";
+  } else if(vType == 'businessformtemplates'){
+    vUrl += "/0/1";
   } 
 
   $.ajax({
@@ -336,6 +343,8 @@ function getFoldersAndFiles(parent_id = 0){
 
         if(vType == 'mylibrary'){
           setFoldersAndFiles_MyLibrary(folders, files);
+        } else if(vType == 'businessformtemplates') {
+          setFoldersAndFiles_BusinessFormTemplates(folders, files);
         } else {
           setFoldersAndFiles(folders, files);
         }
@@ -615,6 +624,191 @@ function setFoldersAndFiles_MyLibrary(folders, files){
       showFileDetail(selected, selected_isFolder, false, true);  
     }  
   });   
+}
+
+//setFoldersAndFiles - Business Form Templates
+function setFoldersAndFiles_BusinessFormTemplates(folders, files){
+  $('#folders_and_files').empty();
+
+  var folders_and_files = $('#folders_and_files');
+
+  folders_and_files.append('<div id="accordion">');
+
+  selected = 0;
+  selected_isFolder = 1;
+
+  var categories = [];
+
+  var cur_count = 1;
+  var category = '';
+  var cur_body_id = '';
+  var cur_row_id = '';
+  var card_append = '';
+  var append = '';
+
+  $.each(folders, function(index, folder){
+    if(category != folder.category_id){
+      category = folder.category_id;
+
+      categories[category] = {row:1,col:1};
+
+      cur_body_id = 'body_bft_' + category;
+      cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+      
+      card_append = '<div class="card" id="bft_' + category + '">';
+
+      card_append += '<div class="card-header">'+
+                     '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                     '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
+                     '</a>'+
+                     '</div>';
+
+      card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
+                     '<div class="card-body" id="'+ cur_body_id +'">'+
+                     '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                     '</div>'+ 
+                     '</div>'+
+                     '</div>';
+
+      card_append += '</div>';
+
+      folders_and_files.append(card_append);
+    }
+
+    append = '';
+
+    if(categories[category]['col'] == 7){
+      if(folders.length >= cur_count){
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+          append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+          append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
+          append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+
+        $('#' + cur_row_id).append(append);
+
+        categories[category]['col'] = 1;
+        categories[category]['row']++;
+
+        cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+        
+        append = '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'"></div>';
+
+        $('#' + cur_body_id).append(append);
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+        append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+        append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
+        append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+
+      $('#' + cur_row_id).append(append);
+
+      categories[category]['col']++;
+    } 
+
+    cur_count++;
+  });
+
+  cur_count = 1;
+  category = '';
+  cur_body_id = '';
+  cur_row_id = '';
+  card_append = '';
+  append = '';
+
+  var in_categories = false;
+  var ex_infos = [];
+
+  $.each(files, function(index, file){
+    ex_infos = getfileExInfos(file.title);
+
+    if(category != file.category_id){
+      category = file.category_id;
+
+      in_categories = (category in categories);
+
+      if(!in_categories){
+        categories[category] = {row:1,col:1};
+      }
+
+      cur_body_id = 'body_bft_' + category;
+      cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+      
+      if(!in_categories){
+        card_append = '<div class="card" id="bft_' + category + '">';
+
+        card_append += '<div class="card-header">'+
+                       '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                       '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
+                       '</a>'+
+                       '</div>';
+
+        card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
+                       '<div class="card-body" id="'+ cur_body_id +'">'+
+                       '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                       '</div>'+ 
+                       '</div>'+
+                       '</div>';
+
+        card_append += '</div>';
+
+        folders_and_files.append(card_append);
+      }
+    }
+
+    append = '';
+
+    if(categories[category]['col'] == 7){
+      if(files.length >= cur_count){
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                       '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+          append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+          append += '<td class="pl-2">' + file.title + '</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+
+        $('#' + cur_row_id).append(append);
+
+        categories[category]['col'] = 1;
+        categories[category]['row']++;
+
+        cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+        
+        append = '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'"></div>';
+
+        $('#' + cur_body_id).append(append);
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+        append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+        append += '<td class="pl-2">' + file.title + '</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+
+      $('#' + cur_row_id).append(append);
+
+      categories[category]['col']++;
+    } 
+
+    cur_count++;  
+  });
+
+  folders_and_files.append('</div>');
 }
 
 // Search Files and Folders

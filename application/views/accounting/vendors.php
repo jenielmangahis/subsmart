@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="dropdown" style="position: relative;display: inline-block;">
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#new-vendor-modal" style="border-radius: 20px 0 0 20px">New vendor</button>
+                                    <button type="button" class="btn btn-success" id="btn-new-vendor-modal" style="border-radius: 20px 0 0 20px">New vendor</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -3px;">
                                         <span class="fa fa-caret-down"></span>
                                     </button>
@@ -98,7 +98,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Open Balance</th>
-                                        <th>Action</th>
+                                        <th style="width:50px">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -282,7 +282,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div id="new-vendor-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
-				<form id="addVendorForm" class="needs-validation" novalidate>
+				<form id="addVendorForm" class="addVendorForm-validation" novalidate>
                 <div class="modal-content max-width">
                     <div class="modal-header" style="border-bottom: 0">
                         <div class="modal-title">Vendor Information</div>
@@ -295,53 +295,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 56px">
                                         <label for="">Title</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="title" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 106px">
                                         <label for="">First name</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="f_name" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 106px">
                                         <label for="">Middle name</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" name="m_name" class="form-control">
                                     </div>
                                     <div class="form-ib" style="width: 106px">
                                         <label for="">Last name</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="l_name" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 56px">
                                         <label for="">Suffix</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" name="suffix" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Company</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="company" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="" style="margin-right: 10px">Print on check as </label>
-										<input type="checkbox"><span style="margin-left: 10px">Use display name</span>
-                                        <input type="text" class="form-control">
+										<input type="checkbox" value="1" name="to_display"><span style="margin-left: 10px">Use display name</span>
+                                        <input type="text" name="display_name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="" style="margin-right: 10px">Address</label>
 										<a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
-                                        <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
-                                        <input type="text" class="form-control address-form" placeholder="City/Town" required>
-                                        <input type="text" class="form-control address-form" placeholder="State/Province" required>
-                                        <input type="text" class="form-control address-form" placeholder="ZIP Code" required>
-                                        <input type="text" class="form-control address-form" placeholder="Country" required>
+                                        <textarea name="street" id="street" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
+                                        <input name="city" type="text" class="form-control address-form" placeholder="City/Town" required>
+                                        <input name="state" type="text" class="form-control address-form" placeholder="State/Province" required>
+                                        <input name="zip" type="text" class="form-control address-form" placeholder="ZIP Code" required>
+                                        <input name="country" type="text" class="form-control address-form" placeholder="Country" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Notes</label>
-                                        <textarea name="" id="" cols="30" rows="2" class="form-control"></textarea>
+                                        <textarea name="notes" id="notes" cols="30" rows="2" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
@@ -350,7 +350,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										<span>Maximum size: 20MB</span>
                                         <form action="/file-upload" class="dropzone" style="height: 50px;border:1px dashed grey;">
                                             <div class="fallback">
-                                                <input name="file" type="file" multiple />
+                                                <input name="attachFiles" type="file" multiple />
                                             </div>
                                         </form>
                                     </div>
@@ -367,43 +367,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Email</label>
-                                        <input type="text" class="form-control" placeholder="Separate multiple emails with commas" required>
+                                        <input type="text" class="form-control" name="email" placeholder="Separate multiple emails with commas" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
-                                    <div class="form-ib" style="width: 126px">
+                                    <div class="form-ib" style="width: 129px">
                                         <label for="">Phone</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="phone" class="form-control" required>
                                     </div>
-                                    <div class="form-ib" style="width: 126px">
+                                    <div class="form-ib" style="width: 129px">
                                         <label for="">Mobile</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="mobile" class="form-control" required>
                                     </div>
-                                    <div class="form-ib" style="width: 126px">
+                                    <div class="form-ib" style="width: 129px">
                                         <label for="">Fax</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" name="fax" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
-                                    <div class="form-ib" style="width: 126px;">
+                                    <!--<div class="form-ib" style="width: 126px;">
                                         <label for="">Other</label>
                                         <input type="text" class="form-control">
-                                    </div>
-                                    <div class="form-ib" style="width: 255px;">
+                                    </div>-->
+                                    <div class="form-ib">
                                         <label for="">Website</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" name="website" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
-                                    <div class="form-ib">
+									<div class="form-ib" style="width: 126px;">
                                         <label for="">Billing rate (/hr)</label>
-                                        <input type="text" class="form-control" style="width: 35%" required>
+                                        <input type="text" name="billing_rate" class="form-control" required>
                                     </div>
-                                </div>
-                                <div class="form-ib-group">
-                                    <div class="form-ib">
+                                    <div class="form-ib" style="width: 265px;">
                                         <label for="">Terms</label>
-										<select class="form-control" required>
+										<select class="form-control" name="terms" required>
 										  <option value="1">Due on Receipt</option>
 										  <option value="2">Net 15</option>
 										  <option value="3">Net 30</option>
@@ -414,30 +412,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 147px">
                                         <label for="">Opening balance</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="opening_balance" class="form-control" required>
                                     </div>
-                                    <div class="form-ib" style="width: 120px">
+                                    <div class="form-ib" style="width: 190px">
                                         <label for="">as of</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="date" name="opening_balance_as_of_date" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 70%">
                                         <label for="">Account no.</label>
-                                        <input type="text" class="form-control" placeholder="Appears in the memo of all payment" required>
+                                        <input type="text" name="account_number" class="form-control" placeholder="Appears in the memo of all payment" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 50%">
                                         <label for="">Business ID No.</label>
-                                        <input type="text" class="form-control" required>
-                                        <input type="checkbox"> <span>Track payment for 1099</span>
+                                        <input type="text" name="business_number" class="form-control" required>
+                                        
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 60%">
                                         <label for="">Default expense account</label>
-                                        <input type="text" class="form-control" placeholder="Choose Account" required>
+                                        <input type="text" name="default_expense_amount" class="form-control" placeholder="Choose Account" required>
                                     </div>
                                 </div>
                             </div>
@@ -465,81 +463,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--    end of modal-->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<script>
-    // DataTable JS
-    $(document).ready(function() {
-		 getAllVendors();
-        $('#vendors_table').DataTable({
-            "paging": false,
-        });
-        $(document).ready(function() {
-            $('#payBillsTable').DataTable({
-                "paging": false,
-                "filter":false
-            });
-        } );
-    } );
-function getAllVendors(){
-	var htmlData;
-	console.log(123);
-   $.ajax({
-		type: "GET",
-		url: "accounting/allVendors",
-		dataType: "json",
-		success:
-			function(data) {
-				htmlData = "";
-				if(data.length > 0){
-					/*$("#vendors_table tbody").empty();
-					for(var x=0;x < data.length;x++){
-						$("#vendors_table tbody").append();
-					}
-					$("#usersTable").show();
-					$("#nousers").hide();
-					$('#usersTable').DataTable();*/
-					htmlData = '<tr>';
-						htmlData += '<td>';
-						htmlData += '</td>';
-					htmlData += '</tr>';
-					$("#vendors_table tbody").append(htmlData);
-				}else{
-					htmlData = '<tr>';
-						htmlData += '<td>';
-							htmlData += '<div class="alert alert-info" role="alert">No available data.</div>;
-						htmlData += '</td>';
-					$("#vendors_table tbody").append(htmlData);
-				}
-			},
-		error:
-		function(data){
-			console.log("false");		
-		}
-	});		
-}
-</script>
-<script>
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-		  event.preventDefault();
-          event.stopPropagation();
-			if (form.checkValidity() === false) {
-			
-			}else{
-				console.log(0);
-			}
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
 
-</script>
 
 <?php include viewPath('includes/footer_accounting'); ?>

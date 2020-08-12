@@ -9189,10 +9189,11 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid #fff;
-    top: -10px;
+    top: 60px;
     left: 60px;
 }
 .add-new-data-block{
+        top: 70px;
     padding: 15px 15px 0;
     background: #fff;
     border-radius: 10px;

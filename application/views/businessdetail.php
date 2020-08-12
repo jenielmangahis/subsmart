@@ -4,25 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
-   <nav class="navbar-side">
-      <ul class="nav">
-         <!--<span class="nav-close">
-            <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%"><path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path></svg>
-            </span>-->
-         <li class="nav-header">My Business</li>
-         <li><a href="<?php echo url('users/businessview') ?>" title="My Profile"><span class="fa fa-user"></span>My Profile</a></li>
-         <li class="active"><a href="<?php echo url('users/businessdetail') ?>" title="Business Details"><span class="fa fa-briefcase"></span>Business Details</a></li>
-         <li><a href="" title="Services"><span class="fa fa-home"></span>Services</a></li>
-         <li><a href="" title="Credentials"><span class="fa fa-shield"></span>Credentials</a></li>
-         <li><a href="" title="Availability"><span class="fa fa-calendar"></span>Availability</a></li>
-         <li><a href="" title="Work Pictures"><span class="fa fa-camera-retro"></span>Work Pictures</a></li>
-         <li><a href="" title="Profile Settings"><span class="fa fa-file-o"></span>Profile Settings</a></li>
-         <li><a href="" title="Social Media"><span class="fa fa-share-square-o"></span>Social Media</a></li>
-      </ul>
-   </nav>
+   <?php include viewPath('includes/sidebars/business'); ?>
    <div wrapper__section>
       <div class="col-md-24 col-lg-24 col-xl-18">
-         <?php //echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+         <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 			<input type="hidden" name="id" value="<?php //echo $profiledata->id; ?>">
 			<input type="hidden" name="user_id" value="<?php //echo $profiledata->user_id; ?>">
             <div class="card">
@@ -31,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Business Name</label> <span class="form-required">*</span>
-                        <input type="text" name="b_name" class="form-control" autocomplete="off" value="<?php echo $profiledata->b_name ?>" placeholder="e.g. Acme Inc" required="">
+                        <input type="text" name="b_name" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->b_name : '' ?>" placeholder="e.g. Acme Inc" required="">
                         <span class="validation-error-field" data-formerrors-for-name="name" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -40,10 +25,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div>
                            <label>Profile Picture</label>
                            <div>
-                              <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" src="<?php //echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>"></a>
+                              <!-- <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" src="<?php //echo (companyProfileImage($profiledata->id)) ? companyProfileImage($profiledata->id) : $url->assets ?>"></a> -->
+                              <img id="img_profile">
                            </div>                           
 						   <div class="margin-top margin-bottom ">
-							<input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="previewImage(this, '#imagePreview')">
+							<input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="readURL(this);">
 						  </div>
                         </div>
                         <div class="profile-avatar-help-container">
@@ -150,7 +136,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Business Website</label> <span class="help">(optional)</span>
-                        <input type="text" name="website" value="<?php echo $profiledata->website ?>"  class="form-control" autocomplete="off" placeholder="Enter your business website, if any">
+                        <input type="text" name="website" value="<?php echo ($profiledata) ? $profiledata->website : '' ?>"  class="form-control" autocomplete="off" placeholder="Enter your business website, if any">
                         <span class="validation-error-field" data-formerrors-for-name="website" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -189,9 +175,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <label>Year of Establishment</label> <span class="form-required">*</span>
                         <div class="help help-block help-sm">Enter the year of company establishment.</div>
                         <select name="year_est" class="form-control">
+                        <?php if($profiledata) : ?>
                            <?php for($i=2020;$i>=1920;$i--){ ?>
-						   <option value="<?php echo $i; ?>" <?php if($profiledata->year_est == $i) echo 'selected'; ?>><?php echo $i ?></option>
-						   <?php } ?>
+                              <option value="<?php echo $i; ?>" <?php if($profiledata->year_est == $i) echo 'selected'; ?>><?php echo $i ?></option>
+                           <?php } ?>
+                        <?php endif;?>
                         </select>
                         <span class="validation-error-field" data-formerrors-for-name="year_est" data-formerrors-message="true" style="display: none;"></span>
                      </div>
@@ -200,7 +188,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      <div class="form-group">
                         <label>Number of Employees</label> <span class="form-required">*</span>
                         <div class="help help-block help-sm">Enter the number of people working for you.</div>
-                        <input type="text" name="employee_count" value="<?php echo $profiledata->employee_count ?>"  class="form-control" autocomplete="off" placeholder="e.g. 5" required="">
+                        <input type="text" name="employee_count" value="<?php echo ($profiledata) ? $profiledata->employee_count : '' ?>"  class="form-control" autocomplete="off" placeholder="e.g. 5" required="">
                         <span class="validation-error-field" data-formerrors-for-name="employee_count" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -247,7 +235,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                            <label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span data-char="counter" data-char-max="2000">1962</span></span>
                         </div>
                         <div class="help help-block help-sm">Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.</div>
-                        <textarea name="business_desc" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo $profiledata->business_desc; ?> </textarea>
+                        <textarea name="business_desc" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
                         <span class="validation-error-field" data-formerrors-for-name="about" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -261,7 +249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </div>
                </div>
             </div>
-    <?php //echo form_close(); ?>
+    <?php echo form_close(); ?>
          <div class="modal fileuploadmodal-modal" id="fileuploadmodal-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                <div class="modal-content">

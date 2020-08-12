@@ -344,7 +344,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <!-- end container-fluid -->
     </div>
-    <input type="hidden" id="site_url" value="<?php echo site_url(); ?>">
+<!--    <input type="hidden" id="site_url" value="--><?php //echo site_url(); ?><!--">-->
     <!-- page wrapper end -->
     <!-- Modal for Print Checks-->
     <div class="full-screen-modal">
@@ -557,6 +557,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <td><span id="line-counter">1</span></td>
                                     <td>
                                         <div id="" style="display:none;">
+                                            <input type="hidden" id="prevent_process" value="true">
                                             <select name="category[]" id="" class="form-control checkCategory select2-check-category">
                                                 <option></option>
                                                 <?php foreach ($list_categories as $list): ?>
@@ -574,6 +575,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <td><span id="line-counter">2</span></td>
                                     <td>
                                         <div id="" style="display:none;">
+                                            <input type="hidden" id="prevent_process" value="true">
                                             <select name="category[]" id="" class="form-control checkCategory select2-check-category">
                                                 <option></option>
                                                 <?php foreach ($list_categories as $list): ?>
@@ -590,6 +592,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </table>
                         </div>
                         <div class="addAndRemoveRow">
+                            <div class="total-amount-container">
+                                <span id="total-amount-check">0.00</span>
+                            </div>
                             <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line">Clear all lines</button>
                         </div>
@@ -903,6 +908,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </table>
                         </div>
                         <div class="addAndRemoveRow">
+                            <div class="total-amount-container">
+                                <span id="total-amount-bill">0.00</span>
+                            </div>
                             <button type="button" class="add-remove-line" id="add-four-line-bill">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line-bill">Clear all lines</button>
                         </div>
@@ -913,7 +921,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                            <div id="billAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
                                 <div class="dz-message" style="margin: 20px;border">
                                     <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                     <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -924,7 +932,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-5">
-                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
                             </div>
                             <div class="col-md-2" style="text-align: center;">
                                 <div>
@@ -933,7 +941,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;display: inline-block;position: relative;">
-                                    <button type="button" class="btn btn-success" id="billSaved" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
+                                    <button type="button" class="btn btn-success" data-dismiss="modal" id="billSaved" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -942,7 +950,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                                    <button class="btn btn-transparent" type="submit">Save</button>
+                                    <button class="btn btn-transparent" id="billSaved" data-dismiss="modal" type="button">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -974,9 +982,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <input type="hidden" id="expenseId">
                                 <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
                                     <option value=""></option>
-                                    <option value="1">Abacus Accounting</option>
-                                    <option value="2">Absolute Power</option>
-                                    <option value="3">ADSC</option>
+                                    <option disabled>&plus;&nbsp;Add new</option>
+                                    <?php foreach ($vendors as $vendor):?>
+                                        <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -1082,6 +1091,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </table>
                         </div>
                         <div class="addAndRemoveRow">
+                            <div class="total-amount-container">
+                                <span id="total-amount-expense">0.00</span>
+                            </div>
                             <button type="button" class="add-remove-line" id="add-four-line-expense">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line-expense">Clear all lines</button>
                         </div>
@@ -1092,7 +1104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                            <div id="expenseAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
                                 <div class="dz-message" style="margin: 20px;border">
                                     <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                     <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -1120,7 +1132,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </ul>
                                 </div>
                                 <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                                    <button class="btn btn-transparent" type="submit">Save</button>
+                                    <button class="btn btn-transparent" data-dismiss="modal" id="expenseSaved" type="button">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -1132,7 +1144,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 <!--    end of modal-->
-<!--    Vendor Credit-->
+<!--    Vendor Credit modal-->
     <div class="full-screen-modal">
         <div id="vendorCredit-modal" class="modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
@@ -1238,6 +1250,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </table>
                         </div>
                         <div class="addAndRemoveRow">
+                            <div class="total-amount-container">
+                                <span id="total-amount-vc">0.00</span>
+                            </div>
                             <button type="button" class="add-remove-line" id="add-four-line-vendorCredit">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line-vendorCredit">Clear all lines</button>
                         </div>
@@ -1248,7 +1263,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
                             <span>Maximum size: 20MB</span>
-                            <div id="" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                            <div id="vcAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
                                 <div class="dz-message" style="margin: 20px;border">
                                     <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                     <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -1259,7 +1274,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-5">
-                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
                             </div>
                             <div class="col-md-2" style="text-align: center;">
                                 <div>
@@ -1268,11 +1283,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-5">
                                 <div class="dropdown" style="float: right;">
-                                    <button type="button" class="btn btn-success" data-dismiss="modal" id="vcSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button type="button" class="btn btn-success" id="vcSaved" data-dismiss="modal" style="border-radius: 20px 0 0 20px">Save and new</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                        <li><a href="#" onclick="document.getElementById('formVendorCredit').submit();">Save and close</a></li>
+                                        <li><a href="#">Save and close</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -1400,6 +1415,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 <!--    end of modal-->
+<!--        Add Categories modal-->
+        <div class="modal" id="addNewCategories">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Modal Heading</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Modal body..
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+<!--        end of modal-->
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
@@ -1471,37 +1511,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#expensesCheckTable').DataTable({
             "paging": false,
             "filter":false,
-            "info":false
+            "info":false,
+            "sort": false
         });
     } );
     // Add & Remove line in dataTable Check modal
     $(document).ready(function () {
         jQuery(document).ready(function() {
             $("#add-four-line").click(function() {
-                var id = $('#line-container > tr').length;
+                var id = $('#line-container-check > tr').length;
                 for (var x = 1;x <= 4;x++){
                     id++;
                     var row = $('#tableLine').clone(true);
                     row.find("#line-counter").html(id);
-                    row.appendTo('#line-container');
+                    row.appendTo('#line-container-check');
                 }
             });
         });
             // Clear Lines
         $('#clear-all-line').click(function (e) {
-            var num = $('#line-container > tr').length;
+            var num = $('#line-container-check > tr').length;
             if (num == 2){
                 e.preventDefault();
             }else{
                 for (var x = 1;x <= num-2;x++){
                     $("#tableLine").last().remove();
-                    $('#line-counter').html(2);
+                    $('#line-counter-check').html(2);
                 }
             }
         });
         //Delete Line
         $(document).on("click","#delete-line-row",function (e) {
-            var count = $('#line-container > tr').length;
+            var count = $('#line-container-check > tr').length;
             if (count > 2){
                 $('#tableLine').last().remove();
             }else{
@@ -1509,15 +1550,69 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
 
         });
-
         //Table input text show
-        $(document).on("click","#tableLine",function () {
-            $('#tableLine > td >input').hide();
-            $('#tableLine > td >div').hide();
-            $('td > input,div', this).show();
+        $(document).on("click","#tableLine",function (e) {
+            if ($('td > div > #prevent_process',this).val() == 'true'){
+                $('.select2-check-category').select2({
+                    placeholder: 'Choose a category',
+                    allowClear: true
+                });
+                $('.select2-check-category').last().next().next().remove();
+                $('#tableLine > td >input').hide();
+                $('#tableLine > td >div').hide();
+                $('#tableLine > td > #category-preview-check').show();
+                $('#tableLine > td > #description-preview-check').show();
+                $('#tableLine > td > #amount-preview-check').show();
+                $('#tableLine >td > div > #prevent_process').val('true');
+                $('td > input,div', this).show();
+                $('td > #category-preview-check', this).hide();
+                $('td > #description-preview-check', this).hide();
+                $('td > #amount-preview-check', this).hide();
+                $('td > div > #prevent_process',this).val('false');
+
+                if ($(this).next().length == 0){
+                    $('#line-container-check').append($('#tableLine').last().clone());
+                    var count = $('#line-container-check > tr').length;
+                    $('td > #line-counter').last().html(count);
+                    $('td > #category-preview-check').last().html(null);
+                    $('td > #description-id-check').last().val(null);
+                    $('td > #description-preview-check').last().html(null);
+                    $('td > #amount-preview-check').last().html(null);
+                    $('td > #amount-id-check').last().val(0);
+                }
+            }
+        });
+
+        $(document).on('change','.select2-check-category',function () {
+            $(this).parent('div').prev("span#category-preview-check").text($(this).find(":selected").text());
+        });
+        $(document).on('change','.checkDescription',function () {
+            $(this).prev('span').text($(this).val());
+        });
+        $(document).on('change','.checkAmount',function () {
+           $(this).prev('span').text($(this).val());
+        });
+
+        $(document).on('keyup','.checkAmount',function () {
+            this.defaultValue = 0;
+            this.value = this.value.trim() || this.defaultValue;
+            var total = 0;
+            $('.checkAmount').each(function () {
+                var num = $(this).val().replace(',','');
+                if(isNaN(num)){
+                    total += parseFloat(num);
+                }
+                console.log(total);
+            });
+            if (isNaN(total)){
+                total = 0;
+                total = total.toFixed(2);
+            }
+            $('#total-amount-check').text(total.toFixed(2));
         });
 
     });
+
     // Bill modal js
     $(document).ready(function () {
         jQuery(document).ready(function() {
@@ -1556,9 +1651,63 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Table input text show
         $(document).on("click","#tableLine-bill",function () {
-            $('#tableLine-bill > td >input').hide();
-            $('#tableLine-bill > td >div').hide();
-            $('td > input,div', this).show();
+            if ($('td > div > #prevent_process',this).val() == 'true'){
+                $('.select2-bill-category').select2({
+                    placeholder: 'Choose a category',
+                    allowClear: true
+                });
+                $('.select2-bill-category').last().next().next().remove();
+
+                $('#tableLine-bill > td >input').hide();
+                $('#tableLine-bill > td >div').hide();
+                $('#tableLine-bill > td > #category-preview-bill').show();
+                $('#tableLine-bill > td > #description-preview-bill').show();
+                $('#tableLine-bill > td > #amount-preview-bill').show();
+                $('#tableLine-bill >td > div > #prevent_process').val('true');
+                $('td > input,div', this).show();
+                $('td > #category-preview-bill', this).hide();
+                $('td > #description-preview-bill', this).hide();
+                $('td > #amount-preview-bill', this).hide();
+                $('td > div > #prevent_process',this).val('false');
+
+                if ($(this).next().length == 0){
+                    $('#line-container-bill').append($('#tableLine-bill').last().clone());
+                    var count = $('#line-container-bill > tr').length;
+                    $('td > #line-counter-bill').last().html(count);
+                    $('td > #category-preview-bill').last().html(null);
+                    $('td > #description-id-bill').last().val(null);
+                    $('td > #description-preview-bill').last().html(null);
+                    $('td > #amount-preview-bill').last().html(null);
+                    $('td > #amount-id-bill').last().val(0);
+                }
+            }
+        });
+        $(document).on('change','.select2-bill-category',function () {
+            $(this).parent('div').prev("span#category-preview-bill").text($(this).find(":selected").text());
+        });
+        $(document).on('change','.billDescription',function () {
+            $(this).prev('span').text($(this).val());
+        });
+        $(document).on('change','.billAmount',function () {
+            $(this).prev('span').text($(this).val());
+        });
+
+        $(document).on('keyup','.billAmount',function () {
+            this.defaultValue = 0;
+            this.value = this.value.trim() || this.defaultValue;
+            var total = 0;
+            $('.billAmount').each(function () {
+                var num = $(this).val().replace(',','');
+                if(num !== 0){
+                    total += parseFloat(num);
+                }
+                console.log(total);
+            });
+            if (isNaN(total)){
+                total = 0;
+                total = total.toFixed(2);
+            }
+            $('#total-amount-bill').text(total.toFixed(2));
         });
 
     });
@@ -1599,11 +1748,66 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
 
         //Table input text show
+
         $(document).on("click","#tableLine-expense",function () {
-            $('#tableLine-expense > td >input').hide();
-            $('#tableLine-expense > td >div').hide();
-            $('td > input,div', this).show();
+            if ($('td > div > #prevent_process',this).val() == 'true'){
+                $('.select2-expense-category').select2({
+                    placeholder: 'Choose a category',
+                    allowClear: true
+                });
+                $('.select2-expense-category').last().next().next().remove();
+                $('#tableLine-expense > td >input').hide();
+                $('#tableLine-expense > td >div').hide();
+                $('#tableLine-expense > td > #category-preview-expense').show();
+                $('#tableLine-expense > td > #description-preview-expense').show();
+                $('#tableLine-expense > td > #amount-preview-expense').show();
+                $('#tableLine-expense >td > div > #prevent_process').val('true');
+                $('td > input,div', this).show();
+                $('td > #category-preview-expense', this).hide();
+                $('td > #description-preview-expense', this).hide();
+                $('td > #amount-preview-expense', this).hide();
+                $('td > div > #prevent_process',this).val('false');
+
+                if ($(this).next().length == 0){
+                    $('#line-container-expense').append($('#tableLine-expense').last().clone());
+                    var count = $('#line-container-expense > tr').length;
+                    $('td > #line-counter-expense').last().html(count);
+                    $('td > #category-preview-expense').last().html(null);
+                    $('td > #description-id-expense').last().val(null);
+                    $('td > #description-preview-expense').last().html(null);
+                    $('td > #amount-preview-expense').last().html(null);
+                    $('td > #amount-id-expense').last().val(0);
+                }
+            }
         });
+        $(document).on('change','.select2-expense-category',function () {
+            $(this).parent('div').prev("span#category-preview-expense").text($(this).find(":selected").text());
+        });
+        $(document).on('change','.expenseDescription',function () {
+            $(this).prev('span').text($(this).val());
+        });
+        $(document).on('change','.expenseAmount',function () {
+            $(this).prev('span').text($(this).val());
+        });
+
+        $(document).on('keyup','.expenseAmount',function () {
+            this.defaultValue = 0;
+            this.value = this.value.trim() || this.defaultValue;
+            var total = 0;
+            $('.expenseAmount').each(function () {
+                var num = $(this).val().replace(',','');
+                if(num != 0){
+                    total += parseFloat(num);
+                }
+                console.log(total);
+            });
+            if (isNaN(total)){
+                total = 0;
+                total = total.toFixed(2);
+            }
+            $('#total-amount-expense').text(total.toFixed(2));
+        });
+
 
     });
     // Vendor Credit modal js
@@ -1644,11 +1848,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Table input text show
         $(document).on("click","#tableLine-vendorCredit",function () {
-            $('#tableLine-vendorCredit > td >input').hide();
-            $('#tableLine-vendorCredit > td >div').hide();
-            $('td > input,div', this).show();
+            if ($('td > div > #prevent_process',this).val() == 'true'){
+                $('.select2-vc-category').select2({
+                    placeholder: 'Choose a category',
+                    allowClear: true
+                });
+                $('.select2-vc-category').last().next().next().remove();
+                $('#tableLine-vendorCredit > td >input').hide();
+                $('#tableLine-vendorCredit > td >div').hide();
+                $('#tableLine-vendorCredit > td > #category-preview-vc').show();
+                $('#tableLine-vendorCredit > td > #description-preview-vc').show();
+                $('#tableLine-vendorCredit > td > #amount-preview-vc').show();
+                $('#tableLine-vendorCredit > td > div > #prevent_process').val('true');
+                $('td > input,div', this).show();
+                $('td > #category-preview-vc', this).hide();
+                $('td > #description-preview-vc', this).hide();
+                $('td > #amount-preview-vc', this).hide();
+                $('td > div > #prevent_process',this).val('false');
+
+                if ($(this).next().length == 0){
+                    $('#line-container-vendorCredit').append($('#tableLine-vendorCredit').last().clone());
+                    var count = $('#line-container-vendorCredit > tr').length;
+                    $('td > #line-counter-vendorCredit').last().html(count);
+                    $('td > #category-preview-vc').last().html(null);
+                    $('td > #description-id-vc').last().val(null);
+                    $('td > #description-preview-vc').last().html(null);
+                    $('td > #amount-preview-vc').last().html(null);
+                    $('td > #amount-id-vc').last().val(0);
+                }
+            }
+        });
+        $(document).on('change','.select2-vc-category',function () {
+            $(this).parent('div').prev("span#category-preview-vc").text($(this).find(":selected").text());
+        });
+        $(document).on('change','.vcDescription',function () {
+            $(this).prev('span').text($(this).val());
+        });
+        $(document).on('change','.vcAmount',function () {
+            $(this).prev('span').text($(this).val());
         });
 
+        $(document).on('keyup','.vcAmount',function () {
+            this.defaultValue = 0;
+            this.value = this.value.trim() || this.defaultValue;
+            var total = 0;
+            $('.vcAmount').each(function () {
+                var num = $(this).val();
+                if(num != 0){
+                    total = total + parseFloat(num);
+                }
+            });
+            if (isNaN(total)){
+                total = 0;
+                total = total.toFixed(2);
+            }
+            $('#total-amount-vc').text(total.toFixed(2));
+        });
     });
 
     //Pay Down

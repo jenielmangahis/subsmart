@@ -312,18 +312,11 @@ class Folders extends MY_Controller {
 	public function getFolderPermissions(){
 	}
 
-	public function getFoldersFiles($parent_id = 0, $getByCurrentUser = 0, $internal = false){
-		$uid = logged('id');
+	public function getFoldersFiles($parent_id = 0, $getByCurrentUser = 0, $getByWithCategory = 0, $internal = false){
 		if($parent_id == 0){
 			$folders_path = '/<a control="gotofolder" href="0">root</a>/';
 			$folders_name = 'Root';
 		} else {
-			$user_filter = '';
-			
-			if($getByCurrentUser == 1){
-				$user_filter = ' and created_by = ' . $uid;
-			}
-
 			$folders_path = '';
 			$folders_name = '';
 			$sql = 'select '.
@@ -334,7 +327,7 @@ class Folders extends MY_Controller {
 
 				   'from file_folders '.
 
-				   'where folder_id = @' . $user_filter;
+				   'where folder_id = @';
 
 			$cSql = str_replace('@', $parent_id, $sql);
 			$folder = $this->db->query($cSql)->row();
@@ -358,10 +351,11 @@ class Folders extends MY_Controller {
 		}
 
 		$ofUser = ($getByCurrentUser == 1);
+		$ofCategorized = ($getByWithCategory == 1);
 
 		$return = array(
-			'folders' => getFolders($parent_id, false, false, true, false, $ofUser),
-			'files' => getFiles($parent_id, true, false, $ofUser),
+			'folders' => getFolders($parent_id, false, false, true, false, $ofUser, $ofCategorized),
+			'files' => getFiles($parent_id, true, false, $ofUser, $ofCategorized),
 			'folders_path' => $folders_path,
 			'folders_name' => $folders_name,
 			'error' => ''

@@ -15,7 +15,7 @@
                         <div id="presenter-from">
                             <b>FROM:</b>
                             <br>
-                            <b><?php echo $user->name ?></b><br>
+                            <b><?php echo $user->FName . ' ' . $user->LName ?></b><br>
                             <?php echo strtolower($user->address) ?><br>
                             Email: <?php echo strtolower($user->email) ?><br>
                             
@@ -62,7 +62,7 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;">Check Payable To:</td>
-                                        <td style="width: 180px; text-align: right;" class="text-right"><?php echo $user->name ?></td>
+                                        <td style="width: 180px; text-align: right;" class="text-right"><?php echo $user->FName . ' ' . $user->LName ?></td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right;"><b>Balance Due:</b></td>
@@ -120,7 +120,8 @@
         <br>
         <div class="table-items-container">
             <?php $total_tax = 0; ?>
-            <?php if ($invoice->invoice_items[0]['item'] != '') : ?>
+            <?php if (false) : ?>
+            <?php// if ($invoice->invoice_items[0]['item'] != '') : ?>
             <table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr>
@@ -176,15 +177,15 @@
                                 <tbody>
                                     <tr>
                                         <td style="padding: 8px 0; text-align: right;" class="text-right">Subtotal (without tax)</td>
-                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') ?></td>
+                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (false) ? number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') : '' ?></td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 8px 0; text-align: right;" class="text-right">Taxes</td>
-                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo number_format($total_tax, 2, '.', ',') ?></td>
+                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (false) ? number_format($total_tax, 2, '.', ',') : '' ?></td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
-                                        <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') ?></b></td>
+                                        <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' ?></b></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -210,10 +211,10 @@
         <br>
         <p>
             <b>Accepted payment methods</b><br>
-            <?php echo ($invoice->credit_card) ? "Credit Card," : '' ?> 
-            <?php echo ($invoice->check) ? "Check" : '' ?>
-            <?php echo ($invoice->cash) ? "Cash" : '' ?>
-            <?php echo ($invoice->deposit) ? "Direct Deposit" : '' ?>    
+            <?php echo ($invoice->accept_credit_card) ? "Credit Card," : '' ?> 
+            <?php echo ($invoice->accept_check) ? "Check" : '' ?>
+            <?php echo ($invoice->accept_cash) ? "Cash" : '' ?>
+            <?php echo ($invoice->accept_direct_deposit) ? "Direct Deposit" : '' ?>    
         </p>
         <p>
             Accepting Mobile Payments
@@ -221,7 +222,7 @@
         
             <p>
             <b>Message</b><br>
-            <?php echo ($invoice->customer_message)?>  
+            <?php echo ($invoice->message_to_customer)?>  
         </p>
         <br>
         <hr style="border-color:#eaeaea;">

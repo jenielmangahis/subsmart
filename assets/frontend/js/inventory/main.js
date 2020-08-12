@@ -163,7 +163,7 @@ $(document).ready(function () {
     $("#newServiceInventory").hide();
     $("#newFeesInventory").hide();
     $("#newItemInventory").fadeIn();
-    $("#saveAddAnother").text("Edit");
+    $("#saveAddAnother").text("Save Changes");
     $("#addLocationDiv").show();
     $("#save_close_item").hide();
     $.LoadingOverlay("show");
@@ -211,13 +211,12 @@ $(document).ready(function () {
   });
 
   $(document).on("click", "#seeLocation", function () {
-    $("#addLocationForm").hide();
-    $("#addLocationLabel").text("View Location");
+    var itemID = $(this).data("id");
     var param = {
-      item_id: $(this).data("id"),
+      item_id: itemID,
     };
 
-    getItemLocationById(param);
+    getItemLocationByIdViewList(param, itemID);
   });
 
   $("#addLocationNewItem").click(function () {
@@ -332,6 +331,21 @@ function getItemLocationById(param) {
         destroy: true,
         data: items,
       });
+    },
+  });
+}
+
+function getItemLocationByIdViewList(param, id) {
+  $.ajax({
+    type: "POST",
+    url: base_url + "inventory/getItemLocations",
+    data: param,
+    success: function (response) {
+      var items = [];
+      var result = jQuery.parseJSON(response);
+      for (var i = 0; i < result.length; i++) {
+        $("#locQtyList"+id).append('<li><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"><span style="float:left;">' + result[i].name + '</span><span style="float:right;">' + result[i].qty + '</span></a><br></li>');
+      }
     },
   });
 }

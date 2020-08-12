@@ -303,57 +303,58 @@
  
 <script>
 $(document).ready(function(){
-  var sample_data = new Bloodhound({
-   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-   queryTokenizer: Bloodhound.tokenizers.whitespace,
-   prefetch:'<?php echo base_url(); ?>wizard/fetch',
-   remote:{
-    url:'<?php echo base_url(); ?>wizard/fetch/%QUERY',
-    wildcard:'%QUERY'
-   }
-  });
+	
+	var sample_data = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch:'<?php echo base_url(); ?>wizard/fetch',
+		remote:{
+			url:'<?php echo base_url(); ?>wizard/fetch/%QUERY',
+			wildcard:'%QUERY'
+		}
+	});
   
 
-  $('#prefetch .typeahead').typeahead(null, {
-   name: 'sample_data',
-   display: 'app_name',
-   source:sample_data,
-   limit:10,
-   templates:{
-   suggestion:Handlebars.compile(`<div class="row" onClick="myfunc('{{app_id}}','{{app_name}}','{{app_img}}')"><div class="col-md-2" style="padding-right:5px; padding-left:5px;"><img src="<?php echo $url->assets ?>{{app_img}}" class="img-thumbnail" width="48" /></div><div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{app_name}}</div></div>`)
-   }
-  });
-});
-function myfunc(app_id,app_name,app_img)
-  {
-    $.ajax({
-     url:'<?php echo base_url(); ?>wizard/show_app',
-     method: 'post',
-     data: {app_id: app_id},
-     dataType: 'json',
-     success: function(response){
-      var mydiv = document.getElementById("ulid");
-    var newcontent = document.createElement("li");
-    newcontent.innerHTML = "<li id='li_"+app_id+"'><div class='app-imgbx'><div class='app-img'><img src='<?php echo $url->assets?>"+app_img+"' alt=''><a href='#' onClick='del_app("+app_id+")'><i class='fa fa-times'></i></a></div></div><p>"+app_name+"</p></li>";
+  	$('#prefetch .typeahead').typeahead(null, {
+			name: 'sample_data',
+			display: 'app_name',
+			source:sample_data,
+			limit:10,
+			templates:{
+				suggestion:Handlebars.compile(`<div class="row" onClick="myfunc('{{app_id}}','{{app_name}}','{{app_img}}')"><div class="col-md-2" style="padding-right:5px; padding-left:5px;"><img src="<?php echo $url->assets ?>{{app_img}}" class="img-thumbnail" width="48" /></div><div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{app_name}}</div></div>`)
+			}
+		});
+	});
 
-    while (newcontent.firstChild) {
-        mydiv.appendChild(newcontent.firstChild);
-    }
- 
-     }
-   });
-  }
+	function myfunc(app_id,app_name,app_img)
+	{
+		$.ajax({
+			url:'<?php echo base_url(); ?>wizard/show_app',
+			method: 'post',
+			data: {app_id: app_id},
+			dataType: 'json',
+			success: function (response) {
+				var mydiv = document.getElementById("ulid");
+				var newcontent = document.createElement("li");
+				newcontent.innerHTML = "<li id='li_"+app_id+"'><div class='app-imgbx'><div class='app-img'><img src='<?php echo $url->assets?>"+app_img+"' alt=''><a href='#' onClick='del_app("+app_id+")'><i class='fa fa-times'></i></a></div></div><p>"+app_name+"</p></li>";
 
- function del_app(app_id)
-  {
-    $.ajax({
-     url:'<?php echo base_url(); ?>wizard/del_app',
-     method: 'post',
-     data: {app_id: app_id},
-     dataType: 'json',
-     success: function(response){
-       document.getElementById('li_'+app_id).remove();
-     }
-   });
-  }
+				while (newcontent.firstChild) {
+					mydiv.appendChild(newcontent.firstChild);
+				}
+		
+			}
+		});
+	}
+
+	function del_app(app_id) {
+		$.ajax({
+			url:'<?php echo base_url(); ?>wizard/del_app',
+			method: 'post',
+			data: {app_id: app_id},
+			dataType: 'json',
+			success: function(response){
+				document.getElementById('li_'+app_id).remove();
+			}
+		});
+	}
 </script>

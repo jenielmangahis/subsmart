@@ -6,114 +6,173 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box mx-4">
-                <div class="row pb-2">
-                    <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/accounting/expenses')?>" class="banking-tab" style="text-decoration: none">Expenses</a>
-                        <a href="<?php echo url('/accounting/vendors')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="vendors")?:'-active';?>">Vendors</a>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-3">
+                <div class="row align-items-center">
                     <div class="col-md-12 px-0" >
                         <div class="row">
                             <div class="col-md-6">
-                                <h2>Vendors</h2>
+                                <h2><?php echo $vendor_details[0]->display_name; ?></h2>
+								<p><?php echo $vendor_details[0]->notes; ?></p>
                             </div>
                             <div class="col-md-6" style="text-align: right">
+                                <button type="button" class="btn btn-default" style="border-radius: 20px">Edit</button>
                                 <div class="dropdown" style="position: relative;display: inline-block;">
-                                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pay-bills-modal" style="border-radius: 20px 0 0 20px">Pay bills</button>
-                                    <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                        <span class="fa fa-caret-down"></span></button>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#">Prepare 1099s</a></li>
-                                        <li><a href="#">Order Checks</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown" style="position: relative;display: inline-block;">
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#new-vendor-modal" style="border-radius: 20px 0 0 20px">New vendor</button>
-                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -3px;">
-                                        <span class="fa fa-caret-down"></span>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 20px;margin-left: 5px;">
+                                       New Transaction&ensp;<span class="fa fa-caret-down"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-left">
-                                        <li><a href="#">Import vendors</a></li>
+                                        <li><a href="#">Time Activity</a></li>
+                                        <li><a href="#">Bill</a></li>
+                                        <li><a href="#">Expense</a></li>
+                                        <li><a href="#">Check</a></li>
+                                        <li><a href="#">Vendor Credit</a></li>
+                                        <li><a href="#">Pay down credit card</a></li>
                                     </ul>
                                 </div>
+								<div class="row justify-content-end mt-3">
+									<div class="col-2">
+										<div class="border-left-warning">
+											<h4 class="mb-0">$0.00</h4>
+											<h6 class="m-0 font-weight-normal">OPEN</h6>
+										</div>
+									</div>
+									<div class="col-2">
+										<div class="border-left-danger">
+											<h4 class="mb-0">$0.00</h4>
+											<h6 class="m-0 font-weight-normal">OVERDUE</h6>
+										</div>
+									</div>
+								</div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="tableContainer moneyBar">
-                                    <div class="unpaid-bar-container">
-                                        <div class="unpaid-bar-header">
-                                            Unpaid 365 days
-                                        </div>
-                                        <div class="overdue-bar">
-                                            <div class="overdue-bar-header">
-                                                <h4>0</h4>
-                                                <span>OPEN BILLS</span>
-                                            </div>
-                                            <div class="openbills-bar">
-                                                <div class="openbills-bar-header">
-                                                    <h4>0</h4>
-                                                    <span>OVERDUE</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="paid-bar-container">
-                                        <div class="paid-header">
-                                            Paid
-                                        </div>
-                                        <div class="paid-bar">
-                                            <div class="paid-bar-header">
-                                                <h4>39</h4>
-                                                <span>PAID LAST 30 DAYS</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row p-3 bg-white mt-3 mx-0">
-                            <div class="col-md-12">
-                                <div style="position: relative;">
-                                    <div class="arrow-level-down">
-                                        <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
-                                    </div>
-                                    <div class="dropdown batch-action-btn" style="display: inline-block;position: relative">
-                                        <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px">Batch Action
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Email</a></li>
-                                            <li><a href="#">Pay Bills Online</a></li>
-                                            <li><a href="#">Make inactive</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!--                        DataTables-->
-                                <table id="vendors_table" class="table table-striped table-bordered" style="width:100%;margin-top: 10px;">
-                                    <thead>
-                                    <tr>
-                                        <th><input type="checkbox"></th>
-                                        <th>Vendor/Company</th>
-                                        <th>Phone</th>
-                                        <th>Email</th>
-                                        <th>Open Balance</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>Test</td>
-                                        <td>Test</td>
-                                        <td>Test</td>
-                                        <td></td>
-                                        <td><a href="">Create bill</a> <span class="caret"></span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+						<div class="row align-items-center">
+							<div class="col-md-12" style="">
+								<!-- Nav tabs -->
+								<div class="banking-tab-container">
+									<div class="rb-01">
+										<ul class="nav nav-tabs border-0">
+											<li class="nav-item banking-sub-active">
+												<a class="nav-link active banking-sub-tab" data-toggle="tab" href="#transactionlist">Transaction List</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link banking-sub-tab" data-toggle="tab" href="#vendordetails">Vendor Details</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<!-- Tab panes -->
+								<div class="tab-content pt-4">
+									<div class="tab-pane active" id="transactionlist">							
+											<div style="position: relative;">
+												<div class="arrow-level-down">
+													<i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
+												</div>
+												<div class="dropdown batch-action-btn" style="display: inline-block;position: relative">
+													<button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 20px">Batch Action
+														<span class="fa fa-caret-down"></span></button>
+													<ul class="dropdown-menu">
+														<li><a href="#">Email</a></li>
+														<li><a href="#">Pay Bills Online</a></li>
+														<li><a href="#">Make inactive</a></li>
+													</ul>
+												</div>
+											</div>
+											<!--                        DataTables-->
+											<table id="vendors_table" class="table table-striped table-bordered bg-white" style="width:100%;margin-top: 10px;">
+												<thead>
+													<tr>
+														<th><input type="checkbox"></th>
+														<th><strong>DATE</strong></th>
+														<th><strong>TYPE</strong></th>
+														<th><strong>NO.</strong></th>
+														<th><strong>PAYEE</strong></th>
+														<th><strong>CATEGORY</strong></th>
+														<th><strong>MEMO</strong></th>
+														<th><strong>TOTAL</strong></th>
+														<th><strong>ACTION</strong></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td><input type="checkbox"></td>
+														<td>08/19/2018</td>
+														<td>Check</td>
+														<td>532</td>
+														<td>Iphen</td>
+														<td>Office Expenses</td>
+														<td></td>
+														<td>$520.00</td>
+														<td><a href="#">View/Edit</a> <span class="caret"></span></td>
+													</tr>
+													<tr>
+														<td><input type="checkbox"></td>
+														<td>08/22/2018</td>
+														<td>Check</td>
+														<td>512</td>
+														<td>Iphen</td>
+														<td>Legal and Professional Fees</td>
+														<td></td>
+														<td>$900.00</td>
+														<td><a href="#">View/Edit</a> <span class="caret"></span></td>
+													</tr>
+												</tbody>
+											</table>
+									</div>
+									<div class="tab-pane fade" id="vendordetails" >
+										<div class="row">
+											<div class="col-md-6">
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Vendor</strong>
+													<span class="font-weight-normal">Iphen</span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Email</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Phone</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Mobile</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Fax</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Other</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Website</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+											</div>
+											<div class="col-md-6">
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Billing address</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Terms</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Company</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+												<h6 class="border-bottom-dark pb-2">
+													<strong class="pr-5">Notes</strong>
+													<span class="font-weight-normal"></span>
+												</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
 
                     </div>
 
@@ -460,40 +519,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
-<script>
-    // DataTable JS
-    $(document).ready(function() {
-        $('#vendors_table').DataTable({
-            "paging": false,
-        });
-        $(document).ready(function() {
-            $('#payBillsTable').DataTable({
-                "paging": false,
-                "filter":false
-            });
-        } );
-    } );
-</script>
-<script>
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-		  event.preventDefault();
-          event.stopPropagation();
-			if (form.checkValidity() === false) {
-			
-			}else{
-				console.log(0);
-			}
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
-</script>
+

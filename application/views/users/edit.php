@@ -39,11 +39,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h3>Basic Details</h3>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="formClient-Name">Name</label>
-                                    <input type="text" class="form-control" name="name" id="formClient-Name" required
+                                    <label for="formClient-Name">First Name</label>
+                                    <input type="text" class="form-control" name="FName" id="formClient-Name" required
                                            placeholder="Enter Name"
                                            onkeyup="$('#formClient-Username').val(createUsername(this.value))"
-                                           value="<?php echo $User->name ?>" autofocus/>
+                                           value="<?php echo $User->FName ?>" autofocus/>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="formClient-Name">Last Name</label>
+                                    <input type="text" class="form-control" name="LName" id="formClient-Name" required
+                                           placeholder="Enter Name"
+                                           onkeyup="$('#formClient-Username').val(createUsername(this.value))"
+                                           value="<?php echo $User->LName ?>" autofocus/>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-Contact">Contact Number</label>
@@ -75,14 +82,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-Password">Password</label>
-                                    <input type="text" class="form-control" minlength="6" name="password"
+                                    <input type="password" class="form-control" minlength="6" name="password"
                                            value="<?php echo $User->password_plain ?>" id="password"
                                            placeholder="Password"/>
                                     <p class="help-block">Leave Blank to remain unchanged !</p>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="formClient-ConfirmPassword">Confirm Password</label>
-                                    <input type="text" class="form-control" minlength="6" equalTo="#password"
+                                    <input type="password" class="form-control" minlength="6" equalTo="#password"
                                            name="confirm_password" id="formClient-ConfirmPassword"
                                            placeholder="Confirm Password"/>
                                 </div>

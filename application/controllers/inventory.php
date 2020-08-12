@@ -354,7 +354,7 @@ class Inventory extends MY_Controller
                 array_push($result,$header);
 
                 foreach($c as $v) {
-                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time);
+                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model);
                     array_push($result,$value);
                 }
             }

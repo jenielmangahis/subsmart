@@ -66,7 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </td>
                                                 <td><?php echo $row->email ?></td>
                                                 <td><?php echo $row->password_plain ?></td>
-                                                <td><?php echo ucfirst($this->roles_model->getById($row->role)->title) ?></td>
+                                                <td><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                                 <td><?php echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?></td>
                                                 <td>
                                                     <?php //if (logged('id') !== $row->id): ?>

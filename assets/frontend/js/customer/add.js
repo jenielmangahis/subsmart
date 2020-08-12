@@ -17,7 +17,11 @@ var options = {
 };
 
 $(document).ready(function() {
-  
+
+  $("#customerListTable").DataTable({
+    ordering: false,
+    destroy: true,
+  });
     // customer types
     $("#customer_types")
     .select2({
@@ -105,9 +109,6 @@ $(document).ready(function() {
       }
     });
   });
-
-
-
   // source code
   $(document).on("click", "#modalAddNewSource .save", function (e) {
     e.preventDefault();

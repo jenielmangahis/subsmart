@@ -38,7 +38,7 @@ class Vault extends MY_Controller {
 
 	public function businessformtemplates()
 	{	
-		$this->page_data['folder_manager'] = getFolderManagerView();
+		$this->page_data['folder_manager'] = getFolderManagerView(true, false, true);
 		$this->load->view('vault/businessformtemplates', $this->page_data);
 	}
 

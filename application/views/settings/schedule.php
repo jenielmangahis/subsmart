@@ -13,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <h1>Settings</h1>
 
                         <?php echo form_open('settings/schedule', ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
-                        <div class="validation-error hide"></div>
+                        <div class="validation-error hide" style="display:none;"></div>
 
                         <div class="card">
                             <div class="rows">
@@ -128,21 +128,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <label for="work_order_show_price"><span>Job price</span></label>
                                         </div>
                                     </div>
+                                    <hr class="card-hr">
+                                    <div class="pt-3 pb-3">
+                                        <a class="link-modal-open" href="<?php echo base_url('schedule') .'/settings/preferences/notifications' ?>">Manage schedule notifications</a>
+                                    </div>
+                                    <hr class="card-hr">
+                                    <div class="pt-3">
+                                        <button class="btn btn-primary" data-action="save">Save Changes</button>
+                                    </div>             
                                 </div>
                             </div>
-                        </div>
-
-                        <hr class="card-hr">
-<!--                        <div class="card">-->
-<!--                            <a href="https://www.markate.com/pro/settings/preferences/notifications">Manage schedule-->
-<!--                                notifications</a>-->
-<!--                        </div>-->
-<!---->
-<!--                        <hr class="card-hr">-->
-                        <div class="card">
-                            <button class="btn btn-primary btn-lg" name="btn-submit" type="submit"
-                                    data-on-click-label="Save Changes...">Save Changes
-                            </button>
                         </div>
 
                         <?php echo form_close(); ?>

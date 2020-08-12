@@ -750,19 +750,19 @@ if (!function_exists('getCompanyFolder')){
                 while(file_exists('./uploads/' . $folder_name . '/')){
                     $folder_name = generateRandomString();  
                 }
-
+    
                 $data = array('folder_name' => $folder_name);
-
+    
                 if($CI->business_model->trans_update($data, array('id' => $company->id))){
                     mkdir('./uploads/' . $folder_name . '/');
-
+    
                     $company_folder = $folder_name;
                 }
             } else {
                 if(!file_exists('./uploads/' . $company->folder_name . '/')){
                     mkdir('./uploads/' . $company->folder_name . '/');    
                 }
-
+    
                 $company_folder = $company->folder_name;
             }
         } 

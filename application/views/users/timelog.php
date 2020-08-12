@@ -48,12 +48,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Clock In - Out</th>
                                             <!-- <th>Id</th>
                                             <th>Image</th> -->
+                                            <th style="width: 150px !important;">Hours:Mins</th>
                                             <th style="width: 150px !important;">Name</th>
                                             <!-- <th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th> -->
                                             
-                                            <th style="width: 150px !important;">Status</th>
+                                            <th style="width: 150px !important;">Type</th>
+                                            <th>Notes</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -76,9 +78,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
                                                             <?php echo '<b>'.date('d M Y', strtotime($clockin->timestamp)).'</b>&nbsp;&nbsp;&nbsp;&nbsp;'; ?>
                                                             <?php if($clockin->action == "Clock In"):?>
-                                                                <?php echo date('h:i a', strtotime($clockin->timestamp))."In - "; ?>
+                                                                <?php echo date('h:iA', strtotime($clockin->timestamp))." In --- "; ?>
                                                             <?php else: ?>
-                                                                <?php echo date('h:i a', strtotime($clockin->timestamp))." Out"; ?>
+                                                                <?php echo date('h:iA', strtotime($clockin->timestamp))." Out"; ?>
                                                             <?php endif;?>
                                                             
                                                         <?php endif; ?>
@@ -86,7 +88,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php endforeach; ?>
 
                                                 </td>
-                                                <!-- <td width="60"><?php echo $row->id ?></td> -->
+                                                <!-- Tota Time/Hours -->
+                                                <td>
+                                                    <?php foreach($clockin_arr as $k => $clockin): ?>
+                                                        
+                                                        <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
+                                                            <?php if($clockin->action == "Clock In"):?>
+                                                                <?php 
+                                                                    $date_clockin = strtotime($clockin->timestamp); 
+                                                                ?>
+                                                            <?php elseif($clockin->action == "Clock Out"): ?>
+                                                                <?php 
+                                                                    $date_clockout = strtotime($clockin->timestamp); 
+                                                                ?>
+                                                            <?php endif;?>
+                                                            <?php 
+                                                                /*echo $date_clockin.'asd';
+                                                                echo $date_clockout.'bcd';*/
+                                                                //$diff = abs($date_clockout - $date_clockin);
+                                                                //echo $diff.'hrs';
+                                                            ?>
+                                                            
+                                                        <?php endif; ?>
+                                                        
+                                                        <?php echo ' hrs';?>
+                                                    <?php endforeach; ?>
+                                                    
+                                                    
+                                                </td>
+                                                <!-- <td width="60"><?php //echo $row->id ?></td> -->
                                                 <!-- <td width="50" class="text-center"> -->
                                                     <!-- <img src="<?php //echo userProfile($row->id) ?>" width="40"
                                                          height="40" alt="" class="img-avtar"> -->
@@ -94,6 +124,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <!-- </td> -->
                                                 <td>
                                                     <?php //echo ucfirst($row->FName).' '.ucfirst($row->LName) ?>
+                                                    <img src="<?php echo base_url('uploads/users/default.png');?>" width="30" height="30" alt="" class="img-avatar" style="float: left; border-radius: 50%; margin-right: 10px;"/>
                                                     <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
                                                         <?php 
                                                             if( !empty($this->roles_model->getById($row->role)->title) ){
@@ -113,13 +144,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php //if (logged('id') !== $row->id): ?>
                                                         <!-- <input type="checkbox" class="js-switch"
                                                                onchange="updateUserStatus('<?php //echo $row->id ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' ?> /> -->
-                                                        <?php if( $row->status == 1 ): ?>
-                                                            <span>Active</span>
-                                                        <?php else: ?>
-                                                            <span>Inactive</span>
+                                                        <?php if( !empty($clockin_arr)): ?>
+                                                            <?php if( $row->status == 1 ): ?>
+                                                                <span>Clock In Out</span>
+                                                            <?php else: ?>
+                                                                <span>Clock In Out</span>
+                                                            <?php endif; ?>
                                                         <?php endif; ?>
+                                                        
                                                     <?php //endif ?>
                                                 </td>
+                                                <!-- Notes -->
+                                                <td>
+                                                    <?php foreach($clockin_arr as $k => $clockin): ?>
+                                                        <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
+                                                            <?php if($clockin->action == "Clock In"):?>
+                                                                <?php if( !empty($clockin->notes) ): ?>
+                                                                    <?php echo $clockin->notes; ?>
+                                                                <?php else: ?>
+                                                                    <?php echo "N/A"?>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </td>
+                                                
                                                 <td>
                                                     <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"

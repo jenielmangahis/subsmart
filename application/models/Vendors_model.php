@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Vendors_model extends MY_Model {
 
-	public $table = 'vendors';
+	public $table = 'accounting_vendors';
 	
 	public function __construct()
 	{
@@ -14,5 +14,8 @@ class Vendors_model extends MY_Model {
 	    $vendor = $this->db->get('accounting_vendors');
 	    return $vendor->result();
     }
-
+	public function getVendorDetails($id){
+	    $vendor = $this->db->get_where('accounting_vendors', array('vendor_id' => $id));
+	    return $vendor->result();
+    }
 }

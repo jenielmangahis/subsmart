@@ -220,7 +220,15 @@ class Settings extends MY_Controller {
             $this->page_data['page']->menu = 'settings';
             $this->load->view('settings/schedule', $this->page_data);
         }
-    }
+	}
+
+	public function notifications()
+	{
+		//ifPermissions('notifications');
+		$this->page_data['page']->menu = 'notifications';
+		$this->load->view('settings/notifications', $this->page_data);
+	}
+	
 }
 
 /* End of file Settings.php */

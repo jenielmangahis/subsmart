@@ -71,7 +71,7 @@
             <div id="folders_and_files">
                 
             </div>
-            <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && ($isMain))){ ?>
+            <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>
               <div class="mt-5">
                 <div class="row">
                   <div class="col-md-4 border">

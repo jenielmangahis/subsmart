@@ -183,7 +183,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	else
     	{
     		$('#chk_type').attr('checked',"checked");
-    		$('.type').css('display','block');
+    		$('.type').css('display','');
     	}
     }
     function col_detailtype()
@@ -197,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	else
     	{
     		$('#chk_detail_type').attr('checked',"checked");
-    		$('.detailtype').css('display','block');
+    		$('.detailtype').css('display','');
     	}
     }
     function col_nbalance()
@@ -211,7 +211,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	else
     	{
     		$('#chk_nsmart_balance').attr('checked',"checked");
-    		$('.nbalance').css('display','block');
+    		$('.nbalance').css('display','');
     	}
     }
     function col_balance()
@@ -225,7 +225,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	else
     	{
     		$('#chk_balance').attr('checked',"checked");
-    		$('.balance').css('display','block');
+    		$('.balance').css('display','');
     	}
     }
 

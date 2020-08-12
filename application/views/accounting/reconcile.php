@@ -31,13 +31,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-3">
                         <h4>Cash on hand</h4>
                     </div>
-                    <div class="col-md-1 hide-col"><h4>$20.00</h4></div>
-                    <div class="col-md-1 hide-col"><h4>$10.00</h4></div>
-                    <div class="col-md-1 hide-col"><h4>$-91,101.00</h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->service_charge?>.00</h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->interest_earned?>.00</h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->ending_balance-111111?>.00</h4></div>
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown show">
-                            <a href="#" class="btn btn-primary"
+                            <a href="<?php echo url('accounting/reconcile/edit/')?><?=$rows[0]->id?>" class="btn btn-primary"
                                    aria-expanded="false">
                                     Edit Info
                             </a>
@@ -78,9 +78,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                          <div class="row">
                             <div class="col-md-9">
                                 <div class="row">
-                                    <div class="col-md-4"><h3>$20,000.00</h3></div>
+                                    <div class="col-md-4"><h3>$<?=$rows[0]->ending_balance?>.00</h3></div>
                                     <div class="col-md-1"><h4>-</h4></div>
-                                    <div class="col-md-4"><h3>$111,101.00</h3></div>
+                                    <div class="col-md-4"><h3>$111,111.00</h3></div>
                                 </div>
                                  <div class="row">
                                     <div class="col-md-4">STATEMENT ENDING BALANCE</div>
@@ -92,9 +92,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-3"><h4>$111,111.00</h4></div>
                                     <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-md-5"><h4>$20.00</h4></div>
+                                            <div class="col-md-5"><h4>$<?=$rows[0]->service_charge?>.00</h4></div>
                                             <div class="col-md-2"><h4>+</h4></div>
-                                            <div class="col-md-5"><h4>$10.00</h4></div>
+                                            <div class="col-md-5"><h4>$<?=$rows[0]->interest_earned?>.00</h4></div>
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <div class="row">
-                                    <div class="col-md-12"><h3>$-91,101.00</h3></div>
+                                    <div class="col-md-12"><h3>$<?=$rows[0]->ending_balance-111111?>.00</h3></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">DIFFERENCE</div>
@@ -152,18 +152,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-3"></div>
                                 <div class="col-md-1 form-group">
                                      <div class="dropdown">
-                                       <a href="" ><i class="fa fa-print"></i></a>
+                                       <a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
                                        <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-cog"></i>
                                        </a>
                                       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         Edit Columns<br/>
-                                        <p class="p-padding"><input type="checkbox" name="chk_type" id="chk_type"> Type</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_detail_type" id="chk_detail_type"> Ref. no</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_nsmart_balance" id="chk_nsmart_balance"> Account</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_balance" id="chk_balance"> Payee</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_balance" id="chk_balance"> Memo</p>
-                                        <p class="p-padding"><input type="checkbox" name="chk_balance" id="chk_balance"> Banking Status</p>
+                                        <p class="p-padding"><input type="checkbox" name="chk_type" id="chk_type" checked="checked" onchange="col_type()"> Type</p>
+                                        <p class="p-padding"><input type="checkbox" name="chk_refno" id="chk_refno" checked="checked" onchange="col_refno()"> Ref. no</p>
+                                        <p class="p-padding"><input type="checkbox" name="chk_account" id="chk_account" checked="checked" onchange="col_account()"> Account</p>
+                                        <p class="p-padding"><input type="checkbox" name="chk_payee" id="chk_payee" checked="checked" onchange="col_payee()"> Payee</p>
+                                        <p class="p-padding"><input type="checkbox" name="chk_memo" id="chk_memo" checked="checked" onchange="col_memo()"> Memo</p>
+                                        <!-- <p class="p-padding"><input type="checkbox" name="chk_status" id="chk_status" checked="checked" onchange="col_status()"> Banking Status</p> -->
                                         <br/>
                                         Display Density
                                         <p class="p-padding"><input type="radio" name="" id=""> Regular</p>
@@ -252,15 +252,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                  <div class="col-md-3"><a href="#"><i class="fa fa-close"></i>Statment ending date</a></div>
                                  <div class="col-md-2"><a href="#">Clear All / View All</a></div>
                              </div>
-                            <table id="charts_of_account_table" class="table table-striped table-bordered" style="width:100%">
+                            <table id="reconcile_table" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
                                     <th>DATE</th>
-                                    <th>TYPE</th>
-                                    <th>REF. NO</th>
-                                    <th>ACCOUNT</th>
-                                    <th>PAYEE</th>
-                                    <th>MEMO</th>
+                                    <th class="type">TYPE</th>
+                                    <th class="refno">REF. NO</th>
+                                    <th class="account">ACCOUNT</th>
+                                    <th class="payee">PAYEE</th>
+                                    <th class="memo">MEMO</th>
+                                    <!-- <th class="status">status</th> -->
                                     <th>PAYMENT(USD)</th>
                                     <th>DEPOSIT(USD)</th>
                                     <th></th>
@@ -273,10 +274,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               {
                                 echo "<tr id='payments'>";
                                 echo "<td contenteditable='true'>".$row->first_date."</td>";
-                                echo "<td>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td contenteditable='true'>SVCCHRG</td>";
-                                echo "<td>".$row->expense_account."</td>";
-                                echo "<td contenteditable='true'>";
+                                echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
+                                echo "<td class='refno' contenteditable='true'>SVCCHRG</td>";
+                                echo "<td class='account'>".$row->expense_account."</td>";
+                                echo "<td class='payee' contenteditable='true'>";
                                     echo "<select class='form-control select2'>";
                                     echo "<option value=' disabled selected>Payee</option>";
                                     echo "<option value='1'>Option 1</option>";
@@ -284,17 +285,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     echo "<option value='2'>Option 3</option>";
                                     echo  "</select>";
                                 echo "</td>";
-                                echo "<td contenteditable='true'>Service Charges</td>";
+                                echo "<td class='memo' contenteditable='true'>Service Charges</td>";
+                                /*echo  "<td class='status'></td>";*/
                                 echo  "<td contenteditable='true'>".$row->service_charge."</td>";
                                 echo  "<td></td>";
                                 echo "<td><input type='checkbox'></td>";
                                 echo "</tr>";
                                 echo "<tr id='deposites'>";
                                 echo "<td contenteditable='true'>".$row->second_date."</td>";
-                                echo "<td>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td contenteditable='true'>INTEREST</td>";
-                                echo "<td>".$row->income_account."</td>";
-                                echo "<td contenteditable='true'>";
+                                echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
+                                echo "<td class='refno' contenteditable='true'>INTEREST</td>";
+                                echo "<td class='account'>".$row->income_account."</td>";
+                                echo "<td class='payee' contenteditable='true'>";
                                     echo "<select class='form-control select2'>";
                                     echo "<option value=' disabled selected>Payee</option>";
                                     echo "<option value='1'>Option 1</option>";
@@ -302,7 +304,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     echo "<option value='2'>Option 3</option>";
                                     echo  "</select>";
                                 echo "</td>";
-                                echo "<td contenteditable='true'>Interest Earned</td>";
+                                echo "<td class='memo' contenteditable='true'>Interest Earned</td>";
+                                /*echo  "<td class='status'></td>";*/
                                 echo  "<td contenteditable='true'></td>";
                                 echo  "<td>".$row->interest_earned."</td>";
                                 echo "<td><input type='checkbox'></td>";
@@ -329,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $(document).ready(function() {
-        $('#charts_of_account_table').DataTable();
+        $('#reconcile_table').DataTable();
     } );
 
    /* $(".ex-button").click(function() {
@@ -369,4 +372,92 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $("#deposites").show();
         $("#payments").show();
     }
+</script>
+
+<!-- filter -->
+<script type="text/javascript">
+function col_type()
+{
+    if($('#chk_type').attr('checked'))
+    {
+        $('#chk_type').removeAttr('checked');
+        $('.type').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_type').attr('checked',"checked");
+        $('.type').css('display','');
+    }
+}
+function col_refno()
+{
+    if($('#chk_refno').attr('checked'))
+    {
+        $('#chk_refno').removeAttr('checked');
+        $('.refno').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_refno').attr('checked',"checked");
+        $('.refno').css('display','');
+    }
+}
+function col_account()
+{
+    if($('#chk_account').attr('checked'))
+    {
+        $('#chk_account').removeAttr('checked');
+        $('.account').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_account').attr('checked',"checked");
+        $('.account').css('display','');
+    }
+}
+function col_payee()
+{
+    if($('#chk_payee').attr('checked'))
+    {
+        $('#chk_payee').removeAttr('checked');
+        $('.payee').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_payee').attr('checked',"checked");
+        $('.payee').css('display','');
+    }
+}  
+function col_memo()
+{
+    if($('#chk_memo').attr('checked'))
+    {
+        $('#chk_memo').removeAttr('checked');
+        $('.memo').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_memo').attr('checked',"checked");
+        $('.memo').css('display','');
+    }
+}  
+function col_status()
+{
+    if($('#chk_status').attr('checked'))
+    {
+        $('#chk_status').removeAttr('checked');
+        $('.status').css('display','none');
+
+    }
+    else
+    {
+        $('#chk_status').attr('checked',"checked");
+        $('.status').css('display','');
+    }
+}    
 </script>
