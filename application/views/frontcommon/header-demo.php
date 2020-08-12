@@ -96,6 +96,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
                 <li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li>
                 <li class=""><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
+                <li class="no-break desktop-only-b"><a href="#" class="no-break dl-home desktop-only">DOWNLOAD</a></li>
+                <li class="mobile-only"><a href="#">DOWNLOAD </a></li>
                 <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
                 <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
 							</ul>

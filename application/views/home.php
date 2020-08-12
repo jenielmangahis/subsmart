@@ -27,6 +27,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-download row-margin-top float-left">
                               <img src="<?php echo $url->assets ?>frontend/images/google-download.png" class="card-img card-features img-download">
                             </div>
+                            <br style="clear:both;"/>
+                            <a href="#" class="banner-dl">DOWNLOAD</a>
                         </div>
                     </div>
                 </div>
