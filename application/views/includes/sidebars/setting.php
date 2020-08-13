@@ -42,7 +42,7 @@
             </a>
         </li>  
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'notifications')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+            <a href="<?php echo base_url('settings/schedule') ?>" title="Notifications">
                 <span class="fa fa-bullhorn"></span>
                 Notifications
             </a>
@@ -53,22 +53,22 @@
                 Online Payments
             </a>
         </li>  
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'file_vault')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'files_vault')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('settings/files_vault') ?>" title="Services">
                 <span class="fa fa-folder-o"></span>
-                File Vault
+                Files Vault
             </a>
         </li>  
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'tax_rates')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+            <a href="<?php echo base_url('settings/tax_rates') ?>" title="Tax Rates">
                 <span class="fa fa-percent"></span>
                 Tax Rates
             </a>
         </li>    
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'quick_books')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+            <a href="<?php echo base_url('settings/quick_books') ?>" title="Services">
                 <span class="fa fa-calculator"></span>
-                Tax Rates
+                Quick Books
             </a>
         </li>        
     </ul>
