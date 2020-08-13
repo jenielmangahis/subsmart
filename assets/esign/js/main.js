@@ -19,7 +19,7 @@ const renderPage = (num, status) => {
     canvasPreview = document.querySelector('#pdf-render-'+num+'-preview'),
     ctx = canvas.getContext('2d');
     // Get page
-    console.log(canvasPreview);
+  
     pdfDoc.getPage(num).then(page => {
       // Set scale
       var viewport = page.getViewport({ scale });
@@ -31,6 +31,7 @@ const renderPage = (num, status) => {
       };
       page.render(renderCtx).promise.then(() => {
         pageIsRendering = false;
+        
       });
 
     });

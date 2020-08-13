@@ -295,6 +295,24 @@ class Wizard extends MY_Controller {
 	  echo $this->wizard_apps_model->fetch_data($this->uri->segment(3));
 	 }
 
+	 public function show_app()
+	 {
+	 	$id = $this->input->post('app_id');
+	 	$this->wizard_apps_model->show_app($id);
+	 }
+
+	 public function del_app()
+	 {
+	 	$id = $this->input->post('app_id');
+	 	$this->wizard_apps_model->del_app($id);
+	 }
+
+	 public function getSubOptions()
+	 {
+	 	$id =$this->input->post('id');
+	 	echo $this->wizard_suboptions_model->getSubOptions($id);
+	 }
+
 }
 
 

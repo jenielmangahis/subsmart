@@ -16,6 +16,10 @@ class Users extends MY_Controller {
 		$this->checkLogin();
 		add_css(array(
             "assets/css/timesheet.css",
+		));
+		
+		add_footer_js(array(
+            'assets/js/user.js'
         ));
 
 		$this->page_data['page']->title = 'Users Management';
@@ -40,8 +44,8 @@ class Users extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
 		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));		
-		$this->page_data['profiledata'] = $profiledata[0];
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
 		$this->load->view('business', $this->page_data);
 
 	}
@@ -53,11 +57,41 @@ class Users extends MY_Controller {
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $user->id;
-		$this->page_data['profiledata'] = $profiledata[0];
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 		
 		/* echo "<pre>"; print_r($this->page_data); die;  */
 		
 		$this->load->view('businessdetail', $this->page_data);
+	}
+
+	public function credentials(){	
+		//ifPermissions('businessdetail');
+		
+		$user = (object)$this->session->userdata('logged');
+		$cid=logged('id');
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		//dd($profiledata);die;
+		$this->page_data['userid'] = $user->id;
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
+		
+		/* echo "<pre>"; print_r($this->page_data); die;  */
+		
+		$this->load->view('credentials', $this->page_data);
+	}
+
+	public function socialMedia(){	
+		//ifPermissions('businessdetail');
+		
+		$user = (object)$this->session->userdata('logged');
+		$cid=logged('id');
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		//dd($profiledata);die;
+		$this->page_data['userid'] = $user->id;
+		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
+		
+		/* echo "<pre>"; print_r($this->page_data); die;  */
+		
+		$this->load->view('social_media', $this->page_data);
 	}
 	
 	public function savebusinessdetail(){
@@ -108,17 +142,21 @@ class Users extends MY_Controller {
 	public function timesheet()
 	{	
 		$this->load->model('timesheet_model');
-		//ifPermissions('users_list');
-
+		$this->load->model('users_model');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		
 		$this->page_data['users'] = $this->users_model->getUsers();
-		
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+
+		// get total numbers of "In" employees
+		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
+		// get total numbers of "Out" employees
+		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
+		// get total numbers of "Not Logged In Today" employees
+		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
+		// get total numbers of "Not Logged In Today" employees
+		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
 		
-		//$this->load->view('users/timesheet', $this->page_data);
 		$this->load->view('users/timesheet-admin', $this->page_data);
-		//$this->load->view('users/timesheet-user', $this->page_data);
 	}
 
 	// added for tracking Timesheet of employees: Schedule View
@@ -362,19 +400,9 @@ class Users extends MY_Controller {
 	public function edit($id)
 
 	{
-
-
-
-		ifPermissions('users_edit');
-
-
-
+		// ifPermissions('users_edit');
 		$this->page_data['User'] = $this->users_model->getById($id);
-
 		$this->load->view('users/edit', $this->page_data);
-
-
-
 	}
 
 
@@ -384,62 +412,30 @@ class Users extends MY_Controller {
 	public function update($id)
 
 	{
-
-
-
-		ifPermissions('users_edit');
-
-		
-
+		// ifPermissions('users_edit');
 		postAllowed();
-
 		$cid=logged('company_id');
-
 		$data = [
-
 			'role' => post('role'),
-
 			'FName' => post('FName'),
 			'LName' => post('LName'),
-
 			'username' => post('username'),
-
 			'email' => post('email'),
-
 			'phone' => post('phone'),
 			'company_id' => $cid,
-			
-
 			'address' => post('address'),
-
 		];
-
-
-
 		$password = post('password');
-
-
-
 		if(logged('id')!=$id)
-
 			$data['status'] = post('status')==1;
-
-
-
 		if(!empty($password)){
-
 			$data['password_plain'] = $password;
 			$data['password'] = hash( "sha256", $password );
 		}
 
-
 		$id = $this->users_model->update($id, $data);
 
-
-
 		if (!empty($_FILES['image']['name'])) {
-
-
 
 			$path = $_FILES['image']['name'];
 

@@ -38,7 +38,7 @@ class Vault extends MY_Controller {
 
 	public function businessformtemplates()
 	{	
-		$this->page_data['folder_manager'] = getFolderManagerView();
+		$this->page_data['folder_manager'] = getFolderManagerView(true, false, true);
 		$this->load->view('vault/businessformtemplates', $this->page_data);
 	}
 
@@ -249,12 +249,14 @@ class Vault extends MY_Controller {
 		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));	
 	}
 
-	public function search_files_and_folders(){
+	public function search_files_and_folders($getByCurrentUser = 0){
 		$keyword = $_GET['keyword'];
 		$search_folders = $_GET['search_folders'];
 		$search_files = $_GET['search_files'];
 
-		$files_and_folders = searchFilesOrFolders($keyword, $search_folders, $search_files);
+		$ofUser = ($getByCurrentUser == 1);
+
+		$files_and_folders = searchFilesOrFolders($keyword, $search_folders, $search_files, $ofUser);
 
 		echo json_encode($files_and_folders);
 	}

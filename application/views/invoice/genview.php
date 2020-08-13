@@ -30,8 +30,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php if(strtolower($invoice->status) === 'paid') : ?>
                                         <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
                                         <?php elseif(strtolower($invoice->status) === 'due') : ?>
-                                            <a class="btn btn-primary margin-right-sec" class="link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><span class="fa fa-usd fa-margin-right"></span> Record Payment</a>
                                             <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
+                                            <a class="btn btn-primary margin-right-sec" class="link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><span class="fa fa-usd fa-margin-right"></span> Record Payment</a>
                                         <?php else : ?>
                                             <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
                                             <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id .'?scheduled=1') ?>"><span class="fa fa-calendar fa-margin-right"></span>
@@ -87,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             <div id="presenter-from">
                                                                 <b>FROM:</b>
                                                                 <br>
-                                                                <b><?php echo ($setting) ? $setting->payable_to : $user->name ?></b><br>
+                                                                <b><?php echo ($setting) ? $setting->check_payable_to : $user->FName . ' ' . $user->LName ?></b><br>
                                                                 <?php echo strtolower($user->address) ?><br>
                                                                 Email: <?php echo strtolower($user->email) ?><br>
                                                                 
@@ -134,7 +134,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="text-align: right;">Check Payable To:</td>
-                                                                            <td style="width: 180px; text-align: right;" class="text-right"><?php echo $user->name ?></td>
+                                                                            <td style="width: 180px; text-align: right;" class="text-right"><?php echo $user->FName . ' ' . $user->LName ?></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="text-align: right;"><b>Balance Due:</b></td>
@@ -194,7 +194,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <br>
                                             <div class="table-items-container">
                                                 <?php $total_tax = 0; ?>
-                                                <?php if ($invoice->invoice_items[0]['item'] != '') : ?>
+                                                <?php if (false) : ?>
                                                 <table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
                                                     <thead>
                                                         <tr>
@@ -250,7 +250,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <tbody>
                                                                         <tr>
                                                                             <td style="padding: 8px 0; text-align: right;" class="text-right">Subtotal (without tax)</td>
-                                                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') ?></td>
+                                                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (false) ? number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') : '' ?></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="padding: 8px 0; text-align: right;" class="text-right">Taxes</td>
@@ -258,7 +258,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
-                                                                            <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') ?></b></td>
+                                                                            <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' ?></b></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -284,10 +284,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <br>
                                             <p>
                                                 <b>Accepted payment methods</b><br>
-                                                <?php echo ($invoice->credit_card) ? "Credit Card," : '' ?> 
-                                                <?php echo ($invoice->check) ? "Check" : '' ?>
-                                                <?php echo ($invoice->cash) ? "Cash" : '' ?>
-                                                <?php echo ($invoice->deposit) ? "Direct Deposit" : '' ?>    
+                                                <?php echo ($invoice->accept_credit_card) ? "Credit Card," : '' ?> 
+                                                <?php echo ($invoice->accept_check) ? "Check" : '' ?>
+                                                <?php echo ($invoice->accept_cash) ? "Cash" : '' ?>
+                                                <?php echo ($invoice->accept_direct_deposit) ? "Direct Deposit" : '' ?>    
                                             </p>
 
                                                 <p>
@@ -296,7 +296,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             
                                                 <p>
                                                 <b>Message</b><br>
-                                                <?php echo ($invoice->customer_message)?>  
+                                                <?php echo ($invoice->message_to_customer)?>  
                                             </p>
                                             <br>
                                             <hr style="border-color:#eaeaea;">

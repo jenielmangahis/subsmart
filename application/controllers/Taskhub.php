@@ -8,6 +8,7 @@ class Taskhub extends MY_Controller {
 		$this->load->model(array('taskhub_model','taskhub_updates_model','taskhub_status_model','taskhub_participants_model'));
 		
 		$this->page_data['page']->menu = 'taskhub';
+		$this->page_data['module'] = 'calendar'; 
 	}
 
 	public function index(){

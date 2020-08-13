@@ -19,16 +19,30 @@ class Customer extends MY_Controller
     {
 
         parent::__construct();
+
+
         $this->page_data['page']->title = 'My Customers';
+
         $this->page_data['page']->menu = 'customers';
+
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
+
+
         $this->checkLogin();
+
+
         $this->load->library('session');
+
+
         $user_id = getLoggedUserID();
+
+
         // concept
+
         $uid = $this->session->userdata('uid');
+
 
         if (empty($uid)) {
 
@@ -48,17 +62,11 @@ class Customer extends MY_Controller
         // CSS to add only Customer module
 
         add_css(array(
-
             'assets/css/jquery.signaturepad.css',
-
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
-
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-
             'assets/css/accounting/sales.css',
         ));
 
@@ -66,20 +74,13 @@ class Customer extends MY_Controller
         // JS to add only Customer module
 
         add_footer_js(array(
-
-            'assets/frontend/js/creditcard.js',
-
-            'assets/frontend/js/customer/add.js',
-
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
-
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'assets/frontend/js/creditcard.js',
+            'assets/frontend/js/customer/add.js',
         ));
 
     }
@@ -88,6 +89,8 @@ class Customer extends MY_Controller
     public function index($status_index = 0)
     {
 
+       //echo  $this->uri->segment(3);
+      // echo  $this->uri->segment(4);
         $role = logged('role');
 
         if ($role == 2 || $role == 3) {
@@ -97,31 +100,31 @@ class Customer extends MY_Controller
             if (!empty($status_index)) {
 
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index), $company_id);
+                $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('status' => $status_index), $company_id));
             } else {
 
                 if (!empty(get('search'))) {
 
                     $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')), $company_id);
+                    $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('search' => get('search')), $company_id));
                 } elseif (!empty(get('type'))) {
 
                     $this->page_data['type'] = get('type');
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id));
                     } else {
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type')), $company_id));
                     }
                 } else {
 
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id);
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')), $company_id));
                     } else {
 //                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')), $company_id);
-                        $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->getAllByCompany($company_id));
                     }
 
 //                    $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id);
@@ -133,36 +136,54 @@ class Customer extends MY_Controller
         }
 
         if ($role == 4) {
+
             if (!empty($status_index)) {
+
                 $this->page_data['tab_index'] = $status_index;
-                $this->page_data['customers'] = $this->customer_model->filterBy(array('status' => $status_index));
+                $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('status' => $status_index)));
             } else {
+
                 if (!empty(get('search'))) {
+
                     $this->page_data['search'] = get('search');
-                    $this->page_data['customers'] = $this->customer_model->filterBy(array('search' => get('search')));
+                    $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('search' => get('search'))));
                 } elseif (!empty(get('type'))) {
+
                     $this->page_data['type'] = get('type');
+
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order'))));
                     } else {
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type'))));
                     }
-                } else{
+                } else {
+
                     if (!empty(get('order'))) {
                         $this->page_data['order'] = get('order');
-                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order')));
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->filterBy(array('type' => get('type', 'order'), 'order' => get('order'))));
                     } else {
-                        $this->page_data['customers'] = $this->customer_model->getAllByUserId();
+//                        $this->page_data['customers'] = $this->customer_model->filterBy(array('type' => get('type')));
+                        $this->page_data['customers'] = $this->categorizeNameAlphabetically($this->customer_model->getAllByUserId());
                     }
+
+//                    $this->page_data['customers'] = $this->customer_model->getAllByUserId();
                 }
             }
+
             $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
         }
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+
+
+//        print_r($this->page_data['statusCount']); die;
+
         $this->load->view('customer/list', $this->page_data);
+
     }
+
 
     public function view($id)
     {
@@ -185,6 +206,8 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/mixedview', $this->page_data);
     }
+
+
     /**
      * @param $id
      */
@@ -207,6 +230,8 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/genview', $this->page_data);
     }
+
+
 
     /**
      * @param $id
@@ -289,34 +314,67 @@ class Customer extends MY_Controller
 
 
     public function save()
+
     {
+
+
         $user = (object)$this->session->userdata('logged');
+
         $company_id = logged('company_id');
+
+
+
         $data = array(
+
+
             'customer_type' => post('customer_type'),
+
             'contact_name' => post('contact_name'),
+
             'contact_email' => post('contact_email'),
+
             'mobile' => post('contact_mobile'),
+
             'phone' => post('contact_phone'),
+
             'notification_method' => post('notify_by'),
+
             'street_address' => post('street_address'),
+
             'suite_unit' => post('suite_unit'),
+
             'city	' => post('city'),
+
             'postal_code' => post('zip'),
+
             'state' => post('state'),
+
             'birthday' => post('birthday'),
+
             'source_id' => post('customer_source_id'),
+
             'comments' => post('notes'),
+
             'user_id' => $user->id,
+
             'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : NULL,
+
             'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
+
             'company_id' => $company_id,
+
             'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
+
         );
+
+
         // previously generated customer id
 
         // this id will be present on session if addition contact or service address has been added
+
         $cid = $this->session->userdata('customer_id');
+
+
         // if no addition contact or service address has been added
 
         // create() will be called insted of update()
@@ -344,7 +402,7 @@ class Customer extends MY_Controller
 
         // }
 
-        $this->activity_model->add("User #$user->id Updated by User:" . logged('name'));
+        // $this->activity_model->add("User #$user->id Updated by User:" . logged('name'));
 
         $this->session->set_flashdata('alert-type', 'success');
 
@@ -356,26 +414,22 @@ class Customer extends MY_Controller
         $this->session->unset_userdata('uid');
 
         $this->session->unset_userdata('customer_id');
-
-
-        die(json_encode(
-
-            array(
-
-                'url' => base_url('customer')
-
-            )
-
-        ));
+        redirect('customer');
 
     }
 
 
     public function update($id)
+
     {
+
         $user = (object)$this->session->userdata('logged');
+
         $company_id = logged('company_id');
+
         $data = array(
+
+
             'customer_type' => post('customer_type'),
 
             'contact_name' => post('contact_name'),
@@ -641,10 +695,14 @@ class Customer extends MY_Controller
     public function add_lead()
     {
         $user_id = logged('id');
-
+        $this->page_data['plans'] = "";
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leadtypes","lead_id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->load->view('customer/add_lead', $this->page_data);
     }
 
+    // for addling of Lead Type (ac_leadtypes table)
     public function add_leadtype_ajax(){
         $input = $this->input->post();
         // customer_ad_model
@@ -687,7 +745,31 @@ class Customer extends MY_Controller
         $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadtypes","lead_id");
         echo json_encode($lead_types);
     }
+    public function fetch_salesarea_data(){
+        $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_salesarea","sa_id");
+        echo json_encode($lead_types);
+    }
+    public function delete_data(){
+        $tbl = $_POST['table'];
+        $input = array();
+        switch($tbl){
+            case "sa":
+                $input['field_name'] = "sa_id";
+                $input['id'] = $_POST['id'];
+                $input['tablename'] = "ac_salesarea";
+                break;
+            case "lt":
+                $input['field_name'] = "lead_id";
+                $input['id'] = $_POST['id'];
+                $input['tablename'] = "ac_leadtypes";
+                break;
+            default;
+        }
 
+        if ($this->customer_ad_model->delete($input)) {
+            echo  "nice";
+        }
+    }
 
     public function remove_address_services()
 
@@ -1102,6 +1184,66 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/print/list', $this->page_data);
 
+    }
+
+    public function categorizeNameAlphabetically($items) {
+        $result = array();
+
+        $cat = array(
+            '#' => array(),
+            'A' => array(),
+            'B' => array(),
+            'C' => array(),
+            'D' => array(),
+            'E' => array(),
+            'F' => array(),
+            'G' => array(),
+            'H' => array(),
+            'I' => array(),
+            'J' => array(),
+            'K' => array(),
+            'L' => array(),
+            'M' => array(),
+            'N' => array(),
+            'O' => array(),
+            'P' => array(),
+            'Q' => array(),
+            'R' => array(),
+            'S' => array(),
+            'T' => array(),
+            'U' => array(),
+            'V' => array(),
+            'W' => array(),
+            'X' => array(),
+            'Y' => array(),
+            'Z' => array()
+        );
+
+        foreach($items as $item) {
+            $letter = ucfirst(substr($item->contact_name,0,1));
+            foreach($cat as $key => $c) {
+                if ($letter == $key) {
+                    array_push($cat[$key], $item);
+                } else if (is_numeric($letter)) {
+                    if (!in_array($item, $cat["#"]))
+                        array_push($cat["#"], $item);
+                }
+            }
+        }
+        
+        foreach($cat as $key => $c) {
+            if(!empty($c)) {
+                $header = array($key, "header", "", "");
+                array_push($result,$header);
+
+                foreach($c as $v) {
+                    $value = array($v->id, $v->contact_name, $v->contact_email, $v->phone);
+                    array_push($result,$value);
+                }
+            }
+        }
+        
+        return $result;
     }
 }
 

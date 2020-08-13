@@ -62,6 +62,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         border-bottom: 1px solid grey;
         padding-left: 0;
     }
+    .add_data{
+        color : #55b94c;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -105,9 +108,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
-                                                    <label for="">Lead Type </label><br/>
+                                                    <label for="">Lead Type </label> <a href="<?php echo url('customer/index/1') ?>" class="add_data"><span class="fa fa-plus"></span></a><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                                         <option value="0">- none -</option>
+                                                        <?php foreach ($lead_types as $lt): ?>
+                                                            <option value="<?= $lt->lead_id; ?>"><?= $lt->lead_name; ?></option>
+                                                        <?php endforeach ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -116,6 +122,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="">Sales Area</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                                         <option value="0">- none -</option>
+                                                        <?php foreach ($sales_area as $sa): ?>
+                                                            <option value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
+                                                        <?php endforeach ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -124,6 +133,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="">Sales Rep</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                                         <option value="0">- none -</option>
+                                                        <?php foreach ($users as $user): ?>
+                                                            <option value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                                                        <?php endforeach ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -186,20 +198,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Name Suffix</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0"></option>
-                                                        <option value="DS">DS</option>
-                                                        <option value="Esq.">Esq.</option>
-                                                        <option value="II">II</option>
-                                                        <option value="III">III</option>
-                                                        <option value="IV">IV</option>
-                                                        <option value="Jr">Jr.</option>
-                                                        <option value="MA">MA</option>
-                                                        <option value="MBA">MBA</option>
-                                                        <option value="MD">MD</option>
-                                                        <option value="MS">MS</option>
-                                                        <option value="PhD">PhD</option>
-                                                        <option value="RN">RN</option>
-                                                        <option value="Sr">Sr</option>
+                                                        <option value="0">Select</option>
+                                                        <option value="0">DS</option>
+                                                        <option value="0">Esq.</option>
+                                                        <option value="0">II</option>
+                                                        <option value="0">III</option>
+                                                        <option value="0">IV</option>
+                                                        <option value="0">Jr.</option>
+                                                        <option value="0">MA</option>
+                                                        <option value="0">MBA</option>
+                                                        <option value="0">MD</option>
+                                                        <option value="0">MS</option>
+                                                        <option value="0">PhD</option>
+                                                        <option value="0">RN</option>
+                                                        <option value="0">Sr.</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -213,15 +225,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Direction</label><br/>
                                                     <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0"></option>
-                                                        <option value="North">North</option>
-                                                        <option value="East">East</option>
-                                                        <option value="South">South</option>
-                                                        <option value="West">West</option>
-                                                        <option value="North East">North East</option>
-                                                        <option value="South East">South East</option>
-                                                        <option value="North West">North West</option>
-                                                        <option value="South West">South West</option>
+                                                        <option value="0">Select</option>
+                                                        <option value="0">North</option>
+                                                        <option value="0">East</option>
+                                                        <option value="0">South</option>
+                                                        <option value="0">West</option>
+                                                        <option value="0">North East</option>
+                                                        <option value="0">South East</option>
+                                                        <option value="0">North West</option>
+                                                        <option value="0">South West</option>
                                                     </select>
                                                 </div>
                                             </div>

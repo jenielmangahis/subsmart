@@ -13,57 +13,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="d-block d-none  hid-deskx">
                             <?php
-                                /* $id = logged('id');
-
-                                $servername = "gator4155.hostgator.com";
-                                $username = "admintom_admin";
-                                $password = "SmarTrac1$!";
-                                $dbname = "admintom_nsmart";
-
-                                // Create connection
-                                $conn = new mysqli($servername, $username, $password, $dbname);
-                                // Check connection
-                                if ($conn->connect_error) {
-                                    die("Connection failed: " . $conn->connect_error);
-                                }
-
-                                $sql = "SELECT  * from workorders WHERE `user_id`=$id";
-                                $result = $conn->query($sql);
-
-                                if ($wordorders->num_rows > 0) {
-                                    // output data of each row
-                                    while ($row = $result->fetch_assoc()) {
-                                        $ss = $row['id'];
-                                        ?>
-                                        <div card__columns>
-                                            <div class="c__header">
-                                                <h4> <?php echo 'WO-00' . $row['id']; ?></h4>
-                                                <div class="card__columns_dec">
-                                                    <div><i class="fa fa-user"
-                                                            aria-hidden="true"></i> <?php echo $row['contact_name']; ?>
-                                                    </div>
-                                                    <div><i class="fa fa-users"
-                                                            aria-hidden="true"></i> <?php echo $row['contact_mobile']; ?>
-                                                    </div>
-                                                    <div><i class="fa fa-calendar"
-                                                            aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
-                                                    </div>
-                                                    <h4>
-                                                        <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
-                                                    </h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <?php
-                                    }
-                                } else {
-                                    echo "No Workorders";
-                                }*/
-                            ?>
-
-                            <?php
-                               
-
                                 if (count($wordorders) > 0) {
                                     // output data of each row
                                      foreach($wordorders as $row) {
@@ -389,10 +338,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         calendar = new FullCalendar.Calendar(calendarEl, {
             plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+            customButtons: {
+                employee: {
+                    text: 'Employee'
+                }
+            },
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                right: 'employee,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
             defaultDate: "<?php echo date('Y-m-d') ?>",
             editable: true,
@@ -445,7 +399,35 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             loading: function (bool) {
                 document.getElementById('loading').style.display =
                     bool ? 'block' : 'none';
-            }
+            },
+            resources: [
+                { id: 'a', building: '460 Bryant', title: 'Auditorium A' },
+                { id: 'b', building: '460 Bryant', title: 'Auditorium B' },
+                { id: 'c', building: '460 Bryant', title: 'Auditorium C' },
+                { id: 'd', building: '460 Bryant', title: 'Auditorium D' },
+                { id: 'e', building: '460 Bryant', title: 'Auditorium E' },
+                { id: 'f', building: '460 Bryant', title: 'Auditorium F' },
+                { id: 'g', building: '564 Pacific', title: 'Auditorium G' },
+                { id: 'h', building: '564 Pacific', title: 'Auditorium H' },
+                { id: 'i', building: '564 Pacific', title: 'Auditorium I' },
+                { id: 'j', building: '564 Pacific', title: 'Auditorium J' },
+                { id: 'k', building: '564 Pacific', title: 'Auditorium K' },
+                { id: 'l', building: '564 Pacific', title: 'Auditorium L' },
+                { id: 'm', building: '564 Pacific', title: 'Auditorium M' },
+                { id: 'n', building: '564 Pacific', title: 'Auditorium N' },
+                { id: 'o', building: '101 Main St', title: 'Auditorium O' },
+                { id: 'p', building: '101 Main St', title: 'Auditorium P' },
+                { id: 'q', building: '101 Main St', title: 'Auditorium Q' },
+                { id: 'r', building: '101 Main St', title: 'Auditorium R' },
+                { id: 's', building: '101 Main St', title: 'Auditorium S' },
+                { id: 't', building: '101 Main St', title: 'Auditorium T' },
+                { id: 'u', building: '101 Main St', title: 'Auditorium U' },
+                { id: 'v', building: '101 Main St', title: 'Auditorium V' },
+                { id: 'w', building: '101 Main St', title: 'Auditorium W' },
+                { id: 'x', building: '101 Main St', title: 'Auditorium X' },
+                { id: 'y', building: '101 Main St', title: 'Auditorium Y' },
+                { id: 'z', building: '101 Main St', title: 'Auditorium Z' }
+            ]
         });
 
         calendar.render();

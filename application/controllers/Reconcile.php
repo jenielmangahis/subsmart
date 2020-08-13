@@ -47,10 +47,11 @@ class Reconcile extends MY_Controller {
 		$this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator"); 
     }
 	
-	public function index()
+	public function index($id)
 	{
 		$this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['rows']  =  $this->reconcile_model->selectonwhere($id);
 		$this->load->view('accounting/reconcile', $this->page_data);
 	}
 
@@ -86,8 +87,28 @@ class Reconcile extends MY_Controller {
         redirect("accounting/reconcile");
 	}
 
-	public function edit()
+	public function edit($id)
 	{
+		$this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['reconcile'] = $this->reconcile_model->getById($id);
 		$this->load->view('accounting/reconcile/edit', $this->page_data);
+	}
+
+	public function update($id)
+	{
+		$id=$id;
+		$chart_of_accounts_id=$this->input->post('chart_of_accounts_id');
+        $ending_balance=$this->input->post('ending_balance');
+        $ending_date=$this->input->post('ending_date');
+        $first_date=$this->input->post('first_date');
+        $service_charge=$this->input->post('service_charge');
+        $expense_account=$this->input->post('expense_account');
+        $second_date=$this->input->post('second_date');
+        $interest_earned=$this->input->post('interest_earned');
+        $income_account=$this->input->post('income_account');
+
+        $this->reconcile_model->updaterecords($id,$chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account);
+		
 	}
 }

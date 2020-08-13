@@ -20,7 +20,12 @@
       </div>
       <div class="modal-body" style="padding: 1rem !important">
 <?php } ?>
-        <?php if($isMyLibrary){ ?>
+        <?php 
+              $default_tag = 'Welcome ' . $company_name;
+
+              if($isMyLibrary){ 
+                $default_tag = 'Hello ' . $user_fname . ' ' . $user_lname;
+        ?>
           <input type="hidden" id="vault_type" value="mylibrary" />
         <?php } else if($isBusinessFormTemplates){ ?>
           <input type="hidden" id="vault_type" value="businessformtemplates" />  
@@ -32,7 +37,9 @@
           <div class="card-header">        
             <div class="row">
                 <div class="col-md-6">
-                  <h5 id="folders_name">Root</h5>
+                  <h5 id="folders_name">
+                    <?php echo $default_tag; ?>    
+                  </h5>
                   <p id="folders_path"></p>
                 </div>
                 <div class="col-md-6 align-middle">
@@ -64,7 +71,7 @@
             <div id="folders_and_files">
                 
             </div>
-            <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && ($isMain))){ ?>
+            <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>
               <div class="mt-5">
                 <div class="row">
                   <div class="col-md-4 border">
@@ -105,25 +112,40 @@
         <h4 id="modal-folder-manager-entry-title" class="modal-title"></h4>
       </div>
       <div class="modal-body">
-        <div class="row d-none" id="folder_entry">
-          <div class="col-md-12 form-group">
-            <label for="folder_name">Folder Name<small> Set name of the folder</small></label>
-            <input type="text" class="form-control" name="folder_name" id="folder_name" placeholder="Enter Folder Name" required autofocus />
+        <div class="row">
+          <div class="d-none" id="folder_entry">
+            <div class="col-md-12 form-group">
+              <label for="folder_name">Folder Name<small> Set name of the folder</small></label>
+              <input type="text" class="form-control" name="folder_name" id="folder_name" placeholder="Enter Folder Name" required autofocus />
+            </div>
+            <div class="col-md-12 form-group">
+              <label for="folder_desc">Description<small> Details about the folder(Max of 255 characters)</small></label>
+              <input type="text" class="form-control" name="folder_desc" id="folder_desc" placeholder="Enter Folder Description" maxlength="255" autofocus />
+            </div>
           </div>
-          <div class="col-md-12 form-group">
-            <label for="folder_desc">Description<small> Details about the folder(Max of 255 characters)</small></label>
-            <input type="text" class="form-control" name="folder_desc" id="folder_desc" placeholder="Enter Folder Description" maxlength="255" autofocus />
-          </div>
-        </div>
-        <div class="row d-none" id="file_entry">
-          <div class="col-md-12 form-group">
-            <label for="fullfile">Select File<small> (Allowed type: pdf, doc, docx, rtf, png, jpg, gif. Max size 8MB.)</small></label>
-            <input type="file" class="form-control" name="fullfile" id="fullfile" placeholder="Upload File" accept=".gif, .jpeg, .jpg, .png, .doc, .rtf, .docx, .pdf" required>
-          </div>
-          <div class="col-md-12 form-group">
-            <label for="file_desc">Description<small> Details about the file(Max of 255 characters)</small></label>
-            <input type="text" class="form-control" name="file_desc" id="file_desc" placeholder="Enter File Description" maxlength="255" autofocus />
+          <div class="d-none" id="file_entry">
+            <div class="col-md-12 form-group">
+              <label for="fullfile">Select File<small> (Allowed type: pdf, doc, docx, rtf, png, jpg, gif. Max size 8MB.)</small></label>
+              <input type="file" class="form-control" name="fullfile" id="fullfile" placeholder="Upload File" accept=".gif, .jpeg, .jpg, .png, .doc, .rtf, .docx, .pdf" required>
+            </div>
+            <div class="col-md-12 form-group">
+              <label for="file_desc">Description<small> Details about the file(Max of 255 characters)</small></label>
+              <input type="text" class="form-control" name="file_desc" id="file_desc" placeholder="Enter File Description" maxlength="255" autofocus />
+            </div>  
           </div>  
+          <?php if($isBusinessFormTemplates){ ?>
+            <div class="col-md-12 form-group">
+              <label for="categories">Categories<small> Select category to put the file/folder</small></label>
+              <select class="form-control" name="f_category" id="f_category">
+                <option value="">Select Category</option>
+                <?php 
+                  foreach($categories as $category){
+                ?>
+                  <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
+              <?php } ?>
+              </select>
+            </div>  
+          <?php } ?>
         </div>
       </div>
       <div class="modal-footer">

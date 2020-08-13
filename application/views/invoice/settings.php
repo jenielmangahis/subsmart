@@ -14,7 +14,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <h1 class="page-title">Settings</h1>
                     </div>
                     <div class="col-sm-12">
-                        <div class="validation-error" id="estimate-error" style="display: none;">You selected Credit Card Payments as payment method for this invoice. Please configure the <a href="#">Online Payment processor</a> first to accept cart payments.</div>
+                        <div class="validation-error" id="estimate-error" style="display: none;">You selected Credit Card Payments as payment method for this invoice. Please configure the <a href="https://www.markate.com/pro/settings/payments/main">Online Payment processor</a> first to accept cart payments.</div>
                     </div>
                 </div>
             </div>
@@ -57,12 +57,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-sm-1">
                                     <div class="margin-bottom-qui">Prefix</div>
-                                    <input type="text" name="prefix" value="<?php echo ($setting) ? $setting->invoice_number['prefix'] : ''  ?>" class="form-control" autocomplete="off">
+                                    <input type="text" name="prefix" class="form-control" autocomplete="off" value="<?php echo ($setting) ? $setting->invoice_num_prefix : 0 ?>">
                                     <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_prefix" data-formerrors-message="true"></span>
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="margin-bottom-qui">Next number</div>
-                                    <input type="text" name="base" value="<?php echo ($setting) ? $setting->invoice_number['base'] : ''  ?>" class="form-control" autocomplete="off">
+                                    <input type="text" name="base" value="<?php echo ($setting) ? $setting->invoice_num_next : ''  ?>" class="form-control" autocomplete="off">
                                     <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_base" data-formerrors-message="true"></span>
                                 </div>
                             </div>
@@ -90,13 +90,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-sm-6">
                                                     <label>Residential Invoice Default Message</label>
                                                     <div class="help help-sm help-block">Custom message that will be placed at the bottom section of the invoice.</div>
-                                                    <textarea name="message" id="message" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential['default_msg'] : '' ?></textarea>
+                                                    <textarea name="message" id="message" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->message : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Residential Invoice Default Terms &amp; Conditions</label>
                                                     <div class="help help-sm help-block">Your T&amp;C that will appear at the bottom section of the invoice.</div>
-                                                    <textarea name="terms" id="terms" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential['default_terms'] : '' ?></textarea>
+                                                    <textarea name="terms" id="terms" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->terms_and_conditions : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>
@@ -118,13 +118,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-sm-6">
                                                     <label>Commercial Invoice Default Message</label>
                                                     <div class="help help-sm help-block">Custom message that will be placed at the bottom section of the invoice.</div>
-                                                    <textarea name="message_commercial" id="message_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial['default_terms'] : '' ?></textarea>
+                                                    <textarea name="message_commercial" id="message_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_message : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Commercial Invoice Default Terms &amp; Conditions</label>
                                                     <div class="help help-sm help-block">Your T&amp;C that will appear at the bottom section of the invoice.</div>
-                                                    <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial['default_terms'] : '' ?></textarea>
+                                                    <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_terms_and_conditions : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>
@@ -137,7 +137,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-sm-6">
                                     <label>Make Check Payable To</label>
                                     <div class="help help-sm help-block">This field will appear in the invoice payment section.</div>
-                                    <input type="text" name="payment_to" value="<?php echo ($setting) ? $setting->payable_to : '' ?>" class="form-control" autocomplete="off" placeholder="" required="">
+                                    <input type="text" name="payment_to" value="<?php echo ($setting) ? $setting->check_payable_to : '' ?>" class="form-control" autocomplete="off" placeholder="" required="">
                                     <span class="validation-error-field hide" data-formerrors-for-name="payment_to" data-formerrors-message="true"></span>
                                 </div>
                                 <div class="col-sm-6">
@@ -165,25 +165,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="help help-sm help-block">Select payment methods that will be listed on your invoice.</div>
                                     <div>
                                         <div class="checkbox checkbox-sec">
-                                            <input type="checkbox" name="payment_cc" value="cc" <?php echo ($setting && $setting->payment_method['cc'] === "cc") ? 'checked' : ''?> id="payment_method_cc">
+                                            <input type="checkbox" name="payment_cc" value="cc" <?php echo ($setting && $setting->accept_credit_card) ? 'checked' : ''?> id="payment_method_cc">
                                             <label for="payment_method_cc"><span>Credit Card</span></label>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="checkbox checkbox-sec">
-                                            <input type="checkbox" name="payment_check" value="check" <?php echo ($setting && $setting->payment_method['check'] === "check") ? 'checked' : ''?> id="payment_method_check">
+                                            <input type="checkbox" name="payment_check" value="check" <?php echo ($setting && $setting->accept_check) ? 'checked' : ''?> id="payment_method_check">
                                             <label for="payment_method_check"><span>Check</span></label>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="checkbox checkbox-sec">
-                                            <input type="checkbox" name="payment_cash" value="cash" <?php echo ($setting && $setting->payment_method['cash'] === "cash") ? 'checked' : ''?> id="payment_method_cash">
+                                            <input type="checkbox" name="payment_cash" value="cash" <?php echo ($setting && $setting->accept_cash) ? 'checked' : ''?> id="payment_method_cash">
                                             <label for="payment_method_cash"><span>Cash</span></label>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="checkbox checkbox-sec">
-                                            <input type="checkbox" name="payment_deposit" value="deposit" <?php echo ($setting && $setting->payment_method['deposit'] === "deposit") ? 'checked' : ''?> id="payment_method_deposit">
+                                            <input type="checkbox" name="payment_deposit" value="deposit" <?php echo ($setting && $setting->accept_direct_deposit) ? 'checked' : ''?> id="payment_method_deposit">
                                             <label for="payment_method_deposit"><span>Direct Deposit</span></label>
                                         </div>
                                     </div>
@@ -206,7 +206,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-sm-3">
                                     <label class="weight-normal" for="payment_fee_percent">Payment Fee Percent %</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="payment_fee_percent" id="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee['percent'] : ''?>" class="form-control">
+                                        <input type="text" name="payment_fee_percent" id="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee_percent : ''?>" class="form-control">
                                         <div class="input-group-append" data-for="payment_fee_percent">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -218,7 +218,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input type="text" class="form-control" data-payment-modal="payment_fee_amount" name="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee['amount'] : '0.00'?>" autocomplete="off">
+                                        <input type="text" class="form-control" data-payment-modal="payment_fee_amount" name="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00'?>" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
@@ -230,7 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_item_price" value="1" <?php echo ($setting && $setting->invoice_template['item_price'] === "1") ? 'checked' : ''?> id="hide_item_price">
+                                                <input type="checkbox" name="hide_item_price" value="1" <?php echo ($setting && $setting->hide_item_price) ? 'checked' : ''?> id="hide_item_price">
                                                 <label for="hide_item_price"><span>Hide item price</span></label>
                                             </div>
                                         </div>
@@ -238,7 +238,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_item_qty" value="1" <?php echo ($setting && $setting->invoice_template['item_qty'] === "1") ? 'checked' : ''?> id="hide_item_qty">
+                                                <input type="checkbox" name="hide_item_qty" value="1" <?php echo ($setting && $setting->hide_item_qty) ? 'checked' : ''?> id="hide_item_qty">
                                                 <label for="hide_item_qty"><span>Hide item quantity</span></label>
                                             </div>
                                         </div>
@@ -246,7 +246,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_item_tax" value="1" <?php echo ($setting && $setting->invoice_template['item_tax'] === "1") ? 'checked' : ''?> id="hide_item_tax">
+                                                <input type="checkbox" name="hide_item_tax" value="1" <?php echo ($setting && $setting->hide_item_tax) ? 'checked' : ''?> id="hide_item_tax">
                                                 <label for="hide_item_tax"><span>Hide item tax</span></label>
                                             </div>
                                         </div>
@@ -254,7 +254,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_item_discount" value="1" <?php echo ($setting && $setting->invoice_template['item_discount'] === "1") ? 'checked' : ''?> id="hide_item_discount">
+                                                <input type="checkbox" name="hide_item_discount" value="1" <?php echo ($setting && $setting->hide_item_discount) ? 'checked' : ''?> id="hide_item_discount">
                                                 <label for="hide_item_discount"><span>Hide item discount</span></label>
                                             </div>
                                         </div>
@@ -262,7 +262,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_item_total" value="1" <?php echo ($setting && $setting->invoice_template['item_total'] === "1") ? 'checked' : ''?> id="hide_item_total">
+                                                <input type="checkbox" name="hide_item_total" value="1" <?php echo ($setting && $setting->hide_item_total) ? 'checked' : ''?> id="hide_item_total">
                                                 <label for="hide_item_total"><span>Hide item total</span></label>
                                             </div>
                                         </div>
@@ -270,7 +270,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_from_email" value="1" <?php echo ($setting && $setting->invoice_template['from_email'] === "1") ? 'checked' : ''?> id="hide_from_email">
+                                                <input type="checkbox" name="hide_from_email" value="1" <?php echo ($setting && $setting->hide_from_email) ? 'checked' : ''?> id="hide_from_email">
                                                 <label for="hide_from_email"><span>Hide business email</span></label>
                                             </div>
                                         </div>
@@ -278,7 +278,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="show_item_type_subtotal" value="1" <?php echo ($setting && $setting->invoice_template['item_subtotal'] === "1") ? 'checked' : ''?> id="show_item_type_subtotal">
+                                                <input type="checkbox" name="show_item_type_subtotal" value="1" <?php echo ($setting && $setting->hide_item_subtotal) ? 'checked' : ''?> id="show_item_type_subtotal">
                                                 <label for="show_item_type_subtotal"><span>Display subtotal for service, material, product</span></label>
                                             </div>
                                         </div>
@@ -289,13 +289,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="help help-sm help-block">What phone number should appear on invoice.</div>
                                     <div>
                                         <div class="checkbox checkbox-sec margin-right">
-                                            <input type="checkbox" name="from_phone_show" value="1" <?php echo ($setting && $setting->invoice_from['business_phone']) ? 'checked' : ''?> id="from_phone_show">
+                                            <input type="checkbox" name="from_phone_show" value="1" <?php echo ($setting && $setting->hide_business_phone) ? 'checked' : ''?> id="from_phone_show">
                                             <label for="from_phone_show"><span>Business Phone</span></label>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="checkbox checkbox-sec margin-right">
-                                            <input type="checkbox" name="from_office_phone_show" value="1" <?php echo ($setting && $setting->invoice_from['office_phone']) ? 'checked' : ''?> id="from_office_phone_show">
+                                            <input type="checkbox" name="from_office_phone_show" value="1" <?php echo ($setting && $setting->hide_office_phone) ? 'checked' : ''?> id="from_office_phone_show">
                                             <label for="from_office_phone_show"><span>Office Phone</span></label>
                                         </div>
                                     </div>
@@ -310,7 +310,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="checkbox" name="tip_status" value="1" <?php echo ($setting && $setting->invoice_tip) ? 'checked' : ''?> id="tip_status">
+                                                    <input type="checkbox" name="tip_status" value="1" <?php echo ($setting && $setting->accept_tip) ? 'checked' : ''?> id="tip_status">
                                                     <label for="tip_status"><span>Accept tip</span></label>
                                                 </div>
                                             </div>
@@ -324,7 +324,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="checkbox checkbox-sec margin-right long-text-break">
-                                                    <input type="checkbox" name="autoconvert_work_order" value="1" <?php echo ($setting && $setting->autoconvert_work_order) ? 'checked' : ''?> id="autoconvert_work_order">
+                                                    <input type="checkbox" name="autoconvert_work_order" value="1" <?php echo ($setting && $setting->auto_convert_completed_work_order) ? 'checked' : ''?> id="autoconvert_work_order">
                                                     <label for="autoconvert_work_order"><span>Autoconvert completed work order to invoice</span></label>
                                                 </div>
                                             </div>
@@ -346,7 +346,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="recurring_on_add_child" value="2" <?php echo ($setting &&     $setting->recurring === '2') ? 'checked' : ''?> id="recurring_on_add_child_2">
+                                        <input type="radio" name="recurring_on_add_child" value="2" <?php echo ($setting && $setting->recurring === '2') ? 'checked' : ''?> id="recurring_on_add_child_2">
                                         <label for="recurring_on_add_child_2"><span>Create and send child invoice to customer</span></label>
                                     </div>
                                 </div>

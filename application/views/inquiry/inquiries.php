@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title">Inquiries</h3>
+                                    <h3 class="page-title">Leads</h3>
 
                                 </div>
                                 <div class="col-sm-6">
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<i class="mdi mdi-settings mr-2"></i> New inquiry
 								</a>    -->
                                                 <a class="btn btn-primary btn-md"
-                                                   href="<?php echo url('inquiries/add') ?>"><span
+                                                   href="<?php echo url('customer/add_lead') ?>"><span
                                                             class="fa fa-plus"></span> New Lead</a>
                                             <?php //endif ?>
                                         </div>
@@ -276,7 +276,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h5 class="page-empty-header">You do not have any leads</h5>
                                         <p class="text-ter margin-bottom">Manage your leads.</p>
                                         <a class="btn btn-primary"
-                                        href="<?php echo base_url('inquiries/add') ?>"><span
+                                        href="<?php echo base_url('customer/add_lead') ?>"><span
                                                     class="fa fa-plus fa-margin-right"></span> Add New Lead</a>
                                     </div>
                                 <?php } ?>

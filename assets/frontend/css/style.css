@@ -96,6 +96,21 @@
    display: block !important;
  }
 
+ .desktop-only-b {
+   display: inline-flex !important;
+ }
+
+ a.banner-dl {
+    padding: 13px 40px;
+    background: #872bec;
+    border-radius: 40px;
+    color: white !important;
+    position: relative;
+    top: 40px;
+    font-size: 19px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
+ }
+
  .mobile-only {
     display: none !important;
  }
@@ -568,9 +583,10 @@ span.widget-desc {
  .header-top p {
    margin-bottom: 0;
    color: #fff;
-   font-size: 12px;
+   font-size: 11px;
    line-height: 1;
    margin: 0px !important;
+   padding-left: 0px;
  }
  .header-top p  span{
     color:#fada97
@@ -1496,6 +1512,16 @@ img.wizard-mobile {
   font-weight: 600;
 }
 @media(max-width:991px) {
+    a.banner-dl {
+      padding: 11px 30px;
+      background: #872bec;
+      border-radius: 40px;
+      color: white !important;
+      position: relative;
+      top: 40px;
+      font-size: 17px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0 1px 3px;
+    }
     span.selector-link img {
         float: left;
         background: white;
@@ -1927,6 +1953,9 @@ img.wizard-mobile {
       display: block !important;
     }
     .desktop-only {
+      display: none !important;
+    }
+    .desktop-only-b {
       display: none !important;
     }
     .customContainer{padding: 0 30px;}
@@ -4269,7 +4298,7 @@ font-size: 12px;
    .slicknav_btn {
     position: absolute;
     right: 10px;
-    top: 76px;
+    top: 90px;
     font-size: 12px;
     z-index: 999999;
   }
@@ -4291,7 +4320,21 @@ font-size: 12px;
     white-space: nowrap;
 }
 .over-write-menu li {
-    width: 90px;
+    width: auto;
+    margin-right: 19px;
+}
+a.dl-home:hover {
+    color: #fada97 !important;
+}
+.scfix {
+    color: #0077c5 !important;
+}
+a.dl-home {
+    padding: 6px 15px;
+    background: #64477d;
+    color: white !important;
+    border-radius: 18px;
+    font-size: 12px !important;
 }
 
 .group-feature {
@@ -4357,4 +4400,34 @@ font-size: 12px;
 
 .widget-footer-container .tradingview-widget-container {
   margin: auto !important;
+}
+/* Login CSS Top Bar */
+ul.account-menu {
+  float: left;
+  font-size: 14px;
+  position: relative;
+  top: 4px;
+  left: 50px;
+}
+span.text-center-b {
+  color: white !important;
+  display: block;
+}
+ul.account-menu li {
+  float: left;
+  margin-right: 25px;
+  list-style: none;
+}
+ul.account-menu li a {
+  color: white;
+  font-size: 13px;
+}
+@media(max-width:1180px) {
+  ul.account-menu {
+    float: left;
+    font-size: 14px;
+    position: relative;
+    top: 4px;
+    left: 10px;
+  }
 }

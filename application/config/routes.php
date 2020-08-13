@@ -66,6 +66,14 @@ $route['services/(:any)?/(:any)?'] = 'service/$1/$2';
 $route['services/(:any)?'] = 'service/$1';
 $route['services'] = 'service';
 
+// form builder pages - Gene
+$route['formbuilder'] = 'formbuilder';
+$route['formbuilder/create'] = 'formbuilder/create';
+$route['formbuilder/edit/(:num)'] = 'formbuilder/edit/$1';
+
+// form builder functions - Gene
+$route['formbuilder/form/add'] = 'formbuilder/addForm';
+
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
 $route['survey/(:num)']['GET'] = 'survey/preview/$1';
@@ -163,10 +171,11 @@ $route['accounting/chart_of_accounts/import'] = 'Accounting/import';
 $route['accounting/chart_of_accounts/refresh'] = 'Accounting/refresh';
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
-$route['accounting/reconcile/index'] = 'reconcile/index';
+$route['accounting/reconcile/(:any)'] = 'reconcile/index/$1';
 $route['accounting/reconcile'] = 'reconcile/indexmain';
-$route['accounting/reconcile/edit'] = 'reconcile/edit';
-
+$route['accounting/reconcile/edit/(:any)'] = 'reconcile/edit/$1';
+$route['accounting/reconcile/update/(:any)'] = 'reconcile/update/$1';
+$route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
 // [Addons - Booking]
@@ -214,6 +223,26 @@ $route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'booking/save_product_booking';
 $route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon';
 
+$route['nsmart_plans/index'] = 'Nsmart_Plans/index';
+$route['nsmart_plans/add_new_plan'] = 'Nsmart_Plans/add_new_plan';
+$route['nsmart_plans/create_plan'] = 'Nsmart_Plans/create_plan';
+$route['nsmart_plans/edit_plan/(:any)'] = 'Nsmart_Plans/edit_plan/$1';
+$route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
+$route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
+
+$route['plan_headings/index'] = 'Plan_Headings/index';
+$route['plan_headings/add_new_headings'] = 'Plan_Headings/add_new_headings';
+$route['plan_headings/create_plan_headings'] = 'Plan_Headings/create_plan_headings';
+$route['plan_headings/edit_plan_headings/(:any)'] = 'Plan_Headings/edit_plan_headings/$1';
+$route['plan_headings/update_plan_headings'] = 'Plan_Headings/update_plan_headings';
+$route['plan_headings/delete_plan_heading'] = 'Plan_Headings/delete_plan_heading';
+
+$route['nsmart_features/index'] = 'Nsmart_Features/index';
+$route['nsmart_features/add_new_feature'] = 'Nsmart_Features/add_new_feature';
+$route['nsmart_features/create_feature'] = 'Nsmart_Features/create_feature';
+
+$route['notification/calendar_notification_counter'] = 'Notification_Counter/calendar_notification_counter';
+
 $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
@@ -223,3 +252,7 @@ $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
 $route['wizard/show_app'] = 'wizard/show_app';
 $route['wizard/del_app'] = 'wizard/del_app';
 //$route['wizard/getSubOptions'] = 'wizard/getSubOptions';
+
+//Settings
+$route['settings/schedule'] = 'Settings/schedule';
+$route['settings/notifications'] = 'Settings/notifications';

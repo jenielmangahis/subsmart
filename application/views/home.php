@@ -27,6 +27,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-download row-margin-top float-left">
                               <img src="<?php echo $url->assets ?>frontend/images/google-download.png" class="card-img card-features img-download">
                             </div>
+                            <br style="clear:both;"/>
+                            <a href="#" class="banner-dl">DOWNLOAD</a>
                         </div>
                     </div>
                 </div>
@@ -330,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-md-7">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><a href="#">eSign</a></h5>
-                                                    <p class="card-text"> Easily get all the signatures you need without ever leaving nSmarTrac. Legally Signatures Empower You to Sign Documents Online. Create an eSignature, Format Documents, Store Signed Documents. Start Signing Today. eSign From Any Device. Clean And Paperless.</p>
+                                                    <p class="card-text"> Easily get all the signatures you need without ever leaving nSmarTrac. Legally signatures empower you to sign documents online. Create an eSignature, format documents, store signed documents. Start signing today. eSign from any device. Clean and paperless.</p>
                                                 </div>
                                             </div>
                                         </div>

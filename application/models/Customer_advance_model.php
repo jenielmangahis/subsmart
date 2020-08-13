@@ -35,12 +35,24 @@ class Customer_advance_model extends MY_Model {
 
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {
-        $this->db->order_by($orderBy, $sort);
+        if(!empty($orderBy) || $orderBy!= null){
+            $this->db->order_by($orderBy, $sort);
+        }
         if ($query = $this->db->get($tablename, $limit, $start)) {
             return $query->result();
         } else {
              return false;
         }
 
+    }
+
+    public function delete($input)
+    {
+        $this->db->where($input['field_name'], $input['id']);
+        if ($this->db->delete($input['tablename'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

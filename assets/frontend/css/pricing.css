@@ -612,10 +612,6 @@ a:hover{
    text-decoration:none;
    cursor:pointer
 }
-a:visited{
-   text-decoration:none;
-   color:#0077c5
-}
 a:focus{
    outline:0
 }

@@ -1,7 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header_accounting'); ?>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css"></link>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
     <!-- page wrapper start -->
     <div class="wrapper">
         <div class="container-fluid">
@@ -136,14 +138,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<div class="qUickStart">
 								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">A</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/items') ?>">Add a New Client</a></h4>
+									<h4><a href="<?php echo url('/customer/add_lead') ?>">Add a New Client</a></h4>
 									<span>Sign up a new client and add to database</span>
 								</div>
 							</div>
 							<div class="qUickStart">
 								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">B</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/plans') ?>">Select an Existing Client</a></h4>
+									<h4><a href="<?php echo url('/customer') ?>">Select an Existing Client</a></h4>
 									<span>Work with an existing client</span>
 								</div>
 							</div>
@@ -237,6 +239,43 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 </div>
             </div><!-- end row -->
+			
+			<div class="row d-none d-lg-flex mb-1">
+				<div class="col-sm-6">
+					<div class="dropdown dropdown-inline filter-date">
+						<div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+							<span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name">This Year</span> <span class="caret"></span>
+						</div>
+						<ul class="dropdown-menu btn-block" role="menu">
+							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-12-31" data-name="This Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-09-30" data-name="This Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q3</a></li>
+							<li data-filter-date="item" data-date-start="2020-04-01" data-date-end="2020-06-30" data-name="This Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q2</a></li>
+							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-03-31" data-name="This Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q1</a></li>
+							<li data-filter-date="item" data-date-start="2020-08-01" data-date-end="2020-08-31" data-name="This Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Month</a></li>
+							<li data-filter-date="item" data-date-start="2020-08-03" data-date-end="2020-08-09" data-name="This Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Week</a></li>
+							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-12-31" data-name="Previous Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year</a></li>
+							<li data-filter-date="item" data-date-start="2019-10-01" data-date-end="2019-12-31" data-name="Previous Year - Q4" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q4</a></li>
+							<li data-filter-date="item" data-date-start="2019-07-01" data-date-end="2019-09-30" data-name="Previous Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q3</a></li>
+							<li data-filter-date="item" data-date-start="2019-04-01" data-date-end="2019-06-30" data-name="Previous Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q2</a></li>
+							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-03-31" data-name="Previous Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q1</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-07-31" data-name="Previous Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Month</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-27" data-date-end="2020-08-02" data-name="Previous Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Week</a></li>
+							<li data-filter-date="item" data-date-start="2018-01-01" data-date-end="2018-12-31" data-name="FY 2018" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2018</a></li>
+							<li data-filter-date="item" data-date-start="2017-01-01" data-date-end="2017-12-31" data-name="FY 2017" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2017</a></li>
+							<li data-filter-date="item" data-date-start="2016-01-01" data-date-end="2016-12-31" data-name="FY 2016" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2016</a></li>
+						</ul>
+					</div>
+					<span class="margin-left">For <span data-date-filter="date-interval">01-Jan-2020 to 31-Dec-2020</span></span>
+				</div>
+				<div class="col-sm-6 text-right-sm">
+					<span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">customize</span>
+					<div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+					</div>
+				</div>
+            </div>
+			
+
              <div class="row d-none d-lg-flex">
                 <div class="col-xl-9">
                     <div class="card">
@@ -245,7 +284,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-lg-7">
                                     <div>
-                                        <div id="chart-with-area" class="ct-chart earning ct-golden-section"></div>
+                                        <!-- <div id="chart-with-area" class="ct-chart earning ct-golden-section"></div> -->
+                                        <canvas id="myChart" style="max-width: 500px;"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-lg-5">
@@ -342,7 +382,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </p>
                                 <h5 class="font-18 text-right">$0.00</h5>
                             </div>
-                            <div id="ct-donut" class="ct-chart wid"></div>
+                            <div id="ct-donut" class="ct-chart wid">
+                            	<canvas id="doughnutChart"></canvas>
+                            </div>
                             <div class="mt-4">
                                 <table class="table mb-0">
                                     <tbody>
@@ -409,7 +451,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </p>
                                 <h5 class="font-18 text-right">$0.00</h5>
                             </div>
-                            <div id="ct-donut1" class="ct-chart wid"></div>
+                            <div id="ct-donut1" class="ct-chart wid">
+                            	<canvas id="polarChart"></canvas>
+                            </div>
                             <div class="mt-4">
                                 <table class="table mb-0">
                                     <tbody>
@@ -571,6 +615,96 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             	&nbsp;
             </div>
 
+            <div class="dash-last-wrpper">
+            	<div class="row">
+            		<div class="col-md-7 col-sm-6">
+            			<div class="com-newlat">
+            				<div class="news-hed">
+            					<img src="<?php echo $url->assets ?>dashboard/images/new-img.png" alt="">
+            					<h4>Company Newsletter</h4>
+            				</div>
+
+            				<div class="inner-news">
+            					<p>Welcome to enGrade!</p>
+            				</div>
+            			</div>
+
+            			<div class="spot-box">
+    						<div class="spot-img">
+    							<img src="<?php echo $url->assets ?>dashboard/images/users/user-3.jpg" alt="">
+    						</div>
+    						<div class="spot-head">
+    							<h4>Today's Spotlight</h4>
+    						</div>
+            			</div>
+
+            			<div class="corpo-box">
+            				<h4>Corporate Bulletin</h4>
+            			</div>
+            		</div>
+            		<div class="col-md-5 col-sm-5">
+            			<div class="corpo-box state-box">
+            				<h4>My Stats</h4>
+
+            				<table class="table">
+							    <thead>
+							      	<tr>
+								        <th>Total Sold</th>
+								        <th>Installed</th>
+								        <th>Scheduled</th>
+								        <th>Tickets</th>
+							      	</tr>
+							    </thead>
+							    <tbody>
+							      	<tr>
+							        	<td>36</td>
+							        	<td>35</td>
+							        	<td>0</td>
+							        	<td>0</td>
+							      	</tr>
+							    </tbody>
+							</table>
+            			</div>
+
+            			<div class="corpo-box">
+            				<h4>Top Installs</h4>
+
+            				<div class="top-ins-in">
+	            				<div class="row">
+	            					<div class="col-md-6 col-sm-6">
+	            						<div class="insl-bx">
+	            							<h5>Top Reps</h5>
+
+	            							<ul>
+	            								<li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
+	            								<li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
+	            							</ul>
+	            						</div>
+	            					</div>
+	            					<div class="col-md-6 col-sm-6">
+	            						<div class="insl-bx">
+	            							<h5>Top Techs</h5>
+
+	            							<ul>
+	            								<li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
+	            								<li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
+	            								<li><strong>3.</strong> T.Smith (COR) - <span>133</span></li>
+	            								<li><strong>4.</strong> T.Smith (COR) - <span>133</span></li>
+	            								<li><strong>5.</strong> T.Smith (COR) - <span>133</span></li>
+	            								<li><strong>6.</strong> T.Smith (COR) - <span>133</span></li>
+	            							</ul>
+	            						</div>
+	            					</div>
+	            				</div>
+	            			</div>
+
+	            			<div class="view-all-bx">
+	            				<a href="#">View All</a>
+	            			</div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
         </div><!-- end container-fluid -->
     </div><!-- page wrapper end -->
 
@@ -963,6 +1097,10 @@ display: block !important;
 </style>
 
     <?php include viewPath('includes/footer'); ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.floating-btn-div').hide();
@@ -979,4 +1117,82 @@ display: block !important;
 			}
 		})
 	})
+</script>
+<!-- monthy graph -->
+<script type="text/javascript">
+	var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+type: 'bar',
+data: {
+labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+datasets: [{
+label: '# of Votes',
+data: [12, 19, 3, 5, 2, 3],
+backgroundColor: [
+'rgba(255, 99, 132, 0.2)',
+'rgba(54, 162, 235, 0.2)',
+'rgba(255, 206, 86, 0.2)',
+'rgba(75, 192, 192, 0.2)',
+'rgba(153, 102, 255, 0.2)',
+'rgba(255, 159, 64, 0.2)'
+],
+borderColor: [
+'rgba(255,99,132,1)',
+'rgba(54, 162, 235, 1)',
+'rgba(255, 206, 86, 1)',
+'rgba(75, 192, 192, 1)',
+'rgba(153, 102, 255, 1)',
+'rgba(255, 159, 64, 1)'
+],
+borderWidth: 1
+}]
+},
+options: {
+scales: {
+yAxes: [{
+ticks: {
+beginAtZero: true
+}
+}]
+}
+}
+});
+
+//doughnut
+var ctxD = document.getElementById("doughnutChart").getContext('2d');
+var myLineChart = new Chart(ctxD, {
+type: 'doughnut',
+data: {
+labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
+datasets: [{
+data: [300, 50, 100, 40, 120],
+backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+}]
+},
+options: {
+responsive: true
+}
+});
+
+//polar
+var ctxPA = document.getElementById("polarChart").getContext('2d');
+var myPolarChart = new Chart(ctxPA, {
+type: 'polarArea',
+data: {
+labels: ["Red", "Green", "Yellow", "Grey", "Dark Grey"],
+datasets: [{
+data: [300, 50, 100, 40, 120],
+backgroundColor: ["rgba(219, 0, 0, 0.1)", "rgba(0, 165, 2, 0.1)", "rgba(255, 195, 15, 0.2)",
+"rgba(55, 59, 66, 0.1)", "rgba(0, 0, 0, 0.3)"
+],
+hoverBackgroundColor: ["rgba(219, 0, 0, 0.2)", "rgba(0, 165, 2, 0.2)",
+"rgba(255, 195, 15, 0.3)", "rgba(55, 59, 66, 0.1)", "rgba(0, 0, 0, 0.4)"
+]
+}]
+},
+options: {
+responsive: true
+}
+});
 </script>

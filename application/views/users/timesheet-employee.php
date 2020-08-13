@@ -170,7 +170,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('monday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin1 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin1.' hrs';
+                                                            echo round($total_clockin1, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Tuesday -->
@@ -179,7 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('tuesday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin2 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin2.' hrs';
+                                                            echo round($total_clockin2, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Wednesday -->
@@ -188,7 +188,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('wednesday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin3 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin3.' hrs';
+                                                            echo round($total_clockin3, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Thursday -->
@@ -197,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('thursday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin4 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin4.' hrs';
+                                                            echo round($total_clockin4, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Friday -->
@@ -206,7 +206,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('friday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin5 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin5.' hrs';
+                                                            echo round($total_clockin5, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Saturday -->
@@ -215,7 +215,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('saturday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin6 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin6.' hrs';
+                                                            echo round($total_clockin6, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- Sunday -->
@@ -224,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $data['date'] = date("Y-m-d",strtotime('sunday this week'));
                                                             //echo $data['date'];
                                                             $total_clockin7 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo $total_clockin7.' hrs';
+                                                            echo round($total_clockin7, 2).' hrs';
                                                         ?>
                                                     </td>
                                                     <!-- TOTAL -->
@@ -232,7 +232,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php 
                                                             //echo #total_hours
                                                             $total_hours = $total_clockin1 + $total_clockin2 + $total_clockin3 + $total_clockin4 + $total_clockin5 + $total_clockin6 + $total_clockin7;
-                                                            echo $total_hours.' hrs';
+                                                            echo round($total_hours, 2).' hrs';
                                                         ?>
                                                     </td>
 

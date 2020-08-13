@@ -1,44 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class FormsBuilder_model extends MY_Model {
-	public $table = 'formbuilder_default_forms';
-	public $table_custom = 'formbuilder_forms';
+	private $forms_table = "fb_forms";
+	private $elements_table = "fb_forms_elements";
+	private $answers_table = "fb_forms_answers";
+	private $choices_table = "fb_forms_choices";
+
 	public function __construct(){
 		parent::__construct();
 	}
+	
+	public function getForms($id = null){
+		$this->db->select("*");
 
-	public function getAllForms() {
-
-		$company_id = logged('company_id');
-		$this->db->select('*');
-		$this->db->from($this->table);
-		$this->db->where('company_id', $company_id);
-
-		$query = $this->db->get();
+		if($id !== null){
+			$this->db->where('forms_id', $id);
+			$query =  $this->db->get($this->forms_table);
+			return $query->row();
+		}
+		$query =  $this->db->get($this->forms_table);
 		return $query->result();
 	}
 
-	public function getById($id) {
+	public function addNewForm($data){
+		$this->db->insert($this->forms_table, $data);
+		return array(	
+			"status" => 1,
+			"id" => $this->db->insert_id()
+		);
+	}
 
-		$company_id = logged('company_id');
-		$this->db->select('*');
-		$this->db->from($this->table_custom);
-		$this->db->where('company_id', $company_id);
-		$this->db->where('id', $id);
-
-		$query = $this->db->get();
-
-		if(count($query->result()) > 0)
-		{	
-			return $query->result();
-		} else {
-			$this->db->select('*');
-			$this->db->from($this->table);
-			$this->db->where('id', $id);
-			$query = $this->db->get();
-			return $query->result();
-		}
-
+	public function updateFormSettings($id, $data){
+		return;
 	}
 }
 

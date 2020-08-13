@@ -7,13 +7,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
     <title>Home</title>
     <meta content="Admin Dashboard" name="description">
-  
+
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--Chartist Chart CSS -->
 
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
-     <!-- DataTables -->
+    <!-- DataTables -->
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
@@ -76,13 +76,13 @@
                                     class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
 
                             </li>
-							                            <li class="dropdown notification-list list-inline-item ml-auto"><a
+                            <li class="dropdown notification-list list-inline-item ml-auto"><a
                                     class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-commenting-o" aria-hidden="true"></i></a>
 
                             </li>
 
 
-							 <li class="dropdown notification-list list-inline-item ml-auto"><a
+							<li class="dropdown notification-list list-inline-item ml-auto"><a
                                     class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa fa-line-chart" aria-hidden="true"></i></a>
 
                             </li>
@@ -122,7 +122,7 @@
                             </li>
                             <?php $newtasks = getNewTasks(); ?>
                             <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href= role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-list-alt" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
+                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style=""class="material-icons" aria-hidden="true">assignment</i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
                                     <?php } ?></a>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->

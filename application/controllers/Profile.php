@@ -9,6 +9,10 @@ class Profile extends MY_Controller {
 		$this->checkLogin();
 		$this->page_data['page']->title = 'Profile Management';
 		$this->page_data['page']->menu = false;
+
+		add_css(array(
+            'assets/css/accounting/sales.css',
+        ));
 	}
 
 	public function index($tab = 'profile')
@@ -28,7 +32,8 @@ class Profile extends MY_Controller {
 
 		$data = [
 			'role' => post('role'),
-			'name' => post('name'),
+			'FName' => post('FName'),
+			'LName' => post('LName'),
 			'username' => post('username'),
 			'email' => post('email'),
 			'phone' => post('contact'),

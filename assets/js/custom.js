@@ -274,17 +274,17 @@ function calculation(counter) {
   cal_total_due();
 }
 
-$(document).on("click", "#add_another", function (e) {
+$(document).on("click", "#add_another", function (e) { 
   e.preventDefault();
   var count = parseInt($("#count").val()) + 1;
   $("#count").val(count);
 
   var html =
     "<tr>\n" +
+    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +
     "<td>\n" +
     '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
-    "</td>\n" +
-    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +
+    "</td>\n" +    
     "<td>\n" +
     '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
     count +

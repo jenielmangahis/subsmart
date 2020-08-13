@@ -783,3 +783,11 @@ button {
     top: 50%;
     transform: translateY(-50%);
 }
+
+.socal_media {
+    padding-top: 13px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: white;
+    border-radius: 3px;
+}

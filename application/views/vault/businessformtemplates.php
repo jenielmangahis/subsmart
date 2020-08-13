@@ -11,7 +11,7 @@
                <div class="col-sm-6">
                   <h1 class="page-title">Business Form Templates</h1>
                   <ol class="breadcrumb">
-                     <li class="breadcrumb-item active"></li>
+                     <li class="breadcrumb-item active">Categorized Files and Folders</li>
                   </ol>
                </div>
                <div class="col-sm-6">
@@ -24,7 +24,7 @@
       <div class="row">
          <div class="col-xl-12">
                <div>
-
+                  <?php echo $folder_manager; ?>
                </div>
          </div>
          <!-- end row -->           

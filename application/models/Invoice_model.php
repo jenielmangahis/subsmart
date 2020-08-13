@@ -4,8 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Invoice_model extends MY_Model
 {
 
-    public $table = 'invoice';
-    public $table_item = 'invoice_has_items';
+    public $table = 'invoices';
 
 
     public function getAll()
@@ -14,9 +13,9 @@ class Invoice_model extends MY_Model
 
         if ($role == 2 || $role == 3) {
 
-            $company_id = logged('company_id');
+            $comp_id = logged('company_id');
 
-            return $this->getAllByCompany($company_id);
+            return $this->getAllByCompany($comp_id);
 
         } else {
 
@@ -24,24 +23,12 @@ class Invoice_model extends MY_Model
         }
     }
 
-    public function getRows($id){
-        $this->db->select('*');
-        $this->db->from($this->table_item);
-        $this->db->where('invoice_has_items.company_id', $id);
-        $this->db->join('items', 'items.id = invoice_has_items.item_id', 'left');
-        $this->db->order_by('title', 'asc');
-        $query  = $this->db->get();
-        $result = $query->row_array();
-        
-        // return fetched data
-        return !empty($result)?$result:false;
-    }
-
-    public function getAllByCompany($company_id, $type, $filter = array())
+    public function getAllByCompany($comp_id, $type, $filter = array())
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        $this->db->where('company_id', $comp_id);
+        $this->db->where('is_recurring', $type);
 
         if (!empty($filter)) {
 
@@ -286,6 +273,7 @@ class Invoice_model extends MY_Model
 
         $this->db->select('id, status, COUNT(id) as total');
         $this->db->from($this->table);
+        $this->db->where('is_recurring', $type);
 
 
         if (isset($company_id)) {
@@ -307,6 +295,7 @@ class Invoice_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('is_recurring', $type);
 
         if (!empty($filters)) {
 
@@ -391,11 +380,11 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
-    function duplicateRecord($primary_key, $company_id) {
+    function duplicateRecord($primary_key, $comp_id) {
 
         $this->db->where('id', $primary_key);
         $query = $this->db->get($this->table);
-        $invoice = $this->getLastRow($company_id);
+        $invoice = $this->getLastRow($comp_id);
         $new_invoice_number = explode("-", $invoice->invoice_number)[0] . '-' . strval(intval(explode("-", $invoice->invoice_number)[1]) + 1);
 
         foreach ($query->result() as $row){
@@ -422,32 +411,14 @@ class Invoice_model extends MY_Model
         return $this->db->update($this->table, ['status' => 'Due']);
     }
 
-    function getLastRow ($company_id) {
+    function getLastRow ($comp_id) {
         $this->db->select("*");
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        $this->db->where('company_id', $comp_id);
         $this->db->limit(1);
         $this->db->order_by('id',"DESC");
         $query = $this->db->get();
         return $query->row();
-    }
-
-    function getInvoiceNumber($jobId, $jobNum) {
-        $this->db->select("*");
-        $this->db->from($this->table);
-        $this->db->where('job_id', $jobId);
-        $query = $this->db->get();
-        $result = $query->num_rows();
-
-        return $jobNum . "-" . ((intval($result) > 9) ? strval(intval($result) + 1) : "0" . strval(intval($result) + 1));
-    }
-
-    /**
-     * @return mixed
-     */
-    public function deleteInvoice($id)
-    {
-        $this->db->delete($this->table, array("invoice_id" => $id));
     }
 }
 

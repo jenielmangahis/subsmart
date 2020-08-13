@@ -2,6 +2,10 @@
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_wizard'); ?>
 
+<div class="wrapper" role="wrapper">
+   <?php include viewPath('includes/sidebars/upgrades'); ?>
+   <div wrapper__section>
+
 	<!-- Wizard -->
 	<section class="wizard-wrp">
 		<div class="container-fluid">
@@ -58,7 +62,7 @@
 						  			<div class="row">
 						  				<div class="col-lg-2 col-md-3 col-sm-4">
 						  					<div class="add-wizard-bx">
-						  						<a href="add-wizard.html"><i class="fa fa-plus"></i></a>
+						  						<a href="<?php echo base_url('/wizard/add_wizard') ?>"><i class="fa fa-plus"></i></a>
 						  					</div>
 						  				</div>
 						  				<div class="col-lg-2 col-md-3 col-sm-4">
@@ -1738,5 +1742,6 @@
 		</div>
 	</section>
 	<!-- End Wizard -->
-
+	</div>
+						  		</div>
 <?php include viewPath('includes/footer_wizard'); ?>

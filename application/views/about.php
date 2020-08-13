@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <span class="about-desc">A business model with real experience approach to build a better software experience. <br/> Web. eCommerce. Mobile App Development. CRM. </span>
                 <br class="clear"/><br/>
                 <div class="startTrialBtn m-auto pt-5">
-                  <a href="<?php echo url('registration') ?>" class="about-btn">Enquire</a>
+                  <a href="<?php echo url('contact') ?>" class="about-btn">Inquire</a>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-about">group</span>
             <span class="about-icon-txt">Teamwork</span>
             <hr class="about-hr"/>
-            <span class="about-icon-description">We are united with you in the drive to get the best from your project - think of us as an extra numbers of your team with all the skills you need.</span>
+            <span class="about-icon-description">We are united with you in the drive to get the best from your project - think of us as an extra member of your team with all the skills you need.</span>
           </div>
       </div>
   </div>
@@ -98,16 +98,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="container spacing-ft">
         <div class="row">
           <div class="col-sm-12 pt-5 mt-3 text-center dv-f">
-              <h1 class="about-title-f">We deliver quickly & efficient based on 3 factors:</h1>
+              <h1 class="about-title-f">We deliver quick and efficient service based on 3 factors:</h1>
           </div>
           <div class="row">
             <div class="col-sm-4 text-center">
               <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-process">bar_chart</span>
-              <span class="about-icon-description-b">Quality of services and support is unmatch.</span>
+              <span class="about-icon-description-b">Quality of services and support is unmatched.</span>
             </div>
             <div class="col-sm-4 text-center">
               <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-process">emoji_objects</span>
-              <span class="about-icon-description-b">We are train to actively listen to what you need.</span>
+              <span class="about-icon-description-b">We are trained to actively listen to what you need.</span>
             </div>
             <div class="col-sm-4 text-center">
               <span class="material-icons mdc-bottom-navigation__list-item__icon show-less icon-process">construction</span>

@@ -65,7 +65,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <tr>
                                                 <th class="text-center"><input type="checkbox" class="form-control" id="inventoryItemCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
-                                                <th scope="col"><strong>Description</strong></th>
+                                                <th scope="col"><strong>Model</strong></th>
                                                 <th scope="col"><strong>Brand</strong></th>
                                                 <th scope="col"><strong>QTY-OH</strong></th>
                                                 <th scope="col"><strong>Qty-Ordered</strong></th>
@@ -78,13 +78,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php if($item[1] != "header") : ?>
                                                 <tr>
                                                     <td class="text-center"><input type="checkbox" class="inventoryItem" data-id="<?php echo $item[3]; ?>" value=""></td>
-                                                    <td><?php echo $item[0]; ?></td>
-                                                    <td><?php echo $item[1]; ?></td>
+                                                    <td>
+                                                        <strong><?php echo $item[0]; ?></strong><br>
+                                                        <span><?php echo $item[1]; ?></span>
+                                                    </td>
+                                                    <td><?php echo $item[7]; ?></td>
                                                     <td><?php echo $item[2]; ?></td>
                                                     <td><?php echo getItemQtyOH($item[3]); ?></td>
                                                     <td>&nbsp;</td>
                                                     <td>
-                                                        <a href='#' data-id="<?php echo $item[3]; ?>" data-toggle="modal" id="seeLocation" data-target="#modalAddLocation">See Location</a> 
+                                                        <!-- <a href='#' data-id="<?php echo $item[3]; ?>" data-toggle="modal" id="seeLocation" data-target="#modalAddLocation">See Location</a>  -->
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" data-id="<?php echo $item[3]; ?>" id="seeLocation" data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">See Location <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" id="<?php echo 'locQtyList' . $item[3]; ?>" style="width:300px;" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation" style="background-color:#D3D3D3;">
+                                                                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"><span style="padding-right:150px;"> <strong>Location</strong></span><span style="border-left:1px solid black;"> <strong>Qty</strong></span>
+                                                                </li>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                     </td>
                                                     <td style="width:12%" class="pl-3">
                                                         <div class="dropdown dropdown-btn text-center">

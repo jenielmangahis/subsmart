@@ -9,6 +9,9 @@
 #myDiv2 div:nth-child(n+5) {
     display:none;
 }
+body {
+	margin-left:0px !important;
+}
 </style>
 <div class="row">
 	<div class="col-md-2">

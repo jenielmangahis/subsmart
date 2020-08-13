@@ -29,7 +29,8 @@ class Workorder extends MY_Controller
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'assets/frontend/css/workorder/main.css',
-			"assets/css/accounting/sidebar.css",
+            "assets/css/accounting/sidebar.css",
+            'assets/css/accounting/sales.css'
         ));
 
 
@@ -154,7 +155,90 @@ class Workorder extends MY_Controller
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        // $this->load->view('workorder/add', $this->page_data);
         $this->load->view('workorder/add', $this->page_data);
+    }
+
+    public function alarm_demo()
+    {
+
+        $get = $this->input->get();
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        // conversation request from estimate to workorder
+        if (!empty($get['estimate_id'])) {
+
+            $this->load->model('Estimate_model', 'estimate_model');
+            $this->load->model('Customer_model', 'customer_model');
+
+            $this->page_data['estimate'] = $this->estimate_model->getEstimate($get['estimate_id']);
+            $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
+        }
+
+        // customer to workorder
+        // ~~ pending: need to add functionality on view ~~
+        if (!empty($get['customer_id'])) {
+
+            $this->load->model('Customer_model', 'customer_model');
+            $this->page_data['customer']->customer = get_customer_by_id($get['customer_id']);
+        }
+
+        $company_id = logged('company_id');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        // $this->load->view('workorder/add', $this->page_data);
+        $this->load->view('workorder/alarm-direct', $this->page_data);
+    }
+
+    public function alarm_demo_2()
+    {
+
+        $get = $this->input->get();
+
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+
+        // conversation request from estimate to workorder
+        if (!empty($get['estimate_id'])) {
+
+            $this->load->model('Estimate_model', 'estimate_model');
+            $this->load->model('Customer_model', 'customer_model');
+
+            $this->page_data['estimate'] = $this->estimate_model->getEstimate($get['estimate_id']);
+            $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
+        }
+
+        // customer to workorder
+        // ~~ pending: need to add functionality on view ~~
+        if (!empty($get['customer_id'])) {
+
+            $this->load->model('Customer_model', 'customer_model');
+            $this->page_data['customer']->customer = get_customer_by_id($get['customer_id']);
+        }
+
+        $company_id = logged('company_id');
+        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+        $this->page_data['file_vault_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        // $this->load->view('workorder/add', $this->page_data);
+        $this->load->view('workorder/alarm-direct-2', $this->page_data);
     }
 
     public function add2()

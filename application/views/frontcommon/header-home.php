@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
 
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script>    
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script>
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -45,13 +45,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="header-top">
 			<div class="container">
 				<div class="row align-items-center">
-					<div class="col-md-10 desktop-only">
-						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> AND START TO CREATE A BETTER AUTOMATED COMPANY</p>
+					<div class="col-md-9 desktop-only">
+						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 pl-4 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
 					</div>
-		          	<div class="col-md-10 mobile-only">
-		            	<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b></p>
-		          	</div>
-					<div class="col-md-2 text-md-right desktop-only">
+        	<div class="col-md-10 mobile-only">
+          	<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
+        	</div>
+					<div class="col-md-3 text-md-right desktop-only">
+            <ul class="account-menu">
+              <li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
+              <li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
+            </ul>
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
@@ -114,10 +118,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								</ul>
 							</nav> -->
 							<nav class="site-nav-menu ml-auto">
-								<ul class="over-write-menu" style="margin-top:8px;">
+								<!-- <ul class="over-write-menu" style="margin-top:8px;">
 									<li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
 									<li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
-								</ul>
+								</ul> -->
 								<ul class="over-write-menu" style="margin-top:8px;">
 									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
 									<li class=""><a href="<?php echo url('/about') ?>">ABOUT US</a></li>
@@ -126,14 +130,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
 									<li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li>
 									<li class=""><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
-					                <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
-					                <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
+                  <li class="no-break desktop-only-b"><a href="#" class="no-break dl-home desktop-only">DOWNLOAD</a></li>
+                  <li class="mobile-only"><a href="#">DOWNLOAD </a></li>
+					        <li class="mobile-only"><a href="<?php echo url('/login') ?>">LOGIN </a></li>
+					        <li class="mobile-only"><a href="<?php echo url('/registration') ?>">SIGN UP</a></li>
 								</ul>
 							</nav>
 						</div>
 					</div>
 					<div class="col-12 d-flex align-items-center site-logo-holder">
-					
+
 					</div>
 				</div>
 			</div>

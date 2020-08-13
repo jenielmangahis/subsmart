@@ -4,171 +4,90 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class FormBuilder extends MY_Controller {
 
-	public function __construct()
-	{
-
+	public function __construct(){
 		parent::__construct();
-		$this->checkLogin();
 		$this->load->library('form_builder');
+		
+		
+		$this->page_data['page']->title = 'Form Builder';
+		$this->page_data['page']->menu = 'Builder';
 		$this->load->model('FormsBuilder_model', 'formsbuilder_model');
-		// $this->page_data['page']->title = 'Form Builder';
-		// $this->page_data['page']->menu = 'Builder';
+
+		add_css(array(
+			'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
+			'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css',
+			'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css'
+		));
+
+		add_footer_js(array(
+			'https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js',
+		));
+
+		if(!isset($_GET['st'])){
+			$this->checkLogin();
+			$this->load->library('session');
+			$user_id = getLoggedUserID();
+		}
+		// $this->checkLogin();
+		// $this->load->library('session');
 		// $user_id = getLoggedUserID();
 
-		// if($user_id != 1) { redirect('/'); }
+		// concept
+		$uid = $this->session->userdata('uid');
+
+		if(empty($uid)){
+				$this->page_data['uid'] = md5(time());
+				$this->session->set_userdata(['uid' => $this->page_data['uid']]);
+		}else{
+			$uid = $this->session->userdata('uid');
+			$this->page_data['uid'] = $uid;
+		}
 	}
 
-	public function index()
-	{	
-
-		$this->page_data['forms'] = $this->formsbuilder_model->getAllForms();
-		$this->page_data['selected_id'] = '0';
-		$this->load->view('formbuilder/add', $this->page_data);
+	
+	
+	// VIEWS
+	public function index(){	
+		$this->page_data["forms"] = $this->formsbuilder_model->getForms();
+		$this->load->view('form_builder/index.php', $this->page_data);
+	}
+	
+	public function create(){
+		$this->load->view('form_builder/create.php', $this->page_data);
+	}
+	
+	public function edit($id){
+		$this->page_data["form"] = $this->formsbuilder_model->getForms($id);
+		$this->load->view('form_builder/edit.php', $this->page_data);
 	}
 
 
-	public function forms($id)
-	{	
-		$this->page_data['selected_id'] = $id;
-		$this->page_data['forms'] = $this->formsbuilder_model->getAllForms();
-		$this->page_data['selected_data'] = $this->formsbuilder_model->getById($id);
-		$this->load->view('formbuilder/add', $this->page_data);
-	}
 
 
-	public function demo()
-	{
-		$this->page_data['form'] = array(
-		    'attr' => array(
-		        'action' => 'my/action',
-		        'class' => 'form-horizontal'
-		    ),
-		    'id' => array(
-		        'type' => 'hidden',
-		        'attr' => array('value' => '123456')
-		    ),
-		    'firstname' => array(
-		        'type' => 'input',
-		        'required' => TRUE,
-		        'label' => 'First Name',
-		        'attr' => array('placeholder' => 'Enter your First Name')
-		    ),
-		    'password' => array(
-		        'type' => 'password',
-		        'required' => TRUE,
-		        'label' => 'Password',
-		        'attr' => array('help_text' => 'This is a quick message to ensure you have all the help you need') //hope this is just a placeholder for user created text, cause this isn't going to be useful. 
-		    ),
-		    'city' => array(
-		        'type' => 'select',
-		        'label' => 'City',
-		        'attr' => array(
-		            'value' => 'NC',
-		            'help_text' => 'Choose from the list above',
-		            'extra' => 'class="test"'
-		        ),
-		        'options' => array(
-		            'AR' => 'Arizona',
-		            'CA' => 'California',
-		            'NC' => 'North Carolina',
-		            'SC' => 'South Carolina',  
-		        )   
-		    ),
-		    'message' => array(
-		        'type' => 'textarea',
-		        'required' => TRUE,
-		        'label' => 'Message',
-		        'attr' => array(
-		            'rows' => 5,
-		            'cols' => 30
-		        )
-		    ),
-		    'favoriteActor' => array(
-		        'type' => 'checkbox',
-		        'label' => 'Who is your favorite actor',
-		        'attr' => array('help_text' => 'This is helpful!'),
-		        'options' => array(
-		            'adamSandler' => array('label' => 'Adam Sandler'),
-		            'jimCarey' => array('label' => 'Jim Carey'),
-		            'michaelBluthe' => array('label' => 'Michael Bluthe')
-		        )
-		    ),
-		    'favoriteActorOnce' => array(
-		        'type' => 'radio',
-		        'label' => 'Who is your favorite actor (Choose One)',
-		        'attr' => array('help_text' => 'This is helpful!'),
-		        'options' => array(
-		            'adamSandler' => array('label' => 'Adam Sandler'),
-		            'jimCarey' => array('label' => 'Jim Carey'),
-		            'michaelBluthe' => array('label' => 'Michael Bluthe')
-		        )
-		    ),
-		    'actions' => array(
-		        'submit' => 'Submit the Form',
-		        'reset' => array(
-		            'label' => 'Reset',
-		            'class' => 'btn-inverse'
-		        )
-		    )
+	// METHODS 
+	public function getForms($id = null){
+		$data =  array(
+			"status" => 1,
+			"id" => $this->formsbuilder_model->getForms($id)
 		);
+		echo json_encode($data);
+		exit;
+	}
 
-		$company_id = logged('company_id');
-		$this->db->select('*');
-		$this->db->from($this->formsbuilder_model->table_custom);
-		$this->db->where('company_id', $company_id);
-		$this->db->where('id', 1);
-		$query = $this->db->get();
-
-		if(count($query->result()) > 0 )
-		{
-			$formdata = $query->result();
-			$this->page_data['form'] = $formdata[0];
-			$this->load->view('formbuilder/demo', $this->page_data);
-		}
+	public function addForm(){
+		$query = $this->formsbuilder_model->addNewForm($this->input->post());
+		$data =  array(
+			"status" => 1,
+			"id" => $query["id"]
+		);
+		echo json_encode($data);
+		exit;
 	}
 
 
-	public function save()
-	{	
-
-		
-		$company_id = logged('company_id');
-		$this->db->select('*');
-		$this->db->from($this->formsbuilder_model->table_custom);
-		$this->db->where('company_id', $company_id);
-		$this->db->where('id', $this->input->post('id'));
-
-		$query = $this->db->get();
-		
-		if(count($query->result()) > 0) {
-
-			$data = array(
-		        'company_id' => logged('company_id'),
-		        'form_type' => 'default',
-		        'form_data' => $this->input->post('data'),
-		        'id' => $this->input->post('id')
-		    );
-		    $this->db->update($this->formsbuilder_model->table_custom,$data);
-
-		} else {
-
-
-		    $data = array(
-		        'company_id' => logged('company_id'),
-		        'form_type' => 'default',
-		        'form_data' => $this->input->post('data'),
-		        'id' => $this->input->post('id')
-		    );
-		    $this->db->insert($this->formsbuilder_model->table_custom,$data);
-
-		}
-
-
-		return json_encode("true");
-		//print_r($this->input->post());
-		// $this->page_data['selected_data'] = $this->formsbuilder_model->getById($id);
-		// $this->load->view('formbuilder/add', $this->page_data);
-	}
-
-
+	
 }

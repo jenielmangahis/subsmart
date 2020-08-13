@@ -1007,3 +1007,41 @@
 .max-width{
     min-width: 911px;
 }
+/*Add categories modal*/
+#addNewCategories .modal-dialog {
+    height: 80% !important;
+    padding-top:10%;
+    position: fixed;
+}
+
+#addNewCategories .modal-content {
+    width: 60%;
+    overflow:visible;
+    opacity: 1;
+    top: 13px;
+    position: fixed;
+    left: 20%;
+}
+
+#addNewCategories .modal-body {
+    overflow: auto;
+    height: 487px;
+}
+#addNewCategories .detailTypeDesc {
+    margin-left: 3px;
+    background-color: #ECEEF1;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 8px;
+    height: 256px;
+    overflow-y: scroll;
+}
+#addNewCategories .modal-footer-addcategories {
+    align-items: center;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: .3rem;
+    border-bottom-left-radius: .3rem;
+}

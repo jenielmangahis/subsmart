@@ -44,6 +44,15 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+
+		// get total numbers of "In" employees
+		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
+		// get total numbers of "Out" employees
+		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
+		// get total numbers of "Not Logged In Today" employees
+		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
+		// get total numbers of "Not Logged In Today" employees
+		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
 		
 		$this->load->view('users/timesheet-admin', $this->page_data);
 	}
@@ -78,6 +87,16 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+		$date_this_week = array(
+            "Monday" => date("Y-m-d",strtotime('monday this week')),
+            "Tuesday" => date("Y-m-d",strtotime('tuesday this week')),
+            "Wednesday" => date("Y-m-d",strtotime('wednesday this week')),
+            "Thursday" => date("Y-m-d",strtotime('thursday this week')),
+            "Friday" => date("Y-m-d",strtotime('friday this week')),
+            "Saturday" => date("Y-m-d",strtotime('saturday this week')),
+            "Sunday" => date("Y-m-d",strtotime('sunday this week')),
+        );
+        $this->page_data['date_this_week'] = $date_this_week;
 		
 		$this->load->view('users/timesheet-schedule', $this->page_data);
 	}

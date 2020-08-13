@@ -9,7 +9,8 @@ $(document).ready(function(){
       }, 0);
   });
   
-  current_selected_folder = 0;
+  vType = $('#vault_type').val();
+  vType = vType.trim();
 
   selected = 0;
   selected_isFolder = 1;
@@ -17,10 +18,12 @@ $(document).ready(function(){
   selected_trash = 0;
   selected_trash_isFolder = 1;
 
+  current_selected_folder = 0;
   current_process = '';
   current_alert_theme = '';
 
   clear_process = true;
+  is_initial = true;
 
 // -------------------------------------------------------------------------------------------------------------
 // Load initial functions
@@ -63,7 +66,12 @@ $(document).ready(function(){
     e.preventDefault();
     
     if(selected != 0){ 
-      var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+      if(vType == 'mylibrary'){
+        var div = $('td[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+      } else {
+        var div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');  
+      }
+      
       var confirm_text = '';
       var confirm_path = $('#folders_path').text();
 
@@ -97,11 +105,13 @@ $(document).ready(function(){
   $('a[control="view"]').click(function(e){
     e.preventDefault();
 
+    vIsMyLibrary = (vType == 'mylibrary');
+
     if(selected != 0){
       if(selected_isFolder == 1){
-        showFolderDetails(selected, selected_isFolder, false, false);
+        showFolderDetails(selected, selected_isFolder, false, vIsMyLibrary);
       } else {
-        showFileDetail(selected, selected_isFolder, false, false);
+        showFileDetail(selected, selected_isFolder, false, vIsMyLibrary);
       }
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder to view','error');
@@ -305,12 +315,11 @@ $(document).ready(function(){
 // Functions below ---------------------------------------------------------------------------------------------
 function getFoldersAndFiles(parent_id = 0){
   var vUrl = base_url + "folders/getFoldersFiles/" + parent_id;
-  var vType = $('#vault_type').val();
   
-  vType = vType.trim();
-
   if(vType == 'mylibrary'){
     vUrl += "/1";
+  } else if(vType == 'businessformtemplates'){
+    vUrl += "/0/1";
   } 
 
   $.ajax({
@@ -323,12 +332,19 @@ function getFoldersAndFiles(parent_id = 0){
         var paths = result.folders_path;
         var fname = result.folders_name;
 
-        $('#folders_name').html(fname);
+        if(!is_initial){
+          $('#folders_name').html(fname);
+        } else {
+          is_initial = !is_initial;
+        }
+
         $('#folders_path').empty();
         $('#folders_path').append(paths);
 
         if(vType == 'mylibrary'){
           setFoldersAndFiles_MyLibrary(folders, files);
+        } else if(vType == 'businessformtemplates') {
+          setFoldersAndFiles_BusinessFormTemplates(folders, files);
         } else {
           setFoldersAndFiles(folders, files);
         }
@@ -513,6 +529,9 @@ function setFoldersAndFiles(folders, files){
 function setFoldersAndFiles_MyLibrary(folders, files){
   $('#folders_and_files').empty();
 
+  selected = 0;
+  selected_isFolder = 1;
+
   var append = '<div class="table-responsive"><table class="table table-bordered table-sm" id="mylibrary_main"><thead><tr>';
 
   append += '<th class="d-none"></th>';
@@ -583,7 +602,7 @@ function setFoldersAndFiles_MyLibrary(folders, files){
     tr.addClass('table-primary');
 
     $('#folders_name').text(fname);
-    $('#folders_path').text(fpath);
+    //$('#folders_path').text(fpath);
 
     selected = fid;
     selected_isFolder = ftype;
@@ -605,6 +624,258 @@ function setFoldersAndFiles_MyLibrary(folders, files){
       showFileDetail(selected, selected_isFolder, false, true);  
     }  
   });   
+}
+
+//setFoldersAndFiles - Business Form Templates
+function setFoldersAndFiles_BusinessFormTemplates(folders, files){
+  $('#folders_and_files').empty();
+
+  var folders_and_files = $('#folders_and_files');
+
+  folders_and_files.append('<div id="accordion">');
+
+  selected = 0;
+  selected_isFolder = 1;
+
+  var categories = [];
+
+  var cur_count = 1;
+  var category = '';
+  var cur_body_id = '';
+  var cur_row_id = '';
+  var card_append = '';
+  var append = '';
+
+  $.each(folders, function(index, folder){
+    if(category != folder.category_id){
+      category = folder.category_id;
+
+      categories[category] = {row:1,col:1};
+
+      cur_body_id = 'body_bft_' + category;
+      cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+      
+      card_append = '<div class="card" id="bft_' + category + '">';
+
+      card_append += '<div class="card-header">'+
+                     '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                     '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
+                     '</a>'+
+                     '</div>';
+
+      card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
+                     '<div class="card-body" id="'+ cur_body_id +'">'+
+                     '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                     '</div>'+ 
+                     '</div>'+
+                     '</div>';
+
+      card_append += '</div>';
+
+      folders_and_files.append(card_append);
+    }
+
+    append = '';
+
+    if(categories[category]['col'] == 7){
+      if(folders.length >= cur_count){
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+          append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+          append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
+          append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+
+        $('#' + cur_row_id).append(append);
+
+        categories[category]['col'] = 1;
+        categories[category]['row']++;
+
+        cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+        
+        append = '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'"></div>';
+
+        $('#' + cur_body_id).append(append);
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
+        append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
+        append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
+        append += '<td style="width: 20%" class="text-center" id="td_total_contents">('+ folder.total_contents +')</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+
+      $('#' + cur_row_id).append(append);
+
+      categories[category]['col']++;
+    } 
+
+    cur_count++;
+  });
+
+  cur_count = 1;
+  category = '';
+  cur_body_id = '';
+  cur_row_id = '';
+  card_append = '';
+  append = '';
+
+  var in_categories = false;
+  var ex_infos = [];
+
+  $.each(files, function(index, file){
+    ex_infos = getfileExInfos(file.title);
+
+    if(category != file.category_id){
+      category = file.category_id;
+
+      in_categories = (category in categories);
+
+      if(!in_categories){
+        categories[category] = {row:1,col:1};
+      }
+
+      cur_body_id = 'body_bft_' + category;
+      cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+      
+      if(!in_categories){
+        card_append = '<div class="card" id="bft_' + category + '">';
+
+        card_append += '<div class="card-header">'+
+                       '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                       '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
+                       '</a>'+
+                       '</div>';
+
+        card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
+                       '<div class="card-body" id="'+ cur_body_id +'">'+
+                       '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                       '</div>'+ 
+                       '</div>'+
+                       '</div>';
+
+        card_append += '</div>';
+
+        folders_and_files.append(card_append);
+      }
+    }
+
+    append = '';
+
+    if(categories[category]['col'] == 7){
+      if(files.length >= cur_count){
+        append += '<div class="col-md-2">';
+          append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                       '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+          append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+          append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+          append += '<td class="pl-2">' + file.title + '</td>';
+          append += '</tr></tbody></table></div>';
+        append += '</div>';
+
+        $('#' + cur_row_id).append(append);
+
+        categories[category]['col'] = 1;
+        categories[category]['row']++;
+
+        cur_row_id = 'row_bft_' + category + '_' + categories[category]['row'];
+        
+        append = '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'"></div>';
+
+        $('#' + cur_body_id).append(append);
+      }
+    } else {
+      append += '<div class="col-md-2">';
+        append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+        append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
+        append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
+        append += '<td class="pl-2">' + file.title + '</td>';
+        append += '</tr></tbody></table></div>';
+      append += '</div>';
+
+      $('#' + cur_row_id).append(append);
+
+      categories[category]['col']++;
+    } 
+
+    cur_count++;  
+  });
+
+  folders_and_files.append('</div>');
+
+//On Select Folder or File
+  $('tr.node > td, div.node').click(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node');
+      var div = $('div[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    var id = div.attr('fid');
+    var isFolder = div.attr('isFolder');
+    var proceed = ((selected != id) || 
+                    ((selected == id) && (selected_isFolder != isFolder)));
+
+    if((selected > 0) && (proceed)){
+      var prev_div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+
+      if(prev_div.length){
+        prev_div.removeClass('bg-info');
+        prev_div.removeClass('text-white');
+      }  
+    }
+
+    div.addClass('bg-info');
+    div.addClass('text-white');
+
+    selected = id;
+    selected_isFolder = isFolder;
+
+    $('#folders_name').html(div.attr('fnm'));
+  });
+
+// On double click folder or file
+  $('tr.node > td, div.node').dblclick(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node');
+      var div = $('div[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    selected = div.attr('fid');
+    selected_isFolder = div.attr('isFolder');
+
+    if(selected_isFolder == 1){
+      current_selected_folder = selected;
+
+      getFoldersAndFiles(selected);
+    } else {
+      if($('#fs_selected_file').length){
+        var fpath = $('#folders_path').text();
+
+        fpath = fpath.trim() + div.attr('fnm');
+
+        $('#fs_selected_file_text').val(fpath);
+        $('#fs_selected_file').val(selected);
+        $('#modal-folder-manager').modal('hide');
+      } else {
+        showFileDetail(selected, selected_isFolder, false, false);
+      }
+    }  
+  });
 }
 
 // Search Files and Folders
@@ -630,9 +901,14 @@ function search_files_and_folders(){
       search_files = 0;
     }
 
+    var vUrl = base_url + "vault/search_files_and_folders";
+    if(vType == 'mylibrary'){
+      vUrl += "/1";
+    }
+
     $.ajax({
       type: 'GET',
-      url: base_url + "vault/search_files_and_folders",
+      url: vUrl,
       data: {keyword: keyword, search_folders: search_folders, search_files: search_files},
       success: function(data){
         var result = jQuery.parseJSON(data);
@@ -718,23 +994,25 @@ function get_most_download_files(){
       var sAppend = '';
       var sFile_Info = [];
 
-      $('#most_downloads').empty();
-      $.each(result, function(index, file){
-        sFile_Info = getfileExInfos(file.title); 
-        sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
-        sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.downloads_count + '</span></li>';  
-        nCur++;
-      });
+      if($('#most_downloads').length){
+        $('#most_downloads').empty();
+        $.each(result, function(index, file){
+          sFile_Info = getfileExInfos(file.title); 
+          sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
+          sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.downloads_count + '</span></li>';  
+          nCur++;
+        });
 
-      if(nCur < 10){
-        var i;
-        for (i = nCur; i <= 10 ; i++) {
-          sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+        if(nCur < 10){
+          var i;
+          for (i = nCur; i <= 10 ; i++) {
+            sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+          }
         }
-      }
 
-      $('#most_downloads').append(sAppend);
-      $('span[target="most_downloads"]').removeClass('fa-spin');
+        $('#most_downloads').append(sAppend);
+        $('span[target="most_downloads"]').removeClass('fa-spin');
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       $('span[target="most_downloads"]').removeClass('fa-spin');
@@ -753,23 +1031,25 @@ function get_most_previewd_files(){
       var sAppend = '';
       var sFile_Info = [];
 
-      $('#most_previews').empty();
-      $.each(result, function(index, file){
-        sFile_Info = getfileExInfos(file.title); 
-        sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
-        sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.previews_count + '</span></li>';  
-        nCur++;
-      });
+      if($('#most_previews').length){
+        $('#most_previews').empty();
+        $.each(result, function(index, file){
+          sFile_Info = getfileExInfos(file.title); 
+          sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
+          sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.previews_count + '</span></li>';  
+          nCur++;
+        });
 
-      if(nCur < 10){
-        var i;
-        for (i = nCur; i <= 10 ; i++) {
-          sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+        if(nCur < 10){
+          var i;
+          for (i = nCur; i <= 10 ; i++) {
+            sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+          }
         }
-      }
 
-      $('#most_previews').append(sAppend);
-      $('span[target="most_previews"]').removeClass('fa-spin');
+        $('#most_previews').append(sAppend);
+        $('span[target="most_previews"]').removeClass('fa-spin');
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       $('span[target="most_previews"]').removeClass('fa-spin');
@@ -788,23 +1068,25 @@ function get_recently_uploaded_files(){
       var sAppend = '';
       var sFile_Info = [];
 
-      $('#recent_uploads').empty();
-      $.each(result, function(index, file){
-        sFile_Info = getfileExInfos(file.title); 
-        sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
-        sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.days + '</span></li>';  
-        nCur++;
-      });
+      if($('#recent_uploads').length){
+        $('#recent_uploads').empty();
+        $.each(result, function(index, file){
+          sFile_Info = getfileExInfos(file.title); 
+          sAppend += '<li class="list-group-item">'+ nCur +'. <i class="' + sFile_Info['icon'] + ' fa-1x ' + sFile_Info['color'] + '"></i>';
+          sAppend += '<a href="#" class="ml-1 d-inline">' + file.title + '</a><span class="d-inline float-right">' + file.days + '</span></li>';  
+          nCur++;
+        });
 
-      if(nCur < 10){
-        var i;
-        for (i = nCur; i <= 10 ; i++) {
-          sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+        if(nCur < 10){
+          var i;
+          for (i = nCur; i <= 10 ; i++) {
+            sAppend += '<li class="list-group-item">' + i + '. - - - ' + '</li>';
+          }
         }
-      }
 
-      $('#recent_uploads').append(sAppend);
-      $('span[target="recent_uploads"]').removeClass('fa-spin');
+        $('#recent_uploads').append(sAppend);
+        $('span[target="recent_uploads"]').removeClass('fa-spin');
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       $('span[target="recent_uploads"]').removeClass('fa-spin');

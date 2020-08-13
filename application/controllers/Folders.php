@@ -261,8 +261,8 @@ class Folders extends MY_Controller {
 		$folder_id = $_POST['folder_id'];
 		$parent_id = 0;
 
-		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id)->row();
-		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id)->row();
+		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id . ' and softdelete <= 0')->row();
+		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id . ' and softdelete <= 0')->row();
 		if(($files->filescount > 0) || ($folders->folderscount > 0)){
 			$return['error'] = 'Cannot delete folder. Folder is not empty.';
 		} else {			
@@ -312,18 +312,11 @@ class Folders extends MY_Controller {
 	public function getFolderPermissions(){
 	}
 
-	public function getFoldersFiles($parent_id = 0, $getByCurrentUser = 0, $internal = false){
-		$uid = logged('id');
+	public function getFoldersFiles($parent_id = 0, $getByCurrentUser = 0, $getByWithCategory = 0, $internal = false){
 		if($parent_id == 0){
 			$folders_path = '/<a control="gotofolder" href="0">root</a>/';
 			$folders_name = 'Root';
 		} else {
-			$user_filter = '';
-			
-			if($getByCurrentUser == 1){
-				$user_filter = ' and created_by = ' . $uid;
-			}
-
 			$folders_path = '';
 			$folders_name = '';
 			$sql = 'select '.
@@ -334,7 +327,7 @@ class Folders extends MY_Controller {
 
 				   'from file_folders '.
 
-				   'where folder_id = @' . $user_filter;
+				   'where folder_id = @';
 
 			$cSql = str_replace('@', $parent_id, $sql);
 			$folder = $this->db->query($cSql)->row();
@@ -358,10 +351,11 @@ class Folders extends MY_Controller {
 		}
 
 		$ofUser = ($getByCurrentUser == 1);
+		$ofCategorized = ($getByWithCategory == 1);
 
 		$return = array(
-			'folders' => getFolders($parent_id, false, false, true, false, $ofUser),
-			'files' => getFiles($parent_id, true, false, $ofUser),
+			'folders' => getFolders($parent_id, false, false, true, false, $ofUser, $ofCategorized),
+			'files' => getFiles($parent_id, true, false, $ofUser, $ofCategorized),
 			'folders_path' => $folders_path,
 			'folders_name' => $folders_name,
 			'error' => ''
@@ -399,16 +393,26 @@ class Folders extends MY_Controller {
 		if($isFolder == 1){
 			$f = $this->folders_model->getById($fid);
 			$folder_id = $f->parent_id;
+			$folder = $this->folders_model->getById($folder_id);
 
-			if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
-				$return['error'] = 'Error restoring folder';
+			if($folder->softdelete <= 0){
+				if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
+					$return['error'] = 'Error restoring folder';
+				}
+			} else {
+				$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';	
 			}
 		} else {
 			$f = $this->vault_model->getById($fid);
 			$folder_id = $f->folder_id;
+			$folder = $this->folders_model->getById($folder_id);
 
-			if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
-				$return['error'] = 'Error restoring file';
+			if($folder->softdelete <= 0){
+				if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
+					$return['error'] = 'Error restoring file';
+				}
+			} else {
+				$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';
 			}
 		}
 
