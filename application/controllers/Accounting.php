@@ -647,7 +647,7 @@ class Accounting extends MY_Controller {
             $default .= '<span id="category-preview'.$preview.'"></span>';
             $default .= '<div id="" style="display:none;">';
             $default .= '<input type="hidden" id="prevent_process" value="true">';
-            $default .= '<select name="category[]" id="" class="form-control '.$cat_class.' '.$select.'">';
+            $default .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
             $default .= '<option></option>';
             $default .= '<option value="0" disabled id="add-expense-categories">&plus; Add Category</option>';
             foreach ($category_list as $list){
@@ -657,10 +657,10 @@ class Accounting extends MY_Controller {
             $default .= '</div>';
             $default .= '</td>';
             $default .= '<td><span id="description-preview'.$preview.'"></span>';
-            $default .= '<input type="text" name="description[]" class="form-control '.$des_class.'" value=""  style="display: none;">';
+            $default .= '<input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value=""  style="display: none;">';
             $default .= '</td>';
             $default .= '<td><span id="amount-preview'.$preview.'"></span>';
-            $default .= '<input type="text" name="amount[]" class="form-control '.$amount_class.'" value=""  style="display: none;">';
+            $default .= '<input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="0"  style="display: none;">';
             $default .= '</td>';
             $default .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
             $default .= '</tr>';
@@ -718,7 +718,7 @@ class Accounting extends MY_Controller {
         if (! empty($_FILES)){
             $config = array(
                 'upload_path' => './uploads/accounting/expenses/',
-                'allowed_types' => 'gif|jpg|png|jpeg',
+                'allowed_types' => '*',
                 'overwrite' => TRUE,
                 'max_size' => '20000',
                 'max_height' => '0',
@@ -892,6 +892,23 @@ class Accounting extends MY_Controller {
     public function deleteVendorCredit(){
         $id = $this->input->post('id');
         $this->expenses_model->deleteVendorCredit($id);
+    }
+
+    /***Add category ***/
+    public function addCategories(){
+        $new_data = array(
+          'account_type' => $this->input->post('account_type'),
+          'detail_type' => $this->input->post('detail_type'),
+          'name' => $this->input->post('name'),
+          'description' => $this->input->post('description'),
+          'sub_account' => $this->input->post('sub_account'),
+        );
+        $query = $this->expenses_model->addCategories($new_data);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
 
     public function payDown(){

@@ -38,33 +38,30 @@
                 <th>Form Name</th>
                 <th>Results</th>
                 <th>Today</th>
-                <th class="text-right">Modified</th>
+                <th class="text-right">Created</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="form-list-item">
-                <td>
-                  asdfasdf
-                    <div class="btn-group d-block form-list-item-options">
-                      <button class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</button>
-                      <button class="btn btn-sm btn-primary"><i class="fa fa-settings"></i> Settings</button>
-                      <button class="btn btn-sm btn-primary"><i class="fa fa-share"></i> Share</button>
-                      <button class="btn btn-sm btn-primary"><i class="fa fa-list"></i> Results</button>
-                    </div>
-                </td>
-                <td>asdfasdf</td>
-                <td>asdfasdf</td>
-                <td class="text-right">asdfasdf</td>
-              </tr>
-              <tr>
-                <td>
-                  asdfasdf
-                  
-                </td>
-                <td>asdfasdf</td>
-                <td>asdfasdf</td>
-                <td class="text-right">asdfasdf</td>
-              </tr>
+              <?php
+                foreach($forms as $formKey => $form){
+                  ?>
+                    <tr class="form-list-item">
+                      <td>
+                        <?= $form->forms_title?>
+                          <div class="btn-group d-block form-list-item-options">
+                            <button class="btn btn-sm btn-primary"> <a href="<?=base_url()?>formbuilder/edit/<?= $form->forms_id?>" class="stretched-link"></a> <i class="fa fa-edit"></i> Edit</button>
+                            <button class="btn btn-sm btn-primary"><i class="fa fa-settings"></i> Settings</button>
+                            <button class="btn btn-sm btn-primary"><i class="fa fa-share"></i> Share</button>
+                            <button class="btn btn-sm btn-primary"><i class="fa fa-list"></i> Results</button>
+                          </div>
+                      </td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="text-right">0</td>
+                    </tr>
+                  <?php
+                }
+              ?>
             </tbody>
           </table>
 
@@ -82,3 +79,8 @@
 
 </div>
 
+<script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script>
+  
+</script>

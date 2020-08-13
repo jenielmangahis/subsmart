@@ -210,4 +210,24 @@ $('#submit').on('click', function() {
     })
   }
 });
+
+$("#ending_date").datepicker({
+    todayBtn:  1,
+    autoclose: true,
+}).on('changeDate', function (selected) {
+    var minDate = new Date(selected.date.valueOf());
+    $('#first_date').datepicker('setStartDate', minDate);
+    $('#second_date').datepicker('setStartDate', minDate);
+});
+    
+$("#first_date").datepicker()
+    .on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#ending_date').datepicker('setEndDate', minDate);
+    });
+$("#second_date").datepicker()
+    .on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#ending_date').datepicker('setEndDate', minDate);
+    });
 </script>

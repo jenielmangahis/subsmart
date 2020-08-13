@@ -2,6 +2,7 @@ var check_filename = [];
 var bill_filename = [];
 var expense_filename = [];
 var vc_filename = [];
+var siteURL = document.getElementById('siteurl').value;
 $(document).ready(function () {
     // Rules page
     //select2 initialisation
@@ -142,7 +143,7 @@ $(document).ready(function () {
     function showCategories(check,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview) {
         if (check > 0){
             $.ajax({
-                url:"/accounting/rowCategories",
+                url: siteURL + "accounting/rowCategories",
                 type:"POST",
                 cache:false,
                 data:{
@@ -161,20 +162,19 @@ $(document).ready(function () {
                     var total = 0;
                     $('.'+ amount_class).each(function () {
                         var num = $(this).val().replace(',','');
-                        if (num !== 0){
-                            total += parseFloat(num);
-                        }
+                        total += parseFloat(num);
                     });
                     if (isNaN(total)){
                         total = 0;
                         total = total.toFixed(2);
+                    }else {
+                        $('#total-amount'+preview).text(total.toFixed(2));
                     }
-                    $('#total-amount'+preview).text(total.toFixed(2));
                 }
             });
         }else{
             $.ajax({
-                url:"/accounting/defaultCategoryRow",
+                url: siteURL + "accounting/defaultCategoryRow",
                 type:"POST",
                 cache:false,
                 data:{
@@ -189,6 +189,18 @@ $(document).ready(function () {
                 },
                 success:function (data) {
                     $(container).html(data);
+                    var total = 0;
+                    $('.'+ amount_class).each(function () {
+                        var num = $(this).val().replace(',','');
+                        total += parseFloat(num);
+                    });
+                    if (isNaN(total)){
+                        total = 0;
+                        total = total.toFixed(2);
+                    }else{
+                        $('#total-amount'+preview).text(total);
+                    }
+
                 }
             });
         }
@@ -383,8 +395,9 @@ $(document).ready(function () {
         var fname = [];
         var selected = [];
         var checkDropzone = new Dropzone('div#checkAttachment', {
-            url:'/accounting/expensesTransactionAttachment',
-            acceptedFiles: "image/*",
+            url:siteURL + 'accounting/expensesTransactionAttachment',
+            // acceptedFiles: "image/*",
+            maxFilesize:20,
             addRemoveLinks:true,
             init: function() {
                 this.on("success", function(file,response) {
@@ -591,8 +604,9 @@ $(document).ready(function () {
         var fname = [];
         var selected = [];
         var billDropzone = new Dropzone('div#billAttachment', {
-            url:'/accounting/expensesTransactionAttachment',
-            acceptedFiles: "image/*",
+            url: siteURL + 'accounting/expensesTransactionAttachment',
+            // acceptedFiles: "image/*",
+            maxFilesize:20,
             addRemoveLinks:true,
             init: function() {
                 this.on("success", function(file,response) {
@@ -800,8 +814,9 @@ $(document).ready(function () {
         var fname = [];
         var selected = [];
         var expenseDropzone = new Dropzone('div#expenseAttachment', {
-            url:'/accounting/expensesTransactionAttachment',
-            acceptedFiles: "image/*",
+            url:siteURL + 'accounting/expensesTransactionAttachment',
+            // acceptedFiles: "image/*",
+            maxFilesize:20,
             addRemoveLinks:true,
             init: function() {
                 this.on("success", function(file,response) {
@@ -1013,8 +1028,9 @@ $(document).ready(function () {
         var fname = [];
         var selected = [];
         var vcDropzone = new Dropzone('div#vcAttachment', {
-            url:'/accounting/expensesTransactionAttachment',
-            acceptedFiles: "image/*",
+            url:siteURL + 'accounting/expensesTransactionAttachment',
+            // acceptedFiles: "image/*",
+            maxFilesize:20,
             addRemoveLinks:true,
             init: function() {
                 this.on("success", function(file,response) {
@@ -1045,10 +1061,207 @@ $(document).ready(function () {
 
 });
 //Add expense categories
+//Bill modal
+$(document).on('click','#select2-category-id-bill-results > li',function () {
+    $('#addNewCategories').modal({backdrop: 'static', keyboard: false});
+    $("#addNewCategories").css('z-index',1055);
+    $('.modal-backdrop').css('z-index',1052);
+    $('.modal-backdrop').css('display','inherit');
+});
+//Expense modal
+$(document).on('click','#select2-category-id-expense-results > li',function () {
+    $('#addNewCategories').modal({backdrop: 'static', keyboard: false});
+    $("#addNewCategories").css('z-index',1055);
+    $('.modal-backdrop').css('z-index',1052);
+    $('.modal-backdrop').css('display','inherit');
+});
+//Check modal
+$(document).on('click','#select2-category-id-check-results > li',function () {
+    $('#addNewCategories').modal({backdrop: 'static', keyboard: false});
+    $("#addNewCategories").css('z-index',1055);
+    $('.modal-backdrop').css('z-index',1052);
+    $('.modal-backdrop').css('display','inherit');
+});
+// Vendor credit modal
 $(document).on('click','#select2-category-id-vc-results > li',function () {
-    $("#addNewCategories").modal("show");
-    $('.select2-vc-category').next('.select2-selection').attr('aria-expanded',false);
-    console.log('Response txt');
+    $('#addNewCategories').modal({backdrop: 'static', keyboard: false});
+    $("#addNewCategories").css('z-index',1055);
+    $('.modal-backdrop').css('z-index',1052);
+    $('.modal-backdrop').css('display','inherit');
+});
+$(document).on('click','#closedAddCategory', function () {
+    if (!$('#addNewCategories').is(':visible')){
+        $('.modal-backdrop').css('z-index',1049);
+        $('.modal-backdrop').css('display','none');
+    }
+});
+$(document).on('change','#selectDetailType',function () {
+    $('#addCategoryName').val($(this).val());
+
+    var advertising = $('#detailDescAdvertise').html();
+    var auto = $('#detailDescAuto').html();
+    var bad_debt = $('#detailDescBadDebt').html();
+    var bank_charges = $('#detailDescBankCharges').html();
+    var charitable = $('#detailDescCharitable').html();
+    var cost_of_labor = $('#detailDescCostOfLabor').html();
+    var due_subscription = $('#detailDescDueSubscription').html();
+    var entertainment = $('#detailDescEntertainment').html();
+    var entertainment_meals = $('#detailDescEntertainmentMeals').html();
+    var equipment_rental = $('#detailDescEquipmentRental').html();
+    var finance = $('#detailDescFinance').html();
+    var insurance = $('#detailDescInsurance').html();
+    var interest_paid = $('#detailDescInterestPaid').html();
+    var fee = $('#detailDescLegalProfFee').html();
+    var general_admin = $('#detailDescGeneralAdmin').html();
+    var other_business = $('#detailDescOtherBusiness').html();
+    var mis_service = $('#detailDescMisService').html();
+    var payroll = $('#detailDescPayrollExpenses').html();
+    var promo_meals = $('#detailDescPromotionalMeals').html();
+    var rent_lease = $('#detailDescRentLease').html();
+    var repair = $('#detailDescRepairMaintain').html();
+    var shipping = $('#detailDescShipping').html();
+    var supplies = $('#detailDescSupplies').html();
+    var taxes_paid = $('#detailDescTaxesPaid').html();
+    var travel = $('#detailDescTravel').html();
+    var travel_meals = $('#detailDescTravelMeals').html();
+    var unapplied = $('#detailDescUnapplied').html();
+    var utilities = $('#detailDescUtilities').html();
+
+    switch ($(this).val()){
+        case "Advertising/Promotional":
+            $('.detailTypeDesc').html(advertising);
+            break;
+        case "Auto":
+            $('.detailTypeDesc').html(auto);
+            break;
+        case "Bad Debts":
+            $('.detailTypeDesc').html(bad_debt);
+            break;
+        case "Bank Charges":
+            $('.detailTypeDesc').html(bank_charges);
+            break;
+        case "Charitable Contributions":
+            $('.detailTypeDesc').html(charitable);
+            break;
+        case "Cost & Labor":
+            $('.detailTypeDesc').html(cost_of_labor);
+            break;
+        case "Dues & subscription":
+            $('.detailTypeDesc').html(due_subscription);
+            break;
+        case "Entertainment":
+            $('.detailTypeDesc').html(entertainment);
+            break;
+        case "Entertainment Meals":
+            $('.detailTypeDesc').html(entertainment_meals);
+            break;
+        case "Equipment Rental":
+            $('.detailTypeDesc').html(equipment_rental);
+            break;
+        case "Finance costs":
+            $('.detailTypeDesc').html(finance);
+            break;
+        case "Insurance":
+            $('.detailTypeDesc').html(insurance);
+            break;
+        case "Interest Paid":
+            $('.detailTypeDesc').html(interest_paid);
+            break;
+        case "Legal & Professional fees":
+            $('.detailTypeDesc').html(fee);
+            break;
+        case "Office/General Administrative Expenses":
+            $('.detailTypeDesc').html(general_admin);
+            break;
+        case "Other Business Expenses":
+            $('.detailTypeDesc').html(other_business);
+            break;
+        case "Other Miscellaneous Service Cost":
+            $('.detailTypeDesc').html(mis_service);
+            break;
+        case "Payroll Expenses":
+            $('.detailTypeDesc').html(payroll);
+            break;
+        case "Promotional Meals":
+            $('.detailTypeDesc').html(promo_meals);
+            break;
+        case "Rent or Lease of Buildings":
+            $('.detailTypeDesc').html(rent_lease);
+            break;
+        case "Repair & Maintenance":
+            $('.detailTypeDesc').html(repair);
+            break;
+        case "Shipping,Freight & Delivery":
+            $('.detailTypeDesc').html(shipping);
+            break;
+        case "Supplies & Materials":
+            $('.detailTypeDesc').html(supplies);
+            break;
+        case "Taxes Paid":
+            $('.detailTypeDesc').html(taxes_paid);
+            break;
+        case "Travel":
+            $('.detailTypeDesc').html(travel);
+            break;
+        case "Travel Meals":
+            $('.detailTypeDesc').html(travel_meals);
+            break;
+        case "Unapplied Cash Bill Payment Expenses":
+            $('.detailTypeDesc').html(unapplied);
+            break;
+        case "Utilities":
+            $('.detailTypeDesc').html(utilities);
+            break;
+        default:
+            $('.detailTypeDesc').html(advertising);
+            break;
+    }
+});
+$(document).on('change','#checkBoxSubAccount',function () {
+    $("#selectSubAccount").attr("disabled", ! $(this).is(':checked'));
+});
+$(document).on('click','#addCategorySaved',function () {
+    if (!$('#addNewCategories').is(':visible')){
+        $('.modal-backdrop').css('z-index',1049);
+        $('.modal-backdrop').css('display','none');
+    }
+   var account_type = $('#addCategoryType').val();
+   var detail_type = $('#selectDetailType').val();
+   var name = $('#addCategoryName').val();
+   var description = $('#addCategoryDesc').val();
+   var sub_account = $('#selectSubAccount').val();
+   $.ajax({
+      url:"/accounting/addCategories",
+      type:"POST",
+      data:{
+          account_type:account_type,
+          detail_type:detail_type,
+          name:name,
+          description:description,
+          sub_account:sub_account
+      },
+      success:function (data) {
+        if (data == 1){
+            Swal.fire(
+                {
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Success',
+                    text: "New category added",
+                    icon: 'success'
+                });
+        }else{
+            Swal.fire(
+                {
+                    showConfirmButton: false,
+                    timer: 5000,
+                    title: 'Failed',
+                    text: "Sorry the *Name is already exist",
+                    icon: 'warning'
+                });
+        }
+      }
+   });
 });
 
     //Upload Receipt image or Add receipt

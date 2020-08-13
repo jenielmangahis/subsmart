@@ -2263,6 +2263,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="pay_history">Pay History</label><br/>
+                                                <select id="pay_history" name="pay_history" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <br>
                                 </div>

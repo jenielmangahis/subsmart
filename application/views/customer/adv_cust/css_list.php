@@ -152,7 +152,7 @@
         background-image: url('/assets/img/customer/invoices.png')!important;
     }
     .assigned {
-        background-image: url('/assets/img/customer/contacts_assigned.png')!important;
+        background-image: url('/assets/img/customer/assigned.png')!important;
     }
 
 

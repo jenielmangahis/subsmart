@@ -990,19 +990,26 @@ if (!function_exists('getNewTasks')){
 
 function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessFormTemplates = false){
     $CI = &get_instance();
+    $uid = logged('id');
 
     $user_fname = logged('FName');
     $user_lname = logged('LName');
 
     $company = getCompany();
+    $categories = array();
+
+    if($isBusinessFormTemplates){
+        $categories = $CI->filefolderscategories_model->getByWhere(array('created_by' => $uid));
+    }
 
     $params = array(
         'isMain' => $isMain,
         'isMyLibrary' => $isMyLibrary,
         'isBusinessFormTemplates' => $isBusinessFormTemplates,
-        'company_name' => $company->b_name,
+        'company_name' => $company->business_name,
         'user_fname' => $user_fname,
-        'user_lname' => $user_lname
+        'user_lname' => $user_lname,
+        'categories' => $categories
     );
 
     return $CI->load->view('modals/folder_manager', $params, TRUE);

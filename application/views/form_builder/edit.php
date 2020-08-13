@@ -19,16 +19,15 @@
 <div class="wrapper">
   <div __wrapper_section>
     <div class="card my-2">
-    
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?php echo base_url()?>formbuilder">Form Builder</a></li>
-        <li class="breadcrumb-item active">Edit</li>
+        <li class="breadcrumb-item active"><?= $form->forms_title?></li>
       </ol>
     </nav>
     
       <div class="text-left">
-        <h1>Edit form <a href="#" class="btn btn-outline-info"><i class="fa fa-eye"></i> View Form</a></h1>
+        <h1><?= $form->forms_title?> <a href="#" class="btn btn-outline-info"><i class="fa fa-eye"></i> View Form</a></h1>
       </div>
 
       <hr/>
@@ -60,7 +59,7 @@
             
             <div class="row">
               <div class="col-xs-12 col-md-3 overflow-auto">
-                <div class="d-block form-group">
+                <div class="form-group">
                   <h2>Form Editor</h2>
       
                   </div>
@@ -137,28 +136,174 @@
                 </div>
               </div>
             </div>
-  
           </div>
+
+          <!-- FORM SETTINGS -->
           <div id="form-editor-settings" class="form-editor-settings-window tab-pane fade ">
+
             <div class="row">
-              <div class="col-xs col-md-3">
-                <div class="accordion">
-                  <ul class="list-group">
-                    <li class="list-group-item">General</li>
-                    <li class="list-group-item">Notifications</li>
-                    <li class="list-group-item">Success Pages</li>
-                    <li class="list-group-item">Custom Text</li>
-                    
-                  </ul>
+              <div class="col-xs-12 col-md-3">
+                <div id="form-settings-menu" class="list-group sticky-top">
+                  <a class="list-group-item list-group-item-action" data-toggle="list" href="#forms-settings-general" >General</a>
+                  <a class="list-group-item list-group-item-action" data-toggle="list" href="#forms-settings-notifications">Notifications</a>
+                  <a class="list-group-item list-group-item-action" data-toggle="list" href="#forms-settings-success-pages">Success Pages</a>  
+                  <a class="list-group-item list-group-item-action" data-toggle="list" href="#forms-settings-custom-text">Custom Text</a>  
                 </div>
               </div>
-              <div class="col-xs col-md-9">
-                <div id="windowSettingsWrapperContent">
-                  windows settings
+              <div class="col-xs-12 col-md-9">
+                <div class="tab-content">
+                  <!-- SETTINGS: GENERAL - DESCRIPTION-->
+                  <div id="forms-settings-general" class="tab-pane fade show active">
+                    <div class="card">
+                      <div class="card-content">
+                        <h3>General Settings</h3>
+                        <hr/>
+                        <h4>Description</h4>
+
+                        <div class="form-group">
+                          <label for="txtFormName">Form Name:</label>
+                          <input type="text" name="txtFormName" id="txtFormName" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="txtPrivateNotes">Private Notes:</label>
+                          <textarea class="form-control" name="txtPrivateNotes" id="txtPrivateNotes" rows="3" ></textarea>
+                        </div>
+                        
+
+                        <div class="form-group">
+                          <label for="txtSocialDescription">Private Notes:</label>
+                          <textarea class="form-control" name="txtSocialDescription" id="txtSocialDescription" rows="3" ></textarea>
+                        </div>
+
+                        <hr/>
+                        <h4>Open/Close</h4>
+                        <div class="card">
+                          <div class="card-content">
+                            <div class="form-check">
+                              <input type="checkbox" name="txtFormToggleStart" id="txtFormToggleStart">
+                              <label for="txtFormToggleStart">Use Start Date..</label>
+                              <small class="form-text text-muted">Open this form after this date</small>
+                              <blockquote class="blockquote">
+                                <div class="form-row">
+                                  <div class="form-group">
+                                    <label for="#txtStartDate">Start Date</label>
+                                    <input type="date" class="form-control" name="txtStartDate" id="txtStartDate">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="#txtStartTime">Start Time</label>
+                                    <input type="date" class="form-control" name="txtStartTime" id="txtStartTime">
+                                  </div>
+                                </div>
+
+                                <div class="form-group">
+                                  <label for="$txtMessageTitle">Message Title</label>
+                                  <input type="text" name="txtStartMessageTitle" id="txtStartMessageTitle" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label for="#txtMessageContent">Message:</label>
+                                  <textarea name="txtStartMesasgeContent" class="form-control" id="txtStartMessageContent" cols="30" rows="10"></textarea>
+                                </div>
+                              </blockquote>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-content">
+                            <div class="form-check">
+                              <input type="checkbox" name="txtFormToggleEnd" id="txtFormToggleEnd">
+                              <label for="txtFormToggleEnd">Use End Date..</label>
+                              <small class="form-text text-muted">Close this form after this date</small>
+                              <blockquote class="blockquote">
+                                <div class="form-row">
+                                  <div class="form-group">
+                                    <label for="#txtEndDate">End Date</label>
+                                    <input type="date" class="form-control" name="txtEndDate" id="txtEndDate">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="#txtEndTime">End Time</label>
+                                    <input type="date" class="form-control" name="txtEndTime" id="txtEndTime">
+                                  </div>
+                                </div>
+
+                                <div class="form-group">
+                                  <label for="#txtEndMessageTitle">Message Title</label>
+                                  <input type="text" name="txtEndMessageTitle" id="txtEndMessageTitle" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label for="#txtEndMessageContent">Message:</label>
+                                  <textarea name="txtEndMessageContent" class="form-control" id="txtEndMessageContent" cols="30" rows="10"></textarea>
+                                </div>
+                              </blockquote>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-content">
+                            <div class="form-check">
+                              <input type="checkbox" name="txtFormToggleResult" id="txtFormToggleResult">
+                              <label for="txtFormToggleResult">Use Results Limit..</label>
+                              <small class="form-text text-muted">Close this form after this many stored results</small>
+                              <blockquote class="blockquote">
+                              
+                                <div class="form-group">
+                                  <label for="#txtResultsLimit">Results Limit</label>
+                                  <input type="number" class="form-control" name="txtResultsLimit" id="txtResultsLimit">
+                                </div>
+
+                                <div class="form-group">
+                                  <label for="#txtEndMessageTitle">Message Title</label>
+                                  <input type="text" name="txtEndMessageTitle" id="txtEndMessageTitle" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label for="#txtEndMessageContent">Message:</label>
+                                  <textarea name="txtEndMessageContent" class="form-control" id="txtEndMessageContent" cols="30" rows="10"></textarea>
+                                </div>
+                              </blockquote>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- SETTINGS: GENERAL - NOTIFICATIONS -->
+                  <div id="forms-settings-notifications" class="tab-pane fade">
+                    <div class="card">
+                      <div class="card-content">
+                        <h3>Notifications</h3>
+                        <hr/>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <!-- SETTINGS: SUCCESS PAGES -->
+                  <div id="forms-settings-success-pages" class="tab-pane fade">
+                    <div class="card">
+                      <div class="card-content">
+                        <h3>Success Pages</h3>
+                        <hr/>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- SETTINGS: CUSTOM TEXT -->
+                  <div id="forms-settings-custom-text" class="tab-pane fade">
+                    <div class="card">
+                      <div class="card-content">
+                        <h3>Custom Text</h3>
+                        <hr/>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+              
             </div>
+            
           </div>
+
           <div id="form-editor-share" class="form-editor-settings-window tab-pane fade ">
             <div class="row">
               <div class="col-xs col-md-3">

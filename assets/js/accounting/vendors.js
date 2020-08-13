@@ -1,4 +1,4 @@
-
+var siteurl = document.getElementById('siteurl').value;
 $(document).ready(function () {
 
 	$('#btn-new-vendor-modal').click(function(){
@@ -90,7 +90,7 @@ function getAllVendors(){
 	if($("#vendors_table").length > 0){	
 	   $.ajax({
 			type: "GET",
-			url: "allVendors",
+			url: siteurl + "accounting/allVendors",
 			dataType: "json",
 			success:
 				function(data) {

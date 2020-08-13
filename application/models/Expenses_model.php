@@ -8,6 +8,26 @@ class Expenses_model extends MY_Model
         parent::__construct();
     }
 
+    public function addCategories($new_data){
+        $qry = $this->db->get_where('accounting_list_category',array('category_name'=>$new_data['detail_type'],'type'=>$new_data['account_type']));
+        if ($qry->num_rows() == 0){
+            $data = array(
+                'category_name'=>$new_data['detail_type'],
+                'type'=>$new_data['account_type'],
+                'display_name'=>$new_data['name'],
+                'description' => $new_data['description'],
+                'sub_account' => $new_data['sub_account'],
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => 1
+            );
+            $this->db->insert('accounting_list_category',$data);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     public function getTransaction(){
         $qry = $this->db->get('accounting_expense_transaction');
         return $qry->result();

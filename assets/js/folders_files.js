@@ -809,6 +809,73 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
   });
 
   folders_and_files.append('</div>');
+
+//On Select Folder or File
+  $('tr.node > td, div.node').click(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node');
+      var div = $('div[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    var id = div.attr('fid');
+    var isFolder = div.attr('isFolder');
+    var proceed = ((selected != id) || 
+                    ((selected == id) && (selected_isFolder != isFolder)));
+
+    if((selected > 0) && (proceed)){
+      var prev_div = $('div[fid="'+ selected +'"][isFolder="'+ selected_isFolder +'"]');
+
+      if(prev_div.length){
+        prev_div.removeClass('bg-info');
+        prev_div.removeClass('text-white');
+      }  
+    }
+
+    div.addClass('bg-info');
+    div.addClass('text-white');
+
+    selected = id;
+    selected_isFolder = isFolder;
+
+    $('#folders_name').html(div.attr('fnm'));
+  });
+
+// On double click folder or file
+  $('tr.node > td, div.node').dblclick(function(){
+    var tag = $(this).prop('tagName');
+
+    if(tag == 'TD'){
+      var row = $(this).parent('tr.node');
+      var div = $('div[fid="'+ row.attr('fid') +'"][isFolder="'+ row.attr('isFolder') +'"]');
+    } else {
+      var div = $(this);
+    }
+    
+    selected = div.attr('fid');
+    selected_isFolder = div.attr('isFolder');
+
+    if(selected_isFolder == 1){
+      current_selected_folder = selected;
+
+      getFoldersAndFiles(selected);
+    } else {
+      if($('#fs_selected_file').length){
+        var fpath = $('#folders_path').text();
+
+        fpath = fpath.trim() + div.attr('fnm');
+
+        $('#fs_selected_file_text').val(fpath);
+        $('#fs_selected_file').val(selected);
+        $('#modal-folder-manager').modal('hide');
+      } else {
+        showFileDetail(selected, selected_isFolder, false, false);
+      }
+    }  
+  });
 }
 
 // Search Files and Folders

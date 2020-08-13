@@ -26,7 +26,7 @@
 	<div class="col-md-10">
 		<!-- Wizard -->
 		<section class="wizard-wrp">
-			<div class="container-fluid">
+			<div class="container-fluid mt-5">
 				<div class="row">
 					<div class="col-lg-2 col-md-3 col-sm-4">
 						<div class="wizard-leftbar">

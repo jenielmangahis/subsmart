@@ -803,160 +803,161 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="billForm">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="">Vendor</label>
-                                <input type="hidden" name="bill_id" id="billID">
-                                <input type="hidden" name="transaction_id" id="billTransId">
-                                <select name="vendor_id" id="billVendorID" class="form-control select2-vendor">
-                                    <option></option>
-                                    <option disabled>&plus;&nbsp;Add new</option>
-                                    <?php foreach ($vendors as $vendor):?>
-                                        <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-9" style="text-align: right">
-                                <div>Balance Due</div>
-                                <div><h1>$0.00</h1></div>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-top: 20px;width: 80%;">
-                            <div class="col-md-3">
-                                <label for="">Mailing address</label>
-                                <textarea name="mailing_address" id="billMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="">Terms</label>
-                                <select name="terms" id="billTerms" class="form-control select2-bill-terms">
-                                    <option></option>
-                                    <option>Due on receipt</option>
-                                    <option>Net 15</option>
-                                    <option>Net 30</option>
-                                    <option>Net 60</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="">Bill date</label>
-                                <input type="date" name="bill_date" id="billDate" class="form-control">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="">Due date</label>
-                                <input type="date" name="due_date" id="billDueDate" class="form-control">
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="">Bill no.</label>
-                                    <input type="text" name="bill_num" id="billNumber" class="form-control" value="">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Permit no.</label>
-                                    <input type="text" name="permit_num" id="billPermitNumber" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-container">
-                            <!--                        DataTables-->
-                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>CATEGORY</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>AMOUNT</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody id="line-container-bill">
-                                <tr id="tableLine-bill">
-                                    <td></td>
-                                    <td><span id="line-counter-bill">1</span></td>
-                                    <td>
-                                        <div id="" style="display:none;">
-                                            <select name="category[]" id="" class="form-control billCategory select2-bill-category">
-                                                <option></option>
-                                                <?php foreach ($list_categories as $list): ?>
-                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                                <?php endforeach;?>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><input type="text" name="description[]" class="form-control billDescription" id="tbl-input-bill" style="display: none;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control billAmount" id="tbl-input-bill" style="display: none;"></td>
-                                    <td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                <tr id="tableLine-bill">
-                                    <td></td>
-                                    <td><span id="line-counter-bill">2</span></td>
-                                    <td>
-                                        <div id="" style="display:none;">
-                                            <select name="category[]" id="" class="form-control billCategory select2-bill-category">
-                                                <option></option>
-                                                <?php foreach ($list_categories as $list): ?>
-                                                    <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
-                                                <?php endforeach;?>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><input type="text" name="description[]" class="form-control billDescription" id="tbl-input-bill" style="display: none;"></td>
-                                    <td><input type="text" name="amount[]" class="form-control billAmount" id="tbl-input-bill" style="display: none;"></td>
-                                    <td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="addAndRemoveRow">
-                            <div class="total-amount-container">
-                                <span id="total-amount-bill">0.00</span>
-                            </div>
-                            <button type="button" class="add-remove-line" id="add-four-line-bill">Add lines</button>
-                            <button type="button" class="add-remove-line" id="clear-all-line-bill">Clear all lines</button>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Memo</label>
-                            <textarea name="memo" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                            <span>Maximum size: 20MB</span>
-                            <div id="billAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
-                                <div class="dz-message" style="margin: 20px;border">
-                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer-check">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
-                            </div>
-                            <div class="col-md-2" style="text-align: center;">
-                                <div>
-                                    <a href="#" style="color: #ffffff;">Make recurring</a>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="dropdown" style="float: right;display: inline-block;position: relative;">
-                                    <button type="button" class="btn btn-success" data-dismiss="modal" id="billSaved" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
-                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                        <span class="fa fa-caret-down"></span></button>
-                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                        <li><a href="#">Save and new</a></li>
-                                        <li><a href="#">Save and close</a></li>
-                                    </ul>
-                                </div>
-                                <div class="" style="display: inline-block;float: right;margin-right: 10px;">
-                                    <button class="btn btn-transparent" id="billSaved" data-dismiss="modal" type="button">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-3">
+									<label for="">Vendor</label>
+									<input type="hidden" name="bill_id" id="billID">
+									<input type="hidden" name="transaction_id" id="billTransId">
+									<select name="vendor_id" id="billVendorID" class="form-control select2-vendor">
+										<option></option>
+										<option disabled>&plus;&nbsp;Add new</option>
+										<?php foreach ($vendors as $vendor):?>
+											<option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+								<div class="col-md-9" style="text-align: right">
+									<div>Balance Due</div>
+									<div><h1>$0.00</h1></div>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 20px;width: 80%;">
+								<div class="col-md-3">
+									<label for="">Mailing address</label>
+									<textarea name="mailing_address" id="billMailingAddress" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
+								</div>
+								<div class="col-md-3">
+									<label for="">Terms</label>
+									<select name="terms" id="billTerms" class="form-control select2-bill-terms">
+										<option></option>
+										<option>Due on receipt</option>
+										<option>Net 15</option>
+										<option>Net 30</option>
+										<option>Net 60</option>
+									</select>
+								</div>
+								<div class="col-md-2">
+									<label for="">Bill date</label>
+									<input type="date" name="bill_date" id="billDate" class="form-control">
+								</div>
+								<div class="col-md-2">
+									<label for="">Due date</label>
+									<input type="date" name="due_date" id="billDueDate" class="form-control">
+								</div>
+								<div class="col-md-2">
+									<div class="form-group">
+										<label for="">Bill no.</label>
+										<input type="text" name="bill_num" id="billNumber" class="form-control" value="">
+									</div>
+									<div class="form-group">
+										<label for="">Permit no.</label>
+										<input type="text" name="permit_num" id="billPermitNumber" class="form-control">
+									</div>
+								</div>
+							</div>
+							<div class="table-container">
+								<!--                        DataTables-->
+								<table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+									<thead>
+									<tr>
+										<th></th>
+										<th>#</th>
+										<th>CATEGORY</th>
+										<th>DESCRIPTION</th>
+										<th>AMOUNT</th>
+										<th></th>
+									</tr>
+									</thead>
+									<tbody id="line-container-bill">
+									<tr id="tableLine-bill">
+										<td></td>
+										<td><span id="line-counter-bill">1</span></td>
+										<td>
+											<div id="" style="display:none;">
+												<select name="category[]" id="" class="form-control billCategory select2-bill-category">
+													<option></option>
+													<?php foreach ($list_categories as $list): ?>
+														<option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+													<?php endforeach;?>
+												</select>
+											</div>
+										</td>
+										<td><input type="text" name="description[]" class="form-control billDescription" id="tbl-input-bill" style="display: none;"></td>
+										<td><input type="text" name="amount[]" class="form-control billAmount" id="tbl-input-bill" style="display: none;"></td>
+										<td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
+									</tr>
+									<tr id="tableLine-bill">
+										<td></td>
+										<td><span id="line-counter-bill">2</span></td>
+										<td>
+											<div id="" style="display:none;">
+												<select name="category[]" id="" class="form-control billCategory select2-bill-category">
+													<option></option>
+													<?php foreach ($list_categories as $list): ?>
+														<option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
+													<?php endforeach;?>
+												</select>
+											</div>
+										</td>
+										<td><input type="text" name="description[]" class="form-control billDescription" id="tbl-input-bill" style="display: none;"></td>
+										<td><input type="text" name="amount[]" class="form-control billAmount" id="tbl-input-bill" style="display: none;"></td>
+										<td style="text-align: center"><a href="#" id="delete-row-bill"><i class="fa fa-trash"></i></a></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="addAndRemoveRow">
+								<div class="total-amount-container">
+									<span id="total-amount-bill">0.00</span>
+								</div>
+								<button type="button" class="add-remove-line" id="add-four-line-bill">Add lines</button>
+								<button type="button" class="add-remove-line" id="clear-all-line-bill">Clear all lines</button>
+							</div>
+							<div class="form-group">
+								<label for="">Memo</label>
+								<textarea name="memo" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+							</div>
+							<div class="form-group">
+								<label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+								<span>Maximum size: 20MB</span>
+								<div id="billAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+									<div class="dz-message" style="margin: 20px;border">
+										<span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+										<a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer-check">
+							<div class="row">
+								<div class="col-md-5">
+									<button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
+								</div>
+								<div class="col-md-2" style="text-align: center;">
+									<div>
+										<a href="#" style="color: #ffffff;">Make recurring</a>
+									</div>
+								</div>
+								<div class="col-md-5">
+									<div class="dropdown" style="float: right;display: inline-block;position: relative;">
+										<button type="button" class="btn btn-success" data-dismiss="modal" id="billSaved" style="border-radius: 20px 0 0 20px">Save and schedule payment</button>
+										<button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+											<span class="fa fa-caret-down"></span></button>
+										<ul class="dropdown-menu dropdown-menu-right" role="menu">
+											<li><a href="#">Save and new</a></li>
+											<li><a href="#">Save and close</a></li>
+										</ul>
+									</div>
+									<div class="" style="display: inline-block;float: right;margin-right: 10px;">
+										<button class="btn btn-transparent" id="billSaved" data-dismiss="modal" type="button">Save</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
         </div>
     </div>
 <!--    end of modal-->
@@ -1417,26 +1418,304 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--    end of modal-->
 <!--        Add Categories modal-->
         <div class="modal" id="addNewCategories">
-            <div class="modal-dialog">
+            <div class="modal-dialog" data-backdrop="false">
                 <div class="modal-content">
 
                     <!-- Modal Header -->
                     <div class="modal-header">
-                        <h4 class="modal-title">Modal Heading</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Account</h4>
+                        <button type="button" id="closedAddCategory" class="close" data-dismiss="modal">&times;</button>
                     </div>
-
                     <!-- Modal body -->
                     <div class="modal-body">
-                        Modal body..
-                    </div>
+                        <form action="" id="" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Account Type</label>
+                                    <select name="type" id="addCategoryType" class="form-control">
+                                        <option>Account receivable (A/R)</option>
+                                        <option>Other current assets</option>
+                                        <option>Bank</option>
+                                        <option>Fixed assets</option>
+                                        <option>Other assets</option>
+                                        <option>Account payable (A/P)</option>
+                                        <option>Credit card</option>
+                                        <option>Other account liabilities</option>
+                                        <option>Long term liabilities</option>
+                                        <option>Equity</option>
+                                        <option>Income</option>
+                                        <option>Other income</option>
+                                        <option>Costs of goods sold</option>
+                                        <option>Expenses</option>
+                                        <option>Other expenses</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for=""><span style="color: red;">*</span>Detail Type</label>
+                                    <select name="detail_type" id="selectDetailType" class="form-control">
+                                        <option>Advertising/Promotional</option>
+                                        <option>Auto</option>
+                                        <option>Bad Debts</option>
+                                        <option>Bank Charges</option>
+                                        <option>Charitable Contributions</option>
+                                        <option>Cost & Labor</option>
+                                        <option>Dues & subscription</option>
+                                        <option>Entertainment</option>
+                                        <option>Entertainment Meals</option>
+                                        <option>Equipment Rental</option>
+                                        <option>Finance costs</option>
+                                        <option>Insurance</option>
+                                        <option>Interest Paid</option>
+                                        <option>Legal & Professional fees</option>
+                                        <option>Office/General Administrative Expenses</option>
+                                        <option>Other Business Expenses</option>
+                                        <option>Other Miscellaneous Service Cost</option>
+                                        <option>Payroll Expenses</option>
+                                        <option>Promotional Meals</option>
+                                        <option>Rent or Lease of Buildings</option>
+                                        <option>Repair & Maintenance</option>
+                                        <option>Shipping,Freight & Delivery</option>
+                                        <option>Supplies & Materials</option>
+                                        <option>Taxes Paid</option>
+                                        <option>Travel</option>
+                                        <option>Travel Meals</option>
+                                        <option>Unapplied Cash Bill Payment Expenses</option>
+                                        <option>Utilities</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="detailTypeDesc">
+                                        Use <b>Advertising/Promotional</b> to track money spent promoting your company.
+                                        <p>
+                                            You may want different accounts of this type to track different promotional efforts (Yellow Pages, newspaper, radio, flyers, events, and so on).
+                                        </p>
+                                        <p>
+                                            If the promotion effort is a meal, use <b>Promotional meals</b> instead.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for=""><span style="color:red;">*</span>Name</label>
+                                    <input type="text" name="name" id="addCategoryName" class="form-control" value="Advertising/Promotional">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Description</label>
+                                    <input type="text"name="description" id="addCategoryDesc" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox" id="checkBoxSubAccount">&nbsp;<span>Is sub-account</span>
+                                    <select name="sub-account" id="selectSubAccount" class="form-control" disabled>
+                                        <option>Enter parent account</option>
+                                        <option>Cash on hand</option>
+                                        <option>Corporate Account (XXXXXX 5850)</option>
+                                        <option>Corporate Account (XXXXXX 5850)te</option>
+                                        <option>Advertising/Promotional</option>
+                                        <option>Auto</option>
+                                        <option>Bad Debts</option>
+                                        <option>Bank Charges</option>
+                                        <option>Charitable Contributions</option>
+                                        <option>Cost & Labor</option>
+                                        <option>Dues & subscription</option>
+                                        <option>Entertainment</option>
+                                        <option>Entertainment Meals</option>
+                                        <option>Equipment Rental</option>
+                                        <option>Finance costs</option>
+                                        <option>Insurance</option>
+                                        <option>Interest Paid</option>
+                                        <option>Legal & Professional fees</option>
+                                        <option>Office/General Administrative Expenses</option>
+                                        <option>Other Business Expenses</option>
+                                        <option>Other Miscellaneous Service Cost</option>
+                                        <option>Payroll Expenses</option>
+                                        <option>Promotional Meals</option>
+                                        <option>Rent or Lease of Buildings</option>
+                                        <option>Repair & Maintenance</option>
+                                        <option>Shipping,Freight & Deleviry</option>
+                                        <option>Supplies & Materials</option>
+                                        <option>Taxes Paid</option>
+                                        <option>Travel</option>
+                                        <option>Travel Meals</option>
+                                        <option>Unapplied Cash Bill Payment Expenses</option>
+                                        <option>Utilities</option>
+                                    </select>
+                                </div>
 
+                            </div>
+                        </div>
+                        </form>
+                    </div>
                     <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <div class="modal-footer-addcategories">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" id="closedAddCategory" class="btn btn-tranparent" data-dismiss="modal" style="border: 1px solid #333333;float: left">Cancel</button>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dropdown" style="float: right">
+                                    <button type="button" class="btn btn-success"  data-dismiss="modal" id="addCategorySaved" data-toggle="modal" data-target="#pay-bills-modal" style="border-radius: 20px 0 0 20px">Save & Close</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#">Save & New</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
+            </div>
+        </div>
+        <div style="display: none">
+            <div id="detailDescAdvertise" >
+                Use <b>Advertising/Promotional</b> to track money spent promoting your company.
+                <p>
+                    You may want different accounts of this type to track different promotional efforts (Yellow Pages, newspaper, radio, flayers, events, and so on).
+                </p>
+                <p>
+                    If the promotion effort is a meal, use <b>Promotional meals</b> instead.
+                </p>
+            </div>
+            <div id="detailDescAuto">
+                Use <b>Auto</b> to track costs associated with vehicles.
+                <p>
+                    You may want different accounts of this type to track gasoline, repairs, and maintenance.
+                </p>
+                <p>
+                    If your business owns a car or truck, you may want to track its
+                    value as a Fixed Asset, in addition to tracking its expenses.
+                </p>
+            </div>
+            <div id="detailDescBadDebt">
+                Use <b>Bad debt</b> to track debt you have written off.
+            </div>
+            <div id="detailDescBankCharges">
+                Use <b>Bank charges</b> for any fees you pay to financial institutions.
+            </div>
+            <div id="detailDescCharitable">
+                Use <b>Charitable contributions</b> to track gifts to charity.
+            </div>
+            <div id="detailDescCostOfLabor">
+                Use <b>Cost of labor</b> to track the cost of paying employees to produce products or supply services.
+                <p>It includes all employment costs, including food and transportation, if applicable.</p>
+                <p>This account is also available as a Cost of Goods Sold (COGS) account.</p>
+            </div>
+            <div id="detailDescDueSubscription">
+                Use <b>Dues & subscriptions</b> to track dues & subscriptions related to running your business.
+                <p>
+                    You may want different accounts of this type for professional dues,
+                    fees for licenses that can’t be transferred, magazines, newspapers,
+                    industry publications, or service subscriptions.
+                </p>
+            </div>
+            <div id="detailDescEntertainment">
+                Use <b>Entertainment</b> to track events to entertain employees.
+                <p>
+                    If the event is a meal, use <b>Entertainment meals</b>, instead.
+                </p>
+            </div>
+            <div id="detailDescEntertainmentMeals">
+                Use <b>Entertainment meals</b> to track how much you spend on dining with your employees to promote morale.
+                <p>If you dine with a customer to promote your business, use a <b>Promotional meals</b> account, instead.</p>
+                <p>Be sure to include who you ate with and the purpose of the meal when you enter the transaction.</p>
+            </div>
+            <div id="detailDescEquipmentRental">
+                Use <b>Equipment rental</b> to track the cost of renting equipment to produce products or services.
+                <p>This account is also available as a Cost of Goods (COGS) account.</p>
+                <p>If you purchase equipment, use a Fixed Asset account type called <b>Machinery and equipment</b>.</p>
+            </div>
+            <div id="detailDescFinance"></div>
+            <div id="detailDescInsurance">
+                Use <b>Insurance</b> to track insurance payments.
+                <p>  You may want different accounts of this type for different
+                    types of insurance (auto, general liability, and so on).</p>
+            </div>
+            <div id="detailDescInterestPaid">
+                Use <b>Interest paid</b> for all types of interest you pay,
+                including mortgage interest, finance charges on credit cards, or interest on loans.
+            </div>
+            <div id="detailDescLegalProfFee">
+                Use <b>Legal & professional fee</b>s to track money to pay to professionals to help you run your business.
+                <p>
+                    You may want different accounts of this type for payments to your accountant,
+                    lawyer, or other consultants.
+                </p>
+            </div>
+            <div id="detailDescGeneralAdmin">
+                Use <b>Office/general administrative expenses</b> to track all types of general or office-related expenses.
+            </div>
+            <div id="detailDescOtherBusiness"></div>
+            <div id="detailDescMisService">
+                Use <b>Other miscellaneous service cost</b> to track costs related to providing services that don’t fall into another Expense type.
+                <p>This account is also available as a Cost of Goods Sold (COGS) account.</p>
+            </div>
+            <div id="detailDescPayrollExpenses">
+                Use <b>Payroll expenses</b> to track payroll expenses. You may want different accounts of this type for things like:
+                <ul>
+                    <li>Compensation of officers</li>
+                    <li>Guaranteed payments</li>
+                    <li>Workers compensation</li>
+                    <li>Salaries and wages</li>
+                    <li>Payroll taxes</li>
+                </ul>
+            </div>
+            <div id="detailDescPromotionalMeals">
+                Use <b>Promotional meals</b> to track how much you spend dining with a customer to promote your business.
+                <p>Be sure to include who you ate with and the purpose of the meal when you enter the transaction.</p>
+            </div>
+            <div id="detailDescRentLease">
+                Use <b>Rent or lease of buildings</b> to track rent payments you make.
+            </div>
+            <div id="detailDescRepairMaintain">
+                Use <b>Repair & maintenance</b> to track any repairs and periodic maintenance fees.
+                <p>
+                    You may want different accounts of this type to track different
+                    types repair & maintenance expenses (auto, equipment, landscape, and so on).
+                </p>
+            </div>
+            <div id="detailDescShipping">
+                Use <b>Shipping, freight & delivery</b> to track the cost of shipping products to customers or distributors.
+                <p>
+                    You might use this type of account for incidental shipping expenses,
+                    and the Cost of Goods Sold type of Shipping, freight & delivery account for direct costs.
+                </p>
+                <p>This account is also available as a Cost of Goods Sold account.</p>
+            </div>
+            <div id="detailDescSupplies">
+                Use <b>Supplies & materials</b> to track the cost of raw goods and parts used or consumed when producing a product or providing a service.
+                <p>This account is also available as a Cost of Goods Sold (COGS) account.</p>
+            </div>
+            <div id="detailDescTaxesPaid">
+                Use <b>Taxes paid</b> to track taxes you pay.
+                <p>
+                    You may want different accounts of this type for payments
+                    to different tax agencies (sales tax, state tax, federal tax).
+                </p>
+            </div>
+            <div id="detailDescTravel">
+                Use <b>Travel</b> to track travel costs.
+                <p>For food you eat while traveling, use Travel meals, instead.</p>
+            </div>
+            <div id="detailDescTravelMeals">
+                Use <b>Travel meals</b> to track how much you spend on food while traveling.
+                <p>If you dine with a customer to promote your business, use a Promotional meals account, instead.</p>
+                <p>If you dine with your employees to promote morale, use Entertainment meals, instead.</p>
+            </div>
+            <div id="detailDescUnapplied">
+                <b>Unapplied Cash Bill Payment Expense</b> reports the <b>Cash Basis</b> expense
+                from vendor payment checks you’ve sent but not yet applied to vendor bills.
+                In general, you would never use this directly on a purchase or sale transaction.
+                See IRS Publication 538.
+            </div>
+            <div id="detailDescUtilities">
+                Use <b>Utilities</b> to track utility payments.
+                <p>
+                    You may want different accounts of this type to track different types
+                    of utility payments (gas and electric, telephone, water, and so on).
+                </p>
             </div>
         </div>
 <!--        end of modal-->
@@ -1444,6 +1723,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     //select2 initialization
+    $('.select2-sub-account').select2({
+        placeholder: 'Enter parent account',
+        allowClear: true
+    });
     $('.select2-payee').select2({
         placeholder: 'Who did you pay?',
         allowClear: true
@@ -1599,16 +1882,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var total = 0;
             $('.checkAmount').each(function () {
                 var num = $(this).val().replace(',','');
-                if(isNaN(num)){
-                    total += parseFloat(num);
-                }
-                console.log(total);
+                total += parseFloat(num);
             });
             if (isNaN(total)){
                 total = 0;
                 total = total.toFixed(2);
+            }else{
+                $('#total-amount-check').text(total.toFixed(2));
             }
-            $('#total-amount-check').text(total.toFixed(2));
+
         });
 
     });
@@ -1698,16 +1980,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var total = 0;
             $('.billAmount').each(function () {
                 var num = $(this).val().replace(',','');
-                if(num !== 0){
-                    total += parseFloat(num);
-                }
-                console.log(total);
+                total += parseFloat(num);
             });
             if (isNaN(total)){
                 total = 0;
                 total = total.toFixed(2);
+            }else{
+                $('#total-amount-bill').text(total.toFixed(2));
             }
-            $('#total-amount-bill').text(total.toFixed(2));
+
         });
 
     });
@@ -1796,16 +2077,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var total = 0;
             $('.expenseAmount').each(function () {
                 var num = $(this).val().replace(',','');
-                if(num != 0){
-                    total += parseFloat(num);
-                }
-                console.log(total);
+                total += parseFloat(num);
             });
             if (isNaN(total)){
                 total = 0;
                 total = total.toFixed(2);
+            }else{
+                $('#total-amount-expense').text(total.toFixed(2));
             }
-            $('#total-amount-expense').text(total.toFixed(2));
+
         });
 
 
@@ -1894,15 +2174,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var total = 0;
             $('.vcAmount').each(function () {
                 var num = $(this).val();
-                if(num != 0){
-                    total = total + parseFloat(num);
-                }
+                total = total + parseFloat(num);
             });
             if (isNaN(total)){
                 total = 0;
                 total = total.toFixed(2);
+            }else{
+                $('#total-amount-vc').text(total.toFixed(2));
             }
-            $('#total-amount-vc').text(total.toFixed(2));
+
         });
     });
 

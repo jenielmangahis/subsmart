@@ -429,9 +429,6 @@
 			<input type="hidden" value="3" name="next_step" />
 			<input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
 			
-            
-
-
 
             <div class="card p-0 mb-0">
                 <div class="site_content">
@@ -715,7 +712,15 @@
                     
                     </div>
                     <style> .document-page { border:2px solid black;  margin-top:30px; } .document-page:first-child { margin-top:50px !important; } </style>
-                    <div class="content_main" id="main-pdf-render" style="height: 887px;overflow: auto;    position: relative;margin: 0 auto; text-align: center;" role="region" aria-label="Active Page"> </div>
+                    <div class="content_main" id="main-pdf-render" style="height: 887px;overflow: auto;    position: relative;margin: 0 auto; text-align: center;" role="region" aria-label="Active Page">   
+                        <div id="draggable" class="resize-x-handle-flip">
+                            <div class="x-text-flip-back">
+                                <div class="vertical-scroll">
+                                <div  style="border:3px solid black;" class="ui-widget-content"><p>Signature</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div ng-class="taggerCtrl.shouldShowPanelSection()" lazy-load-container="thumbNails" svg-view-angular-hook="" hook-name="'documentThumbnailsPanel'" tagger-thumbnails-container="" id="right-panel-tagger" class="ng-scope content_sidebar content_sidebar-right">
                         <div class="sidebar_header l-flex-between" thumbnails-header=""><div>
@@ -727,8 +732,10 @@
                 
                 <div class="docsWrapper ng-scope ng-isolate-scope" ng-if="taggerCtrl.shouldShowDocumentThumbnails()" envelope-data-manager="taggerCtrl.envelopeDataManager">
                     <div class="singleDocument ng-scope" data-qa="doc-thumbnail-list" ng-repeat="document in thumbCtrl.documents.getSorted() | filter: thumbCtrl.documentPreview_filter">
-                        
+                    
                         <div id="main-pdf-render-preview" class="documentPageSet drawer down ng-scope full open" style="overflow: auto;height: 866px;">
+                        
+                        
                             <!-- <div class="drawer-wrapper ng-scope"><br>
                                 <div class="documentPage ng-scope" data-qa="tagger-documents">
                                     <img class="img" data-qa="indvidual-tagger-documents" ng-style="{ 'min-height': 132 / page.get('width') * page.get('height')+ 'px' }" alt="pdf.pdf - Page 1" lazy-load-item="thumbNails" lazy-load-url="page.getImageUrl()" should-unload="document.getPages().length > 100" src="https://app.docusign.com/page-image/accounts/5a4bea64-9f10-42d5-ae11-edd0b58f60d3/envelopes/093ea65e-5cc5-40e1-aa00-15986e27e398/documents/1/pages/1/page_image?lock_token=MTJhNzI5MjYtYmQ3YS00ODk1LTkxNGMtNWIxMWQ3MzE1MjM4&amp;cache_token=2245e9d6-0239-4910-8c1c-f6753cc0d4cb&amp;dpi=150" style="min-height: 170.824px">
@@ -791,6 +798,7 @@
         var url = "<?php echo base_url('uploads/DocFiles/'.$file_url); ?>";
     </script>
     <script src="<?php echo $url->assets ?>/esign/js/main.js"></script>
+    
     <?php } ?>
     
     <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/jquery.min.js"></script> 
@@ -865,3 +873,33 @@
         return false;
     }
 </script>
+<style>
+    #draggable {  padding: 0.5em; width:100px; left:250px; top:300px; position: 'absolute'; }
+</style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- <script> $(document).ready( function () { $( "#draggable" ).draggable(); }); </script> -->
+
+
+<script>
+        $("#draggable").draggable({ connectToSortable: ".document-page" });
+    </script>
+
+<style>    
+    .resize-x-handle-flip {
+        transform: rotateX(180deg);
+        resize: horizontal;
+        overflow: auto;
+        width: 200px;
+        background:lightcyan;
+    }
+    .x-text-flip-back {
+        transform: rotateX(180deg);
+    }
+    .vertical-scroll { 
+        min-height:20px;  
+        resize:vertical;
+        overflow:auto;
+    }
+</style>
+    

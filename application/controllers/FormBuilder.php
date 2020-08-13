@@ -39,22 +39,18 @@ class FormBuilder extends MY_Controller {
 		// concept
 		$uid = $this->session->userdata('uid');
 
-		if (empty($uid)) {
-
+		if(empty($uid)){
 				$this->page_data['uid'] = md5(time());
 				$this->session->set_userdata(['uid' => $this->page_data['uid']]);
-
-		} else {
-
-				$uid = $this->session->userdata('uid');
-				$this->page_data['uid'] = $uid;
+		}else{
+			$uid = $this->session->userdata('uid');
+			$this->page_data['uid'] = $uid;
 		}
 	}
 
 	
 	
-	// views
-
+	// VIEWS
 	public function index(){	
 		$this->page_data["forms"] = $this->formsbuilder_model->getForms();
 		$this->load->view('form_builder/index.php', $this->page_data);
@@ -64,18 +60,30 @@ class FormBuilder extends MY_Controller {
 		$this->load->view('form_builder/create.php', $this->page_data);
 	}
 	
-	public function edit(){
+	public function edit($id){
+		$this->page_data["form"] = $this->formsbuilder_model->getForms($id);
 		$this->load->view('form_builder/edit.php', $this->page_data);
 	}
 
-	// functions 
+
+
+
+	// METHODS 
+	public function getForms($id = null){
+		$data =  array(
+			"status" => 1,
+			"id" => $this->formsbuilder_model->getForms($id)
+		);
+		echo json_encode($data);
+		exit;
+	}
+
 	public function addForm(){
 		$query = $this->formsbuilder_model->addNewForm($this->input->post());
 		$data =  array(
 			"status" => 1,
 			"id" => $query["id"]
 		);
-
 		echo json_encode($data);
 		exit;
 	}

@@ -15,9 +15,11 @@ class FormsBuilder_model extends MY_Model {
 
 		if($id !== null){
 			$this->db->where('forms_id', $id);
+			$query =  $this->db->get($this->forms_table);
+			return $query->row();
 		}
-
-		return $this->db->get($this->forms_table);		
+		$query =  $this->db->get($this->forms_table);
+		return $query->result();
 	}
 
 	public function addNewForm($data){

@@ -139,7 +139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <i class="mdi mdi-settings mr-2"></i> New Customer
                                                 </a>    -->     <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
                                                                 <a class="btn btn-primary btn-md"
-                                                                href="<?php echo url('customer/add') ?>"><span
+                                                                href="<?php echo url('customer/add_advance') ?>"><span
                                                                             class="fa fa-plus"></span> New Customer</a>
                                                             <?php //endif ?>
 
@@ -412,7 +412,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
                                                     <div class="dropdown">
-                                                        <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-print"></span> Print</a>
+                                                        <a class="btn btn-primary btn-md" href="#"><span class="fa fa-print"></span> Print</a>
+                                                        <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> New Lead</a>
                                                         <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>
                                                     </div>
                                                 </div>
@@ -491,11 +492,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="col-sm-12 text-right-sm" style="align:right;">
                                                                     <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
                                                                     <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-                                                                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+                                                                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
+                                                                        <label class="onoffswitch-label" for="onoff-customize">
+                                                                            <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="indata" id="sortable2">
+                                                            <div class="indata sortable2" id="sorting">
 
                                                                 <div class="profile module ui-state-default client" id="prof_mod">
                                                                     <div class="col-sm-12">
@@ -579,24 +583,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                 <div id="tail2-bottom"></div>
                                                                                             </div>
                                                                                         </div>
+                                                                                        <div class="">
 
-                                                                                        <div class="col-sm-12">
-                                                                                            <div class="row">
-                                                                                                <div class="col-auto form-group col-sm-6"><br>
-                                                                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3">
-                                                                                                        <input type="checkbox" name="notify_by" value="Email" checked
-                                                                                                               id="notify_by_email">
-                                                                                                        <label for="notify_by_email"><span>SMS</span></label>
+                                                                                            <div class="col-sm-12">
+                                                                                                <div class="row">
+                                                                                                    <div class="form-group col-sm-12">
+                                                                                                        <div class="checkbox checkbox-sec">
+                                                                                                            <input type="checkbox" name="notify_by" value="Email" checked
+                                                                                                                   id="notify_by_email">
+                                                                                                            <label for="notify_by_email"><span>Notify by SMS</span></label><br>
+
+                                                                                                            <input type="checkbox" name="notify_by" value="Email" checked
+                                                                                                                   id="notify_by_email">
+                                                                                                            <label for="notify_by_email"><span> Notify by Email</span></label>
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                <div class="col-auto form-group col-sm-6"><br>
-                                                                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3">
-                                                                                                        <input type="checkbox" name="notify_by" value="Email" checked
-                                                                                                               id="notify_by_email">
-                                                                                                        <label for="notify_by_email"><span>Email</span></label>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
                                                                                         </div>
                                                                                     </td>
                                                                                 </tr>
@@ -640,7 +643,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <button id="button" style="display:none">View the growth</button>
                                                                             <!--Start Date: 03/09/2020-->
                                                                             <div style="margin-right:15px; padding-top:0;padding-bottom:25px !important;" align="left" class="normaltext1">
-                                                                                <a href="#" style="color:#58bc4f;">Add/Edit Score</a>&nbsp;&nbsp;
+                                                                                <a href="#" style="color:#58bc4f;">Start Date</a>&nbsp;&nbsp;
                                                                             </div>
 
                                                                             <div style="margin-left:75px; padding-top:0;padding-bottom:25px !important;" class="widget_tab">
@@ -648,7 +651,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 <div class="contactrightimg">
                                                                                     <img src="https://app.creditrepaircloud.com/application/images/dashboard-new.png" alt="1-click-import" width="25" height="35" style="padding-left: 2px;margin-top: -4px;">
                                                                                 </div>
-                                                                                <div class="contactrighttxt">Pull <br> Credit</div>
+                                                                                <div class="contactrighttxt">Pull Credit</div>
                                                                                 </a>
                                                                             </div>
                                                                         </div>
@@ -665,7 +668,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         <tbody>
                                                                                         <tr>
                                                                                             <td width="50%" align="right" valign="top">
-                                                                                                <label class="alarm_label"> <span >TechArriveTime :</span> </label>
+                                                                                                <label class="alarm_label"> <span >Arrival Time :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>Guardian</b> </label>
@@ -717,7 +720,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         <tbody>
                                                                                         <tr>
                                                                                             <td width="50%" align="left" valign="top">
-                                                                                                <label class="alarm_label"> <span >TechCompTime :</span> </label>
+                                                                                                <label class="alarm_label"> <span >Complete Time :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>Recuring</b> </label>
@@ -832,7 +835,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                         <tbody>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >CustomFld2 :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -841,7 +844,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Collection Date :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -849,7 +852,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Collection Amt :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -857,7 +860,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >SSN :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -865,7 +868,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >DOB :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -948,7 +951,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                         <tbody>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Language :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -957,7 +960,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Date Enter :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -965,7 +968,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Sales Rep :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -973,7 +976,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Post Survey:</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -981,7 +984,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >CustomField2 :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -989,7 +992,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Last Login :</span> </label>
                                                                                             </td>
                                                                                             <td width="50%" align="right" valign="top">
@@ -1023,7 +1026,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Welcome Kit :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>On</b> </label>
 
                                                                                             </td>
@@ -1032,7 +1035,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >CSO :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>On</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1040,7 +1043,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span>Rep Comm. :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 100</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1048,7 +1051,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Rep Pay :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"><b> 100</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1056,7 +1059,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Tech Comm. :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 110</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1064,7 +1067,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Tech Pay :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 110</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1090,7 +1093,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Rep Payroll :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>On</b> </label>
 
                                                                                             </td>
@@ -1099,7 +1102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >PSO :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>On</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1107,7 +1110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span>Points :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 100</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1115,23 +1118,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                             <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Price Point :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"><b> 100</b> </label>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
                                                                                             <td width="50%" align="right" valign="top">
-                                                                                                <label class="alarm_label"> <span >Pur. Price :</span> </label>
+                                                                                                <label class="alarm_label"> <span >Purchase $ :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 110</b> </label>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
                                                                                             <td width="50%" align="right" valign="top">
-                                                                                                <label class="alarm_label"> <span >Pur. Mul :</span> </label>
+                                                                                                <label class="alarm_label"> <span >Purchase X's :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 110</b> </label>
                                                                                             </td>
                                                                                         </tr>
@@ -1158,44 +1161,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                         <tbody>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >SSN :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b>Guardian</b> </label>
 
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Firstname :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> 1/11/1111</b> </label>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span>Lastname :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> AC</b> </label>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >Address :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"><b> AC</b> </label>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_label"> <span >City/State/Zip :</span> </label>
                                                                                             </td>
-                                                                                            <td width="50%" align="left" valign="top">
+                                                                                            <td width="50%" align="right" valign="top">
                                                                                                 <label class="alarm_answer"><b> AC</b> </label>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td width="50%" align="right" valign="top">
+                                                                                                <label class="alarm_label"> <span >Pay History :</span> </label>
+                                                                                            </td>
+                                                                                            <td width="50%" align="right" valign="top">
+                                                                                                <label class="alarm_answer"><b> 1</b> </label>
                                                                                             </td>
                                                                                         </tr>
                                                                                         </tbody>
@@ -1247,11 +1258,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td align="left" valign="top" style="padding-right:10px;">
-                                                                                        <div style="overflow:auto; height:90px; width:100%; margin-top:10px; " id="paper_place_load">
+                                                                                        <div  id="paper_place_load">
                                                                                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                                 <tbody>
                                                                                                 <tr>
-                                                                                                    <td width="25" align="center" valign="top">
+                                                                                                    <td width="" align="center" valign="top">
                                                                                                         <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
                                                                                                         <input type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_1" value="1" checked="">
                                                                                                         <!-- updated on 10-11-2016 end -->
@@ -1267,19 +1278,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                                 <input type="file" name="upload_document" id="upload_document_1" style="visibility:hidden; width:2px; height:1px;">
                                                                                                             </div>
                                                                                                             <div style="float:right;  width:70px;">
-                                                                                                                <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
-
-                                                                                                                <a href="javascript:void(0);"  title="Choose File" class="js-qwynlraxz"><img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;"></a>
-
-                                                                                                                &nbsp;&nbsp;
-                                                                                                                &nbsp;
-                                                                                                                <!-- updated on 10-11-2016 end -->
+                                                                                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
+                                                                                                                </a>
+                                                                                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
+                                                                                                                </a>
+                                                                                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
+                                                                                                                </a>
                                                                                                             </div>
                                                                                                         </form>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr>
-                                                                                                    <td width="25" align="center" valign="top">
+                                                                                                    <td width="" align="center" valign="top">
                                                                                                         <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
                                                                                                         <input type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_4" value="4">
                                                                                                         <!-- updated on 10-11-2016 end -->
@@ -1290,18 +1303,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                             <div style="float:left; width:75%;">
                                                                                                                 <input type="hidden" name="paperwork_id" value="4">
                                                                                                                 <input type="hidden" name="paperworktxt" value="Photo ID Copy">
-                                                                                                                <label title="Photo ID Copy" for="chk_paperwork_4">Driver License</label>&nbsp;<br>
+                                                                                                                <label title="Photo ID Copy" for="chk_paperwork_4">Photo ID Copy</label>&nbsp;<br>
 
                                                                                                                 <input type="file" name="upload_document" id="upload_document_4" style="visibility:hidden; width:2px; height:1px;">
                                                                                                             </div>
                                                                                                             <div style="float:right;  width:70px;">
-                                                                                                                <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
-
-                                                                                                                <a href="#"  title="Choose File" class="js-qwynlraxz"><img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;"></a>
-
-                                                                                                                &nbsp;&nbsp;
-                                                                                                                &nbsp;
-                                                                                                                <!-- updated on 10-11-2016 end -->
+                                                                                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
+                                                                                                                </a>
+                                                                                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
+                                                                                                                </a>
+                                                                                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
+                                                                                                                </a>
                                                                                                             </div>
                                                                                                         </form>
                                                                                                     </td>
@@ -1318,18 +1333,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                             <div style="float:left; width:75%;">
                                                                                                                 <input type="hidden" name="paperwork_id" value="6">
                                                                                                                 <input type="hidden" name="paperworktxt" value="Social Security Card (optional)">
-                                                                                                                <label title="Social Security Card (optional)" for="chk_paperwork_6">Proof of Resilient</label>&nbsp;<br>
+                                                                                                                <label title="Social Security Card (optional)" for="chk_paperwork_6">Proof of Residency</label>&nbsp;<br>
 
                                                                                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                                                                                             </div>
                                                                                                             <div style="float:right;  width:70px;">
-                                                                                                                <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
-
-                                                                                                                <a href="#"  title="Choose File" class="js-qwynlraxz"><img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;"></a>
-
-                                                                                                                &nbsp;&nbsp;
-                                                                                                                &nbsp;
-                                                                                                                <!-- updated on 10-11-2016 end -->
+                                                                                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
+                                                                                                                </a>
+                                                                                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
+                                                                                                                </a>
+                                                                                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                                                                                    <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
+                                                                                                                </a>
                                                                                                             </div>
                                                                                                         </form>
                                                                                                     </td>
@@ -1342,7 +1359,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 </tr>
 
                                                                                 </tbody></table>
-                                                                            <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
+                                                                            <div style="margin-right:15px; padding-top:1px;" align="left" class="normaltext1">
                                                                                 <a href="#" style="color:#58bc4f;">Customize list</a>&nbsp;&nbsp;
 
                                                                                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
@@ -1464,9 +1481,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="invoices module ui-state-default" id="invoice">
                                                                     <div class="col-sm-12">
                                                                         <div class="row">
-                                                                            <div style="display: inline-block;" class="boverdue">Balance</div>
+                                                                            <div class="col-sm-12">
+                                                                            <div style="position:relative;display: inline-block;float: left;" class="boverdue">Balance</div>
                                                                             <!-- updated on 10-11-2016 start (fixed chargebee permission issue) -->
-                                                                            <div ostyle="position:relative; float: right; margin: 0px 18px 0px 0px;">
+                                                                            <div style="position:relative; float: right; text-align: right;">
                                                                                 <div class="normaltext1">
                                                                                     <a href="#" class="js-qwynlraxz">Chargebee Transaction History</a>
                                                                                 </div>
@@ -1480,10 +1498,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 </div>
                                                                                 <!-- updated on 25-01-2017 end -->
                                                                             </div>
+                                                                            </div>
+
                                                                             <!-- updated on 10-11-2016 end -->
                                                                             <div class="balance" style="width:97%;">
 
-                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-bordered">
 
                                                                                     <tbody><tr>
 
@@ -1562,7 +1582,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <strong>Admin</strong><br> <br><img src="https://app.creditrepaircloud.com/uploads/61803_cmpny/contacts/1_photo_team_1579652503.png" height="80" width="80" alt="1_photo_team_1579652503.png">
                                                                                     <strong>Tommy Fico</strong>
                                                                                     <br>FICO HEROES<br>
-                                                                                    <a style="color:#58bc4f;" href="mailto:support@ficoheroes.com" class="js-qwynlraxz">Send Email</a> | <a style="color:#58bc4f;" href="https://www.ficoheroes.com" target="_blank" class="js-qwynlraxz">Visit Website</a></div>
+                                                                                    <a style="color:#58bc4f;" href="mailto:" class="js-qwynlraxz">Send Email</a> |
+                                                                                    <a style="color:#58bc4f;" href="#" target="_blank" class="js-qwynlraxz">Visit Website</a>|
+                                                                                    <a style="color:#58bc4f;" href="#" target="_blank" class="js-qwynlraxz">Send Reset</a>
+                                                                                </div>
 
 
                                                                             </div>
@@ -2649,9 +2672,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
     $(document).ready(function() {
         //$(".module").draggable({axis:"y"});
+        ///$( ".sortable2" ).sortable("disable");
+        $('#onoff-customize').change(function() {
+            if(this.checked) {
+                $( ".sortable2" ).sortable( "enable" );
+            }else{
+                $( ".sortable2" ).sortable( "disable" );
+            }
 
+        });
 
-        $( "#sortable2" ).sortable({
+        $( ".sortable2" ).sortable({
             start: function(e, ui) {
                 // creates a temporary attribute on the element with the old index
                 $(this).attr('data-previndex', ui.item.index());
@@ -2663,14 +2694,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 var element_id = ui.item.attr('id');
                 console.log('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
                 $(this).removeAttr('data-previndex');
-                console.log("potang ina");
+                console.log("Module Changed!");
             }
         });
-        //$( "#sortable2" ).disableSelection();
 
-        var idsInOrder = $("#sortable2").sortable("toArray");
+        $( ".sortable2" ).sortable( "disable" );
+
+        //var idsInOrder = $(".sortable2").sortable("toArray");
         //-----------------^^^^
-        console.log(idsInOrder);
+        //console.log(idsInOrder);
     });
 
 </script>

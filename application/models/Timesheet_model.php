@@ -335,6 +335,75 @@ class Timesheet_model extends MY_Model {
         return $query->result();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTotalInEmployees(){
+        $todaysDate = date("Y-m-d"); # or any other date
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->like('timestamp', $todaysDate);
+        $this->db->where('action', "Clock In");
+        $query = $this->db->get();
+
+        return $query->num_rows();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalOutEmployees(){
+        $todaysDate = date("Y-m-d"); # or any other date
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->like('timestamp', $todaysDate);
+        $this->db->where('action', "Clock Out");
+        $query = $this->db->get();
+
+        return $query->num_rows();
+    }
+    /**
+     * @return mixed
+     */
+    public function getTotalNotLoggedInTodayEmployees(){
+        //$this->load->model('users_model');
+        $todaysDate = date("Y-m-d"); # or any other date
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->like('timestamp', $todaysDate);
+        $this->db->where('action', "Clock In");
+        $query = $this->db->get();
+        $loggedintoday = $query->num_rows();
+
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id !=', 1);
+        $query = $this->db->get();
+        $totalemployees = $query->num_rows();
+
+        $totalnotloggedintoday = $totalemployees - $loggedintoday;
+        return $totalnotloggedintoday;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalEmployees(){
+        //$this->load->model('users_model');
+        //$todaysDate = date("Y-m-d"); # or any other date
+
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id !=', 1);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+    
+
+
 }
 
 

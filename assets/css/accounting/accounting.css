@@ -1,6 +1,6 @@
 @font-face {
     font-family: fontStyle;
-    src:url("/assets/css/accounting/fonts/Depot-Regular.otf");
+    src:url("/nsmartrac/assets/css/accounting/fonts/Depot-Regular.otf");
 }
 body{
     font-family: fontStyle;
@@ -851,29 +851,6 @@ button {
 .select2-container--default .select2-results__option[aria-disabled=true]:hover {
     background: #2ca01c;
     color: #ffffff;
-}
-.modal .fade .show{
-    z-index: 1055!important;
-}
-#addNewCategories .modal-dialog {
-    height: 80% !important;
-    padding-top:10%;
-    position: fixed;
-}
-
-#addNewCategories .modal-content {
-    width: 60%;
-    height: 100% !important;
-    overflow:visible;
-    margin: 0 auto;
-}
-
-#addNewCategories .modal-body {
-    height: 80%;
-    overflow: auto;
-}
-#addNewCategories .modal-backdrop {
-    z-index: 1052!important;
 }
 
 /*Loader*/

@@ -31,5 +31,6 @@
         <li class="submenus"><a href="<?php echo base_url('customer/group') ?>" title="Services"><span class="fa fa-users"></span>Customer Groups</a></li>
         <li class="submenus"><a href="<?php echo base_url('customer/source') ?>" title="Credentials"><span class="fa fa-cube"></span>Customer Source</a></li>
         <li class="submenus"><a href="<?php echo base_url('customer/types') ?>" title="Credentials"><span class="fa fa-cube"></span>Customer Types</a></li>
+        <li class="submenus"><a href="<?php echo base_url('customer/add_lead') ?>" title="Credentials"><span class="fa fa-bullhorn"></span>Leads</a></li>
     </ul>
 </nav>

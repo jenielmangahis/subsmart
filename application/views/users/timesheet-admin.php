@@ -111,41 +111,86 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body">
                             <h4 class="mt-0 header-title mb-5">Audit</h4>
                             <div class="row">
+                                <?php //$todaysDate = date("Y-m-d"); print_r($todaysDate);print_r($total_not_logged_in_today); ?>
                                 <div id="box1" class="card" style="width: 530px; height: 150px; font-size: 30px;">
-                                    <b>0</b> 
-                                    <span>In Now</span>
-                                      <div class="progress">
-                                        <div class="progress-bar in-now" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
-                                          50%
+                                    <?php if( !empty($total_in) ): ?>
+                                        <b><?php echo $total_in; ?></b> 
+                                        <span>In Now</span>
+                                          <div class="progress">
+                                            <div class="progress-bar in-now" role="progressbar" aria-valuenow="<?php $total_in?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_in;?>%; color: #000;">
+                                              <?php echo $total_in.'%';?>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php else: ?>
+                                        <b>0</b> 
+                                        <span>In Now</span>
+                                          <div class="progress">
+                                            <div class="progress-bar in-now" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
+                                              0%
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    
                                 </div>
                                 <div id="box2" class="card" style="width: 400px; height: 150px; font-size: 30px;">
-                                    <b>0</b>
-                                    <span>Out Now</span>
-                                    <div class="progress">
-                                        <div class="progress-bar out-now" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
-                                          50%
+                                    <?php if( !empty($total_out) ): ?>
+                                        <b><?php echo $total_out;?></b>
+                                        <span>Out Now</span>
+                                        <div class="progress">
+                                            <div class="progress-bar out-now" role="progressbar" aria-valuenow="<?php echo $total_out;?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_out;?>%; color: #000;">
+                                              <?php echo $total_out;?>%
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php else: ?>
+                                        <b>0</b>
+                                        <span>Out Now</span>
+                                        <div class="progress">
+                                            <div class="progress-bar out-now" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
+                                              0%
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    
                                 </div>
                                 <div id="box3" class="card" style="width: 400px; height: 150px; font-size: 30px;">
-                                    <b>0</b>
-                                    <span>Not Logged In Today</span>
-                                    <div class="progress">
-                                        <div class="progress-bar not-logged-in-today" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
-                                            50%
+                                    <?php if( !empty($total_not_logged_in_today) ): ?>
+                                        <b><?php echo $total_not_logged_in_today; ?></b>
+                                        <span>Not Logged In Today</span>
+                                        <div class="progress">
+                                            <div class="progress-bar not-logged-in-today" role="progressbar" aria-valuenow="<?php echo $total_not_logged_in_today; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_not_logged_in_today;?>%; color: #000;">
+                                                <?php echo $total_not_logged_in_today; ?>%
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php else: ?>
+                                        <b>0</b>
+                                        <span>Not Logged In Today</span>
+                                        <div class="progress">
+                                            <div class="progress-bar not-logged-in-today" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
+                                                0%
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                
                                 </div>
                                 <div id="box4" class="card" style="width: 400px; height: 150px; font-size: 30px;">
-                                    <b>22</b>
-                                    <span>Employees</span>
-                                    <div class="progress">
-                                        <div class="progress-bar employees" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; color: #000;">
-                                            100%
+                                    <?php if( !empty($total_employees) ): ?>
+                                        <b><?php echo $total_employees; ?></b>
+                                        <span>Employees</span>
+                                        <div class="progress">
+                                            <div class="progress-bar employees" role="progressbar" aria-valuenow="<?php echo $total_employees; ?>" aria-valuemin="0" aria-valuemax="100" style="width:100%; color: #000;">
+                                                100%
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php else: ?>
+                                        <b>22</b>
+                                        <span>Employees</span>
+                                        <div class="progress">
+                                            <div class="progress-bar employees" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; color: #000;">
+                                                100%
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    
                                 </div>
                                 <div id="box5" class="card" style="width: 400px; height: 150px; font-size: 30px;">
                                     <b>0</b>

@@ -2,8 +2,15 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include 'includes/header.php' ?>
-
-<div class="login-box">
+<style type="text/css">
+  .centered {
+      position: fixed;
+      left: 30%;
+      top: 25%;
+      /*transform: translateX(-50%, -50%);*/
+  }
+</style>
+<div class="login-box centered">
   <!-- /.login-logo -->
   <div class="login-box-body">
   <div class="login-logo">

@@ -138,7 +138,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<div class="qUickStart">
 								<span class="icon" style="background-color: #e60000 !important; font-weight: bold; font-size: 40px;">A</span>
 								<div class="qUickStartde">
-									<h4><a href="<?php echo url('/items') ?>">Add a New Client</a></h4>
+									<h4><a href="<?php echo url('/customer/add_lead') ?>">Add a New Client</a></h4>
 									<span>Sign up a new client and add to database</span>
 								</div>
 							</div>
