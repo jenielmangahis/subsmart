@@ -71,11 +71,7 @@
             </a>
         </li>    
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'quick_books')  ? "active" : ""; ?>">
-<<<<<<< HEAD
             <a href="<?php echo base_url('settings/quick_books') ?>" title="Quick Books">
-=======
-            <a href="<?php echo base_url('settings/quick_books') ?>" title="Services">
->>>>>>> staging-master
                 <span class="fa fa-calculator"></span>
                 Quick Books
             </a>
