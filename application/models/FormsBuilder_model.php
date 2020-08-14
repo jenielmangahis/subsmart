@@ -31,7 +31,11 @@ class FormsBuilder_model extends MY_Model {
 	}
 
 	public function updateFormSettings($id, $data){
-		return;
+		$this->db->where('forms_id', $id);
+		$query = $this->db->update('fb_forms', $data);
+		return array(
+			"status" => 1
+		);
 	}
 }
 

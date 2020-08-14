@@ -81,6 +81,123 @@ class Settings extends MY_Controller {
 		$this->page_data['page']->menu = 'notifications';
 		$this->load->view('settings/notifications', $this->page_data);
 	}*/
+
+    public function tax_rates()
+    {
+        $this->load->model('TaxRates_model');
+        $this->load->model('Users_model');
+
+        $user = $this->session->userdata('logged');
+        $user = $this->Users_model->getUser($user['id']);
+
+        $taxRates = $this->TaxRates_model->getAllByCompanyId($user->company_id);
+
+        $this->page_data['taxRates'] = $taxRates;
+        $this->load->view('settings/tax_rates', $this->page_data);
+    }
+
+    public function create_tax_rate()
+    {
+        $this->load->model('TaxRates_model');
+        $this->load->model('Users_model');
+
+        $user = $this->session->userdata('logged');
+        $user = $this->Users_model->getUser($user['id']);
+        $post = $this->input->post();
+
+        if( !empty($post) ){
+            if( $user ){
+                $is_default = 0;
+                if( $post['is_default'] ){
+                    $is_default = 1;
+                }
+                $data = [
+                    'name' => $post['tax_name'],
+                    'rate' => $post['tax_rate'],
+                    'is_default' => $is_default,
+                    'company_id' => $user->company_id
+                ];
+
+                $taxRates = $this->TaxRates_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add tax rate was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+
+            }else{
+                $this->session->set_flashdata('message', 'Cannot find user');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+            
+        }else{
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('settings/tax_rates');
+    }
+
+    public function ajax_edit_tax_rate()
+    {
+        $this->load->model('TaxRates_model');
+
+        $post = $this->input->post();
+
+        $taxRate = $this->TaxRates_model->getById($post['tid']);
+
+        $this->page_data['taxRate'] = $taxRate;
+        $this->load->view('settings/ajax_edit_tax_rate', $this->page_data);
+    }
+
+    public function update_tax_rate()
+    {
+        $this->load->model('TaxRates_model');
+        $post = $this->input->post();
+        $id   = $post['tid'];
+
+        if( !empty($post) ){
+            $is_default = 0;
+            if( $post['is_default'] ){
+                $is_default = 1;
+            }
+            $data = [
+                'name' => $post['tax_name'],
+                'rate' => $post['tax_rate'],
+                'is_default' => $is_default
+            ];
+
+            $taxRates = $this->TaxRates_model->update($id, $data);
+
+            $this->session->set_flashdata('message', 'Update tax rate was successful');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+            
+        }else{
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('settings/tax_rates');
+    }
+
+    public function delete_tax_rate()
+    {
+        $this->load->model('TaxRates_model');
+        $this->TaxRates_model->delete(post('tid'));
+
+        $this->session->set_flashdata('message', 'Tax rate has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('settings/tax_rates');
+    }
+
+    public function files_vault()
+    {
+        $this->load->view('settings/files_vault', $this->page_data);
+    }
+
+    public function quick_books()
+    {
+        $this->load->view('settings/quick_books', $this->page_data);
+    }
 	
 }
 

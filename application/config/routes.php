@@ -72,7 +72,9 @@ $route['formbuilder/create'] = 'formbuilder/create';
 $route['formbuilder/edit/(:num)'] = 'formbuilder/edit/$1';
 
 // form builder functions - Gene
+$route['formbuilder/form/view/(:any)'] = 'formbuilder/getForms/$1';
 $route['formbuilder/form/add'] = 'formbuilder/addForm';
+$route['formbuilder/form/update/(:any)'] = 'formbuilder/updateForm/$1';
 
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
@@ -256,3 +258,8 @@ $route['wizard/del_app'] = 'wizard/del_app';
 //Settings
 $route['settings/schedule'] = 'Settings/schedule';
 $route['settings/notifications'] = 'Settings/notifications';
+$route['settings/email_templates'] = 'Settings/email_templates';
+$route['settings/sms_templates'] = 'Settings/sms_templates';
+$route['settings/email_branding'] = 'Settings/email_branding';
+$route['settings/online_payments'] = 'Settings/online_payments';
+
