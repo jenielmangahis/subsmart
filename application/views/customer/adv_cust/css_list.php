@@ -41,7 +41,7 @@
     .module_med{
         border: 1px solid #32243d;
         border-radius: 10px;
-        width: 450px;
+        width: 470px;
         max-width: 100%;
         float: left;
         box-sizing: border-box;
