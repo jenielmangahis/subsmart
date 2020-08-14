@@ -48,19 +48,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="card">
                             <h3 class="margin-bottom">Customer Schedule</h3>
-                            <div class="tabs">
-                                <ul class="clearfix">
-                                    <li data-tab="residential" class="active">
-                                        <a href="#tab_residential">Residential</a>
-                                    </li>
-                                    <li data-tab="commercial">
-                                        <a href="#tab_commercial">Commercial</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- Tab Section Start -->
-                            <div class="tab-content">
-                                <div id="tab_residential" class="tab-panel">
+
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Residential</a>
+                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Commercial</a>
+                                </div>
+                            </nav>
+
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                    <br />
                                     <div class="form-group">
                                         <label>Residential Notification</label>
                                         <div class="row">
@@ -81,8 +79,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div id="tab_commercial" class="tab-panel" style="display: none;">
+                                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                    <br />
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-12">
@@ -93,9 +91,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label>Commercial Notification</label>
-                                        <div class="row">
+                                        <div class="row" style="margin-left: 10px;">
                                             <div class="col-sm-16">
                                                 <div class="checkbox checkbox-sec margin-right">
                                                     <input type="checkbox" name="event_notify_customer_on_add_commercial" value="1" id="event_notify_customer_on_add_commercial" disabled="disabled">
@@ -103,7 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row" style="margin-left: 10px;">
                                             <div class="col-sm-16">
                                                 <div class="checkbox checkbox-sec margin-right">
                                                     <input type="checkbox" name="event_notify_customer_on_update_commercial" value="1" id="event_notify_customer_on_update_commercial" disabled="disabled">
@@ -114,7 +113,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Tab Section End -->
                         </div>  
                         
                         

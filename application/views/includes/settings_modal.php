@@ -189,12 +189,12 @@
                       <div class="bold">Transaction Charges</div>
                       <p class="margin-bottom">
                           Transaction charges are applicable as on your PayPal plan.<br>
-                          No additional fee will be charged by Markate.
+                          No additional fee will be charged by the system.
                       </p>
                       <div class="bold">Accepted Credit Cards</div>
                       <p class="margin-bottom">
                           All major cards are accepted.<br>
-                          Payment status will be updated in Markate automatically.
+                          Payment status will be updated in system automatically.
                       </p>
                   </div>
               </div>
@@ -235,12 +235,12 @@
                       <p class="margin-bottom">
                           Transaction charges are applicable as on your Square plan.<br>
                           Square reference fees 2.9% + $0.30<br>
-                          No additional fee will be charged by Markate.<br>
+                          No additional fee will be charged by system.<br>
                       </p>
                       <div class="bold">Accepted Credit Cards</div>
                       <p class="margin-bottom">
                           All major cards are accepted.<br>
-                          Payment status will be updated in Markate automatically.
+                          Payment status will be updated in system automatically.
                       </p>
                       <div class="bold">Locations</div>
                       <p class="margin-bottom">
@@ -255,6 +255,68 @@
                       </p>
                   </div>
               </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Setup Square Payment Method --> 
+<div class="modal fade" id="editTemplateModal" tabindex="-1" role="dialog" aria-labelledby="editTemplateModalTitle" aria-hidden="true">
+  <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Template</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">        
+          <div class="container-fluid">
+
+            <div class="margin-bottom-sec">
+                <div class="row">
+                    <div class="col-sm-12 weight-medium">Create and send invoice</div>
+                    <div class="col-sm-12 text-right"><a data-reset-modal="open" href="#">Reset to default template</a></div>
+                </div>
+            </div>
+            <hr>
+            <form data-form="form" method="post" action="#">
+                    <div class="validation-error hide"></div>
+
+                <div class="row">
+                    <div class="col-sm-16">
+                        <div class="card">
+                            <p class="margin-bottom-ter">
+                                Customize the SMS message.
+                            </p>
+                            <div class="form-group">
+                                <label>SMS</label>
+                                <textarea style="height: 100px !important;" name="body" cols="40" rows="2" class="form-control" id="template-body" autocomplete="off">You got an invoice from {{business.name}}. Click here to view online - {{url}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8" style="max-width: 45% !important;">
+
+                        <div class="panel-info">
+                            <label>Placeholders</label>
+                            <p class="margin-bottom">
+                                Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.
+                            </p>
+                            <div>
+                                <a class="btn btn-default" href="#" data-tags-modal="open" data-template-default-id="1">Insert Placeholders</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
           </div>
         </div>
         <div class="modal-footer">

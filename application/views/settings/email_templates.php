@@ -55,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -73,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                             <tr>
@@ -96,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -105,7 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                             <tr>
@@ -119,7 +119,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -128,7 +128,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -137,7 +137,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -146,7 +146,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                     <tr>
@@ -155,7 +155,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                             <tr>
@@ -169,7 +169,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                             <tr>
@@ -183,7 +183,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="text-ter">Default template</span>
                                                                 </td>
                                                 <td class="text-right" data-title="">
-                                                    <a href="<?php echo base_url('settings/email_templates') ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                 </td>
                                             </tr>
                                                         </tbody>
@@ -206,4 +206,5 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<?php include viewPath('includes/settings_modal'); ?>
 <?php include viewPath('includes/footer'); ?>
