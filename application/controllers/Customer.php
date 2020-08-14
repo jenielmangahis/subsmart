@@ -173,6 +173,17 @@ class Customer extends MY_Controller
 
             $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
         }
+
+        $user_id = logged('id');
+
+        if(!$this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort")){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+            $this->customer_ad_model->add($input,"ac_module_sort");
+        }else{
+            $this->page_data['module_sort'] = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort",TRUE);
+        }
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
@@ -181,10 +192,7 @@ class Customer extends MY_Controller
 //        print_r($this->page_data['statusCount']); die;
 
         $this->load->view('customer/list', $this->page_data);
-
     }
-
-
     public function view($id)
     {
         $customer = get_customer_by_id($id);
@@ -685,8 +693,20 @@ class Customer extends MY_Controller
 
     }
 
+    public function ac_module_sort(){
+        //$user_id = logged('id');
+        $input = $this->input->post();
+        if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
+            echo "Module Sort Updated!";
+        }else{
+            echo "Error";
+        }
+    }
+
     public function add_advance()
     {
+
+
         $user_id = logged('id');
         $this->page_data['plans'] = "";
         $this->load->view('customer/add_advance', $this->page_data);

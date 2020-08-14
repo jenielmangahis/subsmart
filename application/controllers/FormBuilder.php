@@ -62,6 +62,9 @@ class FormBuilder extends MY_Controller {
 	
 	public function edit($id){
 		$this->page_data["form"] = $this->formsbuilder_model->getForms($id);
+		if(empty($this->page_data["form"])){
+			redirect('/formbuilder');
+		}
 		$this->load->view('form_builder/edit.php', $this->page_data);
 	}
 
@@ -72,7 +75,7 @@ class FormBuilder extends MY_Controller {
 	public function getForms($id = null){
 		$data =  array(
 			"status" => 1,
-			"id" => $this->formsbuilder_model->getForms($id)
+			"data" => $this->formsbuilder_model->getForms($id)
 		);
 		echo json_encode($data);
 		exit;
@@ -88,6 +91,14 @@ class FormBuilder extends MY_Controller {
 		exit;
 	}
 
+	public function updateForm($form_id){
+		$query = $this->formsbuilder_model->updateFormSettings($form_id, $this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
 
 	
 }

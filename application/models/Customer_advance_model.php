@@ -24,6 +24,9 @@ class Customer_advance_model extends MY_Model {
         }else if($update_id == "sa_id"){
             $id = $input['sa_id'];
             unset($input['sa_id']);
+        }else if($update_id == "ams_id"){
+            $id = $input['ams_id'];
+            unset($input['ams_id']);
         }
 
         if ($this->db->update($tablename, $input, array($update_id => $id))) {
@@ -32,6 +35,20 @@ class Customer_advance_model extends MY_Model {
             return false;
         }
     }
+
+    public function if_exist($fieldname,$fieldvalue,$tablename,$data=FALSE){
+        $this->db->where($fieldname, $fieldvalue);
+        if($query = $this->db->get($tablename)){
+            if($data){
+                return $query->row();
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
 
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {
