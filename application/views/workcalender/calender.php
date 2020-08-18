@@ -52,11 +52,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     padding: 10px;
     color: #ffffff;
 }
-
+.list-group li{
+    padding: 0px;
+    margin-top: 20px;
+    border: none;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
-        <div class="col-12 col-md-10 left-col">
+        <div class="col-12 col-md-9 left-col">
             <?php include viewPath('includes/sidebars/schedule'); ?>
             <?php include viewPath('includes/notifications'); ?>
             <div wrapper__section>
@@ -171,7 +175,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
 
-        <div class="col-12 col-md-2 right-col" style="background-color: #ffffff;">
+        <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow: scroll; max-height: 800px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div id="right-calendar"></div>
@@ -195,6 +199,58 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <li><label class="checkbox"><input type="checkbox" class=""> Family</label></li>
                         <li><label class="checkbox"><input type="checkbox" class=""> Friends</label></li>
                         <li><label class="checkbox"><input type="checkbox" class=""> Holidays</label></li>
+                    </ul>
+                </div>
+                 <div class="col-12" style="margin-top: 15px;">
+                    <h4  class="right-filter-header">RECENT CONTACTS</h4>                    
+
+
+                    <ul class="list-group">             
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-3 col-md-3">
+                                    <img src="<?php echo base_url() . "/assets/img/user7-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
+                                </div>
+                                <div class="col-xs-12 col-sm-5 col-md-5" style="text-align: left;">
+                                    <span class="name"><i class="fa fa-user"></i> Ana Stevens</span><br/>
+                                    <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
+                                    <span class="visible-xs"> <span class="text-muted"><</span>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
+                                    <a class="btn btn-default" href="javascript:void(0)">Send</a>
+                                </div>
+                            </div>                            
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-3 col-md-3">
+                                    <img src="<?php echo base_url() . "/assets/img/user8-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
+                                </div>
+                                <div class="col-xs-12 col-sm-5 col-md-5" style="text-align: left;">
+                                    <span class="name"><i class="fa fa-user"></i> John Doe</span><br/>
+                                    <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
+                                    <span class="visible-xs"> <span class="text-muted"><</span>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
+                                    <a class="btn btn-default" href="javascript:void(0)">Send</a>
+                                </div>
+                            </div>                            
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-3 col-md-3">
+                                    <img src="<?php echo base_url() . "/assets/img/user6-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
+                                </div>
+                                <div class="col-xs-12 col-sm-5 col-md-5" style="text-align: left;">
+                                    <span class="name"><i class="fa fa-user"></i> Mike David</span><br/>
+                                    <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
+                                    <span class="visible-xs"> <span class="text-muted"><</span>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
+                                    <a class="btn btn-default" href="javascript:void(0)">Send</a>
+                                </div>
+                            </div>                            
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -576,7 +632,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(this).removeClass("show-right");
             $(this).addClass("hide-right");
 
-            $(".left-col").removeClass('col-md-10');
+            $(".left-col").removeClass('col-md-9');
             $(".left-col").addClass('col-md-12');
             $(".right-col").hide();
 
@@ -585,7 +641,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(this).addClass("show-right");
 
             $(".left-col").removeClass('col-md-12');
-            $(".left-col").addClass('col-md-10');
+            $(".left-col").addClass('col-md-9');
             $(".right-col").show();
         }
     });
