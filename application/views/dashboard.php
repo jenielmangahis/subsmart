@@ -276,208 +276,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
 			
 
-             <div class="row d-none d-lg-flex">
-                <div class="col-xl-9">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">Monthly Earning</h4>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div>
-                                        <!-- <div id="chart-with-area" class="ct-chart earning ct-golden-section"></div> -->
-                                        <canvas id="myChart" style="max-width: 500px;"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="text-center">
-                                                <p class="text-muted mb-4">This month</p>
-                                                <h4>$0.00</h4>
-                                                <p class="text-muted mb-5">It will be as simple as in fact it will be
-                                                    occidental.</p><span class="peity-donut"
-                                                    data-peity='{ "fill": ["#02a499", "#f2f2f2"], "innerRadius": 28, "radius": 32 }'
-                                                    data-width="72" data-height="72">4/5</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="text-center">
-                                                <p class="text-muted mb-4">Last month</p>
-                                                <h4>$0.00</h4>
-                                                <p class="text-muted mb-5">It will be as simple as in fact it will be
-                                                    occidental.</p><span class="peity-donut"
-                                                    data-peity='{ "fill": ["#02a499", "#f2f2f2"], "innerRadius": 28, "radius": 32 }'
-                                                    data-width="72" data-height="72">3/5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- end row -->
-                        </div>
-                    </div><!-- end card -->
-                </div>
-                <div class="col-xl-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div>
-                                <h4 class="mt-0 header-title mb-4">Sales Analytics</h4>
-                            </div>
-                            <div class="wid-peity mb-4">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <p class="text-muted">Online</p>
-                                            <h5 class="mb-4">0.00</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-4"><span class="peity-line" data-width="100%"
-                                                data-peity='{ "fill": ["rgba(2, 164, 153,0.3)"],"stroke": ["rgba(2, 164, 153,0.8)"]}'
-                                                data-height="60">0.00</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="wid-peity mb-4">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <p class="text-muted">Offline</p>
-                                            <h5 class="mb-4">0.00</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-4"><span class="peity-line" data-width="100%"
-                                                data-peity='{ "fill": ["rgba(2, 164, 153,0.3)"],"stroke": ["rgba(2, 164, 153,0.8)"]}'
-                                                data-height="60">0.00</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <p class="text-muted">Marketing</p>
-                                            <h5>0.00</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-4"><span class="peity-line" data-width="100%"
-                                                data-peity='{ "fill": ["rgba(2, 164, 153,0.3)"],"stroke": ["rgba(2, 164, 153,0.8)"]}'
-                                                data-height="60">0.00</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+             <div class="row d-none d-lg-flex sortable2">
+                 <?php
+                 $modules = explode(",", $dashboard_sort->ds_values);
+                 for($x=0;$x<count($modules);$x++){
+                     include viewPath('dashboard/'.$modules[$x]);
+                 }
+                 ?>
             </div><!-- end row -->
-            <div class="row d-none d-lg-flex">
-                <div class="col-xl-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="mt-0 header-title mb-4">Sales Report</h4>
-                            <div class="cleafix">
-                                <p class="float-left"><i class="mdi mdi-calendar mr-1 text-primary"></i> Jan 01 - Jan 31
-                                </p>
-                                <h5 class="font-18 text-right">$0.00</h5>
-                            </div>
-                            <div id="ct-donut" class="ct-chart wid">
-                            	<canvas id="doughnutChart"></canvas>
-                            </div>
-                            <div class="mt-4">
-                                <table class="table mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="badge badge-primary">Desk</span></td>
-                                            <td>Desktop</td>
-                                            <td class="text-right">0.00%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="badge badge-success">Mob</span></td>
-                                            <td>Mobile</td>
-                                            <td class="text-right">0.00%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="badge badge-warning">Tab</span></td>
-                                            <td>Tablets</td>
-                                            <td class="text-right">0.00%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="mt-0 header-title mb-4">Activity</h4>
-                            <ol class="activity-feed mb-0">
-                                <li class="feed-item">
-                                    <div class="feed-item-list"><span class="date">Jan 22</span> <span
-                                            class="activity-text">Responded to need “Volunteer Activities”</span></div>
-                                </li>
-                                <li class="feed-item">
-                                    <div class="feed-item-list"><span class="date">Jan 20</span> <span
-                                            class="activity-text">At vero eos et accusamus et iusto odio dignissimos
-                                            ducimus qui deleniti atque...<a href="index.html#" class="text-success">Read
-                                                more</a></span></div>
-                                </li>
-                                <li class="feed-item">
-                                    <div class="feed-item-list"><span class="date">Jan 19</span> <span
-                                            class="activity-text">Joined the group “Boardsmanship Forum”</span></div>
-                                </li>
-                                <li class="feed-item">
-                                    <div class="feed-item-list"><span class="date">Jan 17</span> <span
-                                            class="activity-text">Responded to need “In-Kind Opportunity”</span></div>
-                                </li>
-                                <li class="feed-item">
-                                    <div class="feed-item-list"><span class="date">Jan 16</span> <span
-                                            class="activity-text">Sed ut perspiciatis unde omnis iste natus error sit
-                                            rem.</span></div>
-                                </li>
-                            </ol>
-                            <div class="text-center"><a href="index.html#" class="btn btn-primary">Load More</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="mt-0 header-title mb-4">Sales Report</h4>
-                            <div class="cleafix">
-                                <p class="float-left"><i class="mdi mdi-calendar mr-1 text-primary"></i> Jan 01 - Jan 31
-                                </p>
-                                <h5 class="font-18 text-right">$0.00</h5>
-                            </div>
-                            <div id="ct-donut1" class="ct-chart wid">
-                            	<canvas id="polarChart"></canvas>
-                            </div>
-                            <div class="mt-4">
-                                <table class="table mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="badge badge-primary">Desk</span></td>
-                                            <td>Desktop</td>
-                                            <td class="text-right">0.00%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="badge badge-success">Mob</span></td>
-                                            <td>Mobile</td>
-                                            <td class="text-right">0.00%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="badge badge-warning">Tab</span></td>
-                                            <td>Tablets</td>
-                                            <td class="text-right">0.00%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+             <div class="row d-none d-lg-flex">
+
             </div><!-- end row -->
 
             <div class="row d-none d-lg-flex">
@@ -612,7 +421,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <br />
             <div class="row d-none d-lg-flex">
-            	&nbsp;
+
             </div>
 
             <div class="dash-last-wrpper">
@@ -740,6 +549,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</a>
 </div>
 <div style="" class="floating-btn-div div2">
+
 	<label class="label"><a href="#">Request Signature</a></label>
 	<a href="#" class="float2">
 	<i class="fa fa-external-link my-float"></i>
@@ -803,6 +613,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
 <style type="text/css">
+
+    .ui-state-default{
+        border: 0 !important;
+        background: #dddddd !important;
+    }
 .float1, .float2, .float3, .float4, .float5, .float6, .float7, .float8, .float9, .float10, .float11 {
 	color: #2d1a3e;
     background-color: #fff;
@@ -1101,22 +916,74 @@ display: block !important;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.floating-btn-div').hide();
 		$('#shortcut_link').on('click', function(e){
 			if ( $('.float1').is(':hidden') && $('.float2').is(':hidden') && $('.float3').is(':hidden') ){
-				$('.floating-btn-div ').show('slow')
-				$('.floating-btn-div ').show('slow')
-				$('.floating-btn-div ').show('slow')
+				$('.floating-btn-div ').show('slow');
+				$('.floating-btn-div ').show('slow');
+				$('.floating-btn-div ').show('slow');
 			}
 			else{
-				$('.floating-btn-div ').hide('slow')
-				$('.floating-btn-div ').hide('slow')
-				$('.floating-btn-div ').hide('slow')
+				$('.floating-btn-div ').hide('slow');
+				$('.floating-btn-div ').hide('slow');
+				$('.floating-btn-div ').hide('slow');
 			}
-		})
-	})
+		});
+
+        $('#onoff-customize').change(function() {
+            if(this.checked) {
+                $( ".sortable2" ).sortable( "enable" );
+            }else{
+                $( ".sortable2" ).sortable( "disable" );
+            }
+
+        });
+
+        //$( ".sortable2" ).sortable( "enable" );
+        $( ".sortable2" ).sortable({
+            start: function(e, ui) {
+                // creates a temporary attribute on the element with the old index
+                $(this).attr('data-previndex', ui.item.index());
+            },
+            update: function(e, ui) {
+                // gets the new and old index then removes the temporary attribute
+                var newIndex = ui.item.index();
+                var oldIndex = $(this).attr('data-previndex');
+                var element_id = ui.item.attr('id');
+                console.log('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
+                $(this).removeAttr('data-previndex');
+                console.log("Module Changed!");
+
+                var idsInOrder = $(".sortable2").sortable("toArray");
+                console.log(idsInOrder);
+
+                var new_module_sort = "";
+                for(var x=0;x<idsInOrder.length;x++){
+                    if(x===0){
+                        new_module_sort = new_module_sort + idsInOrder[x];
+                    }else{
+                        new_module_sort = new_module_sort +","+idsInOrder[x];
+                    }
+                    console.log(idsInOrder[x]);
+                }
+                console.log(new_module_sort);
+                $.ajax({
+                    type: "POST",
+                    url: "/dashboard/ac_dashboard_sort",
+                    data: {ds_values : new_module_sort,acds_id : <?php echo $dashboard_sort->acds_id; ?>}, // serializes the form's elements.
+                    success: function(data)
+                    {
+                        console.log(data);
+                    }
+                });
+            }
+        });
+        $( ".sortable2" ).sortable( "disable" );
+	});
 </script>
 <!-- monthy graph -->
 <script type="text/javascript">

@@ -82,6 +82,7 @@ class Accounting extends MY_Controller {
         $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
         $this->page_data['expenses'] = $this->expenses_model->getExpense();
         $this->page_data['list_categories'] = $this->categories_model->getCategories();
+        $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->load->view('accounting/expenses', $this->page_data);
     }
     public function vendors(){
@@ -311,6 +312,12 @@ class Accounting extends MY_Controller {
 		$this->page_data['vendor_details'] = $this->vendors_model->getVendorDetails($id);
         $this->load->view('accounting/vendor_details', $this->page_data);
     }
+	public function getvendortransactions($id = null)
+    {
+		$id = 1;
+        $query = $this->vendors_model->getvendortransactions($id);
+		print_r($query);
+    }
 	public function invalidVendor()
     {
 		$id =  $this->input->post('id');
@@ -504,7 +511,8 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('filename')
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
         $this->expenses_model->addBill($new_data);
 
@@ -545,7 +553,9 @@ class Accounting extends MY_Controller {
             'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
         $query = $this->expenses_model->editBillData($data);
 		if($query){
@@ -566,6 +576,128 @@ class Accounting extends MY_Controller {
 		else{
 			echo json_encode(0);
 		}
+    }
+    /*** Attachment for Expense Transaction***/
+    public function expensesTransactionAttachment(){
+        if (! empty($_FILES)){
+            $config = array(
+                'upload_path' => './uploads/accounting/expenses/',
+                'allowed_types' => '*',
+                'overwrite' => TRUE,
+                'max_size' => '20000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
+            if ($this->upload->do_upload("file")){
+                $uploadData = $this->upload->data();
+                $data = array('attachment'=> $uploadData['file_name']);
+                $this->db->insert('accounting_expense_attachment',$data);
+                echo json_encode($uploadData['file_name']);
+            }
+        }
+    }
+
+    public function removeTransactionAttachment(){
+        $file = $this->input->post('name');
+        $index = $this->input->post('index');
+        if ($file && file_exists($this->expenses_path. $file[$index])){
+            unlink( $this->expenses_path. $file[$index]);
+            $this->db->where('attachment',$file[$index]);
+            $this->db->delete('accounting_expense_attachment');
+        }
+
+    }
+
+    public function displayListAttachment(){
+        $id = $this->input->post('id');
+        $type = $this->input->post('type');
+        $attachments = $this->expenses_model->getAttachment();
+        $display = '';
+        foreach ($attachments as $attachment){
+            $tooltip = ($attachment->status == 0)?"tooltip":"";
+            $cross_out = ($attachment->status == 0)?"cross-out":"previewAttachment ";
+            $exclamation = ($attachment->status == 0)?"fa-times fa-exclamation-triangle":"fa-times";
+            $tipbox = ($attachment->status == 0)?"tooltiptext":"tooltiptext hide";
+            $file = $attachment->attachment;
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            switch ($extension){
+                case "txt":
+                    $file = "default-txt.png";
+                    break;
+                case "pdf":
+                    $file = "default-pdf.png";
+                    break;
+                case "xls":
+                    $file = "default-excel.png";
+                    break;
+                case "xlsb":
+                    $file = "default-excel.png";
+                    break;
+                case "xlsm":
+                    $file = "default-excel.png";
+                    break;
+                case "xlsx":
+                    $file = "default-excel.png";
+                    break;
+                case "docx":
+                    $file = "default-word.png";
+                    break;
+                case "doc":
+                    $file = "default-word.png";
+                    break;
+                default:
+                    $file = $attachment->attachment;
+                    break;
+            }
+            if ($attachment->expenses_id == $id && $attachment->type == $type){
+                $display .= '<div class="file-name-section">';
+                $display .= '<span style="display: inline-block;margin-right: 5px;" class="previewAttachment '.$cross_out.'">'.$attachment->original_filename.'</span>';
+                $display .= '<span class="previewAttachmentImage"><img src="/uploads/accounting/expenses/'.$file.'"></span>';
+                $display .= '<a href="#" class="'.$tooltip.'" id="removeAttachment" data-id="'.$attachment->id.'" data-status="'.$attachment->status.'"><i class="fa '.$exclamation.'"></i></a>';
+                $display .= '<span class="'.$tipbox.'">This file is temporarily removed.</br> You can retrieve it by clicking the </br>exclamation icon "<i class="fa fa-exclamation-triangle"></i>". </span>';
+                $display .= '<input type="hidden" name="attachment[]" value="'.$attachment->id.'">';
+                $display .= '</div>';
+            }
+        }
+        echo $display;
+    }
+
+    public function removeTemporaryAttachment(){
+        $id = $this->input->post('id');
+        $status = $this->input->post('status');
+
+        $query = $this->db->get_where('accounting_expense_attachment',array('id'=>$id));
+        if ($query->num_rows() == 1 && $status == 1){
+            $status = array(
+              'status' => 0
+            );
+            $this->db->where('id',$id);
+            $this->db->update('accounting_expense_attachment',$status);
+            echo json_encode(0);
+        }elseif($query->num_rows() == 1 && $status == 0){
+            $status = array(
+                'status' => 1
+            );
+            $this->db->where('id',$id);
+            $this->db->update('accounting_expense_attachment',$status);
+            echo json_encode(1);
+        }
+    }
+
+    public function addingFileAttachment(){
+        $id = $this->input->post('expense_id');
+        $type = $this->input->post('type');
+        $file_name = $this->input->post('file_name');
+        $base_url = base_url();
+        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        $name = pathinfo($file_name, PATHINFO_FILENAME);
+        $encryption = md5($name).'.'.$extension;
+        $move = copy('./uploads/accounting/expenses/'.$file_name,'./uploads/accounting/expenses/'.$encryption);
+        echo json_encode($encryption);
+
     }
 
     public function rowCategories(){
@@ -616,10 +748,10 @@ class Accounting extends MY_Controller {
             $categories .= ' </div>';
             $categories .= '</td>';
             $categories .= '<td><span id="description-preview'.$preview.'">'.$description.'</span>';
-            $categories .= '<input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value="'.$description.'"  style="display: none;">';
+            $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value="'.$description.'"  ></div>';
             $categories .= '</td>';
             $categories .= '<td><span id="amount-preview'.$preview.'">'.$amount.'</span>';
-            $categories .= '<input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="'.$amount.'"  style="display: none;">';
+            $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="'.$amount.'" ></div>';
             $categories .= '</td>';
             $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
             $categories .= '</tr>';
@@ -709,42 +841,10 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('filename')
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
         $this->expenses_model->addCheck($new_data);
-    }
-    /*** Attachment for Expense Transaction***/
-    public function expensesTransactionAttachment(){
-        if (! empty($_FILES)){
-            $config = array(
-                'upload_path' => './uploads/accounting/expenses/',
-                'allowed_types' => '*',
-                'overwrite' => TRUE,
-                'max_size' => '20000',
-                'max_height' => '0',
-                'max_width' => '0',
-                'encrypt_name' => true
-            );
-            $config = $this->uploadlib->initialize($config);
-            $this->load->library('upload',$config);
-            if ($this->upload->do_upload("file")){
-                $uploadData = $this->upload->data();
-                $data = array('attachment'=> $uploadData['file_name']);
-                $this->db->insert('accounting_expense_attachment',$data);
-                echo json_encode($uploadData['file_name']);
-            }
-        }
-    }
-
-    public function removeTransactionAttachment(){
-        $file = $this->input->post('name');
-        $index = $this->input->post('index');
-        if ($file && file_exists($this->expenses_path. $file[$index])){
-            unlink( $this->expenses_path. $file[$index]);
-            $this->db->where('attachment',$file[$index]);
-            $this->db->delete('accounting_expense_attachment');
-        }
-
     }
 
     public function editCheckData(){
@@ -762,7 +862,8 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('check_filename'),
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
 	    $this->expenses_model->editCheckData($update);
     }
@@ -783,7 +884,8 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('filename')
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
 	    $this->expenses_model->addExpense($new_data);
     }
@@ -823,7 +925,9 @@ class Accounting extends MY_Controller {
             'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
-            'amount' => $this->input->post('amount')
+            'amount' => $this->input->post('amount'),
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
         $this->expenses_model->updateExpenseData($update);
     }
@@ -843,7 +947,8 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('filename')
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
         $this->expenses_model->vendorCredit($new_data);
     }
@@ -879,7 +984,8 @@ class Accounting extends MY_Controller {
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
-            'file_name' => $this->input->post('filename')
+            'file_name' => $this->input->post('filename'),
+            'original_fname' => $this->input->post('original_fname')
         );
         $query = $this->expenses_model->updateVendorCredit($update);
         if ($query == true){
@@ -909,6 +1015,16 @@ class Accounting extends MY_Controller {
         }else{
             echo json_encode(0);
         }
+    }
+    public function updateCategoryById(){
+        $id = $this->input->post('id');
+        $category = $this->input->post('category');
+        $data = array(
+          'category_id' => $category
+        );
+        $this->db->where('id',$id);
+        $this->db->update('accounting_expense_category',$data);
+        echo json_encode(1);
     }
 
     public function payDown(){

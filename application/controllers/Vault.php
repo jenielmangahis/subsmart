@@ -53,8 +53,14 @@ class Vault extends MY_Controller {
 
 		$folder_id = $_POST['folder_id'];
 		$file_desc = '';
+		$category = '';
+
 		if(isset($_POST['file_desc'])){
 			$file_desc = $_POST['file_desc'];
+		}
+
+		if(isset($_POST['category'])){
+			$category = $_POST['category'];
 		}
 
 		if(!empty($_FILES['fullfile'])) {
@@ -95,6 +101,10 @@ class Vault extends MY_Controller {
 							'company_id' => $company_id
 						);
 
+						if($category != ''){
+							$data['category_id'] = $category;
+						}
+
 						if(!$this->vault_model->trans_create($data)){
 							$return['error'] = 'Error in uploading file';
 						}
@@ -113,6 +123,8 @@ class Vault extends MY_Controller {
 	}
 
 	public function delete(){
+		$uid = logged('uid');
+
 		$return = array(
 			'folder_id' => 0,
 			'error' => ''
@@ -123,7 +135,8 @@ class Vault extends MY_Controller {
 		
 		$data = array(
 			'softdelete' => 1,
-			'softdelete_date' => date('Y-m-d h:i:s')	
+			'softdelete_date' => date('Y-m-d h:i:s'),
+			'softdelete_by' => $uid	
 		);	
 
 		if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
@@ -172,7 +185,7 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.downloads_count is not null ' . 
+               'where a.company_id = ' . $company_id . ' and a.downloads_count is not null and a.category_id is null ' . 
 
                'order by downloads_count DESC limit 10';
 
@@ -194,7 +207,7 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.previews_count is not null ' . 
+               'where a.company_id = ' . $company_id . ' and a.previews_count is not null and a.category_id is null ' . 
 
                'order by previews_count DESC limit 10';
 
@@ -217,7 +230,7 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and (DATEDIFF(NOW(), a.created) <= 3) ' . 
+               'where a.company_id = ' . $company_id . ' and (DATEDIFF(NOW(), a.created) <= 3) and a.category_id is null ' . 
 
                'order by created DESC limit 10';
 
@@ -249,14 +262,15 @@ class Vault extends MY_Controller {
 		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));	
 	}
 
-	public function search_files_and_folders($getByCurrentUser = 0){
+	public function search_files_and_folders($getByCurrentUser = 0, $getByCategory = 0){
 		$keyword = $_GET['keyword'];
 		$search_folders = $_GET['search_folders'];
 		$search_files = $_GET['search_files'];
 
 		$ofUser = ($getByCurrentUser == 1);
+		$ofCategorized = ($getByCategory == 1);
 
-		$files_and_folders = searchFilesOrFolders($keyword, $search_folders, $search_files, $ofUser);
+		$files_and_folders = searchFilesOrFolders($keyword, $search_folders, $search_files, $ofUser, $ofCategorized);
 
 		echo json_encode($files_and_folders);
 	}

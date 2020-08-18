@@ -101,6 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab">Employee</a>
                         <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
                         <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
+                        <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
                     </div>
                 </div>
             </div>
@@ -112,20 +113,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <h4 class="mt-0 header-title mb-5">Audit</h4>
                             <div class="row">
                                 <?php //$todaysDate = date("Y-m-d"); print_r($todaysDate);print_r($total_not_logged_in_today); ?>
-                                <div id="box1" class="card" style="width: 530px; height: 150px; font-size: 30px;">
+                                <div id="box1" class="card" style="width: 400px; height: 150px; font-size: 30px;">
                                     <?php if( !empty($total_in) ): ?>
                                         <b><?php echo $total_in; ?></b> 
+                                        <?php 
+                                            $total_in_percentage = round(100*($total_in/$total_employees));
+                                        ?>
                                         <span>In Now</span>
                                           <div class="progress">
-                                            <div class="progress-bar in-now" role="progressbar" aria-valuenow="<?php $total_in?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_in;?>%; color: #000;">
-                                              <?php echo $total_in.'%';?>
+                                            <div class="progress-bar in-now" role="progressbar" aria-valuenow="<?php $total_in_percentage?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_in_percentage;?>%; color: #000;">
+                                              <?php echo $total_in_percentage.'%';?>
                                             </div>
                                         </div>
                                     <?php else: ?>
                                         <b>0</b> 
                                         <span>In Now</span>
                                           <div class="progress">
-                                            <div class="progress-bar in-now" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:50%; color: #000;">
+                                            <div class="progress-bar in-now" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
                                               0%
                                             </div>
                                         </div>
@@ -135,10 +139,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div id="box2" class="card" style="width: 400px; height: 150px; font-size: 30px;">
                                     <?php if( !empty($total_out) ): ?>
                                         <b><?php echo $total_out;?></b>
+                                        <?php 
+                                            $total_out_percentage = round(100*($total_out/$total_employees));
+                                        ?>
                                         <span>Out Now</span>
                                         <div class="progress">
-                                            <div class="progress-bar out-now" role="progressbar" aria-valuenow="<?php echo $total_out;?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_out;?>%; color: #000;">
-                                              <?php echo $total_out;?>%
+                                            <div class="progress-bar out-now" role="progressbar" aria-valuenow="<?php echo $total_out_percentage;?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_out_percentage;?>%; color: #000;">
+                                              <?php echo $total_out_percentage;?>%
                                             </div>
                                         </div>
                                     <?php else: ?>
@@ -155,10 +162,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div id="box3" class="card" style="width: 400px; height: 150px; font-size: 30px;">
                                     <?php if( !empty($total_not_logged_in_today) ): ?>
                                         <b><?php echo $total_not_logged_in_today; ?></b>
+                                        <?php 
+                                            $total_not_logged_in_today_percentage = round(100*($total_not_logged_in_today/$total_employees));
+                                        ?>
                                         <span>Not Logged In Today</span>
                                         <div class="progress">
-                                            <div class="progress-bar not-logged-in-today" role="progressbar" aria-valuenow="<?php echo $total_not_logged_in_today; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_not_logged_in_today;?>%; color: #000;">
-                                                <?php echo $total_not_logged_in_today; ?>%
+                                            <div class="progress-bar not-logged-in-today" role="progressbar" aria-valuenow="<?php echo $total_not_logged_in_today_percentage; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $total_not_logged_in_today_percentage;?>%; color: #000;">
+                                                <?php echo $total_not_logged_in_today_percentage; ?>%
                                             </div>
                                         </div>
                                     <?php else: ?>
@@ -182,10 +192,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     <?php else: ?>
-                                        <b>22</b>
+                                        <b>16</b>
                                         <span>Employees</span>
                                         <div class="progress">
-                                            <div class="progress-bar employees" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; color: #000;">
+                                            <div class="progress-bar employees" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
                                                 100%
                                             </div>
                                         </div>
@@ -196,8 +206,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <b>0</b>
                                     <span>On Approved Leave</span>
                                     <div class="progress">
-                                        <div class="progress-bar on-approved-leave" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:70%; color: #000;">
-                                            70%
+                                        <div class="progress-bar on-approved-leave" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
+                                            0%
                                         </div>
                                     </div>
                                 </div>
@@ -205,8 +215,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <b>0</b>
                                     <span>On Unapproved Leave</span>
                                     <div class="progress">
-                                        <div class="progress-bar on-unapproved-leave" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:20%; color: #000;">
-                                            20%
+                                        <div class="progress-bar on-unapproved-leave" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
+                                            0%
                                         </div>
                                     </div>
                                 </div>
@@ -214,8 +224,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <b>0</b>
                                     <span>On Leave</span>
                                     <div class="progress">
-                                        <div class="progress-bar on-leave" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width:15%; color: #000;">
-                                            15%
+                                        <div class="progress-bar on-leave" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
+                                            %
                                         </div>
                                     </div>
                                 </div>
@@ -223,8 +233,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <b>0</b>
                                     <span>On Business Travel</span>
                                     <div class="progress">
-                                        <div class="progress-bar on-business-travel" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width:10%; color: #000;">
-                                            10%
+                                        <div class="progress-bar on-business-travel" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%; color: #000;">
+                                            0%
                                         </div>
                                     </div>
                                 </div>

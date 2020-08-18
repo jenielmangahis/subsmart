@@ -15,7 +15,7 @@ class Settings extends MY_Controller {
 
     public function schedule()
     {
-    	$this->page_data['module'] = 'calendar';
+        $this->page_data['module'] = 'calendar';
         $post = $this->input->post();
 
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
@@ -67,13 +67,37 @@ class Settings extends MY_Controller {
             $this->page_data['page']->menu = 'settings';
             $this->load->view('settings/schedule', $this->page_data);
         }
-	}
+    }    
+
+    public function email_templates() 
+    {
+        $this->page_data['page']->menu = 'email_templates';
+        $this->load->view('settings/email_templates', $this->page_data);
+    }
+
+    public function sms_templates()
+    {
+        $this->page_data['page']->menu = 'sms_templates';
+        $this->load->view('settings/sms_templates', $this->page_data);
+    }
+
+    public function email_branding()
+    {
+        $this->page_data['page']->menu = 'email_branding';
+        $this->load->view('settings/email_branding', $this->page_data);
+    }    
 
 	public function notifications()
 	{
 		$this->page_data['page']->menu = 'notifications';
 		$this->load->view('settings/notifications', $this->page_data);
-	}	
+	}
+
+    public function online_payments()
+    {
+        $this->page_data['page']->menu = 'online_payments';
+        $this->load->view('settings/online_payments', $this->page_data);
+    }      	
 
 	/*public function notifications()
 	{

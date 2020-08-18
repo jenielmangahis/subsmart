@@ -26,8 +26,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <link rel="stylesheet" href="<?php echo $assets ?>/css/login.css">
   
   <!-- Canvas -->
-  <link rel="stylesheet" href="<?php echo $assets ?>/signature.css">
-  <link rel="stylesheet" href="<?php echo $assets ?>/libs/jcanvas/global.min.css">
+  <!-- <link rel="stylesheet" href="<?php echo $assets ?>/signature.css">
+  <link rel="stylesheet" href="<?php echo $assets ?>/libs/jcanvas/global.min.css"> -->
 
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

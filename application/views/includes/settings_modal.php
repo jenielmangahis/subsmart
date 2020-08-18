@@ -142,3 +142,188 @@
     </div>
   <?php echo form_close(); ?>
 </div>
+
+<!-- Modal Setup Paypal Payment Method --> 
+<div class="modal fade" id="setupPaypalModal" tabindex="-1" role="dialog" aria-labelledby="setupPaypalModalTitle" aria-hidden="true">
+  <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Setup Paypal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">        
+          <div class="row">
+              <div class="col-sm-6">
+                  <p class="margin-bottom">To configure PayPal payment method please complete the fields below.</p>
+
+                  <form data-form="form" method="post" action="#">
+                      <div class="validation-error hide"></div>
+                      <div class="form-group">
+                          <label>Email Address</label>
+                          <div class="help margin-bottom-sec">The email used on your PayPal account.</div>
+                          <input type="text" name="email" value="" class="form-control">
+                      </div>
+                      <div class="form-group">
+                          <label>Re-type Email Address</label>
+                          <input type="text" name="email_confirm" value="" class="form-control">
+                      </div>
+                      <hr>
+                      <div class="form-group">
+                          <div class="weight-medium">Active</div>
+                          <div class="help margin-bottom-sec">Activate or disable this payment method.</div>
+                          <div class="checkbox checkbox-sec no-margin">
+                              <input type="checkbox" name="active" value="1" id="payment_method_active">
+                              <label for="payment_method_active"> Make active</label>
+                          </div>
+                      </div>
+                  </form>
+
+              </div>
+              <div class="col-sm-6">
+                  <div style="background: #eaeaea; padding: 30px;">
+                      <img class="payment-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+
+                      <div class="bold">Transaction Charges</div>
+                      <p class="margin-bottom">
+                          Transaction charges are applicable as on your PayPal plan.<br>
+                          No additional fee will be charged by the system.
+                      </p>
+                      <div class="bold">Accepted Credit Cards</div>
+                      <p class="margin-bottom">
+                          All major cards are accepted.<br>
+                          Payment status will be updated in system automatically.
+                      </p>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Setup Square Payment Method --> 
+<div class="modal fade" id="setupSqaureModal" tabindex="-1" role="dialog" aria-labelledby="setupSqaureModalTitle" aria-hidden="true">
+  <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Setup Square</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">        
+          <div class="row">
+              <div class="col-sm-12">
+                <p class="margin-bottom">Connect to Square to start accepting payments.</p>
+                <a class="btn btn-primary" href="http://nsmartrac.com/settings/square_payment/connect?do=auth"> Connect to Square</a>
+              </div>
+              
+              <div class="col-sm-12">
+                  <div style="background: #eaeaea; padding: 30px;">
+                      <img class="payment-logo" src="<?php echo $url->assets ?>img/square-payment.png">
+
+                      <div class="bold">Transaction Charges</div>
+                      <p class="margin-bottom">
+                          Transaction charges are applicable as on your Square plan.<br>
+                          Square reference fees 2.9% + $0.30<br>
+                          No additional fee will be charged by system.<br>
+                      </p>
+                      <div class="bold">Accepted Credit Cards</div>
+                      <p class="margin-bottom">
+                          All major cards are accepted.<br>
+                          Payment status will be updated in system automatically.
+                      </p>
+                      <div class="bold">Locations</div>
+                      <p class="margin-bottom">
+                          If your business has multiple locations, you can manage everything right from your online Square Dashboard.
+                          You can create unique business profiles for each location.
+                      </p>
+                      <div class="bold">Instant Deposit</div>
+                      <p>
+                          For faster access to your money, initiate an instant deposit from the Square app or from your online Square Dashboard.
+                          You can instantly send up to $10,000 per deposit <b>24 hours a day, 7 days a week</b>.
+                          There is no limit to the number of instant deposits you can initiate in a given day. <a href="https://squareup.com/help/us/en/article/5405-set-up-and-manage-instant-deposits" target="_blank">Setup on Square</a>
+                      </p>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Setup Square Payment Method --> 
+<div class="modal fade" id="editTemplateModal" tabindex="-1" role="dialog" aria-labelledby="editTemplateModalTitle" aria-hidden="true">
+  <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Template</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">        
+          <div class="container-fluid">
+
+            <div class="margin-bottom-sec">
+                <div class="row">
+                    <div class="col-sm-12 weight-medium">Create and send invoice</div>
+                    <div class="col-sm-12 text-right"><a data-reset-modal="open" href="#">Reset to default template</a></div>
+                </div>
+            </div>
+            <hr>
+            <form data-form="form" method="post" action="#">
+                    <div class="validation-error hide"></div>
+
+                <div class="row">
+                    <div class="col-sm-16">
+                        <div class="card">
+                            <p class="margin-bottom-ter">
+                                Customize the SMS message.
+                            </p>
+                            <div class="form-group">
+                                <label>SMS</label>
+                                <textarea style="height: 100px !important;" name="body" cols="40" rows="2" class="form-control" id="template-body" autocomplete="off">You got an invoice from {{business.name}}. Click here to view online - {{url}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8" style="max-width: 45% !important;">
+
+                        <div class="panel-info">
+                            <label>Placeholders</label>
+                            <p class="margin-bottom">
+                                Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.
+                            </p>
+                            <div>
+                                <a class="btn btn-default" href="#" data-tags-modal="open" data-template-default-id="1">Insert Placeholders</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  <?php echo form_close(); ?>
+</div>

@@ -155,7 +155,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<?php //echo $profiledata->city ?>,  <?php //echo $profiledata->state ?> <?php //echo $profiledata->zip ?>, <br>
 							United States<br>
 							<div class="side-title margin-top-sec">Website</div>
-							<a class="a-default" href="<?php echo $profiledata->website ?>" target="_blank"><?php //echo $profiledata->website ?></a><br>
+							<a class="a-default" href="<?php echo ($profiledata) ? $profiledata->website : ''; ?>" target="_blank"><?php //echo $profiledata->website ?></a><br>
 						</div>
 						<div class="margin-bottom">
 							<div class="side-title">Quick Facts</div>

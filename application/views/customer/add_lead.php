@@ -6,7 +6,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <style>
     .module_ac {
         background: #f2f2f2;
-        border-radius: 1px;
         display: grid;
         flex-flow: wrap;
         flex: 0 0 41.666667%;
@@ -15,7 +14,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
         padding-right: 15px;
         padding-left: 15px;
         padding-bottom: 15px;
-        border: 2px solid #32243d !important;
+        border: 2px solid #e4e4e4 !important;
+        border-radius: 5px;
         margin-left: 60px;
         margin-bottom: 20px;
         height:100%;

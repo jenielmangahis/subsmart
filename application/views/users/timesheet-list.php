@@ -72,6 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab">Employee</a>
                         <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
                         <a href="<?php echo url('/timesheet/list')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="list")?:'-active';?>"style="text-decoration: none">List</a>
+                        <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
                     </div>
                 </div>
             </div>
@@ -94,18 +95,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tr>
                                             <th rowspan="2">Employee</th>
                                             <th rowspan="2">Status</th>
-                                            <th>Monday</th>
-                                            <th>Tuesday</th>
-                                            <th>Wednesday</th>
-                                            <th>Thursday</th>
-                                            <th>Friday</th>
-                                            <th>Saturday</th>
-                                            <th>Sunday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Monday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Tuesday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Wednesday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Thursday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Friday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Saturday</th>
+                                            <th style="background-color: #5957B7; color: #ccc;">Sunday</th>
                                             <!-- <th rowspan="2">TOTAL</th> -->
                                         </tr>
                                         <tr>
                                             <?php foreach($date_this_week as $k=>$dtw):?>
-                                                <?php echo '<th>'.$dtw.'</th>';?>
+                                                <?php echo '<th style="background-color: #9391EF;">'. date("m-d-Y",strtotime($dtw)).'</th>';?>
                                             <?php endforeach; ?>
                                         </tr>
                                         </thead>

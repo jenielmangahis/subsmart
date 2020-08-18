@@ -1,6 +1,6 @@
 @font-face {
     font-family: fontStyle;
-    src:url("/nsmartrac/assets/css/accounting/fonts/Depot-Regular.otf");
+    src:url("/assets/css/accounting/fonts/Depot-Regular.otf");
 }
 body{
     font-family: fontStyle;
@@ -852,7 +852,120 @@ button {
     background: #2ca01c;
     color: #ffffff;
 }
+ /*Show existing file css*/
+.show-existing-file{
+    width: 423px;
+    text-align: center;
+}
+.show-existing-file a {
+    color: #0b97c4;
+    font-style: italic;
+    margin: 0 auto;
+}
+.show-existing-file a:hover {
+    text-decoration: underline;
+}
+.file-container-list{
+    max-height: 150px;
+    max-width: 100%;
+}
+.file-name-section {
+    display: inline-block;
+    margin-right: 15px;
+    white-space: nowrap;
+}
+.file-name-section a{
+    color: #0b97c4;
+}
+.file-name-section a:hover{
+    color: orangered;
+}
+.file-name-section .cross-out{
+    text-decoration: line-through;
+    color: #495057;
+}
+.file-name-section .fa-exclamation-triangle{
+    color: #CCCC00;
+}
+/*Tooltip*/
+.tooltip {
+    position: relative;
+    display: contents;
+}
 
+.tooltip + .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 90%;
+    margin-left: -119px;
+    padding: 10px;
+}
+
+.tooltip + .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover + .tooltiptext {
+    visibility: visible;
+}
+.hide{
+    display: none;
+}
+.clear { clear: both; }
+/*Preview Attahcment*/
+.previewAttachment {
+    position: relative;
+    display: contents;
+}
+
+.previewAttachment + .previewAttachmentImage {
+    visibility: hidden;
+    width: 300px;
+    height: 160px;
+    background-color: #ffffff;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 90%;
+    margin-left: -200px;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.previewAttachment + .previewAttachmentImage img {
+    height: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.previewAttachment + .previewAttachmentImage::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.previewAttachment:hover + .previewAttachmentImage {
+    visibility: visible;
+}
 /*Loader*/
 .loader{
     position: fixed;

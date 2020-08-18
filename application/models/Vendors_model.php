@@ -18,4 +18,8 @@ class Vendors_model extends MY_Model {
 	    $vendor = $this->db->get_where('accounting_vendors', array('vendor_id' => $id));
 	    return $vendor->result();
     }
+	public function getvendortransactions($id){
+	    $getBill = $this->db->get_where('accounting_bill', array('vendor_id' => $id));
+	    return $getBill->result();
+    }
 }

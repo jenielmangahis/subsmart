@@ -711,12 +711,176 @@
                         </div>
                     
                     </div>
-                    <style> .document-page { border:2px solid black;  margin-top:30px; } .document-page:first-child { margin-top:50px !important; } </style>
-                    <div class="content_main" id="main-pdf-render" style="height: 887px;overflow: auto;    position: relative;margin: 0 auto; text-align: center;" role="region" aria-label="Active Page">   
+                    <style>
+                        .document-page { border:2px solid black;  margin-top:30px; } .document-page:first-child { margin-top:50px !important; }
+
+                           /* *** Sidebar *** */	
+                        .edit-sidebar{	
+                            background: #fff;	
+                            width: 300px;	
+                            height: 100vh;	
+                            overflow: auto;	
+                            position: fixed;	
+                            right:0%;	
+                            top: 0;	
+                            z-index: 10;	
+                            background: #f5f5f5;	
+                            padding: 95px 0 30px;	
+                            transition: .4s linear;	
+                        }	
+                        .edit-sidebar-open{right: 0 !important;transition: .4s linear;}	
+                        .edit-sidebar h3{	
+                            padding: 15px 30px;	
+                            border-bottom: 1px solid #e0e0e0;	
+                            font-weight: normal;	
+                            font-size: 16px;	
+                            color: #333;	
+                            margin: 0;	
+                        }	
+                        .edit-sidebar h3 i{margin-right: 5px;}	
+                        .cus-check{	
+                            padding: 30px;	
+                            border-bottom: 1px solid #e0e0e0;	
+                            font-weight: normal;	
+                            font-size: 16px;	
+                            color: #333;	
+                        }	
+                        .cus-check .form-group {margin: 0 !important;}	
+                        .cus-check .form-group input {	
+                          padding: 0;	
+                          height: initial;	
+                          width: initial;	
+                          margin-bottom: 0;	
+                          display: none;	
+                          cursor: pointer;	
+                        }	
+                        .cus-check .form-group label {	
+                          position: relative;	
+                          cursor: pointer;	
+                          font-weight: normal;	
+                            font-size: 16px;	
+                            color: #333;	
+                            margin: 0;	
+                        }	
+                        .cus-check .form-group label:before {	
+                          content:'';	
+                          -webkit-appearance: none;	
+                          background-color: transparent;	
+                          border: 2px solid #0079bf;	
+                          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);	
+                          padding: 10px;	
+                          display: inline-block;	
+                          position: relative;	
+                          vertical-align: middle;	
+                          cursor: pointer;	
+                          margin-right:10px;	
+                        }	
+                        .cus-check .form-group input:checked + label:after {	
+                          content: '';	
+                          display: block;	
+                          position: absolute;	
+                          top: 4px;	
+                          left: 9px;	
+                          width: 6px;	
+                          height: 14px;	
+                          border: solid #0079bf;	
+                          border-width: 0 2px 2px 0;	
+                          transform: rotate(45deg);	
+                        }	
+                        .faq-wrps .panel-group {	
+                            margin-bottom: 0px;	
+                        }	
+                        .faq-wrps .panel-default>.panel-heading{	
+                            padding: 0;	
+                            background-color: transparent;	
+                            border: none;	
+                        }	
+                        .faq-wrps .panel-title{	
+                            padding: 15px;	
+                            font-size: 17px;	
+                            font-weight: 600;	
+                            color: #333;	
+                            border-radius:0;	
+                            outline: none;	
+                            text-decoration: none;	
+                            position: relative;	
+                        }	
+                        #accordion .panel-title a.collapsed{ border: none; }	
+                        .faq-wrps .panel-title > a:after{	
+                            position: absolute;	
+                            content:"\f106";	
+                            font-family: 'FontAwesome';	
+                            color: #000;	
+                            width: 30px;	
+                            height: 30px;	
+                            border-radius: 50%;	
+                            line-height: 20px;	
+                            font-size: 18px;	
+                            text-align: center;	
+                            right:15px;	
+                            top:15px;	
+                        }	
+                        .faq-wrps .panel-title > a.collapsed:after{	
+                            content:"\f107";	
+                        }	
+                        .faq-wrps .panel-default{	
+                            border:none; 	
+                        }	
+                        .faq-wrps .panel{	
+                            border:none; 	
+                            box-shadow: none;	
+                        }	
+                        .faq-wrps .panel-group .panel{	
+                            overflow: hidden;	
+                            margin: 0 0;	
+                            background: #f5f5f5;	
+                            border-radius: 0;	
+                            border: none;	
+                            border-bottom: 1px solid #e0e0e0;	
+                        }	
+                        .faq-wrps .panel-body{	
+                            padding:15px;	
+                            font-size:15px;	
+                            line-height:22px;	
+                            font-weight: normal;	
+                            color: #000;	
+                        }	
+                        .faq-wrps .panel-group .panel-heading+.panel-collapse>.list-group, .faq-wrps .panel-group .panel-heading+.panel-collapse>.panel-body{	
+                            border-top: none;	
+                        }	
+                        .frmat-bx{display: flex;align-items: center;}	
+                        .frmat-bx .form-control{padding: 5px 10px;background: #fff;border: none;border-radius: 0;box-shadow:none;font-size: 14px;font-weight: normal;color: #333;margin-right: 15px;width: 80px;height: auto;}	
+                        .frmat-bx p{font-size: 15px;font-weight: 600;color: #333;margin: 0;}	
+                        .dtlab .form-control{width: 100%;margin: 0;}	
+                        .side-action{	
+                            padding: 15px 15px;	
+                            border-top: 1px solid #e0e0e0;	
+                            position: absolute;	
+                            bottom: 0;	
+                            left: 0;	
+                            right: 0;	
+                        }	
+                        .side-action .btn-side{	
+                            padding:8px 15px;	
+                            text-align: center;	
+                            display: block;	
+                            width: 100%;	
+                            font-size: 14px;	
+                            background: #fff;	
+                            font-weight:500;	
+                            color: #333;	
+                            border: 1px solid #e0e0e0;	
+                            margin: 0 0 10px;	
+                        }	
+                        .side-action .btn-side:last-child{margin: 0;}	
+                        .side-action .btn-side:hover{opacity: 0.80;}	
+                        
+                    </style>
+                    <div class="content_main " id="main-pdf-render" style="height: 887px;overflow: auto;    position: relative;margin: 0 auto; text-align: center;" role="region" aria-label="Active Page">   
                         <div id="draggable" class="resize-x-handle-flip">
                             <div class="x-text-flip-back">
                                 <div class="vertical-scroll">
-                                <div  style="border:3px solid black;" class="ui-widget-content"><p>Signature</p></div>
+                                <div  style="border:3px solid black;" class="ui-widget-content sideopne"><p>Signature</p></div>
                                 </div>
                             </div>
                         </div>
@@ -729,7 +893,79 @@
                     <div>
                 </div>
             </div>
-                
+            <div class="edit-sidebar" style="display:none;">	
+                <h3><i class="fa fa-pencil"></i> Signature</h3>	
+                <div class="cus-check">                    	
+                    <div class="form-group">	
+                        <input type="checkbox" id="css">	
+                        <label for="css">Required Field</label>	
+                    </div>	
+                </div>	
+                <div class="listing-edit faq-wrps">	
+                    <div class="panel-group" id="accordion-2" role="tablist" aria-multiselectable="true">	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingfour">	
+                                <h4 class="panel-title">	
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapsefne" aria-expanded="false" aria-controls="collapsefne">Formatting</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapsefne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingfour">	
+                                <div class="panel-body">	
+                                    <div class="frmat-bx">	
+                                        <input type="text" name="" placeholder="" class="form-control">	
+                                        <p> Scale %</p>	
+                                    </div>	
+                                </div>	
+                            </div>	
+                        </div>	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingTwo">	
+                                <h4 class="panel-title">	
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Data Label</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">	
+                                <div class="panel-body">	
+                                    <div class="frmat-bx dtlab">	
+                                        <input type="text" name="" placeholder="" class="form-control">	
+                                    </div>	
+                                </div>	
+                            </div>	
+                        </div>	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingThree">	
+                                <h4 class="panel-title">	
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Tooltip</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">	
+                                <div class="panel-body">	
+                                    <div class="frmat-bx dtlab">	
+                                        <textarea class="form-control" rows="5"></textarea>	
+                                    </div>	
+                                </div>	
+                            </div>	
+                        </div>	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingfor">	
+                                <h4 class="panel-title">	
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapsefor" aria-expanded="false" aria-controls="collapsefor">Location</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapsefor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingfor">	
+                                <div class="panel-body">	
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>	
+                                </div>	
+                            </div>	
+                        </div>	
+                    </div>	
+                </div>	
+                <div class="side-action">	
+                    <button class="btn-side">Save As Custom Field</button>	
+                    <a class="btn-side delbt">Delete</a>	
+                </div>	
+            </div>	
+           
                 <div class="docsWrapper ng-scope ng-isolate-scope" ng-if="taggerCtrl.shouldShowDocumentThumbnails()" envelope-data-manager="taggerCtrl.envelopeDataManager">
                     <div class="singleDocument ng-scope" data-qa="doc-thumbnail-list" ng-repeat="document in thumbCtrl.documents.getSorted() | filter: thumbCtrl.documentPreview_filter">
                     
@@ -902,4 +1138,11 @@
         overflow:auto;
     }
 </style>
-    
+<script type="text/javascript">	
+    $('.sideopne').on('click', function(){	
+        $('.edit-sidebar').show();	
+    });	
+    $('.delbt').on('click', function(){	
+        $('.edit-sidebar').hide();	
+    });	
+</script>

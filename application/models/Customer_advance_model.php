@@ -18,17 +18,8 @@ class Customer_advance_model extends MY_Model {
 
     public function update_data($input,$tablename,$update_id)
     {
-        if($update_id == "lead_id"){
-            $id = $input['lead_id'];
-            unset($input['lead_id']);
-        }else if($update_id == "sa_id"){
-            $id = $input['sa_id'];
-            unset($input['sa_id']);
-        }else if($update_id == "ams_id"){
-            $id = $input['ams_id'];
-            unset($input['ams_id']);
-        }
-
+        $id = $input[$update_id];
+        unset($input[$update_id]);
         if ($this->db->update($tablename, $input, array($update_id => $id))) {
             return true;
         } else {
@@ -36,18 +27,24 @@ class Customer_advance_model extends MY_Model {
         }
     }
 
-    public function if_exist($fieldname,$fieldvalue,$tablename,$data=FALSE){
+    public function if_exist($fieldname,$fieldvalue,$tablename){
         $this->db->where($fieldname, $fieldvalue);
-        if($query = $this->db->get($tablename)){
-            if($data){
-                return $query->row();
-            }else{
-                return true;
-            }
+        $query = $this->db->count_all_results($tablename);
+        if($query > 0){
+            return true;
         }else{
             return false;
         }
     }
+
+    public function get_data_by_id($fieldname,$fieldvalue,$tablename)
+    {
+        $this->db->where($fieldname, $fieldvalue);
+        $query = $this->db->get($tablename);
+        return $query->row();
+    }
+
+
 
 
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)

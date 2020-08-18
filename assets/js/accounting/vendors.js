@@ -1,6 +1,38 @@
 var siteurl = document.getElementById('siteurl').value;
 $(document).ready(function () {
-
+	    // Delete Check
+    $(document).on('click','#makeInactive',function () {
+        $('.loader').show();
+        var id = $(this).attr('data-id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: siteurl + 'accounting/invalidVendor',
+                    method:"POST",
+                    data:{id:id},
+                    success:function () {
+                        $('.loader').hide();
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                text: "Vendor has been inactive.",
+                                icon: 'success'
+                            });
+                    }
+                });
+            }
+		});
+    });
 	$('#btn-new-vendor-modal').click(function(){
 		$("#addVendorForm input").val("");
 		$("#addVendorForm textarea").val("");
@@ -107,16 +139,14 @@ function getAllVendors(){
 								htmlData += '<td>'+data[x].email+'</td>';
 								htmlData += '<td>'+data[x].opening_balance+'</td>';
 								htmlData += '<td>';
-									htmlData += '<div class="dropdown dropdown-toggle">';
-										htmlData += '<button class="btn btn-default border-0 py-2 pl-2 pr-0 bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-											htmlData += 'Settings &ensp;';
-										htmlData += '</button>';
-										htmlData += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-											htmlData += '<a class="dropdown-item" href="#">Create bill</a>';
-											htmlData += '<a class="dropdown-item" href="#">Create Expense</a>';
-											htmlData += '<a class="dropdown-item" href="#">Write Check</a>';
-											htmlData += '<a class="dropdown-item" href="#">Make inactive</a>';
-										htmlData += '</div>';
+									htmlData += '<a href="#" data-toggle="modal" id="addBill" data-target="#bill-modal" id="editCheck" data-id="'+data[x].id+'" style="margin-right: 10px;color: #0077c5;font-weight: 600;">Create bill</a>';
+									htmlData += '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
+										htmlData += '<span class="fa fa-caret-down" data-toggle="dropdown"></span>';
+										htmlData += '<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">';
+											htmlData += '<li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Create Expense</a></li>';
+											htmlData += '<li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Write Check</a></li>';
+											htmlData += '<li><a class="dropdown-item" href="#" data-id="'+data[x].id+'" id="makeInactive">Make inactive</a></li>';
+										htmlData += '</ul>';
 									htmlData += '</div>';
 								htmlData += '</td>';
 							htmlData += '</tr>';

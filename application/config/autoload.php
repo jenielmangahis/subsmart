@@ -158,5 +158,5 @@ $autoload['model'] = array(
 	'wizard_subapps_model',
 	'wizard_suboptions_model',
     'reconcile_model',
-  //  'filefolderscategories_model'
+    'file_folders_categories_model'
 );

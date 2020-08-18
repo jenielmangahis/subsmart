@@ -207,8 +207,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $check_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $check_category_id){
+                                                            $category_list_id = $list->id;
                                                             $category = $list->category_name;
-                                                            $category_id = $list->id;
+                                                            $category_id = $get_category->row()->id;
                                                         }
                                                     }
 
@@ -234,8 +235,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $bill_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $bill_category_id){
+                                                            $category_list_id = $list->id;
                                                             $category = $list->category_name;
-                                                            $category_id = $list->id;
+                                                            $category_id = $get_category->row()->id;
                                                         }
                                                     }
 
@@ -262,8 +264,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $expense_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $expense_category_id){
+                                                            $category_list_id = $list->id;
                                                             $category = $list->category_name;
-                                                            $category_id = $list->id;
+                                                            $category_id = $get_category->row()->id;
                                                         }
                                                     }
 
@@ -290,8 +293,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $vc_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $vc_category_id){
+                                                            $category_list_id = $list->id;
                                                             $category = $list->category_name;
-                                                            $category_id = $list->id;
+                                                            $category_id = $get_category->row()->id;
                                                         }
                                                     }
 
@@ -306,13 +310,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $number;?></td>
                                             <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $vendors_name;?></td>
                                             <td>
-                                                <select name="category" id="expenseTransCategory" data-id="<?php echo $category_id;?>" class="form-control select2-tbl-category">
-                                                    <option><?php echo $category?></option>
-                                                    <option>Advertising</option>
-                                                    <option>Retained Earning</option>
-                                                    <option>Billable Expense Income</option>
-                                                    <option>Gross Receipts</option>
-                                                </select>
+                                                <div style="display: inline-block;position: relative;width: 100%">
+                                                    <select name="category" id="expenseTransCategory" data-category="" data-id="<?php echo $category_id;?>" class="form-control select2-tbl-category">
+                                                        <option value="<?php echo $category_list_id?>" selected><?php echo $category?></option>
+                                                        <?php foreach ($list_categories as $list):?>
+                                                            <?php if ($list->category_name != $category):?>
+                                                                <option value="<?php echo $list->id;?>"><?php echo $list->category_name;?></option>
+                                                            <?php endif; ?>
+                                                        <?php endforeach;?>
+                                                    </select>
+                                                </div>
+                                                <i class="fa fa-spinner fa-pulse" style="display: none;position: relative;"></i>
                                             </td>
                                             <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"></td>
                                             <td style="text-align: right;">
@@ -1159,7 +1167,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="formVendorCredit">
-                    <div class="modal-body">
+                    <div class="modal-body" style="margin-bottom: 100px">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
@@ -1262,13 +1270,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
-                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                            <span>Maximum size: 20MB</span>
-                            <div id="vcAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
-                                <div class="dz-message" style="margin: 20px;border">
-                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                    <span>Maximum size: 20MB</span>
+                                    <div id="vcAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                        <div class="dz-message" style="margin: 20px;border">
+                                            <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                            <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-md-8" style="padding-top: 30px;">
+                                    <div class="file-container-list" id="file-list-vc">
+                                        <?php foreach ($attachments as $attachment): ?>
+                                            <div class="file-name-section">
+                                                <span style="display: inline-block"><?php echo $attachment->original_filename;?></span>
+                                                <a href="#" data-id="<?php echo $attachment->id;?>"><i class="fa fa-times"></i></a>
+                                            </div>
+                                        <?php endforeach;?>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <div class="show-existing-file">
+                                <a href="#" id="showExistingFile">Show existing file</a>
                             </div>
                         </div>
                     </div>
@@ -1569,6 +1598,75 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
+<!--    end of modal-->
+<!--    Show Existing File modal-->
+    <div class="modal-right-side">
+        <div class="modal right fade" id="showExistingModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Existing Files</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="modal-existing-file-section">
+                            <?php foreach ($attachments as $attachment): ?>
+                            <?php
+                                $file = $attachment->attachment;
+                                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                switch ($extension){
+                                    case "txt":
+                                        $file = "default-txt.png";
+                                        break;
+                                    case "pdf":
+                                        $file = "default-pdf.png";
+                                        break;
+                                    case "xls":
+                                        $file = "default-excel.png";
+                                        break;
+                                    case "xlsb":
+                                        $file = "default-excel.png";
+                                        break;
+                                    case "xlsm":
+                                        $file = "default-excel.png";
+                                        break;
+                                    case "xlsx":
+                                        $file = "default-excel.png";
+                                        break;
+                                    case "docx":
+                                        $file = "default-word.png";
+                                        break;
+                                    case "doc":
+                                        $file = "default-word.png";
+                                        break;
+                                    default:
+                                        $file = $attachment->attachment;
+                                        break;
+                                }
+                            ?>
+                           <div class="modal-existing-file-section">
+                               <span><?php echo $attachment->original_filename;?></span>
+                               <img src="/uploads/accounting/expenses/<?php echo $file; ?>" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">
+                               <input type="hidden" id="attachmentType">
+                               <input type="hidden" id="attachmentTypePreview">
+                               <input type="hidden" id="attachmentFileName" value="<?php echo $attachment->attachment; ?>" >
+                               <a href="#" id="addingFileAttachment" data-id="<?php echo $attachment->expenses_id; ?>" style="color: #0b97c4;">Add</a>
+                           </div>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer" style="justify-content: flex-start;">
+                        <button type="button" class="btn btn-transparent" data-dismiss="modal" style="float: left">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    end of modal-->
         <div style="display: none">
             <div id="detailDescAdvertise" >
                 Use <b>Advertising/Promotional</b> to track money spent promoting your company.
@@ -1762,22 +1860,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         placeholder: 'Choose a vendor',
         allowClear: true
     });
-    $('.select2-vc-category').select2({
-        placeholder: 'Choose a category',
-        allowClear: true
-    });
-    $('.select2-check-category').select2({
-        placeholder: 'Choose a category',
-        allowClear: true
-    });
-    $('.select2-bill-category').select2({
-        placeholder: 'Choose a category',
-        allowClear: true
-    });
-    $('.select2-expense-category').select2({
-        placeholder: 'Choose a category',
-        allowClear: true
-    });
+    // $('.select2-vc-category').select2({
+    //     placeholder: 'Choose a category',
+    //     allowClear: true
+    // });
+    // $('.select2-check-category').select2({
+    //     placeholder: 'Choose a category',
+    //     allowClear: true
+    // });
+    // $('.select2-bill-category').select2({
+    //     placeholder: 'Choose a category',
+    //     allowClear: true
+    // });
+    // $('.select2-expense-category').select2({
+    //     placeholder: 'Choose a category',
+    //     allowClear: true
+    // });
 
     // DataTable JS
     $(document).ready(function() {
@@ -1808,6 +1906,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     var row = $('#tableLine').clone(true);
                     row.find("#line-counter").html(id);
                     row.appendTo('#line-container-check');
+                    $('td > #category-preview-check').last().html(null);
+                    $('td > div > #description-id-check').last().val(null);
+                    $('td > #description-preview-check').last().html(null);
+                    $('td > #amount-preview-check').last().html(null);
+                    $('td > div > #amount-id-check').last().val(0);
                 }
             });
         });
@@ -1817,63 +1920,71 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (num == 2){
                 e.preventDefault();
             }else{
-                for (var x = 1;x <= num-2;x++){
-                    $("#tableLine").last().remove();
-                    $('#line-counter-check').html(2);
-                }
+                $('#line-container-check > #tableLine').slice(2).remove();
+                $(".select2-check-category").select2('destroy');
             }
         });
         //Delete Line
         $(document).on("click","#delete-line-row",function (e) {
             var count = $('#line-container-check > tr').length;
             if (count > 2){
-                $('#tableLine').last().remove();
+                $(this).closest('tr').remove();
+                $(this).children(".select2-check-category").select2('destroy');
+                $('#line-container-check > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter').text(index+1);
+                });
             }else{
                 e.preventDefault();
             }
 
         });
         //Table input text show
-        $(document).on("click","#tableLine",function (e) {
-            if ($('td > div > #prevent_process',this).val() == 'true'){
+        $('#tableLine').find('td:last').on('click', function (e) {
+            console.log('last');
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        $(document).on('click','#tableLine td:not(:last-child)',function () {
+            if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-check-category').select2({
                     placeholder: 'Choose a category',
                     allowClear: true
                 });
                 $('.select2-check-category').last().next().next().remove();
-                $('#tableLine > td >input').hide();
-                $('#tableLine > td >div').hide();
+                // $('#tableLine > td >input').hide();
+                $('#tableLine > td > div').hide();
                 $('#tableLine > td > #category-preview-check').show();
                 $('#tableLine > td > #description-preview-check').show();
                 $('#tableLine > td > #amount-preview-check').show();
-                $('#tableLine >td > div > #prevent_process').val('true');
-                $('td > input,div', this).show();
-                $('td > #category-preview-check', this).hide();
-                $('td > #description-preview-check', this).hide();
-                $('td > #amount-preview-check', this).hide();
-                $('td > div > #prevent_process',this).val('false');
+                $('#tableLine > td > div > #prevent_process').val('true');
+                $(this).parent('tr').children('td').children('div').show();
+                $(this).parent('tr').children('td').children('#description-preview-check').hide();
+                $(this).parent('tr').children('td').children('#amount-preview-check').hide();
+                $(this).parent('tr').children('td').children('#category-preview-check').hide();
+                $(this).parent('tr').children('td').children('div').children('#prevent_process').val('false');
 
-                if ($(this).next().length == 0){
+                if ($(this).parent('tr').next().length == 0){
                     $('#line-container-check').append($('#tableLine').last().clone());
                     var count = $('#line-container-check > tr').length;
-                    $('td > #line-counter').last().html(count);
-                    $('td > #category-preview-check').last().html(null);
-                    $('td > #description-id-check').last().val(null);
-                    $('td > #description-preview-check').last().html(null);
-                    $('td > #amount-preview-check').last().html(null);
-                    $('td > #amount-id-check').last().val(0);
+                    $(this).parent('tr').next().children('td').children('#line-counter').html(count);
+                    $(this).parent('tr').next().children('td').children('#category-preview-check').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#description-id-check').val(null);
+                    $(this).parent('tr').next().children('td').children('#description-preview-check').html(null);
+                    $(this).parent('tr').next().children('td').children('#amount-preview-check').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#amount-id-check').val(0);
                 }
             }
+
         });
 
         $(document).on('change','.select2-check-category',function () {
             $(this).parent('div').prev("span#category-preview-check").text($(this).find(":selected").text());
         });
         $(document).on('change','.checkDescription',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
         $(document).on('change','.checkAmount',function () {
-           $(this).prev('span').text($(this).val());
+           $(this).parent('div').prev('span').text($(this).val());
         });
 
         $(document).on('keyup','.checkAmount',function () {
@@ -1905,6 +2016,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     var row = $('#tableLine-bill').clone(true);
                     row.find("#line-counter-bill").html(id);
                     row.appendTo('#line-container-bill');
+                    $('td > #category-preview-bill').last().html(null);
+                    $('td > div > #description-id-bill').last().val(null);
+                    $('td > #description-preview-bill').last().html(null);
+                    $('td > #amount-preview-bill').last().html(null);
+                    $('td > div > #amount-id-bill').last().val(0);
                 }
             });
         });
@@ -1914,17 +2030,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (num == 2){
                 e.preventDefault();
             }else{
-                for (var x = 1;x <= num-2;x++){
-                    $("#tableLine-bill").last().remove();
-                    $('#line-counter-bill').html(2);
-                }
+                $('#line-container-bill > #tableLine-bill').slice(2).remove();
+                $(".select2-bill-category").select2('destroy');
             }
         });
         //Delete Line
         $(document).on("click","#delete-row-bill",function (e) {
             var count = $('#line-container-bill > tr').length;
             if (count > 2){
-                $('#tableLine-bill').last().remove();
+                $(this).closest('tr').remove();
+                $(this).children(".select2-bill-category").select2('destroy');
+                $('#line-container-bill > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter-bill').text(index+1);
+                });
             }else{
                 e.preventDefault();
             }
@@ -1932,35 +2050,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
 
         //Table input text show
-        $(document).on("click","#tableLine-bill",function () {
-            if ($('td > div > #prevent_process',this).val() == 'true'){
+        $(document).on("click","#tableLine-bill td:not(:last-child)",function () {
+            if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-bill-category').select2({
                     placeholder: 'Choose a category',
                     allowClear: true
                 });
                 $('.select2-bill-category').last().next().next().remove();
 
-                $('#tableLine-bill > td >input').hide();
-                $('#tableLine-bill > td >div').hide();
+                // $('#tableLine-bill > td >input').hide();
+                $('#tableLine-bill > td > div').hide();
                 $('#tableLine-bill > td > #category-preview-bill').show();
                 $('#tableLine-bill > td > #description-preview-bill').show();
                 $('#tableLine-bill > td > #amount-preview-bill').show();
                 $('#tableLine-bill >td > div > #prevent_process').val('true');
-                $('td > input,div', this).show();
-                $('td > #category-preview-bill', this).hide();
-                $('td > #description-preview-bill', this).hide();
-                $('td > #amount-preview-bill', this).hide();
-                $('td > div > #prevent_process',this).val('false');
+                $(this).parent('tr').children('td').children('div').show();
+                $(this).parent('tr').children('td').children('#description-preview-bill').hide();
+                $(this).parent('tr').children('td').children('#amount-preview-bill').hide();
+                $(this).parent('tr').children('td').children('#category-preview-bill').hide();
+                $(this).parent('tr').children('td').children('div').children('#prevent_process').val('false');
 
-                if ($(this).next().length == 0){
+                if ($(this).parent('tr').next().length == 0){
                     $('#line-container-bill').append($('#tableLine-bill').last().clone());
                     var count = $('#line-container-bill > tr').length;
-                    $('td > #line-counter-bill').last().html(count);
-                    $('td > #category-preview-bill').last().html(null);
-                    $('td > #description-id-bill').last().val(null);
-                    $('td > #description-preview-bill').last().html(null);
-                    $('td > #amount-preview-bill').last().html(null);
-                    $('td > #amount-id-bill').last().val(0);
+                    $(this).parent('tr').next().children('td').children('#line-counter-bill').html(count);
+                    $(this).parent('tr').next().children('td').children('#category-preview-bill').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#description-id-bill').val(null);
+                    $(this).parent('tr').next().children('td').children('#description-preview-bill').html(null);
+                    $(this).parent('tr').next().children('td').children('#amount-preview-bill').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#amount-id-bill').val(0);
                 }
             }
         });
@@ -1968,10 +2086,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $(this).parent('div').prev("span#category-preview-bill").text($(this).find(":selected").text());
         });
         $(document).on('change','.billDescription',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
         $(document).on('change','.billAmount',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
 
         $(document).on('keyup','.billAmount',function () {
@@ -2002,6 +2120,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     var row = $('#tableLine-expense').clone(true);
                     row.find("#line-counter-expense").html(id);
                     row.appendTo('#line-container-expense');
+                    $('td > #category-preview-expense').last().html(null);
+                    $('td > div > #description-id-expense').last().val(null);
+                    $('td > #description-preview-expense').last().html(null);
+                    $('td > #amount-preview-expense').last().html(null);
+                    $('td > div > #amount-id-expense').last().val(0);
                 }
             });
         });
@@ -2011,17 +2134,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (num == 2){
                 e.preventDefault();
             }else{
-                for (var x = 1;x <= num-2;x++){
-                    $("#tableLine-expense").last().remove();
-                    $('#line-counter-expense').html(2);
-                }
+                $('#line-container-expense > #tableLine-expense').slice(2).remove();
+                $(".select2-expense-category").select2('destroy');
             }
         });
         //Delete Line
         $(document).on("click","#delete-row-expense",function (e) {
             var count = $('#line-container-expense > tr').length;
             if (count > 2){
-                $('#tableLine-expense').last().remove();
+                $(this).closest('tr').remove();
+                $(this).children(".select2-expense-category").select2('destroy');
+                $('#line-container-expense > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter-expense').text(index+1);
+                });
             }else{
                 e.preventDefault();
             }
@@ -2030,34 +2155,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Table input text show
 
-        $(document).on("click","#tableLine-expense",function () {
-            if ($('td > div > #prevent_process',this).val() == 'true'){
-                $('.select2-expense-category').select2({
-                    placeholder: 'Choose a category',
-                    allowClear: true
-                });
-                $('.select2-expense-category').last().next().next().remove();
-                $('#tableLine-expense > td >input').hide();
+        $(document).on("click","#tableLine-expense td:not(:last-child)",function () {
+            $('.select2-expense-category').select2({
+                placeholder: 'Choose a category',
+                allowClear: true
+            });
+            $('.select2-expense-category').last().next().next().remove();
+            if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
+                // $('#tableLine-expense > td >input').hide();
                 $('#tableLine-expense > td >div').hide();
                 $('#tableLine-expense > td > #category-preview-expense').show();
                 $('#tableLine-expense > td > #description-preview-expense').show();
                 $('#tableLine-expense > td > #amount-preview-expense').show();
                 $('#tableLine-expense >td > div > #prevent_process').val('true');
-                $('td > input,div', this).show();
-                $('td > #category-preview-expense', this).hide();
-                $('td > #description-preview-expense', this).hide();
-                $('td > #amount-preview-expense', this).hide();
-                $('td > div > #prevent_process',this).val('false');
+                $(this).parent('tr').children('td').children('div').show();
+                $(this).parent('tr').children('td').children('#description-preview-expense').hide();
+                $(this).parent('tr').children('td').children('#amount-preview-expense').hide();
+                $(this).parent('tr').children('td').children('#category-preview-expense').hide();
+                $(this).parent('tr').children('td').children('div').children('#prevent_process').val('false');
 
-                if ($(this).next().length == 0){
+                if ($(this).parent('tr').next().length == 0){
                     $('#line-container-expense').append($('#tableLine-expense').last().clone());
                     var count = $('#line-container-expense > tr').length;
-                    $('td > #line-counter-expense').last().html(count);
-                    $('td > #category-preview-expense').last().html(null);
-                    $('td > #description-id-expense').last().val(null);
-                    $('td > #description-preview-expense').last().html(null);
-                    $('td > #amount-preview-expense').last().html(null);
-                    $('td > #amount-id-expense').last().val(0);
+                    $(this).parent('tr').next().children('td').children('#line-counter-expense').html(count);
+                    $(this).parent('tr').next().children('td').children('#category-preview-expense').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#description-id-expense').val(null);
+                    $(this).parent('tr').next().children('td').children('#description-preview-expense').html(null);
+                    $(this).parent('tr').next().children('td').children('#amount-preview-expense').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#amount-id-expense').val(0);
                 }
             }
         });
@@ -2065,10 +2190,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $(this).parent('div').prev("span#category-preview-expense").text($(this).find(":selected").text());
         });
         $(document).on('change','.expenseDescription',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
         $(document).on('change','.expenseAmount',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
 
         $(document).on('keyup','.expenseAmount',function () {
@@ -2097,10 +2222,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 var id = $('#line-container-vendorCredit > tr').length;
                 for (var x = 1;x <= 4;x++){
                     id++;
-                    var row = $('#tableLine-vendorCredit').clone(true);
-                    row.find("#line-counter-vendorCredit").html(id);
-                    row.appendTo('#line-container-vendorCredit');
+                    // var row = $('#tableLine-vendorCredit').clone(true);
+                    // row.find("#line-counter-vendorCredit").html(id);
+                    // row.appendTo('#line-container-vendorCredit');
+                    $('#line-container-vendorCredit').append($('#tableLine-vendorCredit').last().clone());
+                    $('td > #category-preview-vc').last().html('');
+                    $('td > div > #description-id-vc').last().val('');
+                    $('td > #description-preview-vc').last().html('');
+                    $('td > #amount-preview-vc').last().html('');
+                    $('td > div > #amount-id-vc').last().val(0);
                 }
+                $('#line-container-vendorCredit > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter-vendorCredit').text(index+1);
+                });
             });
         });
         // Clear Lines
@@ -2109,17 +2243,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (num == 2){
                 e.preventDefault();
             }else{
-                for (var x = 1;x <= num-2;x++){
-                    $("#tableLine-vendorCredit").last().remove();
-                    $('#line-counter-vendorCredit').html(2);
-                }
+                $('#line-container-vendorCredit > #tableLine-vendorCredit').slice(2).remove();
+                $(".select2-vc-category").select2('destroy');
             }
         });
         //Delete Line
         $(document).on("click","#delete-row-vendorCredit",function (e) {
             var count = $('#line-container-vendorCredit > tr').length;
             if (count > 2){
-                $('#tableLine-vendorCredit').last().remove();
+                $(this).closest('tr').remove();
+                $(this).children(".select2-vc-category").select2('destroy');
+                $('#line-container-vendorCredit > #tableLine-vendorCredit').each(function (index) {
+                    $(this).children('td').children('#line-counter-vendorCredit').text(index+1);
+                });
             }else{
                 e.preventDefault();
             }
@@ -2127,34 +2263,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
 
         //Table input text show
-        $(document).on("click","#tableLine-vendorCredit",function () {
-            if ($('td > div > #prevent_process',this).val() == 'true'){
+        $(document).on("click","#tableLine-vendorCredit td:not(:last-child)",function (e) {
+            if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-vc-category').select2({
                     placeholder: 'Choose a category',
                     allowClear: true
                 });
                 $('.select2-vc-category').last().next().next().remove();
-                $('#tableLine-vendorCredit > td >input').hide();
+                // $('#tableLine-vendorCredit > td >input').hide();
                 $('#tableLine-vendorCredit > td >div').hide();
                 $('#tableLine-vendorCredit > td > #category-preview-vc').show();
                 $('#tableLine-vendorCredit > td > #description-preview-vc').show();
                 $('#tableLine-vendorCredit > td > #amount-preview-vc').show();
                 $('#tableLine-vendorCredit > td > div > #prevent_process').val('true');
-                $('td > input,div', this).show();
-                $('td > #category-preview-vc', this).hide();
-                $('td > #description-preview-vc', this).hide();
-                $('td > #amount-preview-vc', this).hide();
-                $('td > div > #prevent_process',this).val('false');
+                $(this).parent('tr').children('td').children('div').show();
+                $(this).parent('tr').children('td').children('#description-preview-vc').hide();
+                $(this).parent('tr').children('td').children('#amount-preview-vc').hide();
+                $(this).parent('tr').children('td').children('#category-preview-vc').hide();
+                $(this).parent('tr').children('td').children('div').children('#prevent_process').val('false');
 
-                if ($(this).next().length == 0){
+                if ($(this).parent('tr').next().length == 0){
                     $('#line-container-vendorCredit').append($('#tableLine-vendorCredit').last().clone());
                     var count = $('#line-container-vendorCredit > tr').length;
-                    $('td > #line-counter-vendorCredit').last().html(count);
-                    $('td > #category-preview-vc').last().html(null);
-                    $('td > #description-id-vc').last().val(null);
-                    $('td > #description-preview-vc').last().html(null);
-                    $('td > #amount-preview-vc').last().html(null);
-                    $('td > #amount-id-vc').last().val(0);
+                    $(this).parent('tr').next().children('td').children('#line-counter-vendorCredit').html(count);
+                    $(this).parent('tr').next().children('td').children('#category-preview-vc').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#description-id-vc').val(null);
+                    $(this).parent('tr').next().children('td').children('#description-preview-vc').html(null);
+                    $(this).parent('tr').next().children('td').children('#amount-preview-vc').html(null);
+                    $(this).parent('tr').next().children('td').children('div').children('#amount-id-vc').val(0);
                 }
             }
         });
@@ -2162,10 +2298,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $(this).parent('div').prev("span#category-preview-vc").text($(this).find(":selected").text());
         });
         $(document).on('change','.vcDescription',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
         $(document).on('change','.vcAmount',function () {
-            $(this).prev('span').text($(this).val());
+            $(this).parent('div').prev('span').text($(this).val());
         });
 
         $(document).on('keyup','.vcAmount',function () {

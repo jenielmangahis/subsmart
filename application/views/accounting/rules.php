@@ -272,28 +272,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-    <?php if ($this->session->flashdata('rules_added')){?>
-        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('rules_added');?>
-        </div>
-    <?php }elseif ($this->session->flashdata('rules_failed')){?>
-        <div class="alert alert-info alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('rules_failed');?>
-        </div>
-    <?php }?>
-    <?php if ($this->session->flashdata('updated_rules')){?>
-        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('updated_rules');?>
-        </div>
-    <?php }elseif ($this->session->flashdata('update_rules_failed')){?>
-        <div class="alert alert-info alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('update_rules_failed');?>
-        </div>
-    <?php }?>
 <!--    end of modal-->
     <div class="full-screen-modal">
         <!--Modal for file upload-->

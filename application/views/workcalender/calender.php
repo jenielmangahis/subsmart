@@ -2,117 +2,203 @@
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
+<style>
+.btn-right-nav-hide-show{
+    position: relative;
+    left: 48%;
+    top: -35px;
+}
+.right-col .fc-left{
+    font-size: 10px;
+}
+.right-col .fc-left h2{
+    margin-top: 10px;
+    font-weight: 300;
+}
+#right-calendar{
+    margin-top: 10px;
+    padding: 10px;
+}
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  padding: 2px;
+  text-align: center;
+  color:#ffffff;
+}
+.dot-red{
+    background-color: #ff2a26;
+}
+.dot-green{
+    background-color: #bee336;
+}
+.dot-yellow{
+    background-color: #f7f016;
+}
+.dot-blue{
+    background-color: #16b7f7;
+}
+.right-list-events li{
+    text-align: left;
+    margin: 19px;
+}
+.right-filter-header{
+    font-size: 16px;
+    text-align: left;
+    background-color: #76828E;
+    padding: 10px;
+    color: #ffffff;
+}
+</style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/schedule'); ?>
-    <?php include viewPath('includes/notifications'); ?>
-    <div wrapper__section>
-        <div class="container-fluid">
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="d-block d-none  hid-deskx">
-                            <?php
-                                if (count($wordorders) > 0) {
-                                    // output data of each row
-                                     foreach($wordorders as $row) {
-                                        $ss = $row['id'];
-                                        ?>
-                                        <div card__columns>
-                                            <div class="c__header">
-                                                <h4> <?php echo 'WO-00' . $row['id']; ?></h4>
-                                                <div class="card__columns_dec">
-                                                    <div><i class="fa fa-user"
-                                                            aria-hidden="true"></i> <?php echo $row['contact_name']; ?>
+    <div class="row">
+        <div class="col-12 col-md-10 left-col">
+            <?php include viewPath('includes/sidebars/schedule'); ?>
+            <?php include viewPath('includes/notifications'); ?>
+            <div wrapper__section>
+                <div class="container-fluid">
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="d-block d-none  hid-deskx">
+                                    <?php
+                                        if (count($wordorders) > 0) {
+                                            // output data of each row
+                                             foreach($wordorders as $row) {
+                                                $ss = $row['id'];
+                                                ?>
+                                                <div card__columns>
+                                                    <div class="c__header">
+                                                        <h4> <?php echo 'WO-00' . $row['id']; ?></h4>
+                                                        <div class="card__columns_dec">
+                                                            <div><i class="fa fa-user"
+                                                                    aria-hidden="true"></i> <?php echo $row['contact_name']; ?>
+                                                            </div>
+                                                            <div><i class="fa fa-users"
+                                                                    aria-hidden="true"></i> <?php echo $row['contact_mobile']; ?>
+                                                            </div>
+                                                            <div><i class="fa fa-calendar"
+                                                                    aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
+                                                            </div>
+                                                            <h4>
+                                                                <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
+                                                            </h4>
+                                                        </div>
                                                     </div>
-                                                    <div><i class="fa fa-users"
-                                                            aria-hidden="true"></i> <?php echo $row['contact_mobile']; ?>
-                                                    </div>
-                                                    <div><i class="fa fa-calendar"
-                                                            aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
-                                                    </div>
-                                                    <h4>
-                                                        <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
-                                                    </h4>
+                                                </div>
+                                                <?php 
+                                            }
+                                        } else {
+                                            echo "No Workorders";
+                                        }
+                                    ?>
+                                </div>
+                                <div class="card-body hid-desk">
+                                    <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
+                                    <div class="calender-toolbar" id="calender_toolbar">
+                                        <h1 class="page-title">Schedule</h1>
+                                        <form id="frm_calender_filter_events" method="post">
+                                            <div class="form-group">
+                                                <!--<select id='time-zone-selector' class="form-control custom-select">
+                                                    <option value='local' selected>local</option>
+                                                    <option value='UTC'>UTC</option>
+                                                </select>-->
+                                                <span class="text-ter">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec" href="http://nsmartrac.com/settings/schedule"><span class="fa fa-cog"></span> Change</a>
+                                            </div>
+                                            <?php if (!empty($users)) { ?>
+                                                <div class="form-group">
+                                                    <select class="form-control custom-select" id="select-employee">
+                                                        <option value="0">All Employees</option>
+                                                        <?php foreach ($users as $user) { ?>
+                                                            <option value="<?php echo $user->id ?>"><?php echo $user->name ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            <?php } ?>
+                                            <div class="form-group margin-left-sec" role="group" aria-label="...">
+                                                 <a class="btn btn-sec btn-md" id="print-calender"  data-calendar="print" href="#">
+                                                    <span class="fa fa-print fa-margin-right"></span> Print
+                                                </a>
+                                            </div>
+                                            <div class="form-group margin-left-sec" role="group" aria-label="...">
+                                                <a class="btn btn-primary btn-md" data-calendar="print"
+                                                   href="<?php echo base_url('workorder/add') ?>" target="_blank">
+                                                    <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
+                                                </a>
+                                            </div>
+                                            <div class="form-group margin-left-sec" role="group" aria-label="...">
+                                                <div class="btn-group btn-with-dropdown">
+                                                    <button type="button" class="btn btn-primary btn-md" data-toggle="modal"
+                                                            data-target="#modalCreateEvent">
+                                                        <span class="fa fa-plus fa-margin-right"></span>&nbsp;&nbsp;Create Event
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary btn-md dropdown-toggle"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
+                                                               data-target="#modalCreateEvent">
+                                                                Add Blocked Event</a></li>
+                                                        <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
+                                                               data-target="#modalCreateEvent">
+                                                                Assign New Lead</a></li>
+                                                        <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                               data-target="#modalCreateEvent">Create Event</a></li>
+                                                        <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                               data-target="#modalCreateEvent">Cancel Schedule</a></li>
+                                                        <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                               data-target="#modalCreateEvent">Reschedule</a></li>
+                                                    </ul>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <?php 
-                                    }
-                                } else {
-                                    echo "No Workorders";
-                                }
-                            ?>
-                        </div>
-                        <div class="card-body hid-desk">
-                            <div class="calender-toolbar" id="calender_toolbar"><h1 class="page-title">Schedule</h1>
-                                <form id="frm_calender_filter_events" method="post">
-                                    <div class="form-group">
-                                        <!--<select id='time-zone-selector' class="form-control custom-select">
-                                            <option value='local' selected>local</option>
-                                            <option value='UTC'>UTC</option>
-                                        </select>-->
-										<span class="text-ter">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec" href="http://nsmartrac.com/settings/schedule"><span class="fa fa-cog"></span> Change</a>
+                                        </form>
                                     </div>
-                                    <?php if (!empty($users)) { ?>
-                                        <div class="form-group">
-                                            <select class="form-control custom-select" id="select-employee">
-                                                <option value="0">All Employees</option>
-                                                <?php foreach ($users as $user) { ?>
-                                                    <option value="<?php echo $user->id ?>"><?php echo $user->name ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    <?php } ?>
-                                    <div class="form-group margin-left-sec" role="group" aria-label="...">
-                                         <a class="btn btn-sec btn-md" id="print-calender"  data-calendar="print" href="#">
-                                            <span class="fa fa-print fa-margin-right"></span> Print
-                                        </a>
-                                    </div>
-                                    <div class="form-group margin-left-sec" role="group" aria-label="...">
-                                        <a class="btn btn-primary btn-md" data-calendar="print"
-                                           href="<?php echo base_url('workorder/add') ?>" target="_blank">
-                                            <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
-                                        </a>
-                                    </div>
-                                    <div class="form-group margin-left-sec" role="group" aria-label="...">
-                                        <div class="btn-group btn-with-dropdown">
-                                            <button type="button" class="btn btn-primary btn-md" data-toggle="modal"
-                                                    data-target="#modalCreateEvent">
-                                                <span class="fa fa-plus fa-margin-right"></span>&nbsp;&nbsp;Create Event
-                                            </button>
-                                            <button type="button" class="btn btn-primary btn-md dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
-                                                       data-target="#modalCreateEvent">
-                                                        Add Blocked Event</a></li>
-                                                <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
-                                                       data-target="#modalCreateEvent">
-                                                        Assign New Lead</a></li>
-                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                       data-target="#modalCreateEvent">Create Event</a></li>
-                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                       data-target="#modalCreateEvent">Cancel Schedule</a></li>
-                                                <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                       data-target="#modalCreateEvent">Reschedule</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </form>
+                                    <div id='calendar'></div>
+                                </div>
                             </div>
-                            <div id='calendar'></div>
+                            <!-- end card -->
                         </div>
                     </div>
-                    <!-- end card -->
+                    <!-- end row -->
                 </div>
             </div>
-            <!-- end row -->
+        </div>
+
+        <div class="col-12 col-md-2 right-col" style="background-color: #ffffff;">
+            <div class="row" style="padding:10px;">
+                <div class="col-12">
+                    <div id="right-calendar"></div>
+                </div>
+                <div class="col-12" style="margin-top: 15px;">
+                    <h4  class="right-filter-header">FILTER BY TIME OFF</h4>
+                    <ul class="right-list-events">
+                        <li><span class="dot dot-red"><i class="fa fa-check"></i></span> Events</li>
+                        <li><span class="dot dot-green"><i class="fa fa-check"></i></span> National Holiday</li>
+                        <li><span class="dot dot-yellow"><i class="fa fa-check"></i></span> Interview</li>
+                        <li><span class="dot dot-blue"><i class="fa fa-check"></i></span> Leave</li>
+                    </ul>
+                </div>
+                <div class="col-12" style="margin-top: 15px;">
+                    <h4  class="right-filter-header">CALENDARS</h4>
+                    <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
+                    <ul class="right-list-events">
+                        <li><label class="checkbox"><input type="checkbox" class=""> All</label></li>
+                        <li><label class="checkbox"><input type="checkbox" class=""> Family</label></li>
+                        <li><label class="checkbox"><input type="checkbox" class=""> Friends</label></li>
+                        <li><label class="checkbox"><input type="checkbox" class=""> Holidays</label></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+    
+    
 </div>
 <!-- end container-fluid -->
 </div>
@@ -460,7 +546,44 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </script>
 
-<script>    
+<script>  
+    var calendarEl = document.getElementById('right-calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+      header: {
+        right: 'prev,next',
+        left: 'title'
+      },
+      height:300,
+      width:300,
+      defaultDate: '2020-02-12',
+      navLinks: true, // can click day/week names to navigate views
+      businessHours: false, // display business hours
+      editable: false,
+      events: []
+    });
+
+    calendar.render();
+
+    $(".btn-right-nav-hide-show").click(function(){
+        if( $(this).hasClass("show-right") ){
+            $(this).removeClass("show-right");
+            $(this).addClass("hide-right");
+
+            $(".left-col").removeClass('col-md-10');
+            $(".left-col").addClass('col-md-12');
+            $(".right-col").hide();
+
+        }else{
+            $(this).removeClass("hide-right");
+            $(this).addClass("show-right");
+
+            $(".left-col").removeClass('col-md-12');
+            $(".left-col").addClass('col-md-10');
+            $(".right-col").show();
+        }
+    });
+
     $('#print-calender').click(function(){  
         var defaultView = calendar.view.type;   
         var defaultDate = calendar.view.type;   

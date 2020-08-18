@@ -11,8 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- iCheck -->
 <script src="<?php echo $assets ?>/plugins/iCheck/icheck.min.js"></script>
 
-<script src="<?php echo $assets ?>/js/sign.js"></script>
-
 <script>
   $(function () {
     $('input').iCheck({

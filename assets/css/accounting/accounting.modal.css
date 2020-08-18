@@ -959,36 +959,47 @@
     height: 100%;
 }
 .btn-transparent{
-    color: whitesmoke;
+    color: black;
     border-radius: 36px;
     background: transparent;
     border:1px solid #6B6C72;
 }
+.btn-transparent:hover{
+    background: #6b6c72;
+}
+#edit-vendor-modal .modal-dialog,
 #new-vendor-modal .modal-dialog{
     max-width: 1060px;
 }
+#edit-vendor-modal .modal-dialog .modal-body,
 #new-vendor-modal .modal-dialog .modal-body{
     overflow: scroll;
     max-height: 480px;
 }
+#edit-vendor-modal .modal-dialog .modal-footer-vendor,
 #new-vendor-modal .modal-dialog .modal-footer-vendor{
     padding: 10px;
 }
+#edit-vendor-modal .modal-dialog .modal-footer-vendor button,
 #new-vendor-modal .modal-dialog .modal-footer-vendor button{
     border-radius: 36px;
 }
+#edit-vendor-modal .form-ib-group,
 #new-vendor-modal .form-ib-group{
     display: block;
     width: 100%;
 }
+#edit-vendor-modal .form-ib-group .form-ib,
 #new-vendor-modal .form-ib-group .form-ib{
     display: inline-block;
     position: relative;
     width: 100%;
 }
+#edit-vendor-modal .form-ib-group .form-ib label,
 #new-vendor-modal .form-ib-group .form-ib label{
     font-weight: 600;
 }
+#edit-vendor-modal .form-ib-group .form-ib .form-textarea,
 #new-vendor-modal .form-ib-group .form-ib .form-textarea{
     color: #363636;
     font-size: 16px;
@@ -999,6 +1010,7 @@
     width: 100%;
     resize: none;
 }
+#edit-vendor-modal .form-ib-group .form-ib .address-form,
 #new-vendor-modal .form-ib-group .form-ib .address-form{
     width: 49%;
     display: inline-block;
@@ -1044,4 +1056,16 @@
     border-top: 1px solid #dee2e6;
     border-bottom-right-radius: .3rem;
     border-bottom-left-radius: .3rem;
+}
+
+#showExistingModal .modal-dialog{
+    min-width: 28%;
+}
+
+.modal-existing-file-container{
+    width: 350px;
+    text-overflow: ellipsis;
+}
+.modal-existing-file-container span{
+    text-overflow: ellipsis;
 }

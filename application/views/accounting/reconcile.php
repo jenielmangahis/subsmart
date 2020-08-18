@@ -175,79 +175,84 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                              </div>
                              <div class="row">
                                  <div class="col-md-7">
-                                     <div class="dropdown">
-                                       <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-filter"></i>
-                                       </a>
-                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                         <table style="width:100%">
-                                            <tbody>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <label for="find">Find</label>
-                                                    <input id="find" autocomplete="on" size="20" maxlength="524288" minlength="0" type="text" name="freeText" placeholder="Memo, Ref. no, $amt, >$amt, <$amt">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label for="cleared_status">Cleared status</label>
-                                                    <select name="cleared_status" id="cleared_status" class="form-control select2" required>
-                                                        <option value="">All</option>
-                                                        <option value="">Cleared</option>
-                                                        <option value="">Not cleared</option>
-                                                    </select>
-                                                </td>
-                                                 <td>
-                                                    <label for="transaction_type">Transaction type</label>
-                                                    <select name="transaction_type" id="transaction_type" class="form-control select2" required>
-                                                        <option value="">All</option>
-                                                        <option value="">Cleared</option>
-                                                        <option value="">Not cleared</option>
-                                                    </select>
-                                                </td>
-                                                 <td>
-                                                    <label for="payee">Payee</label>
-                                                    <select name="payee" id="payee" class="form-control select2" required>
-                                                        <option value="">All</option>
-                                                        <option value="">Cleared</option>
-                                                        <option value="">Not cleared</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label for="date">Date</label>
-                                                    <select name="date" id="date" class="form-control select2" required>
-                                                        <option value="">All</option>
-                                                        <option value="">Cleared</option>
-                                                        <option value="">Not cleared</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <label for="name">From</label>
-                                                    <div class="col-xs-10 date_picker">
-                                                        <input type="text" id="from" class="form-control" name="from" placeholder="">
-                                                  </div>
-                                                </td>
-                                                <td>
-                                                    <label for="name">To</label>
-                                                    <div class="col-xs-10 date_picker">
-                                                        <input type="text" id="to" class="form-control" name="to" placeholder="">
-                                                  </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <button type="submit" class="btn btn-flat btn-primary">Reset</button>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-flat btn-primary">Cancel</button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                      </div>
-                                    </div>
+                                    <section class="filter-wrp">
+                                        <div class="container">
+                                            <div class="filter-box dropdown">
+                                                <a href="javascript:void(0);" class="dropopenbx"><i class="fa fa-filter"></i></a>
+
+                                                <div class="dropdown-menu">
+                                                    <div class="inner-filter-list">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label>Find</label>
+                                                                    <input type="search" id="find" size="20" maxlength="524288" minlength="0" class="form-control" placeholder="Memo, Ref. no, $amt, >$amt, <$amt" aria-controls="reconcile_table">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Cleared status</label>
+                                                                    <select id="cleardrop" name="cleardrop" class="form-control">
+                                                                        <option>All</option>
+                                                                        <option>Cleared</option>
+                                                                        <option>Not Cleared</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Transaction type</label>
+                                                                    <select class="form-control">
+                                                                        <option>All</option>
+                                                                        <option>Bill</option>
+                                                                        <option>Bill Payment</option>
+                                                                        <option>CC Bill Payment</option>
+                                                                        <option>Cash Expense</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Payee</label>
+                                                                    <select class="form-control">
+                                                                        <option>All</option>
+                                                                        <option>Cleared</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>Date</label>
+                                                                    <select id="dropdate" name="dropdate" class="form-control" onchange="myfunc();">
+                                                                        <option>All</option>
+                                                                        <option>Custome Date</option>
+                                                                        <option>Statement Ending Date</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>From</label>
+                                                                    <input type="date" id="from_date" name="from_date" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label>To</label>
+                                                                    <input type="date" id="to_date" name="to_date" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group">
+                                                            <a href="#" class="btn-main">Reset</a>
+                                                            <a href="#" id="apply-btn" class="btn-main apply-btn">Apply</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
                                  </div>
                                  <div class="col-md-3"><a href="#"><i class="fa fa-close"></i>Statment ending date</a></div>
                                  <div class="col-md-2"><a href="#">Clear All / View All</a></div>
@@ -267,11 +272,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <th></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tbody">
                             <?php
                               $i=1;
                               foreach($rows as $row)
                               {
+                                echo "<td id='ending_date' style='display:none'>".$row->ending_date."</td>";
                                 echo "<tr id='payments'>";
                                 echo "<td contenteditable='true'>".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
@@ -332,8 +338,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
     $(document).ready(function() {
-        $('#reconcile_table').DataTable();
+        //$('#reconcile_table').DataTable({sDom: 'lrtip'});
     } );
+
+    var table = $('#reconcile_table').DataTable({sDom: 'lrtip'});
+    /*$('#find').on( 'keyup', function () {
+        table.search( this.value ).draw();
+    } );*/
+    $('#apply-btn').on( 'click', function () {
+        var find = $('#find').val();
+        if(find!='')
+        {
+            table.search( find ).draw();
+        }
+        var selectBox = document.getElementById("cleardrop");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        if(selectedValue == 'Not Cleared')
+        {
+            $("#tbody").hide();
+        }
+        else
+        {
+            $("#tbody").show();
+        }
+    } );
+
+    function myfunc() {
+    var selectBox = document.getElementById("dropdate");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+       if(selectedValue == 'Custome Date')
+       {
+        $('#from_date').text("");
+        $('#to_date').text("");
+       }
+       else if (selectedValue == 'Statement Ending Date')
+       {
+        $('#from_date').text("");
+        var ending_date = $("#ending_date").text();
+        var temp_date = ending_date.split(".");
+        var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];
+        $('#to_date').val(new_date);
+       }
+       else
+       {
+        $('#from_date').text("");
+        $('#to_date').text("");
+       }
+   }
+
 
    /* $(".ex-button").click(function() {
         $('.ex-button').html('<i class="fa fa-chevron-up"></i>');
@@ -460,4 +512,8 @@ function col_status()
         $('.status').css('display','');
     }
 }    
+
+$('.dropopenbx').on('click', function(){
+  $('.dropdown-menu').toggleClass('dropopn');
+});
 </script>

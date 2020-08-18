@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Open+Sans:300,400,600,700');
+*{
+    margin:0;
+    padding:0;
+    text-decoration:none;
+    list-style:none;
+}
+
+
+/* Scroll Bar Css Starts */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.15);
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 20px;
+    border-radius: 0;
+    background: #292929;
+    border: 2px solid #ffffff;
+    width: 8px;
+}
+::-webkit-scrollbar-thumb:active {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: #616161;
+}
+/* Scroll Bar Css Ends */
+
+a:hover,
+a:focus,
+a:active{
+    text-decoration: none;
+}
+ol, ul{
+    margin: 0;
+    padding: 0;
+}
+img{
+    display: block;
+}
+body{
+    font-family: 'Open Sans';
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+}
+
+.form-wraper{
+    padding: 35px 30px;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+.form-titlebar h1{
+    font-size: 26px;
+    font-weight:600;
+    color: #27445f;
+    margin: 0 15px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+.form-titlebar .btn-add{
+    padding: 10px 20px;
+    border: 1px solid #008eff;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #008eff;
+    transition: .4s linear;
+    vertical-align: middle;
+}
+.form-titlebar .btn-add i{margin-right: 5px;}
+.form-titlebar .btn-add:hover{
+    background: #008eff;
+    color: #fff;
+}
+.table-block{
+    padding: 30px 0 0;
+}
+.table-block table{margin: 0;background: #fff;}
+.table-block table thead th{
+    background: #4e7a91;
+    color: #fff;
+    font-size: 15px;
+    padding: 10px;
+}
+.table-block table tbody td{
+    padding: 10px;
+    border-right: none;
+    font-size: 15px;
+    font-weight: 600;
+    color: #27445f;
+}
+.table-block table tbody td:first-child{width: 40%;}
+.table-hover>tbody>tr:hover{background:#edf2f7;}
+.quick-act{display:table;display: none;margin: 5px 0 0;}
+.quick-act ul{background: #27435f;display: inline-block;margin-right: 10px;}
+.quick-act li{display: inline-block;}
+.quick-act li a{
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    display: inline-block;
+}
+.quick-act li a i{margin-right: 5px;}
+a.act-min i{display: inline-block;color: #27435f;font-size: 16px;margin: 0 8px 0;}
+.table-hover>tbody>tr:hover .quick-act{display: block;} 
+.table-hover>tbody>tr:hover td{padding: 10px 10px 0 10px;}
+
+div#DataTables_Table_0_paginate,.dataTables_info{display: none;}

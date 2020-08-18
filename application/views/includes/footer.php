@@ -59,7 +59,6 @@
 <script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>
 <script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
 <!-- <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
-<script src="<?php echo $url->assets ?>js/sign.js"></script>
 <script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
 <script src="<?php echo $url->assets ?>js/sidebar_badges.js"></script>
 <script>

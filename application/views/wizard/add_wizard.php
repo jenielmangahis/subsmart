@@ -29,11 +29,10 @@
 			<div class="container-fluid mt-5">
 				<div class="row">
 					<div class="col-lg-2 col-md-3 col-sm-4">
-						<div class="wizard-leftbar">
+						<div class="wizard-leftbar ziper-sidebar">
 							<div class="wizard-title creatwibx">
 								<a href="#"><h2>Create a Wizard</h2></a>
 							</div>
-
 							<div class="wizard-tabs">
 								<ul class="nav nav-tabs">
 									<li class="nav-item">
@@ -50,8 +49,27 @@
 						</div>
 					</div>
 					<div class="col-lg-10 col-md-9 col-sm-8">
+					<h1 style="font-size: 32px; font-weight: bold; color: #111; margin: 0 0 45px; text-align: center;"><img src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt="" style="    display: block; margin: 0 auto 20px;width:85px;"> Welcome to Wizard</h1>
+					<div class="app-search-block">
+						<h4>Select the apps you want to connect to create your own custom workflow.</h4>
+						<div class="search-compair-bx">
+							<div class="form-group">
+								<label>Connect this app...</label>
+								<input type="text" name="" placeholder="Search for an app" class="form-control">
+								<i class="fa fa-search"></i>
+							</div>
+							<div class="sprerbx">
+								<i class="fa fa-plus-circle"></i>
+							</div>
+							<div class="form-group">
+								<label>with this one!</label>
+								<input type="text" name="" placeholder="Search for an app" class="form-control">
+								<i class="fa fa-search"></i>
+							</div>
+						</div>
+					</div>
 						<div class="wizard-right wizar-add-main">
-							<h1><img src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt=""> Welcome to Wizard</h1>
+							<!-- <h1 style="font-size: 32px; font-weight: bold; color: #111; margin: 0 0 45px; text-align: center;"><img src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt=""> Welcome to Wizard</h1> -->
 
 							<div class="tab-content">
 							  	<div class="tab-pane active" id="tb10">
@@ -319,7 +337,7 @@ $(document).ready(function(){
 			name: 'sample_data',
 			display: 'app_name',
 			source:sample_data,
-			limit:10,
+			limit:15,
 			templates:{
 				suggestion:Handlebars.compile(`<div class="row" onClick="myfunc('{{app_id}}','{{app_name}}','{{app_img}}')"><div class="col-md-2" style="padding-right:5px; padding-left:5px;"><img src="<?php echo $url->assets ?>{{app_img}}" class="img-thumbnail" width="48" /></div><div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{app_name}}</div></div>`)
 			}

@@ -21,7 +21,7 @@ class Wizard extends MY_Controller {
 	public function index()
 
 	{			
-		
+		$this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
 		//$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
 		//$this->load->view('wizard/list', $this->page_data);
 		$this->load->view('wizard/index', $this->page_data);
@@ -278,6 +278,40 @@ class Wizard extends MY_Controller {
 	{
 		$this->load->view('wizard/add_wizard', $this->page_data);
 	}
+
+	public function listing_wizard()
+	{
+		$this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
+		$this->load->view('wizard/listing', $this->page_data);
+	}
+
+	public function save_listing_wizard($id = '')
+	{
+		if( $this->input->post('id') != '' && $this->input->post('id') > 0 ) {
+			$this->db->where('id', $this->input->post('id'));
+            $this->db->update($this->wizard_model->tableWorkspaces, ['name' => $this->input->post('name')]);
+		} else {
+			$this->db->insert($this->wizard_model->tableWorkspaces, ['name' => $this->input->post('name')]);
+		}
+
+		redirect('wizard/listing_wizard');
+	}
+
+	public function delete_listing_wizard($id)
+
+	{
+
+
+		
+		$this->db->where('id', $id);
+		$this->db->delete($this->wizard_model->tableWorkspaces);
+
+		redirect('wizard/listing_wizard');
+
+
+
+	}
+
 
 	public function build_wizard()
 	{

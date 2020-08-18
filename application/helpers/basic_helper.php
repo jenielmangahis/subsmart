@@ -647,7 +647,7 @@ if (!function_exists('getLoggedUserID')) {
 
         $CI = &get_instance();
         $user = (object)$CI->session->userdata('logged');
-        return $user->id;
+        return ($user) ? $user->id : 0;
     }
 }
 
@@ -730,7 +730,7 @@ if (!function_exists('getCompany')){
         $CI = &get_instance();
         $company_id = logged('company_id');
 
-        return $CI->business_model->getById($company_id);
+        return $CI->db->query('select * from business_profile where id = ' . $company_id);
     }
 }
 
@@ -744,7 +744,8 @@ if (!function_exists('getCompanyFolder')){
             mkdir('./uploads/');
         }
 
-        if($company) {
+        if($company->num_rows() > 0) {
+            $company = $company->row();
             if($company->folder_name == ''){
                 $folder_name = generateRandomString();
                 while(file_exists('./uploads/' . $folder_name . '/')){
@@ -766,6 +767,7 @@ if (!function_exists('getCompanyFolder')){
                 $company_folder = $company->folder_name;
             }
         } 
+
         return $company_folder;
     }
 }
@@ -801,6 +803,10 @@ if (!function_exists('getFolders')) {
             $softdelete = '<= 0';
         } else {
             $softdelete = '>= 1';
+
+            if($ofUser){
+                $softdelete .= ' and softdelete_by = ' . $uid;
+            }
         }
 
         if($ofUser){
@@ -809,6 +815,8 @@ if (!function_exists('getFolders')) {
 
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
+        } else {
+            $category_filter = 'and a.category_id is null ';
         }
 
         $sql = 'select ' . 
@@ -863,7 +871,13 @@ if (!function_exists('getFiles')) {
         if(!$trashed){
             $softdelete = '<= 0 and a.folder_id = ' . $folder_id . ' ';
         } else {
-            $softdelete = '>= 1 ';
+            $softdelete = '>= 1';
+
+            if($ofUser){
+                $softdelete .= ' and softdelete_by = ' . $uid . ' ';
+            } else {
+                $softdelete .= ' ';
+            }
         }
 
         if($ofUser){
@@ -872,6 +886,8 @@ if (!function_exists('getFiles')) {
 
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
+        } else {
+            $category_filter = 'and a.category_id is null ';
         }
 
         $sql = 'select ' . 
@@ -903,7 +919,7 @@ if (!function_exists('getFiles')) {
 
 if (!function_exists('searchFilesOrFolders')) {
 
-    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0, $ofUser = false){
+    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0, $ofUser = false, $ofCategorized = false){
         $CI = &get_instance();
         $uid = logged('id');
         $company_id = logged('company_id');
@@ -911,9 +927,17 @@ if (!function_exists('searchFilesOrFolders')) {
         $user_filter_folder = '';
         $user_filter_file = '';
 
+        $category_filter = '';
+
         if($ofUser){
             $user_filter_folder = 'and created_by = ' . $uid . ' ';
             $user_filter_file = 'and user_id = '. $uid . ' ';
+        }
+
+        if($ofCategorized){
+            $category_filter = 'and category_id is not null ';
+        } else {
+            $category_filter = 'and category_id is null ';
         }
 
         $sql_folders = 'select '.
@@ -924,7 +948,7 @@ if (!function_exists('searchFilesOrFolders')) {
 
                        'from file_folders '.
 
-                       'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_folder .
+                       'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_folder . $category_filter .
                           'and (lower(folder_name) like "%'. $keyword .'%" '.
                           'or lower(description) like "%'. $keyword .'%" '.
                           'or lower(path) like "%'. $keyword .'%" '.
@@ -938,7 +962,7 @@ if (!function_exists('searchFilesOrFolders')) {
 
                      'from filevault '.
 
-                     'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_file .
+                     'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_file . $category_filter . 
                         'and (lower(title) like "%'. $keyword .'%" '.
                         'or lower(description) like "%'. $keyword .'%" '.
                         'or lower(file_path) like "%'. $keyword .'%" '.
@@ -999,7 +1023,7 @@ function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessF
     $categories = array();
 
     if($isBusinessFormTemplates){
-        $categories = $CI->filefolderscategories_model->getByWhere(array('created_by' => $uid));
+        $categories = $CI->file_folders_categories_model->getByWhere(array('created_by' => $uid));
     }
 
     $params = array(

@@ -68,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     
                                                     <?php
                                                         $data['user_id'] = $row->id;
-                                                        $clockin_arr = $this->timesheet_model->getClockIn($data);
+                                                        $clockin_arr = $this->timesheet_model->getClockInTimelog($data);
                                                         $clockout_arr = $this->timesheet_model->getClockOut($data);
                                                         //echo "<pre>"; print_r($clockin_arr); echo "</pre>";
                                                     ?>

@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														<th><strong>CATEGORY</strong></th>
 														<th><strong>MEMO</strong></th>
 														<th><strong>TOTAL</strong></th>
-														<th><strong>ACTION</strong></th>
+														<th style="width:60px;"><strong>ACTION</strong></th>
 													</tr>
 												</thead>
 												<tbody>
@@ -97,7 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														<td>08/19/2018</td>
 														<td>Check</td>
 														<td>532</td>
-														<td>Iphen</td>
+														<td><?php echo $vendor_details[0]->display_name; ?></td>
 														<td>Office Expenses</td>
 														<td></td>
 														<td>$520.00</td>
@@ -1476,7 +1476,189 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-       
+<!--    Add vendor modal-->
+        <div id="edit-vendor-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+				<form id="editVendorForm" class="addVendorForm-validation" novalidate>
+                <div class="modal-content max-width">
+                    <div class="modal-header" style="border-bottom: 0">
+                        <div class="modal-title">Edit Vendor Information</div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+						
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 56px">
+                                        <label for="">Title</label>
+                                        <input type="text" name="title" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 106px">
+                                        <label for="">First name</label>
+                                        <input type="text" name="f_name" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 106px">
+                                        <label for="">Middle name</label>
+                                        <input type="text" name="m_name" class="form-control">
+                                    </div>
+                                    <div class="form-ib" style="width: 106px">
+                                        <label for="">Last name</label>
+                                        <input type="text" name="l_name" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 56px">
+                                        <label for="">Suffix</label>
+                                        <input type="text" name="suffix" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Company</label>
+                                        <input type="text" name="company" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="" style="margin-right: 10px">Print on check as </label>
+										<input type="checkbox" value="1" name="to_display"><span style="margin-left: 10px">Use display name</span>
+                                        <input type="text" name="display_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="" style="margin-right: 10px">Address</label>
+										<a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
+                                        <textarea name="street" id="street" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
+                                        <input name="city" type="text" class="form-control address-form" placeholder="City/Town" required>
+                                        <input name="state" type="text" class="form-control address-form" placeholder="State/Province" required>
+                                        <input name="zip" type="text" class="form-control address-form" placeholder="ZIP Code" required>
+                                        <input name="country" type="text" class="form-control address-form" placeholder="Country" required>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Notes</label>
+                                        <textarea name="notes" id="notes" cols="30" rows="2" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
+										<span>Maximum size: 20MB</span>
+                                        <form action="/file-upload" class="dropzone" style="height: 50px;border:1px dashed grey;">
+                                            <div class="fallback">
+                                                <input name="attachFiles" type="file" multiple />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <h4>Get custom fields with Advanced</h4>
+                                    <p>Custom fields let you add more detailed info about your customers and transactions.
+                                        Sort, track, and report info that's important to you.
+                                    </p>
+                                    <a href="#" style="color: #0b97c4;">Learn more</a>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-ib-group">
+                                    <div class="form-ib">
+                                        <label for="">Email</label>
+                                        <input type="text" class="form-control" name="email" placeholder="Separate multiple emails with commas" required>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 129px">
+                                        <label for="">Phone</label>
+                                        <input type="text" name="phone" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 129px">
+                                        <label for="">Mobile</label>
+                                        <input type="text" name="mobile" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 129px">
+                                        <label for="">Fax</label>
+                                        <input type="text" name="fax" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <!--<div class="form-ib" style="width: 126px;">
+                                        <label for="">Other</label>
+                                        <input type="text" class="form-control">
+                                    </div>-->
+                                    <div class="form-ib">
+                                        <label for="">Website</label>
+                                        <input type="text" name="website" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+									<div class="form-ib" style="width: 126px;">
+                                        <label for="">Billing rate (/hr)</label>
+                                        <input type="text" name="billing_rate" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 265px;">
+                                        <label for="">Terms</label>
+										<select class="form-control" name="terms" required>
+										  <option value="1">Due on Receipt</option>
+										  <option value="2">Net 15</option>
+										  <option value="3">Net 30</option>
+										  <option value="4">Net 60</option>
+										</select>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 147px">
+                                        <label for="">Opening balance</label>
+                                        <input type="text" name="opening_balance" class="form-control" required>
+                                    </div>
+                                    <div class="form-ib" style="width: 190px">
+                                        <label for="">as of</label>
+                                        <input type="date" name="opening_balance_as_of_date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 70%">
+                                        <label for="">Account no.</label>
+                                        <input type="text" name="account_number" class="form-control" placeholder="Appears in the memo of all payment" required>
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 50%">
+                                        <label for="">Business ID No.</label>
+                                        <input type="text" name="business_number" class="form-control" required>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-ib-group">
+                                    <div class="form-ib" style="width: 60%">
+                                        <label for="">Default expense account</label>
+                                        <input type="text" name="default_expense_amount" class="form-control" placeholder="Choose Account" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer-vendor">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button type="button" class="btn btn-default btn-tranparent">Cancel</button>
+                                <button type="button" class="btn btn-default btn-tranparent">Make inactive</button>
+                            </div>
+                            <div class="col-md-2" style="text-align: center">
+                                <a href="#" >Privacy</a>
+                            </div>
+                            <div class="col-md-5">
+                                <button class="btn btn-success" type="submit" style="float: right;">Save</button>
+                            </div>
+                        </div>
+						
+                    </div>
+                </div>
+				</form>
+            </div>
+        </div>
+<!--    end of modal-->       
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>

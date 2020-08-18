@@ -96,18 +96,23 @@ class Expenses_model extends MY_Model
             return true;
         }
     }
-    public function removeNullCategories(){
 
+    public function getAttachment(){
+        $query = $this->db->get('accounting_expense_attachment');
+        return $query->result();
     }
 
     public function expensesAttachment($id,$type,$file_name){
         if ($file_name['file_name'] != null){
             $attachment = $file_name['file_name'];
+            $original_fname = $file_name['original_fname'];
             for($x = 0;$x < count($attachment);$x++){
                 $data = array(
+                    'original_filename' => $original_fname[$x],
                     'expenses_id' => $id,
                     'type' => $type,
-                    'date_created' => date('Y-m-d H:i:s')
+                    'date_created' => date('Y-m-d H:i:s'),
+                    'status' => 1
                 );
                 $this->db->where('attachment',$attachment[$x]);
                 $this->db->update('accounting_expense_attachment',$data);

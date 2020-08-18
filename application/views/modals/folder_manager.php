@@ -52,13 +52,19 @@
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
+                            <?php if($isBusinessFormTemplates){ ?>
+                              <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a>   
+                            <?php } ?>
                           </td>
                         </tr>
                         <tr>
                           <td class="p-0 pb-1">
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
+                          <?php if($isBusinessFormTemplates){ ?>  
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
+                          <?php } ?>
                           </td>  
                         </tr>
                       </tbody>
@@ -113,7 +119,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="d-none" id="folder_entry">
+          <div class="d-none w-100" id="folder_entry">
             <div class="col-md-12 form-group">
               <label for="folder_name">Folder Name<small> Set name of the folder</small></label>
               <input type="text" class="form-control" name="folder_name" id="folder_name" placeholder="Enter Folder Name" required autofocus />
@@ -123,7 +129,7 @@
               <input type="text" class="form-control" name="folder_desc" id="folder_desc" placeholder="Enter Folder Description" maxlength="255" autofocus />
             </div>
           </div>
-          <div class="d-none" id="file_entry">
+          <div class="d-none w-100" id="file_entry">
             <div class="col-md-12 form-group">
               <label for="fullfile">Select File<small> (Allowed type: pdf, doc, docx, rtf, png, jpg, gif. Max size 8MB.)</small></label>
               <input type="file" class="form-control" name="fullfile" id="fullfile" placeholder="Upload File" accept=".gif, .jpeg, .jpg, .png, .doc, .rtf, .docx, .pdf" required>
@@ -134,16 +140,28 @@
             </div>  
           </div>  
           <?php if($isBusinessFormTemplates){ ?>
-            <div class="col-md-12 form-group">
-              <label for="categories">Categories<small> Select category to put the file/folder</small></label>
-              <select class="form-control" name="f_category" id="f_category">
-                <option value="">Select Category</option>
-                <?php 
-                  foreach($categories as $category){
-                ?>
-                  <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
-              <?php } ?>
-              </select>
+            <div class="d-none w-100" id="category_entry">
+              <div class="col-md-12 form-group">
+                <label for="category_name">Category Name<small> Set name of the category</small></label>
+                <input type="text" class="form-control" name="category_name" id="category_name" placeholder="Enter Category Name" required autofocus />
+              </div>
+              <div class="col-md-12 form-group">
+                <label for="category_desc">Description<small> Details about the category(Max of 255 characters)</small></label>
+                <input type="text" class="form-control" name="category_desc" id="category_desc" placeholder="Enter Category Description" maxlength="255" autofocus />
+              </div>  
+            </div>
+            <div class="w-100" id="category_selection">
+              <div class="col-md-12 form-group">
+                <label for="categories">Categories<small> Select category to put the file/folder</small></label>
+                <select class="form-control" name="f_category" id="f_category">
+                  <option value="">Select Category</option>
+                  <?php 
+                    foreach($categories as $category){
+                  ?>
+                    <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
+                <?php } ?>
+                </select>
+              </div>
             </div>  
           <?php } ?>
         </div>
@@ -362,3 +380,45 @@
 
   </div>
 </div>
+
+<style>
+  .tmp_mfm_dtu_height{
+    height: 60vh
+  }
+</style>
+
+<?php if($isBusinessFormTemplates){ ?>
+  <div id="mfm-dtu" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Drop To Upload</h4>
+          <button type="button" class="close" data-dismiss="modal" id="mfm-dtu-close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12 form-group">
+            <label for="categories">Categories<small> Select category to put the file/folder</small></label>
+            <select class="form-control" name="f_category" id="f_category">
+              <option value="">Select Category</option>
+              <?php 
+                foreach($categories as $category){
+              ?>
+                <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
+            <?php } ?>
+            </select>
+          </div>
+          <div class="tmp_mfm_dtu_height" style="border: #999 5px dashed;" ondrop="displayDroppedFiles(event)" ondragover="return false" id="mfm-dtu-drop-area">
+            <h5 class="text-center mt-5">Drop File(s) Here to Upload</h5>
+          </div>
+          <div id="mfm-dtu-file-list-area" class="d-none">
+            <ul class="list-group" id="mfm-dtu-file-list">
+            </ul>
+          </div>  
+        </div>
+      </div>
+
+    </div>
+  </div>
+<?php } ?>

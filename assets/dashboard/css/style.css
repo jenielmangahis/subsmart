@@ -9475,3 +9475,73 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     float: right;
 }
 /* **** End Dashboard Last Sections **** */
+
+/* **** Filter Dropdown **** */
+.filter-wrp{
+    padding: 35px 0;
+    width: 100%;
+}
+
+.filter-box .dropdown-menu{
+    width:650px;
+    padding: 20px;
+    border-radius: 3px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+}
+.filter-box .dropdown-menu.dropopn{
+    opacity: 1;
+    visibility: visible;
+}
+.inner-filter-list .form-group{margin: 0 0 15px;}
+
+.inner-filter-list .form-group label{
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 5px;
+}
+.inner-filter-list .form-control{
+    padding: 10px 15px;
+    border-radius: 0;
+    border: 1px solid #e0e0e0;
+    height: auto;
+    font-size: 14px;
+    font-weight:normal;
+    color: #333;
+    box-shadow: none;
+}
+.inner-filter-list .btn-group{
+    width: 100%;
+}
+.inner-filter-list .btn-group .btn-main{
+    padding: 8px 35px;
+    background: #fff;
+    border: 2px solid #333;
+    color: #333;
+    border-radius: 30px;
+    display: table;
+    text-align: center;
+    font-weight: bold;
+    display: inline-block;
+}
+.inner-filter-list .btn-group .btn-main:hover{
+    background: rgba(0,0,0,0.20);
+}
+.inner-filter-list .btn-group .apply-btn{
+    background: #2ca01c;
+    border-color: #2ca01c;
+    color: #fff;
+    float: right;
+    margin-left: 200px;
+}
+.inner-filter-list .btn-group .apply-btn:hover{
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+/* **** End Filter Dropdown **** */

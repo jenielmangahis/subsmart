@@ -11,7 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
                     <div class="col">
-                        <h1 class="m-0">Work Estimates</h1>
+                        <h1 class="m-0">Estimates</h1>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">

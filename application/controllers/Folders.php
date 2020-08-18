@@ -188,8 +188,13 @@ class Folders extends MY_Controller {
 
 			$folder_name = $_POST['folder_name'];
 			$parent_id = 0;
+			$category = '';
 			if(isset($_POST['parent_id'])){
 				$parent_id = $_POST['parent_id'];
+			}
+
+			if(isset($_POST['category'])){
+				$category = $_POST['category'];
 			}
 
 			$description = '';
@@ -224,6 +229,10 @@ class Folders extends MY_Controller {
 					'company_id' => $company_id
 				);
 
+				if($category != ''){
+					$data['category_id'] = $category;
+				}
+
 				if($this->folders_model->trans_create($data)){
 					mkdir('./uploads/' . $this->company_folder . $path, 0777);
 
@@ -254,6 +263,8 @@ class Folders extends MY_Controller {
 	}
 
 	public function delete(){
+		$uid = logged('id');
+
 		$return = array(
 			'error' => ''
 		);
@@ -268,7 +279,8 @@ class Folders extends MY_Controller {
 		} else {			
 			$data = array(
 				'softdelete' => 1,
-				'softdelete_date' => date('Y-m-d h:i:s')
+				'softdelete_date' => date('Y-m-d h:i:s'),
+				'softdelete_by' => $uid
 			);
 
 			if(!$this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
@@ -368,10 +380,14 @@ class Folders extends MY_Controller {
 		}
 	}
 
-	public function getTrashRecords(){
+	public function getTrashRecords($getByCurrentUser = 0, $getByWithCategory = 0){
+
+		$ofUser = ($getByCurrentUser == 1);
+		$ofCategorized = ($getByWithCategory == 1);
+
 		$return = array(
-			'folders' => getFolders(-1, false, false, true, true),
-			'files' => getFiles(-1, true, true)
+			'folders' => getFolders(-1, false, false, true, true, $ofUser, $ofCategorized),
+			'files' => getFiles(-1, true, true, $ofUser, $ofCategorized)
 		);
 
 		echo json_encode($return);
@@ -393,9 +409,14 @@ class Folders extends MY_Controller {
 		if($isFolder == 1){
 			$f = $this->folders_model->getById($fid);
 			$folder_id = $f->parent_id;
-			$folder = $this->folders_model->getById($folder_id);
 
-			if($folder->softdelete <= 0){
+			$continue = true;
+			if($folder_id != 0){
+				$folder = $this->folders_model->getById($folder_id);
+				$continue = ($folder->softdelete <= 0);
+			}
+
+			if($continue){
 				if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
 					$return['error'] = 'Error restoring folder';
 				}
@@ -405,9 +426,14 @@ class Folders extends MY_Controller {
 		} else {
 			$f = $this->vault_model->getById($fid);
 			$folder_id = $f->folder_id;
-			$folder = $this->folders_model->getById($folder_id);
 
-			if($folder->softdelete <= 0){
+			$continue = true;
+			if($folder_id != 0){
+				$folder = $this->folders_model->getById($folder_id);
+				$continue = ($folder->softdelete <= 0);
+			}
+			
+			if($continue){
 				if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
 					$return['error'] = 'Error restoring file';
 				}

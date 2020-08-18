@@ -4,15 +4,21 @@
 
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/upgrades'); ?>
-   <div wrapper__section>
-
+   <div wrapper__section style="">
+	<style>
+		div[wrapper__section] {
+    margin-left: 260px;
+    padding: 0px;
+}
+	
+	</style>
 	<!-- Wizard -->
 	<section class="wizard-wrp">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-lg-2 col-md-3 col-sm-4">
-					<div class="wizard-leftbar">
-						<div class="wizard-title">
+				<div class="col-lg-2 col-md-3 col-sm-4 pl-0">
+					<div class="wizard-leftbar ziper-sidebar">
+						<div class="wizard-title creatwibx">
 							<h2>Wizard</h2>
 						</div>
 
@@ -21,7 +27,12 @@
 								<li class="nav-item">
 									<a class="nav-link active" data-toggle="tab" href="#tb10">Credit</a>
 								</li>
-					    		<li class="nav-item">
+								<?php foreach($wizards_workspace as $key => $value)  { ?>
+									<li class="nav-item">
+										<a class="nav-link " data-toggle="tab" href="#tb10"><?php echo $value->name ; ?></a>
+									</li>
+								<?php } ?>
+					    		<!-- <li class="nav-item">
 									<a class="nav-link" data-toggle="tab" href="#tb1">Credit Repair Industry Template</a>
 								</li>
 								<li class="nav-item">
@@ -44,15 +55,19 @@
 								</li>
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="tab" href="#tb8">Commercial Flow Templates</a>
-								</li>
+								</li> -->
 							  	<li class="nav-item">
 							    	<a class="nav-link" data-toggle="tab" href="#tb9">My Workspace</a>
 							  	</li>
+								<li class="nav-item">
+									<a class="nav-link" data-toogle="tab" href="#tb10" data-toggle="modal" data-target="#add_wizard_template"> Add Template </a>
+								</li>
 							</ul>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-10 col-md-9 col-sm-8">
+					
 					<div class="wizard-right">
 						<h1><img src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt=""> The Workspace List</h1>
 
@@ -1744,4 +1759,39 @@
 	<!-- End Wizard -->
 	</div>
 						  		</div>
+
+
+								  
+<div class="modal fade" id="add_wizard_template" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Template</h5>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      </div>
+      <div class="modal-body">
+        <label> Template Title : </label>
+		<!-- <input class="form-control" name="template_title_name"> -->
+		<input class="form-control" type="text" name="example" list="exampleList">
+		<datalist id="exampleList">
+			<option value="Credit Repair Industry Template">  
+			<option value="Real Estate Industry Flow Templates">
+
+			<option value="Construction Industry Flow Templates">
+			<option value="Universal Flow Templates">
+			<option value="Financial Industry Flow Templates">
+			<option value="Security Alarm Industry Flow Templates">
+			<option value="Residential Flow Templates">
+			<option value="Commercial Flow Templates">
+		</datalist>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
 <?php include viewPath('includes/footer_wizard'); ?>

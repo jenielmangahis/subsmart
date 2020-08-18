@@ -28,33 +28,38 @@
 <nav class="navbar-side d-none d-md-block">
     <ul class="nav"><span class="nav-close"><svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%"><path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path></svg>           </span>
         <li class="nav-header">Settings</li>
-        
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+        <?php 
+            $active_email_sms_menu = "";
+            if(!empty($page->menu) && $page->menu === 'email_templates' || !empty($page->menu) && $page->menu === 'sms_templates') {
+                $active_email_sms_menu = "active";
+            }
+        ?>
+        <li class="submenus <?php echo $active_email_sms_menu; ?>">
+            <a href="<?php echo base_url('settings/email_templates') ?>" title="Email Templates">
                 <span class="fa fa-envelope-o"></span>
                 Email/SMS Templates
             </a>
         </li>  
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'email_branding')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'Email Branding')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('settings/email_branding') ?>" title="Email Branding">
                 <span class="fa fa-sliders"></span>
                 Email Branding
             </a>
         </li>  
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'notifications')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Notifications">
+            <a href="<?php echo base_url('settings/notifications') ?>" title="Notifications">
                 <span class="fa fa-bullhorn"></span>
                 Notifications
             </a>
         </li>  
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'online_payments')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
+            <a href="<?php echo base_url('settings/online_payments') ?>" title="Online Payments">
                 <span class="fa fa-credit-card"></span>
                 Online Payments
             </a>
         </li>  
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'files_vault')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/files_vault') ?>" title="Services">
+            <a href="<?php echo base_url('settings/files_vault') ?>" title="Files Vault">
                 <span class="fa fa-folder-o"></span>
                 Files Vault
             </a>
@@ -66,7 +71,7 @@
             </a>
         </li>    
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'quick_books')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('settings/quick_books') ?>" title="Services">
+            <a href="<?php echo base_url('settings/quick_books') ?>" title="Quick Books">
                 <span class="fa fa-calculator"></span>
                 Quick Books
             </a>

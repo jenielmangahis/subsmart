@@ -85,6 +85,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .form-group {
         margin-bottom: 3px !important;
     }
+    .required{
+        color : red!important;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -284,12 +287,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                    class="select-all">
                                                                             <label for="select-all">Name</label>
                                                                         </div>
-
                                                                     </div>
                                                                 </th>
-
+                                                                <th>Assigned To</th>
+                                                                <th>Referral By</th>
                                                                 <th>Email</th>
+                                                                <th>Added</th>
+                                                                <th>Start Date</th>
+                                                                <th>Last Login</th>
                                                                 <th>Phone</th>
+                                                                <th>Status</th>
                                                                 <th></th>
                                                             </tr>
                                                             </thead>
@@ -312,12 +319,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             </div>
                                                                         </div>
                                                                     </td>
-
+                                                                    <td>&nbsp;</td>
+                                                                    <td>&nbsp;</td>
                                                                     <td>
                                                                         <div class="table-nowrap">
                                                                             <?php echo $customer[2]; ?>
                                                                         </div>
                                                                     </td>
+                                                                    <td>&nbsp;</td>
+                                                                    <td>&nbsp;</td>
+                                                                    <td>&nbsp;</td>
                                                                     <td>
                                                                         <div class="table-nowrap">
                                                                             <?php if (is_serialized($customer[3])) { ?>
@@ -387,7 +398,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <?php else : ?>
                                                                     <tr style="background-color:#D3D3D3;">
                                                                         <td><span class="pl-5"><?php echo $customer[0]; ?></span></td>
-                                                                        <td colspan="2">&nbsp;</td>
+                                                                        <td colspan="8">&nbsp;</td>
                                                                         <td>&nbsp;</td>
                                                                     </tr>
                                                                 <?php endif; ?>
@@ -413,8 +424,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="float-right d-md-block">
                                                     <div class="dropdown">
                                                         <a class="btn btn-primary btn-md" href="#"><span class="fa fa-print"></span> Print</a>
-                                                        <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> New Lead</a>
-                                                        <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>
+                                                        <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> New Lead</a>
+                                                        <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>
                                                     </div>
                                                 </div>
                                                 <br/><br/><br/>
@@ -453,6 +464,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#activity">Activity</a>
                                                                 </li>
                                                                 <li class="nav-item">
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#details">Detail Sheet</a>
+                                                                </li>
+                                                                <li class="nav-item">
                                                                     <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#settings">Settings</a>
                                                                 </li>
                                                             </ul>
@@ -461,33 +475,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="tab-content mt-4" >
                                                         <div class="tab-pane active standard-accordion" id="dashboard">
 
-
-                                                            <!--<div class="col-sm-12">
-                                                                <div class="card">
-                                                                    <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                                        <div class="col-lg-12 table-responsive">
-                                                                            <h6>Client Lists</h6>
-                                                                            <table id="leadtypes" class="table table-bordered table-striped">
-                                                                                <thead>
-                                                                                <tr>
-                                                                                    <th>Client Name</th>
-                                                                                    <th>Action</th>
-                                                                                </tr>
-                                                                                </thead>
-                                                                                <tbody id="">
-
-                                                                                <tr>
-                                                                                    <td>Test Client</td>
-                                                                                    <td>
-                                                                                        <a href="" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>-->
                                                             <div class="col-sm-12">
                                                                 <div class="col-sm-12 text-right-sm" style="align:right;">
                                                                     <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
@@ -518,6 +505,95 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <div class="col-sm-12">
                                                                     </div>
                                                                 </div>-->
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane fade standard-accordion" id="profle">
+                                                            <div class="card">
+                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                                    <div class="col-lg-12">
+                                                                        <h6>Profile  <i>(John Doe)</i> </h6>
+                                                                        <div class="row">
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">First name </label><span class="required">*</span><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Last name</label><span class="required">*</span><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Email</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Last 4 of SSN</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Phone (H)</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Phone (M)</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Middle name </label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Suffix</label><span class="required">*</span><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for=""></label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">DOB</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Phone (W)</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Fax</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
                                                             </div>
                                                         </div>
 
