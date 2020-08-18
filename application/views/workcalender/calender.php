@@ -52,6 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     padding: 10px;
     color: #ffffff;
 }
+
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -176,8 +177,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div id="right-calendar"></div>
                 </div>
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header">FILTER BY TIME OFF</h4>
-                    <ul class="right-list-events">
+                    <h4  class="right-filter-header">FILTER BY TIME OFF</h4>                    
+
+
+                    <ul class="right-list-events">             
                         <li><span class="dot dot-red"><i class="fa fa-check"></i></span> Events</li>
                         <li><span class="dot dot-green"><i class="fa fa-check"></i></span> National Holiday</li>
                         <li><span class="dot dot-yellow"><i class="fa fa-check"></i></span> Interview</li>
@@ -554,6 +557,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         right: 'prev,next',
         left: 'title'
       },
+      titleFormat: { 
+        month: 'short'
+      }, 
       height:300,
       width:300,
       defaultDate: "<?php echo date('Y-m-d') ?>",
