@@ -1722,6 +1722,69 @@ button:focus {
 }
 
 @media (max-width: 767px) {
+    #sidebar {
+      top: 58px;
+      width: 45px !important;
+      z-index: 1;
+      align-items: center;
+      float: right;
+      height: 100vh;
+    }
+    .card-body {
+      padding: 10px;
+    }
+    a#addOnHandInventory {
+      display: none;
+    }
+    body {
+      overflow-x: scroll !important;
+    }
+    div#onHandInventory {
+      padding: 5px 33px;
+    }
+    .custom__border .row {
+      padding-left: 25px !important;
+      padding-right: 25px !important;
+    }
+    .card-body {
+      flex-wrap: wrap !important;
+      width: fit-content !important;
+    }
+    body table.dataTable thead th, body table.dataTable thead td {
+      padding: 6px 10px;
+      padding-right: 18px;
+      border-bottom: none;
+    }
+    .state-box table thead th {
+      padding: 10px 1px !important;
+    }
+    .card {
+      padding: 5px !important;
+      width: fit-content;
+    }
+    #topnav .navbar-right {
+      position: relative;
+      left: 8px;
+    }
+    .col-xl-12 {
+      padding: 0px !important;
+    }
+    .menu-extras.topbar-custom {
+      position: fixed !important;
+      top: 0px !important;
+      right: 0;
+      display: flex;
+      align-items: center;
+      height: 60px !important;
+      width: 100% !important;
+      flex-direction: inherit;
+      background: #dfdfe0;
+    }
+    .menu-extras.topbar-custom ul li .badge-pill {
+      position: absolute;
+      top: 16px !important;
+      right: 4px !important;
+    }
     .email-leftbar {
         float: none;
         width: 100%;
