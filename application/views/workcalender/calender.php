@@ -556,7 +556,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       },
       height:300,
       width:300,
-      defaultDate: '2020-02-12',
+      defaultDate: "<?php echo date('Y-m-d') ?>",
       navLinks: true, // can click day/week names to navigate views
       businessHours: false, // display business hours
       editable: false,
