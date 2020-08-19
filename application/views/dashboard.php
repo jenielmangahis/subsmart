@@ -239,7 +239,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 </div>
             </div><!-- end row -->
-			
+
 			<div class="row d-none d-lg-flex mb-1">
 				<div class="col-sm-6">
 					<div class="dropdown dropdown-inline filter-date">
@@ -274,7 +274,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
             </div>
-			
+
 
              <div class="row d-none d-lg-flex sortable2">
                  <?php
@@ -531,7 +531,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <span class="material-icons mdc-bottom-navigation__list-item__icon">Favorite</span>
           <span class="mdc-bottom-navigation__list-item__text">Favorites</span>
         </span>
-        <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+        <span class="sc-nearby mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
           <span class="material-icons mdc-bottom-navigation__list-item__icon">
             <svg style="width:24px;height:24px" viewBox="0 0 24 24">
               <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,12.5A1.5,1.5 0 0,1 10.5,11A1.5,1.5 0 0,1 12,9.5A1.5,1.5 0 0,1 13.5,11A1.5,1.5 0 0,1 12,12.5M12,7.2C9.9,7.2 8.2,8.9 8.2,11C8.2,14 12,17.5 12,17.5C12,17.5 15.8,14 15.8,11C15.8,8.9 14.1,7.2 12,7.2Z"></path>
@@ -542,69 +542,69 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </nav>
     </div>
 </div>
-<div style="" class="floating-btn-div div1">
+<div style="display: none;" class="floating-btn-div div1">
 	<label class="label"><a href="#">Reschedule</a></label>
 	<a href="#" class="float1">
 	<i class="fa fa-calendar my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div2">
+<div style="display: none;" class="floating-btn-div div2">
 
 	<label class="label"><a href="#">Request Signature</a></label>
 	<a href="#" class="float2">
 	<i class="fa fa-external-link my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div3">
+<div style="display: none;" class="floating-btn-div div3">
 	<label class="label"><a href="#">Notes</a></label>
 	<a href="#" class="float3">
 	<i class="fa fa-file my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div4">
+<div style="display: none;" class="floating-btn-div div4">
 	<label class="label"><a href="#">Log Time</a></label>
 	<a href="#" class="float4">
 	<i class="fa fa-clock-o my-float"></i>
 </a>
 </div>
-<div style="" class="floating-btn-div div5">
+<div style="display: none;" class="floating-btn-div div5">
 	<label class="label"><a href="#">Convert To Estimate</a></label>
 	<a href="#" class="float5">
 	<i class="fa fa-calculator my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div6">
+<div style="display: none;" class="floating-btn-div div6">
 	<label class="label"><a href="#">Convert To Invoice</a></label>
 	<a href="#" class="float6">
 	<i class="fa fa-money my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div7">
+<div style="display: none;" class="floating-btn-div div7">
 	<label class="label"><a href="#">Change Order</a></label>
 	<a href="#" class="float7">
 	<i class="fa fa-edit my-float"></i>
 	</a>
 </div>
 
-<div style="" class="floating-btn-div div8">
+<div style="display: none;" class="floating-btn-div div8">
 	<label class="label"><a href="#">Change Status</a></label>
 	<a href="#" class="float8">
 	<i class="fa fa-flag my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div9">
+<div style="display: none;" class="floating-btn-div div9">
 	<label class="label"><a href="#">Cancel Schedule</a></label>
 	<a href="#" class="float9">
 	<i class="fa fa-stop-circle my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div10">
+<div style="display: none;" class="floating-btn-div div10">
 	<label class="label"><a href="#">Attach Photo</a></label>
 	<a href="#" class="float10">
 	<i class="fa fa-picture-o my-float"></i>
 	</a>
 </div>
-<div style="" class="floating-btn-div div11">
+<div style="display: none;" class="floating-btn-div div11">
 	<label class="label"><a href="#">Assign New Lead</a></label>
 	<a href="#" class="float11">
 	<i class="fa fa-picture-o my-float"></i>
