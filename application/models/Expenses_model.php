@@ -102,6 +102,15 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
+    public function getAddedAttachment(){
+        $query = $this->db->get('accounting_existing_attachment');
+        $result = null;
+        if ($query->num_rows() > 0){
+            $result = $query->result();
+        }
+        return $result;
+    }
+
     public function expensesAttachment($id,$type,$file_name){
         if ($file_name['file_name'] != null){
             $attachment = $file_name['file_name'];

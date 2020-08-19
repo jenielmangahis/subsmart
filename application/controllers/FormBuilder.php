@@ -62,6 +62,7 @@ class FormBuilder extends MY_Controller {
 	
 	public function edit($id){
 		$this->page_data["form"] = $this->formsbuilder_model->getForms($id);
+		$this->page_data["elements"] = $this->formsbuilder_model->getFormElements($id);
 		if(empty($this->page_data["form"])){
 			redirect('/formbuilder');
 		}
@@ -100,5 +101,22 @@ class FormBuilder extends MY_Controller {
 		exit;
 	}
 
+	public function getFormElements($id = null){
+		$data =  array(
+			"status" => 1,
+			"data" => $this->formsbuilder_model->getFormElements($id)
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function addFormElement(){
+		$query = $this->formsbuilder_model->addFormElement($this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
 	
 }

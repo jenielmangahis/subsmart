@@ -110,8 +110,8 @@ $(document).ready(function() {
     });
   });
   // source code
-  $(document).on("click", "#modalAddNewSource .save", function (e) {
-    e.preventDefault();
+  // $(document).on("click", "#modalAddNewSource .save", function (e) {
+  //   e.preventDefault();
 
 
   $(document).on("submit", "#frm_add_new_source", function (e) {
@@ -136,10 +136,6 @@ $(document).ready(function() {
       }
     });
   });
-
-
-
-
 
   $("#customer_source")
     .select2({
@@ -185,30 +181,6 @@ $(document).ready(function() {
 
     var element = $(this);
     $(element).find('.modal-body').html('loading...');
-    //console.log($(e.relatedTarget).attr('data-input-address'));
-    // $('#frm_serice_address input[name=address]').val($(e.relatedTarget).attr('data-input-id'));
-    // $('#frm_serice_address input[name=address]').val($(e.relatedTarget).attr('data-input-customer-id'));
-
-    // console.log($(e.relatedTarget).attr('data-customer-id'));
-
-    // var service_address_index = $(e.relatedTarget).attr('data-id');
-    // var customer_id = $(e.relatedTarget).attr('data-customer-id');
-
-    // if (service_address_index && customer_id) {
-
-    //     $.ajax({
-    //         url: options.urlServiceAddressForm,
-    //         type: 'GET',
-    //         data: {index: service_address_index, customer_id: customer_id},
-    //         success: function (response) {
-
-    //             // console.log(response);
-
-    //             $(element).find('.modal-body').html(response);
-    //         }
-    //     });
-    // } else {
-
     $.ajax({
       url: options.urlServiceAddressForm,
       type: 'GET',
@@ -231,19 +203,9 @@ $(document).ready(function() {
         $(e.relatedTarget).attr('data-input-state_text');
       }
     });
-
-
+  });
     // open service address form
-    $('#modalServiceAddress').on('shown.bs.modal', function (e) {
-
-
-
-
-
-
-
-
-
+  $('#modalServiceAddress').on('shown.bs.modal', function (e) {
     if (confirm('Are you sure to delete this item')) {
 
       var service_address_index = $(this).attr('data-id');
@@ -264,44 +226,11 @@ $(document).ready(function() {
           $('input[name=service_address_container_deleted_addresses]').val(service_address_index);
       }
       $('#service_address_container #customer-address-list-counter-' + counter).remove();
-
-      // $.ajax({
-      //     url: options.urlRemoveServiceAddress,
-      //     type: 'POST',
-      //     data: {index: service_address_index, customer_id: customer_id},
-      //     success: function (response) {
-
-      //         console.log(response);
-
-      //         var json = JSON.parse(response);
-
-      //         if (json.status == 'success') {
-
-      //             $(row).remove();
-      //         } else {
-
-      //             alert("Something went wrong!");
-      //             $(row).css('opacity', 1);
-      //             $(row).find('a').attr('disabled', false);
-      //         }
-
-      //         // get_service_address();
-      //     }
-      // });
     }
   });
 
 
     // get_service_address();
-
-
-
-
-
-
-
-
-  
     // add group 
     $(document).on('click', "#modalAddNewGroup .save", function (e) {
         
@@ -354,21 +283,6 @@ $(document).ready(function() {
         });
     });
 
-
-
-  
-
-  
-
-
-   
-
-    
-   
-
-    
-
-
     /* Contact */
 
     // open additional contact form
@@ -404,15 +318,7 @@ $(document).ready(function() {
             });
       }
     });
-      /*$(document).on(
-        "click",
-        "#modalServiceAddress .modal-footer > button:last-child",
-        function(e) {
-          e.preventDefault();
 
-          $("#frm_serice_address").submit();
-        }
-      );*/
 
   $(document).on("submit", "#frm_serice_address", function(e) {
     e.preventDefault();
@@ -651,44 +557,48 @@ $(document).ready(function() {
     }
   });
 
-    // open service address form
-    $('#modalServiceGroup').on('shown.bs.modal', function (e) {
+  // open service address form
+  $('#modalServiceGroup').on('shown.bs.modal', function (e) {
 
-        var element = $(this);
-        $(element).find('.modal-body').html('loading...');
+      var element = $(this);
+      $(element).find('.modal-body').html('loading...');
 
-        // console.log($(e.relatedTarget).attr('data-customer-id'));
+      // console.log($(e.relatedTarget).attr('data-customer-id'));
 
-        var service_address_index = $(e.relatedTarget).attr('data-id');
-        var customer_id = $(e.relatedTarget).attr('data-customer-id');
+      var service_address_index = $(e.relatedTarget).attr('data-id');
+      var customer_id = $(e.relatedTarget).attr('data-customer-id');
 
-        if (service_address_index && customer_id) {
+      if (service_address_index && customer_id) {
 
-            $.ajax({
-                url: options.urlServiceGroupForm,
-                type: 'GET',
-                data: {index: service_address_index, customer_id: customer_id},
-                success: function (response) {
+          $.ajax({
+              url: options.urlServiceGroupForm,
+              type: 'GET',
+              data: {index: service_address_index, customer_id: customer_id},
+              success: function (response) {
 
-                     console.log(response);
+                    console.log(response);
 
-                    $(element).find('.modal-body').html(response);
-                }
-            });
-        } else {
+                  $(element).find('.modal-body').html(response);
+              }
+          });
+      } else {
 
-            $.ajax({
-                url: options.urlServiceGroupForm,
-                type: 'GET',
-                success: function (response) {
+          $.ajax({
+              url: options.urlServiceGroupForm,
+              type: 'GET',
+              success: function (response) {
 
-                     console.log(response);
+                    console.log(response);
 
-                    $(element).find('.modal-body').html(response);
-                }
-            });
-        }
-    });
+                  $(element).find('.modal-body').html(response);
+              }
+          });
+      }
+  });
+
+  $("#exportCustomers").click(function () {
+    exportItems();
+  });
 });
 
 function toggle_advance_options() {
@@ -785,4 +695,12 @@ function formatRepo(repo) {
 function formatRepoSelection(repo) {
   console.log(repo);
   return repo.title || repo.text;
+}
+
+function exportItems() {
+  var link = document.createElement("a");
+  link.href = base_url + "customer/exportItems";
+
+  document.body.appendChild(link);
+  link.click();
 }

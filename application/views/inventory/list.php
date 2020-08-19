@@ -284,7 +284,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-10 pl-0 text-left">New Item</h4>
                                     </div>
-                                    <?php echo form_open('inventory/saveItems', ['class' => 'form-validate require-validation', 'id' => 'new_item_form', 'autocomplete' => 'off']); ?>
+                                    <?php echo form_open_multipart('inventory/saveItems', ['class' => 'form-validate require-validation', 'id' => 'new_item_form', 'autocomplete' => 'off']); ?>
                                         <div class="row col-md-12">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Item Name</label>
                                             <input type="text" id="itemName" name="item_name" class="form-control col-md-5" required>

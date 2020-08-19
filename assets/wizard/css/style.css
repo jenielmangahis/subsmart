@@ -8584,7 +8584,8 @@ div{outline: none !important;}
     background: #111;color: #fff;
 }
 .app-listing-wrp h4{
-    font-size:20px;
+    /* font-size:20px; */
+    font-size:18px;
     font-weight: bold;
     color: #333;
     margin: 0 0 15px;

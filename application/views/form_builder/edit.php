@@ -6,6 +6,7 @@
 <style>
   #windowPreviewTemplate{
     min-height: 90%;
+    z-index: 0
   }
   
   .form-list-item-options{
@@ -14,8 +15,18 @@
   .form-list-item.options:hover{
     display: block;
   }
+
+  .form-user-elements:hover{
+    background-color: #eeeeee;
+    cursor: pointer;
+  }
+
+  .form-user-elements-settings{
+    display: none;
+  }
   
 </style>
+
 <div class="wrapper">
   <div __wrapper_section>
     <div class="card my-2">
@@ -58,83 +69,375 @@
 
           <!-- FORM EDITOR -->
           <div id="form-editor-window" class="form-editor-settings-window tab-pane fade show active">
+            <h2>Form Editor</h2>
             
             <div class="row">
-              <div class="col-xs-12 col-md-3 overflow-auto">
-                <div class="form-group">
-                  <h2>Form Editor</h2>
-      
-                  </div>
-                  <div id="accordion" class="overflow-none">
-                    <ul class="list-group">
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseCommonItemsMenu" aria-expanded="true" aria-controls="collapse0">
-                        Common Items
-                      </li>
-                      <div id="collapseCommonItemsMenu" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                        <div class="row">
-                          <div class="col-xs-6 col-sm-6">
-                            <button class="btn btn-block btn-secondary"><i class="fa fa-cog"></i> Element</button>
+              <div class="col-xs-12 col-md-3 ">
+                
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="list" href="#form-editor-build-sidenav">Build</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="list" href="#form-editor-style-sidenav">Style</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="list" href="#form-editor-rules-sidenav">Rules</a>
+                  </li>
+                </ul>
+
+                <div class="tab-content">
+                  <div id="form-editor-build-sidenav" class="tab-pane fade show active">
+                    
+                    <div id="accordion" class="overflow-none">
+                      <ul class="list-group">
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseCommonItemsMenu" aria-expanded="true" aria-controls="collapse0">
+                          Common Items
+                        </li>
+                        <div id="collapseCommonItemsMenu" class="collapse show " aria-labelledby="headingOne" data-parent="#accordion">
+                          <div class="row" style="overflow-x: auto; height: 250px;">
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="1">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-dot-circle-o"></i> Radio Button</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                              <div class="form-elements-draggable" data-element-id="2">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-caret-square-o-down"></i> Dropdown</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="3">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-check-square-o"></i> Checkbox</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                              <div class="form-elements-draggable" data-element-id="4">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-envelope"></i> Email Address</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="5">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-text-width"></i> Long Answer</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="6">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-font"></i> Short Answer</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="7">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Calendar  </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="8">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-square-o"></i> Number</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="9">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-file"></i> File Upload</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="10">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-list"></i> Text List</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="11">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-star"></i> Rating</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="12">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-bar-chart"></i> Ranking</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="13">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-square-o"></i> Hidden Field</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="14">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-strikethrough"></i> Signature</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="15">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-image"></i> Image List</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="16">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calculator"></i> Calculation</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="17">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-credit-card"></i> Credit Card</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="18">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-address-book"></i> Contact Block</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="19">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-save"></i> Save and Return</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+
+
                           </div>
-                          <div class="col-xs-6 col-sm-6">
-                            <button class="btn btn-block btn-secondary"><i class="fa fa-cog"></i> Element</button>
+                          
+                        </div>
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseFormattingItemsMenu" aria-expanded="true" aria-controls="collapse0">
+                          Formatting Items
+                        </li>
+                        <div id="collapseFormattingItemsMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <div class="row" style="overflow-x: auto; height: 250px;">
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="20">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-dot-circle-o"></i> Heading</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                              <div class="form-elements-draggable" data-element-id="21">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-caret-square-o-down"></i> Formatted Text</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="22">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-image"></i> Image</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                              <div class="form-elements-draggable" data-element-id="23">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-link"></i> Link</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="24">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-text-width"></i> Custom Code</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="25">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-font"></i> Blank Space</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="26">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Page Break  </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        
-                      </div>
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseFormattingItemsMenu" aria-expanded="true" aria-controls="collapse0">
-                        Formatting Items
-                      </li>
-                      <div id="collapseFormattingItemsMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                        <a href="#" class="btn btn-link">Blank space here</a>
-                      </div>
-                  
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseEmailItemsMenu" aria-expanded="true" aria-controls="collapse0">
-                        Email Items
-                      </li>
-                      <div id="collapseEmailItemsMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                        <a href="#" class="btn btn-link">Blank space here</a>
-                      </div>
-                  
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseOrderFormMenu" aria-expanded="true" aria-controls="collapse0">
-                        Order Form Items
-                      </li>
-                      <div id="collapseOrderFormMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                        <a href="#" class="btn btn-link">Blank space here</a>
-                      </div>
-                  
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseMatrixGridMenu" aria-expanded="true" aria-controls="collapse0">
-                        Matrix/Grid Items
-                      </li>
-                      <div id="collapseMatrixGridMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                        <a href="#" class="btn btn-link">Blank space here</a>
-                      </div>
-                  
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseItemMenu" aria-expanded="true" aria-controls="collapse0">
-                        Item Blocks
-                      </li>
-                      <div id="collapseItemMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                        <a href="#" class="btn btn-link">Blank space here</a>
-                      </div>
-  
-                      <li class="list-group-item" data-toggle="collapse" data-target="#collapseHeaderFooterMenu" aria-expanded="true" aria-controls="collapse0">
-                        Header/Footer
-                      </li>
-                      <div id="collapseHeaderFooterMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                        <a href="#" class="btn btn-link">Blank space here</a>
-                      </div>
-                    </ul>      
+                    
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseEmailItemsMenu" aria-expanded="true" aria-controls="collapse0">
+                          Email Items
+                        </li>
+                        <div id="collapseEmailItemsMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <div class="row" style="overflow-x: auto; heightL 250px;">
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="4">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Email Address</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="28">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Radio Button Email Routing </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="29">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Dropdown Email Routing</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="30">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Checkbox Email Routing</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseOrderFormMenu" aria-expanded="true" aria-controls="collapse0">
+                          Order Form Items
+                        </li>
+                        <div id="collapseOrderFormMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <p class="text-muted">Coming soon</p>
+                        </div>
+                    
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseMatrixGridMenu" aria-expanded="true" aria-controls="collapse0">
+                          Matrix/Grid Items
+                        </li>
+                        <div id="collapseMatrixGridMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <p class="text-muted">Coming soon</p>
+                        </div>
+                    
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseItemMenu" aria-expanded="true" aria-controls="collapse0">
+                          Item Blocks
+                        </li>
+                        <div id="collapseItemMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <p class="text-muted">Coming soon</p>
+                        </div>
+    
+                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseHeaderFooterMenu" aria-expanded="true" aria-controls="collapse0">
+                          Header/Footer
+                        </li>
+                        <div id="collapseHeaderFooterMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                          <p class="text-muted">Coming soon</p>
+                        </div>
+                      </ul>      
+                    </div>
+
                   </div>
+                  <div id="form-editor-style-sidenav" class="tab-pane fade">
+                    <h3 class="text-center text-muted">Coming soon</h3>
+                  </div>
+                  <div id="form-editor-rules-sidenav" class="tab-pane fade">
+                    <h3 class="text-center text-muted">Coming soon</h3>
+                  </div>
+                </div>
                   
               </div>
               <div class="col-xs-12 col-md-9">
-                <div id="windowPreviewTemplate" class="card">
-                  main window preview template
+                <div id="windowPreviewTemplate" class="card row">
                 </div>
               </div>
             </div>
@@ -207,59 +510,9 @@
                                       </div>
                                       <div class="form-group">
                                         <label for="#txtStartTime">Start Time</label>
-                                        <select name="txtStartTime" id="txtStartTime" class="custom-select">
-                                          <option value="00:00" selected>12.00 AM</option>
-                                          <option value="00:30">12.30 AM</option>
-                                          <option value="01:00">01.00 AM</option>
-                                          <option value="01:30">01.30 AM</option>
-                                          <option value="02:00">02.00 AM</option>
-                                          <option value="02:30">02.30 AM</option>
-                                          <option value="03:00">03.00 AM</option>
-                                          <option value="03:30">03.30 AM</option>
-                                          <option value="04:00">04.00 AM</option>
-                                          <option value="04:30">04.30 AM</option>
-                                          <option value="05:00">05.00 AM</option>
-                                          <option value="05:30">05.30 AM</option>
-                                          <option value="06:00">06.00 AM</option>
-                                          <option value="06:30">06.30 AM</option>
-                                          <option value="07:00">07.00 AM</option>
-                                          <option value="07:30">07.30 AM</option>
-                                          <option value="08:00">08.00 AM</option>
-                                          <option value="08:30">08.30 AM</option>
-                                          <option value="09:00">09.00 AM</option>
-                                          <option value="09:30">09.30 AM</option>
-                                          <option value="10:00">10.00 AM</option>
-                                          <option value="10:30">10.30 AM</option>
-                                          <option value="11:00">11.00 AM</option>
-                                          <option value="11:30">11.30 AM</option>
-                                          <option value="12:00">12.00 PM</option>
-                                          <option value="12:30">12.30 PM</option>
-                                          <option value="13:00">01.00 PM</option>
-                                          <option value="13:30">01.30 PM</option>
-                                          <option value="14:00">02.00 PM</option>
-                                          <option value="14:30">02.30 PM</option>
-                                          <option value="15:00">03.00 PM</option>
-                                          <option value="15:30">03.30 PM</option>
-                                          <option value="16:00">04.00 PM</option>
-                                          <option value="16:30">04.30 PM</option>
-                                          <option value="17:00">05.00 PM</option>
-                                          <option value="17:30">05.30 PM</option>
-                                          <option value="18:00">06.00 PM</option>
-                                          <option value="18:30">06.30 PM</option>
-                                          <option value="19:00">07.00 PM</option>
-                                          <option value="19:30">07.30 PM</option>
-                                          <option value="20:00">08.00 PM</option>
-                                          <option value="20:30">08.30 PM</option>
-                                          <option value="21:00">09.00 PM</option>
-                                          <option value="21:30">09.30 PM</option>
-                                          <option value="22:00">10.00 PM</option>
-                                          <option value="22:30">10.30 PM</option>
-                                          <option value="23:00">11.00 PM</option>
-                                          <option value="23:30">11.30 PM</option>
-                                        </select>
+                                        <input type="time" name="txtStartTime" id="txtStartTime" class="form-control">
                                       </div>
                                     </div>
-
                                     <div class="form-group">
                                       <label for="$txtMessageTitle">Message Title</label>
                                       <input type="text" name="txtStartMessageTitle" id="txtStartMessageTitle" class="form-control">
@@ -286,60 +539,9 @@
                                       </div>
                                       <div class="form-group">
                                         <label for="#txtEndTime">End Time</label>
-                                        <!-- <input type="date" class="form-control" name="txtEndTime" id="txtEndTime"> -->
-                                        <select name="txtEndTime" id="txtEndTime" class="custom-select">
-                                          <option value="00:00" selected>12.00 AM</option>
-                                          <option value="00:30">12.30 AM</option>
-                                          <option value="01:00">01.00 AM</option>
-                                          <option value="01:30">01.30 AM</option>
-                                          <option value="02:00">02.00 AM</option>
-                                          <option value="02:30">02.30 AM</option>
-                                          <option value="03:00">03.00 AM</option>
-                                          <option value="03:30">03.30 AM</option>
-                                          <option value="04:00">04.00 AM</option>
-                                          <option value="04:30">04.30 AM</option>
-                                          <option value="05:00">05.00 AM</option>
-                                          <option value="05:30">05.30 AM</option>
-                                          <option value="06:00">06.00 AM</option>
-                                          <option value="06:30">06.30 AM</option>
-                                          <option value="07:00">07.00 AM</option>
-                                          <option value="07:30">07.30 AM</option>
-                                          <option value="08:00">08.00 AM</option>
-                                          <option value="08:30">08.30 AM</option>
-                                          <option value="09:00">09.00 AM</option>
-                                          <option value="09:30">09.30 AM</option>
-                                          <option value="10:00">10.00 AM</option>
-                                          <option value="10:30">10.30 AM</option>
-                                          <option value="11:00">11.00 AM</option>
-                                          <option value="11:30">11.30 AM</option>
-                                          <option value="12:00">12.00 PM</option>
-                                          <option value="12:30">12.30 PM</option>
-                                          <option value="13:00">01.00 PM</option>
-                                          <option value="13:30">01.30 PM</option>
-                                          <option value="14:00">02.00 PM</option>
-                                          <option value="14:30">02.30 PM</option>
-                                          <option value="15:00">03.00 PM</option>
-                                          <option value="15:30">03.30 PM</option>
-                                          <option value="16:00">04.00 PM</option>
-                                          <option value="16:30">04.30 PM</option>
-                                          <option value="17:00">05.00 PM</option>
-                                          <option value="17:30">05.30 PM</option>
-                                          <option value="18:00">06.00 PM</option>
-                                          <option value="18:30">06.30 PM</option>
-                                          <option value="19:00">07.00 PM</option>
-                                          <option value="19:30">07.30 PM</option>
-                                          <option value="20:00">08.00 PM</option>
-                                          <option value="20:30">08.30 PM</option>
-                                          <option value="21:00">09.00 PM</option>
-                                          <option value="21:30">09.30 PM</option>
-                                          <option value="22:00">10.00 PM</option>
-                                          <option value="22:30">10.30 PM</option>
-                                          <option value="23:00">11.00 PM</option>
-                                          <option value="23:30">11.30 PM</option>
-                                        </select>
+                                        <input type="time" class="form-control" name="txtEndTime" id="txtEndTime">
                                       </div>
                                     </div>
-
                                     <div class="form-group">
                                       <label for="#txtEndMessageTitle">Message Title</label>
                                       <input type="text" name="txtEndMessageTitle" id="txtEndMessageTitle" class="form-control">
@@ -416,8 +618,8 @@
                           </div>
                           
                           <div class="custom-control custom-checkbox">
-                            <input type="checkbox" name="chkSubmitResponse" id="chkSubmitResponse" class="custom-control-input">
-                            <label class="custom-control-label" for="chkSubmitResponse">Show 'Submit another response' button</label>
+                            <input type="checkbox" name="chkSubmitResponse" id="chkSubmitAnotherResponse" class="custom-control-input">
+                            <label class="custom-control-label" for="chkSubmitAnotherResponse">Show 'Submit another response' button</label>
                           </div>
                         </blockquote>
                         
@@ -501,23 +703,177 @@
 
     </div>
   </div>
-
+  <div class="modal" id="modalInputSettings">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          asdf
+      </div>
+    </div>
+  </div>
 </div>
+
 <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script>
+  const formElements = document.getElementsByClassName('form-user-elements');
+  const elementsList = [
+    {
+      id: 1,
+      type: "radio-button",
+      category: 'common'
+    },
+    {
+      id: 2,
+      type: "dropdown",
+      category: 'common'
+    },
+    {
+      id: 3,
+      type: "checkbox",
+      category: 'common'
+    },
+    {
+      id: 4,
+      type: "email-address",
+      category: 'common'
+    },
+    {
+      id: 5,
+      type: "long-answer",
+      category: 'common'
+    },
+    {
+      id: 6,
+      type: "short-answer",
+      category: 'common'
+    },
+    {
+      id: 7,
+      type: "calendar",
+      category: 'common'
+    },
+    {
+      id: 8,
+      type: "number",
+      category: 'common'
+    },
+    {
+      id: 9,
+      type: "file-upload",
+      category: 'common'
+    },
+    {
+      id: 10,
+      type: "text-list",
+      category: 'common'
+    },
+    {
+      id: 11,
+      type: "rating",
+      category: 'common'
+    },
+    {
+      id: 12,
+      type: "ranking",
+      category: 'common'
+    },
+    {
+      id: 13,
+      type: "hidden-field",
+      category: 'common'
+    },
+    {
+      id: 14,
+      type: "signature",
+      category: 'common'
+    },
+    {
+      id: 15,
+      type: "image-list",
+      category: 'common'
+    },
+    {
+      id: 16,
+      type: "calculation",
+      category: 'common'
+    },
+    {
+      id: 17,
+      type: "credit-card",
+      category: 'common'
+    },
+    {
+      id: 18,
+      type: "contact-block",
+      category: 'common'
+    },
+    {
+      id: 19,
+      type: "save-and-return",
+      category: 'common'
+    },
+    {
+      id: 20,
+      type: "heading",
+      category: 'format'
+    },
+    {
+      id: 21,
+      type: "formatted-text",
+      category: 'format'
+    },
+    {
+      id: 22,
+      type: "image",
+      category: 'format'
+    },
+    {
+      id: 23,
+      type: "link",
+      category: 'format'
+    },
+    {
+      id: 24,
+      type: "custom-code",
+      category: 'format'
+    },
+    {
+      id: 25,
+      type: "blank-space",
+      category: 'format'
+    },
+    {
+      id: 26,
+      type: "page-break",
+      category: 'format'
+    },
+    {
+      id: 28,
+      type: "radio-button-email-routing",
+      category: 'email'
+    },
+    {
+      id: 29,
+      type: "dropdown-email-routing",
+      category: 'email'
+    },
+    {
+      id: 30,
+      type: "checkbox-email-routing",
+      category: 'email'
+    },
+  ]
   let userFormData = {}
+  let selectedElement = 0;
+  let selectedUserElement = 0;
   var operationsWindow = {
     showStartOptions: false,
     showEndOptions: false,
     showResultOptions: false
   }
-  // selectMenu = menuKey => {
-  //   swtich(){
-  //     case 0:
-  //       break;
-  //   }
-  // }
+  
+  
   
   toggleOperationsMenu = e => {
     switch(e.target.name){
@@ -536,19 +892,69 @@
     }
   }
 
+  // this function runs upon page load
   loadFormSettings = () => {
     $.ajax({
       url: "<?= base_url()?>formbuilder/form/view/<?=$form->forms_id?>",
       dataType: 'json',
       type: 'GET',
       success: function(res){
-        console.log(res)
+        document.querySelector('#txtFormName').value = res.data.forms_title
+        document.querySelector('#txtPrivateNotes').value = res.data.forms_private_note
+        document.querySelector('#txtSocialDescription').value = res.data.forms_social_desc
+        document.querySelector('#txtFormToggleStart').checked = (res.data.forms_use_start_date == 1)? true : false
+        document.querySelector('#txtFormToggleEnd').checked = (res.data.forms_use_closing_date == 1)? true : false
+        document.querySelector('#txtFormToggleResult').checked = (res.data.forms_use_results_limit == 1)? true : false
+        document.querySelector('#txtStartDate').value = res.data.forms_start_date
+        document.querySelector('#txtStartTime').value = res.data.forms_start_time
+        document.querySelector('#txtStartMessageTitle').value = res.data.forms_start_title
+        document.querySelector('#txtStartMessageContent').value = res.data.forms_start_message
+        document.querySelector('#txtEndDate').value = res.data.forms_end_date
+        document.querySelector('#txtEndTime').value = res.data.forms_end_time
+        document.querySelector('#txtEndMessageTitle').value = res.data.forms_end_title
+        document.querySelector('#txtEndMessageContent').value = res.data.forms_end_message
+        document.querySelector('#txtResultsLimit').value = res.data.forms_results_limit
+        document.querySelector('#txtResultsMessageTitle').value = res.data.forms_results_max_title
+        document.querySelector('#txtResultsMessageContent').value = res.data.forms_results_max_message
+
+        document.querySelector('#txtRedirectLink').value = res.data.forms_redirect_link
+        document.querySelector('#txtSuccessTitle').value = res.data.forms_success_title
+        document.querySelector('#txtSuccessMessage').value = res.data.forms_success_message
+        document.querySelector('#chkSubmitAnotherResponse').checked = (res.data.forms_show_repeat_form_check == 1)? true : false
+
         return;
       }
     })
   }
 
+  loadFormElements = () => {
+    document.querySelector("#windowPreviewTemplate").innerHTML = "";
+    $.ajax({
+      url: "<?= base_url()?>formbuilder/form/element/get/<?=$form->forms_id?>",
+      dataType: 'json',
+      type: 'GET',
+      success: function(res){
+        res.data.forEach(el => {
+          document.querySelector('#windowPreviewTemplate').innerHTML += `
+            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-6 form-user-elements">
+              <div class="form-group ">
+                <div id="form-element-setting-${el.fe_id}" class="form-user-elements-settings position-absolute">
+                  <h1>testing lang ${el.fe_id} </h1>
+                </div>
+                <label for="fe${el.fe_id}">${el.fe_label}</label>
+                <input type="text" name="feinput${el.fe_id  }" id="feinput${el.fe_id}" class="form-control">
+              </div>
+            </div>
+          `;
+        });
+        return;
+      }
+    })
+  }
+
+
   loadFormSettings();
+  loadFormElements();
 
   document.querySelector('#btnSaveGeneralSettings').addEventListener('click', () => {
     let data = {
@@ -565,6 +971,7 @@
       "forms_end_date": document.querySelector('#txtEndDate').value,
       "forms_end_time": document.querySelector('#txtEndTime').value,
       "forms_end_title": document.querySelector('#txtEndMessageTitle').value,
+      "forms_end_message": document.querySelector('#txtEndMessageContent').value,
       "forms_results_limit": document.querySelector('#txtResultsLimit').value,
       "forms_results_max_title": document.querySelector('#txtResultsMessageTitle').value,
       "forms_results_max_message": document.querySelector('#txtResultsMessageContent').value,
@@ -577,6 +984,7 @@
       type: 'POST',
       success: function(res){
         window.alert("general settings saved")
+        loadFormSettings();
         return;
       }
     })
@@ -587,7 +995,7 @@
       'forms_redirect_link': document.querySelector('#txtRedirectLink').value,
       'forms_success_title': document.querySelector('#txtSuccessTitle').value,
       'forms_success_message': document.querySelector('#txtSuccessMessage').value,
-      'forms_show_repeat_form_check': (document.querySelector('#chkSubmitResponse').checked === true)? 1 : 0
+      'forms_show_repeat_form_check': (document.querySelector('#chkSubmitAnotherResponse').checked === true)? 1 : 0
     }
 
     $.ajax({
@@ -597,8 +1005,100 @@
       type: 'POST',
       success: function(res){
         window.alert('success pages saved');
+        loadFormSettings();
         return;
       }
     })
   });
+
+  $('.form-elements-draggable').draggable({
+    // snap: "#windowPreviewTemplate",
+    scroll: false,
+    revert: "valid",
+    helper: "clone",
+    appendTo: "#windowPreviewTemplate",
+    snap: "#windowPreviewTemplate",
+    snapMode: "inner",
+    grid: [20, 20],
+    start: function(event, ui){
+      
+      selectedElement = elementsList.findIndex((item) => {
+        return item.id == event.target.dataset.elementId;
+      })
+    },
+    stop: function(event){
+      selectedElement = 0
+    }
+    // containment: "#windowPreviewTemplate",
+    
+  });
+
+  $('#windowPreviewTemplate').droppable({
+    greedy: true,
+    drop: function(event, ui){
+      console.log(ui.position)
+      
+      let data = {
+        "fe_form_id": <?= $form->forms_id?>,
+        "fe_element_id": selectedElement,
+        "fe_label": elementsList[selectedElement].type,
+      }
+      
+      $.ajax({
+        url: "<?= base_url()?>formbuilder/form/element/add",
+        data: data,
+        dataType: 'json',
+        type: 'POST',
+        success: function(res){
+          window.alert('Element added!');
+          loadFormSettings();
+          loadFormElements();
+          return;
+        }
+      })
+    }
+  })
+
 </script>
+<!-- 
+  ELEMENTS GUIDE:
+
+    Common Items:
+      1   -   Radio Button
+      2   -   Dropdown
+      3   -   Checkbox
+      4   -   Email Address
+      5   -   Long Answer
+      6   -   Short Answer
+      7   -   Calendar
+      8   -   Number
+      9   -   File Upload
+      10  -   Text List
+      11  -   Rating
+      12  -   Ranking
+      13  -   Hidden Field
+      14  -   Signature
+      15  -   Image List
+      16  -   Calculation
+      17  -   Credit Card
+      18  -   Contact Block
+      19  -   Save and Return
+
+    Formatting Items:
+      20  -   Heading
+      21  -   Formatted Text
+      22  -   Image
+      23  -   Link
+      24  -   Custom Code
+      25  -   Blank Space
+      26  -   Page Break
+    
+    Email Items:
+      4   -   Email Address
+      28  -   Radio Button Email Routing
+      29  -   Dropdown Email Routing
+      30  -   Checkbox Email Routing
+
+
+  
+-->

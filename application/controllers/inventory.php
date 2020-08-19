@@ -83,6 +83,24 @@ class Inventory extends MY_Controller
         postAllowed();
         $comp_id = logged('company_id');
         $id = $this->input->post('item_id');
+        
+        $config = array(
+            'upload_path' => "./uploads/",
+            'allowed_types' => "gif|jpg|png|jpeg",
+            'overwrite' => TRUE,
+            'max_size' => "2048000",
+            'max_height' => "768",
+            'max_width' => "1024"
+        );
+
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload('attach_photo')) {
+			$product_image = '';
+		} else {
+			$data = array('upload_data' => $this->upload->data());
+			$product_image = $data['upload_data']['file_name'];
+        }
+
         $data = array(
             'company_id' => $comp_id,
             'title' => $this->input->post('item_name'),
@@ -98,7 +116,8 @@ class Inventory extends MY_Controller
             'item_categories_id' => $this->input->post('item_category'),
             'is_active' => 1,
             'vendor_id' => $this->input->post('vendor'),
-            'units' => $this->input->post('unit')
+            'units' => $this->input->post('unit'),
+            'attached_image' => $product_image
         );
 
         $message_1 = "New";
@@ -180,12 +199,19 @@ class Inventory extends MY_Controller
 
         $f = fopen('php://memory', 'w');
   
-        $fields = array('Name', 'Price', 'Discount', 'Description', 'Customer Group', 'Item Vendor', 'Item Type', 'Item Cost', 'Link/Url', 'Notes');
+        $fields = array('Model #', 'Name', 'Price', 'Description', 'Brand', 'Item Vendor', 'Item Type', 'Item Cost', 'Link/Url', 'Image', 'QTH-OH', 'Locations [loc->qty]');
         fputcsv($f, $fields, $delimiter);
 
         if (!empty($items)) {       
             foreach ($items as $item) {
-                $csvData = array($item->title, '$'.number_format($item->price,2,".",","), '', $item->description, '', '', $item->type, 0, '', '');
+                $locations = $this->items_model->getLocationByItemId($item->id);
+                $qty = 0;
+                $loc = "";
+                foreach ($locations as $location) {
+                    $qty += intval($location['qty']);
+                    $loc .= '[' . $location['name'] . '->' . $location['qty'] . '],';
+                }
+                $csvData = array($item->model, $item->title, '$'.number_format($item->price,2,".",","), $item->description, $item->brand, $item->vendor_id, $item->type, $item->COGS, $item->url, '', $qty, $loc);
                 fputcsv($f, $csvData, $delimiter);
             }
         } else {
@@ -225,9 +251,16 @@ class Inventory extends MY_Controller
                             $itemData = array(
                                 'company_id' => logged('company_id'),
                                 'title' => $row['Name'],
+                                'model' => $row['Model'],
+                                'brand' => $row['Brand'],
                                 'price' => intval($price[1]),
-                                'COGS' => intval($price[1]),
                                 'description' => $row['Description'],
+                                'item_categories_id' => intval($row['Customer Group']),
+                                'vendor_id' => intval($row['Item Vendor']),
+                                'type' => intval($row['Item Type']),
+                                'COGS' => intval($row['Item Cost']),
+                                'url' => $row['Link/Url'],
+                                'notes' => $row['Notes'],
                                 'type' => "product",
                                 'is_active' => 1
                             );

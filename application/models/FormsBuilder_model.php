@@ -37,6 +37,27 @@ class FormsBuilder_model extends MY_Model {
 			"status" => 1
 		);
 	}
+
+	public function getFormElements($form_id = null){
+		$this->db->select("*");
+
+		if($form_id !== null){
+			$this->db->where('fe_form_id', $form_id);
+			$query =  $this->db->get($this->elements_table);
+			return $query->result();
+		}
+		$query =  $this->db->get($this->elements_table);
+		return $query->result();
+	}
+
+	public function addFormElement($data){
+		$this->db->insert($this->elements_table, $data);
+		return array(
+			"status" => 1,
+			"id" => $this->db->insert_id()
+		);
+	}
+
 }
 
 /* End of file Permissions_model.php */

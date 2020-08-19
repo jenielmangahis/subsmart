@@ -133,6 +133,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         .tab-badge-left-margin {
             margin-left: auto;
         }
+        /* #main-drag-and-drop-area { font-size: 1.1em !important; } */
+    /* .column { width: 100%; float: left; padding-bottom: 30px; } */
+    /* .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; } */
+    /* .portlet-content { padding: 0.4em; border: 1px solid #cccccc; } */
     </style>
 
     <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{

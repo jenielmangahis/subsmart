@@ -123,12 +123,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="tab-content mt-4" >
                                         <div class="tab-pane <?php if($cust_tab==0){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-3">
                                                     <h3 class="page-title">Customers List</h3>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-9">
                                                     <div class="float-right d-md-block">
                                                         <div class="dropdown">
+                                                            <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
+                                                                <input type="file" name="file" />
+                                                                <input type="submit" class="btn btn-primary btn-md" name="importSubmit" id="importItemsInventory" value="Import">
+                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Export</button>
                                                             <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
                                                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
                                                             </a>
@@ -145,7 +149,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 href="<?php echo url('customer/add_advance') ?>"><span
                                                                             class="fa fa-plus"></span> New Customer</a>
                                                             <?php //endif ?>
-
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>

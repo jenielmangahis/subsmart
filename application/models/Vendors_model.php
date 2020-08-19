@@ -19,7 +19,160 @@ class Vendors_model extends MY_Model {
 	    return $vendor->result();
     }
 	public function getvendortransactions($id){
+		$listOfID = array();
+		$allData = array();
+		
 	    $getBill = $this->db->get_where('accounting_bill', array('vendor_id' => $id));
-	    return $getBill->result();
-    }
+		foreach($getBill->result() as $billRow){
+			array_push($listOfID,$billRow->transaction_id);
+		}
+		
+		$getCheck = $this->db->get_where('accounting_check', array('vendor_id' => $id));
+		foreach($getCheck->result() as $checkRow){
+			array_push($listOfID,$checkRow->transaction_id);
+		}
+		
+		$getExpense = $this->db->get_where('accounting_expense', array('vendor_id' => $id));
+		foreach($getExpense->result() as $expenseRow){
+			array_push($listOfID,$expenseRow->transaction_id);
+		}
+		
+		$getVendorCredit = $this->db->get_where('accounting_vendor_credit', array('vendor_id' => $id));
+		foreach($getVendorCredit->result() as $vendorcreditRow){
+			array_push($listOfID,$vendorcreditRow->transaction_id);
+		}
+		
+		$this->db->where_in('id', $listOfID);
+		$this->db->order_by('date_created', 'DESC');
+		$query = $this->db->get('accounting_expense_transaction');
+		
+		foreach($query->result() as $row){
+			$category = array();
+			$totalAmount = 0;
+
+			switch($row->type){
+				case 'Bill':
+					$getCategory = $this->db->get_where('accounting_expense_category', array('transaction_type_id' => $row->id));
+					foreach($getCategory->result() as $categoryRow){
+						$totalAmount += $categoryRow->amount;
+						$categoryData = array(
+							'category_id' => $categoryRow->category_id,
+							'description' => $categoryRow->description
+						);
+						array_push($category,$categoryData);
+					}
+					$queryTransaction = $this->db->get_where('accounting_bill', array('transaction_id' => $row->id));
+					$info = $queryTransaction->result();
+						$billData = array(
+							'transaction_id' => $row->id,
+							'type' => $row->type,
+							'mailing_address' => $info[0]->mailing_address,
+							'terms' => $info[0]->terms,
+							'bill_date' => $info[0]->bill_date,
+							'due_date' => $info[0]->due_date,
+							'bill_number' => $info[0]->bill_number,
+							'permit_number' => $info[0]->permit_number,
+							'memo' => $info[0]->memo,
+							'category' => $category,
+							'total' => $totalAmount,
+							'transaction_date_created' => $row->date_created,
+							'transaction_date_modified' => $row->date_modified,
+						);
+						array_push($allData,$billData);
+					
+				break;
+				
+				case 'Check':
+					$getCategory = $this->db->get_where('accounting_expense_category', array('transaction_type_id' => $row->id));
+					foreach($getCategory->result() as $categoryRow){
+						$totalAmount += $categoryRow->amount;
+						$categoryData = array(
+							'category_id' => $categoryRow->category_id,
+							'description' => $categoryRow->description
+						);
+						array_push($category,$categoryData);
+					}
+					$queryTransaction = $this->db->get_where('accounting_check', array('transaction_id' => $row->id));
+					$info = $queryTransaction->result();
+						$checkData = array(
+							'transaction_id' => $row->id,
+							'type' => $row->type,
+							'mailing_address' => $info[0]->mailing_address,
+							'bank_id' => $info[0]->bank_id,
+							'payment_date' => $info[0]->payment_date,
+							'check_number' => $info[0]->check_number,
+							'print_later' => $info[0]->print_later,
+							'permit_number' => $info[0]->permit_number,
+							'memo' => $info[0]->memo,
+							'category' => $category,
+							'total' => $totalAmount,
+							'transaction_date_created' => $row->date_created,
+							'transaction_date_modified' => $row->date_modified,
+						);
+						array_push($allData,$checkData);
+				break;
+				
+				case 'Expense':
+					$getCategory = $this->db->get_where('accounting_expense_category', array('transaction_type_id' => $row->id));
+					foreach($getCategory->result() as $categoryRow){
+						$totalAmount += $categoryRow->amount;
+						$categoryData = array(
+							'category_id' => $categoryRow->category_id,
+							'description' => $categoryRow->description
+						);
+						array_push($category,$categoryData);
+					}
+					$queryTransaction = $this->db->get_where('accounting_expense', array('transaction_id' => $row->id));
+					$info = $queryTransaction->result();
+						$expenseData = array(
+							'transaction_id' => $row->id,
+							'type' => $row->type,
+							'payment_method' => $info[0]->payment_method,
+							'payment_account' => $info[0]->payment_account,
+							'payment_date' => $info[0]->payment_date,
+							'ref_number' => $info[0]->ref_number,
+							'permit_number' => $info[0]->permit_number,
+							'memo' => $info[0]->memo,
+							'category' => $category,
+							'total' => $totalAmount,
+							'transaction_date_created' => $row->date_created,
+							'transaction_date_modified' => $row->date_modified,
+						);
+						array_push($allData,$expenseData);
+					
+				break;
+				
+				case 'Vendor Credit':
+					$getCategory = $this->db->get_where('accounting_expense_category', array('transaction_type_id' => $row->id));
+					foreach($getCategory->result() as $categoryRow){
+						$totalAmount += $categoryRow->amount;
+						$categoryData = array(
+							'category_id' => $categoryRow->category_id,
+							'description' => $categoryRow->description
+						);
+						array_push($category,$categoryData);
+					}
+					$queryTransaction = $this->db->get_where('accounting_vendor_credit', array('transaction_id' => $row->id));
+					$info = $queryTransaction->result();
+						$vendorcreditData = array(
+							'transaction_id' => $row->id,
+							'type' => $row->type,
+							'mailing_address' => $info[0]->mailing_address,
+							'payment_date' => $info[0]->payment_date,
+							'ref_number' => $info[0]->ref_number,
+							'permit_number' => $info[0]->permit_number,
+							'memo' => $info[0]->memo,
+							'category' => $category,
+							'total' => $totalAmount,
+							'transaction_date_created' => $row->date_created,
+							'transaction_date_modified' => $row->date_modified,
+						);
+						array_push($allData,$vendorcreditData);
+					
+				break;
+			}
+		}
+
+		return $allData;
+	}
 }

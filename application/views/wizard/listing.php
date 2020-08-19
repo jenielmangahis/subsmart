@@ -16,6 +16,9 @@
 .wizard-app-block .form-group {
     margin: 0 250px 30px !important;
 }
+.wizard-app-block .form-group {
+    margin: 0 250px 30px !important;
+}
 .app-img {
     margin: 0 -14px !important;
 }
@@ -102,6 +105,10 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
+                <!--  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div> -->
             </div>
         <?php echo form_close(); ?>
     </div>

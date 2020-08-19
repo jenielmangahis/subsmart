@@ -8,7 +8,6 @@ body{
 }
 body h1,h2,h3,h4,h5,h6{
     font-family: fontStyle;
-
 }
 input[type='checkbox']{
     width: 15px;
@@ -880,9 +879,15 @@ button {
 .file-name-section a:hover{
     color: orangered;
 }
-.file-name-section .cross-out{
+.cross-out{
     text-decoration: line-through;
-    color: #495057;
+    color: #495057!important;
+}
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
 }
 .file-name-section .fa-exclamation-triangle{
     color: #CCCC00;

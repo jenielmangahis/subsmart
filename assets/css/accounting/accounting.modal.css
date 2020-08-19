@@ -959,7 +959,7 @@
     height: 100%;
 }
 .btn-transparent{
-    color: black;
+    color: #ffffff;
     border-radius: 36px;
     background: transparent;
     border:1px solid #6B6C72;
@@ -1068,4 +1068,7 @@
 }
 .modal-existing-file-container span{
     text-overflow: ellipsis;
+}
+.modal-existing-file-section a{
+    color: #0b97c4;
 }

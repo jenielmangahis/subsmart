@@ -60,7 +60,7 @@
 							    	<a class="nav-link" data-toggle="tab" href="#tb9">My Workspace</a>
 							  	</li>
 								<li class="nav-item">
-									<a class="nav-link" data-toogle="tab" href="#tb10" data-toggle="modal" data-target="#add_wizard_template"> Add Template </a>
+									<a class="nav-link" href="<?php echo base_url('wizard/listing_wizard'); ?>"> Add Template </a>
 								</li>
 							</ul>
 						</div>

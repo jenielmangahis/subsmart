@@ -25,6 +25,8 @@ $(document).ready(function(){
   clear_process = true;
   is_initial = true;
 
+  var dtu_files = {};
+
 // -------------------------------------------------------------------------------------------------------------
 // Load initial functions
 // -------------------------------------------------------------------------------------------------------------
@@ -415,6 +417,7 @@ function getFoldersAndFiles(parent_id = 0){
 
         $('#folders_path').empty();
         $('#folders_path').append(paths);
+        $('#f_folder_name').html(fname);
 
         if(vType == 'mylibrary'){
           setFoldersAndFiles_MyLibrary(folders, files);
@@ -1325,7 +1328,7 @@ function showFileDetail(vS, vSiF, vIsTrash, vIsMyLibrary){
   }
 }
 
-function showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary){
+function showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary, vDiv = ""){
   if(!$('#download_div').hasClass('d-none')){
     $('#download_div').addClass('d-none');
   }
@@ -1334,6 +1337,8 @@ function showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary){
     var div = $('div[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
   } else if(vIsMyLibrary){ 
     var div = $('td[fid="'+ vS +'"][isFolder="'+ vSiF +'"]');
+  } else if(vDiv != ""){
+    var div = $(vDiv);
   } else {
     var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]'); 
   }
@@ -1670,17 +1675,70 @@ function showFolderManagerRecycleBin(){
 function displayDroppedFiles(e){
   e.preventDefault();
 
-  $('#mfm-dtu-file-list').empty();
+  $('#mfm-dtu-file-list > tbody').empty();
 
-  var files = e.dataTransfer.files;
+  dtu_files = e.dataTransfer.files;
   var append = '';
-  $.each(files, function(index, file){
-    append += '<li class="list-group-item">' + file.name + '</li>';
+  $.each(dtu_files, function(index, file){
+    append += '<tr>';
+    append += '<td class="d-none">1</td>';
+    append += '<td class="d-none"></td>'
+    append += '<td>' + file.name + '</td>';
+    append += '<td></td>';
+    append += '<td class="text-center"><a href="#" class="btn btn-sm btn-default fs_dtu" title="Exclude"><i class="fa fa-times"></i></a></td>';
+    append += '</tr>';
   });
 
-  $('#mfm-dtu-file-list').append(append);
+  $('#mfm-dtu-file-list > tbody').append(append);
   $('#mfm-dtu-drop-area').addClass('d-none');
   $('#mfm-dtu-file-list-area').removeClass('d-none');
+
+  $('a.fs_dtu').click(function(e){
+    e.preventDefault();
+
+    var tr = $(this).parent('td').parent('tr')
+    var td = tr.children('td:eq(0)');
+    var td_status_original = tr.children('td:eq(1)');
+    var td_status = tr.children('td:eq(3)');
+
+    if($(this).attr('title') == 'Exclude'){
+      $(this).attr('title', 'Include');
+      $(this).removeClass('btn-default');
+      $(this).addClass('btn-danger');
+
+      var status_new = 'Will not be uploaded';
+      var status_original = td_status.text();
+
+      status_original = status_original.trim();
+
+      td.text('0');
+      td_status_original.text(status_original);
+      td_status.text(status_new);
+
+    } else {
+      $(this).attr('title', 'Exclude');
+      $(this).removeClass('btn-danger');
+      $(this).addClass('btn-default');
+
+      var status_original = td_status_original.text();
+
+      status_original = status_original.trim();
+
+      td.text('1');
+      td_status_original.text("");
+      td_status.text(status_original);
+    }
+  });
+}
+
+function clearDroppedFiles(){
+  if($('#mfm-dtu-drop-area').hasClass('d-none')){
+    $('#mfm-dtu-drop-area').removeClass('d-none');
+  }
+
+  if(!$('#mfm-dtu-file-list-area').hasClass('d-none')){
+    $('#mfm-dtu-file-list-area').addClass('d-none');
+  }  
 }
 
 function showDropToUpload(){

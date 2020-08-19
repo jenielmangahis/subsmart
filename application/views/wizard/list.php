@@ -4,6 +4,36 @@
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
    <?php include viewPath('includes/sidebars/upgrades'); ?>
+
+
+   <!-- <div class="modal fade" id="updateSignature_add" role="dialog">
+			<div class="close-modal" data-dismiss="modal">&times;</div>
+			<div class="modal-dialog">
+				<?php echo form_open_multipart('wizard/save/0', [ 'id' => 'filevaultform', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Add Wizard </h4>
+						</div>
+						<div class="modal-body">
+							<div class="col-md-12 form-group">
+								<label for="title">Name</label>
+								<input type="text" class="form-control" name="title" id="title" required placeholder="Enter Name" autofocus value="" />
+							</div>
+							<div class="col-md-12 form-group">
+								<label for="description">Description<small></small></label>
+								<textarea class="form-control" name="description" id="description" required placeholder="Upload File"></textarea>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="submit" id="click" class="btn btn-primary save-signature">Update</button>
+						</div>
+					</div>
+				<?php echo form_close(); ?>
+			</div>
+		</div> -->
+
+		
    <div wrapper__section>
       <div class="container-fluid">
          <div class="page-title-box">
@@ -162,7 +192,20 @@
 <?php include viewPath('includes/footer'); ?>
 <script>
    $(document).ready( function () {
-
+// 	$(function () {
+//     $('#show_more').click(function () {
+//         $('#myDiv div:hidden').slice(0, 10).show();
+//         if ($('#myDiv div').length == $('#myDiv div:visible').length) {
+//             $('#show_more ').hide();
+//         }
+//     });
+//     $('#show_more2').click(function () {
+//         $('#myDiv2 div:hidden').slice(0, 10).show();
+//         if ($('#myDiv2 div').length == $('#myDiv2 div:visible').length) {
+//             $('#show_more2').hide();
+//         }
+//     });
+// });
     } );
 </script>
 <script type="text/javascript">

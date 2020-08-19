@@ -19,17 +19,24 @@ class Accounting extends MY_Controller {
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
-            "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            "assets/css/accounting/accounting.css?v=".time(),
+            "assets/css/accounting/accounting.modal.css?v?=".time(),
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css',
+            'assets/frontend/css/report/main.css',
         ));
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
-            "assets/js/accounting/accounting.js"
+			'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js',
+            'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js',
+            'https://canvasjs.com/assets/script/jquery.canvasjs.min.js',
+			 "assets/js/accounting/accounting.js?v=".time()
         ));
 
 		$this->page_data['menu_name'] =
@@ -209,6 +216,9 @@ class Accounting extends MY_Controller {
     }
 	public function reports()
     {
+		add_footer_js(array(
+             'assets/frontend/js/report/main.js'
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
@@ -310,6 +320,7 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Vendor Details";
 		
 		$this->page_data['vendor_details'] = $this->vendors_model->getVendorDetails($id);
+		$this->page_data['transaction_details'] = $this->vendors_model->getvendortransactions($id);
         $this->load->view('accounting/vendor_details', $this->page_data);
     }
 	public function getvendortransactions($id = null)
@@ -519,7 +530,7 @@ class Accounting extends MY_Controller {
     }
 
     public function getBillData(){
-        $id = $this->input->post('id');
+        $id = $this->input->get('id');
         $bills = $this->db->get_where('accounting_bill',array('id'=> $id));
         $vendors = $this->db->get_where('accounting_vendors',array('vendor_id' => $bills->row()->vendor_id));
         $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
@@ -612,8 +623,8 @@ class Accounting extends MY_Controller {
     }
 
     public function displayListAttachment(){
-        $id = $this->input->post('id');
-        $type = $this->input->post('type');
+        $id = $this->input->get('id');
+        $type = $this->input->get('type');
         $attachments = $this->expenses_model->getAttachment();
         $display = '';
         foreach ($attachments as $attachment){
@@ -658,11 +669,11 @@ class Accounting extends MY_Controller {
                 $display .= '<span class="previewAttachmentImage"><img src="/uploads/accounting/expenses/'.$file.'"></span>';
                 $display .= '<a href="#" class="'.$tooltip.'" id="removeAttachment" data-id="'.$attachment->id.'" data-status="'.$attachment->status.'"><i class="fa '.$exclamation.'"></i></a>';
                 $display .= '<span class="'.$tipbox.'">This file is temporarily removed.</br> You can retrieve it by clicking the </br>exclamation icon "<i class="fa fa-exclamation-triangle"></i>". </span>';
-                $display .= '<input type="hidden" name="attachment[]" value="'.$attachment->id.'">';
+                $display .= '<input type="hidden" name="attachment[]" id="" value="'.$attachment->id.'">';
                 $display .= '</div>';
             }
         }
-        echo $display;
+        echo json_encode($display);
     }
 
     public function removeTemporaryAttachment(){
@@ -688,28 +699,117 @@ class Accounting extends MY_Controller {
     }
 
     public function addingFileAttachment(){
-        $id = $this->input->post('expense_id');
+        $id = $this->input->post('expenses_id');
         $type = $this->input->post('type');
         $file_name = $this->input->post('file_name');
-        $base_url = base_url();
+        $original_fname = $this->input->post('original_fname');
         $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        $name = pathinfo($file_name, PATHINFO_FILENAME);
-        $encryption = md5($name).'.'.$extension;
-        $move = copy('./uploads/accounting/expenses/'.$file_name,'./uploads/accounting/expenses/'.$encryption);
-        echo json_encode($encryption);
+        $encryption = md5(time()).'.'.$extension;
+        copy('./uploads/accounting/expenses/'.$file_name,'./uploads/accounting/expenses/'.$encryption);
+        $data = array(
+            'expenses_id' => $id,
+            'type' => $type,
+            'original_filename' => $original_fname,
+            'attachment' => $encryption,
+            'date_created' => date('Y-m-d H:i:s'),
+            'status' => 1
+        );
+        $this->db->insert('accounting_expense_attachment',$data);
+        $get_attachment_id = $this->db->get_where('accounting_expense_attachment',array('attachment'=>$file_name));
+        $added = array(
+            'attachment_id' => $get_attachment_id->row()->id,
+            'expenses_id' => $id,
+            'date_created' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('accounting_existing_attachment',$added);
+        echo json_encode($id);
+    }
 
+    public function showExistingFile(){
+        $id = $this->input->get('expenses_id');
+        $type = $this->input->get('type');
+        $attachments = $this->expenses_model->getAttachment();
+        $added = $this->expenses_model->getAddedAttachment();
+        $status = 'Add';
+        $disabled = null;
+        $display = '';
+        foreach ($attachments as $attachment){
+            if ($attachment->expenses_id != $id){
+                if ($added != null){
+                    foreach ($added as $attach_list){
+                        if ($attach_list->attachment_id == $attachment->id && $attach_list->expenses_id == $id){
+                            $status = 'Added';
+                            $disabled = 'isDisabled';
+                        }else{
+                            $status = 'Add';
+                            $disabled = null;
+                        }
+                    }
+                }
+                $preview = "";
+                if($type == 'Check'){
+                    $preview = "-check";
+                }elseif ($type == 'Bill'){
+                    $preview = "-bill";
+                }elseif ($type == 'Expense'){
+                    $preview = "-expense";
+                }elseif ($type == 'Vendor Credit'){
+                    $preview = "-vc";
+                }
+                $file = $attachment->attachment;
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                switch ($extension){
+                    case "txt":
+                        $file = "default-txt.png";
+                        break;
+                    case "pdf":
+                        $file = "default-pdf.png";
+                        break;
+                    case "xls":
+                        $file = "default-excel.png";
+                        break;
+                    case "xlsb":
+                        $file = "default-excel.png";
+                        break;
+                    case "xlsm":
+                        $file = "default-excel.png";
+                        break;
+                    case "xlsx":
+                        $file = "default-excel.png";
+                        break;
+                    case "docx":
+                        $file = "default-word.png";
+                        break;
+                    case "doc":
+                        $file = "default-word.png";
+                        break;
+                    default:
+                        $file = $attachment->attachment;
+                        break;
+                }
+                $display .= '<div class="modal-existing-file-section">';
+                $display .= '<span>'.$attachment->original_filename.'</span>';
+                $display .= '<img src="/uploads/accounting/expenses/'.$file.'" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">';
+                $display .= '<input type="hidden" id="attachmentType" value="'.$type.'">';
+                $display .= '<input type="hidden" id="attachmentTypePreview" value="'.$preview.'">';
+                $display .= '<input type="hidden" id="attachmentFileName" value="'.$attachment->attachment.'" >';
+                $display .= '<a href="#" class="'.$disabled.'" id="addingFileAttachment" data-fname="'.$attachment->original_filename.'" >'.$status.'</a>';
+            }
+        }
+
+        echo json_encode($display);
     }
 
     public function rowCategories(){
-        $id = $this->input->post('id');
-        $row = $this->input->post('row');
-        $cat_class = $this->input->post('cat_class');
-        $des_class = $this->input->post('des_class');
-        $amount_class = $this->input->post('amount_class');
-        $counter = $this->input->post('counter');
-        $remove = $this->input->post('remove_id');
-        $select = $this->input->post('select');
-        $preview = $this->input->post('preview');
+        $id = $this->input->get('id');
+        $row = $this->input->get('row');
+        $cat_class = $this->input->get('cat_class');
+        $des_class = $this->input->get('des_class');
+        $amount_class = $this->input->get('amount_class');
+        $counter = $this->input->get('counter');
+        $remove = $this->input->get('remove_id');
+        $select = $this->input->get('select');
+        $preview = $this->input->get('preview');
         $get_categories = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
         $result = $get_categories->result();
         $categories = '';
@@ -757,18 +857,18 @@ class Accounting extends MY_Controller {
             $categories .= '</tr>';
         }
 
-        echo $categories;
+        echo json_encode($categories);
     }
 
     public function defaultCategoryRow(){
-        $row = $this->input->post('row');
-        $cat_class = $this->input->post('cat_class');
-        $des_class = $this->input->post('des_class');
-        $amount_class = $this->input->post('amount_class');
-        $counter = $this->input->post('counter');
-        $remove = $this->input->post('remove_id');
-        $select = $this->input->post('select');
-        $preview = $this->input->post('preview');
+        $row = $this->input->get('row');
+        $cat_class = $this->input->get('cat_class');
+        $des_class = $this->input->get('des_class');
+        $amount_class = $this->input->get('amount_class');
+        $counter = $this->input->get('counter');
+        $remove = $this->input->get('remove_id');
+        $select = $this->input->get('select');
+        $preview = $this->input->get('preview');
         $category_list = $this->categories_model->getCategories();
         $default = '';
         for ($x = 1;$x <= 2;$x++){
@@ -789,20 +889,20 @@ class Accounting extends MY_Controller {
             $default .= '</div>';
             $default .= '</td>';
             $default .= '<td><span id="description-preview'.$preview.'"></span>';
-            $default .= '<input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value=""  style="display: none;">';
+            $default .= '<div style="display: none;"><input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value=""></div>';
             $default .= '</td>';
             $default .= '<td><span id="amount-preview'.$preview.'"></span>';
-            $default .= '<input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="0"  style="display: none;">';
+            $default .= '<div style="display: none;"><input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="0" ></div>';
             $default .= '</td>';
             $default .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
             $default .= '</tr>';
         }
-        echo $default;
+        echo json_encode($default);
 
     }
 
     public function getCheckData(){
-        $id = $this->input->post('id');
+        $id = $this->input->get('id');
         $query = $this->db->get_where('accounting_check',array(
             'id' => $id
         ));
@@ -890,7 +990,7 @@ class Accounting extends MY_Controller {
 	    $this->expenses_model->addExpense($new_data);
     }
     public function getExpenseData(){
-        $id = $this->input->post('id');
+        $id = $this->input->get('id');
         $get_expense = $this->db->get_where('accounting_expense',array('id'=>$id));
         $vendors = $this->db->get_where('accounting_vendors',array('vendor_id'=> $get_expense->row()->vendor_id));
         $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));
@@ -953,7 +1053,7 @@ class Accounting extends MY_Controller {
         $this->expenses_model->vendorCredit($new_data);
     }
     public function getVendorCredit(){
-        $id = $this->input->post('id');
+        $id = $this->input->get('id');
         $get_vc = $this->db->get_where('accounting_vendor_credit',array('id'=>$id));
         $vendors = $this->db->get_where('accounting_vendors',array('vendor_id'=> $get_vc->row()->vendor_id));
         $check_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$id));

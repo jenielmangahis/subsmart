@@ -169,11 +169,11 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> Before and After Photos</a>
                     </div>*/ ?>
                 </li>
-                <?php ////if (hasPermissions('report')): ?>
+                <!--<?php ////if (hasPermissions('report')): ?>
                     <li class="has-submenu">
                         <a href="<?php echo url('reports/main') ?>"><i class="fa fa-bookmark" aria-hidden="true"></i><span>Reports</span></a>
                     </li>
-                <?php //endif ?>
+                <?php //endif ?>-->
                 <li class="has-submenu">
                     <a href="<?php echo base_url('marketing') ?>"><i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span></a>
                     <?php /*<a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"

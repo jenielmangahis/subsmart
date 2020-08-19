@@ -1,3 +1,5 @@
+var base_url = document.getElementById('siteurl').value;
+
 var options = {
   urlFilterReports: base_url + "reports/filterReports",
   urlFilterProfitLoss: base_url + "reports/profitLoss",
@@ -862,6 +864,7 @@ function profileChart() {
   var chart = new google.visualization.AreaChart(
     document.getElementById("chart-profile")
   );
+
   chart.draw(data, options);
 }
 
@@ -1011,12 +1014,12 @@ window.onload = function () {
   selectReport(currYear + "-01-01", currYear + "-12-31");
   var type = window.location.pathname.split("/");
 
-  if (type[3] === "summary") {
+ // if (type[3] === "summary") {
     google.charts.load("current", { packages: ["corechart", "line"] });
     google.charts.setOnLoadCallback(profileChart);
     google.charts.setOnLoadCallback(jobsChart);
     google.charts.setOnLoadCallback(dealsChart);
-  }
+ // }
 };
 
 $(function () {

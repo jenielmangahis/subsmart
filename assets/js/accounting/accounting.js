@@ -7,7 +7,6 @@ var original_fname_bill = [];
 var original_fname_expense = [];
 var original_fname_vc = [];
 var siteURL = document.getElementById('siteurl').value;
-
 $(document).ready(function () {
     $('.loader').hide();
     // Rules page
@@ -150,8 +149,9 @@ $(document).ready(function () {
         if (check > 0){
             $.ajax({
                 url: siteURL + "accounting/rowCategories",
-                type:"POST",
+                type:"GET",
                 cache:false,
+                dataType:"json",
                 data:{
                     id:id,
                     row:row,
@@ -181,8 +181,9 @@ $(document).ready(function () {
         }else{
             $.ajax({
                 url: siteURL + "accounting/defaultCategoryRow",
-                type:"POST",
+                type:"GET",
                 cache:false,
+                dataType:"json",
                 data:{
                     row:row,
                     cat_class:cat_class,
@@ -216,7 +217,8 @@ $(document).ready(function () {
     function displayAttachments(id,type,container) {
         $.ajax({
             url:"/accounting/displayListAttachment",
-            type:"POST",
+            method:"GET",
+            dataType:"json",
             data:{id:id,type:type},
             success:function (data) {
                 $('#file-list'+container).html(data);
@@ -329,7 +331,7 @@ $(document).ready(function () {
         var preview = '-check';
         $.ajax({
             url:"/accounting/getCheckData",
-            method:"POST",
+            method:"GET",
             data:{id:id},
             dataType:"json",
             success:function (data) {
@@ -345,7 +347,10 @@ $(document).ready(function () {
                 $('#checkNUmberHeader').html(data.check_number);
                 $('#print_later').attr("checked",data.print_later);
                 $('#permit_number').val(data.permit_number);
+                $('#checkID').addClass('expenses-ID-'+data.transaction_id);
+                $('#billType').addClass('expenseType-'+data.transaction_id);
                 showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                displayAttachments(id,'Check',preview);
                 $('.loader').hide();
             }
         });
@@ -511,7 +516,7 @@ $(document).ready(function () {
         var preview = '-bill';
         $.ajax({
             url:'/accounting/getBillData',
-            method:"POST",
+            method:"GET",
             data:{id:id},
             dataType:"json",
             cached:false,
@@ -527,7 +532,10 @@ $(document).ready(function () {
                 $('#billDueDate').val(data.due_date);
                 $('#billNumber').val(data.bill_number);
                 $('#billPermitNumber').val(data.permit_number);
+                $('#billID').addClass('expenses-ID-'+data.transaction_id);
+                $('#billType').addClass('expenseType-'+data.transaction_id);
                 showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                displayAttachments(id,'Bill',preview);
                 $('.loader').hide();
             }
         });
@@ -784,7 +792,7 @@ $(document).ready(function () {
         var preview = '-expense';
         $.ajax({
             url:'/accounting/getExpenseData',
-            method:"POST",
+            method:"GET",
             data:{id:id},
             dataType:"json",
             success:function (data) {
@@ -799,7 +807,10 @@ $(document).ready(function () {
                 $('#expensePaymentMethod').next($('#select2-expensePaymentMethod-container').attr('title',data.payment_method).html(data.payment_method));
                 $('#expenseRefNumber').val(data.ref_number);
                 $('#expensePermitNumber').val(data.permit_number);
+                $('#expenseId').addClass('expenses-ID-'+data.transaction_id);
+                $('#exType').addClass('expenseType-'+data.transaction_id);
                 showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                displayAttachments(id,'Expense',preview);
                 $('.loader').hide();
             }
         });
@@ -1001,7 +1012,7 @@ $(document).ready(function () {
         var preview = '-vc';
         $.ajax({
             url:'/accounting/getVendorCredit',
-            type:"POST",
+            type:"GET",
             data:{id:id},
             dataType:"json",
             cached:false,
@@ -1014,6 +1025,8 @@ $(document).ready(function () {
                 $('#vcPaymentDate').val(data.payment_date);
                 $('#vcRefNumber').val(data.ref_number);
                 $('#vcPermitNumber').val(data.permit_number);
+                $('#vendorCreditId').addClass('expenses-ID-'+data.transaction_id);
+                $('#vcType').addClass('expenseType-'+data.transaction_id);
                 showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
                 displayAttachments(id,'Vendor Credit',preview);
                 $('.loader').hide();
@@ -1078,6 +1091,8 @@ $(document).ready(function () {
 
                 $('#vcAttachment').next().next($('.dz-preview').remove());
                 $('#vcAttachment').next($('.dz-message').css({"display":"inherit"}));
+                $('#vcType').removeClass('expenseType-'+transaction_id);
+                $('#vendorCreditId').removeClass('expenses-ID-'+transaction_id);
             }
         });
     });
@@ -1175,22 +1190,43 @@ $(document).ready(function () {
         });
     });
 //Show Existing file
-    $(document).on('click','#showExistingFile',function () {
+    $(document).on('click','#showExistingFile',function (e) {
         $('#showExistingModal').modal({backdrop: 'static', keyboard: false});
         $(".modal-backdrop").hide();
+        var transaction_id = $(e.target).closest('.modal-body').find('.transaction_id').val();
+        var expenses_id = $('.expenses-ID-'+transaction_id).val();
+        var type =  $('.expenseType-'+transaction_id).val();
+        $.ajax({
+            url:"/accounting/showExistingFile",
+            method:"GET",
+            dataType:"json",
+            data:{expenses_id:expenses_id,type:type},
+            success:function (data) {
+                $('.modal-existing-file-container').html(data);
+            }
+        });
+
     });
+
     $(document).on('click','#addingFileAttachment',function () {
-        var expenses_id = $(this).attr('data-id');
-        var type = $('#attachmentType').val();
+        var expenses_id = $('#vendorCreditId').val();
+        var check = $('.expenseType').attr('data-id');
+        var transaction_id = $('.transaction_id').val();
+        var type = null;
+        if (check == transaction_id){
+            type = $('.expenseType').val();
+        }
         var preview = $('#attachmentTypePreview').val();
         var file_name = $('#attachmentFileName').val();
-
+        var original_fname = $(this).attr('data-fname');
+        $(this).text('Added');
+        $(this).addClass('isDisabled');
         $.ajax({
             url:"/accounting/addingFileAttachment",
             type:"POST",
-            data:{file_name:file_name,expenses_id:expenses_id,type:type},
-            success:function (data) {
-                console.log(data);
+            cache:false,
+            data:{file_name:file_name,expenses_id:expenses_id,type:type,original_fname:original_fname},
+            success:function () {
                 displayAttachments(expenses_id,type,preview);
             }
         });

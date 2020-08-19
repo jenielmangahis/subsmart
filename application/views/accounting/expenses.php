@@ -184,6 +184,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $modal_id = null;
                                             $data_id = null;
                                             $delete = null;
+                                            $category_list_id = null;
                                         ?>
                                         <?php foreach ($transactions as $transaction): ?>
                                         <?php
@@ -298,8 +299,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $category_id = $get_category->row()->id;
                                                         }
                                                     }
-
-
                                                 }
                                             }
                                         ?>
@@ -495,6 +494,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <label for="">Payee</label>
                                 <input type="hidden" name="check_id" id="checkID" value="">
                                 <input type="hidden" name="transaction_id" id="checktransID">
+                                <input type="hidden" id="checkType" class="expenseType" value="Check">
                                 <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
                                     <option></option>
                                     <?php foreach ($vendors as $vendor):?>
@@ -611,15 +611,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
-                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                            <span>Maximum size: 20MB</span>
-                            <div id="checkAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
-                                <div class="dz-message" style="margin: 20px;">
-                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                    <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                    <span>Maximum size: 20MB</span>
+                                    <div id="checkAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
+                                        <div class="dz-message" style="margin: 20px;">
+                                            <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                            <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8" style="padding-top: 30px;">
+                                    <div class="file-container-list" id="file-list-check"></div>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="form-group">
+                            <div class="show-existing-file">
+                                <a href="#" id="showExistingFile">Show existing file</a>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -811,12 +822,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="billForm">
-						<div class="modal-body">
+						<div class="modal-body" style="margin-bottom: 100px">
 							<div class="row">
 								<div class="col-md-3">
 									<label for="">Vendor</label>
 									<input type="hidden" name="bill_id" id="billID">
-									<input type="hidden" name="transaction_id" id="billTransId">
+									<input type="hidden" name="transaction_id" id="billTransId" class="transaction_id">
+                                    <input type="hidden" id="billType" class="expenseType" value="Bill">
 									<select name="vendor_id" id="billVendorID" class="form-control select2-vendor">
 										<option></option>
 										<option disabled>&plus;&nbsp;Add new</option>
@@ -927,15 +939,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<textarea name="memo" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
 							</div>
 							<div class="form-group">
-								<label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-								<span>Maximum size: 20MB</span>
-								<div id="billAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
-									<div class="dz-message" style="margin: 20px;border">
-										<span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-										<a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-									</div>
-								</div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="billAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8" style="padding-top: 30px;">
+                                        <div class="file-container-list" id="file-list-bill"></div>
+                                    </div>
+                                </div>
 							</div>
+                            <div class="form-group">
+                                <div class="show-existing-file">
+                                    <a href="#" id="showExistingFile">Show existing file</a>
+                                </div>
+                            </div>
 						</div>
 						<div class="modal-footer-check">
 							<div class="row">
@@ -983,12 +1007,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="expenseForm">
-                    <div class="modal-body">
+                    <div class="modal-body" style="margin-bottom: 100px">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Payee</label>
-                                <input type="hidden" id="expenseTransId">
+                                <input type="hidden" id="expenseTransId" class="transaction_id">
                                 <input type="hidden" id="expenseId">
+                                <input type="hidden" id="exType" class="" value="Expense" data-id="">
                                 <select name="vendor_id" id="expenseVendorId" class="form-control select2-payee" required>
                                     <option value=""></option>
                                     <option disabled>&plus;&nbsp;Add new</option>
@@ -1111,13 +1136,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
-                            <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                            <span>Maximum size: 20MB</span>
-                            <div id="expenseAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
-                                <div class="dz-message" style="margin: 20px;border">
-                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                    <span>Maximum size: 20MB</span>
+                                    <div id="expenseAttachment" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;">
+                                        <div class="dz-message" style="margin: 20px;border">
+                                            <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                            <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-md-8" style="padding-top: 30px;">
+                                    <div class="file-container-list" id="file-list-expense"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="show-existing-file">
+                                <a href="#" id="showExistingFile">Show existing file</a>
                             </div>
                         </div>
                     </div>
@@ -1171,8 +1208,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="">Vendor</label>
-                                <input type="hidden" id="vendorCreditId">
-                                <input type="hidden" id="vcTransId">
+                                <input type="hidden" id="vendorCreditId" class="">
+                                <input type="hidden" id="vcTransId" class="transaction_id">
+                                <input type="hidden" id="vcType" class="" value="Vendor Credit">
                                 <select name="vendor_id" id="vcVendorId" class="form-control select2-vendor-credit" required>
                                     <option></option>
                                     <option disabled>&plus;&nbsp;Add new</option>
@@ -1282,22 +1320,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-8" style="padding-top: 30px;">
-                                    <div class="file-container-list" id="file-list-vc">
-                                        <?php foreach ($attachments as $attachment): ?>
-                                            <div class="file-name-section">
-                                                <span style="display: inline-block"><?php echo $attachment->original_filename;?></span>
-                                                <a href="#" data-id="<?php echo $attachment->id;?>"><i class="fa fa-times"></i></a>
-                                            </div>
-                                        <?php endforeach;?>
-                                    </div>
+                                    <div class="file-container-list" id="file-list-vc"></div>
                                 </div>
                             </div>
-
-
                         </div>
                         <div class="form-group">
                             <div class="show-existing-file">
-                                <a href="#" id="showExistingFile">Show existing file</a>
+                                <a href="#" id="showExistingFile" class="">Show existing file</a>
                             </div>
                         </div>
                     </div>
@@ -1611,55 +1640,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="modal-existing-file-section">
-                            <?php foreach ($attachments as $attachment): ?>
-                            <?php
-                                $file = $attachment->attachment;
-                                $extension = pathinfo($file, PATHINFO_EXTENSION);
-                                switch ($extension){
-                                    case "txt":
-                                        $file = "default-txt.png";
-                                        break;
-                                    case "pdf":
-                                        $file = "default-pdf.png";
-                                        break;
-                                    case "xls":
-                                        $file = "default-excel.png";
-                                        break;
-                                    case "xlsb":
-                                        $file = "default-excel.png";
-                                        break;
-                                    case "xlsm":
-                                        $file = "default-excel.png";
-                                        break;
-                                    case "xlsx":
-                                        $file = "default-excel.png";
-                                        break;
-                                    case "docx":
-                                        $file = "default-word.png";
-                                        break;
-                                    case "doc":
-                                        $file = "default-word.png";
-                                        break;
-                                    default:
-                                        $file = $attachment->attachment;
-                                        break;
-                                }
-                            ?>
-                           <div class="modal-existing-file-section">
-                               <span><?php echo $attachment->original_filename;?></span>
-                               <img src="/uploads/accounting/expenses/<?php echo $file; ?>" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">
-                               <input type="hidden" id="attachmentType">
-                               <input type="hidden" id="attachmentTypePreview">
-                               <input type="hidden" id="attachmentFileName" value="<?php echo $attachment->attachment; ?>" >
-                               <a href="#" id="addingFileAttachment" data-id="<?php echo $attachment->expenses_id; ?>" style="color: #0b97c4;">Add</a>
-                           </div>
-                            <?php endforeach;?>
+                        <div class="modal-existing-file-container">
+
                         </div>
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer" style="justify-content: flex-start;">
-                        <button type="button" class="btn btn-transparent" data-dismiss="modal" style="float: left">Close</button>
+                        <button type="button" class="btn btn-transparent" data-dismiss="modal" style="color:black">Close</button>
                     </div>
 
                 </div>

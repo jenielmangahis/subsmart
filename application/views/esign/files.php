@@ -1005,8 +1005,8 @@
                 </div>
             </div>
             
-            <div class="drawer left drawer-properties ng-isolate-scope closed" olive-drawer-initial-state="closed" olive-drawer-name="propertiesPanel" olive-drawer-direction="left" olive-animation-weight="light" envelope-moderator="taggerCtrl.envelopeModerator" open-signing-preview="taggerCtrl.openRecipientsPreviewOverlay(tabid)" olive-drawer-initialized="true" style="width: 0px">
-                <div class="drawer-wrapper ng-scope" role="region" aria-label="Properties Panel" svg-view-angular-hook="" hook-name="'propertiesPanel'">
+            <div class="drawer-open-close drawer left drawer-properties ng-isolate-scope closed" olive-drawer-initial-state="closed" olive-drawer-name="propertiesPanel" olive-drawer-direction="left" olive-animation-weight="light" envelope-moderator="taggerCtrl.envelopeModerator" open-signing-preview="taggerCtrl.openRecipientsPreviewOverlay(tabid)" olive-drawer-initialized="true" style="width: 0px">
+                <div class="drawer-wrapper-open-close drawer-wrapper ng-scope" role="region" aria-label="Properties Panel" svg-view-angular-hook="" hook-name="'propertiesPanel'">
                     <div olive-drawer-content="" class="drawer-content full-drawer" template="propertiesPanelDrawerCtrl.markupPropertiesPanelTemplate">
                     
                         <style aria-hidden="true" class="ng-scope">.collapsible-section-card { background-color: #f4f4f4; } .collapsible-section-card .actions { display: none; } .collapsible-section-card:hover .actions { display: block; } .collapsible-section-card:focus-within .actions { display: block; } .collapsible-section-card:hover .action-wrapper { border-top: 1px solid #e9e9e9; } .collapsible-section-card textarea { border: 0px; resize: none; } .collapsible-section-card:hover .section-label-header { display: block; } .collapsible-section-card:focus-within .section-label-header { display: block; } .collapsible-section-card .section-label-header { display: none; } .absolute-div-properties-panel { position: absolute; z-index: 2; width: 100%; height: 100%; } </style>
@@ -1025,7 +1025,13 @@
 </div>
 		<?php echo form_close(); ?>
 	</div>
-
+    <!-- <h3><i class="fa fa-pencil"></i> Signature</h3>	
+                <div class="cus-check">                    	
+                    <div class="form-group">	
+                        <input type="checkbox" id="css">	
+                        <label for="css">Required Field</label>	
+                    </div>	
+                </div>	 -->
     <?php include viewPath('esign/esign-page-preview-step-4-style');  ?>
     <style> body { padding-bottom: 0px !important; } </style>
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>

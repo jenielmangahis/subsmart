@@ -83,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														<th><input type="checkbox"></th>
 														<th><strong>DATE</strong></th>
 														<th><strong>TYPE</strong></th>
-														<th><strong>NO.</strong></th>
+														<th><strong>PERMIT NO.</strong></th>
 														<th><strong>PAYEE</strong></th>
 														<th><strong>CATEGORY</strong></th>
 														<th><strong>MEMO</strong></th>
@@ -92,28 +92,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													</tr>
 												</thead>
 												<tbody>
-													<tr>
-														<td><input type="checkbox"></td>
-														<td>08/19/2018</td>
-														<td>Check</td>
-														<td>532</td>
-														<td><?php echo $vendor_details[0]->display_name; ?></td>
-														<td>Office Expenses</td>
-														<td></td>
-														<td>$520.00</td>
-														<td><a href="#">View/Edit</a> <span class="caret"></span></td>
-													</tr>
-													<tr>
-														<td><input type="checkbox"></td>
-														<td>08/22/2018</td>
-														<td>Check</td>
-														<td>512</td>
-														<td>Iphen</td>
-														<td>Legal and Professional Fees</td>
-														<td></td>
-														<td>$900.00</td>
-														<td><a href="#">View/Edit</a> <span class="caret"></span></td>
-													</tr>
+													<?php if(count($transaction_details) > 0){?>
+														<?php for($x = 0 ; $x < count($transaction_details) ; $x++) { ?>
+															<tr>
+																<td><input type="checkbox"></td>
+																<?php if($transaction_details[$x]['type'] == "Bill"){ ?>
+																	<td><?php echo $transaction_details[$x]['bill_date']; ?></td>
+																<?php }else{ ?>
+																	<td><?php echo $transaction_details[$x]['payment_date']; ?></td>
+																<?php } ?>
+																<td><?php echo $transaction_details[$x]['type']; ?></td>
+																<td><?php echo $transaction_details[$x]['permit_number']; ?></td>
+																<td><?php echo $vendor_details[0]->display_name; ?></td>
+																<td>
+																	<?php 
+																		$categ = $transaction_details[$x]['category']; 
+																		for($i = 0;$i < count($categ) ; $i++){
+																			$categoryName = "";
+																			switch($categ[$i]['category_id']){
+																				case 1:
+																					$categoryName = "Advertising";
+																				break;
+																				case 2:
+																					$categoryName = "Bad Debts";
+																				break;
+																				case 3:
+																					$categoryName = "Bank Charges";
+																				break;
+																				case 4:
+																					$categoryName = "Commissions & Fees";
+																				break;
+																				case 5:
+																					$categoryName = "Other Charges";
+																				break;
+																				case 6:
+																					$categoryName = "Advertising/Promotional";
+																				break;
+																				case 7:
+																					$categoryName = "Bank Charges";
+																				break;
+																			}
+																				
+																			if((count($categ) - $i) == 1){
+																				echo $categoryName;
+																			}else{
+																				echo $categoryName . ", ";
+																			}
+																		}
+																	?>				
+																</td>
+																<td><?php echo $transaction_details[$x]['memo']; ?></td>
+																<td><?php echo $transaction_details[$x]['total']; ?></td>
+																<td><a href="#">View/Edit</a> <span class="caret"></span></td>
+															</tr>
+														<?php } ?>
+													<?php } ?>
 												</tbody>
 											</table>
 									</div>

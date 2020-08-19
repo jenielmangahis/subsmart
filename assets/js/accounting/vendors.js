@@ -39,7 +39,11 @@ $(document).ready(function () {
 		$("#addVendorForm").removeClass("was-validated");
          $("#new-vendor-modal").modal("show");
 	});
-
+	
+	$('#transaction_table').DataTable({
+         "paging": false,
+         "filter":false
+    });
 	$('#payBillsTable').DataTable({
          "paging": false,
          "filter":false

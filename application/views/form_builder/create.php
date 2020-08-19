@@ -163,8 +163,11 @@
   selectedForm = 0;
 
   document.querySelector('#btnSubmitNewForm').addEventListener('click', () => {
+    
+    title = "Blank formy"
     data = {
-      forms_title: "Blank Formy" // static
+      forms_title: title, // static,
+      forms_slag: title.replace(/\s/g, '-').toLowerCase()
     }; 
     
     $.ajax({

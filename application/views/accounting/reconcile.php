@@ -18,6 +18,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     background: #32243D;
 }
+.loader
+{
+    display: none !important;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -233,13 +237,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="col-md-4 col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>From</label>
-                                                                    <input type="date" id="from_date" name="from_date" class="form-control">
+                                                                    <div class="col-xs-10 date_picker">
+                                                                    <input type="text" id="from_date" name="from_date" class="form-control">
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4 col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>To</label>
-                                                                    <input type="date" id="to_date" name="to_date" class="form-control">
+                                                                    <div class="col-xs-10 date_picker">
+                                                                    <input type="text" id="to_date" name="to_date" class="form-control">
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -277,7 +285,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               $i=1;
                               foreach($rows as $row)
                               {
-                                echo "<td id='ending_date' style='display:none'>".$row->ending_date."</td>";
+                                echo "<tr style='display:none'><td id='ending_date' style='display:none'>".$row->ending_date."</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                                 echo "<tr id='payments'>";
                                 echo "<td contenteditable='true'>".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
@@ -337,14 +345,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script>
+    function convertDate(inputFormat) {
+      function pad(s) { return (s < 10) ? '0' + s : s; }
+      var d = new Date(inputFormat)
+      return [pad(d.getDate()), pad(d.getMonth()), d.getFullYear()].join('.')
+    }
     $(document).ready(function() {
-        //$('#reconcile_table').DataTable({sDom: 'lrtip'});
+        $('.date_picker input').datepicker({
+           format: "dd.mm.yyyy",
+           todayBtn: "linked",
+           language: "de"
+        });
+        $('.select2').select2();
+        $('#from_date').attr("disabled", "disabled" );
+        $('#to_date').attr("disabled", "disabled" );
     } );
 
     var table = $('#reconcile_table').DataTable({sDom: 'lrtip'});
     /*$('#find').on( 'keyup', function () {
         table.search( this.value ).draw();
     } );*/
+
     $('#apply-btn').on( 'click', function () {
         var find = $('#find').val();
         if(find!='')
@@ -361,31 +382,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         {
             $("#tbody").show();
         }
-    } );
+        var selectBox1 = document.getElementById("dropdate");
+        var selectedValue1 = selectBox1.options[selectBox1.selectedIndex].value;
+       if(selectedValue1 == 'Custome Date')
+       {
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        var temp_date = from_date.split(".");
+        var temp_date2 = to_date.split(".");
+        var xxx = "";
+        for (var d = new Date(temp_date[2],temp_date[1],temp_date[0]); d <= new Date(temp_date2[2],temp_date2[1],temp_date2[0]); d.setDate(d.getDate() + 1)) {
+            if(xxx == '')
+            {
+                xxx =convertDate(d);
+            }
+            else
+            {
+                xxx = xxx+'|'+convertDate(d);
+            }
+        }
+        table.search('"'+xxx+'"',true,false).draw();
+       }
+       else if (selectedValue1 == 'Statement Ending Date')
+       {
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        table.search( to_date ).draw();
+       }
+    });
 
     function myfunc() {
     var selectBox = document.getElementById("dropdate");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
        if(selectedValue == 'Custome Date')
        {
-        $('#from_date').text("");
-        $('#to_date').text("");
+        $('#from_date'). removeAttr("disabled","disabled");
+        $('#to_date'). removeAttr("disabled","disabled");
+        $('#from_date').val(null);
+        $('#to_date').val(null);
        }
        else if (selectedValue == 'Statement Ending Date')
        {
-        $('#from_date').text("");
+        $('#from_date'). removeAttr("disabled","disabled");
+        $('#to_date'). removeAttr("disabled","disabled");
+        $('#from_date').val(null);
         var ending_date = $("#ending_date").text();
-        var temp_date = ending_date.split(".");
-        var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];
-        $('#to_date').val(new_date);
+        $('#to_date').val(ending_date);
+        /*var temp_date = ending_date.split(".");
+        var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];*/
        }
        else
        {
-        $('#from_date').text("");
-        $('#to_date').text("");
+        $('#from_date').attr("disabled", "disabled" );
+        $('#to_date').attr("disabled", "disabled" );
        }
    }
-
 
    /* $(".ex-button").click(function() {
         $('.ex-button').html('<i class="fa fa-chevron-up"></i>');
@@ -398,16 +449,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('.hide-col').css('color','black');
     }
     });*/
-
-
-    $(function(){
-        $('.date_picker input').datepicker({
-           format: "dd.mm.yyyy",
-           todayBtn: "linked",
-           language: "de"
-        });
-        $('.select2').select2()
-    });
 
     function payments()
     {

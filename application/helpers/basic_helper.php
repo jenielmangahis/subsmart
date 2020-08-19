@@ -1019,7 +1019,7 @@ function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessF
     $user_fname = logged('FName');
     $user_lname = logged('LName');
 
-    $company = getCompany();
+    $company = getCompany()->row();
     $categories = array();
 
     if($isBusinessFormTemplates){

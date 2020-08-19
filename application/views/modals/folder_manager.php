@@ -383,7 +383,7 @@
 
 <style>
   .tmp_mfm_dtu_height{
-    height: 60vh
+    height: 50vh
   }
 </style>
 
@@ -398,24 +398,45 @@
           <button type="button" class="close" data-dismiss="modal" id="mfm-dtu-close-button">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="col-md-12 form-group">
-            <label for="categories">Categories<small> Select category to put the file/folder</small></label>
-            <select class="form-control" name="f_category" id="f_category">
-              <option value="">Select Category</option>
-              <?php 
-                foreach($categories as $category){
-              ?>
-                <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
-            <?php } ?>
-            </select>
+          <div class="row">
+              <div class="col-md-5 form-group">
+                <label for="folder-dtu">Drop to Folder</label>
+                <div class="bg-light" name="f_folder_name" id="f_folder_name">
+                </div>
+              </div>
+              <div class="col-md-7 form-group">
+                <label for="categories">Categories<small> Select category to put the file/folder</small></label>
+                <select class="form-control" name="f_category" id="f_category">
+                  <option value="">Select Category</option>
+                  <?php 
+                    foreach($categories as $category){
+                  ?>
+                    <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
+                <?php } ?>
+                </select>
+              </div>
           </div>
           <div class="tmp_mfm_dtu_height" style="border: #999 5px dashed;" ondrop="displayDroppedFiles(event)" ondragover="return false" id="mfm-dtu-drop-area">
             <h5 class="text-center mt-5">Drop File(s) Here to Upload</h5>
           </div>
-          <div id="mfm-dtu-file-list-area" class="d-none">
-            <ul class="list-group" id="mfm-dtu-file-list">
-            </ul>
+          <div id="mfm-dtu-file-list-area" class="d-none table-responsive">
+            <table class="table table-bordered table-sm" id="mfm-dtu-file-list">
+              <thead>
+                <tr>
+                  <th class="d-none"></th>
+                  <th class="d-none"></th>
+                  <th style="width: 30%" class="font-weight-bold">File Name</th>
+                  <th style="width: 63%" class="font-weight-bold">Status</th>
+                  <th style="width: 7%"></th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
           </div>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="clear_dropped_files" onclick="clearDroppedFiles()">Reset</button>
         </div>
       </div>
 
