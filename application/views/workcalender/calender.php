@@ -95,7 +95,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php 
+                                                <?php
                                             }
                                         } else {
                                             echo "No Workorders";
@@ -103,11 +103,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     ?>
                                 </div>
                                 <div class="card-body hid-desk">
-                                    <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
+                                    <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <h1 class="page-title">Schedule</h1>
                                         <form id="frm_calender_filter_events" method="post">
-                                            <div class="form-group">
+                                            <div class="form-group a-1">
                                                 <!--<select id='time-zone-selector' class="form-control custom-select">
                                                     <option value='local' selected>local</option>
                                                     <option value='UTC'>UTC</option>
@@ -115,7 +115,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <span class="text-ter">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec" href="http://nsmartrac.com/settings/schedule"><span class="fa fa-cog"></span> Change</a>
                                             </div>
                                             <?php if (!empty($users)) { ?>
-                                                <div class="form-group">
+                                                <div class="form-group b-1">
                                                     <select class="form-control custom-select" id="select-employee">
                                                         <option value="0">All Employees</option>
                                                         <?php foreach ($users as $user) { ?>
@@ -124,18 +124,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     </select>
                                                 </div>
                                             <?php } ?>
-                                            <div class="form-group margin-left-sec" role="group" aria-label="...">
+                                            <div class="form-group margin-left-sec c-1" role="group" aria-label="...">
                                                  <a class="btn btn-sec btn-md" id="print-calender"  data-calendar="print" href="#">
                                                     <span class="fa fa-print fa-margin-right"></span> Print
                                                 </a>
                                             </div>
-                                            <div class="form-group margin-left-sec" role="group" aria-label="...">
+                                            <div class="form-group margin-left-sec d-1" role="group" aria-label="...">
                                                 <a class="btn btn-primary btn-md" data-calendar="print"
                                                    href="<?php echo base_url('workorder/add') ?>" target="_blank">
                                                     <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
                                                 </a>
                                             </div>
-                                            <div class="form-group margin-left-sec" role="group" aria-label="...">
+                                            <div class="form-group margin-left-sec e-1" role="group" aria-label="...">
                                                 <div class="btn-group btn-with-dropdown">
                                                     <button type="button" class="btn btn-primary btn-md" data-toggle="modal"
                                                             data-target="#modalCreateEvent">
@@ -146,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <span class="caret"></span>
                                                         <span class="sr-only">Toggle Dropdown</span>
                                                     </button>
-                                                    <ul class="dropdown-menu">
+                                                    <ul class="dropdown-menu text-dark-c1">
                                                         <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
                                                                data-target="#modalCreateEvent">
                                                                 Add Blocked Event</a></li>
@@ -163,6 +163,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </form>
+                                        <br class="clearfix"/><br/>
+
+
                                     </div>
                                     <div id='calendar'></div>
                                 </div>
@@ -181,10 +184,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div id="right-calendar"></div>
                 </div>
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header">FILTER BY TIME OFF</h4>                    
+                    <h4  class="right-filter-header">FILTER BY TIME OFF</h4>
 
 
-                    <ul class="right-list-events">             
+                    <ul class="right-list-events">
                         <li><span class="dot dot-red"><i class="fa fa-check"></i></span> Events</li>
                         <li><span class="dot dot-green"><i class="fa fa-check"></i></span> National Holiday</li>
                         <li><span class="dot dot-yellow"><i class="fa fa-check"></i></span> Interview</li>
@@ -202,10 +205,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </ul>
                 </div>
                  <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header">RECENT CONTACTS</h4>                    
+                    <h4  class="right-filter-header">RECENT CONTACTS</h4>
 
 
-                    <ul class="list-group">             
+                    <ul class="list-group">
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-3 col-md-3">
@@ -219,7 +222,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
                                     <a class="btn btn-default" href="javascript:void(0)">Send</a>
                                 </div>
-                            </div>                            
+                            </div>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
@@ -234,7 +237,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
                                     <a class="btn btn-default" href="javascript:void(0)">Send</a>
                                 </div>
-                            </div>                            
+                            </div>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
@@ -249,15 +252,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
                                     <a class="btn btn-default" href="javascript:void(0)">Send</a>
                                 </div>
-                            </div>                            
+                            </div>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    
-    
+
+
 </div>
 <!-- end container-fluid -->
 </div>
@@ -428,7 +431,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         // filter calender events by emloyess
         $(document).on('change', '#select-employee', function (e) {
 
-            // $('#frm_calender_filter_events').submit();   
+            // $('#frm_calender_filter_events').submit();
 
             $("#calendar").css('opacity', '.5');
             $("#calendar").attr('disabled', true);
@@ -605,7 +608,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </script>
 
-<script>  
+<script>
     var calendarEl = document.getElementById('right-calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
@@ -613,9 +616,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         right: 'prev,next',
         left: 'title'
       },
-      titleFormat: { 
+      titleFormat: {
         month: 'short'
-      }, 
+      },
       height:300,
       width:300,
       defaultDate: "<?php echo date('Y-m-d') ?>",
@@ -646,11 +649,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
     });
 
-    $('#print-calender').click(function(){  
-        var defaultView = calendar.view.type;   
-        var defaultDate = calendar.view.type;   
+    $('#print-calender').click(function(){
+        var defaultView = calendar.view.type;
+        var defaultDate = calendar.view.type;
 
-        window.open("<?php echo base_url('workcalender/print_calender') ?>"+'?default_view='+defaultView, '_blank');    
-        //+'&default_date='+defaultDate;    
-    });         
+        window.open("<?php echo base_url('workcalender/print_calender') ?>"+'?default_view='+defaultView, '_blank');
+        //+'&default_date='+defaultDate;
+    });
 </script>
