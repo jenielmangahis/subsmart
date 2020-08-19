@@ -157,7 +157,6 @@ strong {
     background-color: #f8f9fa;
     color: #2a3142;
 }
-
 .dropdown-item.active,
 .dropdown-item:active {
     background-color: #f8f9fa;
@@ -1297,7 +1296,7 @@ body .navigation-menu {
 
     #navigation {
         position: fixed;
-        top: 50px;
+        top: 60px;
         left: 0;
         right: 0;
         display: none;
@@ -1306,7 +1305,8 @@ body .navigation-menu {
         overflow: auto;
         border-top: 1px solid #e7e7e7;
         border-bottom: 1px solid #e7e7e7;
-        background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGD-9yVUWS3WSJK_6GrTLqP8y6eS-MLD69akoRytoESzNmxkOC&s);
+        /* background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGD-9yVUWS3WSJK_6GrTLqP8y6eS-MLD69akoRytoESzNmxkOC&s); */
+        background: white;
         height: 100%;
         z-index: 99;
         background-size: cover;
@@ -1717,11 +1717,33 @@ button:focus {
     font-weight: 500;
 }
 
+.mobile-only {
+    display: none;
+}
+.desktop-only {
+    display: block;
+}
+
 .chat-user-box p {
     font-size: 12px;
 }
 
 @media (max-width: 767px) {
+    body .page-title-box {
+      padding: 0px 0 !important;
+    }
+    .mobile-only {
+        display: block;
+    }
+    .desktop-only {
+        display: none;
+    }
+    #topnav .navigation-menu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid #ddd;
+    }
     #sidebar {
       top: 58px;
       width: 45px !important;
@@ -1742,6 +1764,20 @@ button:focus {
     div#onHandInventory {
       padding: 5px 33px;
     }
+    span.material-icons.mdc-bottom-navigation__list-item__icon {
+        text-align: center;
+        margin: 0 auto;
+        width: 20px;
+        margin-bottom: 4px;
+    }
+    .sc-nearby span svg {
+      position: relative;
+      top: 3px;
+    }
+    .sc-nearby {
+      position: relative;
+      bottom: 7px;
+    }
     .custom__border .row {
       padding-left: 25px !important;
       padding-right: 25px !important;
@@ -1755,6 +1791,9 @@ button:focus {
       padding-right: 18px;
       border-bottom: none;
     }
+    .notification-list .nav-link i {
+      font-size: 25px !important;
+    }
     .state-box table thead th {
       padding: 10px 1px !important;
     }
@@ -1762,9 +1801,15 @@ button:focus {
       padding: 5px !important;
       width: fit-content;
     }
+    #topnav .navbar-toggle .lines {
+      width: 27px !important;
+      height: 15px !important;
+      position: relative !important;
+      top: 5px !important;
+    }
     #topnav .navbar-right {
       position: relative;
-      left: 8px;
+      left: 31px;
     }
     .col-xl-12 {
       padding: 0px !important;
