@@ -207,7 +207,16 @@ class Workcalender extends MY_Controller
 //         echo '<pre>'; print_r($this->page_data['events']); die;
 
         // load all user for calender toolbar
+
+        $this->load->library('user_agent');
+        if ($this->agent->is_mobile()) {
+            $is_mobile = 1;
+        } else {
+            $is_mobile = 0;
+        }
+
         $this->load->model('Users_model', 'user_model');
+        $this->page_data['is_mobile'] = $is_mobile;
         $this->page_data['users'] = $this->user_model->getUsers();
 
         $this->load->view('workcalender/calender', $this->page_data);
