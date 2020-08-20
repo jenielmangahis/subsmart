@@ -80,3 +80,19 @@ a.login-social:hover {
 	height: 100%;
 	padding: 150px 60px;
 }
+
+@media (max-width: 767px) {
+  .centered {
+    position: fixed !important;
+    left: 5% !important;
+    top: 20% !important;
+  }
+}
+
+@media (max-height: 568px) {
+  .centered {
+    position: fixed !important;
+    left: 5% !important;
+    top: 11% !important;
+  }
+}
