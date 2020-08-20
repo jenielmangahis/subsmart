@@ -139,7 +139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     /* .portlet-content { padding: 0.4em; border: 1px solid #cccccc; } */
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Signature" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Signature">
@@ -149,13 +149,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Signature </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -191,7 +191,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Initial" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Initial">
@@ -201,13 +201,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Initial </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
+    <style>
+        /* This prevents the disabled button in hover-state from reverting to the non-disabled styling. */
+        .menu_listItem-disabledFeature .menu_item.disabled:hover {
+            color: #999999;
+        }
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+        .menu_listItem-disabledFeature .menu_item.disabled .menu_hoverAction {
+            position: absolute;
+            right: 12px;
+        }
+
+        .menu_item-smartContractInfo {
+            position: absolute;
+            right: 2px;
+            visibility: hidden;
+            color: #999999;
+        }
+
+        .menu_item-smartContractInfoShow:hover * {
+            visibility: visible;
+        }
+
+        .tab-badge-left-margin {
+            margin-left: auto;
+        }
+        /* #main-drag-and-drop-area { font-size: 1.1em !important; } */
+    /* .column { width: 100%; float: left; padding-bottom: 30px; } */
+    /* .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; } */
+    /* .portlet-content { padding: 0.4em; border: 1px solid #cccccc; } */
+    </style>
+
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+              'disabled': !tpiCtrl.isEnabled(),
+              'menu_item-isActive': hookCtrl.view.get('selected')
+            }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Signature" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Signature">
+        <span class="swatch swatch-recipient swatch-lg swatch-ext-0" ng-class="tpiCtrl.getRecipientSwatchClass()" aria-hidden="true">
+            <i class="icon icon-color-tagger icon-palette-field-sign"></i>
+        </span>
+
+        <span class="u-ellipsis ng-binding"> Signature </span>
+
+        
+        
+    </button>
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -243,7 +286,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Stamp" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Stamp">
@@ -253,13 +296,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Stamp </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -295,7 +338,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Date Signed" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Date Signed">
@@ -305,13 +348,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Date Signed </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -355,7 +398,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Name" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Name">
@@ -365,13 +408,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Name </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    <style>
+        /* This prevents the disabled button in hover-state from reverting to the non-disabled styling. */
+        .menu_listItem-disabledFeature .menu_item.disabled:hover {
+            color: #999999;
+        }
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+        .menu_listItem-disabledFeature .menu_item.disabled .menu_hoverAction {
+            position: absolute;
+            right: 12px;
+        }
+
+        .menu_item-smartContractInfo {
+            position: absolute;
+            right: 2px;
+            visibility: hidden;
+            color: #999999;
+        }
+
+        .menu_item-smartContractInfoShow:hover * {
+            visibility: visible;
+        }
+
+        .tab-badge-left-margin {
+            margin-left: auto;
+        }
+        /* #main-drag-and-drop-area { font-size: 1.1em !important; } */
+    /* .column { width: 100%; float: left; padding-bottom: 30px; } */
+    /* .portlet { margin: 1em 0em 1em 0; padding: 0.3em 0em 0.3em 0em; } */
+    /* .portlet-content { padding: 0.4em; border: 1px solid #cccccc; } */
+    </style>
+
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+              'disabled': !tpiCtrl.isEnabled(),
+              'menu_item-isActive': hookCtrl.view.get('selected')
+            }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Signature" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Signature">
+        <span class="swatch swatch-recipient swatch-lg swatch-ext-0" ng-class="tpiCtrl.getRecipientSwatchClass()" aria-hidden="true">
+            <i class="icon icon-color-tagger icon-palette-field-sign"></i>
+        </span>
+
+        <span class="u-ellipsis ng-binding"> Signature </span>
+
+        
+        
+    </button>
+
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -407,7 +493,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Email" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Email">
@@ -417,13 +503,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Email </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -459,7 +545,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Company" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Company">
@@ -469,13 +555,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Company </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -511,7 +597,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Title" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Title">
@@ -521,13 +607,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Title </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -571,7 +657,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Text" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Text">
@@ -581,13 +667,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Text </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -623,7 +709,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Checkbox" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Checkbox">
@@ -633,13 +719,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Checkbox </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -675,7 +761,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Dropdown" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Dropdown">
@@ -685,13 +771,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Dropdown </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -727,7 +813,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Radio" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Radio">
@@ -737,13 +823,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Radio </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -787,7 +873,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Formula" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Formula">
@@ -797,13 +883,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Formula </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -839,7 +925,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Attachment" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Attachment">
@@ -849,13 +935,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Attachment </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -891,7 +977,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Note" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Note">
@@ -901,13 +987,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Note </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -943,7 +1029,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Approve" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Approve">
@@ -953,13 +1039,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Approve </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->
@@ -995,7 +1081,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
     </style>
 
-    <!-- ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab --><button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
+    <button class="menu_item ng-scope" type="button" ng-if="!tpiCtrl.paywall &amp;&amp; !tpiCtrl.isPaymentTab &amp;&amp; !tpiCtrl.isSmartContractTab" ng-class="{
               'disabled': !tpiCtrl.isEnabled(),
               'menu_item-isActive': hookCtrl.view.get('selected')
             }" ng-attr-title="{{tpiCtrl.getTabTitle()}}" ng-click="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('click', $event)" ng-mousedown="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('mousedown', $event); $event.preventDefault()" ds-prepare-touchstart="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('touchstart', $event);" data-qa="Decline" ng-focus="tpiCtrl.isEnabled() &amp;&amp; hookCtrl.trigger('focus', $event)" title="Decline">
@@ -1005,13 +1091,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         <span class="u-ellipsis ng-binding"> Decline </span>
 
-        <!-- ngIf: hookCtrl.view.get('selected') -->
-        <!-- ngIf: tpiCtrl.showNewBadgeOnDrawing() -->
-    </button><!-- end ngIf: !tpiCtrl.paywall && !tpiCtrl.isPaymentTab && !tpiCtrl.isSmartContractTab -->
+        
+        
+    </button>
 
-    <!-- ngIf: tpiCtrl.isSmartContractTab -->
+    
 
-    <!-- ngIf: tpiCtrl.paywall && !tpiCtrl.isPaymentTab -->
+    
 
     <!-- todo @ds/prepare -->
     <!-- ngIf: tpiCtrl.isPaymentTab -->

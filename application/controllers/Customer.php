@@ -209,8 +209,6 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/mixedview', $this->page_data);
     }
-
-
     /**
      * @param $id
      */
@@ -233,9 +231,6 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/genview', $this->page_data);
     }
-
-
-
     /**
      * @param $id
      */
@@ -260,10 +255,7 @@ class Customer extends MY_Controller
     }
 
     public function edit($id)
-
     {
-
-
         $company_id = logged('company_id');
 
         $user_id = logged('id');
@@ -399,7 +391,7 @@ class Customer extends MY_Controller
                     $temp_data['customer_id'] = $id;
                     $temp_data['module'] = 'customer';
                     $temp_data['type'] = 'service_address';
-                    $this->customeraddress_model->create($temp_data);                
+                    $this->customeraddress_model->create($temp_data);
                 }
             }
 
@@ -503,7 +495,7 @@ class Customer extends MY_Controller
 
         if($this->input->post('service_address_container_deleted_addresses') !='')
         {
-            $delete_list = explode(",", $this->input->post('service_address_container_deleted_addresses'));        
+            $delete_list = explode(",", $this->input->post('service_address_container_deleted_addresses'));
             $this->db->from($this->customeraddress_model->table);
             $this->db->where('customer_id ', $id);
             $this->db->where_in('id', $delete_list);
@@ -761,10 +753,33 @@ class Customer extends MY_Controller
             }
         }
     }
+    public function add_leadsource_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['ls_id'])){
+            unset($input['ls_id']);
+            if($this->customer_ad_model->add($input,"ac_leadsource")){
+                echo "Lead Source Added!";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_leadsource","ls_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
 
-    public function fetch_leadtype_data(){
-        $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadtypes","lead_id");
+    public function fetch_leadtype_data()
+    {
+        $lead_types = $this->customer_ad_model->get_all(FALSE, "", "DESC", "ac_leadtypes", "lead_id");
         echo json_encode($lead_types);
+    }
+    public function fetch_leadsource_data(){
+        $lead_source = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadsource","ls_id");
+        echo json_encode($lead_source);
     }
     public function fetch_salesarea_data(){
         $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_salesarea","sa_id");
@@ -783,6 +798,11 @@ class Customer extends MY_Controller
                 $input['field_name'] = "lead_id";
                 $input['id'] = $_POST['id'];
                 $input['tablename'] = "ac_leadtypes";
+                break;
+            case "ls":
+                $input['field_name'] = "ls_id";
+                $input['id'] = $_POST['id'];
+                $input['tablename'] = "ac_leadsource";
                 break;
             default;
         }
@@ -1251,7 +1271,7 @@ class Customer extends MY_Controller
                 }
             }
         }
-        
+
         foreach($cat as $key => $c) {
             if(!empty($c)) {
                 $header = array($key, "header", "", "");
@@ -1263,7 +1283,7 @@ class Customer extends MY_Controller
                 }
             }
         }
-        
+
         return $result;
     }
 
@@ -1274,11 +1294,11 @@ class Customer extends MY_Controller
         $filename = getLoggedName()."_customer.csv";
 
         $f = fopen('php://memory', 'w');
-  
+
         $fields = array('Customer Type', 'Company Name', 'Contact Name', 'Contact Email', 'Mobile', 'Phone', 'Birthday', 'Suite Unit', 'Street Address', 'City', 'State', 'Postal Code');
         fputcsv($f, $fields, $delimiter);
 
-        if (!empty($items)) {       
+        if (!empty($items)) {
             foreach ($items as $item) {
                 $csvData = array($item->customer_type, $item->company_name, $item->contact_name, $item->contact_email, $item->mobile, $item->phone, $item->birthday, $item->suite_unit, $item->street_address, $item->city, $item->state, $item->postal_code);
                 fputcsv($f, $csvData, $delimiter);
@@ -1302,17 +1322,17 @@ class Customer extends MY_Controller
 
         if ($this->input->post('importSubmit')) {
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
-            
+
             if ($this->form_validation->run() == true) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-                
+
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                     $this->load->library('CSVReader');
-                    
+
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
 
                     if (!empty($csvData)) {
-                        foreach ($csvData as $row) { 
+                        foreach ($csvData as $row) {
                             $rowCount++;
 
                             $itemData = array(
@@ -1330,7 +1350,7 @@ class Customer extends MY_Controller
                                 'state' => $row['State'],
                                 'postal_code' => $row['Postal Code']
                             );
-                            
+
                             $con = array(
                                 'where' => array(
                                     'contact_name' => $row['Contact Name']
@@ -1338,23 +1358,23 @@ class Customer extends MY_Controller
                                 'returnType' => 'count'
                             );
                             $prevCount = $this->customer_model->getRows($con);
-                            
+
                             if ($prevCount > 0) {
                                 $condition = array('contact_name' => $row['Contact Name']);
                                 $update = $this->customer_model->update($itemData, $condition);
-                                
+
                                 if ($update) {
                                     $updateCount++;
                                 }
                             } else {
                                 $insert = $this->customer_model->insert($itemData);
-                                
+
                                 if ($insert) {
                                     $insertCount++;
                                 }
                             }
                         }
-                        
+
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
                         $successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
                         $this->session->set_userdata('success_msg', $successMsg);

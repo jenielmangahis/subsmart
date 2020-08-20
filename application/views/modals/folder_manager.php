@@ -395,7 +395,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4>Drop To Upload</h4>
-          <button type="button" class="close" data-dismiss="modal" id="mfm-dtu-close-button">&times;</button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -405,8 +404,8 @@
                 </div>
               </div>
               <div class="col-md-7 form-group">
-                <label for="categories">Categories<small> Select category to put the file/folder</small></label>
-                <select class="form-control" name="f_category" id="f_category">
+                <label for="f_category">Categories<small> Select category to put the file/folder</small></label>
+                <select class="form-control" name="dtu_f_category" id="dtu_f_category">
                   <option value="">Select Category</option>
                   <?php 
                     foreach($categories as $category){
@@ -436,7 +435,10 @@
           </div>  
         </div>
         <div class="modal-footer">
+          <h6 id="upload_counter" class="d-none">Uploading . . . 0/0</h6>
+          <button type="button" class="btn btn-default" id="upload_dropped_files">Upload</button>
           <button type="button" class="btn btn-default" id="clear_dropped_files" onclick="clearDroppedFiles()">Reset</button>
+          <button type="button" class="btn btn-default" id="cancel_dropped_files">Cancel</button>
         </div>
       </div>
 

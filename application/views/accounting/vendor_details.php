@@ -155,23 +155,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<div class="col-md-6">
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Vendor</strong>
-													<span class="font-weight-normal">Iphen</span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->display_name; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Email</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->email; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Phone</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->phone; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Mobile</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->mobile; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Fax</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->fax; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Other</strong>
@@ -179,25 +179,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Website</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->website; ?></span>
 												</h6>
 											</div>
 											<div class="col-md-6">
 												<h6 class="border-bottom-dark pb-2">
-													<strong class="pr-5">Billing address</strong>
-													<span class="font-weight-normal"></span>
+													<strong class="pr-1">Billing address</strong>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->street . ", " . $vendor_details[0]->city. ", " . $vendor_details[0]->state. ", " . $vendor_details[0]->country . " " . $vendor_details[0]->zip; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Terms</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->terms; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
-													<strong class="pr-5">Company</strong>
-													<span class="font-weight-normal"></span>
+													<strong class="pr-4">Company</strong>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->company; ?></span>
 												</h6>
 												<h6 class="border-bottom-dark pb-2">
 													<strong class="pr-5">Notes</strong>
-													<span class="font-weight-normal"></span>
+													<span class="font-weight-normal"><?php echo $vendor_details[0]->notes; ?></span>
 												</h6>
 											</div>
 										</div>

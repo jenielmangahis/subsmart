@@ -1151,4 +1151,10 @@
     $('.delbt').on('click', function(){	
         $('.edit-sidebar').hide();	
     });	
-</script>
+</script> <!-- <h3><i class="fa fa-pencil"></i> Signature</h3>	
+                <div class="cus-check">                    	
+                    <div class="form-group">	
+                        <input type="checkbox" id="css">	
+                        <label for="css">Required Field</label>	
+                    </div>	
+                </div>	 -->

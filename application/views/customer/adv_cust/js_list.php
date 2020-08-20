@@ -17,8 +17,15 @@
             "pageLength": 5
         });
 
+        // var table_clt =$('#customerListTable').DataTable({
+        //     "lengthChange": false,
+        //     "searching" : true,
+        //     "pageLength": 20
+        // });
+
         display_leadtype_data();
         display_salesarea_data();
+        display_leadsource_data();
 
         function display_leadtype_data(){
             table_lt.clear();
@@ -68,6 +75,30 @@
             });
         }
 
+        function display_leadsource_data(){
+            table_ls.clear();
+            $.ajax({
+                type: "POST",
+                url: "/customer/fetch_leadsource_data",
+                data: {name : "leadsource"}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var lead_types_data = JSON.parse(data);
+                    for(var x=0;x<lead_types_data.length;x++){
+                        var html = '<tr role="row">';
+                        html += '<td class="sorting_1">'+lead_types_data[x].ls_name+'</td>';
+                        html += '<td>'+'<button class="btn btn-sm btn-default edit_ls" id="'+lead_types_data[x].ls_id+'" data-name="'+lead_types_data[x].ls_name+'" ><i class="fa fa-pencil"></i></button>' +
+                            '<button id="'+lead_types_data[x].ls_id+'" class="btn btn-sm btn-default delete_ls" title="Delete Lead Type" data-toggle="tooltip"><i class="fa fa-trash"></i></button>'+'</td></tr>';
+                        table_ls.rows.add($(html)).draw();
+                        //$('#leadtype_table_data').append(html);
+                        $('#leadSourceForm')[0].reset();
+                    }
+                    console.log(lead_types_data.length);
+                    console.log(lead_types_data);
+                }
+            });
+        }
+
         $("body").delegate(".delete_leadtype", "click", function(){
             //alert("Delegated Button Clicked");
             var ID=this.id;
@@ -96,6 +127,20 @@
             });
         });
 
+        $("body").delegate(".delete_ls", "click", function(){
+            //alert("Delegated Button Clicked");
+            var ID=this.id;
+            $.ajax({
+                type: "POST",
+                url: "/customer/delete_data",
+                data: { id:ID,table:"ls" }, // serializes the form's elements.
+                success: function(data){
+                    console.log(data);
+                    display_salesarea_data();
+                }
+            });
+        });
+
         $("body").delegate(".edit_leadtype", "click", function(){
             //alert("Delegated Button Clicked");
             var ID=this.id;
@@ -111,6 +156,22 @@
             $('#modal_sales_area').modal('show');
             $('[id="sa_name"]').val($(this).data('name'));
             $('[id="sa_id"]').val(ID);
+        });
+
+        $("body").delegate(".edit_ls", "click", function(){
+            //alert("Delegated Button Clicked");
+            $('#lead_source_header').text('Edit Lead Source');
+            var ID=this.id;
+            $('#modal_lead_source').modal('show');
+            $('[id="ls_name"]').val($(this).data('name'));
+            $('[id="ls_id"]').val(ID);
+        });
+
+
+        $("#add_ls").on( "click", function( event ) {
+            $('#leadSourceForm')[0].reset();
+            $('#lead_source_header').text('Add Lead Source');
+            $('#modal_lead_source').modal('show');
         });
 
 
@@ -136,6 +197,42 @@
                     $('#modal_lead_type').modal('hide');
                     $('[id="lead_name"]').val("");
                     $('[id="lead_id"]').val("");
+                }
+            });
+        });
+
+        $("#leadSourceForm").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_leadsource_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === "Updated"){
+                        document.getElementById('alert_box').style.display = "block";
+                        setTimeout(function () {
+                            document.getElementById('alert_box').style.display = 'none'
+                        }, 5000);
+                        display_salesarea_data();
+                    }else{
+                        $('#alert_box').removeClass('invisible');
+                        if(data === "Sales Area Added!"){
+                            document.getElementById('alert_box').style.display = "block";
+                            setTimeout(function () {
+                                document.getElementById('alert_box').style.display = 'none'
+                            }, 5000);
+                            display_salesarea_data();
+                        }
+                        // $('.toast').toast('show');
+                    }
+                    $('#modal_lead_source').modal('hide');
+                    $('#leadSourceForm')[0].reset();
+                    //$('[id="lead_name"]').val("");
+                    //$('[id="lead_id"]').val("");
                 }
             });
         });

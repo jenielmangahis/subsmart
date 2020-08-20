@@ -185,27 +185,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $data_id = null;
                                             $delete = null;
                                             $category_list_id = null;
+                                            $transaction_id = null;
                                         ?>
                                         <?php foreach ($transactions as $transaction): ?>
                                         <?php
+                                        if ($transaction->type == 'Check'){
                                         // Check
                                             foreach ($checks as $check){
                                                 if ($transaction->id == $check->transaction_id){
-                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
                                                     $number = $check->check_number;
                                                     $payee = $check->bank_id;
-                                                    $modal = "edit-expensesCheck";
                                                     $modal_id = "editCheck";
                                                     $data_id = $check->id;
+                                                    $transaction_id = $check->transaction_id;
                                                     foreach ($vendors as $vendor){
                                                         if ($vendor->id == $check->vendor_id){
                                                             $vendors_name = $vendor->f_name." ".$vendor->l_name;
                                                             $delete = 'deleteCheck';
                                                         }
                                                     }
-                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$check->id));
-                                                    $check_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $check->transaction_id));
+                                                    $check_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $check_category_id){
                                                             $category_list_id = $list->id;
@@ -216,15 +218,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                 }
                                             }
+                                        }elseif ($transaction->type == 'Bill'){
 //                                            Bill
                                             foreach ($bills as $bill){
                                                 if ($transaction->id == $bill->transaction_id){
-                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
                                                     $payee = $bill->vendor_id;
                                                     $number = null;
-                                                    $modal = "bill-modal";
                                                     $modal_id = "editBill";
+                                                    $transaction_id = $bill->transaction_id;
                                                     foreach ($vendors as $vendor){
                                                         if ($vendor->vendor_id == $bill->vendor_id){
                                                             $vendors_name = $vendor->f_name." ".$vendor->l_name;
@@ -232,8 +235,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $delete = 'deleteBill';
                                                         }
                                                     }
-                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$bill->id));
-                                                    $bill_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $bill->transaction_id));
+                                                    $bill_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $bill_category_id){
                                                             $category_list_id = $list->id;
@@ -242,18 +245,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         }
                                                     }
 
-
                                                 }
                                             }
+                                        }elseif ($transaction->type == 'Expense'){
 //                                            Expense
                                             foreach ($expenses as $expense){
                                                 if ($transaction->id == $expense->transaction_id){
-                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
                                                     $payee = $expense->vendor_id;
                                                     $number = null;
-                                                    $modal = "expense-modal";
                                                     $modal_id = "editExpense";
+                                                    $transaction_id = $expense->transaction_id;
                                                     foreach ($vendors as $vendor){
                                                         if ($vendor->vendor_id == $expense->vendor_id){
                                                             $vendors_name = $vendor->f_name." ".$vendor->l_name;
@@ -261,8 +264,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $delete = 'deleteExpense';
                                                         }
                                                     }
-                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$expense->id));
-                                                    $expense_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $expense->transaction_id));
+                                                    $expense_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $expense_category_id){
                                                             $category_list_id = $list->id;
@@ -274,15 +277,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                 }
                                             }
+                                        }elseif ($transaction->type == 'Vendor Credit'){
 //                                            Vendor Credit
                                             foreach ($vendor_credits as $vendor_credit){
                                                 if ($transaction->id == $vendor_credit->transaction_id){
-                                                    $date = date("d/m/Y",strtotime($transaction->date_created));
+                                                    $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
                                                     $payee = $vendor_credit->vendor_id;
                                                     $number = null;
-                                                    $modal = "vendorCredit-modal";
                                                     $modal_id = "editVendorCredit";
+                                                    $transaction_id = $vendor_credit->transaction_id;
                                                     foreach ($vendors as $vendor){
                                                         if ($vendor->vendor_id == $vendor_credit->vendor_id){
                                                             $vendors_name = $vendor->f_name." ".$vendor->l_name;
@@ -290,8 +294,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             $delete = 'deleteVendorCredit';
                                                         }
                                                     }
-                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_type_id'=>$vendor_credit->id));
-                                                    $vc_category_id = (!empty($get_category->row()->category_id))?$get_category->row()->category_id:0;
+                                                    $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $vendor_credit->transaction_id));
+                                                    $vc_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
                                                     foreach ($list_categories as $list){
                                                         if ($list->id == $vc_category_id){
                                                             $category_list_id = $list->id;
@@ -301,13 +305,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     }
                                                 }
                                             }
+                                        }
+
+
                                         ?>
                                         <tr style="cursor: pointer;">
                                             <td><input type="checkbox"></td>
-                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $date;?></td>
-                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $type;?></td>
-                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $number;?></td>
-                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"><?php echo $vendors_name;?></td>
+                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $date;?></td>
+                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $type;?></td>
+                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $number;?></td>
+                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $vendors_name;?></td>
                                             <td>
                                                 <div style="display: inline-block;position: relative;width: 100%">
                                                     <select name="category" id="expenseTransCategory" data-category="" data-id="<?php echo $category_id;?>" class="form-control select2-tbl-category">
@@ -321,14 +328,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <i class="fa fa-spinner fa-pulse" style="display: none;position: relative;"></i>
                                             </td>
-                                            <td data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>"></td>
+                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"></td>
                                             <td style="text-align: right;">
-                                                <a href="#" data-toggle="modal" data-target="#<?php echo $modal;?>" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>
+                                                <a href="#" data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-caret-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li><a href="#" id="copy">Copy</a></li>
-                                                        <li id="<?php echo $delete?>" data-id="<?php echo $data_id?>">
+                                                        <li id="<?php echo $delete?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>">
                                                             <a href="#" >Delete</a>
                                                         </li>
                                                         <li><a href="#">Void</a></li>
@@ -336,6 +343,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>&nbsp;
                                             </td>
                                         </tr>
+                                        <?php
+                                            $date = null;
+                                            $type = null;
+                                            $number = null;
+                                            $vendors_name = null;
+                                            $payee = null;
+                                            $category = null;
+                                            $description = null;
+                                            $total = null;
+                                            $category_id = null;
+                                            $modal = null;
+                                            $modal_id = null;
+                                            $data_id = null;
+                                            $delete = null;
+                                            $category_list_id = null;
+                                            $transaction_id = null;
+                                            ?>
                                         <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -601,7 +625,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="addAndRemoveRow">
                             <div class="total-amount-container">
-                                <span id="total-amount-check">0.00</span>
+                                <span style="margin-right: 200px;font-size: 17px">Total</span>
+                                $<span id="total-amount-check">0.00</span>
                             </div>
                             <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line">Clear all lines</button>
@@ -631,6 +656,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="show-existing-file">
                                 <a href="#" id="showExistingFile">Show existing file</a>
                             </div>
+                        </div>
+                        <div class="privacy">
+                            <a href="#">Privacy</a>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -780,6 +808,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-2"></div>
                         </div>
                     </div>
+                        <div class="privacy">
+                            <a href="#">Privacy</a>
+                        </div>
                     <div class="modal-footer-activity">
                         <div class="row">
                             <div class="col-md-6">
@@ -929,7 +960,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 							<div class="addAndRemoveRow">
 								<div class="total-amount-container">
-									<span id="total-amount-bill">0.00</span>
+                                    <span style="margin-right: 200px;font-size: 17px">Total</span>
+									$<span id="total-amount-bill">0.00</span>
 								</div>
 								<button type="button" class="add-remove-line" id="add-four-line-bill">Add lines</button>
 								<button type="button" class="add-remove-line" id="clear-all-line-bill">Clear all lines</button>
@@ -959,6 +991,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="show-existing-file">
                                     <a href="#" id="showExistingFile">Show existing file</a>
                                 </div>
+                            </div>
+                            <div class="privacy">
+                                <a href="#">Privacy</a>
                             </div>
 						</div>
 						<div class="modal-footer-check">
@@ -1126,7 +1161,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="addAndRemoveRow">
                             <div class="total-amount-container">
-                                <span id="total-amount-expense">0.00</span>
+                                <span style="margin-right: 200px;font-size: 17px">Total</span>
+                                $<span id="total-amount-expense">0.00</span>
                             </div>
                             <button type="button" class="add-remove-line" id="add-four-line-expense">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line-expense">Clear all lines</button>
@@ -1156,6 +1192,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="show-existing-file">
                                 <a href="#" id="showExistingFile">Show existing file</a>
                             </div>
+                        </div>
+                        <div class="privacy">
+                            <a href="#">Privacy</a>
                         </div>
                     </div>
                     <div class="modal-footer-check">
@@ -1298,14 +1337,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="addAndRemoveRow">
                             <div class="total-amount-container">
-                                <span id="total-amount-vc">0.00</span>
+                                <span style="margin-right: 200px;font-size: 17px">Total</span>
+                                $<span id="total-amount-vc">0.00</span>
                             </div>
                             <button type="button" class="add-remove-line" id="add-four-line-vendorCredit">Add lines</button>
                             <button type="button" class="add-remove-line" id="clear-all-line-vendorCredit">Clear all lines</button>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
-                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                            <textarea name="memo" id="vcMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -1329,11 +1369,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <a href="#" id="showExistingFile" class="">Show existing file</a>
                             </div>
                         </div>
+                        <div class="privacy">
+                            <a href="#">Privacy</a>
+                        </div>
                     </div>
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-5">
-                                <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" id="closeModalVC" type="button">Cancel</button>
                             </div>
                             <div class="col-md-2" style="text-align: center;">
                                 <div>
@@ -1817,6 +1860,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         allowClear: true
     });
     $('.select2-account').select2({
+        placeholder: 'Select an account',
         allowClear: true
     });
     $('.select2-bill-terms').select2({
@@ -1840,7 +1884,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         allowClear: true
     });
     $('.select2-tbl-category').select2({
-        placeholder: 'Choose a vendor',
+        placeholder: 'Select a category',
         allowClear: true
     });
     $('.select2-vendor-credit').select2({

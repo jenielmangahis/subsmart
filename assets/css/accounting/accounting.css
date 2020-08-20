@@ -839,7 +839,7 @@ button {
     float: right;
     right: 0;
     position: absolute;
-    margin-right: 300px;
+    margin-right: 70px;
     margin-top: 20px;
 }
 /*Seletet2 Disable option*/
@@ -872,6 +872,8 @@ button {
     display: inline-block;
     margin-right: 15px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .file-name-section a{
     color: #0b97c4;

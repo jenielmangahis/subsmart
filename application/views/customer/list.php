@@ -154,152 +154,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row margin-bottom-ter align-items-center col-sm-12">
-                                                <div class="col-auto">
-                                                    <p>
-                                                        Listing all customers.
-                                                    </p>
-                                                </div>
-                                                <div class="col text-right-sm d-flex justify-content-end align-items-center">
-                                                    <form style="display: inline-flex;" class="form-inline form-search"
-                                                          name="form-search"
-                                                          action="<?php echo base_url('customer') ?>"
-                                                          method="get">
-                                                        <div class="form-group" style="margin:0 !important;">
-                                                            <span>Search:</span> &nbsp;
-                                                            <input style="height:auto !important; font-size: 14px; margin-right:10px;"
-                                                                   class="form-control form-control-md"
-                                                                   name="search"
-                                                                   value="<?php echo (!empty($search)) ? $search : '' ?>"
-                                                                   type="text"
-                                                                   placeholder="Search...">
-                                                            <button class="btn btn-default btn-md" type="submit"><span
-                                                                        class="fa fa-search"></span></button>
-                                                            <?php if (!empty($search)) { ?>
-                                                                <a class="btn btn-default btn-md ml-2"
-                                                                   href="<?php echo base_url('customer') ?>"><span
-                                                                            class="fa fa-times"></span></a>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </form>
 
-                                                    <span class="margin-left-sec">Filter by:</span> &nbsp;
-                                                    <div class="dropdown dropdown-inline margin-right-sec"><a
-                                                                class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                                                aria-expanded="true" href="<?php echo base_url('customer') ?>">Type
-                                                            <span class="caret"></span></a>
-                                                        <ul class="dropdown-menu  btn-block" role="menu">
-                                                            <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                      href="<?php echo base_url('customer') ?>">Type</a>
-                                                            </li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo base_url('customer?type=residential') ?>">Residential</a>
-                                                            </li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo base_url('customer?type=commercial') ?>">Commercial</a>
-                                                            </li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1"
-                                                                   href="<?php echo base_url('customer?type=advance') ?>">Advance</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="dropdown dropdown-inline"><a class="btn btn-default dropdown-toggle"
-                                                                                             data-toggle="dropdown" aria-expanded="true"
-                                                                                             href="#">Group <span class="caret"></span></a>
-                                                        <ul class="dropdown-menu  btn-block" role="menu">
-                                                            <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                      href="">Group</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Panel</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <span class="margin-left-sec">Sort:</span> &nbsp;
-                                                    <div class="dropdown dropdown-inline"><a class="btn btn-default dropdown-toggle"
-                                                                                             data-toggle="dropdown"
-                                                                                             aria-expanded="false"
-                                                                                             href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=name-asc') : base_url('customer?order=name-asc') ?>">
-                                                            Name: A to Z
-                                                            <span class="caret"></span></a>
-                                                        <ul class="dropdown-menu  btn-block" role="menu">
-                                                            <li class="active" role="presentation">
-                                                                <a role="menuitem"
-                                                                   tabindex="-1"
-                                                                   href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=name-asc') : base_url('?order=name-asc') ?>">
-                                                                    Name: A to Z</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=name-desc') : base_url('customer?order=name-desc') ?>">Name:
-                                                                    Z to
-                                                                    A</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=last-name-asc') : base_url('customer?order=last-name-asc') ?>">Last
-                                                                    Name:
-                                                                    A to Z</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=last-name-desc') : base_url('customer?order=last-name-desc') ?>">Last
-                                                                    Name:
-                                                                    Z to A</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=email-asc') : base_url('customer?order=email-asc') ?>">Email:
-                                                                    A to
-                                                                    Z</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                       href="<?php echo (!empty($type)) ? base_url('customer?type=' . $type . '&order=email-desc') : base_url('customer?order=email-asc') ?>">Email:
-                                                                    Z to
-                                                                    A</a></li>
-                                                        </ul>
-                                                    </div>
-                                                    <a class="btn btn-default btn-md margin-left-sec" href="" target="_blank"><span
-                                                                class="fa fa-download"></span> &nbsp; Export</a>
-                                                </div>
-                                            </div>
-                                            <div class="tabs">
-                                                <ul class="clearfix work__order" id="myTab" role="tablist">
-                                                    <li <?php echo ((!empty($tab_index)) && $tab_index === 1) ? "class='active'" : "" ?>>
-                                                        <a class="nav-link"
-                                                           id="profile-tab"
-                                                           data-toggle="tab1"
-                                                           href="<?php echo base_url('customer') ?>"
-                                                           role="tab"
-                                                           aria-controls="profile" aria-selected="false">Active
-                                                            (<?php echo get_customer_count() ?>)</a>
-                                                    </li>
-                                                    <li <?php echo ((!empty($tab_index)) && $tab_index === 2) ? "class='active'" : "" ?>>
-                                                        <a class="nav-link"
-                                                           id="profile-tab"
-                                                           data-toggle="tab1"
-                                                           href="<?php echo base_url('customer/tab/2') ?>"
-                                                           role="tab"
-                                                           aria-controls="profile" aria-selected="false">Inactive
-                                                            (<?php echo (!empty($statusCount[1])) ? $statusCount[1] : 0 ?>)</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+
 
                                             <div class="tab-content" id="myTabContent">
                                                 <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
 
-                                                    <?php if (!empty($customers)) { ?>
                                                         <table class="table table-hover" id="customerListTable">
                                                             <thead>
                                                             <tr>
-                                                                <th>
-                                                                    <div class="table-name">
-                                                                        <div class="checkbox checkbox-sm select-all-checkbox">
-                                                                            <input type="checkbox" name="id_selector" value="0"
-                                                                                   id="select-all"
-                                                                                   class="select-all">
-                                                                            <label for="select-all">Name</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </th>
-                                                                <th>Assigned To</th>
-                                                                <th>Referral By</th>
+                                                                <th>City</th>
+                                                                <th>Street</th>
+                                                                <th>Source</th>
                                                                 <th>Email</th>
-                                                                <th>Added</th>
-                                                                <th>Start Date</th>
-                                                                <th>Last Login</th>
-                                                                <th>Phone</th>
+                                                                <th>Sales Rep</th>
+                                                                <th>Tech</th>
+                                                                <th>System Type</th>
+                                                                <th>MMR</th>
                                                                 <th>Status</th>
                                                                 <th></th>
                                                             </tr>
@@ -411,9 +282,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </tbody>
 
                                                         </table>
-                                                    <?php } else { ?>
-                                                        <p class="text-center">No customers found.</p>
-                                                    <?php } ?>
+
                                                 </div>
                                             </div>
 
@@ -594,9 +463,115 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+
+                                                                            <div class="col-md-12">
+                                                                                    <div class="col-md-8">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Mailing address</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                    </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">City</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Zipcode</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">State</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Country</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-12">
+                                                                                <div class="col-md-8">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
+                                                                                        <label for="notify_by_email"><span>Previous mailing address (only if at current mailing address for less than 2 years)</span></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Status</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Assigned to</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Start Date</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Referred By</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-12">
+                                                                                <div class="col-md-8">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
+                                                                                        <label for="notify_by_email"><span>Portal Access</span></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <br>
+                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Client's User ID (Email)</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <div class="form-group" id="customer_type_group">
+                                                                                        <label for="">Language</label><br/>
+                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-12"><br>
+                                                                                <div class="form-group" id="customer_type_group">
+                                                                                    <label for=""></label>
+                                                                                    <button type="submit" class="btn btn-flat btn-primary">Submit</button>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -681,7 +656,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                                     <div class="col-lg-12 table-responsive">
                                                                         <h6>Lead Source</h6>
-                                                                        <button data-toggle="modal" data-target="#modal_lead_source" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                        <button id="add_ls" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
                                                                             <i class="fa fa-plus"></i>
                                                                         </button>
                                                                         <table id="leadsource" class="table table-bordered table-striped">
@@ -795,7 +770,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-12">
                         <div class="form-group" id="customer_type_group">
                             <label for="">Lead Source</label><br/>
-                            <input type="text" class="form-control" name="lead_name" id="lead_name" required/>
+                            <input type="text" class="form-control" name="ls_name" id="ls_name" required/>
                             <input type="hidden" class="form-control" name="ls_id" id="ls_id" required/>
                         </div>
                     </div>

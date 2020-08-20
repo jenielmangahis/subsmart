@@ -118,6 +118,15 @@ $(document).ready(function () {
     });
 
     // Expenses page
+	function addAllAmount(array){
+		var total = 0;
+		if(array.length > 0){
+			for(var x=0; x < array.length ; x++){
+				total += parseFloat(array[x]);
+			}
+		}
+		return parseFloat(total);
+	}
     function getArrayCategoriesId(category_id) {
         var list = [];
         $(category_id).each(function(index, element) {
@@ -145,7 +154,7 @@ $(document).ready(function () {
         });
         return list;
     }
-    function showCategories(check,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview) {
+    function showCategories(check,transaction_id,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview) {
         if (check > 0){
             $.ajax({
                 url: siteURL + "accounting/rowCategories",
@@ -153,6 +162,7 @@ $(document).ready(function () {
                 cache:false,
                 dataType:"json",
                 data:{
+                    transaction_id:transaction_id,
                     id:id,
                     row:row,
                     cat_class:cat_class,
@@ -254,7 +264,6 @@ $(document).ready(function () {
         $('#print_later').attr("checked",false);
         $('#check_number').val(null);
         $('#checkNUmberHeader').html(1);
-        var id = 0;
         var container = '#line-container-check';
         var row = 'tableLine';
         var cat_class = 'checkCategory';
@@ -264,13 +273,13 @@ $(document).ready(function () {
         var remove_id = 'delete-line-row';
         var select = 'select2-check-category';
         var preview = '-check';
-        showCategories(0,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+        showCategories(0,0,0,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
         $('.loader').hide();
     });
     // Add Check
     $('#checkSaved').click(function () {
         $('.loader').show();
-        var vendor_id = getArrayCategoriesId($('#checkVendorID').val());
+        var vendor_id = $('#checkVendorID').val();
         var bank_account = $('#bank_account').val();
         var mailing_address = $('#check_mailing_address').val();
         var payment_date = $('#payment_date').val();
@@ -316,9 +325,11 @@ $(document).ready(function () {
     });
     // Update Check modal
     $(document).on('click','#editCheck',function () {
+        $('#edit-expensesCheck').modal({backdrop: 'static', keyboard: false});
         $('.loader').show();
         $('#addEditCheckmodal').attr('action',"/accounting/editCheckData");
         $('#checkSaved').attr('id','checkUpdate');
+        var transaction_id = $(this).attr('data-transId');
         var id = $(this).attr("data-id");
         var container = '#line-container-check';
         var row = 'tableLine';
@@ -332,11 +343,11 @@ $(document).ready(function () {
         $.ajax({
             url:"/accounting/getCheckData",
             method:"GET",
-            data:{id:id},
+            data:{id:id,transaction_id:transaction_id},
             dataType:"json",
             success:function (data) {
                 $('#checkID').val(data.check_id);
-                $('#checktransID').val(data.transaction);
+                $('#checktransID').val(transaction_id);
                 $("#checkVendorID option[value='" + data.vendor_id +"']").html(data.vendor_name).attr("selected",true);
                 $('#checkVendorID').next($('#select2-checkVendorID-container').attr('title',data.vendor_name).html(data.vendor_name));
                 $("#bank_account option[value='" + data.bank_account +"']").html(data.bank_account).attr("selected",true);
@@ -347,14 +358,13 @@ $(document).ready(function () {
                 $('#checkNUmberHeader').html(data.check_number);
                 $('#print_later').attr("checked",data.print_later);
                 $('#permit_number').val(data.permit_number);
-                $('#checkID').addClass('expenses-ID-'+data.transaction_id);
-                $('#billType').addClass('expenseType-'+data.transaction_id);
-                showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                $('#checkID').addClass('expenses-ID-'+transaction_id);
+                $('#billType').addClass('expenseType-'+transaction_id);
+                showCategories(data.check_category,transaction_id,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
                 displayAttachments(id,'Check',preview);
                 $('.loader').hide();
             }
         });
-
     });
     $(document).on('click','#checkUpdate',function () {
         $('.loader').show();
@@ -488,7 +498,6 @@ $(document).ready(function () {
         $("#billVendorID").select2('val','All');
         $('#billMailingAddress').html(null);
         $('#total-amount-bill').html('0.00');
-        var id = 0;
         var container = '#line-container-bill';
         var row = 'tableLine-bill';
         var cat_class = 'billCategory';
@@ -498,12 +507,14 @@ $(document).ready(function () {
         var remove_id = 'delete-row-bill';
         var select = 'select2-bill-category';
         var preview = '-bill';
-        showCategories(0,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+        showCategories(0,0,0,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
     });
     $(document).on('click','#editBill',function () {
+        $('#bill-modal').modal({backdrop: 'static', keyboard: false});
         $('.loader').show();
         $('#billForm').attr('action',"/accounting/editBillData");
         $('#billSaved').attr('id','billUpdate');
+        var transaction_id = $(this).attr('data-transId');
         var id = $(this).attr("data-id");
         var container = $('#line-container-bill');
         var row = 'tableLine-bill';
@@ -517,11 +528,11 @@ $(document).ready(function () {
         $.ajax({
             url:'/accounting/getBillData',
             method:"GET",
-            data:{id:id},
+            data:{id:id,transaction_id:transaction_id},
             dataType:"json",
             cached:false,
             success:function (data) {
-                $('#billTransId').val(data.transaction_id);
+                $('#billTransId').val(transaction_id);
                 $('#billID').val(data.bill_id);
                 $("#billVendorID option[value='"+ data.vendor_id +"']").attr('selected',true);
                 $('#billVendorID').next($('#select2-billVendorID-container').attr('title',data.vendor_name).html(data.vendor_name));
@@ -532,9 +543,9 @@ $(document).ready(function () {
                 $('#billDueDate').val(data.due_date);
                 $('#billNumber').val(data.bill_number);
                 $('#billPermitNumber').val(data.permit_number);
-                $('#billID').addClass('expenses-ID-'+data.transaction_id);
-                $('#billType').addClass('expenseType-'+data.transaction_id);
-                showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                $('#billID').addClass('expenses-ID-'+transaction_id);
+                $('#billType').addClass('expenseType-'+transaction_id);
+                showCategories(data.check_category,transaction_id,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
                 displayAttachments(id,'Bill',preview);
                 $('.loader').hide();
             }
@@ -720,7 +731,6 @@ $(document).ready(function () {
         $("#expensePaymentAccount").select2('val','All');
         $("#expensePaymentMethod").select2('val','All');
         $('#total-amount-bill').html('0.00');
-        var id = 0;
         var container = '#line-container-expense';
         var row = "tableLine-expense";
         var cat_class = 'expenseCategory';
@@ -730,7 +740,7 @@ $(document).ready(function () {
         var remove_id = 'delete-row-expense';
         var select = 'select2-expense-category';
         var preview = '-expense';
-        showCategories(0,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+        showCategories(0,0,0,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
         $('.loader').hide();
     });
     $(document).on('click','#expenseSaved',function () {
@@ -744,6 +754,9 @@ $(document).ready(function () {
         var category = getArrayCategory($('.expenseCategory'));
         var description = getArrayDescription($('.expenseDescription'));
         var amount = getArrayAmount($('.expenseAmount'));
+        var memo =  $('#expenseForm #memo').val();
+        var total = addAllAmount(amount);
+
         $.ajax({
             url:siteURL + $('#expenseForm').attr('action'),
             type:"POST",
@@ -759,7 +772,9 @@ $(document).ready(function () {
                 description:description,
                 amount:amount,
                 filename:expense_filename,
-                original_fname:original_fname_expense
+                original_fname:original_fname_expense,
+                total:total,
+                memo:memo
             },
             success:function () {
                 $('.loader').hide();
@@ -777,9 +792,11 @@ $(document).ready(function () {
         });
     });
     $(document).on('click','#editExpense',function () {
+        $('#expense-modal').modal({backdrop: 'static', keyboard: false});
         $('.loader').show();
         $('#expenseForm').attr('action',"/accounting/updateExpenseData");
         $('#expenseSaved').attr('id','expenseUpdate');
+        var transaction_id = $(this).attr('data-transId');
         var id = $(this).attr("data-id");
         var container = $('#line-container-expense');
         var row = "tableLine-expense";
@@ -793,10 +810,10 @@ $(document).ready(function () {
         $.ajax({
             url:'/accounting/getExpenseData',
             method:"GET",
-            data:{id:id},
+            data:{id:id,transaction_id:transaction_id},
             dataType:"json",
             success:function (data) {
-                $('#expenseTransId').val(data.transaction_id);
+                $('#expenseTransId').val(transaction_id);
                 $('#expenseId').val(data.expense_id);
                 $("#expenseVendorId option[value='" + data.vendor_id +"']").attr('selected',true);
                 $('#expenseVendorId').next($('#select2-expenseVendorId-container').attr('title',data.vendor_name).html(data.vendor_name));
@@ -807,9 +824,9 @@ $(document).ready(function () {
                 $('#expensePaymentMethod').next($('#select2-expensePaymentMethod-container').attr('title',data.payment_method).html(data.payment_method));
                 $('#expenseRefNumber').val(data.ref_number);
                 $('#expensePermitNumber').val(data.permit_number);
-                $('#expenseId').addClass('expenses-ID-'+data.transaction_id);
-                $('#exType').addClass('expenseType-'+data.transaction_id);
-                showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                $('#expenseId').addClass('expenses-ID-'+transaction_id);
+                $('#exType').addClass('expenseType-'+transaction_id);
+                showCategories(data.check_category,transaction_id,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
                 displayAttachments(id,'Expense',preview);
                 $('.loader').hide();
             }
@@ -944,7 +961,6 @@ $(document).ready(function () {
         $('#formVendorCredit')[0].reset();
         $("#vcVendorId").select2('val','All');
         $("#vcMailingAddress").html(null);
-        var id = 0;
         var container = '#line-container-vendorCredit';
         var row = 'tableLine-vendorCredit';
         var cat_class = 'vcCategory';
@@ -954,7 +970,7 @@ $(document).ready(function () {
         var remove_id = 'delete-row-vendorCredit';
         var select = 'select2-vc-category';
         var preview = '-vc';
-        showCategories(0,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+        showCategories(0,0,0,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
     });
     $(document).on('click','#vcSaved',function () {
         $('.loader').show();
@@ -997,9 +1013,15 @@ $(document).ready(function () {
             }
         });
     });
+    var vc_original = null;
+    var vc_updated = null;
+    var attachment = null;
+    var attachment_id = [];
     $(document).on('click','#editVendorCredit',function () {
+        $('#vendorCredit-modal').modal({backdrop: 'static', keyboard: false});
         $('.loader').show();
         $('#vcSaved').attr('id','updateVC');
+        var transaction_id = $(this).attr('data-transId');
         var id = $(this).attr('data-id');
         var container = $('#line-container-vendorCredit');
         var row = 'tableLine-vendorCredit';
@@ -1013,27 +1035,91 @@ $(document).ready(function () {
         $.ajax({
             url:'/accounting/getVendorCredit',
             type:"GET",
-            data:{id:id},
+            data:{id:id,transaction_id:transaction_id},
             dataType:"json",
             cached:false,
             success:function (data) {
                 $('#vendorCreditId').val(id);
-                $('#vcTransId').val(data.transaction_id);
+                $('#vcTransId').val(transaction_id);
                 $("#vcVendorId option[value='" + data.vendor_id +"']").attr('selected',true);
                 $('#vcVendorId').next($('#select2-vcVendorId-container').attr('title',data.vendor_name).html(data.vendor_name));
                 $('#vcMailingAddress').html(data.mailing_address);
                 $('#vcPaymentDate').val(data.payment_date);
                 $('#vcRefNumber').val(data.ref_number);
                 $('#vcPermitNumber').val(data.permit_number);
-                $('#vendorCreditId').addClass('expenses-ID-'+data.transaction_id);
-                $('#vcType').addClass('expenseType-'+data.transaction_id);
-                showCategories(data.check_category,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
+                $('#vendorCreditId').addClass('expenses-ID-'+transaction_id);
+                $('#vcType').addClass('expenseType-'+transaction_id);
+                showCategories(data.check_category,transaction_id,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
                 displayAttachments(id,'Vendor Credit',preview);
+                vc_original = $('#line-container-vendorCredit').closest('.modal-content').find('form').serialize();
+                vc_updated = $('#line-container-vendorCredit').closest('.modal-content').find('form').serialize();
                 $('.loader').hide();
             }
         });
     });
+    $(document).on('change','#formVendorCredit',function () {
+        vc_updated = $(this).serialize();
+    });
+    $(document).on('click','#closeModalVC',function () {
+        if(vc_original != vc_updated){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#vendorCredit-modal').modal('hide');
+                        }
+                    });
+                }else{
+                    $('#vendorCredit-modal').modal('hide');
+                }
+                }
+            });
+        }else{
+            if(attachment == 0){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "There is/are a attachment that temporarily removed?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove it permanently!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                           url:"/accounting/removePermanentlyAttachment",
+                            type:"POST",
+                            data:{attachment_id:attachment_id},
+                            success:function () {
 
+                            }
+                        });
+                    $('#vendorCredit-modal').modal('hide');
+                }
+            });
+            }else{
+                $('#vendorCredit-modal').modal('hide');
+            }
+        }
+
+    });
     $(document).on('click','#updateVC',function () {
         $('.loader').show();
         var transaction_id = $('#vcTransId').val();
@@ -1068,6 +1154,7 @@ $(document).ready(function () {
                 original_fname:original_fname_vc
             },
             success:function (data) {
+                console.log(data);
                 $('.loader').hide();
                 if (data == 1){
                     Swal.fire(
@@ -1174,18 +1261,25 @@ $(document).ready(function () {
         $(this).children('i.fa').toggleClass('fa-exclamation-triangle');
         $(this).next('span').toggleClass('hide');
         var status = $(this).attr('data-status');
-        var id = $('#removeAttachment').attr('data-id');
+        var attach_id = $(this).next().next('#attachmentId').val();
         if (status == 1){
             $(this).attr('data-status',0);
+            attachment_id.push(attach_id);
+            console.log(attachment_id);
+            attachment = 0;
         }else{
             $(this).attr('data-status',1);
+            attachment = 1;
+            Array.prototype.remove = function(v) { this.splice(this.indexOf(v) == -1 ? this.length : this.indexOf(v), 1); }
+            attachment_id.remove(attach_id);
+            console.log(attachment_id);
         }
         $.ajax({
             url:"/accounting/removeTemporaryAttachment",
             type:"POST",
-            data:{id:id,status:status},
+            data:{attach_id:attach_id,status:status},
             success:function (data) {
-                console.log(data);
+
             }
         });
     });

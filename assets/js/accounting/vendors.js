@@ -28,6 +28,7 @@ $(document).ready(function () {
                                 text: "Vendor has been inactive.",
                                 icon: 'success'
                             });
+						getAllVendors();
                     }
                 });
             }
@@ -99,6 +100,14 @@ $(document).ready(function () {
 									//console.log(data);
 									if(data.length > 0){
 										$("#new-vendor-modal").modal("hide");
+										Swal.fire(
+										{
+											showConfirmButton: false,
+											timer: 2000,
+											title: 'Success',
+											text: "Vendor has been created.",
+											icon: 'success'
+										});
 										getAllVendors();
 									}else{
 										//console.log(0); 	
@@ -135,26 +144,29 @@ function getAllVendors(){
 					if(data.length > 0){
 						$("#vendors_table tbody").empty();
 						for(var x=0; x < data.length; x++){
-							htmlData = "";
-							htmlData += '<tr>';
-								htmlData += '<td><input type="checkbox"></td>';
-								htmlData += '<td><a href="vendor-details/'+data[x].vendor_id+'">'+data[x].company+'</td>';
-								htmlData += '<td>'+data[x].phone+'</td>';
-								htmlData += '<td>'+data[x].email+'</td>';
-								htmlData += '<td>'+data[x].opening_balance+'</td>';
-								htmlData += '<td>';
-									htmlData += '<a href="#" data-toggle="modal" id="addBill" data-target="#bill-modal" id="editCheck" data-id="'+data[x].id+'" style="margin-right: 10px;color: #0077c5;font-weight: 600;">Create bill</a>';
-									htmlData += '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
-										htmlData += '<span class="fa fa-caret-down" data-toggle="dropdown"></span>';
-										htmlData += '<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">';
-											htmlData += '<li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Create Expense</a></li>';
-											htmlData += '<li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Write Check</a></li>';
-											htmlData += '<li><a class="dropdown-item" href="#" data-id="'+data[x].id+'" id="makeInactive">Make inactive</a></li>';
-										htmlData += '</ul>';
-									htmlData += '</div>';
-								htmlData += '</td>';
-							htmlData += '</tr>';
-							$("#vendors_table tbody").append(htmlData);
+							console.log(data[x].status);
+							if(data[x].status == 1){
+								htmlData = "";
+								htmlData += '<tr>';
+									htmlData += '<td><input type="checkbox"></td>';
+									htmlData += '<td><a href="vendor-details/'+data[x].vendor_id+'">'+data[x].company+'</td>';
+									htmlData += '<td>'+data[x].phone+'</td>';
+									htmlData += '<td>'+data[x].email+'</td>';
+									htmlData += '<td>'+data[x].opening_balance+'</td>';
+									htmlData += '<td>';
+										htmlData += '<a href="#" data-toggle="modal" id="addBill" data-target="#bill-modal" id="editCheck" data-id="'+data[x].id+'" style="margin-right: 10px;color: #0077c5;font-weight: 600;">Create bill</a>';
+										htmlData += '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
+											htmlData += '<span class="fa fa-caret-down" data-toggle="dropdown"></span>';
+											htmlData += '<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">';
+												htmlData += '<li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Create Expense</a></li>';
+												htmlData += '<li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Write Check</a></li>';
+												htmlData += '<li><a class="dropdown-item" href="#" data-id="'+data[x].id+'" id="makeInactive">Make inactive</a></li>';
+											htmlData += '</ul>';
+										htmlData += '</div>';
+									htmlData += '</td>';
+								htmlData += '</tr>';
+								$("#vendors_table tbody").append(htmlData);
+							}
 						}
 						vendorDatatable = $('#vendors_table').DataTable({
 							"paging": false,

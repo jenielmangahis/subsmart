@@ -238,7 +238,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="form-group">
                                                                     <label>From</label>
                                                                     <div class="col-xs-10 date_picker">
-                                                                    <input type="text" id="from_date" name="from_date" class="form-control">
+                                                                    <input type="text" id="from_date" name="from_date" class="form-control disableFuturedate">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -265,6 +265,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                  <div class="col-md-3"><a href="#"><i class="fa fa-close"></i>Statment ending date</a></div>
                                  <div class="col-md-2"><a href="#">Clear All / View All</a></div>
                              </div>
+                             <?php
+                             foreach($rows as $row)
+                              {
+                                echo "<input id='ending_date' type='hidden' value='".$row->ending_date."'/>";
+                              }
+                             ?>
                             <table id="reconcile_table" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
@@ -285,7 +291,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               $i=1;
                               foreach($rows as $row)
                               {
-                                echo "<tr style='display:none'><td id='ending_date' style='display:none'>".$row->ending_date."</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                                 echo "<tr id='payments'>";
                                 echo "<td contenteditable='true'>".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
@@ -401,13 +406,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 xxx = xxx+'|'+convertDate(d);
             }
         }
-        table.search('"'+xxx+'"',true,false).draw();
+        table.search(xxx,true,false).draw();
        }
        else if (selectedValue1 == 'Statement Ending Date')
        {
         var from_date = $('#from_date').val();
         var to_date = $('#to_date').val();
-        table.search( to_date ).draw();
+        //table.search( to_date ).draw();
+        var temp_date = from_date.split(".");
+        var temp_date2 = to_date.split(".");
+        var xxx = "";
+        for (var d = new Date(temp_date[2],temp_date[1],temp_date[0]); d <= new Date(temp_date2[2],temp_date2[1],temp_date2[0]); d.setDate(d.getDate() + 1)) {
+            if(xxx == '')
+            {
+                xxx =convertDate(d);
+            }
+            else
+            {
+                xxx = xxx+'|'+convertDate(d);
+            }
+        }
+        table.search(xxx,true,false).draw();
+       }
+       else if(selectedValue1 == 'All')
+       {
+        table.search( '' ).columns().search( '' ).draw();
        }
     });
 
@@ -424,15 +447,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
        else if (selectedValue == 'Statement Ending Date')
        {
         $('#from_date'). removeAttr("disabled","disabled");
-        $('#to_date'). removeAttr("disabled","disabled");
         $('#from_date').val(null);
-        var ending_date = $("#ending_date").text();
+        var ending_date = $("#ending_date").val();
         $('#to_date').val(ending_date);
+        $('#to_date'). attr("disabled","disabled");
         /*var temp_date = ending_date.split(".");
         var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];*/
+        $('.disableFuturedate').datepicker({
+          format: 'dd.mm.yyyy',
+          autoclose:true,
+          endDate: "currentDate",
+          maxDate: ending_date
+          }).on('changeDate', function (ev) {
+             $(this).datepicker('hide');
+          });
+          $('.disableFuturedate').keyup(function () {
+             if (this.value.match(/[^0-9]/g)) {
+                this.value = this.value.replace(/[^0-9^-]/g, '');
+             }
+          });
        }
        else
        {
+
+        $('#from_date').val(null);
+        $('#to_date').val(null);
         $('#from_date').attr("disabled", "disabled" );
         $('#to_date').attr("disabled", "disabled" );
        }

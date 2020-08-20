@@ -79,9 +79,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-sm-12">
                         <div class="float-right">
                             <div class="dropdown">
-                                <a href="<?php echo base_url('customer') ?>" class="btn btn-primary"
+                                <a href="<?php echo base_url('customer/leads') ?>" class="btn btn-primary"
                                    aria-expanded="false">
-                                    <i class="mdi mdi-settings mr-2"></i> Go Back to Customer
+                                    <i class="mdi mdi-settings mr-2"></i> Lead Lists
                                 </a>
                             </div>
                         </div>

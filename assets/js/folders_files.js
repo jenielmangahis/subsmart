@@ -26,6 +26,8 @@ $(document).ready(function(){
   is_initial = true;
 
   var dtu_files = {};
+  var dtu_multiple_uploadable = 0;
+  var dtu_multiple_uploaded = 0; 
 
 // -------------------------------------------------------------------------------------------------------------
 // Load initial functions
@@ -292,6 +294,7 @@ $(document).ready(function(){
             var result = jQuery.parseJSON(data);
             if(result.error == ""){
               $('#f_category').empty();
+              $('#dtu_f_category').empty();
 
               var append = '<option value="">Select Category</option>';
 
@@ -300,7 +303,8 @@ $(document).ready(function(){
               }); 
 
               $('#f_category').append(append);
-
+              $('#dtu_f_category').append(append);
+              
               closeEntry();
             } else {
               showFolderManagerNotif('Error',result.error,'error');
@@ -1672,6 +1676,13 @@ function showFolderManagerRecycleBin(){
   $('#modal-folder-manager-recycle-bin').modal('show');  
 }
 
+// Drop To Upload and Multiple Files Upload feature ----------------------------------------------------------------------------------------------------
+// Upload Statuses
+// 0 - Invalid
+// 1 - Dropped
+// 2 - Uploaded
+// 3 - Upload Invalid
+
 function displayDroppedFiles(e){
   e.preventDefault();
 
@@ -1681,11 +1692,11 @@ function displayDroppedFiles(e){
   var append = '';
   $.each(dtu_files, function(index, file){
     append += '<tr>';
-    append += '<td class="d-none">1</td>';
+    append += '<td class="d-none upstat" uploadstatus="1"></td>';
     append += '<td class="d-none"></td>'
     append += '<td>' + file.name + '</td>';
     append += '<td></td>';
-    append += '<td class="text-center"><a href="#" class="btn btn-sm btn-default fs_dtu" title="Exclude"><i class="fa fa-times"></i></a></td>';
+    append += '<td class="text-center"><button type="button" class="btn btn-sm btn-default fs_dtu" title="Exclude"><i class="fa fa-times"></i></button></td>';
     append += '</tr>';
   });
 
@@ -1693,40 +1704,40 @@ function displayDroppedFiles(e){
   $('#mfm-dtu-drop-area').addClass('d-none');
   $('#mfm-dtu-file-list-area').removeClass('d-none');
 
-  $('a.fs_dtu').click(function(e){
-    e.preventDefault();
-
+  $('button.fs_dtu').click(function(){
     var tr = $(this).parent('td').parent('tr')
     var td = tr.children('td:eq(0)');
-    var td_status_original = tr.children('td:eq(1)');
-    var td_status = tr.children('td:eq(3)');
+    if(td.attr('uploadstatus') <= 1){
+      var td_status_original = tr.children('td:eq(1)');
+      var td_status = tr.children('td:eq(3)');
 
-    if($(this).attr('title') == 'Exclude'){
-      $(this).attr('title', 'Include');
-      $(this).removeClass('btn-default');
-      $(this).addClass('btn-danger');
+      if($(this).attr('title') == 'Exclude'){
+        $(this).attr('title', 'Include');
+        $(this).removeClass('btn-default');
+        $(this).addClass('btn-danger');
 
-      var status_new = 'Will not be uploaded';
-      var status_original = td_status.text();
+        var status_new = 'Will not be uploaded';
+        var status_original = td_status.text();
 
-      status_original = status_original.trim();
+        status_original = status_original.trim();
 
-      td.text('0');
-      td_status_original.text(status_original);
-      td_status.text(status_new);
+        td.attr('uploadstatus', "0");
+        td_status_original.text(status_original);
+        td_status.text(status_new);
 
-    } else {
-      $(this).attr('title', 'Exclude');
-      $(this).removeClass('btn-danger');
-      $(this).addClass('btn-default');
+      } else {
+        $(this).attr('title', 'Exclude');
+        $(this).removeClass('btn-danger');
+        $(this).addClass('btn-default');
 
-      var status_original = td_status_original.text();
+        var status_original = td_status_original.text();
 
-      status_original = status_original.trim();
+        status_original = status_original.trim();
 
-      td.text('1');
-      td_status_original.text("");
-      td_status.text(status_original);
+        td.attr('uploadstatus', "1");
+        td_status_original.text("");
+        td_status.text(status_original);
+      }
     }
   });
 }
@@ -1738,7 +1749,9 @@ function clearDroppedFiles(){
 
   if(!$('#mfm-dtu-file-list-area').hasClass('d-none')){
     $('#mfm-dtu-file-list-area').addClass('d-none');
-  }  
+  }
+
+  $('#mfm-dtu-file-list > tbody').empty();  
 }
 
 function showDropToUpload(){
@@ -1749,10 +1762,129 @@ function hideDropToUpload(){
   $('#mfm-dtu-drop-area').removeClass('d-none');
   $('#mfm-dtu-file-list-area').addClass('d-none');
 
+  $('#mfm-dtu-file-list > tbody').empty();
+
   if(modalIsOpen('#mfm-dtu')){
     $('#mfm-dtu').modal('hide');
   } 
 }
+
+function setModeInProcess(InProcess){
+  $('#dtu_f_category').prop('disabled', InProcess);
+
+  $('#upload_dropped_files').prop('disabled', InProcess);
+  $('#clear_dropped_files').prop('disabled', InProcess);
+  $('#cancel_dropped_files').prop('disabled', InProcess);
+
+  $('button.fs_dtu').prop('disabled', InProcess);
+
+  if(InProcess){
+    if($('#upload_counter').hasClass('d-none')){
+      $('#upload_counter').removeClass('d-none');
+    }
+  } else {
+    if(!$('#upload_counter').hasClass('d-none')){
+      $('#upload_counter').addClass('d-none');
+    }
+  }
+
+  updateUploadCounter();
+}
+
+function updateUploadCounter(){
+  $('#upload_counter').text('Uploading . . . ' + dtu_multiple_uploaded + '/' + dtu_multiple_uploadable);
+}
+
+// Events -------------------------------------------
+  $('#cancel_dropped_files').click(function(){
+    hideDropToUpload();
+  });
+
+  $('#upload_dropped_files').click(function(){
+    var vCategory = $('#dtu_f_category').val();
+    dtu_multiple_uploadable = $('td.upstat[uploadstatus="1"]').length;
+
+    if((dtu_multiple_uploadable > 0) && (vCategory != "")){
+      dtu_multiple_uploaded = 0;
+
+      setModeInProcess(true);
+
+      $('#mfm-dtu-file-list > tbody > tr').each(function(){
+        var uploadstatus = $(this).children('td:eq(0)').attr('uploadstatus');
+        if(uploadstatus == 1){
+          var fIndex = $(this).index();
+          
+          var formdata = new FormData();
+          var file = dtu_files[fIndex];
+          var desc = "";
+          var folder_id = current_selected_folder; //selected folder's id
+
+          formdata.append('fullfile', file);
+          formdata.append('file_desc', desc);
+          formdata.append('folder_id', folder_id);
+          formdata.append('category', vCategory);
+
+          $.ajax({
+            xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = ((evt.loaded / evt.total) * 100);
+                            percentComplete = percentComplete.toFixed(0);
+                            var txtStatus = 'Uploading . . . ' + percentComplete + '%';
+
+                            $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').text(txtStatus);
+                        }
+                    }, false);
+                    return xhr;
+            },
+            type: 'POST',
+            url: base_url + "vault/add",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+            }, 
+            success: function(data){
+              var result = jQuery.parseJSON(data);
+
+              if(result.error != ""){
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').text(result.error);
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('bg-danger');
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(0)').attr("uploadstatus", "3");   
+              } else {
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('bg-success');
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(0)').attr("uploadstatus", "2");   
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown){ 
+              $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').text(errorThrown);
+              $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('bg-danger');
+              $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(0)').attr("uploadstatus", "3");  
+            },
+            complete: function(jqXHR, textStatus){
+              dtu_multiple_uploaded++;
+              updateUploadCounter();
+
+              if(dtu_multiple_uploaded == dtu_multiple_uploadable){
+                setModeInProcess(false);
+              }    
+            }
+          });  
+        }
+      });
+    } else {
+      var sMsg = 'No Files to Upload';
+      if($('#mfm-dtu-drop-area').hasClass('d-none')){
+        sMsg += '.<br>Please Reset Uploads List';
+      }
+
+      showFolderManagerNotif('Information',sMsg,'info');
+    }
+  });
+// --------------------------------------------------
+
+// Drop To Upload and Multiple Files Upload feature ----------------------------------------------------------------------------------------------------
 
 function folderSelectedIsNotEmpty() {
 

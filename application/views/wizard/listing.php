@@ -38,7 +38,7 @@
         <div class="container-fluid">
             <div class="form-titlebar">
                 <h1>Work Space</h1>
-                <a href="#" data-toggle="modal" data-target="#updateSignature_add"  data-backdrop="static" class="btn-add"><i class="fa fa-plus"></i> Create New Form</a>
+                <a href="#" data-toggle="modal" data-target="#updateSignature_add"  data-backdrop="static" class="btn-add"><i class="fa fa-plus"></i> Create New Wizard</a>
             </div>
 
             <div class="table-block">
@@ -61,11 +61,14 @@
                                         </ul>
                                     </div>
                                 </td>
-                                <td style="width:5%"><?php echo date("d.m.Y", strtotime($value->created_at)) ; ?></td>
+                                <td style="width:5%"><?php echo date("m/d/Y", strtotime($value->created_at)) ; ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
+                <center>
+                    <a href="<?php echo base_url('wizard'); ?>">Click to show Wizard</a>
+                </center>
             </div>
         </div>
     </section>
