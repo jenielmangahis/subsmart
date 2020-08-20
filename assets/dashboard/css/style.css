@@ -4340,9 +4340,14 @@ div[wrapper__section] {
 }
 
 #calender_toolbar {
-    display: flex;
-    align-items: center;
+    display: block;
     margin-bottom: 30px;
+}
+div#calender_toolbar h1 {
+    display: block;
+    width: 130px;
+    float: left;
+    text-align: left;
 }
 
 #calender_toolbar h1 {
@@ -4351,9 +4356,8 @@ div[wrapper__section] {
 }
 
 #frm_calender_filter_events {
-    margin-left: auto;
+    display: block;
 
-    display: flex;
 }
 
 #calender_toolbar form .form-group {
@@ -4398,7 +4402,7 @@ div[wrapper__section] {
 #calender_toolbar .btn-with-dropdown button.dropdown-toggle {
 
     padding: 0px !important;
-    width: 45px !important;
+    width: 70px !important;
     border-left: 1px solid #fff !important;
 }
 
@@ -4422,7 +4426,8 @@ div[wrapper__section] {
 }
 
 #calender_toolbar form .margin-left-sec {
-    flex: 0 0 auto
+    width: auto;
+    display: block;
 }
 
 #calender_toolbar form .margin-left-sec * {
@@ -4981,11 +4986,36 @@ body .card_holder .page-title {
         top: 0;
     }
 }
-
-#calender_toolbar>form {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.break {
+    flex-basis: 100%;
+    height: 0;
+}
+.form-group.a-1 {
+    position: relative;
+    right: 10px;
+    top: 2px;
+    width: 270px;
+}
+.form-group.margin-left-sec.c-1 {
+    width: 35%;
+    float: left;
+    display: block;
+}
+.form-group.margin-left-sec.d-1 {
+    width: 40%;
+    float: left;
+    display: block;
+}
+.form-group.margin-left-sec.e-1 {
+    display: block;
+    float: left;
+    width: 30%;
+}
+.form-group.b-1 {
+    width: 40%;
+    float: left;
+    position: relative;
+    bottom: 11px;
 }
 
 #calender_toolbar .form-group {
@@ -5410,7 +5440,70 @@ label {
     border-radius: 0.25rem;
     padding: 20px;
 }
-
+@media (min-width: 1674px) {
+  .form-group.margin-left-sec.c-1 {
+      position: relative;
+      bottom: 10px;
+  }
+}
+@media (max-width: 1455px) {
+  .form-group.a-1 {
+      position: relative;
+      right: 10px;
+      top: 2px;
+      width: 270px;
+  }
+  .form-group.b-1 {
+      width: 30%;
+      float: left;
+      position: relative;
+      bottom: 11px;
+  }
+  .form-group.margin-left-sec.c-1 {
+      width: 35%;
+      float: left;
+      display: block;
+  }
+  .form-group.margin-left-sec.d-1 {
+      width: 40%;
+      float: left;
+      display: block;
+  }
+  .form-group.margin-left-sec.e-1 {
+      display: block;
+      float: left;
+      width: 30%;
+  }
+}
+@media (max-width: 1325px) {
+  .form-group.a-1 {
+      position: relative;
+      right: 10px;
+      top: 2px;
+      width: 270px;
+  }
+  .form-group.b-1 {
+      width: 50%;
+      float: left;
+      position: relative;
+      bottom: 0px;
+  }
+  .form-group.margin-left-sec.c-1 {
+      width: 45%;
+      float: left;
+      display: block;
+  }
+  .form-group.margin-left-sec.d-1 {
+      width: 40%;
+      float: left;
+      display: block;
+  }
+  .form-group.margin-left-sec.e-1 {
+      display: block;
+      float: left;
+      width: 40%;
+  }
+}
 @media (min-width: 576px) {
     .card-deck {
         flex-flow: row wrap;
@@ -8007,9 +8100,8 @@ input:focus+label {}
 
 #frm_calender_filter_events .form-group:first-child,
 #frm_calender_filter_events .form-group:first-child a {
-    display: flex;
-    white-space: nowrap;
-    align-items: center;
+    display: block;
+    float: left;
 }
 
 #frm_calender_filter_events .form-group:first-child * {
@@ -8527,6 +8619,13 @@ a.backstep i{margin: 0 5px 0 0;}
     display: inline-block;
     border: none;
     outline: none;
+}
+div.e-1 div.btn-group .dropdown-toggle::after {
+  position: relative;
+  right: 5px;
+}
+ul.text-dark-c1 li a {
+  color: black;
 }
 .tax-tbl-block .dropdown-toggle::after{display: none;}
 .tax-tbl-block .table tbody td .dropdown-menu{
