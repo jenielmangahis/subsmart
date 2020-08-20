@@ -1729,8 +1729,21 @@ button:focus {
 }
 
 @media (max-width: 767px) {
+    .marketing-card-deck a {
+      padding-top: 20px !important;
+    }
+    .pl-50 {
+      padding-left: 0px !important;
+    }
+    div[wrapper__section] {
+      padding-top: 0px !important;
+      margin-top: 0px !important;
+    }
     body .page-title-box {
       padding: 0px 0 !important;
+    }
+    form#frm_calender_filter_events div.form-group {
+      margin-bottom: 10px !important;
     }
     .mobile-only {
         display: block;
@@ -4124,9 +4137,16 @@ a.faq[data-toggle="collapse"]:before {
 }
 
 @media (max-width: 1024px) {
+    .list-group {
+      margin-bottom: 30px !important;
+    }
+    .mdc-bottom-navigation {
+      display: none;
+    }
+
     body #topnav {
         position: relative;
-        min-height: 50px;
+        min-height: 60px;
     }
 
     body #topnav .logo {
@@ -4135,7 +4155,7 @@ a.faq[data-toggle="collapse"]:before {
     }
 
     body .wrapper {
-        padding: 0 !important;
+        padding: 0 0 40px 0 !important;
     }
 
     body .page-title-box {
