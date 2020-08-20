@@ -315,8 +315,21 @@ class Users_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function findAllUsersByCompanyId($company_id=0, $loggedUserId=0) {
 
+		$this->db->select('*');
+		$this->db->from($this->table);
+		//$this->db->where('parent_id', $user_id);
+		$this->db->where('company_id', $company_id);
 
+		if($loggedUserId) {
+
+			$this->db->where('id !=', $loggedUserId);
+		}
+
+		$query = $this->db->get();			
+		return $query->result();
+	}
 }
 
 
