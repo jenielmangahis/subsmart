@@ -36,7 +36,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 					<div class="col-12 d-md-none d-block p-0">
 					<div class="smart__grid" id="1">
-
 							<div><a href="<?= base_url()?>inquiries">Leads</a></div>
 							<div><a href="<?= base_url()?>customer">Customers</a></div>
               <div><a href="<?= base_url()?>estimate">Estimates</a></div>
