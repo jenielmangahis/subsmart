@@ -16,11 +16,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<div class="container-fluid" style="font-size:14px;">
 		<div class="row">
 			
-			<div class="col-md-2 " style="margin-top:12px;">
+			<div class="col-md-2" style="margin-top:12px;">
 				<div class="shadow" style="background-color: #0d6f6d;text-align:center;">
 					<!-- <img src="<?=url("");?>uploads/image/scan.jpg" height="150" width="180" title="Scan"> -->
 					<i class="fa fa-plus-circle" aria-hidden="true" style="margin: 30px 0px;color: white;font-size:90px;"></i>
-					<button type="button" class="form-control btn btn-success">Scan</button>
+					<button type="button" class="form-control btn btn-success">Create Template</button>
 				</div>
 			</div>
 			

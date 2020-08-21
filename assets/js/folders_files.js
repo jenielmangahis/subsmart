@@ -317,12 +317,175 @@ $(document).ready(function(){
       } else {
         showFolderManagerNotif('Information','Please provide category name','info');
       }
+    } else if(current_process == 'edit_category'){
+      var vCId = $('#f_category').val();
+      var vCName = $('#category_name').val();
+      var vCDesc = $('#category_desc').val();
+      var vError = '';
+
+      var vContinue = true;
+      if(vCId == ""){
+        vContinue = false;
+        vError = 'Please select category to edit';
+      } else if(vCName == ""){
+        vContinue = false;
+        vError = 'Please provide category name';
+      }
+
+      if(vContinue){
+        $.ajax({
+          type: 'POST',
+          url: base_url + "filefolderscategories/edit",
+          data: {category_id:vCId,category_name:vCName,category_desc:vCDesc},
+          success: function(data){
+            var result = jQuery.parseJSON(data);
+            if(result.error == ""){
+              $('#f_category').empty();
+              $('#dtu_f_category').empty();
+
+              var append = '<option value="">Select Category</option>';
+
+              $.each(result.categories, function(index, category){
+                append += '<option value="'+ category.category_id +'" catdesc="'+ category.category_desc +'">' + category.category_name + '</option>';
+              }); 
+
+              $('#f_category').append(append);
+              $('#dtu_f_category').append(append);
+              
+              getFoldersAndFiles(current_selected_folder);
+
+              closeEntry();
+            } else {
+              showFolderManagerNotif('Error',result.error,'error');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){ 
+            showFolderManagerNotif(textStatus, errorThrown, 'error'); 
+          }
+        });
+      } else {
+        showFolderManagerNotif('Information',vError,'info');
+      }  
+    } else if(current_process == 'delete_category'){
+      var vCId = $('#f_category').val();
+
+      var vContinue = true;
+      if(vCId == ""){
+        vContinue = false;
+        vError = 'Please select category to delete';
+      }
+
+      if(vContinue){
+        $.ajax({
+          type: 'POST',
+          url: base_url + "filefolderscategories/delete",
+          data: {category_id:vCId},
+          success: function(data){
+            var result = jQuery.parseJSON(data);
+            if(result.error == ""){
+              $('#f_category').empty();
+              $('#dtu_f_category').empty();
+
+              var append = '<option value="">Select Category</option>';
+
+              $.each(result.categories, function(index, category){
+                append += '<option value="'+ category.category_id +'" catdesc="'+ category.category_desc +'">' + category.category_name + '</option>';
+              }); 
+
+              $('#f_category').append(append);
+              $('#dtu_f_category').append(append);
+
+              $('#category_name').val("");
+              $('#category_desc').val("");
+            } else {
+              showFolderManagerNotif('Error',result.error,'error');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){ 
+            showFolderManagerNotif(textStatus, errorThrown, 'error'); 
+          }
+        });  
+      } else {
+        showFolderManagerNotif('Information',vError,'info'); 
+      }
     }
   });
 
   $('#btn-modal-folder-manager-entry-cancel').click(function(){
     closeEntry();
   });
+
+// -------------------------------------------------------------------------------------------------------------
+// Business Form Templates Category Entry Extras
+// -------------------------------------------------------------------------------------------------------------
+  $('#btn-modal-folder-manager-entry-create-category').click(function(){
+    if(!$('#category_selection').hasClass('d-none')){
+      $('#category_selection').addClass('d-none');  
+    }
+
+    if($('#category_entry').hasClass('d-none')){
+      $('#category_entry').removeClass('d-none');
+    }
+
+    current_process = 'add_category';
+
+    $('button.bft-btn-control').removeClass('border-info');
+    $(this).addClass('border-info');
+  });
+
+  $('#btn-modal-folder-manager-entry-edit-category').click(function(){
+    if($('#category_selection').hasClass('d-none')){
+      $('#category_selection').removeClass('d-none');  
+    }
+
+    if($('#category_entry').hasClass('d-none')){
+      $('#category_entry').removeClass('d-none');
+    }
+
+    current_process = 'edit_category';
+
+    $('button.bft-btn-control').removeClass('border-info');
+    $(this).addClass('border-info');
+  });
+
+  $('#btn-modal-folder-manager-entry-delete-category').click(function(){
+    if($('#category_selection').hasClass('d-none')){
+      $('#category_selection').removeClass('d-none');  
+    }
+
+    if(!$('#category_entry').hasClass('d-none')){
+      $('#category_entry').addClass('d-none');
+    }
+
+    current_process = 'delete_category';
+
+    $('button.bft-btn-control').removeClass('border-info');
+    $(this).addClass('border-info');
+  });
+
+  $('#f_category').on('change', function(){
+    if(current_process == 'edit_category'){
+      var selected_category = $(this).children('option:selected');
+
+      if($(this).val() == ""){
+        $('#category_name').val("");
+        $('#category_desc').val(""); 
+      } else {
+        var sc_text = selected_category.text();
+        var sc_desc = selected_category.attr('catdesc');
+
+        sc_text = sc_text.trim();
+        
+        if(sc_desc != ""){  
+          sc_desc = sc_desc.trim();
+        }
+
+        $('#category_name').val(sc_text);
+        $('#category_desc').val(sc_desc);
+      }
+    }
+  });
+// -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
 // Confirm alert type controls
@@ -1268,9 +1431,14 @@ function closeEntry(){
     $('div#folder_entry').addClass('d-none');
   } else if(current_process == 'add_file'){
     $('div#file_entry').addClass('d-none');  
-  } else if(current_process == 'add_category'){
-    $('div#category_selection').removeClass('d-none');
-    $('div#category_entry').addClass('d-none');  
+  } else if((current_process == 'add_category') || (current_process == 'edit_category') || (current_process == 'delete_category')){
+    if($('div#category_selection').hasClass('d-none')){
+      $('div#category_selection').removeClass('d-none');
+    }
+
+    if(!$('div#category_entry').hasClass('d-none')){
+      $('div#category_entry').addClass('d-none');
+    }  
   }
 
   current_process = '';
@@ -1850,16 +2018,19 @@ function updateUploadCounter(){
 
               if(result.error != ""){
                 $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').text(result.error);
-                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('bg-danger');
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('table-danger');
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('border-danger');
                 $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(0)').attr("uploadstatus", "3");   
               } else {
-                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('bg-success');
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('table-success');
+                $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('border-success');
                 $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(0)').attr("uploadstatus", "2");   
               }
             },
             error: function(jqXHR, textStatus, errorThrown){ 
               $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').text(errorThrown);
-              $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('bg-danger');
+              $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('table-danger');
+              $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(3)').addClass('border-danger');
               $('#mfm-dtu-file-list > tbody').children('tr:eq('+ fIndex +')').children('td:eq(0)').attr("uploadstatus", "3");  
             },
             complete: function(jqXHR, textStatus){
@@ -1868,6 +2039,7 @@ function updateUploadCounter(){
 
               if(dtu_multiple_uploaded == dtu_multiple_uploadable){
                 setModeInProcess(false);
+                getFoldersAndFiles(current_selected_folder);
               }    
             }
           });  
@@ -1875,7 +2047,9 @@ function updateUploadCounter(){
       });
     } else {
       var sMsg = 'No Files to Upload';
-      if($('#mfm-dtu-drop-area').hasClass('d-none')){
+      if(vCategory == ""){
+        sMsg = 'Please select category';
+      } else if($('#mfm-dtu-drop-area').hasClass('d-none')){
         sMsg += '.<br>Please Reset Uploads List';
       }
 

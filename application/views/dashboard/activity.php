@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="col-xl-4 ui-state-default" id="activity">
+<div class="col-xl-4 ui-state-default db-card" id="activity">
     <div class="card">
         <div class="card-body">
             <h4 class="mt-0 header-title mb-4">Activity</h4>
@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             rem.</span></div>
                 </li>
             </ol>
-            <div class="text-center"><a href="index.html#" class="btn btn-primary">Load More</a></div>
+            <div class="text-center"><a href="index.html#" class="btn btn-primary" style="color:#FFFFFF !important;">Load More</a></div>
         </div>
     </div>
 </div>

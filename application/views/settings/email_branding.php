@@ -17,8 +17,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
+            <?php echo form_open_multipart('settings/update_email_branding_setting', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="row">
                 <div class="col-xl-12">
+                    <?php include viewPath('flash'); ?>
                     <div class="card" style="min-height: 400px !important;">       
                         
                     <div class="card">
@@ -27,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-sm-12">
                                         <label>Email From Name</label>
                                         <div class="help help-sm help-block">Emails sent to customers will display this name.</div>
-                                        <input type="text" name="email_from_name" value="ADI" class="form-control" autocomplete="off">
+                                        <input type="text" name="email_from_name" value="<?= $setting_data['email_from_name']; ?>" placeholder="ADI" class="form-control" autocomplete="off">
                                         <span class="validation-error-field hide" data-formerrors-for-name="email_from_name" data-formerrors-message="true"></span>
                                     </div>
                                 </div>
@@ -37,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-sm-12">
                                         <label>Email Footer Text</label>
                                         <div class="help help-sm help-block">Add a custom message to email footer. E.g. Call us on  (212) 123-4567</div>
-                                        <input type="text" name="email_template_footer_text" value="Alarm Direct, Inc." class="form-control" autocomplete="off">
+                                        <input type="text" name="email_template_footer_text" value="<?= $setting_data['email_template_footer_text']; ?>" placeholder="Alarm Direct, Inc." class="form-control" autocomplete="off">
                                         <span class="validation-error-field hide" data-formerrors-for-name="email_template_footer_text" data-formerrors-message="true"></span>
                                     </div>
                                 </div>
@@ -51,12 +53,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="margin-bottom-sec">
-                                        <img class="img-responsive" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/img_default.png">
+                                        <?php 
+                                          $logo_file     = $setting_data['logo'];
+                                          if(file_exists('uploads/email_branding/' . $setting_data['uid'] . '/' . $logo_file) == FALSE || $logo_file == null) {
+                                              $branding_logo = base_url('/assets/img/img_default.png');
+                                          } else {
+                                              $branding_logo = base_url('uploads/email_branding/' . $setting_data['uid'] . '/' .$logo_file);
+                                          }
+                                        ?>
+                                        <img class="img-responsive" data-fileupload="image-logo" id="preview-img-container" src="<?php echo $branding_logo ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-19 col-md-offset-1">
                                     <div>
-                                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Logo <input data-fileupload="file-logo" name="filelogo" type="file"></span> <a class="a-default margin-left" href="#" data-fileupload="delete-logo"><span class="fa fa-trash"></span> Delete Logo</a>
+                                        <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Logo <input data-fileupload="file-logo" name="file-logo" id="file-logo" type="file" onchange="loadPreviewImg(event)"></span> 
+                                        
                                     </div>
                                     <div class="" data-fileupload="progressbar-logo" style="display: none;">
                                         <div class="text">Uploading</div>
@@ -72,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>      
 
                     <div class="">
-                        <button style="width: 45%; float: left;" class="btn btn-primary" name="btn-submit" data-form="submit" type="button" data-on-click-label="Save Changes...">Save Changes</button>
+                        <button style="width: 45%; float: left;" class="btn btn-primary" name="btn-submit" type="submit">Save Changes</button>
                        
                     </div>                                                                     
 
@@ -81,9 +92,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
+            <?php echo form_close(); ?>
         </div>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+var loadPreviewImg=function(event){
+    $('#preview-img-container').attr('src', URL.createObjectURL(event.target.files[0]));
+};
+    
+</script>

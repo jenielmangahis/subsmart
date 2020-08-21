@@ -16,10 +16,6 @@
     display: block;
   }
 
-  .form-user-elements:hover{
-    background-color: #eeeeee;
-    cursor: pointer;
-  }
 
   .form-user-elements-settings{
     display: none;
@@ -271,8 +267,6 @@
 
 
 
-
-
                           </div>
                           
                         </div>
@@ -437,7 +431,13 @@
                   
               </div>
               <div class="col-xs-12 col-md-9">
-                <div id="windowPreviewTemplate" class="card row">
+                <div id="windowPreviewTemplate" class="card">
+                  <div class="row" id="windowPreviewContent">
+
+
+
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -499,7 +499,7 @@
                             <div class="card">
                               <div class="card-content">
                                 <div class="form-check">
-                                  <input type="checkbox" name="txtFormToggleStart" id="txtFormToggleStart" onclick="toggleOperationsMenu(event)">
+                                  <input type="checkbox" name="txtFormToggleStart" id="txtFormToggleStart" >
                                   <label for="txtFormToggleStart">Use Start Date..</label>
                                   <small class="form-text text-muted">Open this form after this date</small>
                                   <blockquote class="blockquote" id="form-start-date-options">
@@ -528,7 +528,7 @@
                             <div class="card">
                               <div class="card-content">
                                 <div class="form-check">
-                                  <input type="checkbox" name="txtFormToggleEnd" id="txtFormToggleEnd" onclick="toggleOperationsMenu(event)">
+                                  <input type="checkbox" name="txtFormToggleEnd" id="txtFormToggleEnd">
                                   <label for="txtFormToggleEnd">Use End Date..</label>
                                   <small class="form-text text-muted">Close this form after this date</small>
                                   <blockquote class="blockquote" id="form-end-date-options">
@@ -557,7 +557,7 @@
                             <div class="card">
                               <div class="card-content">
                                 <div class="form-check">
-                                  <input type="checkbox" name="txtFormToggleResult" id="txtFormToggleResult" onclick="toggleOperationsMenu(event)">
+                                  <input type="checkbox" name="txtFormToggleResult" id="txtFormToggleResult" >
                                   <label for="txtFormToggleResult">Use Results Limit..</label>
                                   <small class="form-text text-muted">Close this form after this many stored results</small>
                                   <blockquote class="blockquote" id="form-results-options">
@@ -715,155 +715,9 @@
 <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
 <script>
-  const formElements = document.getElementsByClassName('form-user-elements');
-  const elementsList = [
-    {
-      id: 1,
-      type: "radio-button",
-      category: 'common'
-    },
-    {
-      id: 2,
-      type: "dropdown",
-      category: 'common'
-    },
-    {
-      id: 3,
-      type: "checkbox",
-      category: 'common'
-    },
-    {
-      id: 4,
-      type: "email-address",
-      category: 'common'
-    },
-    {
-      id: 5,
-      type: "long-answer",
-      category: 'common'
-    },
-    {
-      id: 6,
-      type: "short-answer",
-      category: 'common'
-    },
-    {
-      id: 7,
-      type: "calendar",
-      category: 'common'
-    },
-    {
-      id: 8,
-      type: "number",
-      category: 'common'
-    },
-    {
-      id: 9,
-      type: "file-upload",
-      category: 'common'
-    },
-    {
-      id: 10,
-      type: "text-list",
-      category: 'common'
-    },
-    {
-      id: 11,
-      type: "rating",
-      category: 'common'
-    },
-    {
-      id: 12,
-      type: "ranking",
-      category: 'common'
-    },
-    {
-      id: 13,
-      type: "hidden-field",
-      category: 'common'
-    },
-    {
-      id: 14,
-      type: "signature",
-      category: 'common'
-    },
-    {
-      id: 15,
-      type: "image-list",
-      category: 'common'
-    },
-    {
-      id: 16,
-      type: "calculation",
-      category: 'common'
-    },
-    {
-      id: 17,
-      type: "credit-card",
-      category: 'common'
-    },
-    {
-      id: 18,
-      type: "contact-block",
-      category: 'common'
-    },
-    {
-      id: 19,
-      type: "save-and-return",
-      category: 'common'
-    },
-    {
-      id: 20,
-      type: "heading",
-      category: 'format'
-    },
-    {
-      id: 21,
-      type: "formatted-text",
-      category: 'format'
-    },
-    {
-      id: 22,
-      type: "image",
-      category: 'format'
-    },
-    {
-      id: 23,
-      type: "link",
-      category: 'format'
-    },
-    {
-      id: 24,
-      type: "custom-code",
-      category: 'format'
-    },
-    {
-      id: 25,
-      type: "blank-space",
-      category: 'format'
-    },
-    {
-      id: 26,
-      type: "page-break",
-      category: 'format'
-    },
-    {
-      id: 28,
-      type: "radio-button-email-routing",
-      category: 'email'
-    },
-    {
-      id: 29,
-      type: "dropdown-email-routing",
-      category: 'email'
-    },
-    {
-      id: 30,
-      type: "checkbox-email-routing",
-      category: 'email'
-    },
-  ]
+  var formElements = document.getElementsByClassName('form-user-elements');
   let userFormData = {}
   let selectedElement = 0;
   let selectedUserElement = 0;
@@ -873,29 +727,10 @@
     showResultOptions: false
   }
   
-  
-  
-  toggleOperationsMenu = e => {
-    switch(e.target.name){
-      case 'txtFormToggleStart':
-        operationsWindow.showStartOptions = !operationsWindow.showStartOptions
-        document.querySelector('#form-start-date-options').style.display = (operationsWindow.showStartOptions === true)? "block" : "none"
-        break;
-      case 'txtFormToggleEnd':
-        operationsWindow.showEndOptions = !operationsWindow.showEndOptions
-        document.querySelector('#form-end-date-options').style.display = (operationsWindow.showEndOptions === true)? "block" : "none"
-        break;
-      case 'txtFormToggleResult':
-        operationsWindow.showResultOptions = !operationsWindow.showResultOptions
-        document.querySelector('#form-results-options').style.display = (operationsWindow.showResultOptions === true)? "block" : "none"
-        break;
-    }
-  }
-
   // this function runs upon page load
-  loadFormSettings = () => {
+  loadFormSettings = id => {
     $.ajax({
-      url: "<?= base_url()?>formbuilder/form/view/<?=$form->forms_id?>",
+      url: `${formBaseUrl}formbuilder/form/view/${id}`,
       dataType: 'json',
       type: 'GET',
       success: function(res){
@@ -916,28 +751,33 @@
         document.querySelector('#txtResultsLimit').value = res.data.forms_results_limit
         document.querySelector('#txtResultsMessageTitle').value = res.data.forms_results_max_title
         document.querySelector('#txtResultsMessageContent').value = res.data.forms_results_max_message
-
+        
         document.querySelector('#txtRedirectLink').value = res.data.forms_redirect_link
         document.querySelector('#txtSuccessTitle').value = res.data.forms_success_title
         document.querySelector('#txtSuccessMessage').value = res.data.forms_success_message
         document.querySelector('#chkSubmitAnotherResponse').checked = (res.data.forms_show_repeat_form_check == 1)? true : false
-
+        
+        
         return;
       }
     })
   }
 
-  loadFormElements = () => {
-    document.querySelector("#windowPreviewTemplate").innerHTML = "";
+    
+  loadFormElements = id => {
+    document.querySelector("#windowPreviewContent").innerHTML = "";
     $.ajax({
-      url: "<?= base_url()?>formbuilder/form/element/get/<?=$form->forms_id?>",
+      url: `${formBaseUrl}formbuilder/form/element/get/${id}`,
       dataType: 'json',
       type: 'GET',
       success: function(res){
         res.data.forEach(el => {
-          document.querySelector('#windowPreviewTemplate').innerHTML += `
-            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-6 form-user-elements">
-              <div class="form-group ">
+          document.querySelector('#windowPreviewContent').innerHTML += `
+            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-3" onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)">
+              <div id="form-element-settings-${el.fe_id}" class="form-elements-hover-settings-${el.fe_id}" style="position: absolute; display: block">
+                test
+              </div>
+              <div class="form-group form-user-elements">
                 <div id="form-element-setting-${el.fe_id}" class="form-user-elements-settings position-absolute">
                   <h1>testing lang ${el.fe_id} </h1>
                 </div>
@@ -952,9 +792,26 @@
     })
   }
 
+  
+  testFunction = id => {
+    console.log("works!!")
+  }
 
-  loadFormSettings();
-  loadFormElements();
+  toggleElementSettings = (element_id, value) => {
+    console.log("show settings")
+    document.querySelector('.form-elements-hover-settings-' + element_id).style.display = (value == 1)? "block" : "none"
+  }
+
+  
+  loadFormSettings(<?= $form->forms_id?>);
+  loadFormElements(<?= $form->forms_id?>);
+  setTimeout(() => {
+    console.log(formElements.length)
+  }, 500);
+
+  
+
+
 
   document.querySelector('#btnSaveGeneralSettings').addEventListener('click', () => {
     let data = {
@@ -1011,13 +868,25 @@
     })
   });
 
+  $('.form-user-elements').draggable({
+    // snap: "#windowPreviewTemplate",
+    scroll: false,
+    revert: "valid",
+    helper: "clone",
+    appendTo: "#windowPreviewContent",
+    snap: "#windowPreviewContent",
+    snapMode: "inner",
+    grid: [20, 20],
+  })
+
+
   $('.form-elements-draggable').draggable({
     // snap: "#windowPreviewTemplate",
     scroll: false,
     revert: "valid",
     helper: "clone",
-    appendTo: "#windowPreviewTemplate",
-    snap: "#windowPreviewTemplate",
+    appendTo: "#windowPreviewContent",
+    snap: "#windowPreviewContent",
     snapMode: "inner",
     grid: [20, 20],
     start: function(event, ui){
@@ -1028,22 +897,56 @@
     },
     stop: function(event){
       selectedElement = 0
-    }
-    // containment: "#windowPreviewTemplate",
-    
+    }    
   });
+
+  $('#windowPreviewContent').sortable({
+    placeholder: 'btn btn-success',
+    update: function(event, ui){
+      console.log(event)
+      console.log(ui)
+      
+      $(this).sortable("toArray").map((item, i)=>{
+        let id = item.split('-')[2];
+        let data = {
+          "fe_order": i + 1
+        }
+        $.ajax({
+          url: "<?= base_url()?>formbuilder/form/element/update/" + id,
+          data: data,
+          dataType: 'json',
+          type: 'POST',
+          success: function(res){
+            document.querySelector("#windowPreviewContent").innerHTML = "";
+            return;
+          }
+        })
+      })
+      loadFormElements(<?= $form->forms_id?>);
+      
+    }
+  });
+  $('#windowPreviewContent').disableSelection();
 
   $('#windowPreviewTemplate').droppable({
     greedy: true,
+    accept: '.form-elements-draggable',
     drop: function(event, ui){
-      console.log(ui.position)
-      
+      let elementOrder = $('#windowPreviewContent').sortable("toArray");
+      console.log(elementOrder);
+      console.log(event)
       let data = {
         "fe_form_id": <?= $form->forms_id?>,
         "fe_element_id": selectedElement,
         "fe_label": elementsList[selectedElement].type,
+        "fe_is_required": true,
+        "fe_is_readonly": false,
+        "fe_default_value": null,
+        "fe_placeholder_text": "choice",
       }
       
+      // insert switch case here
+
       $.ajax({
         url: "<?= base_url()?>formbuilder/form/element/add",
         data: data,
@@ -1051,8 +954,8 @@
         type: 'POST',
         success: function(res){
           window.alert('Element added!');
-          loadFormSettings();
-          loadFormElements();
+          loadFormSettings(<?= $form->forms_id?>);
+          loadFormElements(<?= $form->forms_id?>);
           return;
         }
       })

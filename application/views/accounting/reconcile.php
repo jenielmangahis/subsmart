@@ -206,7 +206,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="col-md-4 col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>Transaction type</label>
-                                                                    <select class="form-control">
+                                                                    <select id="transaction_type" class="form-control">
                                                                         <option>All</option>
                                                                         <option>Bill</option>
                                                                         <option>Bill Payment</option>
@@ -271,7 +271,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 echo "<input id='ending_date' type='hidden' value='".$row->ending_date."'/>";
                               }
                              ?>
-                            <table id="reconcile_table" class="table table-striped table-bordered" style="width:100%">
+                             <!-- Table Dropdown -->
+                    <div class="table-drop-wrp">
+                        <div class="container-fluid">
+                            <table id="reconcile_table" class="table table-striped table-bordered accordion" style="width:100%;cursor: pointer;">
                                 <thead>
                                 <tr>
                                     <th>DATE</th>
@@ -289,9 +292,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tbody id="tbody">
                             <?php
                               $i=1;
+                              $o=1;
                               foreach($rows as $row)
                               {
-                                echo "<tr id='payments'>";
+                                echo "<tr id='payments' onclick='trClick(".$o.")'>";
                                 echo "<td contenteditable='true'>".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
                                 echo "<td class='refno' contenteditable='true'>SVCCHRG</td>";
@@ -310,7 +314,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 echo  "<td></td>";
                                 echo "<td><input type='checkbox'></td>";
                                 echo "</tr>";
-                                echo "<tr id='deposites'>";
+                                echo "<tr class='tr_class_".$o."' style='display:none'>";
+                                echo "<td><input type='text' name='' placeholder='07/01/2020' class='form-control'></td>";
+                                echo "<td>Check</td>";
+                                echo "<td><input type='text' name='' placeholder='SVCCHRD' class='form-control'></td>";
+                                echo "<td><select class='form-control'>
+                                        <option>Bank Charges</option>
+                                    </select></td>";
+                                echo "<td><input type='text' name='' placeholder='Service Charge' class='form-control'></td>";
+                                echo "<td><input type='text' name='' placeholder='20.00' class='form-control'></td>";
+                                echo "<td>Payment</td>";                                
+                                echo "<td></td>";                                
+                                echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
+                                echo "</tr>";
+                                echo "<tr class='tr_class_".$o."' style='display:none'>";
+                                echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
+                                echo "<td><a href='#' class='btn-ed'>Edit</a></td>";
+                                echo "<td><a href='#' class='btn-ed savebt'>Save</a></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "</tr>";
+                                $o++;
+                                echo "<tr id='deposites' onclick='trClick(".$o.")'>";
                                 echo "<td contenteditable='true'>".$row->second_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
                                 echo "<td class='refno' contenteditable='true'>INTEREST</td>";
@@ -329,11 +359,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 echo  "<td>".$row->interest_earned."</td>";
                                 echo "<td><input type='checkbox'></td>";
                                 echo "</tr>";
+                                echo "<tr class='tr_class_".$o."' style='display:none'>";
+                                echo "<td><input type='text' name='' placeholder='07/01/2020' class='form-control'></td>";
+                                echo "<td>Check</td>";
+                                echo "<td><input type='text' name='' placeholder='SVCCHRD' class='form-control'></td>";
+                                echo "<td><select class='form-control'>
+                                        <option>Bank Charges</option>
+                                    </select></td>";
+                                echo "<td><input type='text' name='' placeholder='Service Charge' class='form-control'></td>";
+                                echo "<td><input type='text' name='' placeholder='20.00' class='form-control'></td>";
+                                echo "<td>Payment</td>";                                
+                                echo "<td>Payment</td>";                                
+                                echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
+                                echo "</tr>";
+                                echo "<tr class='tr_class_".$o."' style='display:none'>";
+                                echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
+                                echo "<td><a href='#' class='btn-ed'>Edit</a></td>";
+                                echo "<td><a href='#' class='btn-ed savebt'>Save</a></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "<td></td>";
+                                echo "</tr>";
                               $i++;
+                              $o++;
                               }
                                ?>
                                 </tbody>
                             </table>
+                            
+                            <div id="textContent"></div>
+                        </div>
+                    </div>
+                    <!-- End Table Dropdown -->
                         </div>
                     </div>
                     <!-- end card -->
@@ -382,10 +443,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         if(selectedValue == 'Not Cleared')
         {
             $("#tbody").hide();
+            let ele = document.getElementById('textContent');
+            ele.innerHTML += "There are no transactions showing for this account in this time period. If you're filtering transactions, they may be hiding.";
         }
         else
         {
             $("#tbody").show();
+            let ele = document.getElementById('textContent');
+            ele.innerHTML = "";
         }
         var selectBox1 = document.getElementById("dropdate");
         var selectedValue1 = selectBox1.options[selectBox1.selectedIndex].value;
@@ -432,6 +497,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
        {
         table.search( '' ).columns().search( '' ).draw();
        }
+       var selectBox2 = document.getElementById("transaction_type");
+       var selectedValue2 = selectBox2.options[selectBox2.selectedIndex].value;
+       if(selectedValue2 == 'Bill' | selectedValue2 == 'Bill Payment' | selectedValue2 == 'CC Bill Payment' | selectedValue2 == 'Cash Expense')
+       {
+         $("#tbody").hide();
+          let ele = document.getElementById('textContent');
+          ele.innerHTML += "There are no transactions showing for this account in this time period. If you're filtering transactions, they may be hiding.";
+       }
+       else
+       {
+         $("#tbody").show();
+         let ele = document.getElementById('textContent');
+          ele.innerHTML = "";
+       }
     });
 
     function myfunc() {
@@ -453,19 +532,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#to_date'). attr("disabled","disabled");
         /*var temp_date = ending_date.split(".");
         var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];*/
-        $('.disableFuturedate').datepicker({
-          format: 'dd.mm.yyyy',
-          autoclose:true,
-          endDate: "currentDate",
-          maxDate: ending_date
+        /*$('.disableFuturedate').datepicker({
+            onSelect: function() {
+              maxDate: '0'
+            };
           }).on('changeDate', function (ev) {
              $(this).datepicker('hide');
-          });
-          $('.disableFuturedate').keyup(function () {
-             if (this.value.match(/[^0-9]/g)) {
-                this.value = this.value.replace(/[^0-9^-]/g, '');
-             }
-          });
+          });*/
        }
        else
        {
@@ -596,4 +669,14 @@ function col_status()
 $('.dropopenbx').on('click', function(){
   $('.dropdown-menu').toggleClass('dropopn');
 });
+</script>
+<script type="text/javascript">
+    function trClick(o)
+    {
+        $(".tr_class_"+o).show();
+    }
+    function crossClick(o)
+    {
+        $(".tr_class_"+o).hide();
+    }
 </script>

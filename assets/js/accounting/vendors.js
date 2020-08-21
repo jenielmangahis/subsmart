@@ -144,7 +144,7 @@ function getAllVendors(){
 					if(data.length > 0){
 						$("#vendors_table tbody").empty();
 						for(var x=0; x < data.length; x++){
-							console.log(data[x].status);
+							//console.log(data[x].status);
 							if(data[x].status == 1){
 								htmlData = "";
 								htmlData += '<tr>';
@@ -171,7 +171,7 @@ function getAllVendors(){
 						vendorDatatable = $('#vendors_table').DataTable({
 							"paging": false,
 						});
-						$('.loader').hide();
+						
 					}
 				},
 			error:
@@ -180,6 +180,7 @@ function getAllVendors(){
 			}
 		});		
 	}
+	$('.loader').hide();
 }
 
 

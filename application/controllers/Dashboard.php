@@ -20,7 +20,7 @@ class Dashboard extends MY_Controller {
         if(!$check_if_exist){
             $input = array();
             $input['fk_user_id'] = $user_id ;
-            $input['ds_values'] = "earning,analytics,report,activity,report2" ;
+            $input['ds_values'] = "earning,analytics,report,activity,report2,newsletter,spotlight,bulletin,stats,installs" ;
             $this->customer_ad_model->add($input,"ac_dashboard_sort");
         }
         $this->page_data['dashboard_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_dashboard_sort");

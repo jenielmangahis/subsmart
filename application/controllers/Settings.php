@@ -83,7 +83,30 @@ class Settings extends MY_Controller {
 
     public function email_branding()
     {
-        $this->page_data['page']->menu = 'email_branding';
+        $this->load->model('SettingEmailBranding_model');
+
+        $user = $this->session->userdata('logged');
+
+        $settingEmailBranding = $this->SettingEmailBranding_model->findByUserId($user['id']);
+        
+        if( $settingEmailBranding ){
+            $setting_data = [
+                'uid' => $user['id'],
+                'email_from_name' => $settingEmailBranding->email_from_name,
+                'email_template_footer_text' => $settingEmailBranding->email_template_footer_text,
+                'logo' => $settingEmailBranding->logo,
+            ];
+        }else{
+            $setting_data = [
+                'uid' => $user['id'],
+                'email_from_name' => '',
+                'email_template_footer_text' => '',
+                'logo' => ''
+            ];
+        }
+
+        $this->page_data['page']->menu   = 'email_branding';
+        $this->page_data['setting_data'] = $setting_data;
         $this->load->view('settings/email_branding', $this->page_data);
     }    
 
@@ -221,6 +244,65 @@ class Settings extends MY_Controller {
     public function quick_books()
     {
         $this->load->view('settings/quick_books', $this->page_data);
+    }
+
+    public function update_email_branding_setting()
+    {
+        postAllowed();
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $config['upload_path'] = 'uploads/email_branding/' . $user['id'];
+
+        if (!is_dir($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777, TRUE);
+        }
+
+        $config['file_name'] = $_FILES['file-logo']['name'];
+        $config['allowed_types'] = 'gif|jpeg|jpg|png';
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+        if ( !$this->upload->do_upload('file-logo')) {
+            $logo_image = '';
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+            $logo_image = $data['upload_data']['file_name'];
+        }
+
+        if( !empty($post) ){
+            $this->load->model('SettingEmailBranding_model');
+
+            $settingEmailBranding = $this->SettingEmailBranding_model->findByUserId($user['id']);
+            if( $settingEmailBranding ){
+                $data = array(
+                    'email_from_name' => post('email_from_name'),
+                    'email_template_footer_text' => post('email_template_footer_text'),
+                    'logo' => $logo_image,                
+                    'updated' => date("Y-m-d H:i:s")
+                );
+
+                $this->SettingEmailBranding_model->update($settingEmailBranding->id,$data);
+
+            }else{
+                $data = array(
+                    'user_id' => $user['id'],
+                    'email_from_name' => post('email_from_name'),
+                    'email_template_footer_text' => post('email_template_footer_text'),
+                    'logo' => $logo_image,                
+                    'created' => date("Y-m-d H:i:s")
+                );
+
+                $settingEmailBranding = $this->SettingEmailBranding_model->create($data);
+            }
+
+            $this->session->set_flashdata('message', 'Your email branding setting was updated');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+        }
+
+        redirect('settings/email_branding');
     }
 	
 }

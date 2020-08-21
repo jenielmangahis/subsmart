@@ -44,6 +44,15 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getByName($name)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('title', $name);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     function getRows($params = array()) {
         $this->db->select('*');
         $this->db->from($this->table);

@@ -57,6 +57,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     margin-top: 20px;
     border: none;
 }
+.hide{
+    display: none;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -69,7 +72,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card">
-                                <div class="d-block d-none  hid-deskx">
+                                <div class="d-block d-none">
                                     <?php
                                         if (count($wordorders) > 0) {
                                             // output data of each row
@@ -102,7 +105,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         }
                                     ?>
                                 </div>
-                                <div class="card-body hid-desk">
+                                <div class="card-body col-12">
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <h1 class="page-title">Schedule</h1>
@@ -177,7 +180,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
-
+        <?php //if( !$is_mobile ){ ?>
         <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow: scroll; max-height: 800px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
@@ -211,45 +214,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <ul class="list-group">
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-xs-12 col-sm-3 col-md-3">
+                                <div class="col-xs-12 col-3 col-sm-3 col-md-3">
                                     <img src="<?php echo base_url() . "/assets/img/user7-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
                                 </div>
-                                <div class="col-xs-12 col-sm-5 col-md-5" style="text-align: left;">
+                                <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
                                     <span class="name"><i class="fa fa-user"></i> Ana Stevens</span><br/>
                                     <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
-                                    <span class="visible-xs"> <span class="text-muted"><</span>
+                                    <span class="visible-xs"> <span class="text-muted"></span>
                                 </div>
-                                <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
+                                <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
                                     <a class="btn btn-default" href="javascript:void(0)">Send</a>
                                 </div>
                             </div>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-xs-12 col-sm-3 col-md-3">
+                                <div class="col-xs-12 col-3 col-sm-3 col-md-3">
                                     <img src="<?php echo base_url() . "/assets/img/user8-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
                                 </div>
-                                <div class="col-xs-12 col-sm-5 col-md-5" style="text-align: left;">
+                                <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
                                     <span class="name"><i class="fa fa-user"></i> John Doe</span><br/>
                                     <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
-                                    <span class="visible-xs"> <span class="text-muted"><</span>
+                                    <span class="visible-xs"> <span class="text-muted"></span>
                                 </div>
-                                <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
+                                <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
                                     <a class="btn btn-default" href="javascript:void(0)">Send</a>
                                 </div>
                             </div>
                         </li>
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-xs-12 col-sm-3 col-md-3">
+                                <div class="col-xs-12 col-3 col-sm-3 col-md-3">
                                     <img src="<?php echo base_url() . "/assets/img/user6-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
                                 </div>
-                                <div class="col-xs-12 col-sm-5 col-md-5" style="text-align: left;">
+                                <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
                                     <span class="name"><i class="fa fa-user"></i> Mike David</span><br/>
                                     <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
-                                    <span class="visible-xs"> <span class="text-muted"><</span>
+                                    <span class="visible-xs"> <span class="text-muted"></span>
                                 </div>
-                                <div class="col-xs-12 col-sm-4 col-md-4" style="text-align: left;">
+                                <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
                                     <a class="btn btn-default" href="javascript:void(0)">Send</a>
                                 </div>
                             </div>
@@ -258,6 +261,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
             </div>
         </div>
+        <?php //} ?>
     </div>
 
 
@@ -606,6 +610,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             calendar.setOption('timeZone', this.value);
         });
     }
+
+    // add the responsive classes after page initialization
+    window.onload = function () {
+        $('.fc-toolbar.fc-header-toolbar').addClass('row col-lg-12');
+    };
+
+    // add the responsive classes when navigating with calendar buttons
+    $(document).on('click', '.fc-button', function(e) {
+        $('.fc-toolbar.fc-header-toolbar').addClass('row col-lg-12');
+    });
 </script>
 
 <script>

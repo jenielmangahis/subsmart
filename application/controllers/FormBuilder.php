@@ -25,6 +25,7 @@ class FormBuilder extends MY_Controller {
 			'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
 			'https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js',
 			'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js',
+			'assets/js/formbuilder.js'
 		));
 
 		if(!isset($_GET['st'])){
@@ -106,12 +107,24 @@ class FormBuilder extends MY_Controller {
 			"status" => 1,
 			"data" => $this->formsbuilder_model->getFormElements($id)
 		);
+		usort($data['data'], function($a, $b){
+			return ($a->fe_order > $b->fe_order);
+		});
 		echo json_encode($data);
 		exit;
 	}
 
 	public function addFormElement(){
 		$query = $this->formsbuilder_model->addFormElement($this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function updateFormElement($element_id){
+		$query = $this->formsbuilder_model->updateFormElement($element_id, $this->input->post());
 		$data = array(
 			"status" => 1
 		);

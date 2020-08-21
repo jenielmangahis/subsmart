@@ -10,6 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-12 px-0" >
                         <div class="row">
                             <div class="col-md-6">
+								<input type="hidden" id="siteurl" value="<?php echo base_url();?>">
                                 <h2><?php echo $vendor_details[0]->display_name; ?></h2>
 								<p><?php echo $vendor_details[0]->notes; ?></p>
                             </div>
@@ -20,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                        New Transaction&ensp;<span class="fa fa-caret-down"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-left">
-                                        <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal">Time Activity</a></li>
+                                        <li><a href="#" data-toggle="modal" data-target="#timeActivity-modal" id="addTimeActivity">Time Activity</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Expense</a></li>
                                         <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li>
@@ -605,7 +606,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
-                    <form action="<?php echo site_url()?>accounting/timeActivity" method="post">
+                    <form id="timeActivityForm" action="" method="post">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-5">
@@ -626,6 +627,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                            <td><label for="">Customer</label></td>
                                            <td>
                                                <input type="text" name="customer" class="form-inline">
+                                               <input type="hidden" name="vendor_id" value="<?php echo $vendor_details[0]->vendor_id; ?>" class="form-inline">
                                            </td>
                                        </tr>
                                        <tr>

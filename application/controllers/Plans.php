@@ -26,7 +26,7 @@ class Plans extends MY_Controller {
 	}
 	
 	public function add(){
-		ifPermissions('add_plan');
+		// ifPermissions('add_plan');
 		$this->load->view('plans/add', $this->page_data);
 	}
 

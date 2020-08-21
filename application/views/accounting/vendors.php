@@ -588,7 +588,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 							<div class="form-group">
 								<label for="">Memo</label>
-								<textarea name="memo" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+								<textarea name="billMemo" id="billMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
 							</div>
 							<div class="form-group">
 								<label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
@@ -950,7 +950,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
-                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                            <textarea name="" id="checkMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
                             <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>

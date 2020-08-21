@@ -105,7 +105,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12 module_header">
                                                 <h6>General Information</h6>
                                             </div>
-
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Lead Type </label> <a href="<?php echo url('customer/index/1') ?>" class="add_data"><span class="fa fa-plus"></span></a><br/>

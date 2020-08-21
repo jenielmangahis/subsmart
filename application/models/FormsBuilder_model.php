@@ -58,6 +58,15 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 
+	public function updateFormElement($id, $data){
+		$this->db->where('fe_id', $id);
+		$query = $this->db->update('fb_forms_elements', $data);
+		return array(
+			"status" => 1
+		);
+	}
+	
+
 }
 
 /* End of file Permissions_model.php */
