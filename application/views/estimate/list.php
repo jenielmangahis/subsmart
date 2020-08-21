@@ -16,12 +16,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-auto">
                         <div class="h1-spacer">
                              <?php if (isset($estimates) && count($estimates)>0) { ?>
-                                                <a class="btn btn-primary btn-md" href="<?php echo base_url('estimate/print') ?>">
+                                                <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
                                                     <span class="fa fa-print "></span> Print
                                                 </a>
                                             <?php } ?>
 
-                            <a class="btn btn-primary btn-md" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>>
+                            <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
                                 <span class="fa fa-plus"></span> New Estimate
                             </a>
                         </div>
@@ -30,9 +30,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                 <div class="row align-items-center mb-4 margin-bottom-ter">
                     <div class="col">
-                        <p class="m-0">Listing your estimates.</p>
+                        <p class="m-0 mb-fix-list">Listing your estimates.</p>
                     </div>
-                    <div class="col-auto text-right-sm d-flex align-items-center">
+                    <div class="col-auto text-right-sm d-flex align-items-center mb-fix-list">
                         <form style="display: inline;" class="form-inline form-search" name="form-search"
                               action="<?php echo base_url('estimate') ?>" method="get">
                             <div class="form-group m-0" style="margin:0 !important;">
@@ -52,8 +52,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <?php } ?>
                             </div>
                         </form>
-                        <span class="margin-left-sec">Sort:</span> &nbsp;
-                        <div class="dropdown dropdown-inline open"><a class="btn btn-default dropdown-toggle"
+                        <span class="margin-left-sec sc-2">Sort:</span> &nbsp;
+                        <div class="dropdown dropdown-inline open sc-2"><a class="btn btn-default dropdown-toggle"
                                                                       data-toggle="dropdown" aria-expanded="true"
                                                                       href="<?php echo base_url('estimate') ?>?order=added-desc">Newest
                                 first <span class="caret"></span></a>
@@ -89,7 +89,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
 
                 <div class="tabs">
-                    <ul class="clearfix work__order" id="myTab" role="tablist">
+                    <ul class="clearfix work__order ul-mobile" id="myTab" role="tablist">
                         <?php foreach (get_config_item('estimate_status') as $key => $status) { ?>
 
                             <?php if ($key === 0) continue; ?>

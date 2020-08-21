@@ -36,18 +36,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 					<div class="col-12 d-md-none d-block p-0">
 					<div class="smart__grid" id="1">
-							<div><a href="http://nsmartrac.com/workorder/add">Add Work Order</a></div>
-							<div>Sales</div>
-							<div>View Customer</div>
-							<div>Inquiries</div>
-							<div><a href="http://nsmartrac.com/workorder">Work Orders</a></div>
-							<div>Marketing</div>
-							<div>Reports</div>
-							<div><a href="http://nsmartrac.com/workcalender">schedule</a></div>
-							<div>Inventory</div>
-							<div>Items</div>
-							<div><a href="http://nsmartrac.com/menu3">Sub Menu 1</div>
-							<div><a href="http://nsmartrac.com/menu2">Sub Menu 2</a></div>
+
+							<div><a href="<?= base_url()?>inquiries">Leads</a></div>
+							<div><a href="<?= base_url()?>customer">Customers</a></div>
+              <div><a href="<?= base_url()?>estimate">Estimates</a></div>
+              <div><a href="<?= base_url()?>invoice">Invoices</a></div>
+              <div><a href="<?= base_url()?>workcalender">Calendar</a></div>
+              <div><a href="<?= base_url()?>workorder/workorder">Work Order</a></div>
+
+              <div><a href="<?= base_url()?>users">Employees</a></div>
+              <div><a href="#">Route Planner</a></div>
+              <div><a href="<?= base_url()?>accounting/reports">Reports</a></div>
+              <div><a href="<?= base_url()?>inventory">Inventory</a></div>
+
+              <div><a href="<?= base_url()?>survey">Quick Links</a></div>
+              <div><a href="<?= base_url()?>users/businessview">Business</a></div>
+              <div><a href="<?= base_url()?>accounting/banking">Accounting</a></div>
+              <div><a href="<?= base_url()?>vault">Files Vault</a></div>
+              <div><a href="<?= base_url()?>esignmain">eSign</a></div>
+
+              <div><a href="<?= base_url()?>taskhub">Tasks</a></div>
+              <div><a href="#">Bulletin</a></div>
+              <div><a href="<?= base_url()?>vault/beforeafter">Collage Maker</a></div>
+              <div><a href="<?= base_url()?>estimate">Cost Estimator</a></div>
+              <div><a href="<?= base_url()?>inventory">Virtual Estimator</a></div>
+
+              <div><a href="<?= base_url()?>users/timelog">Time Clock</a></div>
+              <div><a href="<?= base_url()?>customer">Marketing</a></div>
+              <div><a href="#">Trac 360</a></div>
 					</div>
 
 					</div>
