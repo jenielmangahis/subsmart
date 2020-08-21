@@ -26,8 +26,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <h3 class="margin-bottom">Notification preference</h3>
                             <div class="margin-bottom-sec">
                                 <div class="checkbox checkbox-sec margin-right">
-                                    <input type="checkbox" name="global_notify_by_email" value="1" checked="checked" id="global_notify_by_email">
-                                    <label for="global_notify_by_email"><span>Email notifications</span></label>
+                                    <input type="checkbox" name="default_notify_by_email" value="1" checked="checked" id="global_notify_by_email">
+                                    <label for="default_notify_by_email"><span>Email notifications</span></label>
                                 </div>
                                 <p class="help help-sm">
                                     Receive all emails for various actions related to schedule, invoices, estimates.
@@ -35,16 +35,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="form-group">
                                 <div class="checkbox checkbox-sec margin-right">
-                                    <input type="checkbox" name="global_notify_by_sms" value="1" checked="checked" id="global_notify_by_sms">
-                                    <label for="global_notify_by_sms"><span>SMS notifications</span></label>
+                                    <input type="checkbox" name="default_notify_by_sms" value="1" checked="checked" id="global_notify_by_sms">
+                                    <label for="default_notify_by_sms"><span>SMS notifications</span></label>
                                 </div>
                                 <p class="help help-sm">
                                     Receive all text messages for various actions related to schedule, invoices, estimates.
                                 </p>
                             </div>
                         </div>        
-                        
-                        
 
                         <div class="card">
                             <h3 class="margin-bottom">Customer Schedule</h3>
