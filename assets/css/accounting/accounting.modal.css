@@ -245,6 +245,7 @@
 #pay-bills-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
+    position: relative;
 }
 #pay-bills-modal .filter-container{
     height: 60px;
@@ -598,6 +599,7 @@
 #edit-expensesCheck .table-container{
     background: #ffffff;
     padding-top: 15px;
+    position: relative;
 }
 #edit-expensesCheck .add-remove-line{
     border-radius: 5px;
@@ -671,6 +673,7 @@
 #bill-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
+    position: relative;
 }
 #bill-modal .add-remove-line{
     border-radius: 5px;
@@ -736,6 +739,7 @@
 #expense-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
+    position: relative;
 }
 #expense-modal .add-remove-line{
     border-radius: 5px;
@@ -801,6 +805,7 @@
 #vendorCredit-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
+    position: relative;
 }
 #vendorCredit-modal .add-remove-line{
     border-radius: 5px;
@@ -868,6 +873,7 @@
 #payDown-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
+    position: relative;
 }
 #payDown-modal .add-remove-line{
     border-radius: 5px;

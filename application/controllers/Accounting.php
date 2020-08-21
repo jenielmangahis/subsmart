@@ -213,23 +213,22 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
     }
-
+	
+	
     /*** Vendors ***/
     public function addVendor()
     {
         $id = logged('id');
-        $filePath = "uploads/accounting/vendors".$id;
+        $filePath = "./uploads/accounting/vendors/".$id;
         $file_name = "";
 
-        if (file_exists($filePath)) {
-            $config['upload_path']  =  "uploads/accounting/vendors".$id;
-        } else {
-            mkdir("uploads/accounting/vendors".$id);
-            $config['upload_path']  =  "uploads/accounting/vendors".$id;
+        if (!file_exists($filePath)) {
+            mkdir($filePath);
         }
+		
+		$config['upload_path']  =  $filePath;
         $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
         $config['max_size']        = '20000';
-        $config['encrypt_name']    = true;
 
         $this->load->library('upload', $config);
 
@@ -276,16 +275,14 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $addQuery = $this->vendors_model->createVendor($new_data);
-		
+        $addQuery = $this->vendors_model->create($new_data);
+
         if($addQuery > 0){
 
             $new_id = $addQuery;
-			
             $comp = mb_substr($this->input->post('company'), 0, 3);
             $vendor_id = strtolower($comp) . $new_id;
-
-            $updateQuery = $this->vendors_model->updateVendor($new_id, array("vendor_id" => $vendor_id));
+            $updateQuery = $this->vendors_model->update($new_id, array("vendor_id" => $vendor_id));
 
             if($updateQuery > 0){
                 echo json_encode($updateQuery);
@@ -312,7 +309,6 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Vendor Details";
 
         $this->page_data['vendor_details'] = $this->vendors_model->getVendorDetails($id);
-        $this->page_data['transaction_details'] = $this->vendors_model->getvendortransactions($id);
         $this->load->view('accounting/vendor_details', $this->page_data);
     }
     public function getvendortransactions($id = null)
@@ -389,15 +385,14 @@ class Accounting extends MY_Controller {
     public function createBill()
     {
         $id = logged('id');
-        $filePath = "uploads/accounting/vendors/bill".$id;
+        $filePath = "uploads/accounting/vendors/bill/".$id;
         $file_name = "";
 
-        if (file_exists($filePath)) {
-            $config['upload_path']  =  "uploads/accounting/vendors/bill".$id;
-        } else {
-            mkdir("uploads/accounting/vendors/bill".$id);
-            $config['upload_path']  =  "uploads/accounting/vendors/bill".$id;
+        if (!file_exists($filePath)) {
+             mkdir($filePath);
         }
+		
+		$config['upload_path']  =  $filePath;
         $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
         $config['max_size']        = '20000';
         $config['encrypt_name']    = true;
@@ -482,6 +477,7 @@ class Accounting extends MY_Controller {
 
     public function timeActivity(){
         $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
             'date' => $this->input->post('date'),
             'name' => $this->input->post('name'),
             'customer' => $this->input->post('customer'),
@@ -490,15 +486,15 @@ class Accounting extends MY_Controller {
             'taxable' => $this->input->post('taxable'),
             'start_time' => $this->input->post('start_time'),
             'end_time' => $this->input->post('end_time'),
-            'break' => $this->input->post('break'),
+            'break' => $this->input->post('breakTime'),
             'time' => $this->input->post('time'),
             'description' => $this->input->post('description')
         );
         $query = $this->expenses_model->timeActivity($new_data);
         if ($query == true){
-            redirect('accounting/expenses');
+             echo json_encode(1);
         }else{
-            redirect('accounting/expenses');
+            echo json_encode(0);
         }
     }
 
@@ -511,10 +507,14 @@ class Accounting extends MY_Controller {
             'due_date' => $this->input->post('due_date'),
             'bill_number' => $this->input->post('bill_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+            'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
+			'total' => $this->input->post('total'),
+			'memo' => $this->input->post('memo'),
             'original_fname' => $this->input->post('original_fname')
         );
         $this->expenses_model->addBill($new_data);
@@ -538,6 +538,7 @@ class Accounting extends MY_Controller {
         $data->due_date = $bills->row()->due_date;
         $data->bill_number = $bills->row()->bill_number;
         $data->permit_number = $bills->row()->permit_number;
+        $data->memo = $bills->row()->memo;
         $data->check_category = ($check_category->num_rows() > 0)?true:false;
         echo json_encode($data);
     }
@@ -553,10 +554,12 @@ class Accounting extends MY_Controller {
             'due_date' => $this->input->post('due_date'),
             'bill_number' => $this->input->post('bill_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+            'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
@@ -621,7 +624,7 @@ class Accounting extends MY_Controller {
         $display = '';
         foreach ($attachments as $attachment){
             $tooltip = ($attachment->status == 0)?"tooltip":"";
-            $cross_out = ($attachment->status == 0)?"cross-out":"previewAttachment ";
+            $cross_out = ($attachment->status == 0)?"cross-out":"";
             $exclamation = ($attachment->status == 0)?"fa-times fa-exclamation-triangle":"fa-times";
             $tipbox = ($attachment->status == 0)?"tooltiptext":"tooltiptext hide";
             $file = $attachment->attachment;
@@ -657,8 +660,8 @@ class Accounting extends MY_Controller {
             }
             if ($attachment->expenses_id == $id && $attachment->type == $type){
                 $display .= '<div class="file-name-section">';
-                $display .= '<span style="display: inline-block;margin-right: 5px;" class="previewAttachment '.$cross_out.'">'.$attachment->original_filename.'</span>';
-                $display .= '<span class="previewAttachmentImage"><img src="/uploads/accounting/expenses/'.$file.'"></span>';
+                $display .= '<span class="previewAttachment '.$cross_out.'">'.$attachment->original_filename.'</span>';
+                $display .= '<span class="previewAttachmentImage"><img src="/uploads/accounting/expenses/'.$file.'">.'.$extension.'</span>';
                 $display .= '<a href="#" class="'.$tooltip.'" id="removeAttachment" data-id="'.$attachment->id.'" data-status="'.$attachment->status.'"><i class="fa '.$exclamation.'"></i></a>';
                 $display .= '<span class="'.$tipbox.'">This file is temporarily removed.</br> You can retrieve it by clicking the </br>exclamation icon "<i class="fa fa-exclamation-triangle"></i>". </span>';
                 $display .= '<input type="hidden" name="attachment_id" id="attachmentId" value="'.$attachment->id.'">';
@@ -701,9 +704,11 @@ class Accounting extends MY_Controller {
     }
 
     public function addingFileAttachment(){
+        $file_id = $this->input->post('file_id');
         $id = $this->input->post('expenses_id');
         $type = $this->input->post('type');
-        $file_name = $this->input->post('file_name');
+        $get_attachment_id = $this->db->get_where('accounting_expense_attachment',array('id'=>$file_id));
+        $file_name = $get_attachment_id->row()->attachment;
         $original_fname = $this->input->post('original_fname');
         $extension = pathinfo($file_name, PATHINFO_EXTENSION);
         $encryption = md5(time()).'.'.$extension;
@@ -717,7 +722,7 @@ class Accounting extends MY_Controller {
             'status' => 1
         );
         $this->db->insert('accounting_expense_attachment',$data);
-        $get_attachment_id = $this->db->get_where('accounting_expense_attachment',array('attachment'=>$file_name));
+
         $added = array(
             'attachment_id' => $get_attachment_id->row()->id,
             'expenses_id' => $id,
@@ -730,6 +735,7 @@ class Accounting extends MY_Controller {
     public function showExistingFile(){
         $id = $this->input->get('expenses_id');
         $type = $this->input->get('type');
+        $file_id = $this->input->get('file_id');
         $attachments = $this->expenses_model->getAttachment();
         $added = $this->expenses_model->getAddedAttachment();
         $status = 'Add';
@@ -794,8 +800,8 @@ class Accounting extends MY_Controller {
                 $display .= '<img src="/uploads/accounting/expenses/'.$file.'" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">';
                 $display .= '<input type="hidden" id="attachmentType" value="'.$type.'">';
                 $display .= '<input type="hidden" id="attachmentTypePreview" value="'.$preview.'">';
-                $display .= '<input type="hidden" id="attachmentFileName" value="'.$attachment->attachment.'" >';
-                $display .= '<a href="#" class="'.$disabled.'" id="addingFileAttachment" data-fname="'.$attachment->original_filename.'" >'.$status.'</a>';
+                $display .= '<a href="#" class="'.$disabled.'" id="addingFileAttachment" data-id="'.$attachment->id.'" data-fname="'.$attachment->original_filename.'" >'.$status.'</a>';
+                $display .= '</div>';
             }
         }
 
@@ -804,7 +810,6 @@ class Accounting extends MY_Controller {
 
     public function rowCategories(){
         $transaction_id = $this->input->get('transaction_id');
-        $id = $this->input->get('id');
         $row = $this->input->get('row');
         $cat_class = $this->input->get('cat_class');
         $des_class = $this->input->get('des_class');
@@ -998,7 +1003,8 @@ class Accounting extends MY_Controller {
         $std->check_number = $query->row()->check_number;
         $std->print_later = $print;
         $std->permit_number = $query->row()->permit_number;
-        $std->check_category = $check_category->num_rows();
+        $std->memo = $query->row()->memo;
+        $std->check_category = ($check_category->num_rows() > 0)?true:false;
 
         echo json_encode($std);
 
@@ -1012,9 +1018,11 @@ class Accounting extends MY_Controller {
             'check_num' => $this->input->post('check_number'),
             'print_later' => $this->input->post('print_later'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+			'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
@@ -1032,10 +1040,12 @@ class Accounting extends MY_Controller {
             'check_num' => $this->input->post('check_number'),
             'print_later' => $this->input->post('print_later'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+            'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
@@ -1055,12 +1065,12 @@ class Accounting extends MY_Controller {
             'payment_method' => $this->input->post('payment_method'),
             'ref_number' => $this->input->post('ref_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
             'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
-            'memo' => $this->input->post('memo'),
             'original_fname' => $this->input->post('original_fname')
         );
         $this->expenses_model->addExpense($new_data);
@@ -1082,6 +1092,7 @@ class Accounting extends MY_Controller {
         $data->payment_method = $get_expense->row()->payment_method;
         $data->ref_number = $get_expense->row()->ref_number;
         $data->permit_number = $get_expense->row()->permit_number;
+        $data->memo = $get_expense->row()->memo;
         $data->check_category = ($check_category->num_rows() > 0)?true:false;
 
         echo json_encode($data);
@@ -1098,10 +1109,12 @@ class Accounting extends MY_Controller {
             'payment_method' => $this->input->post('payment_method'),
             'ref_number' => $this->input->post('ref_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+            'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
@@ -1120,9 +1133,11 @@ class Accounting extends MY_Controller {
             'payment_date' => $this->input->post('payment_date'),
             'ref_number' => $this->input->post('ref_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+            'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
@@ -1143,6 +1158,7 @@ class Accounting extends MY_Controller {
         $data->payment_date = $get_vc->row()->payment_date;
         $data->ref_number = $get_vc->row()->ref_number;
         $data->permit_number = $get_vc->row()->permit_number;
+        $data->memo = $get_vc->row()->memo;
         $data->check_category = ($check_category->num_rows() > 0)?true:false;
 
         echo json_encode($data);
@@ -1156,10 +1172,12 @@ class Accounting extends MY_Controller {
             'payment_date' => $this->input->post('payment_date'),
             'ref_number' => $this->input->post('ref_number'),
             'permit_number' => $this->input->post('permit_number'),
+            'memo' => $this->input->post('memo'),
             'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
+            'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );

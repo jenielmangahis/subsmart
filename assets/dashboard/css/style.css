@@ -9772,3 +9772,66 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     border-color: #111;
 }
 /* **** End Filter Dropdown **** */
+
+/* **** Table Dropdown CSS **** */
+.table-drop-wrp{
+    padding: 45px 0;
+}
+.table-drop-wrp table{margin: 0;}
+.table-drop-wrp table tbody td,
+.table-drop-wrp table thead th{
+    padding: 10px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    border: none;
+    vertical-align: middle;
+    border-bottom:2px solid #e0e0e0;
+}
+.table-drop-wrp table tbody td{font-weight: normal;}
+.table-drop-wrp table thead tr th:last-child,
+.table-drop-wrp table tbody tr td:last-child{width: 45px;}
+.table-drop-wrp table thead tr th:first-child,
+.table-drop-wrp table tbody tr td:first-child{width: 100px;}
+
+.edit-details-block{padding: 15px;background: #ecebeb;}
+.table-drop-wrp table tbody td .form-control{
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    font-size: 14px;
+    font-weight: normal;
+    color: #333;
+}
+.panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+.edit-action{
+    width: 100%;
+    text-align: right;
+    padding: 25px 25px 0;
+}
+.edit-action .btn-ed{
+    border: 2px solid #333;
+    background: transparent;
+    color: #333;
+    font-size: 15px;
+    font-weight: 600;
+    display: inline-block;
+    border-radius: 30px;
+    margin-right: 10px;
+    padding: 8px 30px;
+}
+.edit-action .btn-ed:last-child{margin: 0;}
+.edit-action .savebt{
+    background: #2CA01C;
+    color: #fff;
+    border-color: #2CA01C;
+}
+.edit-action .btn-ed:hover{background: rgba(0,0,0,0.30);}
+/* **** End Table Dropdown CSS **** */

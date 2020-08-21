@@ -240,89 +240,40 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div><!-- end row -->
 
-			<div class="row d-none d-lg-flex mb-1">
-				<div class="col-sm-6">
-					<div class="dropdown dropdown-inline filter-date">
-						<div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-							<span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name">This Year</span> <span class="caret"></span>
-						</div>
-						<ul class="dropdown-menu btn-block" role="menu">
-							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-12-31" data-name="This Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year</a></li>
-							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-09-30" data-name="This Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q3</a></li>
-							<li data-filter-date="item" data-date-start="2020-04-01" data-date-end="2020-06-30" data-name="This Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q2</a></li>
-							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-03-31" data-name="This Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q1</a></li>
-							<li data-filter-date="item" data-date-start="2020-08-01" data-date-end="2020-08-31" data-name="This Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Month</a></li>
-							<li data-filter-date="item" data-date-start="2020-08-03" data-date-end="2020-08-09" data-name="This Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Week</a></li>
-							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-12-31" data-name="Previous Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year</a></li>
-							<li data-filter-date="item" data-date-start="2019-10-01" data-date-end="2019-12-31" data-name="Previous Year - Q4" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q4</a></li>
-							<li data-filter-date="item" data-date-start="2019-07-01" data-date-end="2019-09-30" data-name="Previous Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q3</a></li>
-							<li data-filter-date="item" data-date-start="2019-04-01" data-date-end="2019-06-30" data-name="Previous Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q2</a></li>
-							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-03-31" data-name="Previous Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q1</a></li>
-							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-07-31" data-name="Previous Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Month</a></li>
-							<li data-filter-date="item" data-date-start="2020-07-27" data-date-end="2020-08-02" data-name="Previous Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Week</a></li>
-							<li data-filter-date="item" data-date-start="2018-01-01" data-date-end="2018-12-31" data-name="FY 2018" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2018</a></li>
-							<li data-filter-date="item" data-date-start="2017-01-01" data-date-end="2017-12-31" data-name="FY 2017" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2017</a></li>
-							<li data-filter-date="item" data-date-start="2016-01-01" data-date-end="2016-12-31" data-name="FY 2016" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2016</a></li>
-						</ul>
-					</div>
-					<span class="margin-left">For <span data-date-filter="date-interval">01-Jan-2020 to 31-Dec-2020</span></span>
-				</div>
-				<div class="col-sm-6 text-right-sm">
-					<span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">customize</span>
-					<div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
-					</div>
-				</div>
-            </div>
-
-
-             <div class="row d-none d-lg-flex sortable2">
-                 <?php
-                 $modules = explode(",", $dashboard_sort->ds_values);
-                 for($x=0;$x<count($modules);$x++){
-                     include viewPath('dashboard/'.$modules[$x]);
-                 }
-                 ?>
-            </div><!-- end row -->
-
-             <div class="row d-none d-lg-flex">
-
-            </div><!-- end row -->
-
             <div class="row d-none d-lg-flex">
-            	<div class="col-xl-12">
+                <div class="col-xl-12">
                     <!-- TradingView Widget BEGIN -->
                     <div class="tradingview-widget-container">
                         <div class="tradingview-widget-container__widget"></div>
                         <div class="tradingview-widget-copyright" style="z-index:1;font-size: 12px !important;line-height: 32px !important;text-align: center !important;vertical-align: middle !important;font-family: 'Trebuchet MS', Arial, sans-serif !important;color: #45a2f3 !important;position: relative;bottom: 4px;"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
-                       <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-                              {
-                              "symbols": [
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                            {
+                                "symbols": [
                                 {
-                                  "proName": "FOREXCOM:SPXUSD",
-                                  "title": "S&P 500"
+                                    "proName": "FOREXCOM:SPXUSD",
+                                    "title": "S&P 500"
                                 },
                                 {
-                                  "proName": "FOREXCOM:NSXUSD",
-                                  "title": "Nasdaq 100"
+                                    "proName": "FOREXCOM:NSXUSD",
+                                    "title": "Nasdaq 100"
                                 },
                                 {
-                                  "proName": "FX_IDC:EURUSD",
-                                  "title": "EUR/USD"
+                                    "proName": "FX_IDC:EURUSD",
+                                    "title": "EUR/USD"
                                 },
                                 {
-                                  "proName": "BITSTAMP:BTCUSD",
-                                  "title": "BTC/USD"
+                                    "proName": "BITSTAMP:BTCUSD",
+                                    "title": "BTC/USD"
                                 },
                                 {
-                                  "proName": "BITSTAMP:ETHUSD",
-                                  "title": "ETH/USD"
+                                    "proName": "BITSTAMP:ETHUSD",
+                                    "title": "ETH/USD"
                                 },
                                 {
-                                  "proName": "RF"
+                                    "proName": "RF"
                                 },
                                 {
-                                  "proName": "LOW"
+                                    "proName": "LOW"
                                 },
                                 {
                                     "proName": "HD"
@@ -408,112 +359,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 {
                                     "proName": "BGG"
                                 }
-                              ],
-                                  "colorTheme": "light",
-                                  "isTransparent": false,
-                                  "displayMode": "adaptive",
-                                  "locale": "en"
-                              }
+                            ],
+                                "colorTheme": "light",
+                                "isTransparent": false,
+                                "displayMode": "adaptive",
+                                "locale": "en"
+                            }
                         </script>
                     </div>
                     <!-- TradingView Widget END -->
-            	</div>
-            </div>
-            <br />
-            <div class="row d-none d-lg-flex">
-
+                </div>
             </div>
 
-            <div class="dash-last-wrpper">
-            	<div class="row">
-            		<div class="col-md-7 col-sm-6">
-            			<div class="com-newlat">
-            				<div class="news-hed">
-            					<img src="<?php echo $url->assets ?>dashboard/images/new-img.png" alt="">
-            					<h4>Company Newsletter</h4>
-            				</div>
-
-            				<div class="inner-news">
-            					<p>Welcome to enGrade!</p>
-            				</div>
-            			</div>
-
-            			<div class="spot-box">
-    						<div class="spot-img">
-    							<img src="<?php echo $url->assets ?>dashboard/images/users/user-3.jpg" alt="">
-    						</div>
-    						<div class="spot-head">
-    							<h4>Today's Spotlight</h4>
-    						</div>
-            			</div>
-
-            			<div class="corpo-box">
-            				<h4>Corporate Bulletin</h4>
-            			</div>
-            		</div>
-            		<div class="col-md-5 col-sm-5">
-            			<div class="corpo-box state-box">
-            				<h4>My Stats</h4>
-
-            				<table class="table">
-							    <thead>
-							      	<tr>
-								        <th>Total Sold</th>
-								        <th>Installed</th>
-								        <th>Scheduled</th>
-								        <th>Tickets</th>
-							      	</tr>
-							    </thead>
-							    <tbody>
-							      	<tr>
-							        	<td>36</td>
-							        	<td>35</td>
-							        	<td>0</td>
-							        	<td>0</td>
-							      	</tr>
-							    </tbody>
-							</table>
-            			</div>
-
-            			<div class="corpo-box">
-            				<h4>Top Installs</h4>
-
-            				<div class="top-ins-in">
-	            				<div class="row">
-	            					<div class="col-md-6 col-sm-6">
-	            						<div class="insl-bx">
-	            							<h5>Top Reps</h5>
-
-	            							<ul>
-	            								<li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
-	            								<li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
-	            							</ul>
-	            						</div>
-	            					</div>
-	            					<div class="col-md-6 col-sm-6">
-	            						<div class="insl-bx">
-	            							<h5>Top Techs</h5>
-
-	            							<ul>
-	            								<li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
-	            								<li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
-	            								<li><strong>3.</strong> T.Smith (COR) - <span>133</span></li>
-	            								<li><strong>4.</strong> T.Smith (COR) - <span>133</span></li>
-	            								<li><strong>5.</strong> T.Smith (COR) - <span>133</span></li>
-	            								<li><strong>6.</strong> T.Smith (COR) - <span>133</span></li>
-	            							</ul>
-	            						</div>
-	            					</div>
-	            				</div>
-	            			</div>
-
-	            			<div class="view-all-bx">
-	            				<a href="#">View All</a>
-	            			</div>
-            			</div>
-            		</div>
-            	</div>
+			<div class="row d-none d-lg-flex mb-1">
+				<div class="col-sm-6">
+					<div class="dropdown dropdown-inline filter-date">
+						<div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+							<span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name">This Year</span> <span class="caret"></span>
+						</div>
+						<ul class="dropdown-menu btn-block" role="menu">
+							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-12-31" data-name="This Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-09-30" data-name="This Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q3</a></li>
+							<li data-filter-date="item" data-date-start="2020-04-01" data-date-end="2020-06-30" data-name="This Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q2</a></li>
+							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-03-31" data-name="This Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q1</a></li>
+							<li data-filter-date="item" data-date-start="2020-08-01" data-date-end="2020-08-31" data-name="This Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Month</a></li>
+							<li data-filter-date="item" data-date-start="2020-08-03" data-date-end="2020-08-09" data-name="This Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Week</a></li>
+							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-12-31" data-name="Previous Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year</a></li>
+							<li data-filter-date="item" data-date-start="2019-10-01" data-date-end="2019-12-31" data-name="Previous Year - Q4" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q4</a></li>
+							<li data-filter-date="item" data-date-start="2019-07-01" data-date-end="2019-09-30" data-name="Previous Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q3</a></li>
+							<li data-filter-date="item" data-date-start="2019-04-01" data-date-end="2019-06-30" data-name="Previous Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q2</a></li>
+							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-03-31" data-name="Previous Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q1</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-07-31" data-name="Previous Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Month</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-27" data-date-end="2020-08-02" data-name="Previous Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Week</a></li>
+							<li data-filter-date="item" data-date-start="2018-01-01" data-date-end="2018-12-31" data-name="FY 2018" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2018</a></li>
+							<li data-filter-date="item" data-date-start="2017-01-01" data-date-end="2017-12-31" data-name="FY 2017" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2017</a></li>
+							<li data-filter-date="item" data-date-start="2016-01-01" data-date-end="2016-12-31" data-name="FY 2016" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2016</a></li>
+						</ul>
+					</div>
+					<span class="margin-left">For <span data-date-filter="date-interval">01-Jan-2020 to 31-Dec-2020</span></span>
+				</div>
+				<div class="col-sm-6 text-right-sm">
+					<span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">customize</span>
+					<div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+					</div>
+				</div>
             </div>
+
+
+             <div class="row d-none d-lg-flex sortable2">
+                 <?php
+                 $modules = explode(",", $dashboard_sort->ds_values);
+                 for($x=0;$x<count($modules);$x++){
+                     include viewPath('dashboard/'.$modules[$x]);
+                 }
+                 ?>
+            </div><!-- end row -->
         </div><!-- end container-fluid -->
     </div><!-- page wrapper end -->
 
@@ -611,6 +512,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</a>
 </div>
 
+<!-- CSS for dashboard cards -->
+<style>
+    .db-card{
+        height : auto;
+        margin: 0 auto !important;
+        width: 100% !important;
+        display: grid;
+        grid-auto-flow: column;
+    }
+</style>
 
 <style type="text/css">
 

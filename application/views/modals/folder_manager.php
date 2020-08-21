@@ -158,11 +158,16 @@
                   <?php 
                     foreach($categories as $category){
                   ?>
-                    <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
+                    <option value="<?php echo $category->category_id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
                 <?php } ?>
                 </select>
               </div>
-            </div>  
+            </div> 
+            <div class="w-100 text-center">
+              <button type="button" class="btn btn-default bft-btn-control border-info" id="btn-modal-folder-manager-entry-create-category">Create</button>
+              <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-edit-category">Edit</button>
+              <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-delete-category">Delete</button>  
+            </div> 
           <?php } ?>
         </div>
       </div>
@@ -410,7 +415,7 @@
                   <?php 
                     foreach($categories as $category){
                   ?>
-                    <option value="<?php echo $category->category_id; ?>"><?php echo $category->category_name; ?></option>
+                    <option value="<?php echo $category->category_id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
                 <?php } ?>
                 </select>
               </div>

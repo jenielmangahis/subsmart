@@ -45,10 +45,7 @@
                                 </a>
                             </li>
 							<li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a></li>
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="/users/timesheet_user" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-clock-o" aria-hidden="true"></i></a>
-
-                            </li>
+                            <li class="dropdown notification-list list-inline-item ml-auto"><a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="/users/timesheet_user" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-clock-o" aria-hidden="true"></i></a> </li>
                             <li class="dropdown notification-list list-inline-item ml-auto"><a
                                     class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
 
@@ -715,6 +712,19 @@
                         .document-page { border:2px solid black;  margin-top:30px; } .document-page:first-child { margin-top:50px !important; }
 
                            /* *** Sidebar *** */	
+                           .edit-sidebar-1{	
+                            background: #fff;	
+                            width: 300px;	
+                            height: 100vh;	
+                            overflow: auto;	
+                            position: fixed;	
+                            right:0%;	
+                            top: 0;	
+                            z-index: 10;	
+                            background: #f5f5f5;	
+                            padding: 95px 0 30px;	
+                            transition: .4s linear;	
+                        }	
                         .edit-sidebar{	
                             background: #fff;	
                             width: 300px;	
@@ -738,6 +748,7 @@
                             margin: 0;	
                         }	
                         .edit-sidebar h3 i{margin-right: 5px;}	
+                        .edit-sidebar-1 h3 i{margin-right: 5px;}	
                         .cus-check{	
                             padding: 30px;	
                             border-bottom: 1px solid #e0e0e0;	
@@ -884,6 +895,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="draggable-2" class="resize-x-handle-flip">
+                            <div class="x-text-flip-back">
+                                <div class="vertical-scroll">
+                                <div  style="border:3px solid black;" class="ui-widget-content sideopne-1"><p>Signature 2</p></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div ng-class="taggerCtrl.shouldShowPanelSection()" lazy-load-container="thumbNails" svg-view-angular-hook="" hook-name="'documentThumbnailsPanel'" tagger-thumbnails-container="" id="right-panel-tagger" class="ng-scope content_sidebar content_sidebar-right">
@@ -963,6 +981,78 @@
                 <div class="side-action">	
                     <button class="btn-side">Save As Custom Field</button>	
                     <a class="btn-side delbt">Delete</a>	
+                </div>	
+            </div>	
+            <div class="edit-sidebar-1" style="display:none;">	
+                <h3 style="padding: 15px 30px; border-bottom: 1px solid #e0e0e0; font-weight: normal; font-size: 16px; color: #333; margin: 0;"><i class="fa fa-pencil" ></i> Signature 2</h3>	
+                <div class="cus-check">                    	
+                    <div class="form-group">	
+                        <input type="checkbox" id="css">	
+                        <label for="css">Required Field</label>	
+                    </div>	
+                </div>	
+                <div class="listing-edit faq-wrps">	
+                    <div class="panel-group" id="accordion-2" role="tablist" aria-multiselectable="true">	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingfour">	
+                                <h4 class="panel-title">	
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapsefne" aria-expanded="false" aria-controls="collapsefne">Formatting</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapsefne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingfour">	
+                                <div class="panel-body">	
+                                    <div class="frmat-bx">	
+                                        <input type="text" name="" placeholder="" class="form-control">	
+                                        <p> Scale %</p>	
+                                    </div>	
+                                </div>	
+                            </div>	
+                        </div>	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingTwo">	
+                                <h4 class="panel-title">	
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Data Label</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">	
+                                <div class="panel-body">	
+                                    <div class="frmat-bx dtlab">	
+                                        <input type="text" name="" placeholder="" class="form-control">	
+                                    </div>	
+                                </div>	
+                            </div>	
+                        </div>	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingThree">	
+                                <h4 class="panel-title">	
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Tooltip</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">	
+                                <div class="panel-body">	
+                                    <div class="frmat-bx dtlab">	
+                                        <textarea class="form-control" rows="5"></textarea>	
+                                    </div>	
+                                </div>	
+                            </div>	
+                        </div>	
+                        <div class="panel panel-default">	
+                            <div class="panel-heading" role="tab" id="headingfor">	
+                                <h4 class="panel-title">	
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-2" href="#collapsefor" aria-expanded="false" aria-controls="collapsefor">Location</a>	
+                                </h4>	
+                            </div>	
+                            <div id="collapsefor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingfor">	
+                                <div class="panel-body">	
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>	
+                                </div>	
+                            </div>	
+                        </div>	
+                    </div>	
+                </div>	
+                <div class="side-action">	
+                    <button class="btn-side">Save As Custom Field</button>	
+                    <a class="btn-side delbt-1">Delete</a>	
                 </div>	
             </div>	
            
@@ -1117,44 +1207,37 @@
 </script>
 <style>
     #draggable {  padding: 0.5em; width:100px; left:250px; top:300px; position: 'absolute'; }
+    #draggable-2 {  padding: 0.5em; width:100px; left:250px; top:300px; position: 'absolute'; }
 </style>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!-- <script> $(document).ready( function () { $( "#draggable" ).draggable(); }); </script> -->
 
-
 <script>
-        $("#draggable").draggable({ connectToSortable: ".document-page" });
-    </script>
+    $("#draggable").draggable({ connectToSortable: ".document-page" });
+    $("#draggable-2").draggable({ connectToSortable: ".document-page" });
+</script>
 
 <style>    
-    .resize-x-handle-flip {
-        transform: rotateX(180deg);
-        resize: horizontal;
-        overflow: auto;
-        width: 200px;
-        background:lightcyan;
-    }
-    .x-text-flip-back {
-        transform: rotateX(180deg);
-    }
-    .vertical-scroll { 
-        min-height:20px;  
-        resize:vertical;
-        overflow:auto;
-    }
+    .resize-x-handle-flip { transform: rotateX(180deg); resize: horizontal; overflow: auto; width: 200px; background:lightcyan; }
+    .x-text-flip-back { transform: rotateX(180deg); }
+    .vertical-scroll {  min-height:20px; resize:vertical; overflow:auto; }
 </style>
 <script type="text/javascript">	
-    $('.sideopne').on('click', function(){	
-        $('.edit-sidebar').show();	
-    });	
-    $('.delbt').on('click', function(){	
-        $('.edit-sidebar').hide();	
-    });	
-</script> <!-- <h3><i class="fa fa-pencil"></i> Signature</h3>	
-                <div class="cus-check">                    	
-                    <div class="form-group">	
-                        <input type="checkbox" id="css">	
-                        <label for="css">Required Field</label>	
-                    </div>	
-                </div>	 -->
+    $('.sideopne').on( 'click' , function () {
+        $('.edit-sidebar').show();
+        $('.edit-sidebar-1').hide();
+    } );	
+    $('.delbt').on( 'click' , function () {
+         $('.edit-sidebar').hide();
+         $('.edit-sidebar-1').hide(); 
+    } );	
+    $('.sideopne-1').on( 'click' , function () {
+        $('.edit-sidebar-1').show();
+        $('.edit-sidebar').hide();
+    } );	
+    $('.delbt-1').on( 'click' , function () {
+        $('.edit-sidebar-1').hide();
+        $('.edit-sidebar').hide();
+    } );	
+</script>

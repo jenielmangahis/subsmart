@@ -509,7 +509,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Check #<span id="checkNUmberHeader"></span>
                         </div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
                     <div class="modal-body" style="margin-bottom: 100px">
@@ -571,6 +571,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-2"></div>
                         </div>
                         <div class="table-container">
+                            <div class="table-loader">
+                                <p class="loading-text">Loading records</p>
+                            </div>
                             <!--                        DataTables-->
                             <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
                                 <thead>
@@ -633,7 +636,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
-                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                            <textarea name="name" id="checkMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -664,7 +667,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-4">
-                                <button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
                                 <button class="btn btn-dark cancel-button" type="reset">Revert</button>
                             </div>
                             <div class="col-md-5">
@@ -687,7 +690,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                        <li><a href="#">Save and close</a></li>
+                                        <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -850,7 +853,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Bill
                         </div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeBillModal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="billForm">
 						<div class="modal-body" style="margin-bottom: 100px">
@@ -908,6 +911,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</div>
 							</div>
 							<div class="table-container">
+                                <div class="table-loader">
+                                    <p class="loading-text">Loading records</p>
+                                </div>
 								<!--                        DataTables-->
 								<table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
 									<thead>
@@ -968,7 +974,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							</div>
 							<div class="form-group">
 								<label for="">Memo</label>
-								<textarea name="memo" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+								<textarea name="memo" id="billMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
 							</div>
 							<div class="form-group">
                                 <div class="row">
@@ -999,7 +1005,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						<div class="modal-footer-check">
 							<div class="row">
 								<div class="col-md-5">
-									<button class="btn btn-dark cancel-button" data-dismiss="modal" type="button">Cancel</button>
+									<button class="btn btn-dark cancel-button" id="closeBillModal" type="button">Cancel</button>
 								</div>
 								<div class="col-md-2" style="text-align: center;">
 									<div>
@@ -1039,7 +1045,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Expense
                         </div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeModalExpense"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="expenseForm">
                     <div class="modal-body" style="margin-bottom: 100px">
@@ -1109,6 +1115,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <div class="table-container">
+                            <div class="table-loader">
+                                <p class="loading-text">Loading records</p>
+                            </div>
                             <!--                        DataTables-->
                             <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
                                 <thead>
@@ -1169,7 +1178,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="form-group">
                             <label for="">Memo</label>
-                            <textarea name="" id="memo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
+                            <textarea name="memo" id="expenseMemo" cols="30" rows="3" placeholder="" style="width: 350px;resize: none;" ></textarea>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -1200,7 +1209,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-5">
-                                <button class="btn btn-dark cancel-button" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" id="closeModalExpense" type="button">Cancel</button>
                             </div>
                             <div class="col-md-2" style="text-align: center;">
                                 <div>
@@ -1240,7 +1249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Vendor Credit
                         </div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeModalVC"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="formVendorCredit">
                     <div class="modal-body" style="margin-bottom: 100px">
@@ -1286,7 +1295,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="table-container">
                             <!--                        DataTables-->
-                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;">
+                            <div class="table-loader">
+                                <p class="loading-text">Loading records</p>
+                            </div>
+                            <table id="expensesCheckTable" class="table table-striped table-bordered" style="width:100%;margin-top: 20px;position: relative">
                                 <thead>
                                 <tr>
                                     <th></th>
@@ -1925,6 +1937,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             "filter":false,
             "info":false,
             "sort": false
+
         });
     } );
     // Add & Remove line in dataTable Check modal
@@ -2145,6 +2158,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(document).ready(function () {
         jQuery(document).ready(function() {
             $("#add-four-line-expense").click(function() {
+                $('.select2-expense-category').select2({
+                    placeholder: 'Choose a category',
+                    allowClear: true
+                });
+                $('.select2-expense-category').last().next().next().remove();
                 var id = $('#line-container-expense > tr').length;
                 for (var x = 1;x <= 4;x++){
                     id++;
@@ -2187,12 +2205,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Table input text show
 
         $(document).on("click","#tableLine-expense td:not(:last-child)",function () {
-            $('.select2-expense-category').select2({
-                placeholder: 'Choose a category',
-                allowClear: true
-            });
-            $('.select2-expense-category').last().next().next().remove();
             if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
+                $('.select2-expense-category').select2({
+                    placeholder: 'Choose a category',
+                    allowClear: true
+                });
+                $('.select2-expense-category').last().next().next().remove();
                 // $('#tableLine-expense > td >input').hide();
                 $('#tableLine-expense > td >div').hide();
                 $('#tableLine-expense > td > #category-preview-expense').show();

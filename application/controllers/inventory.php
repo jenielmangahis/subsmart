@@ -209,7 +209,7 @@ class Inventory extends MY_Controller
                 $loc = "";
                 foreach ($locations as $location) {
                     $qty += intval($location['qty']);
-                    $loc .= '[' . $location['name'] . '->' . $location['qty'] . '],';
+                    $loc .= $location['name'] . '->' . $location['qty'] . '|';
                 }
                 $csvData = array($item->model, $item->title, '$'.number_format($item->price,2,".",","), $item->description, $item->brand, $item->vendor_id, $item->type, $item->COGS, $item->url, '', $qty, $loc);
                 fputcsv($f, $csvData, $delimiter);
@@ -230,6 +230,7 @@ class Inventory extends MY_Controller
     public function importItems () {
         $data = array();
         $itemData = array();
+        $last_id = 0;
         
         if ($this->input->post('importSubmit')) {
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
@@ -247,20 +248,16 @@ class Inventory extends MY_Controller
                             $rowCount++;
                             
                             $price = explode("$",$row['Price']);
-
                             $itemData = array(
                                 'company_id' => logged('company_id'),
                                 'title' => $row['Name'],
-                                'model' => $row['Model'],
+                                'model' => $row['Model #'],
                                 'brand' => $row['Brand'],
                                 'price' => intval($price[1]),
                                 'description' => $row['Description'],
-                                'item_categories_id' => intval($row['Customer Group']),
                                 'vendor_id' => intval($row['Item Vendor']),
-                                'type' => intval($row['Item Type']),
                                 'COGS' => intval($row['Item Cost']),
                                 'url' => $row['Link/Url'],
-                                'notes' => $row['Notes'],
                                 'type' => "product",
                                 'is_active' => 1
                             );
@@ -276,15 +273,33 @@ class Inventory extends MY_Controller
                             if ($prevCount > 0) {
                                 $condition = array('title' => $row['Name']);
                                 $update = $this->items_model->update($itemData, $condition);
-                                
+                                $updateItem = $this->items_model->getByName($row['Name']);
+                                $last_id = $updateItem[0]->id;
                                 if ($update) {
                                     $updateCount++;
                                 }
                             } else {
                                 $insert = $this->items_model->insert($itemData);
+                                $last_id = $insert;
                                 
                                 if ($insert) {
                                     $insertCount++;
+                                }
+                            }
+                            $locations = explode("|",$row['Locations']);
+
+                            foreach($locations as $location) {
+                                if($locations[0] != "") {
+                                    $location_quantities = explode("->",$location);
+    
+                                    $data = array(
+                                        'company_id' => logged('company_id'),
+                                        'qty' => $location_quantities[1],
+                                        'name' => $location_quantities[0],
+                                        'item_id' => $last_id,
+                                        'insert_date' => date('Y-m-d H:i:s')
+                                    );
+                                    $this->items_model->saveNewItemLocation($data);
                                 }
                             }
                         }

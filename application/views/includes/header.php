@@ -88,9 +88,10 @@
                             </li>
 
 
-							                            <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></a>
-
+							<li class="dropdown notification-list list-inline-item ml-auto">
+                                <a class="nav-link dropdown-toggle arrow-none" href="<?php echo base_url('settings/tax_rates') ?>">
+                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                </a>
                             </li>
 							<li class="dropdown notification-list list-inline-item ml-auto"><a
                                     class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i> <span class="badge badge-pill badge-danger noti-icon-badge">3</span></a>

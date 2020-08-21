@@ -865,15 +865,14 @@ button {
     text-decoration: underline;
 }
 .file-container-list{
-    max-height: 150px;
-    max-width: 100%;
+    min-height: 150px;
+    width: 100%;
 }
 .file-name-section {
     display: inline-block;
-    margin-right: 15px;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
+    margin-right: 10px;
 }
 .file-name-section a{
     color: #0b97c4;
@@ -935,7 +934,12 @@ button {
 /*Preview Attahcment*/
 .previewAttachment {
     position: relative;
-    display: contents;
+    display: inline-block;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 200px;
+    margin-right: 8px;
 }
 
 .previewAttachment + .previewAttachmentImage {
@@ -943,7 +947,6 @@ button {
     width: 300px;
     height: 160px;
     background-color: #ffffff;
-    color: #fff;
     text-align: center;
     border-radius: 6px;
     position: absolute;
@@ -952,9 +955,10 @@ button {
     margin-left: -200px;
     padding: 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: #0b0b0b;
 }
 .previewAttachment + .previewAttachmentImage img {
-    height: 100%;
+    height: 90%;
     max-width: 100%;
     margin: 0 auto;
 }
@@ -973,6 +977,44 @@ button {
 .previewAttachment:hover + .previewAttachmentImage {
     visibility: visible;
 }
+.table-loader{
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+    position:absolute;
+    background-color: #f4f5f8;
+}
+.table-loader p{
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translateY(-50%);
+}
+.loading-text:after {
+    content: ' .';
+    animation: dots 1s steps(5, end) infinite;}
+
+@keyframes dots {
+    0%, 20% {
+        color: rgba(0,0,0,0);
+        text-shadow:
+                .25em 0 0 rgba(0,0,0,0),
+                .5em 0 0 rgba(0,0,0,0);}
+    40% {
+        color: white;
+        text-shadow:
+                .25em 0 0 rgba(0,0,0,0),
+                .5em 0 0 rgba(0,0,0,0);}
+    60% {
+        text-shadow:
+                .25em 0 0 white,
+                .5em 0 0 rgba(0,0,0,0);}
+    80%, 100% {
+        text-shadow:
+                .25em 0 0 white,
+                .5em 0 0 white;}}
 /*Loader*/
 .loader{
     position: fixed;

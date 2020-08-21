@@ -77,6 +77,7 @@ $route['formbuilder/form/add'] = 'formbuilder/addForm';
 $route['formbuilder/form/update/(:any)'] = 'formbuilder/updateForm/$1';
 $route['formbuilder/form/element/get/(:any)'] = 'formbuilder/getFormElements/$1';
 $route['formbuilder/form/element/add'] = 'formbuilder/addFormElement';
+$route['formbuilder/form/element/update/(:any)'] = 'formbuilder/updateFormElement/$1';
 
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';

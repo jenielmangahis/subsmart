@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="col-xl-4 ui-state-default" id="report">
+<div class="col-xl-4 ui-state-default db-card" id="report">
     <div class="card">
         <div class="card-body">
             <h4 class="mt-0 header-title mb-4">Sales Report</h4>
