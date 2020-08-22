@@ -9967,9 +9967,6 @@ select#select-employee {
     width: auto;
     float: left;
   }
-  .cs-float {
-    float: right;
-  }
   .stcs-1, .stcs-print {
     margin-bottom: 13px;
   }
@@ -9980,6 +9977,9 @@ select#select-employee {
   }
 }
 @media (min-width: 1790px) {
+  .cs-float {
+    float: right;
+  }
   .stcs-3 {
     width: auto;
     float: left;
