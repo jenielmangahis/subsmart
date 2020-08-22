@@ -117,7 +117,6 @@ function styles_header($url){
 <!-- Page specific script -->
 <script>
   $(function () {
-
     /* initialize the external events
      -----------------------------------------------------------------*/
     function init_events(ele) {
