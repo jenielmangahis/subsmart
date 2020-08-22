@@ -266,6 +266,52 @@
   <?php echo form_close(); ?>
 </div>
 
+<!-- Modal Setup wepay Payment Method --> 
+<div class="modal fade" id="setupWePayModal" tabindex="-1" role="dialog" aria-labelledby="setupWePayModal" aria-hidden="true">
+  <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Setup WePay</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">        
+          <div class="row">
+              <div class="col-sm-12">
+                <p class="margin-bottom">Connect to WePay to start accepting payments.</p>
+                <p class="margin-bottom">By clicking Continue button you agree to <a href="https://go.wepay.com/terms-of-service" target="_blank">WePay Terms</a>.</p>
+                <a class="btn btn-primary" href="http://nsmartrac.com/settings/wepay_payment/connect?do=auth"> Connect to WePay</a>
+              </div>
+              
+              <div class="col-sm-12">
+                  <div style="background: #eaeaea; padding: 30px;">
+                      <img class="payment-logo" src="<?php echo $url->assets ?>img/wepay-logo.png">
+
+                      <div class="bold">Transaction Charges</div>
+                      <p class="margin-bottom">
+                          Online Transaction Fees: 2.9% + $0.30<br>
+                      </p>
+                      <div class="bold">Accepted Credit Cards</div>
+                      <p class="margin-bottom">
+                          All major cards are accepted.<br>
+                          Funds are deposited in your bank account in 1-2 business days.<br>
+                          Payment status will be updated in Markate automatically. <br>
+                      </p>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  <?php echo form_close(); ?>
+</div>
+
 <!-- Modal Setup Square Payment Method --> 
 <div class="modal fade" id="editTemplateModal" tabindex="-1" role="dialog" aria-labelledby="editTemplateModalTitle" aria-hidden="true">
   <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
