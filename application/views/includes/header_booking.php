@@ -84,7 +84,7 @@
 
 
                             <li class="dropdown notification-list list-inline-item ml-auto">
-                                <a class="nav-link dropdown-toggle arrow-none" href="<?php echo base_url('settings/tax_rates') ?>">
+                                <a class="nav-link dropdown-toggle arrow-none" href="<?php echo base_url('settings/email_templates') ?>">
                                     <i class="fa fa-cog" aria-hidden="true"></i>
                                 </a>
                             </li>
