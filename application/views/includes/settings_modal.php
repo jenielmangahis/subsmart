@@ -145,7 +145,7 @@
 
 <!-- Modal Setup Paypal Payment Method --> 
 <div class="modal fade" id="setupPaypalModal" tabindex="-1" role="dialog" aria-labelledby="setupPaypalModalTitle" aria-hidden="true">
-  <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+  <?php echo form_open_multipart('settings/update_online_payment_setting', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -164,7 +164,7 @@
                       <div class="form-group">
                           <label>Email Address</label>
                           <div class="help margin-bottom-sec">The email used on your PayPal account.</div>
-                          <input type="text" name="email" value="" class="form-control">
+                          <input type="text" name="email" value="<?php echo $setting['paypal_email']; ?>" class="form-control">
                       </div>
                       <div class="form-group">
                           <label>Re-type Email Address</label>
@@ -175,7 +175,7 @@
                           <div class="weight-medium">Active</div>
                           <div class="help margin-bottom-sec">Activate or disable this payment method.</div>
                           <div class="checkbox checkbox-sec no-margin">
-                              <input type="checkbox" name="active" value="1" id="payment_method_active">
+                              <input type="checkbox" name="active" value="1" <?= $setting['is_active'] == 1 ? 'checked="checked"' : ''; ?> id="payment_method_active">
                               <label for="payment_method_active"> Make active</label>
                           </div>
                       </div>
@@ -202,7 +202,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" name="action" value="paypal">Save</button>
         </div>
       </div>
     </div>

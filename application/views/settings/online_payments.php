@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">       
-                        
+                        <?php include viewPath('flash'); ?>
                         <div class="card">
                             <table class="table table-hover table-to-list fix-reponsive-table" data-id="work_orders">
                                 <thead>
@@ -33,12 +33,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <?php 
+                                            if( $setting['is_active'] == 1 ){
+                                                $is_active = 'YES';
+                                                $is_setup = 'YES';
+                                            }else{
+                                                $is_active = 'NO';
+                                                $is_setup = 'NOT SET';
+                                            }
+                                        ?>
                                         <td data-title="Payment Method">
                                             <img class="img-responsive" style="max-width: 200px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
                                             <div class="text-ter">Online Transaction Fees: as set by PayPal </div>
                                         </td>
-                                        <td data-title="Setup">Not set</td>
-                                        <td data-title="Active">Yes</td>
+                                        <td><?= $is_setup; ?></td>
+                                        <td><?= $is_active; ?></td>
                                         <td class="text-right" data-title="">
                                             <a class="btn btn-primary btn-md" href="#setupPaypalModal" data-toggle="modal" data-target="#setupPaypalModal">Setup</a>
                                         </td>
@@ -48,8 +57,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <img class="img-responsive" style="max-width: 200px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/square-payment.png">
                                             <div class="text-ter">Online Transaction Fees: as set by Square, Instant Deposit is available </div>
                                         </td>
-                                        <td data-title="Setup">Not set</td>
-                                        <td data-title="Active">Yes</td>
+                                        <td data-title="Setup">NOT SET</td>
+                                        <td data-title="Active">NO</td>
                                         <td class="text-right" data-title="">
                                             <a class="btn btn-primary btn-md" href="#setupSqaureModal" data-toggle="modal" data-target="#setupSqaureModal">Setup</a>
                                         </td>

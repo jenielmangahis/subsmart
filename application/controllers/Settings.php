@@ -136,6 +136,25 @@ class Settings extends MY_Controller {
 
     public function online_payments()
     {
+        $this->load->model('SettingOnlinePayment_model');
+
+        $user = $this->session->userdata('logged');
+
+        $settingOnlinePayment = $this->SettingOnlinePayment_model->findByUserId($user['id']);
+
+        if( $settingOnlinePayment ){
+            $setting = [
+                'paypal_email' => $settingOnlinePayment->paypal_email_address,
+                'is_active' => $settingOnlinePayment->paypal_is_active
+            ];
+        }else{
+            $setting = [
+                'paypal_email' => '',
+                'is_active' => 0
+            ];
+        }
+
+        $this->page_data['setting'] = $setting;
         $this->page_data['page']->menu = 'online_payments';
         $this->load->view('settings/online_payments', $this->page_data);
     }      	
@@ -375,7 +394,55 @@ class Settings extends MY_Controller {
                         
         }
 
-        redirect('settings/notifications');  
+        redirect('settings/notifications'); 
+
+    } 
+
+    public function update_online_payment_setting()
+    {
+        postAllowed();
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['email'] != $post['email_confirm'] ){
+            $this->session->set_flashdata('message', 'Paypal email not same. Please try again');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }else{
+            if( $post['active'] == 1 ){
+                $is_active = 1;
+            }else{
+                $is_active = 0;
+            }
+
+            $this->load->model('SettingOnlinePayment_model');
+
+            $settingOnlinePayment = $this->SettingOnlinePayment_model->findByUserId($user['id']);
+            if( $settingOnlinePayment ){
+                $data_setting = [                    
+                    'paypal_email_address' => $post['email'],
+                    'paypal_is_active' => $is_active,
+                    'updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->SettingOnlinePayment_model->update($settingOnlinePayment->id,$data_setting);
+            }else{
+                $data_setting = [ 
+                    'user_id' => $user['id'],                   
+                    'paypal_email_address' => $post['email'],
+                    'paypal_is_active' => $is_active,
+                    'created' => date("Y-m-d H:i:s")
+                ];
+
+                $settingOnlinePayment = $this->SettingOnlinePayment_model->create($data_setting);
+            }
+
+            $this->session->set_flashdata('message', 'Your online payment setting was updated');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+        }
+        
+        redirect('settings/online_payments');
+
     }
 	
 }
