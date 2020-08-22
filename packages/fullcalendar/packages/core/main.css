@@ -830,7 +830,7 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 }
 
 .fc-toolbar h2 {
-  font-size: 1.75em;
+  font-size: 21px !important;
   margin: 0;
 }
 
