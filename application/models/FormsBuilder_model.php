@@ -38,10 +38,16 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 
-	public function getFormElements($form_id = null){
+	public function getFormElements($form_id = null, $element_id = null){
 		$this->db->select("*");
 
 		if($form_id !== null){
+			if($element_id !== null){
+				$this->db->where('fe_id', $element_id);
+				$query =  $this->db->get($this->elements_table);
+				return $query->row();
+			}
+
 			$this->db->where('fe_form_id', $form_id);
 			$query =  $this->db->get($this->elements_table);
 			return $query->result();
@@ -58,9 +64,17 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 
-	public function updateFormElement($id, $data){
-		$this->db->where('fe_id', $id);
+	public function updateFormElement($element_id, $data){
+		$this->db->where('fe_id', $element_id);
 		$query = $this->db->update('fb_forms_elements', $data);
+		return array(
+			"status" => 1
+		);
+	}
+
+	public function deleteFormElement($element_id){
+		$this->db->where('fe_id', $element_id);
+		$query = $this->db->delete('fb_forms_elements');
 		return array(
 			"status" => 1
 		);

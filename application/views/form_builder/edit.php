@@ -20,6 +20,16 @@
   .form-user-elements-settings{
     display: none;
   }
+
+  .form-elements-settings-hover{
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    color: #FFFFFF;
+    border: 2px solid #555;
+  }
   
 </style>
 
@@ -441,6 +451,130 @@
                 </div>
               </div>
             </div>
+
+            
+            <div class="modal fade" id="modalElementSettings" data-backdroup="static">
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title">Edit Element</h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div id="modalElementSettingsContent" class="modal-body h-100">
+                    <ul class="nav nav-tabs">
+                      <li class="nav-item">
+                        <a href="#modal-element-settings-settings" class="nav-link active" data-toggle="tab">
+                          Settings
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#modal-element-settings-default-value" class="nav-link" data-toggle="tab">
+                          Default Value
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#modal-element-settings-rules" class="nav-link" data-toggle="tab">
+                          Rules
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#modal-element-settings-calculations" class="nav-link" data-toggle="tab">
+                          Calculations
+                        </a>
+                      </li>
+                    </ul>
+
+                    <div class="tab-content">
+                      <div id="modal-element-settings-settings" class="tab-pane fade show active">
+                        
+                        <div class="form-group">
+                          <label for="txtElementSettingsLabel" class="form-label">Field Label:</label>
+                          <input type="text" name="txtElementSettingsLabel" id="txtElementSettingsLabel" class="form-control">
+                        </div>
+
+                        <div class="row">
+                          <div class="col-xs-12 col-md-6">
+                            <h4>Text Field</h4>
+                            <hr/>
+
+                            <div class="form-group">
+                              <label for="txtElementSettingsLength">Length</label>
+                              <input type="text" name="txtElementSettingsLength" id="txtElementSEttingsLength" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                              <label for="txtElementSettingsPlaceholderText">Placeholder Text</label>
+                              <input type="text" name="txtElementSettingsPlaceholderText" id="txtElementSettingsPlaceholderText" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                              <label for="txtElementSettingsLength">Placeholder Text</label>
+                              <select name="txtElementSettingsValidation" id="txtElementSettingsValidation" class="custom-select">
+                                <option value="">None</option>
+                                <option value="">Text-only</option>
+                                <option value="">Number</option>
+                                <option value="">Alpha-Numeric</option>
+                                <option value="">CC Expiration Date</option>
+                                <option value="">URL</option>
+                                <option value="">Phone Number</option>
+                                <option value="">US Phone Number</option>
+                                <option value="">Currency</option>
+                                <option value="">Whole Number</option>
+                              </select>
+                            </div>
+
+
+                          </div>
+                          <div class="col-xs-12 col-md-6">
+                            <h4>Options</h4>
+                            <hr/>
+                            
+                            <div class="form-group form-check">
+                              <input type="checkbox" name="chkElementSettingsRequired" id="chkElementSettingsRequired" class="form-check-input">
+                              <label for="chkElementSettingsRequired">Required</label>
+                            </div>
+
+                            <!-- should add to database -->
+                            <div class="form-group form-check">
+                              <input type="checkbox" name="chkElementSettingsReadonly" id="chkElementSettingsReadonly" class="form-check-input">
+                              <label for="chkElementSettingsReadonly">Read-Only</label>
+                            </div>
+
+                            <h5>Question Position</h5> 
+                            <!-- should add to database -->
+                            <div class="form-check">
+                              <input type="radio" name="radElementSettingsQuestionPosition" id="radElementSettingsQuestionPositionTop" class="form-check-input">
+                              <label for="radElementSettingsQuestionPosition">Top</label>
+                            </div>
+                            <div class="form-check">
+                              <input type="radio" name="radElementSettingsQuestionPosition" id="radElementSettingsQuestionPositionLeft" class="form-check-input">
+                              <label for="radElementSettingsQuestionPosition">Left</label>
+                            </div>
+                            <div class="form-check">
+                              <input type="radio" name="radElementSettingsQuestionPosition" id="radElementSettingsQuestionPositionRight" class="form-check-input">
+                              <label for="radElementSettingsQuestionPosition">Right</label>
+                            </div>
+                            
+                          </div>
+                        </div>
+
+                      </div>
+                      <div id="modal-element-settings-default-value" class="tab-pane fade">
+                        default value
+                      </div>
+                      <div id="modal-element-settings-rules" class="tab-pane fade">
+                        rules
+                      </div>
+                      <div id="modal-element-settings-calculations" class="tab-pane fade">
+                        calculations
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
 
           <!-- FORM SETTINGS -->
@@ -703,13 +837,6 @@
 
     </div>
   </div>
-  <div class="modal" id="modalInputSettings">
-    <div class="modal-dialog">
-      <div class="modal-content">
-          asdf
-      </div>
-    </div>
-  </div>
 </div>
 
 <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
@@ -717,10 +844,10 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
 <script>
-  var formElements = document.getElementsByClassName('form-user-elements');
+  var formUserElements = document.getElementsByClassName('form-user-elements');
   let userFormData = {}
   let selectedElement = 0;
-  let selectedUserElement = 0;
+  let selectedUserElement = {};
   var operationsWindow = {
     showStartOptions: false,
     showEndOptions: false,
@@ -773,9 +900,13 @@
       success: function(res){
         res.data.forEach(el => {
           document.querySelector('#windowPreviewContent').innerHTML += `
-            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-3" onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)">
-              <div id="form-element-settings-${el.fe_id}" class="form-elements-hover-settings-${el.fe_id}" style="position: absolute; display: block">
-                test
+            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-3 px-2" onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)">
+              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                <div class="btn-group" style="margin-y: auto">
+                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})">Edit</button>
+                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})">Copy</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})">Delete</button>
+                </div>
               </div>
               <div class="form-group form-user-elements">
                 <div id="form-element-setting-${el.fe_id}" class="form-user-elements-settings position-absolute">
@@ -792,21 +923,94 @@
     })
   }
 
-  
-  testFunction = id => {
-    console.log("works!!")
+  toggleElementSettings = (elementId, value) => {
+    document.querySelector('#form-elements-settings-' + elementId).style.display = (value == 1)? "block" : "none"
   }
 
-  toggleElementSettings = (element_id, value) => {
-    console.log("show settings")
-    document.querySelector('.form-elements-hover-settings-' + element_id).style.display = (value == 1)? "block" : "none"
+  copyElement = elementId => {
+    
+    $.ajax({
+      url: `${formBaseUrl}formbuilder/form/element/get/<?= $form->forms_id?>/${elementId}`,
+      dataType: 'json',
+      type: 'GET',
+      success: function(res){
+        console.log(res.data)
+        let data = {
+        "fe_form_id": <?= $form->forms_id?>,
+        "fe_element_id": res.data.fe_element_id,
+        "fe_label": res.data.fe_label,
+        "fe_is_required": res.data.fe_is_required,
+        "fe_is_readonly": res.data.fe_is_readonly,
+        "fe_default_value": res.data.fe_default_value,
+        "fe_placeholder_text": res.data.fe_placeholder_text,
+        "fe_order": formUserElements.length + 1
+        }
+
+        $.ajax({
+          url: "<?= base_url()?>formbuilder/form/element/add",
+          data: data,
+          dataType: 'json',
+          type: 'POST',
+          success: function(res){
+            
+            loadFormSettings(<?= $form->forms_id?>);
+            loadFormElements(<?= $form->forms_id?>);
+            return;
+          }
+        })
+      }
+    })
+
+    
+  }
+
+  editElement = elementId => {
+    // opens up an interface of the element, allowing users
+    // to make changes to a single element
+
+    // document.querySelector('#modalElementSettings').classList.add('show');
+    $('#modalElementSettings').modal('show')
+    // document.querySelector('#modalElementSettingsContent').innerHTML = "Loading..."
+
+    $.ajax({
+      url: `${formBaseUrl}formbuilder/form/element/get/<?= $form->forms_id?>/${elementId}`,
+      dataType: 'json',
+      type: 'GET',
+      success: function(res){
+        selectedUserElement = res.data;
+      }
+    })
+
+    setTimeout(() => {
+      console.log(selectedUserElement)
+      // document.querySelector('#modalElementSettingsContent').innerHTML = "Settings go here"
+    }, 1000);
+    
+    
+  }
+
+  deleteElement = elementId => {
+    
+    $.ajax({
+      url: `${formBaseUrl}formbuilder/form/element/delete/${elementId}`,
+      dataType: 'json',
+      type: 'GET',
+      success: function(res){
+
+        
+        loadFormSettings(<?= $form->forms_id?>);
+        loadFormElements(<?= $form->forms_id?>);
+        return;
+        
+      }
+    })
   }
 
   
   loadFormSettings(<?= $form->forms_id?>);
   loadFormElements(<?= $form->forms_id?>);
   setTimeout(() => {
-    console.log(formElements.length)
+    console.log(formUserElements.length)
   }, 500);
 
   
@@ -901,7 +1105,7 @@
   });
 
   $('#windowPreviewContent').sortable({
-    placeholder: 'btn btn-success',
+    placeholder: 'col-xs-12 col-sm-3  bg-light card',
     update: function(event, ui){
       console.log(event)
       console.log(ui)
@@ -933,8 +1137,6 @@
     accept: '.form-elements-draggable',
     drop: function(event, ui){
       let elementOrder = $('#windowPreviewContent').sortable("toArray");
-      console.log(elementOrder);
-      console.log(event)
       let data = {
         "fe_form_id": <?= $form->forms_id?>,
         "fe_element_id": selectedElement,
@@ -943,6 +1145,7 @@
         "fe_is_readonly": false,
         "fe_default_value": null,
         "fe_placeholder_text": "choice",
+        "fe_order": formUserElements.length + 1
       }
       
       // insert switch case here

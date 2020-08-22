@@ -108,8 +108,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Lead Type </label> <a href="<?php echo url('customer/index/1') ?>" class="add_data"><span class="fa fa-plus"></span></a><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                    <select id="fk_lead_id" name="customer_types_id" data-customer-source="dropdown" class="form-control" placeholder="Select">
+                                                        <option value="">Select</option>
                                                         <?php foreach ($lead_types as $lt): ?>
                                                             <option value="<?= $lt->lead_id; ?>"><?= $lt->lead_name; ?></option>
                                                         <?php endforeach ?>
@@ -119,8 +119,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Sales Area</label><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                    <select id="fk_sa_id" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                        <option value="">Select</option>
                                                         <?php foreach ($sales_area as $sa): ?>
                                                             <option value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
                                                         <?php endforeach ?>
@@ -130,8 +130,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Sales Rep</label><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">- none -</option>
+                                                    <select id="fk_sr_id" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                        <option value="">Select</option>
                                                         <?php foreach ($users as $user): ?>
                                                             <option value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                                                         <?php endforeach ?>
@@ -178,75 +178,75 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">First Name</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="firstname" id="firstname" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Middle Initial</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="middle_initial" id="middle_initial" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Secondary (Maternal) Name</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="lastname" id="lastname" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Name Suffix</label><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">Select</option>
-                                                        <option value="0">DS</option>
-                                                        <option value="0">Esq.</option>
-                                                        <option value="0">II</option>
-                                                        <option value="0">III</option>
-                                                        <option value="0">IV</option>
-                                                        <option value="0">Jr.</option>
-                                                        <option value="0">MA</option>
-                                                        <option value="0">MBA</option>
-                                                        <option value="0">MD</option>
-                                                        <option value="0">MS</option>
-                                                        <option value="0">PhD</option>
-                                                        <option value="0">RN</option>
-                                                        <option value="0">Sr.</option>
+                                                    <select id="suffix" name="suffix" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                        <option value="">Select</option>
+                                                        <option value="DS">DS</option>
+                                                        <option value="Esq.">Esq.</option>
+                                                        <option value="II">II</option>
+                                                        <option value="III">III</option>
+                                                        <option value="IV">IV</option>
+                                                        <option value="Jr.">Jr.</option>
+                                                        <option value="MA">MA</option>
+                                                        <option value="MBA">MBA</option>
+                                                        <option value="MD">MD</option>
+                                                        <option value="MS">MS</option>
+                                                        <option value="PhD">PhD</option>
+                                                        <option value="RN">RN</option>
+                                                        <option value="Sr.">Sr.</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Number</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="st_number" id="st_number" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Direction</label><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">Select</option>
-                                                        <option value="0">North</option>
-                                                        <option value="0">East</option>
-                                                        <option value="0">South</option>
-                                                        <option value="0">West</option>
-                                                        <option value="0">North East</option>
-                                                        <option value="0">South East</option>
-                                                        <option value="0">North West</option>
-                                                        <option value="0">South West</option>
+                                                    <select id="st_direction" name="st_direction" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                        <option value="">Select</option>
+                                                        <option value="North">North</option>
+                                                        <option value="East">East</option>
+                                                        <option value="South">South</option>
+                                                        <option value="West">West</option>
+                                                        <option value="North East">North East</option>
+                                                        <option value="South East">South East</option>
+                                                        <option value="North West">North West</option>
+                                                        <option value="South West">South West</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Name</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="st_name" id="st_name" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Street Type</label><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value=""></option>
+                                                    <select id="st_type" name="st_type" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                        <option value="">Select</option>
                                                         <option value="ALLEY">ALLEY</option>
                                                         <option value="ARCH">ARCH</option>
                                                         <option value="BOULEVARD">BOULEVARD</option>
@@ -302,13 +302,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Apt/Ste/Space#</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="apt_ste_space" id="apt_ste_space" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">Condo Name</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="condo_name" id="condo_name" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -316,13 +316,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="">ZIP State City</label><br/>
                                                     <div class="row">
                                                         <div class="col-md-4">
-                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                            <input type="text" class="form-control" name="zip" id="zip" required/>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                            <input type="text" class="form-control" name="state" id="state" required/>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                            <input type="text" class="form-control" name="city" id="city" required/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -330,7 +330,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <div class="form-group" id="customer_type_group">
                                                     <label for="">County</label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                    <input type="text" class="form-control" name="county" id="county" required/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">

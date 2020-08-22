@@ -517,7 +517,12 @@ class Accounting extends MY_Controller {
 			'memo' => $this->input->post('memo'),
             'original_fname' => $this->input->post('original_fname')
         );
-        $this->expenses_model->addBill($new_data);
+       $query = $this->expenses_model->addBill($new_data);
+       if ($query == true){
+           echo json_encode(1);
+       }else{
+           echo json_encode(0);
+       }
 
     }
 
@@ -704,6 +709,8 @@ class Accounting extends MY_Controller {
     }
 
     public function addingFileAttachment(){
+        $transaction_id = $this->input->post('transaction_id');
+        $transaction_from_id = $this->input->post('trans_from_id');
         $file_id = $this->input->post('file_id');
         $id = $this->input->post('expenses_id');
         $type = $this->input->post('type');
@@ -714,6 +721,7 @@ class Accounting extends MY_Controller {
         $encryption = md5(time()).'.'.$extension;
         copy('./uploads/accounting/expenses/'.$file_name,'./uploads/accounting/expenses/'.$encryption);
         $data = array(
+            'transaction_id' => $transaction_id,
             'expenses_id' => $id,
             'type' => $type,
             'original_filename' => $original_fname,
@@ -722,9 +730,13 @@ class Accounting extends MY_Controller {
             'status' => 1
         );
         $this->db->insert('accounting_expense_attachment',$data);
+        $new_attachment_id = $this->db->insert_id();
 
         $added = array(
-            'attachment_id' => $get_attachment_id->row()->id,
+            'attachment_id' => $new_attachment_id,
+            'attachment_from_id' => $get_attachment_id->row()->id,
+            'trans_from_id' => $transaction_from_id,
+            'expenses_type' => $type,
             'expenses_id' => $id,
             'date_created' => date('Y-m-d H:i:s')
         );
@@ -732,28 +744,37 @@ class Accounting extends MY_Controller {
         echo json_encode($id);
     }
 
-    public function showExistingFile(){
-        $id = $this->input->get('expenses_id');
-        $type = $this->input->get('type');
-        $file_id = $this->input->get('file_id');
+    public function deleteTemporaryAttachment(){
         $attachments = $this->expenses_model->getAttachment();
-        $added = $this->expenses_model->getAddedAttachment();
-        $status = 'Add';
+        $result = null;
+        foreach ($attachments as $attachment){
+            if ($attachment->transaction_id == 0){
+                unlink( $this->expenses_path.$attachment->attachment);
+            }
+        }
+        $this->db->where('transaction_id',0);
+        $this->db->delete('accounting_expense_attachment');
+        echo json_encode($result);
+    }
+
+    public function showExistingFile(){
+        $expense_id = $this->input->get('expenses_id');
+        $type = $this->input->get('type');
+        $transaction_id = $this->input->get('transaction_id');
+        $attachments = $this->expenses_model->getAttachmentById($transaction_id);
         $disabled = null;
         $display = '';
         foreach ($attachments as $attachment){
-            if ($attachment->expenses_id != $id){
-                if ($added != null){
-                    foreach ($added as $attach_list){
-                        if ($attach_list->attachment_id == $attachment->id && $attach_list->expenses_id == $id){
-                            $status = 'Added';
-                            $disabled = 'isDisabled';
-                        }else{
-                            $status = 'Add';
-                            $disabled = null;
-                        }
-                    }
+                $added = $this->expenses_model->getAddedAttachment($attachment->id,$expense_id,$type);
+                if ($added == true){
+                    $status = 'Added';
+                    $disabled = 'isDisabled';
+                }else{
+                    $status = 'Add';
+                    $disabled = null;
                 }
+
+
                 $preview = "";
                 if($type == 'Check'){
                     $preview = "-check";
@@ -800,9 +821,12 @@ class Accounting extends MY_Controller {
                 $display .= '<img src="/uploads/accounting/expenses/'.$file.'" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">';
                 $display .= '<input type="hidden" id="attachmentType" value="'.$type.'">';
                 $display .= '<input type="hidden" id="attachmentTypePreview" value="'.$preview.'">';
+                $display .= '<input type="hidden" id="attachmentTransId" value="'.$transaction_id.'">';
+                $display .= '<input type="hidden" id="attachTransFromId" value="'.$attachment->transaction_id.'">';
+                $display .= '<input type="hidden" id="attachmentExpensesId" value="'.$expense_id.'">';
                 $display .= '<a href="#" class="'.$disabled.'" id="addingFileAttachment" data-id="'.$attachment->id.'" data-fname="'.$attachment->original_filename.'" >'.$status.'</a>';
                 $display .= '</div>';
-            }
+                $display .= '<hr>';
         }
 
         echo json_encode($display);
@@ -1026,7 +1050,12 @@ class Accounting extends MY_Controller {
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
-        $this->expenses_model->addCheck($new_data);
+        $query = $this->expenses_model->addCheck($new_data);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
 
     public function editCheckData(){
@@ -1049,7 +1078,12 @@ class Accounting extends MY_Controller {
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
-        $this->expenses_model->editCheckData($update);
+        $query = $this->expenses_model->editCheckData($update);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
     public function deleteCheckData(){
 
@@ -1073,7 +1107,12 @@ class Accounting extends MY_Controller {
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
-        $this->expenses_model->addExpense($new_data);
+        $query = $this->expenses_model->addExpense($new_data);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
     public function getExpenseData(){
         $id = $this->input->get('id');
@@ -1118,7 +1157,12 @@ class Accounting extends MY_Controller {
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
-        $this->expenses_model->updateExpenseData($update);
+        $query = $this->expenses_model->updateExpenseData($update);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
 
     public function deleteExpenseData(){
@@ -1141,7 +1185,12 @@ class Accounting extends MY_Controller {
             'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
-        $this->expenses_model->vendorCredit($new_data);
+        $query = $this->expenses_model->vendorCredit($new_data);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
     public function getVendorCredit(){
         $id = $this->input->get('id');
@@ -1192,6 +1241,197 @@ class Accounting extends MY_Controller {
     public function deleteVendorCredit(){
         $id = $this->input->post('id');
         $this->expenses_model->deleteVendorCredit($id);
+    }
+
+    public function showExpenseTransactionsTable(){
+        $vendors = $this->vendors_model->getVendors();
+        $checks = $this->expenses_model->getCheck();
+        $transactions = $this->expenses_model->getTransaction();
+        $bills = $this->expenses_model->getBill();
+        $vendor_credits = $this->expenses_model->getVendorCredit();
+        $expenses = $this->expenses_model->getExpense();
+        $list_categories = $this->categories_model->getCategories();
+        $date = null;
+        $type = null;
+        $number = null;
+        $vendors_name = null;
+        $category = null;
+        $description = null;
+        $total = null;
+        $category_id = null;
+        $modal = null;
+        $modal_id = null;
+        $data_id = null;
+        $delete = null;
+        $category_list_id = null;
+        $transaction_id = null;
+        $show = '';
+        foreach ($transactions as $transaction):
+            if ($transaction->type == 'Check'){
+                // Check
+                foreach ($checks as $check){
+                    if ($transaction->id == $check->transaction_id){
+                        $date = date("m/d/y",strtotime($transaction->date_created));
+                        $type = $transaction->type;
+                        $number = $check->check_number;
+                        $modal_id = "editCheck";
+                        $data_id = $check->id;
+                        $transaction_id = $check->transaction_id;
+                        foreach ($vendors as $vendor){
+                            if ($vendor->vendor_id == $check->vendor_id){
+                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $delete = 'deleteCheck';
+                            }
+                        }
+                        $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $check->transaction_id));
+                        $check_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        foreach ($list_categories as $list){
+                            if ($list->id == $check_category_id){
+                                $category_list_id = $list->id;
+                                $category = $list->category_name;
+                                $category_id = $get_category->row()->id;
+                            }
+                        }
+
+                    }
+                }
+            }elseif ($transaction->type == 'Bill'){
+//                                            Bill
+                foreach ($bills as $bill){
+                    if ($transaction->id == $bill->transaction_id){
+                        $date = date("m/d/y",strtotime($transaction->date_created));
+                        $type = $transaction->type;
+                        $number = null;
+                        $modal_id = "editBill";
+                        $transaction_id = $bill->transaction_id;
+                        foreach ($vendors as $vendor){
+                            if ($vendor->vendor_id == $bill->vendor_id){
+                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $data_id = $bill->id;
+                                $delete = 'deleteBill';
+                            }
+                        }
+                        $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $bill->transaction_id));
+                        $bill_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        foreach ($list_categories as $list){
+                            if ($list->id == $bill_category_id){
+                                $category_list_id = $list->id;
+                                $category = $list->category_name;
+                                $category_id = $get_category->row()->id;
+                            }
+                        }
+
+                    }
+                }
+            }elseif ($transaction->type == 'Expense'){
+//                                            Expense
+                foreach ($expenses as $expense){
+                    if ($transaction->id == $expense->transaction_id){
+                        $date = date("m/d/y",strtotime($transaction->date_created));
+                        $type = $transaction->type;
+                        $number = null;
+                        $modal_id = "editExpense";
+                        $transaction_id = $expense->transaction_id;
+                        foreach ($vendors as $vendor){
+                            if ($vendor->vendor_id == $expense->vendor_id){
+                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $data_id = $expense->id;
+                                $delete = 'deleteExpense';
+                            }
+                        }
+                        $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $expense->transaction_id));
+                        $expense_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        foreach ($list_categories as $list){
+                            if ($list->id == $expense_category_id){
+                                $category_list_id = $list->id;
+                                $category = $list->category_name;
+                                $category_id = $get_category->row()->id;
+                            }
+                        }
+
+
+                    }
+                }
+            }elseif ($transaction->type == 'Vendor Credit'){
+//                                            Vendor Credit
+                foreach ($vendor_credits as $vendor_credit){
+                    if ($transaction->id == $vendor_credit->transaction_id){
+                        $date = date("m/d/y",strtotime($transaction->date_created));
+                        $type = $transaction->type;
+                        $payee = $vendor_credit->vendor_id;
+                        $number = null;
+                        $modal_id = "editVendorCredit";
+                        $transaction_id = $vendor_credit->transaction_id;
+                        foreach ($vendors as $vendor){
+                            if ($vendor->vendor_id == $vendor_credit->vendor_id){
+                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $data_id = $vendor_credit->id;
+                                $delete = 'deleteVendorCredit';
+                            }
+                        }
+                        $get_category = $this->db->get_where('accounting_expense_category',array('transaction_id' => $vendor_credit->transaction_id));
+                        $vc_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        foreach ($list_categories as $list){
+                            if ($list->id == $vc_category_id){
+                                $category_list_id = $list->id;
+                                $category = $list->category_name;
+                                $category_id = $get_category->row()->id;
+                            }
+                        }
+                    }
+                }
+            }
+        $show .= '<tr style="cursor: pointer;">';
+        $show .= '<td><input type="checkbox"></td>';
+        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$date.'</td>';
+        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$type.'</td>';
+        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$number.'</td>';
+        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$vendors_name.'</td>';
+        $show .= '<td>';
+        $show .= '<div style="display: inline-block;position: relative;width: 100%">';
+        $show .= '<select name="category" id="expenseTransCategory" data-category="" data-id="'.$category_id.'" class="form-control select2-tbl-category">';
+        $show .= '<option value="'.$category_list_id.'" selected>'.$category.'</option>';
+            foreach ($list_categories as $list):
+                if ($list->category_name != $category):
+                    $show .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+                endif;
+            endforeach;
+        $show .= '</select>';
+        $show .= '</div>';
+        $show .= '<i class="fa fa-spinner fa-pulse" style="display: none;position: relative;"></i>';
+        $show .= '</td>';
+        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$transaction->total.'</td>';
+        $show .= '<td style="text-align: right;">';
+        $show .= '<a href="#" id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>';
+        $show .= '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
+        $show .= '<span class="fa fa-caret-down" data-toggle="dropdown"></span>';
+        $show .= '<ul class="dropdown-menu dropdown-menu-right">';
+        $show .= '<li><a href="#" id="copy">Copy</a></li>';
+        $show .= '<li id="'.$delete.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">';
+        $show .= '<a href="#" >Delete</a>';
+        $show .= '</li>';
+        $show .= '<li><a href="#">Void</a></li>';
+        $show .= '</ul>';
+        $show .= '</div>';
+        $show .= '</td>';
+        $show .= '</tr>';
+
+            $date = null;
+            $type = null;
+            $number = null;
+            $vendors_name = null;
+            $category = null;
+            $description = null;
+            $total = null;
+            $category_id = null;
+            $modal = null;
+            $modal_id = null;
+            $data_id = null;
+            $delete = null;
+            $category_list_id = null;
+            $transaction_id = null;
+        endforeach;
+        echo json_encode($show);
     }
 
     /***Add category ***/

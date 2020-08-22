@@ -1729,6 +1729,40 @@ button:focus {
 }
 
 @media (max-width: 767px) {
+    .smart__grid {
+      height: auto !important;
+    }
+    .btn-mobile {
+      margin-top: 20px;
+    }
+    ul.ul-mobile li {
+      width: 50%;
+      float: left;
+      padding: 0px;
+      min-height: 50px;
+    }
+    .sc-2 {
+        position: relative;
+        bottom: 12px;
+    }
+    .mb-fix-list {
+      display: block;
+      padding-top: 20px;
+      text-align: left;
+    }
+    .container-fluid {
+      padding-top: 15px;
+    }
+    body .card_holder .page-title {
+      padding-top: 20px;
+      margin-top: 10px;
+    }
+    div#myTabContent {
+      padding-bottom: 40px !important;
+    }
+    .smart__grid > div {
+      height: 115px;
+    }
     .marketing-card-deck a {
       padding-top: 20px !important;
     }

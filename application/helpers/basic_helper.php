@@ -987,6 +987,41 @@ if (!function_exists('searchFilesOrFolders')) {
 
 }
 
+if (!function_exists('getTasks')){
+
+    function getTasks($keyword = "", $status_id = "", $from_date = "", $to_date = ""){
+        $CI = &get_instance();
+        $uid = logged('id');
+
+        $tasks = $CI->db->query(
+            'select ' .
+            'a.*, '.
+            'b.status_text, '.
+            'if(ISNULL(c.task_id),"no","yes") as `is_participant` '.
+            'from tasks a '.
+            'left join tasks_status b on b.status_id = a.status_id '.
+            'left join('.
+                'select '.
+
+                'task_id, '.
+                'user_id '.
+
+                'from tasks_participants '.
+
+                'where user_id = '. $uid . 
+            ') c on c.task_id = a.task_id '.
+            'where a.created_by = ' . $uid . ' ' .
+               'or not ISNULL(c.task_id) '.
+
+            'group by a.task_id '.
+            'order by a.date_created DESC'
+        )->result();
+
+        return $tasks;
+    }
+
+}
+
 if (!function_exists('getNewTasks')){
 
     function getNewTasks(){

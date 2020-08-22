@@ -19,10 +19,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                    <?php ////if (hasPermissions('add_plan')): ?>
+                                    <a href="#" class="btn btn-primary" id="btn-th-open-search"><i class="fa fa-search"></i> Search Task</a>
                                     <a href="<?php echo base_url('taskhub/entry'); ?>" class="btn btn-primary"><i
                                                 class="fa fa-plus"></i> Add Task</a>
-
                                 </div>
                             </div>
                         </div>
@@ -87,10 +86,63 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
 </div>
 
+<div id="modal-taskhub-search" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h4 class="modal-title">Search Tasks</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-md-7 form-group">
+              <label for="ts-keyword">Keyword<small> Filter tasks with a keyword</small></label>
+              <input type="text" class="form-control" name="ts-keyword" id="ts-keyword" placeholder="Enter Keyword" required autofocus />
+            </div>
+            <div class="col-md-5 form-group">
+              <label for="ts-status">Status<small> Select status to filter tasks</small></label>
+              <select class="form-control" name="ts-status" id="ts-status">
+                <option value="">Select Status...</option>
+
+                <?php foreach ($status_selection as $status) { ?>
+                    <option value="<?php echo $status->status_id; ?>"><?php echo $status->status_text; ?></option>
+                <?php } ?>
+              </select>
+            </div>  
+        </div>
+        <h6 class="mt-1">Filter By Date Created</h6>
+        <div class="row mt-4">
+            <div class="col-md-6 form-group">
+                <label for="ts-from-date">From</label>
+                <input type="date" class="form-control" name="ts-from-date" id="ts-from-date" required autofocus />
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="ts-to-date">To</label>
+                <input type="date" class="form-control" name="ts-to-date" id="ts-to-date" required autofocus />
+            </div>    
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="btn-modal-taskhub-search">Search</button>
+      </div>
+    </div>  
+  </div>
+</div>
+
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $('#dataTable1').DataTable({
-    	"order": []
+    $(document).ready(function(){
+        $('#btn-th-open-search').click(function(e){
+            e.preventDefault();
+
+            $('#modal-taskhub-search').modal('show');    
+        });
+
+        $('#dataTable1').DataTable({
+        	"order": []
+        });
     });
 </script>

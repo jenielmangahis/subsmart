@@ -182,6 +182,7 @@ $(document).ready(function () {
                         total = total.toFixed(2);
                     }else {
                         $('#total-amount'+preview).text(total.toFixed(2));
+                        $('#h1_amount'+preview).text('$'+total.toFixed(2));
                     }
                 }
             });
@@ -217,12 +218,25 @@ $(document).ready(function () {
                         total = total.toFixed(2);
                     }else{
                         $('#total-amount'+preview).text(total);
+                        $('#h1_amount'+preview).text('$'+total.toFixed(2));
                     }
 
                 }
             });
         }
 
+    }
+
+    function deleteTemporaryAttachment() {
+        $.ajax({
+            url:"/accounting/deleteTemporaryAttachment",
+            method:"POST",
+            dataType:"json",
+            success:function (data) {
+                $('#billAttachment').next().next($('.dz-preview').remove());
+                $('#billAttachment').next($('.dz-message').css({"display":"inherit"}));
+            }
+        });
     }
 
     function displayAttachments(id,type,container) {
@@ -235,6 +249,21 @@ $(document).ready(function () {
                 $('#file-list'+container).html(data);
             }
 
+        });
+    }
+    function showExpenseTransactionsTable() {
+        $.ajax({
+            url:"/accounting/showExpenseTransactionsTable",
+            method:"GET",
+            dataType:"json",
+            success:function (data) {
+                $('.expense-transactions-data-table').html(data);
+                $('.select2-tbl-category').select2({
+                    placeholder: 'Select a category',
+                    allowClear: true
+                });
+                console.log(data);
+            }
         });
     }
 
@@ -302,6 +331,7 @@ $(document).ready(function () {
             url:siteURL + $('#addEditCheckmodal').attr('action'),
             type:"POST",
             cache: false,
+            dataType:"json",
             data:{
                 vendor_id:vendor_id,
                 bank_account:bank_account,
@@ -316,25 +346,36 @@ $(document).ready(function () {
                 amount:amount,
                 total:total,
                 filename:check_filename,
-                original_fname:original_fname_check,
-				total:total,
-                memo:memo
+                original_fname:original_fname_check
             },
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "New check has been created!",
-                        icon: 'success'
-                    }
-                );
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "New check has been updated!",
+                            icon: 'success'
+                        });
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        });
+                }
+                showExpenseTransactionsTable();
                 $('#checkAttachment').next().next($('.dz-preview').remove());
                 $('#checkAttachment').next($('.dz-message').css({"display":"inherit"}));
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -425,6 +466,8 @@ $(document).ready(function () {
                         $(".loader").fadeOut('fast',function(){
                             $('.loader').hide();
                         });
+                        attachment = null;
+                        attachment_id = [];
                     }
                 });
                 }else{
@@ -435,6 +478,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             }
         });
@@ -465,6 +510,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             });
             }else{
@@ -475,6 +522,8 @@ $(document).ready(function () {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
+                attachment = null;
+                attachment_id = [];
             }
         }
     });
@@ -501,6 +550,7 @@ $(document).ready(function () {
             url:$('#addEditCheckmodal').attr('action'),
             type:"POST",
             cache: false,
+            dataType:"json",
             data:{
                 check_id:check_id,
                 transaction_id:transaction_id,
@@ -520,23 +570,37 @@ $(document).ready(function () {
                 filename:check_filename,
                 original_fname:original_fname_check
             },
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "Check expense has been updated!",
-                        icon: 'success'
-                    }
-                );
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "Check expense has been updated!",
+                            icon: 'success'
+                        });
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        });
+                }
+                showExpenseTransactionsTable();
                 $('#checkAttachment').next().next($('.dz-preview').remove());
                 $('#checkAttachment').next($('.dz-message').css({"display":"inherit"}));
                 $('#checkID').removeClass('expenses-ID-'+transaction_id);
                 $('#checkType').removeClass('expenseType-'+transaction_id);
+                attachment = null;
+                attachment_id = [];
+                showExpenseTransactionsTable();
             }
         });
     });
@@ -727,6 +791,8 @@ $(document).ready(function () {
                         $(".loader").fadeOut('fast',function(){
                             $('.loader').hide();
                         });
+                        attachment = null;
+                        attachment_id = [];
                     }
                 });
                 }else{
@@ -737,6 +803,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             }
         });
@@ -767,6 +835,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             });
             }else{
@@ -777,6 +847,8 @@ $(document).ready(function () {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
+                attachment = null;
+                attachment_id = [];
             }
         }
 
@@ -801,6 +873,7 @@ $(document).ready(function () {
         $.ajax({
             url:siteURL + $('#billForm').attr('action'),
             type:"POST",
+            dataType:"json",
             data:{
                 vendor_id:vendor_id,
                 mailing_address:mailing_address,
@@ -815,28 +888,39 @@ $(document).ready(function () {
                 amount:amount,
                 total:total,
                 filename:bill_filename,
-                original_fname:original_fname_bill,
-				total:total,
-                memo:memo
+                original_fname:original_fname_bill
             },
             cache:false,
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "Bill expense has been added!",
-                        icon: 'success'
-                    }
-                );
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "Bill expense has been added!",
+                            icon: 'success'
+                        }
+                    );
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        }
+                    );
+                }
+                showExpenseTransactionsTable();
                 $('#billAttachment').next().next($('.dz-preview').remove());
                 $('#billAttachment').next($('.dz-message').css({"display":"inherit"}));
-                $('#billID').removeClass('expenses-ID-'+transaction_id);
-                $('#billType').removeClass('expenseType-'+transaction_id);
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -882,20 +966,36 @@ $(document).ready(function () {
                 filename:bill_filename,
                 original_fname:original_fname_bill
             },
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "Bill expense has been updated!",
-                        icon: 'success'
-                    });
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "Bill expense has been updated!",
+                            icon: 'success'
+                        });
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        });
+                }
+                showExpenseTransactionsTable();
                 $('#billAttachment').next().next($('.dz-preview').remove());
                 $('#billAttachment').next($('.dz-message').css({"display":"inherit"}));
+                $('#billID').removeClass('expenses-ID-'+transaction_id);
+                $('#billType').removeClass('expenseType-'+transaction_id);
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -1035,20 +1135,34 @@ $(document).ready(function () {
                 filename:expense_filename,
                 original_fname:original_fname_expense
             },
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "New expense has been added!",
-                        icon: 'success'
-                    });
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "New expense has been added!",
+                            icon: 'success'
+                        });
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        });
+                }
+                showExpenseTransactionsTable();
                 $('#expenseAttachment').next().next($('.dz-preview').remove());
                 $('#expenseAttachment').next($('.dz-message').css({"display":"inherit"}));
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -1137,6 +1251,8 @@ $(document).ready(function () {
                         $(".loader").fadeOut('fast',function(){
                             $('.loader').hide();
                         });
+                        attachment = null;
+                        attachment_id = [];
                     }
                 });
                 }else{
@@ -1147,6 +1263,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             }
         });
@@ -1177,6 +1295,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             });
             }else{
@@ -1187,6 +1307,8 @@ $(document).ready(function () {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
+                attachment = null;
+                attachment_id = [];
             }
         }
 
@@ -1232,22 +1354,36 @@ $(document).ready(function () {
                 filename:expense_filename,
                 original_fname:original_fname_expense
             },
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "Expense has been updated!",
-                        icon: 'success'
-                    });
+                if (data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "Expense has been updated!",
+                            icon: 'success'
+                        });
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        });
+                }
+                showExpenseTransactionsTable();
                 $('#expenseAttachment').next().next($('.dz-preview').remove());
                 $('#expenseAttachment').next($('.dz-message').css({"display":"inherit"}));
                 $('#expenseId').removeClass('expenses-ID-'+transaction_id);
                 $('#exType').removeClass('expenseType-'+transaction_id);
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -1284,6 +1420,7 @@ $(document).ready(function () {
                             text: "Expense has been deleted!",
                             icon: 'success'
                         });
+
                 }
             });
         }
@@ -1385,20 +1522,34 @@ $(document).ready(function () {
                 filename:vc_filename,
                 original_fname:original_fname_vc
             },
-            success:function () {
+            success:function (data) {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
-                Swal.fire(
-                    {
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Success',
-                        text: "Vendor Credit has been added!",
-                        icon: 'success'
-                    });
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "Vendor Credit has been added!",
+                            icon: 'success'
+                        });
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        });
+                }
+                showExpenseTransactionsTable();
                 $('#vcAttachment').next().next($('.dz-preview').remove());
                 $('#vcAttachment').next($('.dz-message').css({"display":"inherit"}));
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -1455,6 +1606,7 @@ $(document).ready(function () {
         vc_updated = $(this).serialize();
     });
     $(document).on('click','#closeModalVC',function () {
+        deleteTemporaryAttachment();
         if(vc_original != vc_updated){
             Swal.fire({
                 title: 'Are you sure?',
@@ -1484,6 +1636,8 @@ $(document).ready(function () {
                         $(".loader").fadeOut('fast',function(){
                             $('.loader').hide();
                         });
+                        attachment = null;
+                        attachment_id = [];
                         }
                     });
                 }else{
@@ -1494,6 +1648,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
                 }
             });
@@ -1524,6 +1680,8 @@ $(document).ready(function () {
                     $(".loader").fadeOut('fast',function(){
                         $('.loader').hide();
                     });
+                    attachment = null;
+                    attachment_id = [];
                 }
             });
             }else{
@@ -1535,6 +1693,8 @@ $(document).ready(function () {
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
+                attachment = null;
+                attachment_id = [];
             }
         }
 
@@ -1578,7 +1738,9 @@ $(document).ready(function () {
             },
             success:function (data) {
                 console.log(data);
-                $('.loader').hide();
+                $(".loader").fadeOut('fast',function(){
+                    $('.loader').hide();
+                });
                 if (data == 1){
                     Swal.fire(
                         {
@@ -1598,11 +1760,13 @@ $(document).ready(function () {
                             icon: 'warning'
                         });
                 }
-
+                showExpenseTransactionsTable();
                 $('#vcAttachment').next().next($('.dz-preview').remove());
                 $('#vcAttachment').next($('.dz-message').css({"display":"inherit"}));
                 $('#vcType').removeClass('expenseType-'+transaction_id);
                 $('#vendorCreditId').removeClass('expenses-ID-'+transaction_id);
+                attachment = null;
+                attachment_id = [];
             }
         });
     });
@@ -1643,7 +1807,6 @@ $(document).ready(function () {
     });
 
     //Vendor credit modal Dropzone
-    var vcDropzone;
     $(document).ready(function () {
         var fname = [];
         var selected = [];
@@ -1714,26 +1877,24 @@ $(document).ready(function () {
         var transaction_id = $(e.target).closest('.modal-body').find('.transaction_id').val();
         var expenses_id = $('.expenses-ID-'+transaction_id).val();
         var type =  $('.expenseType-'+transaction_id).val();
+        console.log(transaction_id);
         $.ajax({
             url:"/accounting/showExistingFile",
             method:"GET",
             dataType:"json",
-            data:{expenses_id:expenses_id,type:type},
+            data:{expenses_id:expenses_id,type:type,transaction_id:transaction_id},
             success:function (data) {
                 $('.modal-existing-file-container').html(data);
             }
         });
     });
-
-    $(document).on('click','#addingFileAttachment',function () {
-        var expenses_id = $('#vendorCreditId').val();
-        var check = $('.expenseType').attr('data-id');
-        var transaction_id = $('.transaction_id').val();
-        var type = null;
-        if (check == transaction_id){
-            type = $('.expenseType').val();
-        }
-        var preview = $('#attachmentTypePreview').val();
+//Adding Existing file
+    $(document).on('click','#addingFileAttachment',function (e) {
+        var transaction_id = $(e.target).closest('.modal-content').find('#attachmentTransId').val();
+        var trans_from_id = $(e.target).closest('.modal-content').find('#attachTransFromId').val();
+        var expenses_id = $(e.target).closest('.modal-content').find('#attachmentExpensesId').val();
+        var type = $(e.target).closest('.modal-content').find('#attachmentType').val();
+        var preview = $(e.target).closest('.modal-content').find('#attachmentTypePreview').val();
         var original_fname = $(this).attr('data-fname');
         var file_id = $(this).attr('data-id');
         $(this).text('Added');
@@ -1742,7 +1903,7 @@ $(document).ready(function () {
             url:"/accounting/addingFileAttachment",
             type:"POST",
             cache:false,
-            data:{file_id:file_id,expenses_id:expenses_id,type:type,original_fname:original_fname},
+            data:{file_id:file_id,expenses_id:expenses_id,transaction_id:transaction_id,trans_from_id:trans_from_id,type:type,original_fname:original_fname},
             success:function () {
                 displayAttachments(expenses_id,type,preview);
             }
@@ -1750,79 +1911,6 @@ $(document).ready(function () {
     });
 
 });
-
- // Time Activity modal
-    $(document).on('click','#addTimeActivity',function () {
-        $('.loader').show();
-        $('#timeActivityForm').attr('action',"accounting/timeActivity");
-        $('#timeActivityForm')[0].reset();
-        $('#timeActivityForm input[name="name"]').val();
-        $('#timeActivityForm input[name="customer"]').val();
-        $('#timeActivityForm input[name="date"]').val();
-        $('#timeActivityForm input[name="taxable"]').val();
-        $('#timeActivityForm input[name="time"]').val();
-        $('#timeActivityForm input[name="start_time"]').val();
-        $('#timeActivityForm input[name="end_time"]').val();
-        $('#timeActivityForm input[name="break"]').val();
-        $('#timeActivityForm textarea[name="description"]').val();
-        $('.loader').hide();
-    });
-    // Add Time Activity
-	$("#timeActivityForm").submit(function(e){
-		e.preventDefault();
-        $('.loader').show();
-        var vendor_id = $('#timeActivityForm input[name="vendor_id"]').val();
-        var name = $('#timeActivityForm input[name="name"]').val();
-        var customer = $('#timeActivityForm input[name="customer"]').val();
-        var date = $('#timeActivityForm input[name="date"]').val();
-        var taxable = $('#timeActivityForm input[name="taxable"]').val();
-        var time = $('#timeActivityForm input[name="time"]').val();
-        var start_time = $('#timeActivityForm input[name="start_time"]').val();
-        var end_time = $('#timeActivityForm input[name="end_time"]').val();
-        var breakTime = $('#timeActivityForm input[name="break"]').val();
-        var description = $('#timeActivityForm textarea[name="description"]').val();
-        var service = $('#timeActivityForm select[name="service"]').val();
-        var billable = $('#timeActivityForm #billable').val();
-		
-        $.ajax({
-            url:siteURL + "accounting/timeActivity",
-            type:"POST",
-            cache:false,
-            data:{
-                vendor_id:vendor_id,
-                name:name,
-                customer:customer,
-                date:date,
-                billable:billable,
-                taxable:taxable,
-                time:time,
-                start_time:start_time,
-                end_time:end_time,
-                breakTime:breakTime,
-                description:description,
-                service:service
-            },
-            success:function (data) {
-				if(data == 1){
-					$('#timeActivity-modal').modal("hide");
-					$('.loader').hide();
-					Swal.fire(
-						{
-							showConfirmButton: false,
-							timer: 2000,
-							title: 'Success',
-							text: "New time activity has been created!",
-							icon: 'success'
-						}
-					);
-					
-					setTimeout(function(){ window.location.reload(); }, 2000);
-				}
-            }
-        });
-		
-	});
-    
 
 
 //Add expense categories

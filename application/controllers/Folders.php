@@ -200,11 +200,13 @@ class Folders extends MY_Controller {
 			$description = '';
 			$path = '';
 
-			$record = $this->db->query('select count(*) as `existing` from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id)->row();
-			$record = $record->existing;
+			$record = $this->db->query('select count(*) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id)->row();
 
-			if($record > 0){
+			if($record->existing > 0){
 				$return['error'] = 'Folder already exists';
+				if(!empty($record->category_id)){
+					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+				}
 			} else {
 				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
 				if($parent_folder->num_rows() > 0){

@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                         <div class="btn-group">
                                                             <a href="#" class="btn-main">Reset</a>
-                                                            <a href="#" id="apply-btn" class="btn-main apply-btn">Apply</a>
+                                                            <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applybtn()">Apply</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -271,9 +271,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 echo "<input id='ending_date' type='hidden' value='".$row->ending_date."'/>";
                               }
                              ?>
-                             <!-- Table Dropdown -->
-                    <div class="table-drop-wrp">
-                        <div class="container-fluid">
+                             <div class="row" id="filtername" style="margin-bottom: 20px">
+                                 
+                             </div>
                             <table id="reconcile_table" class="table table-striped table-bordered accordion" style="width:100%;cursor: pointer;">
                                 <thead>
                                 <tr>
@@ -390,11 +390,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                ?>
                                 </tbody>
                             </table>
-                            
                             <div id="textContent"></div>
-                        </div>
-                    </div>
-                    <!-- End Table Dropdown -->
                         </div>
                     </div>
                     <!-- end card -->
@@ -432,11 +428,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         table.search( this.value ).draw();
     } );*/
 
-    $('#apply-btn').on( 'click', function () {
+    //$('#apply-btn').on( 'click', function () {
+    function applybtn(){
+        var filtername = document.getElementById('filtername').innerHTML;
         var find = $('#find').val();
         if(find!='')
         {
             table.search( find ).draw();
+            if(filtername.includes("findtag")  == false)
+            {
+            var findtag ="<button type='button' id='findTag' class='btn btn-info' onclick='removeTag(this)' style='margin-right: 20px'>"+find+"<i class='fa fa-close'></i></button>";
+            document.getElementById('filtername').innerHTML+=findtag;
+            }
+        }
+        else
+        {
+            table.search( '' ).columns().search( '' ).draw();
         }
         var selectBox = document.getElementById("cleardrop");
         var selectedValue = selectBox.options[selectBox.selectedIndex].value;
@@ -444,14 +451,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         {
             $("#tbody").hide();
             let ele = document.getElementById('textContent');
-            ele.innerHTML += "There are no transactions showing for this account in this time period. If you're filtering transactions, they may be hiding.";
+            ele.innerHTML = "There are no transactions showing for this account in this time period. If you're filtering transactions, they may be hiding.";
+            if(filtername.includes("clear_drop") == false)
+            {
+            var cleardroptag ="<button type='button' id='clear_drop' class='btn btn-success' onclick='removeCleardrop(this)' style='margin-right: 20px'>"+selectedValue+"<i class='fa fa-close'></i></button>";
+            document.getElementById('filtername').innerHTML+=cleardroptag;
+            }
         }
-        else
+        else if(selectedValue == 'Cleared')
         {
             $("#tbody").show();
             let ele = document.getElementById('textContent');
             ele.innerHTML = "";
+
+            if(filtername.includes("clear_drop") == false)
+            {
+            var cleardroptag ="<button type='button' id='clear_drop' class='btn btn-success' onclick='removeCleardrop(this)' style='margin-right: 20px'>"+selectedValue+"<i class='fa fa-close'></i></button>";
+            document.getElementById('filtername').innerHTML+=cleardroptag;
+            }
         }
+        
+
         var selectBox1 = document.getElementById("dropdate");
         var selectedValue1 = selectBox1.options[selectBox1.selectedIndex].value;
        if(selectedValue1 == 'Custome Date')
@@ -472,6 +492,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         }
         table.search(xxx,true,false).draw();
+
+        if(filtername.includes("drop_date") == false)
+        {
+        var dropdate ="<button type='button' id='drop_date' class='btn btn-warning' onclick='removeDropdate(this)' style='margin-right: 20px'>"+selectedValue1+"<i class='fa fa-close'></i></button>";
+        document.getElementById('filtername').innerHTML+=dropdate;
+        }
        }
        else if (selectedValue1 == 'Statement Ending Date')
        {
@@ -492,10 +518,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         }
         table.search(xxx,true,false).draw();
+
+        if(filtername.includes("drop_date") == false)
+        {
+        var dropdate ="<button type='button' id='drop_date' class='btn btn-warning' onclick='removeDropdate(this)' style='margin-right: 20px'>"+selectedValue1+"<i class='fa fa-close'></i></button>";
+        document.getElementById('filtername').innerHTML+=dropdate;
+        }
        }
        else if(selectedValue1 == 'All')
        {
-        table.search( '' ).columns().search( '' ).draw();
+        //table.search( '' ).columns().search( '' ).draw();
        }
        var selectBox2 = document.getElementById("transaction_type");
        var selectedValue2 = selectBox2.options[selectBox2.selectedIndex].value;
@@ -503,7 +535,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
        {
          $("#tbody").hide();
           let ele = document.getElementById('textContent');
-          ele.innerHTML += "There are no transactions showing for this account in this time period. If you're filtering transactions, they may be hiding.";
+          ele.innerHTML = "There are no transactions showing for this account in this time period. If you're filtering transactions, they may be hiding.";
+
+          if(filtername.includes("tran_type") == false)
+         {
+          var trantype ="<button type='button' id='tran_type' class='btn btn-danger' onclick='removeTranstype(this)' style='margin-right: 20px'>"+selectedValue2+"<i class='fa fa-close'></i></button>";
+          document.getElementById('filtername').innerHTML+=trantype;
+         }
        }
        else
        {
@@ -511,7 +549,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
          let ele = document.getElementById('textContent');
           ele.innerHTML = "";
        }
-    });
+    //});
+    }
 
     function myfunc() {
     var selectBox = document.getElementById("dropdate");
@@ -678,5 +717,29 @@ $('.dropopenbx').on('click', function(){
     function crossClick(o)
     {
         $(".tr_class_"+o).hide();
+    }
+    function removeTag(val)
+    {
+        val.remove();
+        $('#find').val('');
+        applybtn();
+    }
+    function removeCleardrop(val)
+    {
+        val.remove();
+        document.getElementById("cleardrop").selectedIndex = 0;
+        applybtn();
+    }
+    function removeDropdate(val)
+    {
+        val.remove();
+        document.getElementById("dropdate").selectedIndex = 0;
+        applybtn();
+    }
+    function removeTranstype(val)
+    {
+        val.remove();
+        document.getElementById("transaction_type").selectedIndex = 0;
+        applybtn();
     }
 </script>

@@ -109,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
                         <div class="tabs">
-                            <ul class="clearfix work__order" id="myTab" role="tablist">
+                            <ul class="ul-mobile clearfix work__order" id="myTab" role="tablist">
                                 <li <?php echo ((empty($tab_index)) || $tab_index === 1) ? "class='active'" : "" ?>>
                                     <a class="nav-link"
                                        id="profile-tab"
