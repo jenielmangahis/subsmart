@@ -112,7 +112,25 @@ class Settings extends MY_Controller {
 
 	public function notifications()
 	{
+        $this->load->model('SettingNotification_model');
+        $setting_data = "";
+        $user = $this->session->userdata('logged');
+        if($user) {
+            $settingNotifications = $this->SettingNotification_model->getAllByUserId($user['id']);
+
+            if( $settingNotifications ){
+                $setting_notifications_data = $settingNotifications;
+
+                $setting_data = array();
+                foreach($setting_notifications_data as $settign_notif) {
+                    $setting_data[$settign_notif->name] = $settign_notif->value;
+                }
+            }
+
+        }
+
 		$this->page_data['page']->menu = 'notifications';
+        $this->page_data['setting_data'] = $setting_data;
 		$this->load->view('settings/notifications', $this->page_data);
 	}
 
@@ -303,6 +321,61 @@ class Settings extends MY_Controller {
         }
 
         redirect('settings/email_branding');
+    }
+
+    public function update_notification_setting() 
+    {
+        postAllowed();
+        $this->load->model('SettingNotification_model');
+
+        /*
+        $default_notify_by_email = "";
+        $default_notify_by_sms = "";
+        $event_notify_customer_on_add = "";
+        $event_notify_customer_on_update = "";
+        $same_as_residential = ""; 
+        $event_notify_customer_on_add_commercial = "";
+        $event_notify_customer_on_update_commercial = "";
+        $event_notify_at = "";
+        $event_notify_at_headsup_1 = "";
+        $event_notify_at_headsup_2 = "";
+        $event_notify_at_business = "";
+        $event_notify_at_task = "";
+        $estimate_send_to_business = "";
+        $invoice_send_to_business = "";
+        $work_order_notify_on_employee_action = "";
+        $event_notify_customer_address = "";
+        */
+
+        $user = $this->session->userdata('logged');
+
+        //Delete first the old settings data
+        $this->SettingNotification_model->deleteByUserId($user['id']);
+
+        $post = $this->input->post();    
+        if($post) {
+
+            $data_array = array();
+            foreach($post as $post_key => $post_data) {
+                $data_array = array(
+                    'user_id' => $user['id'],
+                    'name' => $post_key,
+                    'value' => $post_data,         
+                    'created_at' => date("Y-m-d H:i:s")
+                );
+
+                if($post_key != 'btn-submit') {
+                    $this->SettingNotification_model->create($data_array);
+                }
+
+            }
+
+            $this->session->set_flashdata('message', 'Your notification setting was updated');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+                        
+        }
+
+        redirect('settings/notifications');  
     }
 	
 }
