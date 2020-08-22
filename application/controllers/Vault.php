@@ -71,10 +71,15 @@ class Vault extends MY_Controller {
 				$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 				$record = $this->db->query(
-					'select count(*) as `existing` from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '"'
+					'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
 				)->row();
 
-				if($record->existing <= 0){
+				if($record->existing > 0){
+					$return['error'] = 'File already exists';
+					if(!empty($record->category_id)){
+						$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+					}	
+				} else {
 					if($folder_id > 0){
 						$folder = $this->folders_model->getById($folder_id);
 						$folder_path = $folder->path;
@@ -108,9 +113,7 @@ class Vault extends MY_Controller {
 						if(!$this->vault_model->trans_create($data)){
 							$return['error'] = 'Error in uploading file';
 						}
-					}
-				} else {
-					$return['error'] = 'File already exists';	
+					}	
 				}
 			} else {
 				$return['error'] = 'File is larger than 8mb';

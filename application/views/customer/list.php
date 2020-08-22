@@ -101,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- end row -->
             <div class="row">
-                <div class="col-xl-12">
+                <div class="col-xl-9">
                     <div class="card">
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center pt-3 bg-white">
@@ -131,11 +131,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="dropdown">
                                                             <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
                                                                 <input type="file" name="file" />
-                                                                <input type="submit" class="btn btn-primary btn-md" name="importSubmit" id="importItemsInventory" value="Import">
-                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Export</button>
-                                                            <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
-                                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
-                                                            </a>
+                                                                <button type="submit" class="btn btn-primary btn-md" name="importSubmit" id="importItemsInventory" ><span class="fa fa-download"></span> Import</button>
+                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
+                                                                    <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
+                                                                        <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                                                                    </a>
                                                             <?php if (isset($customers) && count($customers) > 0) { ?>
                                                                 <a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
                                                                     <span class="fa fa-print "></span> Print
@@ -154,6 +154,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <style>
+                                                .btn{
+                                                    font-size: 12px !important;
+                                                }
+                                            </style>
 
 
 
@@ -175,49 +180,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <th>MMR</th>
                                                                 <th>Phone</th>
                                                                 <th>Status</th>
-                                                                <th></th>
+                                                                <th>Actions</th>
                                                             </tr>
                                                             </thead>
 
                                                             <tbody>
                                                             <?php if (isset($customers)) : ?>
                                                                 <?php foreach ($customers as $customer) : ?>
-                                                                    <?php if($customer[1] != "header") : ?>
+
                                                                     <tr>
-                                                                        <td>
-                                                                            <div class="table-name">
-                                                                                <div class="checkbox checkbox-sm">
-                                                                                    <input type="checkbox"
-                                                                                        name="id[<?php echo $customer[0] ?>]"
-                                                                                        value="<?php echo $customer[0] ?>"
-                                                                                        class="select-one"
-                                                                                        id="customer_id_<?php echo $customer[0] ?>">
-                                                                                    <label for="customer_id_<?php echo $customer[0] ?>"> <a
-                                                                                                class="a-default"
-                                                                                                href="<?php echo base_url('customer/genview/' . $customer[0]) ?>"><?php echo $customer[1] ?></a></label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
+                                                                        <td><?php echo $customer->contact_name; ?></td>
                                                                         <td>&nbsp;</td>
                                                                         <td>&nbsp;</td>
-                                                                        <td>
-                                                                            <div class="table-nowrap">
-                                                                                <?php echo $customer[2]; ?>
-                                                                            </div>
-                                                                        </td>
+                                                                        <td></td>
+                                                                        <td><?php echo $customer->contact_email; ?></td>
                                                                         <td>&nbsp;</td>
-                                                                        <td>&nbsp;</td>
-                                                                        <td>&nbsp;</td>
-                                                                        <td>
-                                                                            <div class="table-nowrap">
-                                                                                <?php if (is_serialized($customer[3])) { ?>
-                                                                                    <?php echo unserialize($customer[3])['number'] ?>
-                                                                                    (<?php echo unserialize($customer[3])['type'] ?>)
-                                                                                <?php } else { ?>
-                                                                                    <?php echo $customer[3]; ?>
-                                                                                <?php } ?>
-                                                                            </div>
-                                                                        </td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td><?php echo $customer->phone; ?></td>
+                                                                        <td><?php echo $customer->status; ?></td>
                                                                         <td class="text-right">
                                                                             <div class="dropdown dropdown-btn open">
                                                                                 <button class="btn btn-default dropdown-toggle" type="button"
@@ -230,57 +213,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu"
                                                                                     aria-labelledby="dropdown-edit">
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            href="<?php echo base_url('customer/view/' . $customer[0]) ?>"><span
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-user icon"></span> View</a>
                                                                                     </li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            href="<?php echo base_url('customer/edit/' . $customer[0]) ?>"><span
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-pencil-square-o icon"></span>
                                                                                             Edit</a></li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            href="<?php echo base_url('customer/tickets/add?customer_id=' . $customer[0]) ?>"><span
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-pencil-square-o icon"></span>
                                                                                             Create Service Ticket</a></li>
                                                                                     <li role="separator" class="divider"></li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            href="<?php echo base_url('workcalender/?customer_id=' . $customer[0] . '&action=open_event_modal') ?>"><span
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-calendar icon"></span> Schedule
                                                                                             Appointment</a></li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            href="<?php echo base_url('invoice') ?>"><span
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-money icon"></span> Create
                                                                                             Invoice</a></li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            href="<?php echo base_url('estimate/add?customer_id=' . $customer[0]) ?>"><span
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-file-text-o icon"></span>
                                                                                             Create Estimate</a></li>
                                                                                     <li role="separator" class="divider"></li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            data-inactive-modal="open"
-                                                                                                            data-customer-id="400604"
-                                                                                                            data-customer-info="Agnes Knox, "
-                                                                                                            href="#"><span
+                                                                                                               data-inactive-modal="open"
+                                                                                                               data-customer-id="400604"
+                                                                                                               data-customer-info="Agnes Knox, "
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-user-times icon"></span> Mark
                                                                                             as inactive</a></li>
                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                            data-delete-modal="open"
-                                                                                                            data-customer-id="<?php echo $customer[0] ?>"
-                                                                                                            onclick="return confirm('Do you really want to delete this item ?')"
-                                                                                                            data-customer-info="Agnes Knox, "
-                                                                                                            href="<?php echo base_url('customer/delete/' . $customer[0]) ?>"><span
+                                                                                                               data-delete-modal="open"
+                                                                                                               data-customer-id=""
+                                                                                                               onclick="return confirm('Do you really want to delete this item ?')"
+                                                                                                               data-customer-info="Agnes Knox, "
+                                                                                                               href="#"><span
                                                                                                     class="fa fa-trash-o icon"></span> Delete
                                                                                             customer</a></li>
                                                                                 </ul>
                                                                             </div>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php else : ?>
-                                                                        <tr style="background-color:#D3D3D3;">
-                                                                            <td><span class="pl-5"><?php echo $customer[0]; ?></span></td>
-                                                                            <td colspan="8">&nbsp;</td>
-                                                                            <td>&nbsp;</td>
-                                                                        </tr>
-                                                                    <?php endif; ?>
                                                                 <?php endforeach; ?>
                                                             <?php endif; ?>
                                                             </tbody>
@@ -687,16 +663,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-                       </div>
+                </div>
+                <div class="col-xl-3">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h6 class="page-title">Quick Action</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-hover" id="customer_list_quick">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <?php if (isset($customers)) : ?>
+                                    <?php foreach ($customers as $customer) : ?>
+
+                                        <tr>
+                                            <td><?php echo $customer->contact_name; ?></td>
+                                            <td>
+                                                <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
+                                                    <img src="https://app.creditrepaircloud.com/application/images/email-icon.png" border="0" title="Internal Note">
+                                                </a>
+                                                <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
+                                                    <img src="https://app.creditrepaircloud.com/application/images/comment_edit.png" border="0" title="Internal Note">
+                                                </a>
+                                                <a href="#"  style="text-decoration:none; display:inline-block;">
+                                                    <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="Team member assigned">
+                                                </a>
+                                                <a href="#" style="text-decoration:none;display:inline-block;" class="js-qwynlraxz">
+                                                    <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
+                                                </a>
+                                                <a href="#"  style="text-decoration:none;display:inline-block;" title="Delete client" class="js-qwynlraxz">
+                                                    <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </tbody>
+
+                            </table>
+                            </div>
+                        </div>
                     </div>
-                    <!-- end card -->
                 </div>
             </div>
-            <!-- end row -->
+                    <!-- end card -->
         </div>
-        <!-- end container-fluid -->
-    </div>
+     </div>
+            <!-- end row -->
 </div>
+        <!-- end container-fluid -->
 
 <!-- Lead Type Modal -->
 <div class="modal fade" id="modal_lead_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

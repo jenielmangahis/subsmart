@@ -169,7 +169,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="expense-transactions-data-table">
                                         <?php
                                             $date = null;
                                             $type = null;
@@ -196,12 +196,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
                                                     $number = $check->check_number;
-                                                    $payee = $check->bank_id;
                                                     $modal_id = "editCheck";
                                                     $data_id = $check->id;
                                                     $transaction_id = $check->transaction_id;
                                                     foreach ($vendors as $vendor){
-                                                        if ($vendor->id == $check->vendor_id){
+                                                        if ($vendor->vendor_id == $check->vendor_id){
                                                             $vendors_name = $vendor->f_name." ".$vendor->l_name;
                                                             $delete = 'deleteCheck';
                                                         }
@@ -224,7 +223,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 if ($transaction->id == $bill->transaction_id){
                                                     $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
-                                                    $payee = $bill->vendor_id;
                                                     $number = null;
                                                     $modal_id = "editBill";
                                                     $transaction_id = $bill->transaction_id;
@@ -253,7 +251,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 if ($transaction->id == $expense->transaction_id){
                                                     $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
-                                                    $payee = $expense->vendor_id;
                                                     $number = null;
                                                     $modal_id = "editExpense";
                                                     $transaction_id = $expense->transaction_id;
@@ -283,7 +280,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 if ($transaction->id == $vendor_credit->transaction_id){
                                                     $date = date("m/d/y",strtotime($transaction->date_created));
                                                     $type = $transaction->type;
-                                                    $payee = $vendor_credit->vendor_id;
                                                     $number = null;
                                                     $modal_id = "editVendorCredit";
                                                     $transaction_id = $vendor_credit->transaction_id;
@@ -328,7 +324,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <i class="fa fa-spinner fa-pulse" style="display: none;position: relative;"></i>
                                             </td>
-                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"></td>
+                                            <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $transaction->total;?></td>
                                             <td style="text-align: right;">
                                                 <a href="#" data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
@@ -340,7 +336,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </li>
                                                         <li><a href="#">Void</a></li>
                                                     </ul>
-                                                </div>&nbsp;
+                                                </div>
                                             </td>
                                         </tr>
                                         <?php
@@ -517,7 +513,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-3">
                                 <label for="">Payee</label>
                                 <input type="hidden" name="check_id" id="checkID" value="">
-                                <input type="hidden" name="transaction_id" id="checktransID">
+                                <input type="hidden" name="transaction_id" class="transaction_id" id="checktransID">
                                 <input type="hidden" id="checkType" class="expenseType" value="Check">
                                 <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
                                     <option></option>
@@ -541,7 +537,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3" style="text-align: right">
                                 <div>AMOUNT</div>
-                                <div><h1>$0.00</h1></div>
+                                <div><h1 id="h1_amount-check">$0.00</h1></div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px">
@@ -873,7 +869,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								</div>
 								<div class="col-md-9" style="text-align: right">
 									<div>Balance Due</div>
-									<div><h1>$0.00</h1></div>
+									<div><h1 id="h1_amount-bill">$0.00</h1></div>
 								</div>
 							</div>
 							<div class="row" style="margin-top: 20px;width: 80%;">
@@ -1082,7 +1078,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3" style="text-align: right">
                                 <div>AMOUNT</div>
-                                <div><h1>$0.00</h1></div>
+                                <div><h1 id="h1_amount-expense">$0.00</h1></div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px;width: 80%;">
@@ -1269,7 +1265,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-9" style="text-align: right">
                                 <div>CREDIT AMOUNT</div>
-                                <div><h1>$0.00</h1></div>
+                                <div><h1 id="h1_amount-vc">$0.00</h1></div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px;width: 80%;">
@@ -1950,6 +1946,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     var row = $('#tableLine').clone(true);
                     row.find("#line-counter").html(id);
                     row.appendTo('#line-container-check');
+                    $('td > .categories_id').last().val(null);
                     $('td > #category-preview-check').last().html(null);
                     $('td > div > #description-id-check').last().val(null);
                     $('td > #description-preview-check').last().html(null);
@@ -2016,6 +2013,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $(this).parent('tr').next().children('td').children('#description-preview-check').html(null);
                     $(this).parent('tr').next().children('td').children('#amount-preview-check').html(null);
                     $(this).parent('tr').next().children('td').children('div').children('#amount-id-check').val(0);
+                    $(this).parent('tr').next().children('td').children('.categories_id').val(null);
                 }
             }
 
@@ -2042,8 +2040,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (isNaN(total)){
                 total = 0;
                 total = total.toFixed(2);
+                $('#total-amount-check').text(total.toFixed(2));
+                $('#h1_amount-check').text('$'+total.toFixed(2));
             }else{
                 $('#total-amount-check').text(total.toFixed(2));
+                $('#h1_amount-check').text('$'+total.toFixed(2));
             }
 
         });
@@ -2060,6 +2061,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     var row = $('#tableLine-bill').clone(true);
                     row.find("#line-counter-bill").html(id);
                     row.appendTo('#line-container-bill');
+                    $('td > .categories_id').last().val(null);
                     $('td > #category-preview-bill').last().html(null);
                     $('td > div > #description-id-bill').last().val(null);
                     $('td > #description-preview-bill').last().html(null);
@@ -2123,6 +2125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $(this).parent('tr').next().children('td').children('#description-preview-bill').html(null);
                     $(this).parent('tr').next().children('td').children('#amount-preview-bill').html(null);
                     $(this).parent('tr').next().children('td').children('div').children('#amount-id-bill').val(0);
+                    $(this).parent('tr').next().children('td').children('.categories_id').val(null);
                 }
             }
         });
@@ -2149,6 +2152,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 total = total.toFixed(2);
             }else{
                 $('#total-amount-bill').text(total.toFixed(2));
+                $('#h1_amount-bill').text('$'+total.toFixed(2));
             }
 
         });
@@ -2170,6 +2174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     row.find("#line-counter-expense").html(id);
                     row.appendTo('#line-container-expense');
                     $('td > #category-preview-expense').last().html(null);
+                    $('td > .categories_id').last().val(null);
                     $('td > div > #description-id-expense').last().val(null);
                     $('td > #description-preview-expense').last().html(null);
                     $('td > #amount-preview-expense').last().html(null);
@@ -2232,6 +2237,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $(this).parent('tr').next().children('td').children('#description-preview-expense').html(null);
                     $(this).parent('tr').next().children('td').children('#amount-preview-expense').html(null);
                     $(this).parent('tr').next().children('td').children('div').children('#amount-id-expense').val(0);
+                    $(this).parent('tr').next().children('td').children('.categories_id').val(null);
                 }
             }
         });
@@ -2258,6 +2264,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 total = total.toFixed(2);
             }else{
                 $('#total-amount-expense').text(total.toFixed(2));
+                $('#h1_amount-expense').text('$'+total.toFixed(2));
             }
 
         });
@@ -2271,11 +2278,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 var id = $('#line-container-vendorCredit > tr').length;
                 for (var x = 1;x <= 4;x++){
                     id++;
-                    // var row = $('#tableLine-vendorCredit').clone(true);
-                    // row.find("#line-counter-vendorCredit").html(id);
-                    // row.appendTo('#line-container-vendorCredit');
                     $('#line-container-vendorCredit').append($('#tableLine-vendorCredit').last().clone());
                     $('td > #category-preview-vc').last().html('');
+                    $('td > .categories_id').last().val(null);
                     $('td > div > #description-id-vc').last().val('');
                     $('td > #description-preview-vc').last().html('');
                     $('td > #amount-preview-vc').last().html('');
@@ -2340,6 +2345,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $(this).parent('tr').next().children('td').children('#description-preview-vc').html(null);
                     $(this).parent('tr').next().children('td').children('#amount-preview-vc').html(null);
                     $(this).parent('tr').next().children('td').children('div').children('#amount-id-vc').val(0);
+                    $(this).parent('tr').next().children('td').children('.categories_id').val(null);
+                    console.log($(this).parent('tr').children('td').children('.categories_id').val());
                 }
             }
         });
@@ -2366,6 +2373,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 total = total.toFixed(2);
             }else{
                 $('#total-amount-vc').text(total.toFixed(2));
+                $('#h1_amount-vc').text('$'+total.toFixed(2));
             }
 
         });

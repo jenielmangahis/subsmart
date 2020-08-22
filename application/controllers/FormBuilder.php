@@ -102,14 +102,17 @@ class FormBuilder extends MY_Controller {
 		exit;
 	}
 
-	public function getFormElements($id = null){
+	public function getFormElements($form_id = null, $element_id = null){
+		
 		$data =  array(
 			"status" => 1,
-			"data" => $this->formsbuilder_model->getFormElements($id)
+			"data" => $this->formsbuilder_model->getFormElements($form_id, $element_id)
 		);
-		usort($data['data'], function($a, $b){
-			return ($a->fe_order > $b->fe_order);
-		});
+		if(is_array($data['data'])){
+			usort($data['data'], function($a, $b){
+				return ($a->fe_order > $b->fe_order);
+			});
+		}
 		echo json_encode($data);
 		exit;
 	}
@@ -125,6 +128,15 @@ class FormBuilder extends MY_Controller {
 
 	public function updateFormElement($element_id){
 		$query = $this->formsbuilder_model->updateFormElement($element_id, $this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function deleteFormElement($element_id){
+		$query = $this->formsbuilder_model->deleteFormElement($element_id);
 		$data = array(
 			"status" => 1
 		);

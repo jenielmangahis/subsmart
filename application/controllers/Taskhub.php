@@ -12,33 +12,8 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function index(){
-		$uid = logged('id');
-
-		$tasks = $this->db->query(
-			'select ' .
-			'a.*, '.
-			'b.status_text, '.
-			'if(ISNULL(c.task_id),"no","yes") as `is_participant` '.
-			'from tasks a '.
-			'left join tasks_status b on b.status_id = a.status_id '.
-			'left join('.
-				'select '.
-
-			  	'task_id, '.
-			  	'user_id '.
-
-				'from tasks_participants '.
-
-			  	'where user_id = '. $uid . 
-			') c on c.task_id = a.task_id '.
-			'where a.created_by = ' . $uid . ' ' .
-			   'or not ISNULL(c.task_id) '.
-
-			'group by a.task_id '.
-			'order by a.date_created DESC'
-		)->result();
-
-		$this->page_data['tasks'] = $tasks;
+		$this->page_data['tasks'] = getTasks();
+		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);
 	}

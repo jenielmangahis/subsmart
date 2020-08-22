@@ -174,6 +174,7 @@ class Customer extends MY_Controller
             $this->page_data['statusCount'] = $this->customer_model->getStatusWithCount();
         }
 
+        $this->page_data['customers'] = $this->customer_model->getAllByUserId();
         $user_id = logged('id');
         $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
         if(!$check_if_exist){
