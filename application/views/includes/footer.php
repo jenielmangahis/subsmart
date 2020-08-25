@@ -41,12 +41,12 @@
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 	var nav_badges  = '';
-	<?php 
+	<?php
 		if( isset($module) ){
 			if( $module == 'calendar' ){
 				echo "nav_badges = 'calendar';";
 			}
-		} 
+		}
 
 	?>
 </script>

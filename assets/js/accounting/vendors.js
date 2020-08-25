@@ -125,7 +125,76 @@ $(document).ready(function () {
 	  }, false);
 	getAllVendors();
 });
-
+	window.addEventListener('load', function() {
+		var editVendorForm = document.getElementsByClassName('editVendorForm-validation');
+		
+		var editVendorForm_validation = Array.prototype.filter.call(editVendorForm, function(form) {
+		  form.addEventListener('submit', function(event) {
+			  $('.loader').show();
+			  event.preventDefault();
+			  event.stopPropagation();
+				if (form.checkValidity() === true) {
+					
+					var passdata = new FormData(this);
+						passdata.append('title', $("input[name='title']").val());
+						passdata.append('f_name', $("input[name='f_name']").val());
+						passdata.append('m_name', $("input[name='m_name']").val());
+						passdata.append('l_name', $("input[name='l_name']").val());
+						passdata.append('suffix', $("input[name='suffix']").val());
+						passdata.append('email', $("input[name='email']").val());
+						passdata.append('company', $("input[name='company']").val());
+						passdata.append('display_name', $("input[name='display_name']").val());
+						passdata.append('to_display', $("input[name='to_display']").val());
+						passdata.append('street', $("#street").val());
+						passdata.append('city', $("input[name='city']").val());
+						passdata.append('state', $("input[name='state']").val());
+						passdata.append('zip', $("input[name='zip']").val());
+						passdata.append('country', $("input[name='country']").val());
+						passdata.append('phone', $("input[name='phone']").val());
+						passdata.append('mobile', $("input[name='mobile']").val());
+						passdata.append('fax', $("input[name='fax']").val());
+						passdata.append('website', $("input[name='website']").val());
+						passdata.append('billing_rate', $("input[name='billing_rate']").val());
+						passdata.append('terms', $("input[name='terms']").val());
+						passdata.append('opening_balance', $("input[name='opening_balance']").val());
+						passdata.append('opening_balance_as_of_date', $("input[name='opening_balance_as_of_date']").val());
+						passdata.append('account_number', $("input[name='account_number']").val());
+						passdata.append('business_number', $("input[name='business_number']").val());
+						passdata.append('default_expense_amount', $("input[name='default_expense_amount']").val());
+						passdata.append('notes', $("#notes").val());
+						
+						$.ajax({
+							type: "POST",
+							url: "editVendor",
+							data: passdata,
+							processData:false,
+							contentType:false,
+							cache:false,
+							async:true,
+							success:
+								function(data) {
+									//console.log(data);
+										$("#edit-vendor-modal").modal("hide");
+										Swal.fire(
+										{
+											showConfirmButton: false,
+											timer: 2000,
+											title: 'Success',
+											text: "Vendor has been updated.",
+											icon: 'success'
+										});
+								},
+							error:
+							function(data){
+								//console.log(data);	
+							}
+						});
+				}
+			form.classList.add('was-validated');
+		  }, false);
+		});
+	  }, false);
+});
 function getAllVendors(){
 	var htmlData;
 	var vendorDatatable = $('#vendors_table').DataTable();

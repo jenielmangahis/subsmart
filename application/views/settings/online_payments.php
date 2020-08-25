@@ -63,6 +63,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a class="btn btn-primary btn-md" href="#setupSqaureModal" data-toggle="modal" data-target="#setupSqaureModal">Setup</a>
                                         </td>
                                     </tr>
+                                     <tr>
+                                        <td data-title="Payment Method">
+                                            <img class="img-responsive" style="max-width: 200px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/wepay-logo.png">
+                                            <div class="text-ter">Online Transaction Fees: 2.9% + $0.30</div>
+                                        </td>
+                                        <td data-title="Setup">NOT SET</td>
+                                        <td data-title="Active">NO</td>
+                                        <td class="text-right" data-title="">
+                                            <a class="btn btn-primary btn-md" href="#setupWePayModal" data-toggle="modal" data-target="#setupWePayModal">Setup</a>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>                                             

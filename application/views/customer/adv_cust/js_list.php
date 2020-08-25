@@ -24,6 +24,13 @@
             "info": false
         });
 
+        var table_cust_list =$('#customer_list_table').DataTable({
+            "lengthChange": false,
+            "searching" : true,
+            "pageLength": 20,
+            "info": false
+        });
+
         // var table_clt =$('#customerListTable').DataTable({
         //     "lengthChange": false,
         //     "searching" : true,

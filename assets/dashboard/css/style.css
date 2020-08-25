@@ -5494,12 +5494,6 @@ label {
     border-radius: 0.25rem;
     padding: 20px;
 }
-@media (min-width: 1674px) {
-  .form-group.margin-left-sec.c-1 {
-      position: relative;
-      bottom: 10px;
-  }
-}
 @media (max-width: 1455px) {
   .form-group.a-1 {
       position: relative;
@@ -8162,14 +8156,9 @@ input:focus+label {}
     width: auto !important
 }
 
-#frm_calender_filter_events .form-group:first-child a span {
+#frm_calender_filter_events .form-group:first-child a span, #frm_calender_filter_events div .form-group:first-child a span {
     margin-right: 6px;
 }
-
-#frm_calender_filter_events .form-group:first-child a {
-    color: #45a73c !important
-}
-
 
 
 /*taxes*/
@@ -9869,3 +9858,306 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
 }
 .edit-action .btn-ed:hover{background: rgba(0,0,0,0.30);}
 /* **** End Table Dropdown CSS **** */
+<<<<<<< HEAD
+
+* ***** Popup Design ***** */
+.popbox{
+    padding: 60px 0;
+}
+#popup-opn .modal-dialog{max-width:600px;}
+#popup-opn .modal-content{
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 10px;
+}
+.reconciliblock{
+    padding: 30px;
+    border-radius: 10px;
+    background: #fff;
+}
+.error-block{
+    padding: 45px 0;
+    border-bottom: 2px solid #c1c1c1;
+    display: flex;
+    width: 100%;
+}
+.error-ic {margin-right: 20px;}
+.error-ic i{
+    font-size:60px;
+    color: #0098cd;
+}
+.error-dt h4{
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 10px;
+}
+.error-dt p{
+    font-size: 14px;
+    font-weight: normal;
+    color: #717171;
+    margin: 0;
+    line-height: 22px;
+}
+.action-popup{
+    padding: 20px 0 0;
+}
+.action-popup .btn-main{
+    padding: 8px 30px;
+    border: 2px solid #2ca01c;
+    background: #2ca01c;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    border-radius: 30px;
+    float: right;
+}
+.action-popup .uplobtn{
+    background: #dadadc;
+    border-color: #333;
+    color: #333;
+    float: none;
+}
+.file-upload-block{
+    padding: 15px;
+}
+.file-upload-block .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+.file-upload-block .upload-btn-wrapper input[type=file] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+.file-upload-block .upload-btn-wrapper .btn{
+    padding: 35px 15px 20px;
+    width: 100%;
+    text-align: center;
+    display: block;
+    border-radius: 0;
+    background: #f4f5f8;
+    border: 2px dashed #8d9096;
+    cursor: pointer;
+}
+.file-upload-block .upload-btn-wrapper .btn i{
+    font-size: 42px;
+    color: #8d9096;
+    text-align: center;
+    margin: 0 0 10px;
+}
+.file-upload-block .upload-btn-wrapper .btn h6{
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    margin: 0;
+    color: #717171;
+}
+.file-upload-block .upload-btn-wrapper .btn h6 span{
+    color: #0077c5;
+}
+/* ***** End Popup Design ***** */
+
+/* Calendar Custom CSS */
+select#select-employee {
+  width: 100% !important;
+}
+.text-green {
+  color: #44a73c !important;
+}
+.text-wite {
+  color: #ffffff !important;
+}
+.pos-2 {
+  position: relative;
+  bottom: 2px;
+}
+.stcs-1, .stcs-print {
+  width: auto;
+  float: left;
+  margin-bottom: 10px;
+}
+.stcs-2 {
+  width: 20%;
+  float: left;
+  margin-bottom: 10px;
+}
+.stcs-3-full {
+  width: 35%;
+  float: left;
+  margin-bottom: 10px;
+}
+.stcs-3 {
+  width: 35%;
+  float: left;
+  margin-bottom: 10px;
+}
+.stcs-4 {
+  width: 40%;
+  float: left;
+  margin-bottom: 10px;
+  position: relative;
+  top: 10px;
+}
+.stcs-cover {
+  width: 80%;
+  float: left;
+}
+.cs-float, .cs-float-print {
+  float: left;
+}
+@media (max-width: 1580px) {
+  .stcs-4 {
+    width: 48.5%;
+    float: left;
+  }
+}
+@media (max-width: 1500px) {
+  .fc-left {
+    margin-bottom: 8px;
+  }
+  .stcs-4 {
+    width: 100%;
+    float: left;
+    position: relative;
+    top: 3px;
+  }
+  .stcs-print {
+    width: auto;
+    float: left;
+    margin-bottom: 10px;
+  }
+  .cs-float, .cs-float-print {
+    float: left;
+  }
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+  .stcs-3-full {
+    width: 70%;
+    float: left;
+  }
+}
+@media (min-width: 1501px) {
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+}
+@media (min-width: 1581px) {
+  .stcs-4 {
+    width: 46%;
+  }
+  .stcs-3-full {
+    width: 44%;
+    float: left;
+    margin-bottom: 10px;
+  }
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+}
+@media (min-width: 1700px) {
+  .stcs-4 {
+    width: 40%;
+  }
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+  .stcs-1, .stcs-print {
+    margin-bottom: 13px;
+  }
+  .stcs-3-full {
+    width: 47.5%;
+    float: left;
+    margin-bottom: 10px;
+  }
+}
+@media (min-width: 1790px) {
+  .cs-float {
+    float: right;
+  }
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+  .cs-float {
+    float: right;
+  }
+  .stcs-1, .stcs-print {
+    margin-bottom: 13px;
+  }
+  .stcs-3-full {
+    width: 46.6%%;
+    float: left;
+    margin-bottom: 10px;
+  }
+}
+@media (min-width: 1790px) {
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+  .cs-float {
+    float: right;
+  }
+  .stcs-1, .stcs-print {
+    margin-bottom: 13px;
+  }
+  .stcs-3-full {
+    width: 46.6%;
+    float: left;
+    margin-bottom: 10px;
+  }
+}
+@media (min-width: 1820px) {
+  .stcs-3-full {
+    width: 47%;
+    float: left;
+    margin-bottom: 10px;
+  }
+}
+@media (min-width: 1870px) {
+  .stcs-3-full {
+    width: 47.5%;
+    float: left;
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 1000px) {
+  .stcs-2 {
+    width: 100%;
+    float: left;
+    margin-bottom: 10px;
+  }
+  span.text-ter.left {
+    font-size: 14px;
+  }
+  #calender_toolbar form .margin-left-sec .btn {
+    width: 100%;
+    background: #45a73c;
+    border: none;
+    padding: 12px 12px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .stcs-3-full {
+    width: 100%;
+    float: left;
+  }
+  .stcs-3 {
+    width: auto;
+    float: left;
+  }
+}
+/*End Calendar Custom CSS */

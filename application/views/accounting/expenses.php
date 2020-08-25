@@ -311,12 +311,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $type;?></td>
                                             <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $number;?></td>
                                             <td data-toggle="modal" id="<?php echo $modal_id?>" data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>"><?php echo $vendors_name;?></td>
-                                            <td>
+                                            <td data-id="<?php echo $data_id?>" data-transId="<?php echo $transaction_id?>">
                                                 <div style="display: inline-block;position: relative;width: 100%">
                                                     <select name="category" id="expenseTransCategory" data-category="" data-id="<?php echo $category_id;?>" class="form-control select2-tbl-category">
+                                                        <option></option>
+                                                        <option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>
                                                         <option value="<?php echo $category_list_id?>" selected><?php echo $category?></option>
                                                         <?php foreach ($list_categories as $list):?>
-                                                            <?php if ($list->category_name != $category):?>
+                                                            <?php if ($list->category_name == $category):?>
                                                                 <option value="<?php echo $list->id;?>"><?php echo $list->category_name;?></option>
                                                             <?php endif; ?>
                                                         <?php endforeach;?>
@@ -1893,7 +1895,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     });
     $('.select2-tbl-category').select2({
         placeholder: 'Select a category',
-        allowClear: true
+        allowClear: true,
+        width: 'resolve',
+        ajax:{
+            url:'/accounting/getExpensesCategories',
+            type:"GET",
+            dataType:"json",
+            delay:250,
+            data:function (params) {
+                    var query = {
+                        search: params.term
+                    };
+                return query;
+            },
+            processResults:function (response) {
+                return{results:response};
+            },
+            cache:true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        templateResult: function (d) {
+            var subtext = d.subtext;
+            if(subtext == undefined){subtext=''}
+            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+        }
     });
     $('.select2-vendor-credit').select2({
         placeholder: 'Choose a vendor',
@@ -1941,18 +1968,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         jQuery(document).ready(function() {
             $("#add-four-line").click(function() {
                 var id = $('#line-container-check > tr').length;
+                var transaction_id = $('#checktransID').val();
                 for (var x = 1;x <= 4;x++){
                     id++;
-                    var row = $('#tableLine').clone(true);
-                    row.find("#line-counter").html(id);
-                    row.appendTo('#line-container-check');
+                    $('#line-container-check').append($('#tableLine').last().clone());
                     $('td > .categories_id').last().val(null);
                     $('td > #category-preview-check').last().html(null);
                     $('td > div > #description-id-check').last().val(null);
                     $('td > #description-preview-check').last().html(null);
                     $('td > #amount-preview-check').last().html(null);
                     $('td > div > #amount-id-check').last().val(0);
+                    $('.select2-check-category').select2({
+                        placeholder: 'Choose a category',
+                        allowClear: true,
+                        width:'resolve',
+                        ajax:{
+                            url:'/accounting/getExpensesCategories',
+                            type:"GET",
+                            dataType:"json",
+                            delay:250,
+                            data:function (params) {
+                                return{
+                                    q: params.name,
+                                    transaction_id:transaction_id
+                                }
+                            },
+                            processResults:function (response) {
+                                return{results:response};
+                            },
+                            cache:true
+                        },
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        },
+                        templateResult: function (d) {
+                            var subtext = d.subtext;
+                            if(subtext == undefined){subtext=''}
+                            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                        }
+                    });
+                    $('.select2-check-category').last().next().next().remove();
                 }
+                $('#line-container-check > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter').text(index+1);
+                });
             });
         });
             // Clear Lines
@@ -1986,10 +2045,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             e.stopPropagation();
         });
         $(document).on('click','#tableLine td:not(:last-child)',function () {
+            var transaction_id = $('#checktransID').val();
             if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-check-category').select2({
                     placeholder: 'Choose a category',
-                    allowClear: true
+                    allowClear: true,
+                    width:'resolve',
+                    ajax:{
+                        url:'/accounting/getExpensesCategories',
+                        type:"GET",
+                        dataType:"json",
+                        delay:250,
+                        data:function (params) {
+                            return{
+                                q: params.name,
+                                transaction_id:transaction_id
+                            }
+                        },
+                        processResults:function (response) {
+                            return{results:response};
+                        },
+                        cache:true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    templateResult: function (d) {
+                        var subtext = d.subtext;
+                        if(subtext == undefined){subtext=''}
+                        return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                    }
                 });
                 $('.select2-check-category').last().next().next().remove();
                 // $('#tableLine > td >input').hide();
@@ -2056,18 +2141,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         jQuery(document).ready(function() {
             $("#add-four-line-bill").click(function() {
                 var id = $('#line-container-bill > tr').length;
+                var transaction_id = $('#billTransId').val();
                 for (var x = 1;x <= 4;x++){
                     id++;
-                    var row = $('#tableLine-bill').clone(true);
-                    row.find("#line-counter-bill").html(id);
-                    row.appendTo('#line-container-bill');
+                    $('#line-container-bill').append($('#tableLine-bill').last().clone());
                     $('td > .categories_id').last().val(null);
                     $('td > #category-preview-bill').last().html(null);
                     $('td > div > #description-id-bill').last().val(null);
                     $('td > #description-preview-bill').last().html(null);
                     $('td > #amount-preview-bill').last().html(null);
                     $('td > div > #amount-id-bill').last().val(0);
+                    $('.select2-bill-category').select2({
+                        placeholder: 'Choose a category',
+                        allowClear: true,
+                        width:'resolve',
+                        ajax:{
+                            url:'/accounting/getExpensesCategories',
+                            type:"GET",
+                            dataType:"json",
+                            delay:250,
+                            data:function (params) {
+                                return{
+                                    q: params.name,
+                                    transaction_id:transaction_id
+                                }
+                            },
+                            processResults:function (response) {
+                                return{results:response};
+                            },
+                            cache:true
+                        },
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        },
+                        templateResult: function (d) {
+                            var subtext = d.subtext;
+                            if(subtext == undefined){subtext=''}
+                            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                        }
+                    });
+                    $('.select2-bill-category').last().next().next().remove();
                 }
+                $('#line-container-bill > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter-bill').text(index+1);
+                });
             });
         });
         // Clear Lines
@@ -2097,10 +2214,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Table input text show
         $(document).on("click","#tableLine-bill td:not(:last-child)",function () {
+            var transaction_id = $('#billTransId').val();
             if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-bill-category').select2({
                     placeholder: 'Choose a category',
-                    allowClear: true
+                    allowClear: true,
+                    width:'resolve',
+                    ajax:{
+                        url:'/accounting/getExpensesCategories',
+                        type:"GET",
+                        dataType:"json",
+                        delay:250,
+                        data:function (params) {
+                            return{
+                                q: params.name,
+                                transaction_id:transaction_id
+                            }
+                        },
+                        processResults:function (response) {
+                            return{results:response};
+                        },
+                        cache:true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    templateResult: function (d) {
+                        var subtext = d.subtext;
+                        if(subtext == undefined){subtext=''}
+                        return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                    }
                 });
                 $('.select2-bill-category').last().next().next().remove();
 
@@ -2162,24 +2305,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $(document).ready(function () {
         jQuery(document).ready(function() {
             $("#add-four-line-expense").click(function() {
-                $('.select2-expense-category').select2({
-                    placeholder: 'Choose a category',
-                    allowClear: true
-                });
-                $('.select2-expense-category').last().next().next().remove();
                 var id = $('#line-container-expense > tr').length;
+                var transaction_id = $('#expenseTransId').val();
                 for (var x = 1;x <= 4;x++){
                     id++;
-                    var row = $('#tableLine-expense').clone(true);
-                    row.find("#line-counter-expense").html(id);
-                    row.appendTo('#line-container-expense');
+                    $('#line-container-expense').append($('#tableLine-expense').last().clone());
                     $('td > #category-preview-expense').last().html(null);
                     $('td > .categories_id').last().val(null);
                     $('td > div > #description-id-expense').last().val(null);
                     $('td > #description-preview-expense').last().html(null);
                     $('td > #amount-preview-expense').last().html(null);
                     $('td > div > #amount-id-expense').last().val(0);
+                    $('.select2-expense-category').select2({
+                        placeholder: 'Choose a category',
+                        allowClear: true,
+                        width:'resolve',
+                        ajax:{
+                            url:'/accounting/getExpensesCategories',
+                            type:"GET",
+                            dataType:"json",
+                            delay:250,
+                            data:function (params) {
+                                return{
+                                    q: params.name,
+                                    transaction_id:transaction_id
+                                }
+                            },
+                            processResults:function (response) {
+                                return{results:response};
+                            },
+                            cache:true
+                        },
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        },
+                        templateResult: function (d) {
+                            var subtext = d.subtext;
+                            if(subtext == undefined){subtext=''}
+                            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                        }
+                    });
+                    $('.select2-expense-category').last().next().next().remove();
                 }
+                $('#line-container-expense > tr').each(function (index) {
+                    $(this).children('td').children('#line-counter-expense').text(index+1);
+                });
             });
         });
         // Clear Lines
@@ -2210,10 +2380,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Table input text show
 
         $(document).on("click","#tableLine-expense td:not(:last-child)",function () {
+            var transaction_id = $('#expenseTransId').val();
             if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-expense-category').select2({
                     placeholder: 'Choose a category',
-                    allowClear: true
+                    allowClear: true,
+                    width:'resolve',
+                    ajax:{
+                        url:'/accounting/getExpensesCategories',
+                        type:"GET",
+                        dataType:"json",
+                        delay:250,
+                        data:function (params) {
+                            return{
+                                q: params.name,
+                                transaction_id:transaction_id
+                            }
+                        },
+                        processResults:function (response) {
+                            return{results:response};
+                        },
+                        cache:true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    templateResult: function (d) {
+                        var subtext = d.subtext;
+                        if(subtext == undefined){subtext=''}
+                        return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                    }
                 });
                 $('.select2-expense-category').last().next().next().remove();
                 // $('#tableLine-expense > td >input').hide();
@@ -2276,6 +2472,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         jQuery(document).ready(function() {
             $("#add-four-line-vendorCredit").click(function() {
                 var id = $('#line-container-vendorCredit > tr').length;
+                var transaction_id = $('#vcTransId').val();
                 for (var x = 1;x <= 4;x++){
                     id++;
                     $('#line-container-vendorCredit').append($('#tableLine-vendorCredit').last().clone());
@@ -2285,6 +2482,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $('td > #description-preview-vc').last().html('');
                     $('td > #amount-preview-vc').last().html('');
                     $('td > div > #amount-id-vc').last().val(0);
+                    $('.select2-vc-category').select2({
+                        placeholder: 'Choose a category',
+                        allowClear: true,
+                        width:'resolve',
+                        ajax:{
+                            url:'/accounting/getExpensesCategories',
+                            type:"GET",
+                            dataType:"json",
+                            delay:250,
+                            data:function (params) {
+                                return{
+                                    q: params.name,
+                                    transaction_id:transaction_id
+                                }
+                            },
+                            processResults:function (response) {
+                                return{results:response};
+                            },
+                            cache:true
+                        },
+                        escapeMarkup: function (markup) {
+                            return markup;
+                        },
+                        templateResult: function (d) {
+                            var subtext = d.subtext;
+                            if(subtext == undefined){subtext=''}
+                            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                        }
+                    });
+                    $('.select2-vc-category').last().next().next().remove();
                 }
                 $('#line-container-vendorCredit > tr').each(function (index) {
                     $(this).children('td').children('#line-counter-vendorCredit').text(index+1);
@@ -2318,10 +2545,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         //Table input text show
         $(document).on("click","#tableLine-vendorCredit td:not(:last-child)",function (e) {
+            var transaction_id = $('#vcTransId').val();
             if ($(this).parent('tr').children('td').children('div').children('#prevent_process').val() == 'true'){
                 $('.select2-vc-category').select2({
                     placeholder: 'Choose a category',
-                    allowClear: true
+                    allowClear: true,
+                    width:'resolve',
+                    ajax:{
+                        url:'/accounting/getExpensesCategories',
+                        type:"GET",
+                        dataType:"json",
+                        delay:250,
+                        data:function (params) {
+                            return{
+                                q: params.name,
+                                transaction_id:transaction_id
+                            }
+                        },
+                        processResults:function (response) {
+                            return{results:response};
+                        },
+                        cache:true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    templateResult: function (d) {
+                        var subtext = d.subtext;
+                        if(subtext == undefined){subtext=''}
+                        return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                    }
                 });
                 $('.select2-vc-category').last().next().next().remove();
                 // $('#tableLine-vendorCredit > td >input').hide();

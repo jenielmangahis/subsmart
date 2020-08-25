@@ -57,8 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 					                        </td>
 					                        <td>
 					                        	<?php
-					                        		$date_created = date_create($row->date_created);
-													echo date_format($date_created, "F d, Y");
+					                        		echo $row->date_created_formatted;
 					                        	?>
 					                        </td>
 					                        <td>
@@ -131,18 +130,86 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   </div>
 </div>
 
+<div id="modal-taskhub-entry-error-alert" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title" id="modal-taskhub-entry-error-alert-title">Error</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-taskhub-entry-error-alert-message"><?php if(isset($error)){ echo trim($error); } ?></p>  
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
     $(document).ready(function(){
+        tasks_table = $('#dataTable1').DataTable({
+                        "order": []
+                      });
+
         $('#btn-th-open-search').click(function(e){
             e.preventDefault();
 
             $('#modal-taskhub-search').modal('show');    
         });
 
-        $('#dataTable1').DataTable({
-        	"order": []
+        $('#btn-modal-taskhub-search').click(function(){
+            var vKeyword = $('#ts-keyword').val();
+            var vStatusId = $('#ts-status').val();
+            var vFromDate = $('#ts-from-date').val();
+            var vToDate = $('#ts-to-date').val();
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + "taskhub/getTasksWithFilters",
+                data: {keyword:vKeyword,status:vStatusId,fromdate:vFromDate,todate:vToDate},
+                success: function(data){
+                    var result = jQuery.parseJSON(data);
+
+                    tasks_table.destroy();
+
+                    $('table#dataTable1 > tbody').empty();
+
+                    var append = '';
+                    $.each(result, function(index, task){
+                        append += '<tr>';
+                            append += '<td width="60">'+ task.task_id +'</td>';
+                            append += '<td><a href="'+ base_url +'taskhub/view/'+ task.task_id +'">'+ task.subject +'</a></td>';
+                            append += '<td>'+ task.status_text +'</td>';
+                            append += '<td>'+ task.date_created_formatted + '</td>';
+                            append += '<td>' +
+                                      '<a href="'+ base_url +'taskhub/entry/'+ task.task_id +'" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa ' + 
+                                      'fa-pencil"></i></a>' +
+
+                                      '<a href="'+ base_url +'taskhub/addupdate/'+ task.task_id +'" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa ' +
+                                      'fa-sticky-note-o"></i></a>' +
+                                            
+                                      '</td>';
+                        append += '</tr>';
+                    });
+
+                    $('table#dataTable1 > tbody').append(append);
+
+                    tasks_table = $('#dataTable1').DataTable({
+                                    "order": []
+                                  });
+
+                    $('#modal-taskhub-search').modal('hide');
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    $('#modal-taskhub-entry-error-alert-title').text(textStatus);
+                    $('#modal-taskhub-entry-error-alert-message').text(errorThrown);
+                    $('#modal-taskhub-entry-error-alert').modal('show');
+                } 
+            }); 
         });
     });
 </script>

@@ -108,64 +108,78 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="card-body col-12">
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
-                                        <h1 class="page-title">Schedule</h1>
-                                        <form id="frm_calender_filter_events" method="post">
-                                            <div class="form-group a-1">
-                                                <!--<select id='time-zone-selector' class="form-control custom-select">
-                                                    <option value='local' selected>local</option>
-                                                    <option value='UTC'>UTC</option>
-                                                </select>-->
-                                                <span class="text-ter">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec" href="http://nsmartrac.com/settings/schedule"><span class="fa fa-cog"></span> Change</a>
-                                            </div>
-                                            <?php if (!empty($users)) { ?>
-                                                <div class="form-group b-1">
-                                                    <select class="form-control custom-select" id="select-employee">
-                                                        <option value="0">All Employees</option>
-                                                        <?php foreach ($users as $user) { ?>
-                                                            <option value="<?php echo $user->id ?>"><?php echo $user->name ?></option>
-                                                        <?php } ?>
-                                                    </select>
+                                        <div class="stcs-2 left">
+                                          <h1 class="page-title left">Schedule</h1>
+                                        </div>
+                                        <div class="stcs-cover left">
+                                          <form id="frm_calender_filter_events" method="post">
+                                              <div class="stcs-4 left">
+                                                <div class="form-group">
+                                                    <!--<select id='time-zone-selector' class="form-control custom-select">
+                                                        <option value='local' selected>local</option>
+                                                        <option value='UTC'>UTC</option>
+                                                    </select>-->
+                                                    <span class="text-ter left">Central Time (UTC -5) &nbsp;</span><a class="margin-right-sec left text-green" href="<?= base_url()?>settings/schedule"><span class="fa fa-cog left"></span> Change</a>
                                                 </div>
-                                            <?php } ?>
-                                            <div class="form-group margin-left-sec c-1" role="group" aria-label="...">
-                                                 <a class="btn btn-sec btn-md" id="print-calender"  data-calendar="print" href="#">
-                                                    <span class="fa fa-print fa-margin-right"></span> Print
-                                                </a>
-                                            </div>
-                                            <div class="form-group margin-left-sec d-1" role="group" aria-label="...">
-                                                <a class="btn btn-primary btn-md" data-calendar="print"
-                                                   href="<?php echo base_url('workorder/add') ?>" target="_blank">
-                                                    <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
-                                                </a>
-                                            </div>
-                                            <div class="form-group margin-left-sec e-1" role="group" aria-label="...">
-                                                <div class="btn-group btn-with-dropdown">
-                                                    <button type="button" class="btn btn-primary btn-md" data-toggle="modal"
-                                                            data-target="#modalCreateEvent">
-                                                        <span class="fa fa-plus fa-margin-right"></span>&nbsp;&nbsp;Create Event
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary btn-md dropdown-toggle"
-                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        <span class="caret"></span>
-                                                        <span class="sr-only">Toggle Dropdown</span>
-                                                    </button>
-                                                    <ul class="dropdown-menu text-dark-c1">
-                                                        <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
-                                                               data-target="#modalCreateEvent">
-                                                                Add Blocked Event</a></li>
-                                                        <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
-                                                               data-target="#modalCreateEvent">
-                                                                Assign New Lead</a></li>
-                                                        <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                               data-target="#modalCreateEvent">Create Event</a></li>
-                                                        <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                               data-target="#modalCreateEvent">Cancel Schedule</a></li>
-                                                        <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                               data-target="#modalCreateEvent">Reschedule</a></li>
-                                                    </ul>
+                                              </div>
+                                              <?php if (!empty($users)) { ?>
+                                              <div class="stcs-3-full left">
+                                                  <div class="select-group">
+                                                      <select class="form-control custom-select" id="select-employee">
+                                                          <option value="0">All Employees</option>
+                                                          <?php foreach ($users as $user) { ?>
+                                                              <option value="<?php echo $user->id ?>"><?php echo $user->name ?></option>
+                                                          <?php } ?>
+                                                      </select>
+                                                  </div>
+                                              </div>
+                                              <?php } ?>
+                                              <div class="stcs-print cs-float-print">
+                                                <div class="form-group margin-left-sec c-1" role="group" aria-label="...">
+                                                     <a class="text-white btn btn-sec btn-md" id="print-calender"  data-calendar="print" href="#">
+                                                        <span class="fa fa-print fa-margin-right"></span> Print
+                                                    </a>
                                                 </div>
-                                            </div>
-                                        </form>
+                                              </div>
+                                              <div class="stcs-1 cs-float">
+                                                <div class="form-group margin-left-sec d-1" role="group" aria-label="...">
+                                                    <a class="text-white btn btn-primary btn-md" data-calendar="print"
+                                                       href="<?php echo base_url('workorder/add') ?>" target="_blank">
+                                                        <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
+                                                    </a>
+                                                </div>
+                                              </div>
+                                              <div class="stcs-3 pos-2 cs-float">
+                                                <div class="form-group margin-left-sec e-1" role="group" aria-label="...">
+                                                    <div class="btn-group btn-with-dropdown">
+                                                        <button type="button" class="text-white btn btn-primary btn-md" data-toggle="modal"
+                                                                data-target="#modalCreateEvent">
+                                                            <span class="fa fa-plus fa-margin-right"></span>&nbsp;&nbsp;Create Event
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary btn-md dropdown-toggle"
+                                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                            <span class="caret"></span>
+                                                            <span class="text-white sr-only">Toggle Dropdown</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu text-dark-c1">
+                                                            <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">
+                                                                    Add Blocked Event</a></li>
+                                                            <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">
+                                                                    Assign New Lead</a></li>
+                                                            <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">Create Event</a></li>
+                                                            <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">Cancel Schedule</a></li>
+                                                            <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">Reschedule</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                          </form>
+                                        </div>
                                         <br class="clearfix"/><br/>
 
 
@@ -181,7 +195,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
         <?php //if( !$is_mobile ){ ?>
-        <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow: scroll; max-height: 800px;">
+        <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow-y: scroll; max-height: 800px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div id="right-calendar"></div>

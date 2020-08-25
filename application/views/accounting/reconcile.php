@@ -23,6 +23,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     display: none !important;
 }
 </style>
+
+<!-- Popup -->
+    <div class="modal fade" id="popup-opn" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="reconciliblock">
+                    <div class="error-block">
+                        <div class="error-ic">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="error-dt">
+                            <h4>Reconciliation saved for later.</h4>
+                            <p>You can upload statements to this reconcilation to find it when you come back later.</p>
+                        </div>
+                    </div>
+
+                    <div class="action-popup">
+                        <a href="#" class="btn-main uplobtn" id="menuButton" onclick="openSideNav3()">Upload statement</a>
+                        <a href="#" class="btn-main">Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Popup -->
+
+    <!-- Add Custom Tax Sidebar -->
+    <div id="overlay-cus-tx" class=""></div>
+    <div id="side-menu-cus-tx" class="main-side-nav">
+        <div class="side-title">
+            <h4>Statement attachments - Cash on hand</h4>
+            <a id="close-menu-cus-tx" class="menuCloseButton" onclick="closeSideNav3()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        <div class="mainMenu nav">
+            <div class="file-upload-block">
+                <div class="upload-btn-wrapper">
+                    <button class="btn">
+                        <i class="fa fa-cloud-upload"></i>
+                        <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                    </button>
+                    <input type="file" name="myfile" />
+                </div>
+            </div>
+        </div>
+
+        <div class="save-act">
+            <button class="btn-cmn">Cancel</button>
+            <button class="savebtn">Done</button>
+        </div>
+    </div>
+    <!-- End Add Custom Tax Sidebar -->
+
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -55,7 +108,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item" href="#">Finish Now</a>
-                                <a class="dropdown-item" href="#">Save for later</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-opn">Save for later</a>
                                 <a class="dropdown-item" href="#">Close without saving</a>
                               </div>
                             </div>
@@ -218,9 +271,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="col-md-4 col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>Payee</label>
-                                                                    <select class="form-control">
-                                                                        <option>All</option>
-                                                                        <option>Cleared</option>
+                                                                    <select name='payee_drop' class='form-control select2'>
+                                                                        <option value='' disabled selected>All</option>
+                                                                        <?php
+                                                                        foreach($this->AccountingVendors_model->select() as $ro)
+                                                                        {
+                                                                            echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                                                        }
+                                                                        ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -300,12 +358,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
                                 echo "<td class='refno' contenteditable='true'>SVCCHRG</td>";
                                 echo "<td class='account'>".$row->expense_account."</td>";
-                                echo "<td class='payee' contenteditable='true'>";
-                                    echo "<select class='form-control select2'>";
-                                    echo "<option value=' disabled selected>Payee</option>";
-                                    echo "<option value='1'>Option 1</option>";
-                                    echo "<option value='2'>Option 2</option>";
-                                    echo "<option value='2'>Option 3</option>";
+                                echo "<td name='payee' class='payee' contenteditable='true'>";
+                                    echo "<select name='payee' class='form-control select2'>";
+                                    echo "<option value='' disabled selected>Payee</option>";
+                                    foreach($this->AccountingVendors_model->select() as $ro)
+                                    {
+                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                    }
                                     echo  "</select>";
                                 echo "</td>";
                                 echo "<td class='memo' contenteditable='true'>Service Charges</td>";
@@ -346,11 +405,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 echo "<td class='refno' contenteditable='true'>INTEREST</td>";
                                 echo "<td class='account'>".$row->income_account."</td>";
                                 echo "<td class='payee' contenteditable='true'>";
-                                    echo "<select class='form-control select2'>";
-                                    echo "<option value=' disabled selected>Payee</option>";
-                                    echo "<option value='1'>Option 1</option>";
-                                    echo "<option value='2'>Option 2</option>";
-                                    echo "<option value='2'>Option 3</option>";
+                                    echo "<select name='payee' class='form-control select2'>";
+                                    echo "<option value='' disabled selected>Payee</option>";
+                                    foreach($this->AccountingVendors_model->select() as $ro)
+                                    {
+                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                    }
                                     echo  "</select>";
                                 echo "</td>";
                                 echo "<td class='memo' contenteditable='true'>Interest Earned</td>";
@@ -742,4 +802,17 @@ $('.dropopenbx').on('click', function(){
         document.getElementById("transaction_type").selectedIndex = 0;
         applybtn();
     }
+</script>
+<script type="text/javascript">
+function openSideNav3() {
+     
+    jQuery("#side-menu-cus-tx").addClass("open-side-nav");
+    jQuery("#overlay-cus-tx").addClass("overlay");
+}
+
+function closeSideNav3() {
+   
+    jQuery("#side-menu-cus-tx").removeClass("open-side-nav");
+    jQuery("#overlay-cus-tx").removeClass("overlay");
+}
 </script>
