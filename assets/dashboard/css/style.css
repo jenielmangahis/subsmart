@@ -1732,8 +1732,30 @@ button:focus {
     .smart__grid {
       height: auto !important;
     }
+    .onoffswitch {
+      float: right;
+      margin-bottom: 20px;
+    }
     .btn-mobile {
       margin-top: 20px;
+    }
+    .mobile-left {
+      float:left !important;
+    }
+    .padding-mobile-cs {
+      padding: 0px 30px !important;
+    }
+    .card-mobile {
+      width: 100% !important;
+    }
+    ::-webkit-scrollbar-track {
+      display: none;
+    }
+    ul.nav.sidebar-accounting li.nav-header {
+      display: none;
+    }
+    ul.nav.sidebar-accounting li i {
+      padding-right: 60px !important;
     }
     ul.ul-mobile li {
       width: 50%;

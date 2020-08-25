@@ -410,7 +410,34 @@
         padding-top: 10px;
     }
 
-
+    @media (max-width: 767px) {
+      .client, .project {
+          height: auto !important;
+          width: 100% !important;
+          padding: 30px 30px;
+          margin-bottom: 40px;
+      }
+      div.ui-state-default div a {
+          margin-left: 16px;
+      }
+      table.widget_client {
+          position: relative;
+          right: 25px;
+      }
+      div#chart_column, .contactrighttxt {
+          position: relative;
+          left: 20px;
+      }
+      .assigncontactlist.normaltext1 img {
+          margin: 0 auto;
+      }
+      div.ui-state-default {
+          padding: 30px 10px;
+          clear: both;
+          margin-bottom: 40px;
+          height: auto;
+      }
+    }
 
     @media only screen and (max-width: 600px) {
         .hid-desk {

@@ -103,7 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                        <div class="card-body" style="padding-bottom:0px;">
                             <div class="row align-items-center pt-3 bg-white">
                                 <div class="col-md-12">
                                     <!-- Nav tabs -->
@@ -126,10 +126,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="col-xl-9">
                                                     <div class="card">
                                                         <div class="card-body" style="padding-bottom:0px;">
-                                                            <div class="col-sm-12">
-                                                                <h3 class="page-title">Customers List</h3>
+                                                            <div class="col-sm-6 col-md-12">
+                                                                <h3 class="page-title mobile-left">Customers List</h3>
                                                             </div>
-                                                            <div class="col-sm-12">
+                                                            <div class="col-sm-6 col-md-12">
                                                                 <div class="float-right d-md-block">
                                                                     <div class="dropdown">
                                                                         <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
@@ -261,10 +261,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-3">
-                                                    <div class="card">
-                                                        <div class="row">
+                                                <div class="col-sm-12 col-xl-3">
+                                                    <div class="card card-mobile">
+                                                        <div class="row padding-mobile-cs">
                                                             <div class="col-sm-12">
+
                                                                 <h6 class="page-title">Quick Action</h6>
                                                             </div>
                                                             <div class="card-body">
@@ -318,8 +319,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
 
                                         <div class="tab-pane <?php if($cust_tab==1){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
-                                            <div class="col-sm-12">
-                                                <h3 class="page-title">Customer List View</h3>
+                                            <div class="col-sm-6 col-md-12 col-xl-12">
+                                                <h3 class="page-title mobile-left">Customer List View</h3>
                                             </div>
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
@@ -330,7 +331,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                                 <br/><br/><br/>
-                                                <div class="col-sm-12">
+                                                <div class="col-sm-6 col-md-12 col-xl-12">
                                                     <div class="banking-tab-container">
                                                         <div class="rb-01">
                                                             <ul class="nav nav-tabs border-0">
