@@ -101,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- end row -->
             <div class="row">
-                <div class="col-xl-9">
+                <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center pt-3 bg-white">
@@ -123,33 +123,189 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="tab-content mt-4" >
                                         <div class="tab-pane <?php if($cust_tab==0){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
-                                                <div class="col-sm-3">
-                                                    <h3 class="page-title">Customers List</h3>
+                                                <div class="col-xl-9">
+                                                    <div class="card">
+                                                        <div class="card-body" style="padding-bottom:0px;">
+                                                            <div class="col-sm-12">
+                                                                <h3 class="page-title">Customers List</h3>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <div class="float-right d-md-block">
+                                                                    <div class="dropdown">
+                                                                        <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
+                                                                            <!--<input type="file" name="file" /> -->
+                                                                            <button type="submit" class="btn btn-primary btn-md" name="importSubmit" id="importItemsInventory" ><span class="fa fa-download"></span> Import</button>
+                                                                            <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
+                                                                            <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
+                                                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                                                                            </a>
+                                                                            <?php if (isset($customers) && count($customers) > 0) { ?>
+                                                                                <a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
+                                                                                    <span class="fa fa-print "></span> Print
+                                                                                </a>
+                                                                            <?php } ?>
+                                                                            <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
+                                                                            <a class="btn btn-primary btn-md"
+                                                                               href="<?php echo url('customer/add_advance') ?>"><span
+                                                                                        class="fa fa-plus"></span> New Customer</a>
+                                                                            <?php //endif ?>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                                <br><br><br>
+                                                                <div class="tab-content" id="myTabContent">
+                                                                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+
+                                                                        <table class="table table-hover" id="customer_list_table">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th>Name</th>
+                                                                                <th>City</th>
+                                                                                <th>Street</th>
+                                                                                <th>Source</th>
+                                                                                <th>Email</th>
+                                                                                <th>Added</th>
+                                                                                <th>Sales Rep</th>
+                                                                                <th>Tech</th>
+                                                                                <th>System Type</th>
+                                                                                <th>MMR</th>
+                                                                                <th>Phone</th>
+                                                                                <th>Status</th>
+                                                                                <th>Actions</th>
+                                                                            </tr>
+                                                                            </thead>
+
+                                                                            <tbody>
+                                                                            <?php if (isset($customers)) : ?>
+                                                                                <?php foreach ($customers as $customer) : ?>
+
+                                                                                    <tr>
+                                                                                        <td><?php echo $customer->contact_name; ?></td>
+                                                                                        <td>&nbsp;</td>
+                                                                                        <td>&nbsp;</td>
+                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->contact_email; ?></td>
+                                                                                        <td>&nbsp;</td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->phone; ?></td>
+                                                                                        <td><?php echo $customer->status; ?></td>
+                                                                                        <td class="text-right">
+                                                                                            <div class="dropdown dropdown-btn open">
+                                                                                                <button class="btn btn-default dropdown-toggle" type="button"
+                                                                                                        id="dropdown-edit" data-toggle="dropdown"
+                                                                                                        aria-expanded="true">
+                                                                                                    <span class="btn-label">Manage</span><span
+                                                                                                            class="caret-holder"><span
+                                                                                                                class="caret"></span></span>
+                                                                                                </button>
+                                                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                                                                                    aria-labelledby="dropdown-edit">
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-user icon"></span> View</a>
+                                                                                                    </li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-pencil-square-o icon"></span>
+                                                                                                            Edit</a></li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-pencil-square-o icon"></span>
+                                                                                                            Create Service Ticket</a></li>
+                                                                                                    <li role="separator" class="divider"></li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-calendar icon"></span> Schedule
+                                                                                                            Appointment</a></li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-money icon"></span> Create
+                                                                                                            Invoice</a></li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-file-text-o icon"></span>
+                                                                                                            Create Estimate</a></li>
+                                                                                                    <li role="separator" class="divider"></li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               data-inactive-modal="open"
+                                                                                                                               data-customer-id="400604"
+                                                                                                                               data-customer-info="Agnes Knox, "
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-user-times icon"></span> Mark
+                                                                                                            as inactive</a></li>
+                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                                                               data-delete-modal="open"
+                                                                                                                               data-customer-id=""
+                                                                                                                               onclick="return confirm('Do you really want to delete this item ?')"
+                                                                                                                               data-customer-info="Agnes Knox, "
+                                                                                                                               href="#"><span
+                                                                                                                    class="fa fa-trash-o icon"></span> Delete
+                                                                                                            customer</a></li>
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                <?php endforeach; ?>
+                                                                            <?php endif; ?>
+                                                                            </tbody>
+
+                                                                        </table>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-9">
-                                                    <div class="float-right d-md-block">
-                                                        <div class="dropdown">
-                                                            <form action="<?php echo base_url('customer/importItems'); ?>" method="post" enctype="multipart/form-data">
-                                                                <input type="file" name="file" />
-                                                                <button type="submit" class="btn btn-primary btn-md" name="importSubmit" id="importItemsInventory" ><span class="fa fa-download"></span> Import</button>
-                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
-                                                                    <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
-                                                                        <span class="fa fa-pencil"></span> &nbsp; Customize Form
-                                                                    </a>
-                                                            <?php if (isset($customers) && count($customers) > 0) { ?>
-                                                                <a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
-                                                                    <span class="fa fa-print "></span> Print
-                                                                </a>
-                                                            <?php } ?>
-                                                            <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
-                                                                <!-- <a href="<?php echo url('customer/add') ?>" class="btn btn-primary" aria-expanded="false">
-                                                    <i class="mdi mdi-settings mr-2"></i> New Customer
-                                                </a>    -->     <a class="btn btn-primary btn-md"href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
-                                                                <a class="btn btn-primary btn-md"
-                                                                href="<?php echo url('customer/add_advance') ?>"><span
-                                                                            class="fa fa-plus"></span> New Customer</a>
-                                                            <?php //endif ?>
-                                                            </form>
+
+                                                <div class="col-xl-3">
+                                                    <div class="card">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <h6 class="page-title">Quick Action</h6>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <table class="table table-hover" id="customer_list_quick">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Name</th>
+                                                                        <th>Actions</th>
+                                                                    </tr>
+                                                                    </thead>
+
+                                                                    <tbody>
+                                                                    <?php if (isset($customers)) : ?>
+                                                                        <?php foreach ($customers as $customer) : ?>
+
+                                                                            <tr>
+                                                                                <td><?php echo $customer->contact_name; ?></td>
+                                                                                <td>
+                                                                                    <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/email-icon.png" border="0" title="Internal Note">
+                                                                                    </a>
+                                                                                    <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/comment_edit.png" border="0" title="Internal Note">
+                                                                                    </a>
+                                                                                    <a href="#"  style="text-decoration:none; display:inline-block;">
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="Team member assigned">
+                                                                                    </a>
+                                                                                    <a href="#" style="text-decoration:none;display:inline-block;" class="js-qwynlraxz">
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
+                                                                                    </a>
+                                                                                    <a href="#"  style="text-decoration:none;display:inline-block;" title="Delete client" class="js-qwynlraxz">
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        <?php endforeach; ?>
+                                                                    <?php endif; ?>
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -159,114 +315,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     font-size: 12px !important;
                                                 }
                                             </style>
-
-
-
-                                            <div class="tab-content" id="myTabContent">
-                                                <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-
-                                                        <table class="table table-hover" id="customerListTable">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>City</th>
-                                                                <th>Street</th>
-                                                                <th>Source</th>
-                                                                <th>Email</th>
-                                                                <th>Added</th>
-                                                                <th>Sales Rep</th>
-                                                                <th>Tech</th>
-                                                                <th>System Type</th>
-                                                                <th>MMR</th>
-                                                                <th>Phone</th>
-                                                                <th>Status</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                            </thead>
-
-                                                            <tbody>
-                                                            <?php if (isset($customers)) : ?>
-                                                                <?php foreach ($customers as $customer) : ?>
-
-                                                                    <tr>
-                                                                        <td><?php echo $customer->contact_name; ?></td>
-                                                                        <td>&nbsp;</td>
-                                                                        <td>&nbsp;</td>
-                                                                        <td></td>
-                                                                        <td><?php echo $customer->contact_email; ?></td>
-                                                                        <td>&nbsp;</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td><?php echo $customer->phone; ?></td>
-                                                                        <td><?php echo $customer->status; ?></td>
-                                                                        <td class="text-right">
-                                                                            <div class="dropdown dropdown-btn open">
-                                                                                <button class="btn btn-default dropdown-toggle" type="button"
-                                                                                        id="dropdown-edit" data-toggle="dropdown"
-                                                                                        aria-expanded="true">
-                                                                                    <span class="btn-label">Manage</span><span
-                                                                                            class="caret-holder"><span
-                                                                                                class="caret"></span></span>
-                                                                                </button>
-                                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                                                    aria-labelledby="dropdown-edit">
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-user icon"></span> View</a>
-                                                                                    </li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-pencil-square-o icon"></span>
-                                                                                            Edit</a></li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-pencil-square-o icon"></span>
-                                                                                            Create Service Ticket</a></li>
-                                                                                    <li role="separator" class="divider"></li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-calendar icon"></span> Schedule
-                                                                                            Appointment</a></li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-money icon"></span> Create
-                                                                                            Invoice</a></li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-file-text-o icon"></span>
-                                                                                            Create Estimate</a></li>
-                                                                                    <li role="separator" class="divider"></li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               data-inactive-modal="open"
-                                                                                                               data-customer-id="400604"
-                                                                                                               data-customer-info="Agnes Knox, "
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-user-times icon"></span> Mark
-                                                                                            as inactive</a></li>
-                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                               data-delete-modal="open"
-                                                                                                               data-customer-id=""
-                                                                                                               onclick="return confirm('Do you really want to delete this item ?')"
-                                                                                                               data-customer-info="Agnes Knox, "
-                                                                                                               href="#"><span
-                                                                                                    class="fa fa-trash-o icon"></span> Delete
-                                                                                            customer</a></li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                <?php endforeach; ?>
-                                                            <?php endif; ?>
-                                                            </tbody>
-
-                                                        </table>
-
-                                                </div>
-                                            </div>
-
-
                                         </div>
 
                                         <div class="tab-pane <?php if($cust_tab==1){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
@@ -342,10 +390,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="indata sortable2" id="sorting">
 
                                                                 <?php
-                                                                    $modules = explode(",", $module_sort->ams_values);
-                                                                    for($x=0;$x<count($modules);$x++){
-                                                                        include viewPath('customer/adv_cust_modules/'.$modules[$x]);
-                                                                    }
+                                                                $modules = explode(",", $module_sort->ams_values);
+                                                                for($x=0;$x<count($modules);$x++){
+                                                                    include viewPath('customer/adv_cust_modules/'.$modules[$x]);
+                                                                }
                                                                 ?>
                                                                 <!--<div class="contract module ui-state-default" id="contact">
                                                                     <h5>Contact Module</h5>
@@ -445,12 +493,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             </div>
 
                                                                             <div class="col-md-12">
-                                                                                    <div class="col-md-8">
+                                                                                <div class="col-md-8">
                                                                                     <div class="form-group" id="customer_type_group">
                                                                                         <label for="">Mailing address</label><br/>
                                                                                         <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
                                                                                     </div>
-                                                                                    </div>
+                                                                                </div>
                                                                             </div>
 
                                                                             <div class="col-md-4">
@@ -656,69 +704,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <h6 class="page-title">Quick Action</h6>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-hover" id="customer_list_quick">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                <?php if (isset($customers)) : ?>
-                                    <?php foreach ($customers as $customer) : ?>
-
-                                        <tr>
-                                            <td><?php echo $customer->contact_name; ?></td>
-                                            <td>
-                                                <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/email-icon.png" border="0" title="Internal Note">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/comment_edit.png" border="0" title="Internal Note">
-                                                </a>
-                                                <a href="#"  style="text-decoration:none; display:inline-block;">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="Team member assigned">
-                                                </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" class="js-qwynlraxz">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
-                                                </a>
-                                                <a href="#"  style="text-decoration:none;display:inline-block;" title="Delete client" class="js-qwynlraxz">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                                </tbody>
-
-                            </table>
-                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
-                    <!-- end card -->
+            <!-- end card -->
         </div>
-     </div>
-            <!-- end row -->
+    </div>
+    <!-- end row -->
 </div>
-        <!-- end container-fluid -->
+<!-- end container-fluid -->
 
 <!-- Lead Type Modal -->
 <div class="modal fade" id="modal_lead_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -731,21 +732,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </button>
             </div>
             <form id="leadTypeForm">
-            <div class="modal-body">
+                <div class="modal-body">
 
-                <div class="col-md-12">
-                    <div class="form-group" id="customer_type_group">
-                        <label for="">Lead Type Name</label><br/>
-                        <input type="text" class="form-control" name="lead_name" id="lead_name" required/>
-                        <input type="hidden" class="form-control" name="lead_id" id="lead_id" required/>
+                    <div class="col-md-12">
+                        <div class="form-group" id="customer_type_group">
+                            <label for="">Lead Type Name</label><br/>
+                            <input type="text" class="form-control" name="lead_name" id="lead_name" required/>
+                            <input type="hidden" class="form-control" name="lead_id" id="lead_id" required/>
+                        </div>
                     </div>
-                </div>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
             </form>
         </div>
     </div>

@@ -148,8 +148,10 @@ $(document).ready(function () {
         return list;
     }
     function showCategories(check,transaction_id,id,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview) {
-        if (check > 0){
+        $(".table-loader").fadeIn('fast',function(){
             $('.table-loader').show();
+        });
+        if (check > 0){
             $.ajax({
                 url: siteURL + "accounting/rowCategories",
                 type:"GET",
@@ -187,7 +189,6 @@ $(document).ready(function () {
                 }
             });
         }else{
-            $('.table-loader').show();
             $.ajax({
                 url: siteURL + "accounting/defaultCategoryRow",
                 type:"GET",
@@ -260,9 +261,34 @@ $(document).ready(function () {
                 $('.expense-transactions-data-table').html(data);
                 $('.select2-tbl-category').select2({
                     placeholder: 'Select a category',
-                    allowClear: true
+                    allowClear: true,
+                    width: 'resolve',
+                    ajax:{
+                        url:'/accounting/getExpensesCategories',
+                        type:"GET",
+                        dataType:"json",
+                        delay:250,
+                        data:function (params) {
+                            var query = {
+                                search: params.term
+                            };
+                            return query;
+                        },
+                        processResults:function (response) {
+                            return{results:response};
+                        },
+                        cache:true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    templateResult: function (d) {
+                        var subtext = d.subtext;
+                        if(subtext == undefined){subtext=''}
+                        return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+                    }
                 });
-                console.log(data);
+
             }
         });
     }
@@ -273,10 +299,12 @@ $(document).ready(function () {
         var id = $(this).attr('data-id');
         var category = $(this).val();
         var select = this;
+        var expenses_id = $(this).parent('div').parent('td').attr('data-id');
+        var transaction_id = $(this).parent('div').parent('td').attr('data-transid');
         $.ajax({
            url:"/accounting/updateCategoryById",
            type:"POST",
-           data:{id:id,category:category},
+           data:{id:id,category:category,expenses_id:expenses_id,transaction_id:transaction_id},
            success:function () {
                $(select).parent().next('.fa-spinner').css('display','none');
                $(select).parent('div').css('width','100%');
@@ -685,7 +713,7 @@ $(document).ready(function () {
         $(".loader").fadeIn('fast',function(){
             $('.loader').show();
         });
-        $('#billForm').attr('action',"accounting/addBill");
+        $('#billForm').attr('action',"/accounting/addBill");
         $('#billForm')[0].reset();
         $("#billTerms").select2('val','All');
         $("#billVendorID").select2('val','All');
@@ -703,6 +731,78 @@ $(document).ready(function () {
         showCategories(0,0,0,container,row,cat_class,des_class,amount_class,counter,remove_id,select,preview);
         $(".loader").fadeOut('fast',function(){
             $('.loader').hide();
+        });
+    });
+    $(document).on('click','#billSaved',function () {
+        $(".loader").fadeIn('fast',function(){
+            $('.loader').show();
+        });
+        var vendor_id = $('#billVendorID').val();
+        var mailing_address = $('#billMailingAddress').val();
+        var terms = $('#billTerms').val();
+        var bill_date = $('#billDate').val();
+        var due_date = $('#billDueDate').val();
+        var bill_number = $('#billNumber').val();
+        var permit_number = $('#billPermitNumber').val();
+        var memo = $('#billMemo').val();
+        var category = getArrayCategory($('.billCategory'));
+        var description = getArrayDescription($('.billDescription'));
+        var amount = getArrayAmount($('.billAmount'));
+        var total = $('#total-amount-bill').text();
+        $.ajax({
+            url:$('#billForm').attr('action'),
+            type:"POST",
+            dataType:"json",
+            data:{
+                vendor_id:vendor_id,
+                mailing_address:mailing_address,
+                terms:terms,
+                bill_date:bill_date,
+                due_date:due_date,
+                bill_number:bill_number,
+                permit_number:permit_number,
+                memo:memo,
+                category:category,
+                description:description,
+                amount:amount,
+                total:total,
+                filename:bill_filename,
+                original_fname:original_fname_bill
+            },
+            cache:false,
+            success:function (data) {
+                console.log(data);
+                $(".loader").fadeOut('fast',function(){
+                    $('.loader').hide();
+                });
+                if(data == 1){
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "Bill expense has been added!",
+                            icon: 'success'
+                        }
+                    );
+                }else{
+                    Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process!",
+                            icon: 'warning'
+                        }
+                    );
+                }
+
+                showExpenseTransactionsTable();
+                $('#billAttachment').next().next($('.dz-preview').remove());
+                $('#billAttachment').next($('.dz-message').css({"display":"inherit"}));
+                attachment = null;
+                attachment_id = [];
+            }
         });
     });
     var bill_original = null;
@@ -853,76 +953,6 @@ $(document).ready(function () {
         }
 
 
-    });
-    $(document).on('click','#billSaved',function () {
-        $(".loader").fadeIn('fast',function(){
-            $('.loader').show();
-        });
-        var vendor_id = $('#billVendorID').val();
-        var mailing_address = $('#billMailingAddress').val();
-        var terms = $('#billTerms').val();
-        var bill_date = $('#billDate').val();
-        var due_date = $('#billDueDate').val();
-        var bill_number = $('#billNumber').val();
-        var permit_number = $('#billPermitNumber').val();
-        var memo = $('#billMemo').val();
-        var category = getArrayCategory($('.billCategory'));
-        var description = getArrayDescription($('.billDescription'));
-        var amount = getArrayAmount($('.billAmount'));
-        var total = $('#total-amount-bill').text();
-        $.ajax({
-            url:siteURL + $('#billForm').attr('action'),
-            type:"POST",
-            dataType:"json",
-            data:{
-                vendor_id:vendor_id,
-                mailing_address:mailing_address,
-                terms:terms,
-                bill_date:bill_date,
-                due_date:due_date,
-                bill_number:bill_number,
-                permit_number:permit_number,
-                memo:memo,
-                category:category,
-                description:description,
-                amount:amount,
-                total:total,
-                filename:bill_filename,
-                original_fname:original_fname_bill
-            },
-            cache:false,
-            success:function (data) {
-                $(".loader").fadeOut('fast',function(){
-                    $('.loader').hide();
-                });
-                if(data == 1){
-                    Swal.fire(
-                        {
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Success',
-                            text: "Bill expense has been added!",
-                            icon: 'success'
-                        }
-                    );
-                }else{
-                    Swal.fire(
-                        {
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Failed',
-                            text: "Something is wrong in the process!",
-                            icon: 'warning'
-                        }
-                    );
-                }
-                showExpenseTransactionsTable();
-                $('#billAttachment').next().next($('.dz-preview').remove());
-                $('#billAttachment').next($('.dz-message').css({"display":"inherit"}));
-                attachment = null;
-                attachment_id = [];
-            }
-        });
     });
     $(document).on('click','#billUpdate',function () {
         $(".loader").fadeIn('fast',function(){
@@ -1737,7 +1767,6 @@ $(document).ready(function () {
                 original_fname:original_fname_vc
             },
             success:function (data) {
-                console.log(data);
                 $(".loader").fadeOut('fast',function(){
                     $('.loader').hide();
                 });
@@ -1937,6 +1966,13 @@ $(document).on('click','#select2-category-id-check-results > li',function () {
 });
 // Vendor credit modal
 $(document).on('click','#select2-category-id-vc-results > li',function () {
+    $('#addNewCategories').modal({backdrop: 'static', keyboard: false});
+    $("#addNewCategories").css('z-index',1055);
+    $('.modal-backdrop').css('z-index',1052);
+    $('.modal-backdrop').css('display','inherit');
+});
+//Expense Transactions page
+$(document).on('click','#select2-expenseTransCategory-results > li',function () {
     $('#addNewCategories').modal({backdrop: 'static', keyboard: false});
     $("#addNewCategories").css('z-index',1055);
     $('.modal-backdrop').css('z-index',1052);

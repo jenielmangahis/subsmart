@@ -79,8 +79,9 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'assets/frontend/js/creditcard.js',
-            'assets/frontend/js/customer/add.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+           // 'assets/frontend/js/creditcard.js',
+           // 'assets/frontend/js/customer/add.js',
         ));
 
     }
@@ -684,7 +685,7 @@ class Customer extends MY_Controller
     public function leads()
     {
         $user_id = logged('id');
-        $this->page_data['plans'] = "";
+        $this->page_data['leads'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leads","leads_id");
         $this->load->view('customer/leads', $this->page_data);
     }
 
@@ -699,8 +700,8 @@ class Customer extends MY_Controller
     }
 
     public function add_advance()
-    {
 
+    {
         $user_id = logged('id');
         $this->page_data['plans'] = "";
         $this->load->view('customer/add_advance', $this->page_data);
@@ -708,12 +709,27 @@ class Customer extends MY_Controller
 
     public function add_lead()
     {
-        $user_id = logged('id');
-        $this->page_data['plans'] = "";
-        $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leadtypes","lead_id");
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->load->view('customer/add_lead', $this->page_data);
+        $input = $this->input->post();
+        if($input){
+            unset($input['credit_report']);
+            unset($input['report_history']);
+            $input['phone_home'] = $input['phone_home'][0].'-'.$input['phone_home'][1].'-'.$input['phone_home'][2];
+            $input['phone_cell'] = $input['phone_cell'][0].'-'.$input['phone_cell'][1].'-'.$input['phone_cell'][2];
+            $input['sss_num'] = $input['sss_num'][0].'-'.$input['sss_num'][1].'-'.$input['sss_num'][2];
+            print_r($input);
+            if($this->customer_ad_model->add($input,"ac_leads")){
+                redirect(base_url('customer/leads'));
+            }else{
+                echo "Error";
+            }
+        }else{
+            $user_id = logged('id');
+            $this->page_data['plans'] = "";
+            $this->page_data['users'] = $this->users_model->getUsers();
+            $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leadtypes","lead_id");
+            $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+            $this->load->view('customer/add_lead', $this->page_data);
+        }
     }
 
     // for addling of Lead Type (ac_leadtypes table)

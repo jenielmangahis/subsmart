@@ -895,6 +895,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="draggable__3" class="resize-x-handle-flip d-none">
+                            <div class="x-text-flip-back">
+                                <div class="vertical-scroll">
+                                <div  style="border:3px solid black;" class="ui-widget-content sideopne"><p>Signature</p></div>
+                                </div>
+                            </div>
+                        </div>
                         <div id="draggable-2" class="resize-x-handle-flip">
                             <div class="x-text-flip-back">
                                 <div class="vertical-scroll">
@@ -1096,6 +1103,21 @@
             </div>
             
             <div class="drawer-open-close drawer left drawer-properties ng-isolate-scope closed" olive-drawer-initial-state="closed" olive-drawer-name="propertiesPanel" olive-drawer-direction="left" olive-animation-weight="light" envelope-moderator="taggerCtrl.envelopeModerator" open-signing-preview="taggerCtrl.openRecipientsPreviewOverlay(tabid)" olive-drawer-initialized="true" style="width: 0px">
+                <div class="drawer-wrapper-open-close drawer-wrapper ng-scope" role="region" aria-label="Properties Panel" svg-view-angular-hook="" hook-name="'propertiesPanel'">
+                    <div olive-drawer-content="" class="drawer-content full-drawer" template="propertiesPanelDrawerCtrl.markupPropertiesPanelTemplate">
+                    
+                        <style aria-hidden="true" class="ng-scope">.collapsible-section-card { background-color: #f4f4f4; } .collapsible-section-card .actions { display: none; } .collapsible-section-card:hover .actions { display: block; } .collapsible-section-card:focus-within .actions { display: block; } .collapsible-section-card:hover .action-wrapper { border-top: 1px solid #e9e9e9; } .collapsible-section-card textarea { border: 0px; resize: none; } .collapsible-section-card:hover .section-label-header { display: block; } .collapsible-section-card:focus-within .section-label-header { display: block; } .collapsible-section-card .section-label-header { display: none; } .absolute-div-properties-panel { position: absolute; z-index: 2; width: 100%; height: 100%; } </style>
+                    
+                        <div class="drawer-properties_footer ng-scope">
+                            <button class="btn btn-block btn-md btn-utility ng-scope ng-hide" type="button" ng-show="hookCtrl.view.canDeleteSelection()" svg-view-angular-hook="" data-qa="properties-panel-delete" hook-name="'destroyMarkupSelection'" ng-click="hookCtrl.trigger('click', $event)">
+                                <span class="ng-binding">Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drawer-open-close drawer left drawer-properties ng-isolate-scope closed d-none" olive-drawer-initial-state="closed" olive-drawer-name="propertiesPanel" olive-drawer-direction="left" olive-animation-weight="light" envelope-moderator="taggerCtrl.envelopeModerator" open-signing-preview="taggerCtrl.openRecipientsPreviewOverlay(tabid)" olive-drawer-initialized="true" style="width: 0px">
                 <div class="drawer-wrapper-open-close drawer-wrapper ng-scope" role="region" aria-label="Properties Panel" svg-view-angular-hook="" hook-name="'propertiesPanel'">
                     <div olive-drawer-content="" class="drawer-content full-drawer" template="propertiesPanelDrawerCtrl.markupPropertiesPanelTemplate">
                     

@@ -61,13 +61,13 @@ class Expenses_model extends MY_Model
     }
 
     public function expenseCategory($transaction_id,$expenses_id,$cu,$new_data){
-        $category_id = $new_data['category_id'];
         $category = $new_data['category'];
         $description = $new_data['description'];
         $amount = $new_data['amount'];
         if ($cu == true){
-            for ($x = 0; $x < count($category);$x++){
-                if ($category[$x] != 0 || $amount[$x] == null){
+            $category_id = $new_data['category_id'];
+            for ($x = 0; $x < count($category_id);$x++){
+                if ($category[$x] != 0 || $amount[$x] == 0){
                     $update = array(
                         'category_id' => $category[$x],
                         'description' => $description[$x],
@@ -92,22 +92,19 @@ class Expenses_model extends MY_Model
                 }
 
             }
-            return $new_data;
         }else{
-                for ($x = 0;$x < count($category);$x++){
-                    if ($category[$x] != null || $category[$x] != 0){
-                        $data = array(
-                            'transaction_id' => $transaction_id,
-                            'expenses_id' => $expenses_id,
-                            'category_id' => $category[$x],
-                            'description' => $description[$x],
-                            'amount' => $amount[$x]
-                        );
-                        $this->db->insert('accounting_expense_category',$data);
-                    }
+            for ($x = 0;$x < count($category);$x++){
+                if ($category[$x] != null || $category[$x] != 0){
+                $data = array(
+                    'transaction_id' => $transaction_id,
+                    'expenses_id' => $expenses_id,
+                    'category_id' => $category[$x],
+                    'description' => $description[$x],
+                    'amount' => $amount[$x]
+                );
+                $this->db->insert('accounting_expense_category',$data);
                 }
-
-            return true;
+            }
         }
     }
 
@@ -191,11 +188,11 @@ class Expenses_model extends MY_Model
     }
     public function addBill($new_data){
         $type = "Bill";
-        $trans_id = $this->transaction($type,false,null,$new_data['total']);
         $qry = $this->db->get_where('accounting_bill',array(
             'bill_number' => $new_data['bill_number']
         ));
         if ($qry->num_rows() == 0){
+            $trans_id = $this->transaction($type,false,null,$new_data['total']);
             $data = array(
                 'transaction_id' => $trans_id,
                 'vendor_id' => $new_data['vendor_id'],
@@ -417,7 +414,7 @@ class Expenses_model extends MY_Model
         $type = "Vendor Credit";
         $trans_id = $this->transaction($type,false,null,$new_data['total']);
         $qry = $this->db->get_where('accounting_vendor_credit',array(
-            'transaction_id' => $new_data['transaction_id']
+            'transaction_id' => $trans_id
         ));
         if ($qry->num_rows() == 0){
             $data = array(

@@ -326,6 +326,33 @@ class Taskhub extends MY_Controller {
 			}
 		}	
 	}
+
+	public function getTasksWithFilters(){
+		$keyword = "";
+		$status_id = "";
+		$from_date = "";
+		$to_date = "";
+
+		if(isset($_POST['keyword'])){
+			$keyword = $_POST['keyword'];
+		}	
+
+		if(isset($_POST['statusid'])){
+			$status_id = $_POST['status'];
+		}
+
+		if(isset($_POST['fromdate'])){
+			$from_date = $_POST['fromdate'];
+		}
+
+		if(isset($_POST['todate'])){
+			$to_date = $_POST['todate'];
+		}
+
+		$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
+
+		echo json_encode($result);
+	}
 }
 
 ?>

@@ -989,13 +989,34 @@ if (!function_exists('searchFilesOrFolders')) {
 
 if (!function_exists('getTasks')){
 
-    function getTasks($keyword = "", $status_id = "", $from_date = "", $to_date = ""){
+    function getTasks($array = false, $keyword = "", $status_id = "", $from_date = "", $to_date = ""){
         $CI = &get_instance();
         $uid = logged('id');
+
+        $filter = "";
+
+        if($keyword != ""){
+            $filter = ' and ((lower(a.subject) like "%'. $keyword .'%") or (lower(a.description) like "%'. $keyword .'%"))';
+        }
+
+        if($status_id != ""){
+            $filter .= ' and a.status_id = ' . $status_id;
+        }
+
+        if($from_date != ""){
+            $filter .= ' and a.date_created >= "'. $from_date .'"';
+        }
+
+        if($to_date != ""){
+            $filter .= ' and a.date_created <= "'. $to_date .' 23:59:59"';
+        }
+
 
         $tasks = $CI->db->query(
             'select ' .
             'a.*, '.
+            'date_format(a.date_created, "%M %d, %Y %h:%i:%s") as `date_created_formatted_with_time`, '.
+            'date_format(a.date_created, "%M %d, %Y") as `date_created_formatted`, '.
             'b.status_text, '.
             'if(ISNULL(c.task_id),"no","yes") as `is_participant` '.
             'from tasks a '.
@@ -1010,14 +1031,18 @@ if (!function_exists('getTasks')){
 
                 'where user_id = '. $uid . 
             ') c on c.task_id = a.task_id '.
-            'where a.created_by = ' . $uid . ' ' .
-               'or not ISNULL(c.task_id) '.
+            'where (a.created_by = ' . $uid . ' ' .
+               'or not ISNULL(c.task_id))'. $filter . ' ' .
 
             'group by a.task_id '.
             'order by a.date_created DESC'
-        )->result();
+        );
 
-        return $tasks;
+        if($array){
+            return $tasks->result_array();
+        } else {
+            return $tasks->result();
+        }
     }
 
 }

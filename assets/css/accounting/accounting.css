@@ -1016,8 +1016,16 @@ button {
                 .25em 0 0 white,
                 .5em 0 0 white;}
 }
-.expense-transactions-data-table{
-
+.subtext{
+    font-style: italic;
+    color: grey;
+    position: relative;
+}
+.text-details{
+    white-space: nowrap;
+}
+.select2-selection{
+    min-width: 250px !important;
 }
 
 /*Loader*/

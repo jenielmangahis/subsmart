@@ -275,16 +275,17 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $addQuery = $this->vendors_model->create($new_data);
+        $addQuery = $this->vendors_model->createVendor($new_data);
 
         if($addQuery > 0){
 
             $new_id = $addQuery;
             $comp = mb_substr($this->input->post('company'), 0, 3);
             $vendor_id = strtolower($comp) . $new_id;
-            $updateQuery = $this->vendors_model->update($new_id, array("vendor_id" => $vendor_id));
+			
+            $updateQuery = $this->vendors_model->updateVendor($new_id, array("vendor_id" => $vendor_id));
 
-            if($updateQuery > 0){
+            if($updateQuery){
                 echo json_encode($updateQuery);
             }
         }
@@ -309,6 +310,7 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Vendor Details";
 
         $this->page_data['vendor_details'] = $this->vendors_model->getVendorDetails($id);
+        $this->page_data['transaction_details'] = $this->vendors_model->getvendortransactions($id);
         $this->load->view('accounting/vendor_details', $this->page_data);
     }
     public function getvendortransactions($id = null)
@@ -337,9 +339,6 @@ class Accounting extends MY_Controller {
     }
     public function editVendor()
     {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Edit Vendor";
-
         $id =  $this->input->post('id');
         $new_data = array(
             'title' => $this->input->post('title'),
@@ -361,7 +360,7 @@ class Accounting extends MY_Controller {
             'fax' => $this->input->post('fax'),
             'website' => $this->input->post('website'),
             'billing_rate' => $this->input->post('billing_rate'),
-            'terms' => $this->input->post('terns'),
+            'terms' => $this->input->post('terms'),
             'opening_balance' => $this->input->post('opening_balance'),
             'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
             'account_number' => $this->input->post('account_number'),
@@ -371,9 +370,9 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $editQuery = $this->vendors_model->update($id,$new_data);
+        $editQuery = $this->vendors_model->updateVendor($id,$new_data);
 
-        if($editQuery > 0){
+        if($editQuery){
             echo json_encode(1);
         }
         else{
@@ -491,7 +490,7 @@ class Accounting extends MY_Controller {
             'description' => $this->input->post('description')
         );
         $query = $this->expenses_model->timeActivity($new_data);
-        if ($query == true){
+        if ($query){
              echo json_encode(1);
         }else{
             echo json_encode(0);
@@ -513,8 +512,6 @@ class Accounting extends MY_Controller {
             'amount' => $this->input->post('amount'),
             'total' => $this->input->post('total'),
             'file_name' => $this->input->post('filename'),
-			'total' => $this->input->post('total'),
-			'memo' => $this->input->post('memo'),
             'original_fname' => $this->input->post('original_fname')
         );
        $query = $this->expenses_model->addBill($new_data);
@@ -549,10 +546,9 @@ class Accounting extends MY_Controller {
     }
 
     public function editBillData(){
-        $data = array(
-            'bill_id' => $this->input->post('bill_id'),
-            'transaction_id' => $this->input->post('transaction_id'),
-            'vendor_id' => $this->input->post('vendor_id'),
+        
+		$new_data = array(
+			'bill_id' => $this->input->post('id'),
             'mailing_address' => $this->input->post('mailing_address'),
             'terms' => $this->input->post('terms'),
             'bill_date' => $this->input->post('bill_date'),
@@ -560,12 +556,10 @@ class Accounting extends MY_Controller {
             'bill_number' => $this->input->post('bill_number'),
             'permit_number' => $this->input->post('permit_number'),
             'memo' => $this->input->post('memo'),
-            'category_id' => $this->input->post('category_id'),
             'category' => $this->input->post('category'),
             'description' => $this->input->post('description'),
             'amount' => $this->input->post('amount'),
             'total' => $this->input->post('total'),
-            'file_name' => $this->input->post('filename'),
             'original_fname' => $this->input->post('original_fname')
         );
         $query = $this->expenses_model->editBillData($data);
@@ -872,11 +866,11 @@ class Accounting extends MY_Controller {
                         $categories .= '<option value="'.$list->id.'" selected>'.$list->category_name.'</option>';
                     }
                 }
-                foreach ($category_list as $list){
-                    if($list->id != $category){
-                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-                    }
-                }
+//                foreach ($category_list as $list){
+//                    if($list->id != $category){
+//                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+//                    }
+//                }
                 $categories .= '</select>';
                 $categories .= ' </div>';
                 $categories .= '</td>';
@@ -915,11 +909,11 @@ class Accounting extends MY_Controller {
                         $categories .= '<option value="'.$list->id.'" selected>'.$list->category_name.'</option>';
                     }
                 }
-                foreach ($category_list as $list){
-                    if($list->id != $category){
-                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-                    }
-                }
+//                foreach ($category_list as $list){
+//                    if($list->id != $category){
+//                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+//                    }
+//                }
                 $categories .= '</select>';
                 $categories .= ' </div>';
                 $categories .= '</td>';
@@ -943,10 +937,10 @@ class Accounting extends MY_Controller {
             $categories .= '<input type="hidden" id="prevent_process" value="true">';
             $categories .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
             $categories .= '<option></option>';
-            $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
-            foreach ($category_list as $list){
-                $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-            }
+//            $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
+//            foreach ($category_list as $list){
+//                $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+//            }
             $categories .= '</select>';
             $categories .= ' </div>';
             $categories .= '</td>';
@@ -984,10 +978,10 @@ class Accounting extends MY_Controller {
             $default .= '<input type="hidden" id="prevent_process" value="true">';
             $default .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
             $default .= '<option></option>';
-            $default .= '<option value="0" disabled id="add-expense-categories">&plus; Add Category</option>';
-            foreach ($category_list as $list){
-                $default .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-            }
+//            $default .= '<option value="0" disabled id="add-expense-categories">&plus; Add Category</option>';
+//            foreach ($category_list as $list){
+//                $default .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+//            }
             $default .= '</select>';
             $default .= '</div>';
             $default .= '</td>';
@@ -1387,12 +1381,12 @@ class Accounting extends MY_Controller {
         $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$type.'</td>';
         $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$number.'</td>';
         $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$vendors_name.'</td>';
-        $show .= '<td>';
+        $show .= '<td data-id="'.$data_id.'" data-transId="'.$transaction_id.'">';
         $show .= '<div style="display: inline-block;position: relative;width: 100%">';
         $show .= '<select name="category" id="expenseTransCategory" data-category="" data-id="'.$category_id.'" class="form-control select2-tbl-category">';
         $show .= '<option value="'.$category_list_id.'" selected>'.$category.'</option>';
             foreach ($list_categories as $list):
-                if ($list->category_name != $category):
+                if ($list->category_name == $category):
                     $show .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
                 endif;
             endforeach;
@@ -1434,7 +1428,55 @@ class Accounting extends MY_Controller {
         echo json_encode($show);
     }
 
-    /***Add category ***/
+    /***Get Update Add category ***/
+    public function getExpensesCategories(){
+        $transaction_id = $this->input->get('transaction_id');
+        $search = $this->input->get('search');
+        $categories_by_id = $this->categories_model->getCategoriesByTransactionId($transaction_id);
+        $query = $this->categories_model->getCategories();
+        $get_by_search = $this->categories_model->getCategoriesBySearch($search);
+        $data = array();
+        $data[] = array(
+            'id' => 0,
+            'text' => '+ Add category',
+            'disabled' => true
+        );
+        if ($categories_by_id != null){
+            foreach ($query as $categories){
+                foreach ($categories_by_id as $category_by_id){
+                    if ($categories->id == $category_by_id->category_id){
+                        $data[] = array(
+                            'id' => $categories->id,
+                            'text' => $categories->category_name,
+                            'subtext' => $categories->type,
+                            'selected' => true
+                        );
+                    }
+                }
+            }
+            foreach ($query as $categories){
+                foreach ($categories_by_id as $category_by_id){
+                    if ($categories->id != $category_by_id->category_id){
+                        $data[] = array(
+                            'id' => $categories->id,
+                            'text' => $categories->category_name,
+                            'subtext' => $categories->type
+                        );
+                    }
+                }
+            }
+        }else{
+            foreach ($get_by_search as $categories){
+                $data[] = array(
+                    'id' => $categories->id,
+                    'text' => $categories->category_name,
+                    'subtext' => $categories->type
+                );
+            }
+        }
+
+        echo json_encode($data);
+    }
     public function addCategories(){
         $new_data = array(
             'account_type' => $this->input->post('account_type'),
@@ -1453,11 +1495,23 @@ class Accounting extends MY_Controller {
     public function updateCategoryById(){
         $id = $this->input->post('id');
         $category = $this->input->post('category');
-        $data = array(
-            'category_id' => $category
-        );
-        $this->db->where('id',$id);
-        $this->db->update('accounting_expense_category',$data);
+        $expenses_id = $this->input->post('expenses_id');
+        $transaction_id = $this->input->post('transaction_id');
+        if ($id == null){
+            $new_category = array(
+                'transaction_id'=> $transaction_id,
+                'expenses_id' => $expenses_id,
+                'category_id' => $category
+            );
+            $this->db->insert('accounting_expense_category',$new_category);
+        }else{
+            $data = array(
+                'category_id' => $category
+            );
+            $this->db->where('id',$id);
+            $this->db->update('accounting_expense_category',$data);
+        }
+
         echo json_encode(1);
     }
 

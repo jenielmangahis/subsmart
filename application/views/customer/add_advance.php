@@ -92,7 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         margin-bottom: 1px !important;
     }
     hr{
-        border: 2px solid #32243d !important;
+        border: 0.5px solid #32243d !important;
         width: 100%;
     }
     .form-group {
@@ -106,15 +106,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
-
-
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">New Advance Customer</h1>
+                        <h4>New Advance Customer</h4>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Add your new customer.</li>
                         </ol>
@@ -148,60 +146,119 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="card-body">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="module_ac" style="max-width: 90%;">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <div class="checkbox checkbox-sec margin-right">
-                                                    <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
-                                                    <label for="notify_by_email"><span>Rep Paper</span></label>
-                                                </div>
-                                                <div class="form-group" id="customer_type_group">
-                                                    <label for=""></label><br/>
-                                                    <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-                                                </div>
-                                            </div><br>
+                                    <div class="banking-tab-container">
+                                        <div class="rb-01">
+                                            <ul class="nav nav-tabs border-0">
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab active" data-toggle="tab" href="#profile">Profile</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#other">Other Info</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#account">Account</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#address">Address</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#billing">Billing</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#alarm">Alarm</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#office">Office Use</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#admin">Admin</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#tect">Tech</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#access">Access</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#customizable">Customizable</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#payment">Payment</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#owner">Owner</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#assign">Assigned</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#notes">Notes</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#devices">Devices</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content mt-4" >
+                                        <?php
+                                            include viewPath('customer/adv_module_sheets/sheet_profile');
+                                        ?>
+                                    </div>
+                                </div>
+                                <br><br><br>
+                                <div class="module_ac" style="max-width: 90%;">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
+                                                <label for="notify_by_email"><span>Rep Paper</span></label>
+                                            </div>
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for=""></label><br/>
+                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                            </div>
+                                        </div><br>
 
-                                            <div class="col-md-12">
-                                                <div class="row">
-                                                    <div class="col-md-4">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-4">
 
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group" id="customer_type_group">
+                                                        <label for=""></label><br/>
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group" id="customer_type_group">
-                                                            <label for=""></label><br/>
-                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group" id="customer_type_group">
-                                                            <label for=""></label><br/>
-                                                            <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-                                                        </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group" id="customer_type_group">
+                                                        <label for=""></label><br/>
+                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="col-md-12">
-                                                <div class="form-group" id="customer_type_group">
-                                                    <label for="">Status</label><br/>
-                                                    <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                        <option value="0">Scheduled</option>
-                                                        <option value="0">Re-Scheduled</option>
-                                                        <option value="0">Past Date</option>
-                                                        <option value="0">Cancel Pending</option>
-                                                        <option value="0">Service Customer</option>
-                                                        <option value="0">Charged Back</option>
-                                                        <option value="0">Installed</option>
-                                                        <option value="0">Cancelled</option>
-                                                        <option value="0">Collections</option>
-                                                        <option value="0">No Show</option>
-                                                    </select>
-                                                </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" id="customer_type_group">
+                                                <label for="">Status</label><br/>
+                                                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                    <option value="0">Scheduled</option>
+                                                    <option value="0">Re-Scheduled</option>
+                                                    <option value="0">Past Date</option>
+                                                    <option value="0">Cancel Pending</option>
+                                                    <option value="0">Service Customer</option>
+                                                    <option value="0">Charged Back</option>
+                                                    <option value="0">Installed</option>
+                                                    <option value="0">Cancelled</option>
+                                                    <option value="0">Collections</option>
+                                                    <option value="0">No Show</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class=" module_ac">
                                                 <div class="row">
                                                     <div class="col-md-12 module_header">
