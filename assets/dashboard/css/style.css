@@ -1732,8 +1732,73 @@ button:focus {
     .smart__grid {
       height: auto !important;
     }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    div#accordionExample div.card {
+      margin-bottom: 12px !important;
+    }
+    div.st-wrap-mobile {
+      margin-bottom: 60px;
+    }
+    img#welcome-image {
+      display: none;
+    }
+    div#welcome-image-container {
+      text-align: center;
+      padding-bottom: 0px !important;
+    }
+    .card.p-5 {
+      padding: 15px 20px !important;
+    }
+    div#list-workspace-index {
+      margin-top: 12px;
+      position: relative;
+      right: 12px;
+    }
+    .row {
+      margin-right: 0px !important;
+      margin-left: 0px !important;
+    }
+    .page-title-box.mx-4 {
+      padding: 0px;
+      margin: 0px !important;
+    }
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 25px 8px;
+    }
+    .col-lg-6.px-0 h2 {
+      margin-left: 20px;
+    }
+    .row.align-items-center.pt-3.bg-white {
+      width: 100% !important;
+      display: table;
+      margin: 0px;
+    }
+    .onoffswitch {
+      float: right;
+      margin-bottom: 20px;
+    }
     .btn-mobile {
       margin-top: 20px;
+    }
+    .mobile-left {
+      float:left !important;
+    }
+    .padding-mobile-cs {
+      padding: 0px 30px !important;
+    }
+    .card-mobile {
+      width: 100% !important;
+    }
+    ::-webkit-scrollbar-track {
+      display: none;
+    }
+    ul.nav.sidebar-accounting li.nav-header {
+      display: none;
+    }
+    ul.nav.sidebar-accounting li i {
+      padding-right: 60px !important;
     }
     ul.ul-mobile li {
       width: 50%;

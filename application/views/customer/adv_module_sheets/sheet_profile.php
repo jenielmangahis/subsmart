@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="tab-pane active standard-accordion" id="profile">
+<div class="tab-pane fade standard-accordion" id="account">
     <div class="row">
         <div class="col-sm-12">
             <div class="col-sm-12 text-right-sm" style="align:right;">
@@ -14,71 +14,166 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Sales Area</label><br/>
+                <label for="">Entered By</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Time Entered</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Sales Date</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Credit Score *</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Monitoring Company *</label><br/>
                 <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                     <option value="0">- none -</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Account Type *</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">Select</option>
+                    <option value="0">In-House</option>
+                    <option value="0">Purchase</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Monitoring ID</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Language</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">Select</option>
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Mandarin Chinese">Mandarin Chinese</option>
+                    <option value="French">French</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Signal Confirmation Number</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Monitoring Confirmation </label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Abort Code</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Sales Rep</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">- none -</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Technician</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">- none -</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Save Date</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Save By</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">- none -</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Cancellation Date</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Cancellation Reason</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">Select</option>
+                    <option value="0">Dissatisfied with Service</option>
+                    <option value="0">Financial Hardship</option>
+                    <option value="0">Fulfilled Contract</option>
+                    <option value="0">Moving</option>
+                    <option value="0">Non-Payment</option>
+                    <option value="0">Paid BOC</option>
+                    <option value="0">Passed Away</option>
+                    <option value="0">Still Under Contruct</option>
                 </select>
             </div>
         </div>
         <div class="col-md-9"></div>
         <div class="col-md-3">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                <label for="notify_by_email"><span>Check for Schedule Conflict</span></label>
+            </div>
+        </div>
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">First Name</label><br/>
+                <label for="">Install Date</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Last Name</label><br/>
+                <label for="">Tech Arrival Time</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Middle Name</label><br/>
+                <label for="">Tech Departure Time</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Name Prefix</label><br/>
-                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                    <option value="0">Select</option>
-                    <option value="0">Captain</option>
-                    <option value="0">Cnl.</option>
-                    <option value="0">Colonel</option>
-                    <option value="0">Dr.</option>
-                    <option value="0">Gen.</option>
-                    <option value="0">Judge</option>
-                    <option value="0">Lady</option>
-                    <option value="0">Lieutenant</option>
-                    <option value="0">Lord</option>
-                    <option value="0">Lt.</option>
-                    <option value="0">Madam</option>
-                    <option value="0">Maj.</option>
-                    <option value="0">Major</option>
-                    <option value="0">Master</option>
-                    <option value="0">Miss</option>
-                    <option value="0">Mister</option>
-                    <option value="0">Mr.</option>
-                    <option value="0">Mrs.</option>
-                    <option value="0">Ms.</option>
-                    <option value="0">Pastor</option>
-                    <option value="0">Private</option>
-                    <option value="0">Prof.</option>
-                    <option value="0">Pvt.</option>
-                    <option value="0">Rev.</option>
-                    <option value="0">Sergeant</option>
-                    <option value="0">Sgt</option>
-                    <option value="0">Sir</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-1">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Surfix</label><br/>
+                <label for="">Panel Type *</label><br/>
                 <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                     <option value="0">- none -</option>
                 </select>
@@ -86,107 +181,116 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Business Name</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                <label for="">Pre-Install Survey</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">Select</option>
+                    <option value="0">Pass</option>
+                    <option value="0">Fail</option>
+                    <option value="0">Pending</option>
+                </select>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Email</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                <label for="">Post-Install Survey</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">Select</option>
+                    <option value="0">Pass</option>
+                    <option value="0">Fail</option>
+                    <option value="0">Pending</option>
+                </select>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">SSN</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">DOB</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Phone (H)</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Phone (W)</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Phone (M)</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Fax</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Mailing Address</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">City</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">State</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Country</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Zip Code</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Cross Street</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group" id="customer_type_group">
-                <label for="">Subdivision</label><br/>
-                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                <label for="">Monitoring Waived</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">- none -</option>
+                </select>
             </div>
         </div>
         <div class="col-md-3"></div>
-        <div class="col-md-6">
+        <div class="col-md-3">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                <label for="notify_by_email"><span>Rebate Offered</span></label>
+            </div>
+        </div>
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Image/Logo File</label><br/>
+                <label for="">Rebate Check # 1</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="checkbox checkbox-sec margin-right">
-                <input type="checkbox" name="notify_by" value="Email" checked id="prev_add">
-                <label for="prev_add"><span>Check for Schedule Conflict</span></label>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Amount $</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Rebate Check # 2</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Amount $</label><br/>
+                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Activation Fee</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                    <option value="0">- none -</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="form-group" id="customer_type_group">
+                <div class="checkbox checkbox-sec margin-right">
+                    <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                    <label for="notify_by_email"><span>None</span></label>
+                </div>
+                <div class="checkbox checkbox-sec margin-right">
+                    <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                    <label for="notify_by_email"><span>Check</span></label>
+                </div>
+                <div class="checkbox checkbox-sec margin-right">
+                    <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                    <label for="notify_by_email"><span>Credit</span></label>
+                </div>
+                <div class="checkbox checkbox-sec margin-right">
+                    <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                    <label for="notify_by_email"><span>Paid</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group" id="customer_type_group">
+                <label for="">Lead Source</label><br/>
+                <select id="customer_types" name="customer_types_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                    <option value="0">Select</option>
+                    <option value="0">Customer Referral</option>
+                    <option value="0">Door</option>
+                    <option value="0">Door Hanger</option>
+                    <option value="0">Flyer Mail Outs</option>
+                    <option value="0">Outbound Calls</option>
+                    <option value="0">Phone</option>
+                    <option value="0">Radio Ad</option>
+                    <option value="0">Social Media</option>
+                    <option value="0">TV Ad</option>
+                    <option value="0">Unknown</option>
+                    <option value="0">Website</option>
+                    <option value="0">Yard Sign</option>
+                </select>
+            </div>
+        </div>
+
         <hr>
         <div class="col-sm-12">
             <div class="col-sm-12 text-right-sm" style="align:right;">
