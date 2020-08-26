@@ -29,6 +29,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   text-align: center;
   color:#ffffff;
 }
+.fc-button-group{
+    margin: 15px 0;
+}
 .dot-red{
     background-color: #ff2a26;
 }
