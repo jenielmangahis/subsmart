@@ -610,7 +610,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 { id: 'x', building: '101 Main St', title: 'Auditorium X' },
                 { id: 'y', building: '101 Main St', title: 'Auditorium Y' },
                 { id: 'z', building: '101 Main St', title: 'Auditorium Z' }
-            ]
+            ],
+            events:[
+        {
+              resourceId:'a',
+              title:"My repeating event",
+              start:'2020-08-26 10:00',
+              end:'2020-08-26 13:00',
+              eventColor: '#378006',
+            }
+        ],
         });
 
         calendar.render();
