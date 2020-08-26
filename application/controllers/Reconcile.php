@@ -111,4 +111,30 @@ class Reconcile extends MY_Controller {
         $this->reconcile_model->updaterecords($id,$chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account);
 		
 	}
+
+	public function do_upload($id)
+    {
+            $config['upload_path']          = './uploads/';
+            $config['allowed_types']        = 'gif|jpg|png|jpeg|jpe|pdf|doc|docx|rtf|text|txt';
+            $config['max_size'] = 1024 * 8;
+    		$config['encrypt_name'] = TRUE;
+		    $config['max_width'] = '1024';
+		    $config['max_height'] = '1024';
+
+            $this->load->library('upload', $config);
+
+            if ( ! $this->upload->do_upload('userfile'))
+            {
+                    $error = array('error' => $this->upload->display_errors());
+
+                    //$this->load->view('accounting/upload_success', $error);
+            }
+            else
+            {
+                    $data = array('upload_data' => $this->upload->data());
+            		$success = array('success' => "successfully added");
+                    //$this->load->view('accounting/upload_success', $success);
+            }
+        $this->index($id);
+    }
 }

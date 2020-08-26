@@ -161,7 +161,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <tr>
                                                                                 <th>Name</th>
                                                                                 <th>City</th>
-                                                                                <th>Street</th>
+                                                                                <th>State</th>
                                                                                 <th>Source</th>
                                                                                 <th>Email</th>
                                                                                 <th>Added</th>
