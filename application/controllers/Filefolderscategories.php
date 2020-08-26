@@ -31,7 +31,7 @@ class Filefolderscategories extends MY_Controller {
 
 			if(isset($_POST['category_desc'])){
 				$category_desc = $_POST['category_desc'];
-			}
+			}	
 
 			$sql = 'select count(*) as `exists` from file_folders_categories where lower(category_name) = "'. strtolower($category_name) .'" and company_id = ' . $company_id;
 
@@ -73,6 +73,8 @@ class Filefolderscategories extends MY_Controller {
 
 		if(isset($_POST['category_id'])){
 			if(isset($_POST['category_name'])){
+				$category_name = $_POST['category_name'];
+				
 				$data = array(
 					'category_name' => $_POST['category_name'],
 					'modified_by' => $uid,

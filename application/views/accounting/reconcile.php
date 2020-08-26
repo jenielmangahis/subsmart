@@ -57,6 +57,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <a id="close-menu-cus-tx" class="menuCloseButton" onclick="closeSideNav3()"><span id="side-menu-close-text">
             <i class="fa fa-times"></i></span></a>
         </div>
+        
+        <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
         <div class="mainMenu nav">
             <div class="file-upload-block">
                 <div class="upload-btn-wrapper">
@@ -64,14 +66,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <i class="fa fa-cloud-upload"></i>
                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                     </button>
-                    <input type="file" name="myfile" />
+                    <input type="file" name="userfile" />
                 </div>
             </div>
         </div>
 
         <div class="save-act">
             <button class="btn-cmn">Cancel</button>
-            <button class="savebtn">Done</button>
+            <button type="submit" class="savebtn">Done</button>
         </div>
     </div>
     <!-- End Add Custom Tax Sidebar -->

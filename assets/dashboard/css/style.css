@@ -1732,8 +1732,30 @@ button:focus {
     .smart__grid {
       height: auto !important;
     }
+    .onoffswitch {
+      float: right;
+      margin-bottom: 20px;
+    }
     .btn-mobile {
       margin-top: 20px;
+    }
+    .mobile-left {
+      float:left !important;
+    }
+    .padding-mobile-cs {
+      padding: 0px 30px !important;
+    }
+    .card-mobile {
+      width: 100% !important;
+    }
+    ::-webkit-scrollbar-track {
+      display: none;
+    }
+    ul.nav.sidebar-accounting li.nav-header {
+      display: none;
+    }
+    ul.nav.sidebar-accounting li i {
+      padding-right: 60px !important;
     }
     ul.ul-mobile li {
       width: 50%;
@@ -9858,112 +9880,6 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
 }
 .edit-action .btn-ed:hover{background: rgba(0,0,0,0.30);}
 /* **** End Table Dropdown CSS **** */
-<<<<<<< HEAD
-
-* ***** Popup Design ***** */
-.popbox{
-    padding: 60px 0;
-}
-#popup-opn .modal-dialog{max-width:600px;}
-#popup-opn .modal-content{
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    border-radius: 10px;
-}
-.reconciliblock{
-    padding: 30px;
-    border-radius: 10px;
-    background: #fff;
-}
-.error-block{
-    padding: 45px 0;
-    border-bottom: 2px solid #c1c1c1;
-    display: flex;
-    width: 100%;
-}
-.error-ic {margin-right: 20px;}
-.error-ic i{
-    font-size:60px;
-    color: #0098cd;
-}
-.error-dt h4{
-    font-size: 24px;
-    font-weight: 500;
-    color: #333;
-    margin: 0 0 10px;
-}
-.error-dt p{
-    font-size: 14px;
-    font-weight: normal;
-    color: #717171;
-    margin: 0;
-    line-height: 22px;
-}
-.action-popup{
-    padding: 20px 0 0;
-}
-.action-popup .btn-main{
-    padding: 8px 30px;
-    border: 2px solid #2ca01c;
-    background: #2ca01c;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    display: inline-block;
-    border-radius: 30px;
-    float: right;
-}
-.action-popup .uplobtn{
-    background: #dadadc;
-    border-color: #333;
-    color: #333;
-    float: none;
-}
-.file-upload-block{
-    padding: 15px;
-}
-.file-upload-block .upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: block;
-}
-.file-upload-block .upload-btn-wrapper input[type=file] {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-}
-.file-upload-block .upload-btn-wrapper .btn{
-    padding: 35px 15px 20px;
-    width: 100%;
-    text-align: center;
-    display: block;
-    border-radius: 0;
-    background: #f4f5f8;
-    border: 2px dashed #8d9096;
-    cursor: pointer;
-}
-.file-upload-block .upload-btn-wrapper .btn i{
-    font-size: 42px;
-    color: #8d9096;
-    text-align: center;
-    margin: 0 0 10px;
-}
-.file-upload-block .upload-btn-wrapper .btn h6{
-    font-size: 14px;
-    font-weight: normal;
-    text-align: center;
-    margin: 0;
-    color: #717171;
-}
-.file-upload-block .upload-btn-wrapper .btn h6 span{
-    color: #0077c5;
-}
-/* ***** End Popup Design ***** */
-
 /* Calendar Custom CSS */
 select#select-employee {
   width: 100% !important;
@@ -10160,4 +10076,3 @@ select#select-employee {
     float: left;
   }
 }
-/*End Calendar Custom CSS */

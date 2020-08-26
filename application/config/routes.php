@@ -182,6 +182,7 @@ $route['accounting/reconcile/(:any)'] = 'reconcile/index/$1';
 $route['accounting/reconcile'] = 'reconcile/indexmain';
 $route['accounting/reconcile/edit/(:any)'] = 'reconcile/edit/$1';
 $route['accounting/reconcile/update/(:any)'] = 'reconcile/update/$1';
+$route['accounting/reconcile/do_upload/(:any)'] = 'reconcile/do_upload/$1';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
