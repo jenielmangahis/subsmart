@@ -503,10 +503,123 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
 
         calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+            plugins: ['resource-timegrid,resource-timeline,interaction', 'dayGrid', 'timeGrid', 'list'],
             customButtons: {
                 employee: {
-                    text: 'Employee'
+                    text: 'Employee',
+                    click: function() {
+
+                           alert("test");
+                           var calendarEl = document.getElementById('calendar');    
+                           var calendar = new FullCalendar.Calendar(calendarEl, {
+                             schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                             plugins: ['resource-timegrid,resource-timeline,interaction', 'dayGrid', 'timeGrid', 'list'],
+                              schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                              initialView: 'resourceTimelineWeek',
+                              resources: [ {"id":"a","title":"Auditorium A"},{"id":"b","title":"Auditorium B"},{"id":"c","title":"Auditorium C"},{"id":"d","title":"Auditorium D"},{"id":"e","title":"Auditorium E"},{"id":"f","title":"Auditorium F"},{"id":"g","title":"Auditorium G"},{"id":"h","title":"Auditorium H"},{"id":"i","title":"Auditorium I"},{"id":"j","title":"Auditorium J"},{"id":"k","title":"Auditorium K"},{"id":"l","title":"Auditorium L"},{"id":"m","title":"Auditorium M"},{"id":"n","title":"Auditorium N"},{"id":"o","title":"Auditorium O"},{"id":"p","title":"Auditorium P"},{"id":"q","title":"Auditorium Q"},{"id":"r","title":"Auditorium R"},{"id":"s","title":"Auditorium S"},{"id":"t","title":"Auditorium T"},{"id":"u","title":"Auditorium U"},{"id":"v","title":"Auditorium V"},{"id":"w","title":"Auditorium W"},{"id":"x","title":"Auditorium X"},{"id":"y","title":"Auditorium Y"},{"id":"z","title":"Auditorium Z"}
+                              ],
+                              header: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'employee,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                              },
+                              height:300,
+                              width:300,
+                              defaultDate: "<?php echo date('Y-m-d') ?>",
+                              navLinks: true, // can click day/week names to navigate views
+                              businessHours: false, // display business hours
+                              editable: true,
+                              events: []
+                            });
+
+                            $("#calendar").html("");
+
+                            calendar.render();
+
+
+                          //   var calendarEl = document.getElementById('calendar');
+                          //   var calendar = new FullCalendar.Calendar(calendarEl, {
+                          //     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                          //     initialView: 'resourceTimelineDay',
+
+                          //     resourceAreaColumns: [
+                          //       {
+                          //         field: 'title',
+                          //         headerContent: 'Employees'
+                          //       }
+                          //     ],
+                          //     resources: [ {"id":"a","title":"Employee 1"},
+                          //                  {"id":"b","title":"Employee 2"},
+                          //                  {"id":"c","title":"Employee 3"},
+                          //                  {"id":"d","title":"Employee 4"},
+                          //                  {"id":"f","title":"Employee 5"} ],
+                          //      events: [
+                          //     { id: '1', resourceId: 'b', start: '2020-08-25T02:00:00', end: '2020-08-25T07:00:00', title: 'event 1' },
+                          //     { id: '2', resourceId: 'c', start: '2020-08-25T05:00:00', end: '2020-08-25T22:00:00', title: 'event 2' },
+                          //     { id: '3', resourceId: 'd', start: '2020-08-25', end: '2020-08-25', title: 'event 3' },
+                          //     { id: '4', resourceId: 'e', start: '2020-08-25T03:00:00', end: '2020-08-25T08:00:00', title: 'event 4' },
+                          //     { id: '5', resourceId: 'f', start: '2020-08-25T00:30:00', end: '2020-08-25T02:30:00', title: 'event 5' }
+                          // ]            
+                          //   });
+                          //   calendar.render();
+
+
+                        // var calendarEl = document.getElementById('calendar');
+                        // var calendar = new FullCalendar.Calendar(calendarEl, {
+                        //  initialView: 'resourceTimelineWeek',
+                        //   plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+                        //   customButtons: {
+                        //     employee: {
+                        //         text: 'Employee',
+                        //         click: function() {
+
+                        //             var calendarEl = document.getElementById('calendar');
+                        //             var calendar = new FullCalendar.Calendar(calendarEl, {
+                        //               plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+                        //               customButtons: {
+                        //                 employee: {
+                        //                     text: 'Employee'
+                        //                 }    
+                        //               },      
+                        //               header: {
+                        //                 left: 'prev,next today',
+                        //                 center: 'title',
+                        //                 right: 'employee,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                        //               },
+                        //               height:300,
+                        //               width:300,
+                        //               defaultDate: "<?php echo date('Y-m-d') ?>",
+                        //               navLinks: true, // can click day/week names to navigate views
+                        //               businessHours: false, // display business hours
+                        //               editable: false,
+                        //               events: []
+                        //             });
+
+                        //             $("#calendar").html("");
+
+                        //             calendar.render();
+
+                        //         }
+                        //     }    
+                        //   },      
+                        //   header: {
+                        //     left: 'prev,next today',
+                        //     center: 'title',
+                        //     right: 'employee,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                        //   },
+                        //   height:300,
+                        //   width:300,
+                        //   defaultDate: "<?php echo date('Y-m-d') ?>",
+                        //   navLinks: true, // can click day/week names to navigate views
+                        //   businessHours: false, // display business hours
+                        //   editable: false,
+                        //   events: []
+                        // });
+
+                        // $("#calendar").html("");
+                        // calendar.render();
+
+                    }
                 }
             },
             header: {

@@ -2,6 +2,10 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+
+
+
+
 class Workcalender extends MY_Controller
 {
 
@@ -26,6 +30,13 @@ class Workcalender extends MY_Controller
             'packages/fullcalendar/packages/daygrid/main.css',
             'packages/fullcalendar/packages/timegrid/main.css',
             'packages/fullcalendar/packages/list/main.css',
+           // 'packages/fullcalendar-scheduler/lib/main.css'
+            // 'packages/fullcalendar/packages/timeline/main.css',
+            // 'packages/fullcalendar/packages/resource-timeline/main.css',
+            // 'packages/fullcalendar/packages/resource-daygrid/main.css',
+            // 'packages/fullcalendar/packages/resource-timegrid/main.css',
+            // 'packages/fullcalendar/packages/resource-timeline/main.css',
+            // 'packages/fullcalendar/packages/scrollgrid/main.css',
         ));
 
         add_footer_js(array(
@@ -36,7 +47,13 @@ class Workcalender extends MY_Controller
             'packages/fullcalendar/packages/daygrid/main.js',
             'packages/fullcalendar/packages/timegrid/main.js',
             'packages/fullcalendar/packages/list/main.js',
-            'packages/fullcalendar/packages/list/main.js',
+            // 'packages/fullcalendar-scheduler/lib/main.js',
+            'packages/fullcalendar/packages/timeline/main.js',
+            'packages/fullcalendar/packages/resource-timeline/main.js',
+            'packages/fullcalendar/packages/resource-daygrid/main.js',
+            'packages/fullcalendar/packages/resource-timegrid/main.js',
+            'packages/fullcalendar/packages/resource-timeline/main.js',
+            'packages/fullcalendar/packages/scrollgrid/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
         ));
     }
@@ -51,7 +68,7 @@ class Workcalender extends MY_Controller
             // $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
-            // $events = $this->event_model->getAllByUserId();
+            // $events = $this->event_model->getAllByUserId();-
         }
 
         $this->page_data['events'] = array();

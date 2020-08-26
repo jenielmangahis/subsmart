@@ -1,0 +1,96 @@
+
+
+  .fc .fc-resource-timeline-divider {
+    width: 3px; /* important to have width to shrink this cell. no cross-browser problems */
+    cursor: col-resize;
+  }
+.fc {
+
+
+  /* will match horizontal groups in the datagrid AND group lanes in the timeline area */
+
+}
+.fc .fc-resource-timeline .fc-resource-group:not([rowspan]) {
+      background: rgba(208, 208, 208, 0.3);
+      background: var(--fc-neutral-bg-color, rgba(208, 208, 208, 0.3));
+    }
+.fc .fc-timeline-lane-frame {
+    position: relative; /* contains the fc-timeline-bg container, which liquidly expands */
+    /* the height is explicitly set by row-height-sync */
+  }
+.fc .fc-timeline-overlap-enabled .fc-timeline-lane-frame .fc-timeline-events { /* has height set on it */
+    box-sizing: content-box; /* padding no longer part of height */
+    padding-bottom: 10px; /* give extra spacing underneath for selecting */
+  }
+/* the "frame" */
+.fc-datagrid-cell-frame-liquid {
+  height: 100%; /* needs liquid hack */
+}
+.fc-liquid-hack .fc-datagrid-cell-frame-liquid {
+  height: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  }
+.fc {
+
+  /* the "frame" in a HEADER */
+  /* needs to position the column resizer */
+  /* needs to vertically center content */
+
+}
+.fc .fc-datagrid-header .fc-datagrid-cell-frame {
+      position: relative; /* for resizer */
+      display: flex;
+      justify-content: flex-start; /* horizontal align (natural left/right) */
+      align-items: center; /* vertical align */
+    }
+.fc {
+
+  /* the column resizer (only in HEADER) */
+
+}
+.fc .fc-datagrid-cell-resizer {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: col-resize;
+  }
+.fc {
+
+  /* the cushion */
+
+}
+.fc .fc-datagrid-cell-cushion {
+    padding: 8px;
+    white-space: nowrap;
+    overflow: hidden; /* problem for col resizer :( */
+  }
+.fc {
+
+  /* expander icons */
+
+}
+.fc .fc-datagrid-expander {
+    cursor: pointer;
+    opacity: 0.65
+
+  }
+.fc .fc-datagrid-expander .fc-icon { /* the expander and spacers before the expander */
+      display: inline-block;
+      width: 1em; /* ensure constant width, esp for empty icons */
+    }
+.fc .fc-datagrid-expander-placeholder {
+    cursor: auto;
+  }
+.fc .fc-resource-timeline-flat .fc-datagrid-expander-placeholder {
+      display: none;
+    }
+.fc-direction-ltr .fc-datagrid-cell-resizer { right: -3px }
+.fc-direction-rtl .fc-datagrid-cell-resizer { left: -3px }
+.fc-direction-ltr .fc-datagrid-expander { margin-right: 3px }
+.fc-direction-rtl .fc-datagrid-expander { margin-left: 3px }
