@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div><a href="<?= base_url()?>estimate">Estimates</a></div>
               <div><a href="<?= base_url()?>invoice">Invoices</a></div>
               <div><a href="<?= base_url()?>workcalender">Calendar</a></div>
-              <div><a href="<?= base_url()?>workorder/workorder">Work Order</a></div>
+              <div><a href="<?= base_url()?>workorder">Work Order</a></div>
 
               <div><a href="<?= base_url()?>users">Employees</a></div>
               <div><a href="#">Route Planner</a></div>
