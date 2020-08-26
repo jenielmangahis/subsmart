@@ -26,10 +26,11 @@ class Workcalender extends MY_Controller
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'packages/fullcalendar/packages/core/main.css',
+            'assets/plugins/timeline_calendar/main.css'
+            /*'packages/fullcalendar/packages/core/main.css',
             'packages/fullcalendar/packages/daygrid/main.css',
             'packages/fullcalendar/packages/timegrid/main.css',
-            'packages/fullcalendar/packages/list/main.css',
+            'packages/fullcalendar/packages/list/main.css',*/
            // 'packages/fullcalendar-scheduler/lib/main.css'
             // 'packages/fullcalendar/packages/timeline/main.css',
             // 'packages/fullcalendar/packages/resource-timeline/main.css',
@@ -42,18 +43,19 @@ class Workcalender extends MY_Controller
         add_footer_js(array(
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'packages/fullcalendar/packages/core/main.js',
+            'assets/plugins/timeline_calendar/main.js',
+            /*'packages/fullcalendar/packages/core/main.js',
             'packages/fullcalendar/packages/interaction/main.js',
             'packages/fullcalendar/packages/daygrid/main.js',
             'packages/fullcalendar/packages/timegrid/main.js',
-            'packages/fullcalendar/packages/list/main.js',
+            'packages/fullcalendar/packages/list/main.js',*/
             // 'packages/fullcalendar-scheduler/lib/main.js',
-            'packages/fullcalendar/packages/timeline/main.js',
+            /*'packages/fullcalendar/packages/timeline/main.js',
             'packages/fullcalendar/packages/resource-timeline/main.js',
             'packages/fullcalendar/packages/resource-daygrid/main.js',
             'packages/fullcalendar/packages/resource-timegrid/main.js',
             'packages/fullcalendar/packages/resource-timeline/main.js',
-            'packages/fullcalendar/packages/scrollgrid/main.js',
+            'packages/fullcalendar/packages/scrollgrid/main.js',*/
             'assets/frontend/js/workcalender/workcalender.js',
         ));
     }
