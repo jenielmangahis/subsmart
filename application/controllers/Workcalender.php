@@ -62,18 +62,18 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
-        // $this->load->model('Event_model', 'event_model');
+         $this->load->model('Event_model', 'event_model');
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
-            // $events = $this->event_model->getAllByCompany($company_id);
+             $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
-            // $events = $this->event_model->getAllByUserId();-
+             $events = $this->event_model->getAllByUserId();
         }
 
-        $this->page_data['events'] = array();
+        $this->page_data['calendar_events'] = array();
 
         // setting of the calender
         $calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
@@ -100,15 +100,31 @@ class Workcalender extends MY_Controller
                     }
                 }
 
-                $this->page_data['events'][$key]['eventId'] = $event->id;
-                $this->page_data['events'][$key]['status'] = $event->status;
-                $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
-                $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
-                $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
+                  //   resourceId:'a',
+            //   title:"My repeating event",
+            //   start:'2020-08-27 10:00',
+            //   end:'2020-08-27 13:00',
+            //   eventColor: '#378006'
+
+
+                $calendar_events[$key]['resourceId'] = $event->id;
+                //$this->page_data['events'][$key]['status'] = $event->status;
+                $calendar_events[$key]['title'] = (!empty($customer)) ? $title : '';
+                $calendar_events[$key]['start'] = date('Y-m-d', strtotime($event->start_date));
+                $calendar_events[$key]['end'] = date('Y-m-d', strtotime($event->end_date));
                 // $this->page_data['events'][$key]['userName'] 		= ($user) ? $user->name : '';
-                $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
+                $calendar_events[$key]['eventColor'] = $event->event_color;
             }
+
+             echo "<pre>";
+            print_r($calendar_events);
+            echo "</pre>";
+            exit();
+            $this->page_data['calendar_events'] = $calendar_events;
+          
         }
+
+       
 
 
         /*// workorders

@@ -495,16 +495,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var timeZoneSelectorEl = document.getElementById('time-zone-selector');
-        var events = <?php echo json_encode($events) ?>;
+        var events = <?php echo json_encode($calendar_events) ?>;
 
         console.log(events);
-
+        alert(events);
         render_calender(calendarEl, timeZoneSelectorEl, events);
     });
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
-
+        var calendar_events = events; 
+       
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
             headerToolbar: {
@@ -583,42 +584,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             loading: function (bool) {
                 
             },
-            resources: [
-                { id: 'a', building: '460 Bryant', title: 'Auditorium A' },
-                { id: 'b', building: '460 Bryant', title: 'Auditorium B' },
-                { id: 'c', building: '460 Bryant', title: 'Auditorium C' },
-                { id: 'd', building: '460 Bryant', title: 'Auditorium D' },
-                { id: 'e', building: '460 Bryant', title: 'Auditorium E' },
-                { id: 'f', building: '460 Bryant', title: 'Auditorium F' },
-                { id: 'g', building: '564 Pacific', title: 'Auditorium G' },
-                { id: 'h', building: '564 Pacific', title: 'Auditorium H' },
-                { id: 'i', building: '564 Pacific', title: 'Auditorium I' },
-                { id: 'j', building: '564 Pacific', title: 'Auditorium J' },
-                { id: 'k', building: '564 Pacific', title: 'Auditorium K' },
-                { id: 'l', building: '564 Pacific', title: 'Auditorium L' },
-                { id: 'm', building: '564 Pacific', title: 'Auditorium M' },
-                { id: 'n', building: '564 Pacific', title: 'Auditorium N' },
-                { id: 'o', building: '101 Main St', title: 'Auditorium O' },
-                { id: 'p', building: '101 Main St', title: 'Auditorium P' },
-                { id: 'q', building: '101 Main St', title: 'Auditorium Q' },
-                { id: 'r', building: '101 Main St', title: 'Auditorium R' },
-                { id: 's', building: '101 Main St', title: 'Auditorium S' },
-                { id: 't', building: '101 Main St', title: 'Auditorium T' },
-                { id: 'u', building: '101 Main St', title: 'Auditorium U' },
-                { id: 'v', building: '101 Main St', title: 'Auditorium V' },
-                { id: 'w', building: '101 Main St', title: 'Auditorium W' },
-                { id: 'x', building: '101 Main St', title: 'Auditorium X' },
-                { id: 'y', building: '101 Main St', title: 'Auditorium Y' },
-                { id: 'z', building: '101 Main St', title: 'Auditorium Z' }
+            resourceAreaColumns: [
+              {
+                 field: 'title',
+                 headerContent: 'Employees'
+              }
             ],
-            events:[
-        {
-              resourceId:'a',
-              title:"My repeating event",
-              start:'2020-08-26 10:00',
-              end:'2020-08-26 13:00',
-              eventColor: '#378006',
-            }
+            resources: [
+                       {"id":"1","title":"Employee 1"},
+                       {"id":"2","title":"Employee 2"},
+                       {"id":"3","title":"Employee 3"},
+                       {"id":"3","title":"Employee 4"},
+                       {"id":"5","title":"Employee 5"} 
+            ],
+            events:[calendar_events
+            // {
+            //   resourceId:'a',
+            //   title:"My repeating event",
+            //   start:'2020-08-27 10:00',
+            //   end:'2020-08-27 13:00',
+            //   eventColor: '#378006'
+            // },
         ],
         });
 
