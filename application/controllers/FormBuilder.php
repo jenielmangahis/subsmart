@@ -69,7 +69,12 @@ class FormBuilder extends MY_Controller {
 		}
 		$this->load->view('form_builder/edit.php', $this->page_data);
 	}
-
+	
+	public function view($form_id){
+		$this->page_data["form"] = $this->formsbuilder_model->getForms($form_id);
+		$this->page_data["elements"] = $this->formsbuilder_model->getFormElements($form_id);
+		$this->load->view('form_builder/view.php', $this->page_data);
+	}
 
 
 
@@ -141,6 +146,20 @@ class FormBuilder extends MY_Controller {
 			"status" => 1
 		);
 		echo json_encode($data);
+		exit;
+	}
+
+	public function submitForm($form_id){
+		foreach($this->input->post() as $key => $answer){
+			echo "<pre>";
+			$data = array(
+				"fa_form_id" => $form_id,
+				"fa_element_id" => explode('-', $key)[1],
+				"fa_value" => $answer,
+			);
+			$this->formsbuilder_model->submitAnswers($data);
+		}
+		redirect('form/'.$form_id);
 		exit;
 	}
 	

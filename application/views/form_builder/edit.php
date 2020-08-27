@@ -44,7 +44,7 @@
     </nav>
     
       <div class="text-left">
-        <h1><?= $form->forms_title?> <a href="#" class="btn btn-outline-info"><i class="fa fa-eye"></i> View Form</a></h1>
+        <h1><?= $form->forms_title?> <a href="<?= base_url()?>form/<?=$form->forms_id?>" class="btn btn-outline-info"><i class="fa fa-eye"></i> View Form</a></h1>
       </div>
 
       <hr/>
@@ -211,7 +211,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="col-xs-6 col-sm-6 m-0">
+                            <!-- <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="13">
                                 <div class="card p-1">
                                   <div class="card-content">
@@ -219,7 +219,7 @@
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> -->
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="14">
                                 <div class="card p-1">
@@ -454,13 +454,19 @@
 
             
             <div class="modal fade" id="modalElementSettings" data-backdroup="static">
-              <div class="modal-dialog modal-dialog-centered modal-xl">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h3 class="modal-title">Edit Element</h3>
+                    <div class="d-flex w-100 justify-content-between">
+                      <h3 class="modal-title">Edit Element</h3>
+                      <button class="btn btn-sm btn-success" onclick="saveElementSettings()" data-dismiss="modal">Save Settings</button>
+                    </div>
                     <button class="close" data-dismiss="modal">&times;</button>
                   </div>
-                  <div id="modalElementSettingsContent" class="modal-body h-100">
+                  <div id="modalElementSettingsLoadingContent" class="modal-body" style="min-height: 800px;">
+                    Loading.. Please Wait..
+                  </div>
+                  <div id="modalElementSettingsContent" class="modal-body" style="display: none; min-height: 800px">
                     <ul class="nav nav-tabs">
                       <li class="nav-item">
                         <a href="#modal-element-settings-settings" class="nav-link active" data-toggle="tab">
@@ -485,47 +491,102 @@
                     </ul>
 
                     <div class="tab-content">
+
                       <div id="modal-element-settings-settings" class="tab-pane fade show active">
                         
                         <div class="form-group">
-                          <label for="txtElementSettingsLabel" class="form-label">Field Label:</label>
-                          <input type="text" name="txtElementSettingsLabel" id="txtElementSettingsLabel" class="form-control">
+                          <label for="txtElementSettingsFieldLabel" class="form-label">Field Label:</label>
+                          <input type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control">
                         </div>
 
                         <div class="row">
-                          <div class="col-xs-12 col-md-6">
-                            <h4>Text Field</h4>
-                            <hr/>
 
-                            <div class="form-group">
-                              <label for="txtElementSettingsLength">Length</label>
-                              <input type="text" name="txtElementSettingsLength" id="txtElementSEttingsLength" class="form-control">
+                          <div class="col-xs-12 col-md-6">
+                            <div id="settings1">
+                              <h4>Text Field</h4>
+                              <hr/>
+
+                              <div class="form-group">
+                                <label for="txtElementSettingsPlaceholderText">Placeholder Text</label>
+                                <input type="text" name="txtElementSettingsPlaceholderText" id="txtElementSettingsPlaceholderText" class="form-control">
+                              </div>
+                              
+                              <div class="form-group">
+                                <label for="txtElementSettingsLength">Validation Type</label>
+                                <select name="txtElementSettingsValidation" id="txtElementSettingsValidation" class="custom-select">
+                                  <option value="">None</option>
+                                  <option value="">Text-only</option>
+                                  <option value="">Number</option>
+                                  <option value="">Alpha-Numeric</option>
+                                  <option value="">CC Expiration Date</option>
+                                  <option value="">URL</option>
+                                  <option value="">Phone Number</option>
+                                  <option value="">US Phone Number</option>
+                                  <option value="">Currency</option>
+                                  <option value="">Whole Number</option>
+                                </select>
+                              </div>
                             </div>
-                            
-                            <div class="form-group">
-                              <label for="txtElementSettingsPlaceholderText">Placeholder Text</label>
-                              <input type="text" name="txtElementSettingsPlaceholderText" id="txtElementSettingsPlaceholderText" class="form-control">
+                            <div id="settings2">
+                              <h4>Choices</h4>
+                              <hr/>
+                              <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                  <a href="#choices-add-choice" class="nav-link active" data-toggle="tab">Add Choice</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a href="#choices-edit-choice" class="nav-link " data-toggle="tab">Edit Choice</a>
+                                </li>
+                              </ul>
+
+                              <div class="tab-content">
+
+                                <div class="tab-pane fade show active" id="choices-add-choice">
+                                  <div class="form-group">
+                                    <textarea name="txtElementChoices" id="txtElementChoices" cols="30" rows="10" class="form-control"></textarea>
+                                    <small class="text-muted">Separated by spaces</small>
+                                  </div>
+                                
+                                </div>
+                                <div class="tab-pane fade" id="choices-edit-choice">
+                                
+                                  <div class="card p-0">
+                                    
+                                    <div class="d-flex w-100 justify-content-between">
+                                      <span>choice here</span>
+                                      <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                  </div>
+                                  <div class="card p-0">
+                                    
+                                    <div class="d-flex w-100 justify-content-between">
+                                      <span>choice here</span>
+                                      <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                  </div>
+                                  
+                                </div>
+
+                              </div>
+
+
                             </div>
-                            
+                          </div>
+                          
+                          <div class="col-xs-12 col-md-6">
+                            <h4>Style</h4>
+                            <hr/>
                             <div class="form-group">
-                              <label for="txtElementSettingsLength">Placeholder Text</label>
-                              <select name="txtElementSettingsValidation" id="txtElementSettingsValidation" class="custom-select">
-                                <option value="">None</option>
-                                <option value="">Text-only</option>
-                                <option value="">Number</option>
-                                <option value="">Alpha-Numeric</option>
-                                <option value="">CC Expiration Date</option>
-                                <option value="">URL</option>
-                                <option value="">Phone Number</option>
-                                <option value="">US Phone Number</option>
-                                <option value="">Currency</option>
-                                <option value="">Whole Number</option>
+                              <label for="selElementSize">Element Size</label>
+                              <select name="selElementSize" id="selElementSize" class="custom-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
                               </select>
                             </div>
 
 
-                          </div>
-                          <div class="col-xs-12 col-md-6">
                             <h4>Options</h4>
                             <hr/>
                             
@@ -543,15 +604,15 @@
                             <h5>Question Position</h5> 
                             <!-- should add to database -->
                             <div class="form-check">
-                              <input type="radio" name="radElementSettingsQuestionPosition" id="radElementSettingsQuestionPositionTop" class="form-check-input">
+                              <input type="radio" name="radElementSettingsQuestionPosition" value="1" id="selectedUserElement" class="form-check-input">
                               <label for="radElementSettingsQuestionPosition">Top</label>
                             </div>
                             <div class="form-check">
-                              <input type="radio" name="radElementSettingsQuestionPosition" id="radElementSettingsQuestionPositionLeft" class="form-check-input">
+                              <input type="radio" name="radElementSettingsQuestionPosition" value="2" id="selectedUserElement" class="form-check-input">
                               <label for="radElementSettingsQuestionPosition">Left</label>
                             </div>
                             <div class="form-check">
-                              <input type="radio" name="radElementSettingsQuestionPosition" id="radElementSettingsQuestionPositionRight" class="form-check-input">
+                              <input type="radio" name="radElementSettingsQuestionPosition" value="3" id="selectedUserElement" class="form-check-input">
                               <label for="radElementSettingsQuestionPosition">Right</label>
                             </div>
                             
@@ -559,15 +620,104 @@
                         </div>
 
                       </div>
+
                       <div id="modal-element-settings-default-value" class="tab-pane fade">
-                        default value
+                        <div class="row">
+                          <div class="col-xs-12 col-md-12">
+                            <div class="form-group">
+                              <h4>Default Values</h4>
+                              <hr/>
+                              <label for="txtElementSettingsDefaultValue">Default Value:</label>
+                              <input type="text" name="txtElementSettingsDefaultValue" id="txtElementSettingsDefaultValue" class="form-control">
+                            </div>
+                          </div>
+                        </div>
                       </div>
+
                       <div id="modal-element-settings-rules" class="tab-pane fade">
-                        rules
+                        <h4>Display Rules</h4>
+                        <hr/>
+                        <p>Conditionally show or hide this item. Use this page to configure rules for all items at once.</p>
+                        <div class="card">
+                          <div class="card-content">
+                            <label>Item #1</label>
+                            <div class="card">
+                              <div class="card-content">
+
+                                <div class="form-row ">
+                                  <div class="col-auto">
+                                    <select name="asfd" id="asdf" class="custom-select">
+                                      <option value="1">show</option>
+                                      <option value="1">hide</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-auto">
+                                    this item when 
+                                  </div>
+                                  <div class="col-auto">
+                                    <select name="asfd" id="asdf" class="custom-select">
+                                      <option value="1">all</option>
+                                      <option value="1">any</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-auto">
+                                    of it's criteria match:
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-6">
+                                <div class="form-group">
+                                  <select name="asdf" id="asdf" class="custom-select">
+                                    <option value="sss">always</option>
+                                    <option value="sss">page 1</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-6">
+                                <button class="btn btn-success">+</button>
+                                <button class="btn btn-danger">-</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
+
                       <div id="modal-element-settings-calculations" class="tab-pane fade">
-                        calculations
+                        <div class="row">
+                          <div class="col-xs-12 col-md-6">
+                            <h4>Calculation Values</h4>
+                            <hr/>
+                            <p>Assign values for:</p>
+                            <div class="form-check">
+                              <input type="radio" name="radCalculationValues" id="radCalculationOption1" class="form-check-input">
+                              <label for="radCalculationOption1">Entire Item</label>
+                            </div>
+                            <div class="form-check">
+                              <input type="radio" name="radCalculationValues" id="radCalculationOption2" class="form-check-input">
+                              <label for="radCalculationOption2">Each Choice</label>
+                            </div>
+                            <div class="form-check">
+                              <input type="radio" name="radCalculationValues" id="radCalculationOption3" class="form-check-input">
+                              <label for="radCalculationOption3">Directly</label>
+                            </div>
+                            <p>The number that users enter will be the value.</p>
+                          </div>
+                          <div class="col-xs-12 col-md-6">
+                            <h4>Scoring</h4>
+                            <hr/>
+                            <div class="form-check">
+                              <input type="checkbox" name="chkElementSettingsScoringCheck" id="chkElementSettingsScoringCheck" class="form-check-input">
+                              <label for="chkElementSettingsScoringCheck">Enable Scoring</label>
+                              <small>Include Value in Scoring total.</small>
+                            </div>
+                          </div>
+                        </div>
                       </div>
+
                     </div>
 
                   </div>
@@ -828,12 +978,9 @@
             <h1 class="text-center text-muted py-5">Coming soon</h1>
           </div>
         </div>
-        
 
       </div>
       
-
-
 
     </div>
   </div>
@@ -878,6 +1025,7 @@
         document.querySelector('#txtResultsLimit').value = res.data.forms_results_limit
         document.querySelector('#txtResultsMessageTitle').value = res.data.forms_results_max_title
         document.querySelector('#txtResultsMessageContent').value = res.data.forms_results_max_message
+        document.querySelector('#txtResultsMessageContent').value = res.data.forms_results_max_message
         
         document.querySelector('#txtRedirectLink').value = res.data.forms_redirect_link
         document.querySelector('#txtSuccessTitle').value = res.data.forms_success_title
@@ -891,37 +1039,6 @@
   }
 
     
-  loadFormElements = id => {
-    document.querySelector("#windowPreviewContent").innerHTML = "";
-    $.ajax({
-      url: `${formBaseUrl}formbuilder/form/element/get/${id}`,
-      dataType: 'json',
-      type: 'GET',
-      success: function(res){
-        res.data.forEach(el => {
-          document.querySelector('#windowPreviewContent').innerHTML += `
-            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-3 px-2" onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)">
-              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
-                <div class="btn-group" style="margin-y: auto">
-                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})">Edit</button>
-                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})">Copy</button>
-                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})">Delete</button>
-                </div>
-              </div>
-              <div class="form-group form-user-elements">
-                <div id="form-element-setting-${el.fe_id}" class="form-user-elements-settings position-absolute">
-                  <h1>testing lang ${el.fe_id} </h1>
-                </div>
-                <label for="fe${el.fe_id}">${el.fe_label}</label>
-                <input type="text" name="feinput${el.fe_id  }" id="feinput${el.fe_id}" class="form-control">
-              </div>
-            </div>
-          `;
-        });
-        return;
-      }
-    })
-  }
 
   toggleElementSettings = (elementId, value) => {
     document.querySelector('#form-elements-settings-' + elementId).style.display = (value == 1)? "block" : "none"
@@ -934,16 +1051,17 @@
       dataType: 'json',
       type: 'GET',
       success: function(res){
-        console.log(res.data)
+        // console.log(res.data)
         let data = {
-        "fe_form_id": <?= $form->forms_id?>,
-        "fe_element_id": res.data.fe_element_id,
-        "fe_label": res.data.fe_label,
-        "fe_is_required": res.data.fe_is_required,
-        "fe_is_readonly": res.data.fe_is_readonly,
-        "fe_default_value": res.data.fe_default_value,
-        "fe_placeholder_text": res.data.fe_placeholder_text,
-        "fe_order": formUserElements.length + 1
+          "fe_form_id": <?= $form->forms_id?>,
+          "fe_element_id": res.data.fe_element_id,
+          "fe_label": res.data.fe_label,
+          "fe_is_required": res.data.fe_is_required,
+          "fe_is_readonly": res.data.fe_is_readonly,
+          "fe_default_value": res.data.fe_default_value,
+          "fe_placeholder_text": res.data.fe_placeholder_text,
+          "fe_span": res.data.fe_span,
+          "fe_order": formUserElements.length + 1
         }
 
         $.ajax({
@@ -954,7 +1072,7 @@
           success: function(res){
             
             loadFormSettings(<?= $form->forms_id?>);
-            loadFormElements(<?= $form->forms_id?>);
+            loadFormElements(<?= $form->forms_id?>, "edit");
             return;
           }
         })
@@ -968,22 +1086,34 @@
     // opens up an interface of the element, allowing users
     // to make changes to a single element
 
-    // document.querySelector('#modalElementSettings').classList.add('show');
     $('#modalElementSettings').modal('show')
-    // document.querySelector('#modalElementSettingsContent').innerHTML = "Loading..."
-
+    document.querySelector('#modalElementSettingsContent').style.display = "none"
+    document.querySelector('#modalElementSettingsLoadingContent').style.display = "block"
     $.ajax({
       url: `${formBaseUrl}formbuilder/form/element/get/<?= $form->forms_id?>/${elementId}`,
       dataType: 'json',
       type: 'GET',
       success: function(res){
-        selectedUserElement = res.data;
+        element = res.data;
+        
+        document.querySelector('#txtElementSettingsFieldLabel').value = element.fe_label;
+        document.querySelector('#txtElementSettingsPlaceholderText').value = element.fe_placeholder_text;
+        document.querySelector('#txtElementSettingsDefaultValue').value = element.fe_default_value;
+        document.querySelector('#selElementSize').value = element.fe_span;
+        document.querySelector('#chkElementSettingsRequired').checked = (element.fe_is_required == 1)? true : false;
+        document.querySelector('#chkElementSettingsReadonly').checked = (element.fe_is_readonly == 1)? true : false;
+        document.querySelector('#chkElementSettingsScoringCheck').checked = (element.fe_enable_score == 1)? true : false;
+        // document.querySelector('#radElementSettingsQuestionPosition').value = element.fe_question_position;
+
+
+
       }
     })
 
     setTimeout(() => {
-      console.log(selectedUserElement)
-      // document.querySelector('#modalElementSettingsContent').innerHTML = "Settings go here"
+      selectedUserElement = element;
+      document.querySelector('#modalElementSettingsLoadingContent').style.display = "none"
+      document.querySelector('#modalElementSettingsContent').style.display = "block"
     }, 1000);
     
     
@@ -999,19 +1129,47 @@
 
         
         loadFormSettings(<?= $form->forms_id?>);
-        loadFormElements(<?= $form->forms_id?>);
+        loadFormElements(<?= $form->forms_id?>, "edit");
         return;
         
       }
     })
   }
-
   
-  loadFormSettings(<?= $form->forms_id?>);
-  loadFormElements(<?= $form->forms_id?>);
-  setTimeout(() => {
-    console.log(formUserElements.length)
-  }, 500);
+  saveElementSettings = () => {
+    
+    let data = {
+      "fe_label": document.querySelector('#txtElementSettingsFieldLabel').value,
+      "fe_placeholder_text": document.querySelector('#txtElementSettingsPlaceholderText').value,
+      "fe_default_value": document.querySelector('#txtElementSettingsDefaultValue').value,
+      "fe_span": document.querySelector('#selElementSize').value,
+      "fe_is_required": (document.querySelector('#chkElementSettingsRequired').checked === true)? 1 : 0,
+      "fe_is_readonly": (document.querySelector('#chkElementSettingsReadonly').checked === true)? 1 : 0,
+      "fe_enable_score": (document.querySelector('#chkElementSettingsScoringCheck').checked === true)? 1 : 0,
+      // "fe_question_position": document.querySelector('#radElementSettingsQuestionPosition').value,
+
+    }
+    
+    $.ajax({
+      url: `${formBaseUrl}formbuilder/form/element/update/${selectedUserElement.fe_id}`,
+      data: data,
+      dataType: 'json',
+      type: 'POST',
+      success: function(res){
+        loadFormSettings(<?= $form->forms_id?>);
+        loadFormElements(<?= $form->forms_id?>, "edit");
+        $('#modalElementSettings').modal('hide')
+      }
+    })
+  }
+  
+  window.onload = () => {
+    loadFormSettings(<?= $form->forms_id?>);
+    loadFormElements(<?= $form->forms_id?>, "edit");
+    setTimeout(() => {
+      console.log(formUserElements.length)
+    }, 500);
+  }
 
   
 
@@ -1126,7 +1284,7 @@
           }
         })
       })
-      loadFormElements(<?= $form->forms_id?>);
+      loadFormElements(<?= $form->forms_id?>, "edit");
       
     }
   });
@@ -1141,10 +1299,11 @@
         "fe_form_id": <?= $form->forms_id?>,
         "fe_element_id": selectedElement,
         "fe_label": elementsList[selectedElement].type,
-        "fe_is_required": true,
-        "fe_is_readonly": false,
+        "fe_is_required": 0,
+        "fe_is_readonly": 0,
         "fe_default_value": null,
-        "fe_placeholder_text": "choice",
+        "fe_placeholder_text": null,
+        "fe_span": 1,
         "fe_order": formUserElements.length + 1
       }
       
@@ -1158,7 +1317,7 @@
         success: function(res){
           window.alert('Element added!');
           loadFormSettings(<?= $form->forms_id?>);
-          loadFormElements(<?= $form->forms_id?>);
+          loadFormElements(<?= $form->forms_id?>, "edit");
           return;
         }
       })

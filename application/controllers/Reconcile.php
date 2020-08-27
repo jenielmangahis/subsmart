@@ -137,4 +137,10 @@ class Reconcile extends MY_Controller {
             }
         $this->index($id);
     }
+
+    public function delete()
+    {
+    	$id = $this->input->post('id');
+        $this->reconcile_model->delete($id);
+    }
 }

@@ -1492,8 +1492,6 @@ $(document).ready(function () {
                 return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
             }
         });
-
-
     });
 
     // Vendor Credit
@@ -1834,7 +1832,6 @@ $(document).ready(function () {
         }
     });
     });
-
     //Vendor credit modal Dropzone
     $(document).ready(function () {
         var fname = [];
@@ -1862,7 +1859,6 @@ $(document).ready(function () {
                     url:'/accounting/removeTransactionAttachment',
                     data:{name:name,index:index},
                     success:function (data) {
-
                     }
                 });
                 //remove thumbnail

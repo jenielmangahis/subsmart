@@ -435,6 +435,121 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get();
         return $query->num_rows();
     }
+
+    public function getTimeSheetSettings(){
+        $qry = $this->db->get('timesheet_settings');
+        return $qry->result();
+    }
+    public function getTimeSheetDay(){
+        $qry = $this->db->get('ts_settings_day');
+        return $qry->result();
+    }
+    public function getTimeSheetDayByWeek($week){
+        for ($x = 0;$x < count($week);$x++){
+            $this->db->or_where('date_created',$week[$x]);
+        }
+        $qry = $this->db->get('timesheet_settings');
+        return $qry->result();
+    }
+    public function getTimeSheetDayById($timesheet_id){
+        $qry = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$timesheet_id));
+        return $qry->result();
+    }
+    public function getTimeSheetTotalInDay($week){
+        for ($x = 0;$x < count($week);$x++){
+            $this->db->or_where('date',$week[$x]);
+        }
+        $qry = $this->db->get('ts_settings_total_day');
+        return $qry->result();
+    }
+    public function getTotalWeekDuration($week){
+        for ($x = 0;$x < count($week);$x++){
+            $this->db->or_where('date',$week[$x]);
+        }
+        $qry = $this->db->get('ts_total_week_duration');
+        return $qry->result();
+    }
+
+    public function addingProjects($project){
+        $qry = $this->db->get_where('timesheet_settings',array('projects' => $project));
+        if ($qry->num_rows() == 0){
+            $data = array(
+                'projects' => $project,
+                'date_created' => date('Y-m-d h:i:s'),
+                'status' => 1
+            );
+            $this->db->insert('timesheet_settings',$data);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function updateDuration($data){
+        $qry = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$data['project_id'],'id'=>$data['day_id']));
+        if ($qry->num_rows() == 1){
+            $update = array(
+                'duration' => $data['duration'],
+            );
+            $this->db->where('id',$data['day_id']);
+            $this->db->update('ts_settings_day',$update);
+        }else{
+            $new = array(
+                'ts_settings_id' => $data['project_id'],
+                'day' => $data['day'],
+                'duration' => $data['duration']
+            );
+            $this->db->insert('ts_settings_day',$new);
+        }
+    }
+
+    public function updateTotalWeekDuration($update){
+        $qry = $this->db->get_where('timesheet_settings',array('id'=>$update['project_id']));
+        if ($qry->num_rows() == 1){
+            $data = array(
+              'total_duration_w' => $update['total']
+            );
+            $this->db->where('id',$update['project_id']);
+            $this->db->update('timesheet_settings',$data);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function addingTotalInDay($update,$id){
+        $qry = $this->db->get_where('ts_settings_total_day',array('date'=> $update['date']));
+        if ($qry->num_rows() == 0){
+            $this->db->insert('ts_settings_total_day',$update);
+        }else{
+            $this->db->where('id',$id);
+            $this->db->update('ts_settings_total_day',$update);
+        }
+    }
+
+    public function updateTotalDuration($update,$week){
+        $date_week_check = array(
+            0 => date("Y-m-d",strtotime('monday '.$week)),
+            1 => date("Y-m-d",strtotime('tuesday '.$week)),
+            2 => date("Y-m-d",strtotime('wednesday '.$week)),
+            3 => date("Y-m-d",strtotime('thursday '.$week)),
+            4 => date("Y-m-d",strtotime('friday '.$week)),
+            5 => date("Y-m-d",strtotime('saturday '.$week)),
+            6 => date("Y-m-d",strtotime('sunday '.$week)),
+        );
+        for ($x = 0;$x < count($date_week_check);$x++){
+            $this->db->or_where('date',$date_week_check[$x]);
+        }
+        $query = $this->db->get('ts_total_week_duration');
+        if ($query->num_rows() == 0){
+            $this->db->insert('ts_total_week_duration',$update);
+        }else{
+            for ($x = 0;$x < count($date_week_check);$x++){
+                $this->db->or_where('date',$date_week_check[$x]);
+            }
+            $this->db->update('ts_total_week_duration',$update);
+        }
+    }
     
 
 

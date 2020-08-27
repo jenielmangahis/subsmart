@@ -69,6 +69,7 @@ $route['services'] = 'service';
 // form builder pages - Gene
 $route['formbuilder'] = 'formbuilder';
 $route['formbuilder/create'] = 'formbuilder/create';
+$route['form/(:num)'] = 'formbuilder/view/$1';
 $route['formbuilder/edit/(:num)'] = 'formbuilder/edit/$1';
 
 // form builder functions - Gene
@@ -80,6 +81,7 @@ $route['formbuilder/form/element/get/(:any)/(:any)'] = 'formbuilder/getFormEleme
 $route['formbuilder/form/element/add'] = 'formbuilder/addFormElement';
 $route['formbuilder/form/element/update/(:any)'] = 'formbuilder/updateFormElement/$1';
 $route['formbuilder/form/element/delete/(:any)'] = 'formbuilder/deleteFormElement/$1';
+$route['form/submit/(:any)'] = 'formbuilder/submitForm/$1';
 
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
@@ -183,6 +185,7 @@ $route['accounting/reconcile'] = 'reconcile/indexmain';
 $route['accounting/reconcile/edit/(:any)'] = 'reconcile/edit/$1';
 $route['accounting/reconcile/update/(:any)'] = 'reconcile/update/$1';
 $route['accounting/reconcile/do_upload/(:any)'] = 'reconcile/do_upload/$1';
+$route['accounting/reconcile/delete/reconcile'] = 'reconcile/delete';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 

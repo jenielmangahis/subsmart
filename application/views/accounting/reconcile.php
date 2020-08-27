@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_accounting'); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <style type="text/css">
     .hide-toggle::after {
         display: none;
@@ -24,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
 
-<!-- Popup -->
+    <!-- Popup -->
     <div class="modal fade" id="popup-opn" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -48,6 +50,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!-- End Popup -->
+
+    <!-- Close Popup -->
+    <div class="modal fade" id="popup-cls" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="reconciliblock">
+                    <div class="error-block">
+                        <div class="error-ic">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="error-dt">
+                            <h4>We'll remove all of your changes</h4>
+                            <p>If you close without saving your work, we reset all the transactions to their original state when you opened this reconciliation session. We also remove the statement info that you entered.</p>
+                        </div>
+                    </div>
+
+                    <div class="action-popup">
+                        <a href="#" class="btn-main uplobtn" id="menuButton" onclick="closedelete(<?=$rows[0]->id?>)">Close without saving</a>
+                        <a href="#" class="btn-main">Go back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Close Popup -->
+
 
     <!-- Add Custom Tax Sidebar -->
     <div id="overlay-cus-tx" class=""></div>
@@ -111,7 +139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item" href="#">Finish Now</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-opn">Save for later</a>
-                                <a class="dropdown-item" href="#">Close without saving</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-cls">Close without saving</a>
                               </div>
                             </div>
                         </div>
@@ -816,5 +844,28 @@ function closeSideNav3() {
    
     jQuery("#side-menu-cus-tx").removeClass("open-side-nav");
     jQuery("#overlay-cus-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+function closedelete(val) {
+  var id = val;
+  if(id!='')
+  {
+    alert(id);
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/delete/reconcile') ?>",
+        method: "POST",
+        data: {id:id},
+        success:function(data)
+        {
+            sweetAlert(
+                            'Deleted!',
+                            'Reconcile has been deleted.',
+                            'success'
+                        );
+            location.href="<?php echo url('accounting/reconcile') ?>";
+        }
+    })
+  }
 }
 </script>

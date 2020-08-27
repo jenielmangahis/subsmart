@@ -1732,6 +1732,49 @@ button:focus {
     .smart__grid {
       height: auto !important;
     }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    div#accordionExample div.card {
+      margin-bottom: 12px !important;
+    }
+    div.st-wrap-mobile {
+      margin-bottom: 60px;
+    }
+    img#welcome-image {
+      display: none;
+    }
+    div#welcome-image-container {
+      text-align: center;
+      padding-bottom: 0px !important;
+    }
+    .card.p-5 {
+      padding: 15px 20px !important;
+    }
+    div#list-workspace-index {
+      margin-top: 12px;
+      position: relative;
+      right: 12px;
+    }
+    .row {
+      margin-right: 0px !important;
+      margin-left: 0px !important;
+    }
+    .page-title-box.mx-4 {
+      padding: 0px;
+      margin: 0px !important;
+    }
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 25px 8px;
+    }
+    .col-lg-6.px-0 h2 {
+      margin-left: 20px;
+    }
+    .row.align-items-center.pt-3.bg-white {
+      width: 100% !important;
+      display: table;
+      margin: 0px;
+    }
     .onoffswitch {
       float: right;
       margin-bottom: 20px;
@@ -9880,6 +9923,111 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
 }
 .edit-action .btn-ed:hover{background: rgba(0,0,0,0.30);}
 /* **** End Table Dropdown CSS **** */
+
+/* ***** Popup Design ***** */
+.popbox{
+    padding: 60px 0;
+}
+#popup-opn .modal-dialog{max-width:600px;}
+#popup-opn .modal-content{
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 10px;
+}
+.reconciliblock{
+    padding: 30px;
+    border-radius: 10px;
+    background: #fff;
+}
+.error-block{
+    padding: 45px 0;
+    border-bottom: 2px solid #c1c1c1;
+    display: flex;
+    width: 100%;
+}
+.error-ic {margin-right: 20px;}
+.error-ic i{
+    font-size:60px;
+    color: #0098cd;
+}
+.error-dt h4{
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 10px;
+}
+.error-dt p{
+    font-size: 14px;
+    font-weight: normal;
+    color: #717171;
+    margin: 0;
+    line-height: 22px;
+}
+.action-popup{
+    padding: 20px 0 0;
+}
+.action-popup .btn-main{
+    padding: 8px 30px;
+    border: 2px solid #2ca01c;
+    background: #2ca01c;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    border-radius: 30px;
+    float: right;
+}
+.action-popup .uplobtn{
+    background: #dadadc;
+    border-color: #333;
+    color: #333;
+    float: none;
+}
+.file-upload-block{
+    padding: 15px;
+}
+.file-upload-block .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+.file-upload-block .upload-btn-wrapper input[type=file] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+.file-upload-block .upload-btn-wrapper .btn{
+    padding: 35px 15px 20px;
+    width: 100%;
+    text-align: center;
+    display: block;
+    border-radius: 0;
+    background: #f4f5f8;
+    border: 2px dashed #8d9096;
+    cursor: pointer;
+}
+.file-upload-block .upload-btn-wrapper .btn i{
+    font-size: 42px;
+    color: #8d9096;
+    text-align: center;
+    margin: 0 0 10px;
+}
+.file-upload-block .upload-btn-wrapper .btn h6{
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    margin: 0;
+    color: #717171;
+}
+.file-upload-block .upload-btn-wrapper .btn h6 span{
+    color: #0077c5;
+}
+/* ***** End Popup Design ***** */
+
 /* Calendar Custom CSS */
 select#select-employee {
   width: 100% !important;

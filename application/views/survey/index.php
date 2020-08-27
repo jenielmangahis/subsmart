@@ -20,7 +20,7 @@
     margin-right: .5rem;
     font-size: 14px;
   }
-  
+
 
   .survey-card {
     padding: 0px;
@@ -54,9 +54,9 @@
     box-shadow: 5px 5px 10px #ddd;
     transition-duration: 300ms;
   }
-  
+
   .template-card:hover{
-    
+
     border-radius: 10px;
     margin: 10px;
     border: none;
@@ -79,8 +79,8 @@
 
 
   img.survey-card-image{
-    width: 100%; 
-    max-height: 150px; 
+    width: 100%;
+    max-height: 150px;
     object-fit: cover;
   }
 
@@ -97,7 +97,7 @@
 
 </style>
 
-<div class="wrapper" role="wrapper">
+<div class="wrapper st-wrap-mobile" role="wrapper">
 
   <?php include viewPath('includes/sidebars/marketing'); ?>  <div wrapper__section>
 
@@ -110,7 +110,7 @@
           <div class="container">
             <div class="col-xs-12">
               <div id="welcome-image-container">
-                <img id="welcome-image" src="assets/survey/wizard.png" alt="wizard">            
+                <img id="welcome-image" src="assets/survey/wizard.png" alt="wizard">
               </div>
               <h1 class="text-center">
                 Welcome to Survey Wizard
@@ -162,7 +162,7 @@
             ?>
           </div>
         </div>
-        
+
         <div class="col-xs-12 col-md-2 d-none d-md-block">
           <div class="list-group" id="list-tab" role="tablist">
             <button class="list-group-item  btn-light" data-toggle="modal" data-target="#modalAddWorkspace"> <i class="fa fa-plus"></i> Add new workspace</button>
@@ -207,7 +207,7 @@
                         <hr/>
 
                         <div class="row">
-                        
+
                           <div class="col-xs-12 col-sm-6 col-xl-3">
                             <div id="survey-add-card" class="card border-0 shadow" >
                               <a class="text-left" href="<?=base_url()?>survey/add?ws=<?=$workspace->id?>">
@@ -221,7 +221,7 @@
                             </div>
                           </div>
                           <?php foreach ($workspace->surveys as $key => $survey): ?>
-                          
+
                             <div class="col-xs-12 col-sm-6 col-xl-3">
                               <!-- Card content for each survey -->
                               <div data-id="<?= $survey->id ?>" class="card survey-card border-0 shadow" >
@@ -248,7 +248,7 @@
                                         <?php
                                       }
                                     }?>
-                                    
+
                                   </div>
                                   <div class="card-footer">
                                     <p class="card-title survey-title font-weight-bold"><?= $survey->title ?></p>
@@ -270,7 +270,7 @@
                                         <a id="btn-share-survey" data-id="<?= $survey->id; ?>"  class="dropdown-item" href="survey/share/<?= $survey->id ?>"><span class="material-icons">share</span> Share</a>
                                         <a id="btn-delete-survey" data-id="<?= $survey->id; ?>" class="dropdown-item" href="survey/delete/<?= $survey->id ?>"><span class="material-icons">delete</span> Delete</a>
                                       </div>
-                                    
+
                                     </div>
                                   </div>
                                 </a>
@@ -278,8 +278,8 @@
 
                             </div>
                           <?php endforeach; ?>
-                          
-                          
+
+
                         </div>
                       </div>
                     </div>
@@ -289,11 +289,11 @@
             ?>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
-  
+
   <!-- end of workspace container -->
 
 
@@ -304,22 +304,22 @@
         <h4><i class="fa fa-th-list"></i> Templates</h4>
         <p>Here are the list of templates that include all the questions at your disposal. </p>
         <div class="accordion" id="accordionExample">
-          <?php      
+          <?php
             foreach($template_categories as $key => $category){
               ?>
-                
+
                 <div class="card m-0 p-0">
-                
+
                   <div class="card-header d-flex justify-content-between" id="headingOne" data-toggle="collapse" data-target="#collapse-<?=$key?>" aria-expanded="true" aria-controls="collapse-<?=$key?>">
                       <span>
-                        <?=$category?> 
+                        <?=$category?>
                       </span>
                     <i class="fa fa-caret-down"></i>
                   </div>
 
                   <div id="collapse-<?=$key?>" class="collapse" data-parent="#accordionExample">
                     <div class="card-body">
-                      
+
                       <div class="row d-flex w-100">
                         <?php
                           foreach($survey_templates as $template){
@@ -357,20 +357,20 @@
                                     <!-- </a> -->
                                   </div>
                                 </div>
-                                
+
                               <?php
                             }
                           }
                         ?>
                       </div>
-                      
 
-                      
+
+
                     </div>
                   </div>
-                </div>        
+                </div>
 
-                
+
               <?php
             };
           ?>
@@ -454,7 +454,7 @@
               </div>
           </div>
           <div id="modalViewTemplateContent">
-            
+
               <small>Questions Listed:</small>
               <div id="template-questions-list"></div>
 
@@ -471,13 +471,13 @@
   <!-- end of modals -->
 </div>
 
-  
+
 
 
   <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
   <script script type="text/javascript" src="<?=base_url()?>/assets/js/survey.js"></script>
   <script>
-  
+
   let viewingTemplate = null;
   let recentSurveys = <?= json_encode($surveys)?>;
   recentSurveys.sort((a,b)=>{
@@ -512,14 +512,14 @@
           return data
         }
       });
-      
+
       let questionContent = '';
       viewingTemplate.questions.map((question)=>{
         let tempQuestion = templateQuestions.find(data => {
           if(data.id === question.temp_id) return data
         });
 
-        questionContent += 
+        questionContent +=
           `<div class="card w-100 ">
             <div class="card-content">
               <p class="d-flex m-0">
@@ -529,7 +529,7 @@
             </div>
           </div>`
       })
-    
+
       questionsContainer.innerHTML = questionContent;
       cardIsLoading = false;
       document.querySelector('#modalLoadingSpinner').style.display = "none";
@@ -537,8 +537,8 @@
       console.log(viewingTemplate);
     },1000)
   }
-  
-  
+
+
   JSON.parse(localStorage.getItem('survey_ro')).map((item)=>{
     document.querySelector('#recent-survey-opened-table').innerHTML += `
     <div class="col-xs-12 col-sm-6 col-xl-3">
@@ -556,8 +556,8 @@
     `;
   })
 
-  
-  
+
+
   recentSurveys.map((item)=>{
     document.querySelector('#recent-survey-added-table').innerHTML += `
     <div class="col-xs-12 col-sm-6 col-xl-3">
@@ -568,24 +568,24 @@
           </div>
           <div class="card-footer">
             <h5 class="card-title survey-title font-weight-bold">${item.title}</h5>
-          </div>          
+          </div>
         </a>
       </div>
     </div>
     `;
   })
-  
 
-  
+
+
 
 
 
   handleDeleteWorkspacePrompt = (id = null) => {
-    deleteId = (id === null)? deleteId = null : deleteId = id 
+    deleteId = (id === null)? deleteId = null : deleteId = id
   }
 
   handleEditWorkspacePrompt = (id = null) => {
-    editId = (id === null)? editId = null : editId = id 
+    editId = (id === null)? editId = null : editId = id
   }
 
   handleDeleteWorkspace = (event) => {
@@ -624,11 +624,11 @@
       }
     })
   }
-  
+
 
 
 </script>
-  
+
 </div>
 
 <?php echo put_footer_assets(); ?>

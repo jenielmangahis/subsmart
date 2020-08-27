@@ -35,6 +35,82 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     th{
         text-align: center;
     }
+    #timesheet_settings .fa-times, th{
+        font-weight: lighter!important;
+        color: #92969d;
+    }
+    #timesheet_settings .fa-times:hover{
+        color: orangered;
+    }
+    #timesheet_settings .fa-times[disabled]{
+        cursor: not-allowed;
+        color: #92969d;
+    }
+    #timesheet_settings thead,tfoot{
+       background: #d6e6f3;
+    }
+    #timesheet_settings thead{
+       background: #d6e6f3;
+    }
+    #timesheet_settings td{
+        border-right: 0;
+        border-left: 0;
+        text-align: center;
+    }
+    .ts-duration{
+        width: 90px;
+        height: 36px!important;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .ts-project-name{
+        font-weight: bold;
+    }
+    .ts-status{
+        color: greenyellow;
+        margin-right: 10px;
+        font-size: 8px;
+        vertical-align: middle;
+    }
+    .ts-settings-menu{
+        float: right;
+        margin-bottom: 10px;
+    }
+    .ts-settings-menu .form-group{
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 0!important;
+        width: auto;
+    }
+    .ts-settings-menu .form-group select{
+        width: 200px;
+    }
+
+    .ts-settings-menu .form-group .btn{
+        width: 50px;
+        height: 45.99px;
+        display: inline-block;
+        padding: 0;
+        margin-top: -4px;
+    }
+    .ts-settings-menu .form-group .right{
+        margin-left: -4px;
+    }
+    .ts-settings-menu .form-group .btn > i{
+        margin: 0 auto;
+    }
+    .ts-settings-menu .ts-sorting{
+        margin-right: -5px!important;
+    }
+    .ts-bottom-btn-section{
+        float: left;
+        margin-top: 10px;
+    }
+    .ts-bottom-btn-section .form-group{
+        display: inline-block;
+    }
+
+
 </style>
 <?php
     //dd(logged());die;
@@ -81,167 +157,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">Settings Overview</h4>
+                            <h4 class="mt-0 header-title">Settings Overview</h4>
                             <!-- Date Selector -->
                             <div class="row">
-                                <div class="col-lg-3" style="">
-                                    <input type="text" class="form-control entry_date" name="timesheet_date" placeholder="Select Date">
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="dataTable1" class="table table-bordered table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th rowspan="2">Employee</th>
-                                            <th rowspan="2">Status</th>
-                                            <th>Monday</th>
-                                            <th>Tuesday</th>
-                                            <th>Wednesday</th>
-                                            <th>Thursday</th>
-                                            <th>Friday</th>
-                                            <th>Saturday</th>
-                                            <th>Sunday</th>
-                                            <th rowspan="2">TOTAL</th>
-                                        </tr>
-                                        <tr>
-                                            <?php foreach($date_this_week as $k=>$dtw):?>
-                                                <?php echo '<th>'.$dtw.'</th>';?>
-                                            <?php endforeach; ?>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                            //print date('H:i');
-                                            date_default_timezone_set('US/Central');
-                                            //$current_time = date('Y-m-d H:i');
-                                            $current_time_now = date('h:i a')." Manual Clock In";
-
-                                            //session_start();
-                                            /** check if session has started; session is started if you don't write this line can't use $_Session  global variable*/
-                                            /*if (session_status() == PHP_SESSION_NONE) {
-                                                session_start();
-                                            }*/
-                                            $clockin_sess = md5(uniqid());
-                                            $_SESSION["clockin_sess"] = $clockin_sess;
-                                        ?>
-                                        
-                                        <?php foreach ($users as $row): ?>
-                                            <?php //if (logged('id') === $row->id): ?>
-                                                <?php //echo "<pre>";print_r($users);echo "</pre>";?>
-                                                <?php
-                                                    $data['user_id'] = $row->id;
-                                                    // clockin array for each user
-                                                    $clockin_arr = $this->timesheet_model->getClockIn($data);
-                                                    $clockout_arr = $this->timesheet_model->getClockOut($data);
-                                                    //echo "<pre>";print_r($clockin_arr);echo "</pre>";
-                                                    //echo "Today is " . date("Y/m/d");
-                                                ?>
-                                                <tr class="timesheet_row">
-                                                    <!-- Employee -->
-                                                    <td class="employee_name">
-                                                        <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
-                                                        <?php 
-                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
-                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
-                                                            }
-                                                        ?>
-                                                    </td>
-                                                    <!-- Status -->
-                                                    <?php if( !empty($clockin_arr) ):?>
-                                                        <td class="status" style="text-align: center; background: green;">
-                                                    <?php else: ?>
-                                                        <td class="status" style="text-align: center;">
-                                                    <?php endif; ?>
-                                                        <?php foreach($clockin_arr as $k => $clockin ): ?>
-                                                            <?php if($clockin->action == "Clock In"): ?>
-                                                                <?php echo "In"; ?>
-                                                            <?php elseif($clockin->action == "Clock Out"): ?>
-                                                                <?php echo "Out"; ?>
-                                                            <?php elseif($clockin->action == "Lunch In"): ?>
-                                                                <?php echo "On Lunch"; ?>
-                                                            <?php endif; ?>
-                                                        <?php endforeach; ?>
-                                                    </td>
-                                                    
-
-                                                    <!-- Monday -->
-                                                    <td class="monday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('monday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin1 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin1, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- Tuesday -->
-                                                    <td class="tuesday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('tuesday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin2 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin2, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- Wednesday -->
-                                                    <td class="wednesday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('wednesday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin3 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin3, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- Thursday -->
-                                                    <td class="thursday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('thursday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin4 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin4, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- Friday -->
-                                                    <td class="friday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('friday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin5 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin5, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- Saturday -->
-                                                    <td class="saturday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('saturday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin6 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin6, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- Sunday -->
-                                                    <td class="sunday">
-                                                        <?php 
-                                                            $data['date'] = date("Y-m-d",strtotime('sunday this week'));
-                                                            //echo $data['date'];
-                                                            $total_clockin7 = $this->timesheet_model->getTotalClockinDay($data);
-                                                            echo round($total_clockin7, 2).' hrs';
-                                                        ?>
-                                                    </td>
-                                                    <!-- TOTAL -->
-                                                    <td class="total">
-                                                        <?php 
-                                                            //echo #total_hours
-                                                            $total_hours = $total_clockin1 + $total_clockin2 + $total_clockin3 + $total_clockin4 + $total_clockin5 + $total_clockin6 + $total_clockin7;
-                                                            echo round($total_hours, 2).' hrs';
-                                                        ?>
-                                                    </td>
-
-                                                </tr>
-                                            <?php //endif; ?>
-                                        <?php endforeach ?>
-                                        </tbody>
-                                    </table>
+                                    <div class="ts-settings-menu">
+                                        <div class="form-group">
+                                            <select name="" id="" class="form-control">
+                                                <option value="">Teammates</option>
+                                                <?php foreach ($users as $user): ?>
+                                                    <option value="<?php echo $user->id?>"><?php echo $user->FName?> <?php echo $user->LName;?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-default" type="button"><i class="fa fa-list"></i></button>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">
+                                                <option value="this week" selected>This week</option>
+                                                <option value="last week">Last week</option>
+                                                <option value="next week">Next week</option>
+                                            </select>
+                                            <button class="btn btn-default"><i class="fa fa-angle-left fa-lg"></i></button>
+                                            <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>
+                                        </div>
+                                    </div>
+                                    <table id="timesheet_settings" class="timesheet_settings-table"></table>
+                                    <div class="ts-bottom-btn-section">
+                                        <div class="form-group">
+                                            <button class="btn btn-default"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-default"><i class="fa fa-copy" style="color: #9da5af;"></i>&nbsp;Copy last week</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-default"><i class="fa fa-save" style="color: #56bb4d;"></i>&nbsp;Save as template</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -258,544 +211,403 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
-    //$('#dataTable1').DataTable();
-
     $(document).ready(function () {
-        $('#dataTable1').DataTable();
-
-
-        /* Modal */
-        $('#workhours').on('click', function(e){
-            $("#pto").prop("checked", false);
-        })
-        $('#pto').on('click', function(e){
-            $("#workhours").prop("checked", false);
-        })
-
-        $(".entry_date").datepicker();
-        /* eol Modal */
-
-        /*$('#dataTable1').on('click', 'tbody td', function() {
-
-          //get textContent of the TD
-          console.log('TD cell textContent : ', this.textContent)
-
-          //get the value of the TD using the API 
-          console.log('value by API : ', table.cell({ row: this.parentNode.rowIndex, column : this.cellIndex }).data());
-        })*/
-
-        /*$('#dataTable1').on('click', 'tbody tr', function(){
-            //console.log('API row values : ', table.row(this).data());
-            alert('asd');
-        });*/
-
-        $('.clockin_btn').on('click', function(e){
-            var logged_in_id = "<?php echo logged('id');?>";
-
-            $(this).hide();
-            $('.lunchin_btn').show();
-
-            // put indicator to show employee has clocked in
-            /*$('td.clocked_out_'+logged_in_id).removeClass('red');
-            $('td.clocked_in_'+logged_in_id).addClass('red');*/
-            $('input[name=clocked_out_'+logged_in_id+']').prop("checked", false);
-            $('input[name=clocked_in_'+logged_in_id+']').prop("checked", true);
-            console.log(logged_in_id);
+        // DataTables
+        $('.timesheet_settings-table').DataTable({
+            "paging": false,
+            "filter":false,
+            "info":false,
+            "sort": false
         });
-
-        $('.lunchin_btn').on('click', function(e){
-            var logged_in_id = "<?php echo logged('id');?>";
-            $(this).hide();
-            $('.lunchout_btn').show();
-
-            // put indicator to show employee has clocked in
-            /*$('td.clocked_in_'+logged_in_id).removeClass('red');
-            $('td.lunched_in_'+logged_in_id).addClass('red');*/
-            $('input[name=clocked_in_'+logged_in_id+']').prop("checked", false);
-            $('input[name=lunched_in_'+logged_in_id+']').prop("checked", true);
-            console.log(logged_in_id);
+    });
+    $(document).ready(function() {
+        var selected_week = $('#ts-sorting-week').val();
+        $('#timesheet_settings').ready(showWeekList(selected_week));
+        function showWeekList(week) {
+            if(week != null){
+                $.ajax({
+                    url:"/timesheet/showTimesheetSettings",
+                    type:"GET",
+                    dataType:"json",
+                    data:{week:week},
+                    success:function (data) {
+                        $('#timesheet_settings').html(data);
+                        // Restriction of input field
+                        var options =  {
+                            onKeyPress: function(cep, e, field, options) {
+                                var masks = ['00:00'];
+                                var mask = (cep.length>4) ? masks[1] : masks[0];
+                                $('.ts-duration').mask(mask, options);
+                            }};
+                        $('.ts-duration').mask("00:00",options);
+                    }
+                });
+            }
+        }
+        $(document).on('change','#ts-sorting-week',function () {
+            var week = $(this).val();
+            showWeekList(week);
         });
+        //Updating duration
+        // Monday
+        $(document).on('change','#tsMonday',function () {
+           var project_id = $(this).closest('tr').attr('data-id');
+           var day_id = $(this).attr('data-id');
+           var duration = $(this).val();
+           var day = "Monday";
+           $.ajax({
+              url:"/timesheet/updateDuration",
+              type:"POST",
+              dataType:"json",
+              cache:false,
+              data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+              success:function () {
 
-        $('.lunchout_btn').on('click', function(e){
-            var logged_in_id = "<?php echo logged('id');?>";
-            $(this).hide();
-            $('.clockout_btn').show();
-
-            // put indicator to show employee has clocked in
-            /*$('td.lunched_in_'+logged_in_id).removeClass('red');
-            $('td.lunched_out_'+logged_in_id).addClass('red');*/
-            $('input[name=lunched_in_'+logged_in_id+']').prop("checked", false);
-            $('input[name=lunched_out_'+logged_in_id+']').prop("checked", true);
-            console.log(logged_in_id);
+              }
+           });
         });
+        // Tuesday
+        $(document).on('change','#tsTuesday',function () {
+            var project_id = $(this).closest('tr').attr('data-id');
+            var day_id = $(this).attr('data-id');
+            var duration = $(this).val();
+            var day = "Tuesday";
+            $.ajax({
+                url:"/timesheet/updateDuration",
+                type:"POST",
+                dataType:"json",
+                cache:false,
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                success:function () {
 
-        $('.clockout_btn').on('click', function(e){
-            var logged_in_id = "<?php echo logged('id');?>";
-            $(this).hide();
-            $('.clockin_btn').show();
-
-            // put indicator to show employee has clocked in
-            /*$('td.lunched_out_'+logged_in_id).removeClass('red');
-            $('td.clocked_out_'+logged_in_id).addClass('red');*/
-            $('input[name=lunched_out_'+logged_in_id+']').prop("checked", false);
-            $('input[name=clocked_out_'+logged_in_id+']').prop("checked", true);
-            console.log(logged_in_id);
+                }
+            });
         });
+        //Wednesday
+        $(document).on('change','#tsWednesday',function () {
+            var project_id = $(this).closest('tr').attr('data-id');
+            var day_id = $(this).attr('data-id');
+            var duration = $(this).val();
+            var day = "Wednesday";
+            $.ajax({
+                url:"/timesheet/updateDuration",
+                type:"POST",
+                dataType:"json",
+                cache:false,
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                success:function () {
 
+                }
+            });
+        });
+        //Thursday
+        $(document).on('change','#tsThursday',function () {
+            var project_id = $(this).closest('tr').attr('data-id');
+            var day_id = $(this).attr('data-id');
+            var duration = $(this).val();
+            var day = "Thursday";
+            $.ajax({
+                url:"/timesheet/updateDuration",
+                type:"POST",
+                dataType:"json",
+                cache:false,
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                success:function () {
 
-        function updateClockIn(){
+                }
+            });
+        });
+        //Friday
+        $(document).on('change','#tsFriday',function () {
+            var project_id = $(this).closest('tr').attr('data-id');
+            var day_id = $(this).attr('data-id');
+            var duration = $(this).val();
+            var day = "Friday";
+            $.ajax({
+                url:"/timesheet/updateDuration",
+                type:"POST",
+                dataType:"json",
+                cache:false,
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                success:function () {
 
-            alert('Clock In updated');
+                }
+            });
+        });
+        //Saturday
+        $(document).on('change','#tsSaturday',function () {
+            var project_id = $(this).closest('tr').attr('data-id');
+            var day_id = $(this).attr('data-id');
+            var duration = $(this).val();
+            var day = "Saturday";
+            $.ajax({
+                url:"/timesheet/updateDuration",
+                type:"POST",
+                dataType:"json",
+                cache:false,
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                success:function () {
+
+                }
+            });
+        });
+        //Sunday
+        $(document).on('change','#tsSunday',function () {
+            var project_id = $(this).closest('tr').attr('data-id');
+            var day_id = $(this).attr('data-id');
+            var duration = $(this).val();
+            var day = "Sunday";
+            $.ajax({
+                url:"/timesheet/updateDuration",
+                type:"POST",
+                dataType:"json",
+                cache:false,
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                success:function () {
+
+                }
+            });
+        });
+        //Calculation total duration
+        $(document).on('change','.ts-duration',function () {
+            var day = $(this).attr('name');
+            var day_date = $(this).attr('data-date');
+            var total = 0;
+            var total_mins = 0;
+            var total_hrs = 0;
+            var hrs = 0;
+            var min = 0;
+            var id = $(this).closest('tr').attr('data-id');
+            $('td > .ts-duration'+id).each(function () {
+                var duration = $(this).val();
+                var split = duration.split(":");
+                var hours = parseInt(split[0]);
+                var mins = parseInt(split[1]);
+                if (!isNaN(mins)){
+                    total_mins += mins;
+                }
+                if (!isNaN(hours)){
+                    total_hrs += hours;
+                }
+            });
+            hrs = Math.floor(total_mins / 60);
+            min = total_mins % 60;
+            total_hrs += hrs;
+            total = total_hrs+':'+leftPad(min,2);
+            $('#totalWeekDuration'+id).text(total);
+            totalPerDay(id,day,day_date);
+            totalWeekDuration(day_date);
+            $.ajax({
+               url:"/timesheet/updateTotalWeekDuration",
+               type:"POST",
+               dataType:"json",
+               data:{id:id,total:total},
+               success:function () {
+
+               }
+            });
+        });
+        function totalPerDay(id,day,day_date) {
+            var total = 0;
+            var total_mins = 0;
+            var total_hrs = 0;
+            var hrs = 0;
+            var min = 0;
+            $("input[name$='"+day+"']").each(function () {
+               var duration = $(this).val();
+               var split = duration.split(":");
+                var hours = parseInt(split[0]);
+                var mins = parseInt(split[1]);
+                if (!isNaN(mins)){
+                    total_mins += mins;
+                }
+                if (!isNaN(hours)){
+                    total_hrs += hours;
+                }
+            });
+            hrs = Math.floor(total_mins / 60);
+            min = total_mins % 60;
+            total_hrs += hrs;
+            total = total_hrs+':'+leftPad(min,2);
+            var day_total_id = 0;
+            switch(day) {
+                case "monday":
+                    $('#totalMonday').text(total);
+                    day_total_id = $('#totalMonday').attr('data-id');
+                    break;
+                case "tuesday":
+                    $('#totalTuesday').text(total);
+                    day_total_id = $('#totalTuesday').attr('data-id');
+                    break;
+                case "wednesday":
+                    $('#totalWednesday').text(total);
+                    day_total_id = $('#totalWednesday').attr('data-id');
+                    break;
+                case "thursday":
+                    $('#totalThursday').text(total);
+                    day_total_id = $('#totalThursday').attr('data-id');
+                    break;
+                case "friday":
+                    $('#totalFriday').text(total);
+                    day_total_id = $('#totalFriday').attr('data-id');
+                    break;
+                case "saturday":
+                    $('#totalSaturday').text(total);
+                    day_total_id = $('#totalSaturday').attr('data-id');
+                    break;
+                case "sunday":
+                    $('#totalSunday').text(total);
+                    day_total_id = $('#totalSunday').attr('data-id');
+                    break;
+                default:
+                break;
+            }
+            $.ajax({
+                url:"/timesheet/addingTotalInDay",
+                type:"POST",
+                dataType:"json",
+                data:{id:day_total_id,total:total,day_date:day_date,day:day},
+                success:function () {
+                    showWeekList(selected_week);
+                }
+            });
+
         }
 
-        $('a#clockin').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            //alert('Clock In this user');
-            //
-            $(this).css('display', 'none');
-            // show clock out button
-            $(this).next().css('display', 'inline-block');
-
-            $("td#last_login span.last_login_now_" + clockin_user_id).css({"display":"inline-block", "color":"green"});
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/clock_in') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    alert('User has Clocked In');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
+        function totalWeekDuration(day_date) {
+            var total = 0;
+            var total_mins = 0;
+            var total_hrs = 0;
+            var hrs = 0;
+            var min = 0;
+            $('.totalWeek').each(function () {
+                var duration = $(this).text();
+                var split = duration.split(":");
+                var hours = parseInt(split[0]);
+                var mins = parseInt(split[1]);
+                if (!isNaN(mins)){
+                    total_mins += mins;
+                }
+                if (!isNaN(hours)){
+                    total_hrs += hours;
                 }
             });
-        })
-        $('a#clockout').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockout_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            //alert('Clock In this user');
-            //
-            $(this).css('display', 'none');
-            // show clock out button
-            $(this).prev("a#clockin").css('display', 'inline-block');
-
-            $("td#last_login span.last_login_now_" + clockout_user_id).css('display','inline-block');
+            hrs = Math.floor(total_mins / 60);
+            min = total_mins % 60;
+            total_hrs += hrs;
+            total = total_hrs+':'+leftPad(min,2);
+            $('#totalWeekDuration').text(total);
             $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/clock_out') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    alert('User has Clocked Out');
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
+               url:'/timesheet/updateTotalDuration',
+               type:"POST",
+               dataType:"json",
+               data:{total:total,date:day_date,week:selected_week},
+               success:function () {
+
+               }
+            });
+        }
+        function leftPad(number, targetLength) {
+            var output = number + '';
+            while (output.length < targetLength) {
+                output = '0' + output;
+            }
+            return output;
+        }
+
+        // Adding Project
+        $(document).on('click','#addProject',function () {
+            Swal.fire({
+                title: 'Please enter project name',
+                input: 'text',
+                // html:
+                // '<input id="swal-input1" class="swal2-input">' +
+                // '<input id="swal-input2" class="swal2-input">',
+                // inputAttributes: {
+                //     autocapitalize: 'off'
+                // },
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                confirmButtonColor: '#2ca01c',
+                // preConfirm: function () {
+                //     return new Promise(function (resolve) {
+                //         resolve([
+                //             $('#swal-input1').val(),
+                //             $('#swal-input2').val()
+                //         ])
+                //     })
+                // },
+                // onOpen: function () {
+                //     $('#swal-input1').focus()
+                // },
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url:"/timesheet/addingProjects",
+                        method:"POST",
+                        dataType:"json",
+                        data:{project:result.value},
+                        cache:false,
+                        success:function (data) {
+                            showWeekList(selected_week)
+                            if(data == 1){
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Success',
+                                        text: "New Project has been added!",
+                                        icon: 'success'
+                                    });
+                            }else{
+                                Swal.fire(
+                                    {
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Failed',
+                                        text: "Something is wrong in the process!",
+                                        icon: 'warning'
+                                    });
+                            }
+                        }
+                    });
                 }
-            });
-        })
+            })
 
-        $('#manual_add').on('click', function(e){
-            /*var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };*/
-
-            var $inputs = $(this).parent('form :input');
-
-            // not sure if you wanted this, but I thought I'd add it.
-            // get an associative array of just the values.
-            var values = {};
-            $inputs.each(function() {
-                values[this.name] = $(this).val();
-            });
-
-            var values = $(this).parent('form.manual_clockin_form').serialize();
-
-            console.log(values);
-            //var clockin_user_id = getValue('clockin_user_id');
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/manual_clock_in') ?>",
-                data: values,
-                success: function(result) {
-                    //alert('Manual Entry Success');
-                    //window.location.reload();
-                },
-                error: function(result) {
-                    //console.log(data);
-                    //alert('error');
-                }
-            });
         });
-
-        // Clocked In action
-        $('.clockin_btn').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            //alert('Clock In this user');
-            //
-            
-            //console.log(values);
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/clock_in') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    //alert('User has Clocked In');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
-                }
-            });
-        })
-
-        // Clocked Out action
-        $('.clockout_btn').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            alert('Are you sure you want to Clock Out?');
-            //
-            
-            //console.log(values);
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/clock_out') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    //alert('User has Clocked In');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
-                }
-            });
-        })
-
-        // Lunched In action
-        $('.lunchin_btn').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            //alert('Clock In this user');
-            //
-            
-            //console.log(values);
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/lunch_in') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    //alert('User has Lunch In');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
-                }
-            });
-        })
-
-        // Lunched Out action
-        $('.lunchout_btn').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            alert('Are you sure you want to Lunch Out?');
-            //
-            
-            //console.log(values);
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/lunch_out') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    //alert('User has Lunched Out');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
-                }
-            });
-        })
-
-        // Break In action
-        $('.breakin_btn').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            //alert('Are you sure you want to Lunch Out?');
-            //
-            
-            //console.log(values);
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/break_in') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    //alert('User has Break In');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
-                }
-            });
+        $(document).on('click','#removeProject',function () {
+            var id = $(this).attr('data-id');
+            var project_name = $(this).attr('data-name');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:'/timesheet/deleteProjectData',
+                    method:"POST",
+                    data:{id:id},
+                    success:function () {
+                        showWeekList(selected_week);
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "Project <strong>"+project_name+"</strong> has been deleted!",
+                                icon: 'success'
+                            });
+                    }
+                });
+            }
         });
-
-        // Break Out action
-        $('.breakout_btn').on('click', function(e){
-            //var values = $(this).parent('form').serializeArray();
-            var values = {};
-            $.each($(this).parent('form').serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
-            //Value Retrieval Function
-            var getValue = function (valueName) {
-                return values[valueName];
-            };
-            var clockin_user_id = getValue('clockin_user_id');
-            //console.log(clockin_user_id);
-
-            e.preventDefault();
-            alert('Are you sure you want to Break Out?');
-            //
-            
-            //console.log(values);
-            $.ajax({
-                type: "POST",
-                url: "<?php echo url('users/break_out') ?>",
-                data: values,
-                /*data: {
-                    user_id: $("input[name='clockin_user_id']").val(),
-                    clock_in: $("input[name='current_time_in']").val(),
-                    status: $("input[name='clockin_status']").val()
-                },*/
-                success: function(result) {
-                    //alert('User has Break Out');
-                    //updateClockIn();
-                    window.location.reload();
-                    //console.log('okay');
-                    //console.log(this);
-                    //var last_login = result['current_time_in'];
-                    //$(this).find('#last_login').append(last_login);
-                },
-                error: function(result) {
-                    //console.log(data);
-                    alert('error');
-                }
-            });
         });
 
     });
-
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-
-
-    elems.forEach(function (html) {
-
-        var switchery = new Switchery(html, {size: 'small'});
-
-    });
-
-
-    window.updateUserStatus = (id, status) => {
-
-        $.get('<?php echo url('users/change_status') ?>/' + id, {
-
-            status: status
-
-        }, (data, status) => {
-
-            if (data == 'done') {
-
-                // code
-
-            } else {
-
-                alert('Unable to change Status ! Try Again');
-
-            }
-
-        })
-
-    }
-
-    window.updateClockIn = (id, clockIn) => {
-        console.log(clockIn);
-        $.get('<?php echo url('users/update_clockin') ?>/' + id, {
-
-            clock_in_from: clockIn
-
-        }, (data, clockIn) => {
-
-
-            if (data == 'done') {
-
-                // code
-
-            } else {
-
-                alert('Clock In Unsuccessful ! Try Again');
-
-            }
-
-        })
-
-    }
-
 
 </script>
