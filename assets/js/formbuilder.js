@@ -5,7 +5,7 @@ const formBaseUrl = "/nsmartrac/"; // loc al
 // const formBaseUrl = `${window.location.origin}/` ; // online
 
 // =====================================
-//            GLOBAL VALUES
+//     GLOBAL VALUES AND FUNCTIONS
 // =====================================
 
 const elementsList = [
@@ -156,6 +156,105 @@ const elementsList = [
   },
 ]
 
+
+
+
+
+// =====================================
+//            VIEW PAGE
+// =====================================
+
+loadFormElements = (id, mode = null) => {
+  document.querySelector("#windowPreviewContent").innerHTML = "";
+  $.ajax({
+    url: `${formBaseUrl}formbuilder/form/element/get/${id}`,
+    dataType: 'json',
+    type: 'GET',
+    success: function(res){
+      res.data.forEach(el => {
+        let elementType = el.fe_element_id;
+        document.querySelector('#windowPreviewContent').innerHTML += `
+          <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+            ${(mode == "edit")?
+              `
+                <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                  <div class="btn-group" style="margin-y: auto">
+                    <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                    <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                  </div>
+                </div>
+              `
+            :""}
+
+            ${(elementType == 1)?`
+              <div class="form-group form-user-elements">
+                <label for="feinput-${el.fe_id}">${el.fe_label}}</label>
+                <select id="feinput-${el.fe_id}" class="custom-select">
+                  <option>test</option>
+                  <option>test</option>
+                </select>
+              </div>
+            `:""}
+            
+            
+            ${(elementType == 4 || elementType == 9)?`
+              <div class="form-group form-user-elements">
+                <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                <textarea name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"></textarea>
+              </div>
+            `:""}
+
+            
+            ${(elementType == 5 || elementType == 3)?`
+              <div class="form-group form-user-elements">
+                <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                <input type="text" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
+              </div>
+            `:""}
+            
+            ${(elementType == 2)?`
+              <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+              <div class="form-check form-user-elements">
+                <input type="checkbox" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="test">
+                <label for="feinput-${el.fe_id}">${el.fe_label}</label>
+              </div>
+            `:""}
+            
+            ${(elementType == 6)?`
+              <div class="form-group form-user-elements">
+                <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                <input type="date" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
+              </div>
+            `:""}
+            
+            ${(elementType == 7)?`
+              <div class="form-group form-user-elements">
+                <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                <input type="number" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
+              </div>
+            `:""} 
+
+            ${(elementType == 8)?`
+              <!-- fix this part -->
+
+              <div class="form-group custom-file form-user-elements">
+                <input type="file" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="custom-file-input" >
+                <label class="custom-file-label" for="feinput-${el.fe_id}">${el.fe_label}</label>
+              </div>
+            `:""}
+
+
+
+
+            
+          </div>
+        `;
+      });
+      return;
+    }
+  })
+}
 
 // =====================================
 //            EDIT PAGE

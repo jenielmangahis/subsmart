@@ -38,6 +38,17 @@ class Reconcile_model extends MY_Model {
         return $result[0];
 	  } 
 
+	public function delete($id)
+	{
+		$this->db->query("delete from reconcile where id='".$id."'");
+	}
+
+	public function checkexist()
+	{
+		$query = $this->db->query("SELECT * FROM chart_of_accounts where EXISTS (SELECT id FROM reconcile WHERE reconcile."."chart_of_accounts_id = chart_of_accounts."."id)");
+		echo $query->num_rows();
+	}
+
 
 }
 ?>

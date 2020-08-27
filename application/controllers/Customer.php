@@ -309,7 +309,6 @@ class Customer extends MY_Controller
 
     }
 
-
     public function save()
 
     {
@@ -414,7 +413,6 @@ class Customer extends MY_Controller
         redirect('customer');
 
     }
-
 
     public function update($id)
 
@@ -523,15 +521,10 @@ class Customer extends MY_Controller
 
     }
 
-
     public function service_address_form()
-
     {
 
-
         $get = $this->input->get();
-
-
         if (!empty($get)) {
 
 
@@ -554,9 +547,7 @@ class Customer extends MY_Controller
 
 
     public function save_service_address()
-
     {
-
 
         $post = $this->input->post();
 
@@ -610,13 +601,8 @@ class Customer extends MY_Controller
 
 
     public function json_get_address_services()
-
     {
-
-
         $get = $this->input->get();
-
-
         if (!empty($get['customer_id'])) {
 
             $cid = $get['customer_id'];
@@ -646,9 +632,7 @@ class Customer extends MY_Controller
 
 
     public function add()
-
     {
-
 
         $user_id = logged('id');
 
@@ -700,10 +684,9 @@ class Customer extends MY_Controller
     }
 
     public function add_advance()
-
     {
         $user_id = logged('id');
-        $this->page_data['plans'] = "";
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->load->view('customer/add_advance', $this->page_data);
     }
 

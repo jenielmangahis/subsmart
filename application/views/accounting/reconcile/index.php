@@ -75,6 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                       }
                                                                        ?>
                                                                 </select>
+                                                                <?php /* echo $this->reconcile_model->checkexist()*/ ?>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-7 col-sm-7">

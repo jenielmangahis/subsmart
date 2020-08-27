@@ -80,6 +80,13 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 	
+	public function submitAnswers($data){
+		$this->db->insert($this->answers_table, $data);
+		return array(
+			"status" => 1,
+			"id" => $this->db->insert_id()
+		);
+	}
 
 }
 

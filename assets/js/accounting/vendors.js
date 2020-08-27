@@ -123,8 +123,7 @@ $(document).ready(function () {
 		  }, false);
 		});
 	  }, false);
-	getAllVendors();
-});
+	
 	window.addEventListener('load', function() {
 		var editVendorForm = document.getElementsByClassName('editVendorForm-validation');
 		
@@ -136,6 +135,7 @@ $(document).ready(function () {
 				if (form.checkValidity() === true) {
 					
 					var passdata = new FormData(this);
+						passdata.append('id', $("input[name='vid']").val());
 						passdata.append('title', $("input[name='title']").val());
 						passdata.append('f_name', $("input[name='f_name']").val());
 						passdata.append('m_name', $("input[name='m_name']").val());
@@ -162,7 +162,7 @@ $(document).ready(function () {
 						passdata.append('business_number', $("input[name='business_number']").val());
 						passdata.append('default_expense_amount', $("input[name='default_expense_amount']").val());
 						passdata.append('notes', $("#notes").val());
-						
+
 						$.ajax({
 							type: "POST",
 							url: "editVendor",
@@ -173,8 +173,8 @@ $(document).ready(function () {
 							async:true,
 							success:
 								function(data) {
-									//console.log(data);
 										$("#edit-vendor-modal").modal("hide");
+										$('.loader').hide();
 										Swal.fire(
 										{
 											showConfirmButton: false,

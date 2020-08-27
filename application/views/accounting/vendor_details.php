@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<p><?php echo $vendor_details[0]->notes; ?></p>
                             </div>
                             <div class="col-md-6" style="text-align: right">
-                                <button type="button" class="btn btn-default" style="border-radius: 20px">Edit</button>
+                                <button type="button" class="btn btn-default" style="border-radius: 20px" data-toggle="modal" data-target="#edit-vendor-modal">Edit</button>
                                 <div class="dropdown" style="position: relative;display: inline-block;">
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 20px;margin-left: 5px;">
                                        New Transaction&ensp;<span class="fa fa-caret-down"></span>
@@ -223,10 +223,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 
 <!--    Add vendor modal-->
-        <div id="new-vendor-modal" class="modal fade" role="dialog">
+        <div id="edit-vendor-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
-				<form id="addVendorForm" class="needs-validation" novalidate>
+				<form id="editVendorForm" class="editVendorForm-validation needs-validation" novalidate>
                 <div class="modal-content max-width">
                     <div class="modal-header" style="border-bottom: 0">
                         <div class="modal-title">Vendor Information</div>
@@ -239,53 +239,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 56px">
                                         <label for="">Title</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="title" value="<?php echo $vendor_details[0]->title; ?>" class="form-control" required>
+                                        <input type="hidden" name="vid" value="<?php echo $vendor_details[0]->id; ?>" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 106px">
                                         <label for="">First name</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="f_name" value="<?php echo $vendor_details[0]->f_name; ?>" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 106px">
                                         <label for="">Middle name</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" name="m_name" value="<?php echo $vendor_details[0]->m_name; ?>" class="form-control">
                                     </div>
                                     <div class="form-ib" style="width: 106px">
                                         <label for="">Last name</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" name="l_name" value="<?php echo $vendor_details[0]->l_name; ?>"  class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 56px">
                                         <label for="">Suffix</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" name="suffix" value="<?php echo $vendor_details[0]->suffix; ?>"  class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Company</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" class="form-control" value="<?php echo $vendor_details[0]->company; ?>"  required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="" style="margin-right: 10px">Print on check as </label>
-										<input type="checkbox"><span style="margin-left: 10px">Use display name</span>
-                                        <input type="text" class="form-control">
+										<input type="checkbox" <?php if($vendor_details[0]->to_display ==1 ){echo "checked";}?>><span style="margin-left: 10px">Use display name</span>
+                                        <input type="text" class="form-control"  value="<?php echo $vendor_details[0]->display_name; ?>" >
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="" style="margin-right: 10px">Address</label>
 										<a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
-                                        <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
-                                        <input type="text" class="form-control address-form" placeholder="City/Town" required>
-                                        <input type="text" class="form-control address-form" placeholder="State/Province" required>
-                                        <input type="text" class="form-control address-form" placeholder="ZIP Code" required>
-                                        <input type="text" class="form-control address-form" placeholder="Country" required>
+                                        <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Street" required> <?php echo $vendor_details[0]->street; ?> </textarea>
+                                        <input value="<?php echo $vendor_details[0]->city; ?>"  type="text" class="form-control address-form" placeholder="City/Town" required>
+                                        <input value="<?php echo $vendor_details[0]->state; ?>"  type="text" class="form-control address-form" placeholder="State/Province" required>
+                                        <input value="<?php echo $vendor_details[0]->zip; ?>"  type="text" class="form-control address-form" placeholder="ZIP Code" required>
+                                        <input value="<?php echo $vendor_details[0]->country; ?>"  type="text" class="form-control address-form" placeholder="Country" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Notes</label>
-                                        <textarea name="" id="" cols="30" rows="2" class="form-control"></textarea>
+                                        <textarea name="" id="" cols="30" rows="2" class="form-control"><?php echo $vendor_details[0]->notes; ?> </textarea>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
@@ -311,21 +312,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Email</label>
-                                        <input type="text" class="form-control" placeholder="Separate multiple emails with commas" required>
+                                        <input value="<?php echo $vendor_details[0]->email; ?>"  type="text" class="form-control" placeholder="Separate multiple emails with commas" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 126px">
                                         <label for="">Phone</label>
-                                        <input type="text" class="form-control" required>
+                                        <input value="<?php echo $vendor_details[0]->phone; ?>"  type="text" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 126px">
                                         <label for="">Mobile</label>
-                                        <input type="text" class="form-control" required>
+                                        <input value="<?php echo $vendor_details[0]->mobile; ?>"  type="text" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 126px">
                                         <label for="">Fax</label>
-                                        <input type="text" class="form-control">
+                                        <input value="<?php echo $vendor_details[0]->fax; ?>"  type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
@@ -335,53 +336,53 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="form-ib" style="width: 255px;">
                                         <label for="">Website</label>
-                                        <input type="text" class="form-control">
+                                        <input value="<?php echo $vendor_details[0]->website; ?>"  type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Billing rate (/hr)</label>
-                                        <input type="text" class="form-control" style="width: 35%" required>
+                                        <input value="<?php echo $vendor_details[0]->billing_rate; ?>"  type="text" class="form-control" style="width: 35%" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib">
                                         <label for="">Terms</label>
 										<select class="form-control" required>
-										  <option value="1">Due on Receipt</option>
-										  <option value="2">Net 15</option>
-										  <option value="3">Net 30</option>
-										  <option value="4">Net 60</option>
+										  <option value="1" <?php if($vendor_details[0]->terms ==1) echo "selected"; ?>>Due on Receipt</option>
+										  <option value="2" <?php if($vendor_details[0]->terms ==2) echo "selected"; ?>>Net 15</option>
+										  <option value="3" <?php if($vendor_details[0]->terms ==3) echo "selected"; ?>>Net 30</option>
+										  <option value="4" <?php if($vendor_details[0]->terms ==4) echo "selected"; ?>>Net 60</option>
 										</select>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 147px">
                                         <label for="">Opening balance</label>
-                                        <input type="text" class="form-control" required>
+                                        <input value="<?php echo $vendor_details[0]->opening_balance; ?>" type="text" class="form-control" required>
                                     </div>
                                     <div class="form-ib" style="width: 120px">
                                         <label for="">as of</label>
-                                        <input type="text" class="form-control" required>
+                                        <input value="<?php echo $vendor_details[0]->opening_balance_as_of_date; ?>" type="datetime" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 70%">
                                         <label for="">Account no.</label>
-                                        <input type="text" class="form-control" placeholder="Appears in the memo of all payment" required>
+                                        <input value="<?php echo $vendor_details[0]->account_number; ?>" type="text" class="form-control" placeholder="Appears in the memo of all payment" required>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 50%">
                                         <label for="">Business ID No.</label>
-                                        <input type="text" class="form-control" required>
+                                        <input value="<?php echo $vendor_details[0]->business_number; ?>" type="text" class="form-control" required>
                                         <input type="checkbox"> <span>Track payment for 1099</span>
                                     </div>
                                 </div>
                                 <div class="form-ib-group">
                                     <div class="form-ib" style="width: 60%">
                                         <label for="">Default expense account</label>
-                                        <input type="text" class="form-control" placeholder="Choose Account" required>
+                                        <input value="<?php echo $vendor_details[0]->default_expense_amount; ?>" type="text" class="form-control" placeholder="Choose Account" required>
                                     </div>
                                 </div>
                             </div>

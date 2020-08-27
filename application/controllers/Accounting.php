@@ -370,7 +370,7 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $editQuery = $this->vendors_model->updateVendor($id,$new_data);
+        $editQuery = $this->vendors_model->updateVendorWithVendorID($id,$new_data);
 
         if($editQuery){
             echo json_encode(1);
