@@ -9,7 +9,7 @@ class Event_model extends MY_Model
     public function getAllByCompany($company_id, $user_id=0)
     {
 
-        $this->db->select('events.id, company_id, customer_id, workorder_id, description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
         $this->db->from($this->table);
 
         if ($user_id) {
@@ -29,7 +29,7 @@ class Event_model extends MY_Model
 
         $user_id = getLoggedUserID();
 
-        $this->db->select('events.id, company_id, customer_id, workorder_id, description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
+        $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
         $this->db->from($this->table);
 
         if ($uid) {

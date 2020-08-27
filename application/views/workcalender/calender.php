@@ -495,17 +495,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var timeZoneSelectorEl = document.getElementById('time-zone-selector');
-        var events = <?php echo json_encode($calendar_events) ?>;
+        var events = <?php echo json_encode($events) ?>;
+        var customer_events = <?php echo json_encode($resources_user_events) ?>
 
         console.log(events);
-        alert(events);
+
         render_calender(calendarEl, timeZoneSelectorEl, events);
     });
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
-        var calendar_events = events; 
-       
+
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
             headerToolbar: {
@@ -584,28 +584,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             loading: function (bool) {
                 
             },
-            resourceAreaColumns: [
-              {
-                 field: 'title',
-                 headerContent: 'Employees'
-              }
-            ],
-            resources: [
-                       {"id":"1","title":"Employee 1"},
-                       {"id":"2","title":"Employee 2"},
-                       {"id":"3","title":"Employee 3"},
-                       {"id":"3","title":"Employee 4"},
-                       {"id":"5","title":"Employee 5"} 
-            ],
-            events:[calendar_events
-            // {
-            //   resourceId:'a',
-            //   title:"My repeating event",
-            //   start:'2020-08-27 10:00',
-            //   end:'2020-08-27 13:00',
-            //   eventColor: '#378006'
-            // },
-        ],
+            /*resources: [
+                { id: 'a', building: 'Employee', title: 'Bryann' },
+                { id: 'b', building: 'Employee', title: 'Tommy' }
+            ],*/
+            /*events:[
+                {
+                    resourceId:'a',
+                    title:"My repeating event",
+                    start:'2020-08-26 10:00',
+                    end:'2020-08-26 13:00',
+                    eventColor: '#378006',
+                }
+            ],*/            
+            resources: <?php echo json_encode($resources_users); ?>,
+            events: <?php echo json_encode($resources_user_events); ?>,
+
         });
 
         calendar.render();
