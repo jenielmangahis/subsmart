@@ -511,6 +511,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             headerToolbar: {
             center: 'employeeTimeline,monthView,dayView,weekView,listView' // buttons for switching between views
           },
+          themeSystem : 'bootstrap',
           views: {
             employeeTimeline: {
               type: 'resourceTimelineDay',
