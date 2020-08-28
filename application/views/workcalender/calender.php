@@ -8,6 +8,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     left: 48%;
     top: -35px;
 }
+img.datagrid-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    margin: 0 auto;
+    object-fit: cover;
+    margin-top: 10px;
+}
+td.fc-datagrid-cell.fc-resource {
+    text-align: center;
+}
 .right-col .fc-left{
     font-size: 10px;
 }
@@ -590,13 +601,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 });
             },
             loading: function (bool) {
-                
+
             },
-            /*resources: [
+            /* resources: [
                 { id: 'a', building: 'Employee', title: 'Bryann', imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png' },
                 { id: 'b', building: 'Employee', title: 'Tommy', imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
-            ],*/
-            /*events:[
+            ],
+            events:[
                 {
                     resourceId:'a',
                     title:"My repeating event",
@@ -613,7 +624,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     eventColor: '#378006',
                     imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU'
                 }
-            ],      */      
+            ],      */
             resources: <?php echo json_encode($resources_users); ?>,
             events: <?php echo json_encode($resources_user_events); ?>,
 
@@ -666,7 +677,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       /*headerToolbar: {
         center: 'monthView,dayView' // buttons for switching between views
       },
-      views: {        
+      views: {
         dayView: {
           type: 'timeGridDay',
           buttonText: 'Day'
@@ -676,7 +687,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           buttonText: 'Month'
         }
       }*/
-    }); 
+    });
 
     calendar.render();
 
