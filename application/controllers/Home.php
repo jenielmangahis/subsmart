@@ -2,18 +2,13 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
-
 class Home extends MY_Controller {
-
-
 
 	public function __construct(){
 		parent::__construct();
-		$this->checkLogin();
+		$this->checkLogin(1);
 		$this->page_data['page']->title = 'nSmart';
 	}
-
 
 	public function index(){	
 		$this->page_data['business'] = getIndustryBusiness();
@@ -21,12 +16,9 @@ class Home extends MY_Controller {
 		$this->load->view('home', $this->page_data);
 	}
 
-
 	public function signup(){
 		$this->load->view('signup', $this->page_data);
 	}
-
-
 
 	public function save(){
 
@@ -44,15 +36,15 @@ class Home extends MY_Controller {
 			
 		]);
 
-	$business_id = $this->business_model->create([
-		'user_id' => $id,
-		'b_name' => post('name'),
-		'address' => post('address'),
-		'b_phone' => post('phone'),
-		'b_email' => post('email')
-	]);
+		$business_id = $this->business_model->create([
+			'user_id' => $id,
+			'b_name' => post('name'),
+			'address' => post('address'),
+			'b_phone' => post('phone'),
+			'b_email' => post('email')
+		]);
 	
-	$this->users_model->update($id, ['company_id' => $business_id]);
+		$this->users_model->update($id, ['company_id' => $business_id]);
 
 		if (!empty($_FILES['image']['name'])) {
 
@@ -73,12 +65,8 @@ class Home extends MY_Controller {
 		}else{
 			copy(FCPATH.'uploads/users/default.png', 'uploads/users/'.$id.'.png');
 		}
-
-
 	
-	/* print_r($this->db->last_query());     */
-
-
+	    /* print_r($this->db->last_query()); */
 
 		// $this->activity_model->add('New User $'.$id.' Created by User:'.logged('name'), logged('id'));
 		$this->session->set_flashdata('alert-type', 'success');
@@ -90,57 +78,32 @@ class Home extends MY_Controller {
 		redirect('login');
 	}
 
-
-
-
-
 	public function update($id)	{
 
 		ifPermissions('users_edit');
 		postAllowed();
 
 		$data = [
-
 			'role' => post('role'),
-
 			'FName' => post('FName'),
 			'LName' => post('LName'),
-
 			'username' => post('username'),
-
 			'email' => post('email'),
-
 			'phone' => post('phone'),
-
 			'address' => post('address'),
-
 		];
-
-
 
 		$password = post('password');
 
-
-
 		if(logged('id')!=$id)
-
 			$data['status'] = post('status')==1;
 
-
-
 		if(!empty($password))
-
 			$data['password'] = hash( "sha256", $password );
-
-
 
 		$id = $this->users_model->update($id, $data);
 
-
-
 		if (!empty($_FILES['image']['name'])) {
-
-
 
 			$path = $_FILES['image']['name'];
 
@@ -154,64 +117,32 @@ class Home extends MY_Controller {
 
 			$image = $this->uploadlib->uploadImage('image', '/users');
 
-
-
 			if($image['status']){
-
 				$this->users_model->update($id, ['img_type' => $ext]);
-
 			}
-
-
-
 		}
 
-
-
 		$this->activity_model->add("User #$id Updated by User:".logged('username'));
-
-
-
 		$this->session->set_flashdata('alert-type', 'success');
-
 		$this->session->set_flashdata('alert', 'Client Profile has been Updated Successfully');
 
-		
-
 		redirect('users');
-
-
-
 	}
 
-
-
 	public function check()
-
 	{
-
 		$email = !empty(get('email')) ? get('email') : false;
-
 		$username = !empty(get('username')) ? get('username') : false;
-
 		$notId = !empty($this->input->get('notId')) ? $this->input->get('notId') : 0;
 
-
-
 		if($email)
-
 			$exists = count($this->users_model->getByWhere([
-
 					'email' => $email,
 
 					'id !=' => $notId,
-
 				])) > 0 ? true : false;
 
-
-
 		if($username)
-
 			$exists = count($this->users_model->getByWhere([
 
 					'username' => $username,
@@ -223,61 +154,28 @@ class Home extends MY_Controller {
 
 
 		echo $exists ? 'false' : 'true';
-
 	}
-
-
 
 	public function delete($id)
-
 	{
-
-
 
 		ifPermissions('users_delete');
-
-
-
 		if($id!==1 && $id!=logged($id)){ }else{
-
 			redirect('/','refresh');
-
 			return;
-
 		}
 
-
-
 		$id = $this->users_model->delete($id);
-
-
-
 		$this->activity_model->add("User #$id Deleted by User:".logged('username'));
-
-
-
 		$this->session->set_flashdata('alert-type', 'success');
-
 		$this->session->set_flashdata('alert', 'User has been Deleted Successfully');
-
-		
-
 		redirect('users');
-
-
-
 	}
 
-
-
 	public function change_status($id)
-
 	{
-
 		$this->users_model->update($id, ['status' => get('status') == 'true' ? 1 : 0 ]);
-
 		echo 'done';
-
 	}
 
 	public function getSpecificBusinessByIndustry()
@@ -446,8 +344,6 @@ class Home extends MY_Controller {
 
 }
 
+/* End of file Home.php */
 
-
-/* End of file Users.php */
-
-/* Location: ./application/controllers/Users.php */
+/* Location: ./application/controllers/Home.php */
