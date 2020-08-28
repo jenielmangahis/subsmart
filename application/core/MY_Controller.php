@@ -50,12 +50,12 @@ class MY_Controller extends CI_Controller {
 
 		$user_id =  logged('id');
 
-		if ( empty($user_id) ) {
+		/*if ( empty($user_id) ) {
 
 			redirect('login');
 
 			exit();
-		}
+		}*/
 	}
 }
 
