@@ -805,13 +805,20 @@ class Timesheet extends MY_Controller {
 	    $project_id = $this->input->post('project_id');
 	    $duration = $this->input->post('duration');
 	    $day = $this->input->post('day');
+	    $date = $this->input->post('date');
 	    $data = array(
 	        'day_id' => $day_id,
 	        'project_id' => $project_id,
             'duration' => $duration,
-            'day' => $day
+            'day' => $day,
+            'date' => $date
         );
-	    $this->timesheet_model->updateDuration($data);
+	    $query = $this->timesheet_model->updateDuration($data);
+	    if ($query == true){
+	        echo json_encode(1);
+        }else{
+	        echo json_encode(0);
+        }
     }
 
     public function updateTotalWeekDuration(){
@@ -821,7 +828,12 @@ class Timesheet extends MY_Controller {
 	      'project_id' => $project_id,
           'total' => $total
         );
-	    $this->timesheet_model->updateTotalWeekDuration($update);
+	    $query = $this->timesheet_model->updateTotalWeekDuration($update);
+	    if ($query == true){
+	        echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
     }
 
     public function addingTotalInDay(){
@@ -839,6 +851,17 @@ class Timesheet extends MY_Controller {
 	    $total = $this->input->post('total');
 	    $update = array('date'=>$date,'total_duration'=>$total);
 	    $this->timesheet_model->updateTotalDuration($update,$week);
+    }
+
+    public function updateProjectName(){
+	    $id = $this->input->post('id');
+	    $name = $this->input->post('name');
+	    $query = $this->timesheet_model->updateProjectName($id,$name);
+	    if ($query == true){
+	        echo json_encode($name);
+        }else{
+            echo json_encode(0);
+        }
     }
 
     public function deleteProjectData(){
@@ -904,7 +927,7 @@ class Timesheet extends MY_Controller {
                 $display .= '<th></th>';
             $display .= '</tr>';
 	    $display .= '</thead>';
-	    $display .= '<tbody>';
+	    $display .= '<tbody id="tsSettingsTblTbody">';
 	    foreach ($timesheet_settings as $setting):
             $timesheet_id = $setting->id;
             $timesheet_duration_w = (!empty($setting->total_duration_w))?$setting->total_duration_w:"00:00";
@@ -933,8 +956,8 @@ class Timesheet extends MY_Controller {
                         $sunday = $days->duration;
                     }
             }
-            $display .= '<tr data-id="'.$timesheet_id.'">';
-                $display .= '<td><i class="fa fa-circle ts-status"></i><span class="ts-project-name">'.ucfirst($setting->projects).'</span></td>';
+            $display .= '<tr data-id="'.$timesheet_id.'" id="tsSettingsRow">';
+                $display .= '<td><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->projects).'</span><a href="#" id="editProjectName" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->projects).'"><i class="fa fa-pencil-alt"></i></a></td>';
                 $display .= '<td><input type="text" name="monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" value="'.$monday.'" placeholder="HH:MM"></td>';
                 $display .= '<td><input type="text" name="tuesday" id="tsTuesday" data-date="'.$date_week_check[1].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_tue.'" value="'.$tuesday.'" placeholder="HH:MM"></td>';
                 $display .= '<td><input type="text" name="wednesday" id="tsWednesday" data-date="'.$date_week_check[2].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_wed.'" value="'.$wednesday.'" placeholder="HH:MM"></td>';
@@ -962,6 +985,7 @@ class Timesheet extends MY_Controller {
             $day_id_sat = null;
         endforeach;
         $day_id_sun = null;
+            if ($week != 'last week'):
             $display .= '<tr>';
                 $display .= '<td><a href="#" id="addProject" style="color: #0b97c4;font-weight: bold"><i class="fa fa-plus"></i>&nbsp;Project</a></td>';
                 $display .= '<td><input type="text" class="form-control ts-duration" readonly></td>';
@@ -974,6 +998,7 @@ class Timesheet extends MY_Controller {
                 $display .= '<td><span style="color: #92969d;">00:00</span></td>';
                 $display .= '<td><a href="#"><i class="fa fa-times fa-lg" disabled></i></a></td>';
             $display .= '</tr>';
+            endif;
 	    $display .= '</tbody>';
         $duration_mon = '00:00';
         $duration_tue = '00:00';
@@ -1031,6 +1056,34 @@ class Timesheet extends MY_Controller {
             $display .= '</tr>';
 	    $display .= '</tfoot>';
 	    echo json_encode($display);
+    }
+    public function getEmployees(){
+	    $name = $this->input->get('search');
+	    $users = $this->users_model->getUsersByName($name);
+        $data = array();
+        $data[] = array(
+            'id' =>   'teammates',
+            'text' => 'Teammates',
+        );
+	    foreach ($users as $employee){
+	        $role = '';
+	        if ($employee->role == 6){
+                $role = 'IT';
+            }elseif ($employee->role == 3){
+                $role = 'Admin';
+            }elseif ($employee->role == 1){
+                $role = 'Owner';
+            }
+            $data[] = array(
+                'id' =>   $employee->id,
+                'text' => $employee->FName." ".$employee->LName,
+                'subtext' => $role
+            );
+        }
+
+        echo json_encode($data);
+
+
     }
 }
 

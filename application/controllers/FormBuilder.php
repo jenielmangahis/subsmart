@@ -64,6 +64,7 @@ class FormBuilder extends MY_Controller {
 	public function edit($id){
 		$this->page_data["form"] = $this->formsbuilder_model->getForms($id);
 		$this->page_data["elements"] = $this->formsbuilder_model->getFormElements($id);
+		$this->page_data["answers"] = $this->formsbuilder_model->getAnswers($id);
 		if(empty($this->page_data["form"])){
 			redirect('/formbuilder');
 		}
@@ -141,7 +142,8 @@ class FormBuilder extends MY_Controller {
 	}
 
 	public function deleteFormElement($element_id){
-		$query = $this->formsbuilder_model->deleteFormElement($element_id);
+		$this->formsbuilder_model->deleteFormElement($element_id);
+		$this->formsbuilder_model->deleteAnswers("fa_element_id", $element_id);
 		$data = array(
 			"status" => 1
 		);
@@ -150,12 +152,18 @@ class FormBuilder extends MY_Controller {
 	}
 
 	public function submitForm($form_id){
+		
+		// var_dump($this->input->post());
+		// var_dump($_FILES);
+
+		$sid = rand(100000000,999999999);
 		foreach($this->input->post() as $key => $answer){
 			echo "<pre>";
 			$data = array(
 				"fa_form_id" => $form_id,
 				"fa_element_id" => explode('-', $key)[1],
 				"fa_value" => $answer,
+				"fa_session_id" => $sid
 			);
 			$this->formsbuilder_model->submitAnswers($data);
 		}
@@ -163,4 +171,13 @@ class FormBuilder extends MY_Controller {
 		exit;
 	}
 	
+	public function getAnswers($form_id){
+		$data = array(
+			"status" => 1,
+			"data" => $this->formsbuilder_model->getAnswers($form_id)
+		);
+		echo json_encode($data);
+		exit;
+	}
+
 }

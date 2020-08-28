@@ -65,6 +65,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     .ts-project-name{
         font-weight: bold;
+        cursor: pointer;
+    }
+    .ts-project-name:hover{
+        text-decoration: underline;
+        color: #0b97c4;
     }
     .ts-status{
         color: greenyellow;
@@ -82,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         margin-bottom: 0!important;
         width: auto;
     }
-    .ts-settings-menu .form-group select{
+    .ts-settings-menu .form-group .ts-sorting{
         width: 200px;
     }
 
@@ -109,8 +114,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .ts-bottom-btn-section .form-group{
         display: inline-block;
     }
-
-
+    .ts-settings-menu .select2-container--default .select2-selection--single{
+        width: 250px!important;
+    }
+    .text-details{
+        white-space: nowrap;
+    }
+    .subtext{
+        font-style: italic;
+        color: grey;
+        position: relative;
+    }
+    #tsSettingsRow .fa-pencil-alt{
+        color: grey;
+    }
+    #tsSettingsRow .fa-pencil-alt:hover{
+        text-decoration: underline;
+        color: #0b97c4;
+    }
+    #tsSettingsRow #editProjectName{
+        display: none;
+        margin-left: 5px;
+    }
+    .alert-message{
+        position: fixed;
+        bottom: 20px;
+        left: 50px;
+        z-index: 10000;
+        display: none;
+    }
+    .swal2-title{
+        font-size: 20px!important;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -163,11 +198,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-lg-12 table-responsive">
                                     <div class="ts-settings-menu">
                                         <div class="form-group">
-                                            <select name="" id="" class="form-control">
-                                                <option value="">Teammates</option>
-                                                <?php foreach ($users as $user): ?>
-                                                    <option value="<?php echo $user->id?>"><?php echo $user->FName?> <?php echo $user->LName;?></option>
-                                                <?php endforeach;?>
+                                            <select name="" id="" class="form-control select2-employee-list">
+                                                <option value="teammates" selected>Teammates</option>
+<!--                                                --><?php //foreach ($users as $user): ?>
+<!--                                                    <option value="--><?php //echo $user->id?><!--">--><?php //echo $user->FName?><!-- --><?php //echo $user->LName;?><!--</option>-->
+<!--                                                --><?php //endforeach;?>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -186,7 +221,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <table id="timesheet_settings" class="timesheet_settings-table"></table>
                                     <div class="ts-bottom-btn-section">
                                         <div class="form-group">
-                                            <button class="btn btn-default"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>
+                                            <button class="btn btn-default" id="btnAddRow"><i class="fa fa-plus" style="color: #0b97c4;"></i>&nbsp;Add new row</button>
                                         </div>
                                         <div class="form-group">
                                             <button class="btn btn-default"><i class="fa fa-copy" style="color: #9da5af;"></i>&nbsp;Copy last week</button>
@@ -209,8 +244,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<div class="alert-message">
+    <div class="alert alert-success">
+        <strong>Success!</strong> You've updated a duration.
+    </div>
+</div>
+<!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
+    //Add row
+    $(document).on('click','#btnAddRow',function () {
+        $('#tsSettingsTblTbody tr:last').prev('tr').clone('#tsSettingsRow').insertBefore('#tsSettingsTblTbody tr:last');
+        $('td > .ts-project-name').last().text('Unnamed');
+    });
+    //Select2 employee list
+    $('.select2-employee-list').select2({
+        placeholder: 'Select employee',
+        width: 'resolve',
+        ajax:{
+            url:'/timesheet/getEmployees',
+            type:"GET",
+            dataType:"json",
+            delay:250,
+            data:function (params) {
+                var query = {
+                    search: params.term
+                };
+                return query;
+            },
+            processResults:function (response) {
+                return{results:response};
+            },
+            cache:true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        templateResult: function (d) {
+            var subtext = d.subtext;
+            if(subtext == undefined){subtext=''}
+            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+        }
+    });
+
     $(document).ready(function () {
         // DataTables
         $('.timesheet_settings-table').DataTable({
@@ -221,6 +297,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
     });
     $(document).ready(function() {
+        //Toggle edit pen
+        $(document).on('click','#showEditPen',function () {
+            if($(this).next('a').css('display') =='none'){
+                $(this).next('a').css('display','inline-block');
+            }else{
+                $(this).next('a').css('display','none');
+            }
+        });
+
         var selected_week = $('#ts-sorting-week').val();
         $('#timesheet_settings').ready(showWeekList(selected_week));
         function showWeekList(week) {
@@ -255,30 +340,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
            var day_id = $(this).attr('data-id');
            var duration = $(this).val();
            var day = "Monday";
+           var date = $(this).attr('data-date');
            $.ajax({
               url:"/timesheet/updateDuration",
               type:"POST",
               dataType:"json",
               cache:false,
-              data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
-              success:function () {
+              data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
+              success:function (data) {
 
               }
            });
         });
         // Tuesday
         $(document).on('change','#tsTuesday',function () {
+
             var project_id = $(this).closest('tr').attr('data-id');
             var day_id = $(this).attr('data-id');
             var duration = $(this).val();
             var day = "Tuesday";
+            var date = $(this).attr('data-date');
             $.ajax({
                 url:"/timesheet/updateDuration",
                 type:"POST",
                 dataType:"json",
                 cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
-                success:function () {
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
+                success:function (data) {
 
                 }
             });
@@ -289,12 +377,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var day_id = $(this).attr('data-id');
             var duration = $(this).val();
             var day = "Wednesday";
+            var date = $(this).attr('data-date');
             $.ajax({
                 url:"/timesheet/updateDuration",
                 type:"POST",
                 dataType:"json",
                 cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
                 success:function () {
 
                 }
@@ -306,12 +395,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var day_id = $(this).attr('data-id');
             var duration = $(this).val();
             var day = "Thursday";
+            var date = $(this).attr('data-date');
             $.ajax({
                 url:"/timesheet/updateDuration",
                 type:"POST",
                 dataType:"json",
                 cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
                 success:function () {
 
                 }
@@ -323,12 +413,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var day_id = $(this).attr('data-id');
             var duration = $(this).val();
             var day = "Friday";
+            var date = $(this).attr('data-date');
             $.ajax({
                 url:"/timesheet/updateDuration",
                 type:"POST",
                 dataType:"json",
                 cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
                 success:function () {
 
                 }
@@ -340,12 +431,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var day_id = $(this).attr('data-id');
             var duration = $(this).val();
             var day = "Saturday";
+            var date = $(this).attr('data-date');
             $.ajax({
                 url:"/timesheet/updateDuration",
                 type:"POST",
                 dataType:"json",
                 cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
                 success:function () {
 
                 }
@@ -357,12 +449,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var day_id = $(this).attr('data-id');
             var duration = $(this).val();
             var day = "Sunday";
+            var date = $(this).attr('data-date');
             $.ajax({
                 url:"/timesheet/updateDuration",
                 type:"POST",
                 dataType:"json",
                 cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day},
+                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
                 success:function () {
 
                 }
@@ -370,6 +463,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         //Calculation total duration
         $(document).on('change','.ts-duration',function () {
+            $(".alert-message").fadeIn('fast',function(){
+                $('.alert-message').show();
+            });
             var day = $(this).attr('name');
             var day_date = $(this).attr('data-date');
             var total = 0;
@@ -402,7 +498,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                type:"POST",
                dataType:"json",
                data:{id:id,total:total},
-               success:function () {
+               success:function (data) {
+                   if (data == 1){
+                       $(".alert-message").fadeOut(5000,function(){
+                           $('.alert-message').hide();
+                       });
+                   }
 
                }
             });
@@ -575,12 +676,47 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             })
 
         });
+        //Updating Project name
+        $(document).on('click','#editProjectName',function () {
+            var id = $(this).attr('data-id');
+            var project_name = $(this).attr('data-name');
+            Swal.fire({
+                title: 'Do you want to rename this project?',
+                input: 'text',
+                inputValue: project_name,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, rename it!',
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:'/timesheet/updateProjectName',
+                    method:"POST",
+                    data:{id:id,name:result.value},
+                    success:function (data) {
+                        showWeekList(selected_week);
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "Project: <strong>"+project_name+"</strong> has been updated to <strong>"+data+"</strong>",
+                                icon: 'success'
+                            });
+                    }
+                });
+            }
+        });
+        });
+        //Deleting Project
         $(document).on('click','#removeProject',function () {
             var id = $(this).attr('data-id');
             var project_name = $(this).attr('data-name');
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: 'Are you sure to delete this?',
+                html: "Project name: <strong>"+project_name+"</strong>",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',

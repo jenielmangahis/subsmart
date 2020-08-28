@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+    $(odcument).ready(function () {
         var table_lt = $('#leadtype').DataTable({
             "lengthChange": false,
             "searching" : false,
@@ -190,8 +190,8 @@
 
 
         $("#leadTypeForm").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+                var form = $(this);
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",

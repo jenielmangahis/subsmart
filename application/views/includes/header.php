@@ -31,7 +31,8 @@
     <link href="<?php echo $url->assets ?>dashboard/css/slick-theme.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- taxes page -->
-
+<!--    Clock CSS-->
+    <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
     <style type="text/css">
@@ -68,10 +69,6 @@
                                 </a>
                             </li>
 							<li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img width="100" height="25" style="height: 25px !important;width: 100px !important;" src="<?php echo $url->assets ?>dashboard/images/logo.png" alt=""  > </a></li>
-                            <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="/users/timesheet_user" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-clock-o" aria-hidden="true"></i></a>
-
-                            </li>
                             <li class="dropdown notification-list list-inline-item ml-auto"><a
                                     class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
 
@@ -140,6 +137,19 @@
                                         <?php } ?>
                                     </div><!-- All--> <a href="<?php echo base_url('taskhub') ?>"
                                     class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
+                                </div>
+                            </li>
+                            <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                                <div class="clock">
+                                    <div class="hour">
+                                        <div class="hr" id="hr"></div>
+                                    </div>
+                                    <div class="minute">
+                                        <div class="min" id="min"></div>
+                                    </div>
+                                    <div class="second">
+                                        <div class="sec" id="sec"></div>
+                                    </div>
                                 </div>
                             </li>
                             <li class="dropdown notification-list list-inline-item">

@@ -493,35 +493,35 @@ $(document).ready(function() {
   // get_additional_contacts();
 
   // save customer
-  $(document).on("submit", "#customer_form", function(e) {
-    e.preventDefault();
-
-    if (testCreditCard()) {
-      var button = $(this).find("button[type='submit']");
-      var button_text = $(button).html();
-      $(button).text("saving...");
-      $(button).attr("disabled", true);
-
-      $.ajax({
-        url: $(this).attr("action"),
-        type: "POST",
-        data: $(this).serialize(),
-        success: function(response) {
-          console.log(response);
-
-          var json = JSON.parse(response);
-
-          if (json.url) {
-            location.href = json.url;
-          } else {
-            $(button).text(button_text);
-            $(button).attr("disabled", false);
-          }
-        }
-      });
-     
-    }
-  });
+  // $(document).on("submit", "#customer_form", function(e) {
+  //   e.preventDefault();
+  //
+  //   if (testCreditCard()) {
+  //     var button = $(this).find("button[type='submit']");
+  //     var button_text = $(button).html();
+  //     $(button).text("saving...");
+  //     $(button).attr("disabled", true);
+  //
+  //     $.ajax({
+  //       url: $(this).attr("action"),
+  //       type: "POST",
+  //       data: $(this).serialize(),
+  //       success: function(response) {
+  //         console.log(response);
+  //
+  //         var json = JSON.parse(response);
+  //
+  //         if (json.url) {
+  //           location.href = json.url;
+  //         } else {
+  //           $(button).text(button_text);
+  //           $(button).attr("disabled", false);
+  //         }
+  //       }
+  //     });
+  //
+  //   }
+  // });
 
   toggle_advance_options();
 
