@@ -10,7 +10,7 @@ class Customer_advance_model extends MY_Model {
     public function add($input,$tablename)
     {
         if ($this->db->insert($tablename, $input)) {
-            return $this->db->insert_id();
+            return true;
         } else {
             return false;
         }
@@ -43,9 +43,6 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get($tablename);
         return $query->row();
     }
-
-
-
 
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {

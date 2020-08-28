@@ -975,7 +975,76 @@
 
           <!-- FORM RESULTS -->
           <div id="form-editor-results" class="form-editor-settings-window tab-pane fade ">
-            <h1 class="text-center text-muted py-5">Coming soon</h1>
+            <div class="row">
+
+              <div class="col-xs-12 col-md-3">
+                <div id="form-settings-menu" class="list-group sticky-top">
+                  <a class="list-group-item list-group-item-action active" data-toggle="list" href="#forms-results-table" >Results Table</a>
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-md-9">
+                <div class="tab-content">
+                  <div id="forms-results-table" class="tab-pane fade show active">
+                    <div class="card">
+                      <div class="card-content">
+                        <h3>Results Table</h3>
+                        <hr/>
+                      
+                        <table id="#resultsTable" class="table table-responsive table-bordered table-hover">
+                          <thead>
+                            <tr>
+                              <th><strong>Number</strong></th>
+                              <?php
+                                foreach($elements as $element_key => $element){
+                                  ?>
+                                    <th><strong><?= $element->fe_label?></strong></th>
+                                  <?php
+                                }
+                              ?>
+                            </tr>
+                          </thead>
+                          
+                          <tbody>
+                            <?php 
+                              $answerSessionKeys = array_unique(array_map(function($answer){
+                                return $answer->fa_session_id;
+                              }, $answers));
+                            ?>
+                            <?php
+                              foreach($answerSessionKeys as $key => $sessionKey){
+                                ?>
+                                  <tr>
+                                    <td><?= $key ?></td>
+                                    <?php
+                                      foreach($answers as $answer_key => $answer){
+                                        if($answer->fa_session_id == $sessionKey){
+                                          // update this part
+                                          foreach($elements as $element_key => $element){
+                                            if($element->fe_id == $answer->fa_element_id){
+                                              ?>
+                                                <td><?= $answer->fa_value?></td>
+                                              <?php
+                                            }
+                                          }
+                                        }
+                                      }
+                                    ?>
+                                  </tr>
+                                <?php
+                              }
+                            ?>
+                          </tbody>
+                        </table>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
 
@@ -1037,6 +1106,7 @@
       }
     })
   }
+
 
     
 
@@ -1169,11 +1239,7 @@
     setTimeout(() => {
       console.log(formUserElements.length)
     }, 500);
-  }
-
-  
-
-
+  };
 
   document.querySelector('#btnSaveGeneralSettings').addEventListener('click', () => {
     let data = {
@@ -1297,7 +1363,7 @@
       let elementOrder = $('#windowPreviewContent').sortable("toArray");
       let data = {
         "fe_form_id": <?= $form->forms_id?>,
-        "fe_element_id": selectedElement,
+        "fe_element_id": selectedElement + 1,
         "fe_label": elementsList[selectedElement].type,
         "fe_is_required": 0,
         "fe_is_readonly": 0,
@@ -1315,7 +1381,7 @@
         dataType: 'json',
         type: 'POST',
         success: function(res){
-          window.alert('Element added!');
+          // window.alert('Element added!');
           loadFormSettings(<?= $form->forms_id?>);
           loadFormElements(<?= $form->forms_id?>, "edit");
           return;

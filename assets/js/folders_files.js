@@ -18,6 +18,9 @@ $(document).ready(function(){
   selected_trash = 0;
   selected_trash_isFolder = 1;
 
+  selected_move = 0;
+  selected_move_isFolder = 1;
+
   current_selected_folder = 0;
   current_process = '';
   current_alert_theme = '';
@@ -165,7 +168,71 @@ $(document).ready(function(){
 
     openEntry('add_category');
   });
+
+// initiate move folder or file
+  $('a[control="move"]').click(function(e){
+    e.preventDefault();
+
+    if((selected != 0) && (selected_move == 0)){
+      selected_move = selected;
+      selected_move_isFolder = selected_isFolder;
+
+      if(selected_move_isFolder == 1){
+        $('#move_f_tag').text('Folder');
+      } else {
+        $('#move_f_tag').text('File');
+      }
+
+      $('#move_f_text').text($('#folders_path').text() + $('#folders_name').text());
+
+      if($('#move_details').hasClass('d-none')){
+        $('#move_details').removeClass('d-none');
+      }
+    } else if(selected_move != 0){
+      showFolderManagerNotif('Error','a file or folder already selected for moving','error');  
+    } else {
+      showFolderManagerNotif('Error','Please select a file or a folder to move','error');  
+    }
+  });
 // -------------------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------------------
+// Move fole or folder extra controls
+// -------------------------------------------------------------------------------------------------------------
+  
+  $('#move_proceed').click(function(){
+    if(selected_move != 0){
+      if(selected_move_isFolder == 1){
+        var vUrl = base_url + "folders/move/" + current_selected_folder + "/" + selected_move;
+      } else {
+        var vUrl = base_url + "vault/move/" + current_selected_folder + "/" + selected_move;
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: vUrl,
+        success: function(data){
+
+        } 
+      });
+    } else {
+      showFolderManagerNotif('Error','Please select a file or a folder to move','error');  
+    }
+  });
+
+  $('#move_cancel').click(function(){
+    selected_move = 0;
+    selected_move_isFolder = 1;
+
+    $('#move_f_text').text("");
+
+    if(!$('#move_details').hasClass('d-none')){
+      $('#move_details').addClass('d-none');
+    }  
+  });
+  
+// -------------------------------------------------------------------------------------------------------------
+
 
 // -------------------------------------------------------------------------------------------------------------
 // Drop To Upload extra controls

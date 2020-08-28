@@ -29,6 +29,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   text-align: center;
   color:#ffffff;
 }
+.fc-button-group{
+    margin: 15px 0;
+}
 .dot-red{
     background-color: #ff2a26;
 }
@@ -493,6 +496,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var calendarEl = document.getElementById('calendar');
         var timeZoneSelectorEl = document.getElementById('time-zone-selector');
         var events = <?php echo json_encode($events) ?>;
+        var customer_events = <?php echo json_encode($resources_user_events) ?>
 
         console.log(events);
 
@@ -503,19 +507,35 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
 
         calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
-            customButtons: {
-                employee: {
-                    text: 'Employee'
-                }
+           schedulerLicenseKey: '0531798248-fcs-1598103289',
+            headerToolbar: {
+            center: 'employeeTimeline,monthView,dayView,weekView,listView' // buttons for switching between views
+          },
+          themeSystem : 'bootstrap',
+          views: {
+            employeeTimeline: {
+              type: 'resourceTimelineDay',
+              buttonText: 'Employee'
             },
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'employee,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            dayView: {
+              type: 'timeGridDay',
+              buttonText: 'Day'
             },
-            defaultDate: "<?php echo date('Y-m-d') ?>",
-            editable: true,
+            monthView: {
+              type: 'dayGridMonth',
+              buttonText: 'Month'
+            },
+            weekView: {
+              type: 'timeGridWeek',
+              buttonText: 'Week'
+            },
+            listView: {
+              type: 'listWeek',
+              buttonText: 'List'
+            }
+          },
+          defaultDate: "<?php echo date('Y-m-d') ?>",
+            editable: false,
             navLinks: true, // can click day/week names to navigate views
             eventLimit: true, // allow "more" link when too many events
             events: events,
@@ -563,37 +583,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 });
             },
             loading: function (bool) {
-                document.getElementById('loading').style.display =
-                    bool ? 'block' : 'none';
+                
             },
-            resources: [
-                { id: 'a', building: '460 Bryant', title: 'Auditorium A' },
-                { id: 'b', building: '460 Bryant', title: 'Auditorium B' },
-                { id: 'c', building: '460 Bryant', title: 'Auditorium C' },
-                { id: 'd', building: '460 Bryant', title: 'Auditorium D' },
-                { id: 'e', building: '460 Bryant', title: 'Auditorium E' },
-                { id: 'f', building: '460 Bryant', title: 'Auditorium F' },
-                { id: 'g', building: '564 Pacific', title: 'Auditorium G' },
-                { id: 'h', building: '564 Pacific', title: 'Auditorium H' },
-                { id: 'i', building: '564 Pacific', title: 'Auditorium I' },
-                { id: 'j', building: '564 Pacific', title: 'Auditorium J' },
-                { id: 'k', building: '564 Pacific', title: 'Auditorium K' },
-                { id: 'l', building: '564 Pacific', title: 'Auditorium L' },
-                { id: 'm', building: '564 Pacific', title: 'Auditorium M' },
-                { id: 'n', building: '564 Pacific', title: 'Auditorium N' },
-                { id: 'o', building: '101 Main St', title: 'Auditorium O' },
-                { id: 'p', building: '101 Main St', title: 'Auditorium P' },
-                { id: 'q', building: '101 Main St', title: 'Auditorium Q' },
-                { id: 'r', building: '101 Main St', title: 'Auditorium R' },
-                { id: 's', building: '101 Main St', title: 'Auditorium S' },
-                { id: 't', building: '101 Main St', title: 'Auditorium T' },
-                { id: 'u', building: '101 Main St', title: 'Auditorium U' },
-                { id: 'v', building: '101 Main St', title: 'Auditorium V' },
-                { id: 'w', building: '101 Main St', title: 'Auditorium W' },
-                { id: 'x', building: '101 Main St', title: 'Auditorium X' },
-                { id: 'y', building: '101 Main St', title: 'Auditorium Y' },
-                { id: 'z', building: '101 Main St', title: 'Auditorium Z' }
-            ]
+            /*resources: [
+                { id: 'a', building: 'Employee', title: 'Bryann' },
+                { id: 'b', building: 'Employee', title: 'Tommy' }
+            ],*/
+            /*events:[
+                {
+                    resourceId:'a',
+                    title:"My repeating event",
+                    start:'2020-08-26 10:00',
+                    end:'2020-08-26 13:00',
+                    eventColor: '#378006',
+                }
+            ],*/            
+            resources: <?php echo json_encode($resources_users); ?>,
+            events: <?php echo json_encode($resources_user_events); ?>,
+
         });
 
         calendar.render();
@@ -639,22 +646,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     var calendarEl = document.getElementById('right-calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
-      header: {
-        right: 'prev,next',
-        left: 'title'
+        schedulerLicenseKey: '0531798248-fcs-1598103289'
+      /*headerToolbar: {
+        center: 'monthView,dayView' // buttons for switching between views
       },
-      titleFormat: {
-        month: 'short'
-      },
-      height:300,
-      width:300,
-      defaultDate: "<?php echo date('Y-m-d') ?>",
-      navLinks: true, // can click day/week names to navigate views
-      businessHours: false, // display business hours
-      editable: false,
-      events: []
-    });
+      views: {        
+        dayView: {
+          type: 'timeGridDay',
+          buttonText: 'Day'
+        },
+        monthView: {
+          type: 'dayGridMonth',
+          buttonText: 'Month'
+        }
+      }*/
+    }); 
 
     calendar.render();
 

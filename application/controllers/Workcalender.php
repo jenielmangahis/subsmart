@@ -9,12 +9,13 @@ class Workcalender extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-        $this->page_data['page']->title = 'Work calender';
-        $this->page_data['page']->menu = 'Workcalender';
-        $this->page_data['module'] = 'calendar'; 
+        $this->page_data['page']->title = 'Work Calender';
+        $this->page_data['page']->menu  = 'Workcalender';
+        $this->page_data['module']      = 'calendar'; 
 
-        // $this->load->model('Workorder_model', 'workorder_model');
+        //$this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Workzone_model', 'workzone_model');
+        $this->load->model('Users_model');
 
         $user_id = getLoggedUserID();
 
@@ -22,36 +23,28 @@ class Workcalender extends MY_Controller
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'packages/fullcalendar/packages/core/main.css',
-            'packages/fullcalendar/packages/daygrid/main.css',
-            'packages/fullcalendar/packages/timegrid/main.css',
-            'packages/fullcalendar/packages/list/main.css',
+            'assets/plugins/timeline_calendar/main.css',
         ));
 
         add_footer_js(array(
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'packages/fullcalendar/packages/core/main.js',
-            'packages/fullcalendar/packages/interaction/main.js',
-            'packages/fullcalendar/packages/daygrid/main.js',
-            'packages/fullcalendar/packages/timegrid/main.js',
-            'packages/fullcalendar/packages/list/main.js',
-            'packages/fullcalendar/packages/list/main.js',
+            'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
         ));
     }
 
     public function index()
     {
-        // $this->load->model('Event_model', 'event_model');
+        $this->load->model('Event_model', 'event_model');
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
-            // $events = $this->event_model->getAllByCompany($company_id);
+            $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
-            // $events = $this->event_model->getAllByUserId();
+            $events = $this->event_model->getAllByUserId();
         }
 
         $this->page_data['events'] = array();
@@ -86,7 +79,7 @@ class Workcalender extends MY_Controller
                 $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
                 $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
                 $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
-                // $this->page_data['events'][$key]['userName'] 		= ($user) ? $user->name : '';
+                // $this->page_data['events'][$key]['userName']         = ($user) ? $user->name : '';
                 $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
             }
         }
@@ -109,7 +102,7 @@ class Workcalender extends MY_Controller
             $workorder->$key = serialize_to_array($workorder);
         }
 
-//        echo '<pre>'; print_r($workorders); die;
+        //echo '<pre>'; print_r($workorders); die;
 
         if (!empty($workorders)) {
 
@@ -143,7 +136,7 @@ class Workcalender extends MY_Controller
                 $workorder_events[$k]['start'] = date('Y-m-d', strtotime($workorder->date_issued));
                 $workorder_events[$k]['end'] = date('Y-m-d', strtotime($workorder->date_issued));
                 $workorder_events[$k]['userName'] = ($user) ? $user->name : '';
-				$workorder_events[$k]['backgroundColor'] 	= get_event_color($workorder->status_id);
+                $workorder_events[$k]['backgroundColor']    = get_event_color($workorder->status_id);
             }
 
             $this->page_data['events'] = array_merge($this->page_data['events'], $workorder_events);
@@ -156,15 +149,13 @@ class Workcalender extends MY_Controller
         // $workorders = $this->workorder_model->getAllByUserId('', '', 0, logged('id'), array());
         $workorders = array();
 
-
-
         // perform serialize decode operation
         foreach ($workorders as $key => $workorder) {
 
             $workorder->$key = serialize_to_array($workorder);
         }
 
-//        echo '<pre>'; print_r($workorders); die;
+        //echo '<pre>'; print_r($workorders); die;
 
         if (!empty($workorders)) {
 
@@ -204,10 +195,9 @@ class Workcalender extends MY_Controller
             $this->page_data['wordorders'] = array_merge($this->page_data['wordorders'], $workorder_events);
         }
 
-//         echo '<pre>'; print_r($this->page_data['events']); die;
+        //echo '<pre>'; print_r($this->page_data['events']); die;
 
         // load all user for calender toolbar
-
         $this->load->library('user_agent');
         if ($this->agent->is_mobile()) {
             $is_mobile = 1;
@@ -215,13 +205,64 @@ class Workcalender extends MY_Controller
             $is_mobile = 0;
         }
 
+        $get_users = $this->Users_model->getUsers();
+
+        $resources_users = array();
+        $resources_user_events = array();
+
+        if(!empty($get_users)) {
+            $inc = 0;
+            foreach($get_users as $get_user) {
+                $resources_users[$inc]['id'] = $get_user->id;
+                $resources_users[$inc]['building'] = 'Employee';
+                $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
+            $inc++;               
+            }
+        }
+
+        /*$resources_user_events[0]['resourceId'] = 2;
+        $resources_user_events[0]['title'] = 'My repeating event';
+        $resources_user_events[0]['start'] = '2020-08-27 10:00';
+        $resources_user_events[0]['end'] = '2020-08-27 13:00';
+        $resources_user_events[0]['eventColor'] = '#378006';*/
+
+        if(!empty($events)) {
+            $inc = 0;
+            foreach($events as $event) {
+
+                if($event->employee_id > 0) {
+                    $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                    $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                    $resources_user_events[$inc]['resourceId'] = $event->employee_id;
+                    $resources_user_events[$inc]['title'] = $event->event_description;
+                    $resources_user_events[$inc]['start'] = $start_date_time;
+                    $resources_user_events[$inc]['end'] = $start_date_end;
+                    $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                $inc++;
+                }elseif($event->employee_id == 0) {
+                    foreach($get_users as $get_user) {
+                        $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                        $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                        $resources_user_events[$inc]['resourceId'] = $get_user->id;
+                        $resources_user_events[$inc]['title'] = $event->event_description;
+                        $resources_user_events[$inc]['start'] = $start_date_time;
+                        $resources_user_events[$inc]['end'] = $start_date_end;
+                        $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                    $inc++; 
+                    }
+                   
+                }
+            }
+        }     
+
         $this->load->model('Users_model', 'user_model');
+        $this->page_data['resources_users'] = $resources_users;
+        $this->page_data['resources_user_events'] = $resources_user_events;
         $this->page_data['is_mobile'] = $is_mobile;
         $this->page_data['users'] = $this->user_model->getUsers();
 
         $this->load->view('workcalender/calender', $this->page_data);
     }
-
 
     public function edit($id)
     {
@@ -335,26 +376,26 @@ class Workcalender extends MY_Controller
         // zone
         // if(count(post('zones')) > 0) {
 
-        // 	$zones = post('zones');
-        // 	$quantity = post('quantity');
-        // 	$price = post('price');
-        // 	$type = post('type');
+        //  $zones = post('zones');
+        //  $quantity = post('quantity');
+        //  $price = post('price');
+        //  $type = post('type');
 
-        // 	foreach(post('item') as $key=>$val) {
+        //  foreach(post('item') as $key=>$val) {
 
-        // 		$itemArray[] = array(
+        //      $itemArray[] = array(
 
-        // 			'item' => $items[$key],
-        // 			'type' => $type[$key],
-        // 			'quantity'=> $quantity[$key],
-        // 			'price' => $price[$key]
-        // 		);
-        // 	}
+        //          'item' => $items[$key],
+        //          'type' => $type[$key],
+        //          'quantity'=> $quantity[$key],
+        //          'price' => $price[$key]
+        //      );
+        //  }
 
-        // 	$workorder_items = serialize($itemArray);
+        //  $workorder_items = serialize($itemArray);
         // } else {
 
-        // 	$workorder_items = '';
+        //  $workorder_items = '';
         // }
 
         if (count(post('premises_chk')) > 0) {
@@ -605,24 +646,24 @@ class Workcalender extends MY_Controller
 
         // if (!empty($_FILES['attachment']['name'])) {
 
-        // 	$path = $_FILES['attachment']['name'];
+        //  $path = $_FILES['attachment']['name'];
 
-        // 	$ext = pathinfo($path, PATHINFO_EXTENSION);
+        //  $ext = pathinfo($path, PATHINFO_EXTENSION);
 
-        // 	$this->uploadlib->initialize([
+        //  $this->uploadlib->initialize([
 
-        // 		'file_name' => $id.'.'.$ext
+        //      'file_name' => $id.'.'.$ext
 
-        // 	]);
+        //  ]);
 
-        // 	$image = $this->uploadlib->uploadImage('attachment', '/workorders');
+        //  $image = $this->uploadlib->uploadImage('attachment', '/workorders');
 
 
-        // 	if($image['status']){
+        //  if($image['status']){
 
-        // 		$this->workorder_model->update($id, ['img_type' => $ext]);
+        //      $this->workorder_model->update($id, ['img_type' => $ext]);
 
-        // 	}
+        //  }
 
         // }
 

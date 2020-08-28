@@ -43,10 +43,20 @@ class Reconcile_model extends MY_Model {
 		$this->db->query("delete from reconcile where id='".$id."'");
 	}
 
-	public function checkexist()
+	public function checkexist($id)
 	{
-		$query = $this->db->query("SELECT * FROM chart_of_accounts where EXISTS (SELECT id FROM reconcile WHERE reconcile."."chart_of_accounts_id = chart_of_accounts."."id)");
-		echo $query->num_rows();
+		$query = $this->db->query("SELECT * FROM chart_of_accounts where EXISTS (SELECT id FROM reconcile WHERE reconcile."."chart_of_accounts_id = ".$id.")");
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			return $row->id;
+		}
+		else
+		{
+			return 0;
+		}
+
+
 	}
 
 

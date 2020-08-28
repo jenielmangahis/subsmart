@@ -86,6 +86,173 @@ class Customer extends MY_Controller
 
     }
 
+    public function leads()
+    {
+        $user_id = logged('id');
+        $this->page_data['leads'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leads","leads_id");
+        $this->load->view('customer/leads', $this->page_data);
+    }
+
+    public function ac_module_sort(){
+        //$user_id = logged('id');
+        $input = $this->input->post();
+        if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
+            echo "Module Sort Updated!";
+        }else{
+            echo "Error";
+        }
+    }
+
+    public function add_data_sheet(){
+        $user_id = logged('id');
+        $input = $this->input->post();
+        $input['fk_user_id'] = $user_id;
+
+        // customer_ad_model
+//        if(empty($input['lead_id'])){
+//            unset($input['lead_id']);
+            if($this->customer_ad_model->add($input,"acs_profile")){
+                echo "Success";
+            }else{
+                echo "Error";
+            }
+//        }else{
+//            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
+//                echo "Updated";
+//            }else{
+//                echo "Error";
+//            }
+//        }
+    }
+    public function add_advance()
+    {
+        $user_id = logged('id');
+        $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"acs_profile");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->load->view('customer/add_advance', $this->page_data);
+    }
+
+    public function add_lead()
+    {
+        $input = $this->input->post();
+        if($input){
+            unset($input['credit_report']);
+            unset($input['report_history']);
+            $input['phone_home'] = $input['phone_home'][0].'-'.$input['phone_home'][1].'-'.$input['phone_home'][2];
+            $input['phone_cell'] = $input['phone_cell'][0].'-'.$input['phone_cell'][1].'-'.$input['phone_cell'][2];
+            $input['sss_num'] = $input['sss_num'][0].'-'.$input['sss_num'][1].'-'.$input['sss_num'][2];
+            print_r($input);
+            if($this->customer_ad_model->add($input,"ac_leads")){
+                redirect(base_url('customer/leads'));
+            }else{
+                echo "Error";
+            }
+        }else{
+            $user_id = logged('id');
+            $this->page_data['plans'] = "";
+            $this->page_data['users'] = $this->users_model->getUsers();
+            $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leadtypes","lead_id");
+            $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+            $this->load->view('customer/add_lead', $this->page_data);
+        }
+    }
+
+    // for addling of Lead Type (ac_leadtypes table)
+    public function add_leadtype_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['lead_id'])){
+            unset($input['lead_id']);
+            if($this->customer_ad_model->add($input,"ac_leadtypes")){
+                echo "Success";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
+    public function add_salesarea_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['sa_id'])){
+            unset($input['sa_id']);
+            if($this->customer_ad_model->add($input,"ac_salesarea")){
+                echo "Sales Area Added!";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_salesarea","sa_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+    public function add_leadsource_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['ls_id'])){
+            unset($input['ls_id']);
+            if($this->customer_ad_model->add($input,"ac_leadsource")){
+                echo "Lead Source Added!";
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_leadsource","ls_id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
+    public function fetch_leadtype_data()
+    {
+        $lead_types = $this->customer_ad_model->get_all(FALSE, "", "DESC", "ac_leadtypes", "lead_id");
+        echo json_encode($lead_types);
+    }
+    public function fetch_leadsource_data(){
+        $lead_source = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadsource","ls_id");
+        echo json_encode($lead_source);
+    }
+    public function fetch_salesarea_data(){
+        $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_salesarea","sa_id");
+        echo json_encode($lead_types);
+    }
+    public function delete_data(){
+        $tbl = $_POST['table'];
+        $input = array();
+        switch($tbl){
+            case "sa":
+                $input['field_name'] = "sa_id";
+                $input['id'] = $_POST['id'];
+                $input['tablename'] = "ac_salesarea";
+                break;
+            case "lt":
+                $input['field_name'] = "lead_id";
+                $input['id'] = $_POST['id'];
+                $input['tablename'] = "ac_leadtypes";
+                break;
+            case "ls":
+                $input['field_name'] = "ls_id";
+                $input['id'] = $_POST['id'];
+                $input['tablename'] = "ac_leadsource";
+                break;
+            default;
+        }
+
+        if ($this->customer_ad_model->delete($input)) {
+            echo  "nice";
+        }
+    }
 
     public function index($status_index = 0)
     {
@@ -666,151 +833,6 @@ class Customer extends MY_Controller
 
     }
 
-    public function leads()
-    {
-        $user_id = logged('id');
-        $this->page_data['leads'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leads","leads_id");
-        $this->load->view('customer/leads', $this->page_data);
-    }
-
-    public function ac_module_sort(){
-        //$user_id = logged('id');
-        $input = $this->input->post();
-        if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
-            echo "Module Sort Updated!";
-        }else{
-            echo "Error";
-        }
-    }
-
-    public function add_advance()
-    {
-        $user_id = logged('id');
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->load->view('customer/add_advance', $this->page_data);
-    }
-
-    public function add_lead()
-    {
-        $input = $this->input->post();
-        if($input){
-            unset($input['credit_report']);
-            unset($input['report_history']);
-            $input['phone_home'] = $input['phone_home'][0].'-'.$input['phone_home'][1].'-'.$input['phone_home'][2];
-            $input['phone_cell'] = $input['phone_cell'][0].'-'.$input['phone_cell'][1].'-'.$input['phone_cell'][2];
-            $input['sss_num'] = $input['sss_num'][0].'-'.$input['sss_num'][1].'-'.$input['sss_num'][2];
-            print_r($input);
-            if($this->customer_ad_model->add($input,"ac_leads")){
-                redirect(base_url('customer/leads'));
-            }else{
-                echo "Error";
-            }
-        }else{
-            $user_id = logged('id');
-            $this->page_data['plans'] = "";
-            $this->page_data['users'] = $this->users_model->getUsers();
-            $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leadtypes","lead_id");
-            $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-            $this->load->view('customer/add_lead', $this->page_data);
-        }
-    }
-
-    // for addling of Lead Type (ac_leadtypes table)
-    public function add_leadtype_ajax(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['lead_id'])){
-            unset($input['lead_id']);
-            if($this->customer_ad_model->add($input,"ac_leadtypes")){
-                echo "Success";
-            }else{
-                echo "Error";
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function add_salesarea_ajax(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['sa_id'])){
-            unset($input['sa_id']);
-            if($this->customer_ad_model->add($input,"ac_salesarea")){
-                echo "Sales Area Added!";
-            }else{
-                echo "Error";
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_salesarea","sa_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-    public function add_leadsource_ajax(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['ls_id'])){
-            unset($input['ls_id']);
-            if($this->customer_ad_model->add($input,"ac_leadsource")){
-                echo "Lead Source Added!";
-            }else{
-                echo "Error";
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_leadsource","ls_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function fetch_leadtype_data()
-    {
-        $lead_types = $this->customer_ad_model->get_all(FALSE, "", "DESC", "ac_leadtypes", "lead_id");
-        echo json_encode($lead_types);
-    }
-    public function fetch_leadsource_data(){
-        $lead_source = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadsource","ls_id");
-        echo json_encode($lead_source);
-    }
-    public function fetch_salesarea_data(){
-        $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_salesarea","sa_id");
-        echo json_encode($lead_types);
-    }
-    public function delete_data(){
-        $tbl = $_POST['table'];
-        $input = array();
-        switch($tbl){
-            case "sa":
-                $input['field_name'] = "sa_id";
-                $input['id'] = $_POST['id'];
-                $input['tablename'] = "ac_salesarea";
-                break;
-            case "lt":
-                $input['field_name'] = "lead_id";
-                $input['id'] = $_POST['id'];
-                $input['tablename'] = "ac_leadtypes";
-                break;
-            case "ls":
-                $input['field_name'] = "ls_id";
-                $input['id'] = $_POST['id'];
-                $input['tablename'] = "ac_leadsource";
-                break;
-            default;
-        }
-
-        if ($this->customer_ad_model->delete($input)) {
-            echo  "nice";
-        }
-    }
 
     public function remove_address_services()
 

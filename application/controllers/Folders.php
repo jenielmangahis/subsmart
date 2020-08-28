@@ -448,6 +448,20 @@ class Folders extends MY_Controller {
 
 		echo json_encode($return);
 	}
+
+	public function move($to_folder = 0, $folder_id = 0){
+		$return = array(
+			'error' => ''
+		);
+
+		if($folder_id == 0){
+			$return['error'] = 'Please select folder to move';
+		} else {
+			$folder = $this->folders_model->getById($folder_id);
+		}
+
+		echo json_encode($return);
+	}
 }
 
 ?>

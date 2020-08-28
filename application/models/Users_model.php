@@ -330,6 +330,12 @@ class Users_model extends MY_Model {
 		$query = $this->db->get();			
 		return $query->result();
 	}
+	public function getUsersByName($search){
+	    $this->db->like('FName',$search);
+	    $this->db->or_like('LName',$search);
+        $qry = $this->db->get($this->table);
+        return $qry->result();
+    }
 }
 
 

@@ -1,6 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header_accounting'); ?>
+<style type="text/css">
+    .loader
+{
+    display: none !important;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -69,13 +75,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                        foreach($this->chart_of_accounts_model->select() as $row)
                                                                        {
                                                                         ?>
-                                                                        <option value="<?=$row->id?>"><?=$row->name?></option>
+                                                                        <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                                                        <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
                                                                       <?php
                                                                       $i++;
                                                                       }
                                                                        ?>
                                                                 </select>
-                                                                <?php /* echo $this->reconcile_model->checkexist()*/ ?>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-7 col-sm-7">

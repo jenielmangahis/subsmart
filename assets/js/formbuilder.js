@@ -188,9 +188,17 @@ loadFormElements = (id, mode = null) => {
             :""}
 
             ${(elementType == 1)?`
+              <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+              <div class="form-check form-user-elements">
+                <input type="radio" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="test">
+                <label for="feinput-${el.fe_id}">${el.fe_label}</label>
+              </div>
+            `:""}
+
+            ${(elementType == 2)?`
               <div class="form-group form-user-elements">
-                <label for="feinput-${el.fe_id}">${el.fe_label}}</label>
-                <select id="feinput-${el.fe_id}" class="custom-select">
+                <label for="feinput-${el.fe_id}">${el.fe_label}</label>
+                <select id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="custom-select">
                   <option>test</option>
                   <option>test</option>
                 </select>
@@ -198,7 +206,7 @@ loadFormElements = (id, mode = null) => {
             `:""}
             
             
-            ${(elementType == 4 || elementType == 9)?`
+            ${(elementType == 5 || elementType == 10)?`
               <div class="form-group form-user-elements">
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 <textarea name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"></textarea>
@@ -206,14 +214,14 @@ loadFormElements = (id, mode = null) => {
             `:""}
 
             
-            ${(elementType == 5 || elementType == 3)?`
+            ${(elementType == 6 || elementType == 4)?`
               <div class="form-group form-user-elements">
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 <input type="text" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
               </div>
             `:""}
             
-            ${(elementType == 2)?`
+            ${(elementType == 3)?`
               <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
               <div class="form-check form-user-elements">
                 <input type="checkbox" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="test">
@@ -221,26 +229,25 @@ loadFormElements = (id, mode = null) => {
               </div>
             `:""}
             
-            ${(elementType == 6)?`
+            ${(elementType == 7)?`
               <div class="form-group form-user-elements">
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 <input type="date" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
               </div>
             `:""}
             
-            ${(elementType == 7)?`
+            ${(elementType == 8)?`
               <div class="form-group form-user-elements">
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 <input type="number" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
               </div>
             `:""} 
 
-            ${(elementType == 8)?`
+            ${(elementType == 9)?`
               <!-- fix this part -->
-
-              <div class="form-group custom-file form-user-elements">
-                <input type="file" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="custom-file-input" >
-                <label class="custom-file-label" for="feinput-${el.fe_id}">${el.fe_label}</label>
+              <div class="form-group form-user-elements">
+                <label for="${el.fe_id}">${el.fe_label}</label>
+                <input type="file" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" >
               </div>
             `:""}
 

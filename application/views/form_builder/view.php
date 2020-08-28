@@ -36,9 +36,7 @@
       loadFormElements(<?= $form->forms_id?>);
     }
 
-    document.querySelector('#btnFormSubmit').addEventListener('submit',(e)=>{
-      e.preventDefault();
-    })
+    
 
   </script>
 </body>

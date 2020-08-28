@@ -66,7 +66,7 @@ class FormsBuilder_model extends MY_Model {
 
 	public function updateFormElement($element_id, $data){
 		$this->db->where('fe_id', $element_id);
-		$query = $this->db->update('fb_forms_elements', $data);
+		$query = $this->db->update($this->elements_table, $data);
 		return array(
 			"status" => 1
 		);
@@ -74,7 +74,7 @@ class FormsBuilder_model extends MY_Model {
 
 	public function deleteFormElement($element_id){
 		$this->db->where('fe_id', $element_id);
-		$query = $this->db->delete('fb_forms_elements');
+		$query = $this->db->delete($this->elements_table);
 		return array(
 			"status" => 1
 		);
@@ -85,6 +85,21 @@ class FormsBuilder_model extends MY_Model {
 		return array(
 			"status" => 1,
 			"id" => $this->db->insert_id()
+		);
+	}
+
+	public function getAnswers($form_id){
+		$this->db->select('*');
+		$this->db->where('fa_form_id', $form_id);
+		$query = $this->db->get($this->answers_table);
+		return $query->result();
+	}
+
+	public function deleteAnswers($column, $id){
+		$this->db->where($column, $id);
+		$query = $this->db->delete($this->answers_table);
+		return array(
+			"status" => 1
 		);
 	}
 

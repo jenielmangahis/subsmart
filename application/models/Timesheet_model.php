@@ -485,8 +485,20 @@ class Timesheet_model extends MY_Model {
         }
     }
 
+    public function updateProjectName($id,$name){
+        $qry = $this->db->get_where('timesheet_settings',array('id'=>$id));
+        if ($qry->num_rows() == 1){
+            $rename = array('projects'=>$name);
+            $this->db->where('id',$id);
+            $this->db->update('timesheet_settings',$rename);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function updateDuration($data){
-        $qry = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$data['project_id'],'id'=>$data['day_id']));
+        $qry = $this->db->get_where('ts_settings_day',array('id'=>$data['day_id']));
         if ($qry->num_rows() == 1){
             $update = array(
                 'duration' => $data['duration'],
@@ -497,10 +509,12 @@ class Timesheet_model extends MY_Model {
             $new = array(
                 'ts_settings_id' => $data['project_id'],
                 'day' => $data['day'],
-                'duration' => $data['duration']
+                'duration' => $data['duration'],
+                'date' => $data['date']
             );
             $this->db->insert('ts_settings_day',$new);
         }
+        return true;
     }
 
     public function updateTotalWeekDuration($update){

@@ -34,7 +34,7 @@
         <?php } ?>
 
         <div class="card">
-          <div class="card-header">        
+          <div class="card-header pb-0">        
             <div class="row">
                 <div class="col-md-6">
                   <h5 id="folders_name">
@@ -62,6 +62,7 @@
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="move" title="Move Folder/File"><i class="fa fa-scissors"></i></a>
                           <?php if($isBusinessFormTemplates){ ?>  
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
                           <?php } ?>
@@ -71,6 +72,15 @@
                     </table>
                   </div>
                 </div> 
+            </div>
+            <div class="row table-danger pt-1 pb-1 d-none" id="move_details">
+              <div class="col-md-9">
+                <p class="align-middle" style="margin-bottom: 0 !important">Move <span id="move_f_tag"></span> &ensp;<strong id="move_f_text"></strong></p>
+              </div>
+              <div class="col-md-3 text-right">
+                <button type="button" class="btn btn-sm btn-default" id="move_proceed">Move Here</button>
+                <button type="button" class="btn btn-sm btn-default" id="move_cancel">Cancel</button>
+              </div>
             </div>
           </div>
           <div class="card-body" style="<?php if(!$isMain){ echo 'height: 64vh !important; overflow: auto'; } ?>">
