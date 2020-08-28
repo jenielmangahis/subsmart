@@ -534,6 +534,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               buttonText: 'List'
             }
           },
+          resourceLabelDidMount: function(info) {
+            console.log(info);
+            let img = document.createElement('img');
+            img.src = info.resource.extendedProps.imageurl;
+            img.setAttribute("class", "datagrid-image");
+            info.el.prepend(img);
+          },
           defaultDate: "<?php echo date('Y-m-d') ?>",
             editable: false,
             navLinks: true, // can click day/week names to navigate views
@@ -586,8 +593,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 
             },
             /*resources: [
-                { id: 'a', building: 'Employee', title: 'Bryann' },
-                { id: 'b', building: 'Employee', title: 'Tommy' }
+                { id: 'a', building: 'Employee', title: 'Bryann', imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png' },
+                { id: 'b', building: 'Employee', title: 'Tommy', imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
             ],*/
             /*events:[
                 {
@@ -596,8 +603,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     start:'2020-08-26 10:00',
                     end:'2020-08-26 13:00',
                     eventColor: '#378006',
+                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQCEqdsHyakSRTKbJ9cEgurC739Om2F83yubQ&usqp=CAU'
+                },
+                {
+                    resourceId:'b',
+                    title:"My repeating event",
+                    start:'2020-08-26 10:00',
+                    end:'2020-08-26 13:00',
+                    eventColor: '#378006',
+                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU'
                 }
-            ],*/            
+            ],      */      
             resources: <?php echo json_encode($resources_users); ?>,
             events: <?php echo json_encode($resources_user_events); ?>,
 
