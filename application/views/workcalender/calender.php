@@ -240,51 +240,39 @@ td.fc-datagrid-cell.fc-resource {
 
 
                     <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-12 col-3 col-sm-3 col-md-3">
-                                    <img src="<?php echo base_url() . "/assets/img/user7-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
-                                </div>
-                                <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
-                                    <span class="name"><i class="fa fa-user"></i> Ana Stevens</span><br/>
-                                    <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
-                                    <span class="visible-xs"> <span class="text-muted"></span>
-                                </div>
-                                <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
-                                    <a class="btn btn-default" href="javascript:void(0)">Send</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-12 col-3 col-sm-3 col-md-3">
-                                    <img src="<?php echo base_url() . "/assets/img/user8-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
-                                </div>
-                                <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
-                                    <span class="name"><i class="fa fa-user"></i> John Doe</span><br/>
-                                    <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
-                                    <span class="visible-xs"> <span class="text-muted"></span>
-                                </div>
-                                <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
-                                    <a class="btn btn-default" href="javascript:void(0)">Send</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-12 col-3 col-sm-3 col-md-3">
-                                    <img src="<?php echo base_url() . "/assets/img/user6-128x128.jpg"; ?>" alt="user" class="rounded-circle" style="inline">
-                                </div>
-                                <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
-                                    <span class="name"><i class="fa fa-user"></i> Mike David</span><br/>
-                                    <span><i class="fa fa-envelope-open"></i> Receipt Address</span>
-                                    <span class="visible-xs"> <span class="text-muted"></span>
-                                </div>
-                                <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
-                                    <a class="btn btn-default" href="javascript:void(0)">Send</a>
-                                </div>
-                            </div>
-                        </li>
+                      <?php if(isset($get_recent_users)){ 
+                                foreach ($get_recent_users as $key => $recent_user) {  ?>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-3 col-sm-3 col-md-3">
+                                             <?php 
+                                             $default_imp_img = base_url('uploads/users/default.png');
+                                              if( $recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.png') ) {
+                                                    $default_imp_img = $url_png;
+                                                }elseif($recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.jpeg') ) {
+                                                    $default_imp_img = $url_jpeg;
+                                                }elseif($recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.jpg') ) {
+                                                    $default_imp_img = $url_jpg;
+                                                } else {
+                                                    $default_imp_img = base_url('uploads/users/default.png');
+                                                }
+                                             ?>
+                                            <img src="<?php echo $default_imp_img ?>" alt="user" class="rounded-circle" style="inline">
+                                        </div>
+                                        <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
+                                            <span class="name"><i class="fa fa-user"></i> <?php echo $recent_user->FName . " " . $recent_user->LName  ?></span><br/>
+                                            <span><i class="fa fa-envelope-open"></i> <?php echo $recent_user->email ?></span>
+                                            <span class="visible-xs"> <span class="text-muted"></span>
+                                        </div>
+                                        <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
+                                            <a class="btn btn-default" href="javascript:void(0)">Send</a>
+                                        </div>
+                                    </div>
+                                </li>                          
+                      <?php     }
+                            } ?>
+
+                        
                     </ul>
                 </div>
             </div>

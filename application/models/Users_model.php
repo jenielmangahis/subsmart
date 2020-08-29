@@ -112,6 +112,26 @@ class Users_model extends MY_Model {
 
 	}
 
+	public function getRecentUsers() {
+
+		
+		$parent_id = getLoggedUserID();
+		$cid=logged('company_id');
+
+		$this->db->select('*');
+		$this->db->from($this->table);
+		//$this->db->where('parent_id', $parent_id);
+		$this->db->where('id', $parent_id);
+		$this->db->or_where('company_id',$cid );
+		 $this->db->order_by('id', 'DESC');
+		$this->db->limit(3);
+		$query = $this->db->get();
+
+		return $query->result();
+
+	}
+
+
 
 	public function getUser($user_id) {
 

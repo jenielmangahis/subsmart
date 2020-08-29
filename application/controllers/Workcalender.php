@@ -206,6 +206,7 @@ class Workcalender extends MY_Controller
         }
 
         $get_users = $this->Users_model->getUsers();
+        $get_recent_users = $this->Users_model->getRecentUsers();
 
         $resources_users = array();
         $resources_user_events = array();
@@ -272,6 +273,7 @@ class Workcalender extends MY_Controller
             }
         }     
 
+        $this->page_data['get_recent_users'] = $get_recent_users;
         $this->load->model('Users_model', 'user_model');
         $this->page_data['resources_users'] = $resources_users;
         $this->page_data['resources_user_events'] = $resources_user_events;
