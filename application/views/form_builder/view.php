@@ -11,8 +11,7 @@
     <div class="card">
       <div class="card-body">
         
-          <h2><?= $form->forms_title?></h2>
-          <hr/>
+        
           <?= form_open_multipart('form/submit/'.$form->forms_id, array("id" => "formMain"));?>
             <div id="windowPreviewcontent" class="row">
             </div>

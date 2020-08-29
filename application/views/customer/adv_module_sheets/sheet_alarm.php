@@ -76,7 +76,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Contact Name #2</label><br/>
+                <label for="">Contact Name #1</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
@@ -94,19 +94,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Contact Name #3</label><br/>
+                <label for="">Contact Name #4</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Contact Name #3</label><br/>
+                <label for="">Contact Name #5</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Contact Name #3</label><br/>
+                <label for="">Contact Name #6</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>

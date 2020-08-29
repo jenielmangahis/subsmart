@@ -46,15 +46,18 @@ class MY_Controller extends CI_Controller {
 	}
 
 
-	protected function checkLogin() {
+	protected function checkLogin($is_front = '') {
 
-		$user_id =  logged('id');
+		$user_id =  logged('id');		
+		if( $is_front == 1 ){
+			return true;
+		}else{
+			if ( empty($user_id) ) {
 
-		if ( empty($user_id) ) {
+				redirect('login');
 
-			redirect('login');
-
-			exit();
+				exit();
+			}
 		}
 	}
 }

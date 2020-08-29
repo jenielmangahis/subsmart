@@ -124,6 +124,55 @@ class Customer extends MY_Controller
 //            }
 //        }
     }
+    public function crud_account_module(){
+        $user_id = logged('id');
+        $input = $this->input->post();
+        $input['way_of_pay'] = $input['way_of_pay'][0];
+        unset($input['account_switch']);
+
+        // customer_ad_model
+//        if(empty($input['lead_id'])){
+//            unset($input['lead_id']);
+        if($this->customer_ad_model->add($input,"acs_account")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+//        }else{
+//            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
+//                echo "Updated";
+//            }else{
+//                echo "Error";
+//            }
+//        }
+    }
+
+    public function crud_address_module(){
+        $user_id = logged('id');
+        $input = $this->input->post();
+        unset($input['address_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_address")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+
+    }
+
+    public function crud_billing_module(){
+        $user_id = logged('id');
+        $input = $this->input->post();
+        unset($input['billing_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_billing")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+
+    }
+
     public function add_advance()
     {
         $user_id = logged('id');

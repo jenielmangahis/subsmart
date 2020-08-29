@@ -4,7 +4,7 @@ class FormsBuilder_model extends MY_Model {
 	private $forms_table = "fb_forms";
 	private $elements_table = "fb_forms_elements";
 	private $answers_table = "fb_forms_answers";
-	private $choices_table = "fb_forms_choices";
+	private $choices_table = "fb_choices";
 
 	public function __construct(){
 		parent::__construct();
@@ -80,6 +80,39 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 	
+	public function getElementChoices($element_id){
+		$this->db->select("*");
+		$this->db->where("fc_element_id", $element_id);
+		$query = $this->db->get($this->choices_table);
+		return $query->result();
+	}
+
+	public function addElementChoices($data){
+		$this->db->insert($this->choices_table, $data);
+		return array(
+			"status" => 1,
+			"id" => $this->db->insert_id()
+		);
+	}
+	
+	public function updateElementChoices($element_id, $data){
+		$this->db->where('fe_id', $element_id);
+		$query = $this->db->delete($this->choices_table);
+		$this->db->where('fc_id', $element_id);
+		$query = $this->db->update($this->choices_table, $data);
+		return array(
+			"status" => 1
+		);
+	}
+
+	public function deleteElementChoices($element_id){
+		$this->db->where('fe_id', $element_id);
+		$query = $this->db->delete($this->choices_table);
+		return array(
+			"status" => 1
+		);
+	}
+
 	public function submitAnswers($data){
 		$this->db->insert($this->answers_table, $data);
 		return array(

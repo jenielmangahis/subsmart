@@ -2,16 +2,17 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
-<form id="profile_form">
+
     <div class="tab-pane active standard-accordion" id="profile">
+        <form id="profile_form">
     <div class="row">
 
         <div class="col-sm-12">
             <div class="col-sm-12 text-right-sm" style="align:right;">
                 <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
                 <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
-                    <label class="onoffswitch-label" for="onoff-customize">
+                    <input type="checkbox" name="profile_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-profile">
+                    <label class="onoffswitch-label" for="onoff-profile">
                         <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
                     </label>
                 </div>
@@ -208,7 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <hr>
             <div class="col-sm-12">
-                <div class="col-md-1" style="display: nones;">
+                <div class="col-md-1" style="display: none;">
                     <div class="form-group" id="customer_type_group">
                         <input type="text" class="form-control" name="prof_id" id="prof_id" value="<?php if(isset($profile_info->prof_id)){ echo $profile_info->prof_id; } ?>">
                     </div>
@@ -218,7 +219,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
         </div>
+        </form>
     </div>
-</form>
+
 
 

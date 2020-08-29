@@ -146,9 +146,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <li class="nav-item">
                                                         <a class="h6 mb-0 nav-link banking-sub-tab active" data-toggle="tab" href="#profile">Profile</a>
                                                     </li>
-                                                    <li class="nav-item">
+                                                    <!--<li class="nav-item">
                                                         <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#other">Other Info</a>
-                                                    </li>
+                                                    </li>-->
                                                     <li class="nav-item">
                                                         <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#account">Account</a>
                                                     </li>
@@ -200,12 +200,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 include viewPath('customer/adv_module_sheets/sheet_account');
                                                 include viewPath('customer/adv_module_sheets/sheet_address');
                                                 include viewPath('customer/adv_module_sheets/sheet_billing');
-                                                include viewPath('customer/adv_module_sheets/sheet_alarm');
-                                                include viewPath('customer/adv_module_sheets/sheet_office');
-                                                include viewPath('customer/adv_module_sheets/sheet_admin');
-                                                include viewPath('customer/adv_module_sheets/sheet_tech');
-                                                include viewPath('customer/adv_module_sheets/sheet_access');
-                                                include viewPath('customer/adv_module_sheets/sheet_cust');
+//                                                include viewPath('customer/adv_module_sheets/sheet_alarm');
+//                                                include viewPath('customer/adv_module_sheets/sheet_office');
+//                                                include viewPath('customer/adv_module_sheets/sheet_admin');
+//                                                include viewPath('customer/adv_module_sheets/sheet_tech');
+//                                                include viewPath('customer/adv_module_sheets/sheet_access');
+//                                                include viewPath('customer/adv_module_sheets/sheet_cust');
                                             ?>
                                         </div>
                                     </div>
@@ -2483,6 +2483,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             format: "L",
             //minDate: new Date(),
         });
+        $(".date_picker").datetimepicker({
+            format: "l",
+            //'setDate': new Date(),
+            //minDate: new Date(),
+        });
+        $('.date_picker').val(new Date().toLocaleDateString());
 
     });
 
@@ -2520,17 +2526,71 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 success: function(data)
                 {
                     if(data === "Success"){
-                        save_sucess();
+                        save_sucess("Profile Info successfully saved!");
                     }
                     console.log(data);
                 }
             });
         });
 
-        function save_sucess(){
+        $("#account_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/crud_account_module",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        save_sucess("Account Information successfully saved!");
+                    }
+                    console.log(data);
+                }
+            });
+        });
+
+        $("#address_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/crud_address_module",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        save_sucess("Address Information successfully saved!");
+                    }
+                    console.log(data);
+                }
+            });
+        });
+
+        $("#billing_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/crud_billing_module",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        save_sucess("Billing Information Successfully Saved!");
+                    }
+                    console.log(data);
+                }
+            });
+        });
+
+        function save_sucess(information){
             Swal.fire(
                 'Good job!',
-                'Profile Info successfully saved!',
+                information,
                 'success'
             );
         }

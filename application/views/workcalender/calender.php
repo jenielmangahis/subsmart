@@ -8,6 +8,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     left: 48%;
     top: -35px;
 }
+img.datagrid-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    margin: 0 auto;
+    object-fit: cover;
+    margin-top: 10px;
+}
+td.fc-datagrid-cell.fc-resource {
+    text-align: center;
+}
 .right-col .fc-left{
     font-size: 10px;
 }
@@ -534,6 +545,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               buttonText: 'List'
             }
           },
+          resourceLabelDidMount: function(info) {
+            console.log(info);
+            let img = document.createElement('img');
+            img.src = info.resource.extendedProps.imageurl;
+            img.setAttribute("class", "datagrid-image");
+            info.el.prepend(img);
+          },
           defaultDate: "<?php echo date('Y-m-d') ?>",
             editable: false,
             navLinks: true, // can click day/week names to navigate views
@@ -583,21 +601,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 });
             },
             loading: function (bool) {
-                
+
             },
-            /*resources: [
-                { id: 'a', building: 'Employee', title: 'Bryann' },
-                { id: 'b', building: 'Employee', title: 'Tommy' }
-            ],*/
-            /*events:[
+            /* resources: [
+                { id: 'a', building: 'Employee', title: 'Bryann', imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png' },
+                { id: 'b', building: 'Employee', title: 'Tommy', imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
+            ],
+            events:[
                 {
                     resourceId:'a',
                     title:"My repeating event",
                     start:'2020-08-26 10:00',
                     end:'2020-08-26 13:00',
                     eventColor: '#378006',
+                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQCEqdsHyakSRTKbJ9cEgurC739Om2F83yubQ&usqp=CAU'
+                },
+                {
+                    resourceId:'b',
+                    title:"My repeating event",
+                    start:'2020-08-26 10:00',
+                    end:'2020-08-26 13:00',
+                    eventColor: '#378006',
+                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU'
                 }
-            ],*/            
+            ],      */
             resources: <?php echo json_encode($resources_users); ?>,
             events: <?php echo json_encode($resources_user_events); ?>,
 
@@ -650,7 +677,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       /*headerToolbar: {
         center: 'monthView,dayView' // buttons for switching between views
       },
-      views: {        
+      views: {
         dayView: {
           type: 'timeGridDay',
           buttonText: 'Day'
@@ -660,7 +687,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           buttonText: 'Month'
         }
       }*/
-    }); 
+    });
 
     calendar.render();
 

@@ -1069,46 +1069,12 @@
     showEndOptions: false,
     showResultOptions: false
   }
+  let elementChoices = []
   
-  // this function runs upon page load
-  loadFormSettings = id => {
-    $.ajax({
-      url: `${formBaseUrl}formbuilder/form/view/${id}`,
-      dataType: 'json',
-      type: 'GET',
-      success: function(res){
-        document.querySelector('#txtFormName').value = res.data.forms_title
-        document.querySelector('#txtPrivateNotes').value = res.data.forms_private_note
-        document.querySelector('#txtSocialDescription').value = res.data.forms_social_desc
-        document.querySelector('#txtFormToggleStart').checked = (res.data.forms_use_start_date == 1)? true : false
-        document.querySelector('#txtFormToggleEnd').checked = (res.data.forms_use_closing_date == 1)? true : false
-        document.querySelector('#txtFormToggleResult').checked = (res.data.forms_use_results_limit == 1)? true : false
-        document.querySelector('#txtStartDate').value = res.data.forms_start_date
-        document.querySelector('#txtStartTime').value = res.data.forms_start_time
-        document.querySelector('#txtStartMessageTitle').value = res.data.forms_start_title
-        document.querySelector('#txtStartMessageContent').value = res.data.forms_start_message
-        document.querySelector('#txtEndDate').value = res.data.forms_end_date
-        document.querySelector('#txtEndTime').value = res.data.forms_end_time
-        document.querySelector('#txtEndMessageTitle').value = res.data.forms_end_title
-        document.querySelector('#txtEndMessageContent').value = res.data.forms_end_message
-        document.querySelector('#txtResultsLimit').value = res.data.forms_results_limit
-        document.querySelector('#txtResultsMessageTitle').value = res.data.forms_results_max_title
-        document.querySelector('#txtResultsMessageContent').value = res.data.forms_results_max_message
-        document.querySelector('#txtResultsMessageContent').value = res.data.forms_results_max_message
-        
-        document.querySelector('#txtRedirectLink').value = res.data.forms_redirect_link
-        document.querySelector('#txtSuccessTitle').value = res.data.forms_success_title
-        document.querySelector('#txtSuccessMessage').value = res.data.forms_success_message
-        document.querySelector('#chkSubmitAnotherResponse').checked = (res.data.forms_show_repeat_form_check == 1)? true : false
-        
-        
-        return;
-      }
-    })
-  }
-
-
+  document.querySelector('#txtElementChoices').addEventListener('change', e => {
+  // saveElementChoices = event =>
     
+  })
 
   toggleElementSettings = (elementId, value) => {
     document.querySelector('#form-elements-settings-' + elementId).style.display = (value == 1)? "block" : "none"
@@ -1174,7 +1140,18 @@
         document.querySelector('#chkElementSettingsReadonly').checked = (element.fe_is_readonly == 1)? true : false;
         document.querySelector('#chkElementSettingsScoringCheck').checked = (element.fe_enable_score == 1)? true : false;
         // document.querySelector('#radElementSettingsQuestionPosition').value = element.fe_question_position;
-
+        
+        if(element.fe_element_id == 1 || element.fe_element_id == 2 || element.fe_element_id == 3 ){
+          choices = JSON.parse($.ajax({
+            url: `${formBaseUrl}formbuilder/form/element/choices/${element.fe_id}`,
+            dataType: 'json',
+            type: 'GET',
+            async: false
+          }).responseText).data;
+          document.querySelector("#txtElementChoices").value = choices.map(choice => `${choice.fc_choice}`).join("\n")
+        }else{
+          document.querySelector("#txtElementChoices").value = ""
+        }
 
 
       }
@@ -1226,11 +1203,34 @@
       dataType: 'json',
       type: 'POST',
       success: function(res){
+        const values = document.querySelector("#txtElementChoices").value.split("\n");
+        if(values != ""){
+          values.map( value => {
+            let choicesdata = {
+              "fc_element_id": selectedUserElement.fe_id,
+              "fc_choice": value,
+              "fc_is_correct_answer": 0
+            }
+            $.ajax({
+              url: `${formBaseUrl}formbuilder/form/element/choices/add`,
+              data: choicesdata,
+              dataType: 'json',
+              type: 'POST',
+              success: function(){
+                
+                $('#modalElementSettings').modal('hide')
+              }
+            })
+          })
+        }
         loadFormSettings(<?= $form->forms_id?>);
         loadFormElements(<?= $form->forms_id?>, "edit");
-        $('#modalElementSettings').modal('hide')
+        
       }
     })
+
+    
+
   }
   
   window.onload = () => {
@@ -1354,6 +1354,7 @@
       
     }
   });
+
   $('#windowPreviewContent').disableSelection();
 
   $('#windowPreviewTemplate').droppable({

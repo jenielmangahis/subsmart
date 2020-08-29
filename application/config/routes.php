@@ -81,6 +81,8 @@ $route['formbuilder/form/element/get/(:any)/(:any)'] = 'formbuilder/getFormEleme
 $route['formbuilder/form/element/add'] = 'formbuilder/addFormElement';
 $route['formbuilder/form/element/update/(:any)'] = 'formbuilder/updateFormElement/$1';
 $route['formbuilder/form/element/delete/(:any)'] = 'formbuilder/deleteFormElement/$1';
+$route['formbuilder/form/element/choices/add'] = 'formbuilder/addElementChoices';
+$route['formbuilder/form/element/choices/(:any)'] = 'formbuilder/getElementChoices/$1';
 $route['form/submit/(:any)'] = 'formbuilder/submitForm/$1';
 
 //survey module
