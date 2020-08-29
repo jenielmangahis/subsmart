@@ -40,7 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-md-6">
             <div class="form-group" id="customer_type_group">
-                <label for="">TECH Assign</label><br/>
+                <label for="">Tech Assign</label><br/>
                 <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
             </div>
         </div>

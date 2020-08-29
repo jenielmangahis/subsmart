@@ -20,6 +20,7 @@ $(document).ready(function(){
 
   selected_move = 0;
   selected_move_isFolder = 1;
+  selected_move_fName = '';
 
   current_selected_folder = 0;
   current_process = '';
@@ -176,6 +177,7 @@ $(document).ready(function(){
     if((selected != 0) && (selected_move == 0)){
       selected_move = selected;
       selected_move_isFolder = selected_isFolder;
+      selected_move_fName = $('#folders_name').text();
 
       if(selected_move_isFolder == 1){
         $('#move_f_tag').text('Folder');
@@ -204,15 +206,35 @@ $(document).ready(function(){
     if(selected_move != 0){
       if(selected_move_isFolder == 1){
         var vUrl = base_url + "folders/move/" + current_selected_folder + "/" + selected_move;
+        var vTag = 'Folder';
       } else {
         var vUrl = base_url + "vault/move/" + current_selected_folder + "/" + selected_move;
+        var vTag = 'File';
       }
 
       $.ajax({
         type: 'POST',
         url: vUrl,
+        beforeSend: function(){
+          showUploading('Moving ' + vTag + ' ' + selected_move_fName, true);
+        },
         success: function(data){
+          var result = jQuery.parseJSON(data);
 
+          if(result.error == ""){
+            resetMoveProcess();
+            
+            getFoldersAndFiles(current_selected_folder);
+          } else {
+            hideUploading();
+
+            showFolderManagerNotif('Error', result.error, 'error');  
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          hideUploading();
+
+          showFolderManagerNotif(textStatus, errorThrown, 'error');
         } 
       });
     } else {
@@ -221,15 +243,20 @@ $(document).ready(function(){
   });
 
   $('#move_cancel').click(function(){
+    resetMoveProcess(); 
+  });
+
+  function resetMoveProcess(){
     selected_move = 0;
     selected_move_isFolder = 1;
+    selected_move_fName = '';
 
     $('#move_f_text').text("");
 
     if(!$('#move_details').hasClass('d-none')){
       $('#move_details').addClass('d-none');
-    }  
-  });
+    }   
+  }
   
 // -------------------------------------------------------------------------------------------------------------
 
@@ -330,9 +357,9 @@ $(document).ready(function(){
           success: function(data){
             var result = jQuery.parseJSON(data);
 
-            hideUploading();
-
             if(result.error != ""){
+              hideUploading();
+
               showFolderManagerNotif('Error', result.error, 'error');  
             } else {
               getFoldersAndFiles(current_selected_folder);
@@ -675,6 +702,10 @@ function getFoldersAndFiles(parent_id = 0){
     complete: function(jqXHR, textStatus){
       if(modalIsOpen('#modal-folder-manager-search')){
         hideFolderManagerSearch();
+      }
+
+      if(modalIsOpen('#modal-folder-manager-uploading')){
+        hideUploading();
       }
     }
   });
@@ -1514,9 +1545,15 @@ function closeEntry(){
   $('#modal-folder-manager-entry').modal('hide');
 }
 
-function showUploading(filename){
+function showUploading(filename, vUseShowProgress = false){
+  if(!vUseShowProgress){
+    var vText = 'Uploading ' + filename;   
+  } else {
+    var vText = filename;
+  }
+
   if(!modalIsOpen('#modal-folder-manager-uploading')){
-    $('#modal-folder-manager-uploading-title').text('Uploading ' + filename);
+    $('#modal-folder-manager-uploading-title').text(vText);
     $('#modal-folder-manager-uploading-percentage').text('0%');
     $('#modal-folder-manager-uploading').modal('show');
   }

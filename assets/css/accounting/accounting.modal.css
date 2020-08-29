@@ -1,5 +1,5 @@
 .full-screen-modal .modal {
-    padding: 0 !important; // override inline padding-right added from js
+    padding: 0 !important; /** override inline padding-right added from js **/
 }
 .full-screen-modal .modal .modal-dialog {
     width: 100%;
@@ -557,6 +557,9 @@
     float: right;
 }
 /*Check Expenses modal*/
+#receive-payment .modal-title,
+#add-invoice .modal-title,
+#add-estimate .modal-title,
 #edit-expensesCheck .modal-title{
     font-size: 24px;
     line-height: 50px;
@@ -564,6 +567,9 @@
     padding-left: 15px;
     vertical-align: middle;
 }
+#add-invoice .modal-header,
+#add-estimate .modal-header,
+#receive-payment .modal-header,
 #edit-expensesCheck .modal-header{
     border-bottom: 0;
 }
@@ -575,17 +581,29 @@
     bottom: 0;
     margin-top: 100px;
 }
+#add-estimate .remove-button,
+#add-invoice .remove-button,
+#receive-payment .remove-button,
 #edit-expensesCheck .remove-button{
     border-radius: 36px;
 }
+#add-estimate .modal-footer-check .cancel-button,
+#add-invoice .modal-footer-check .cancel-button,
+#receive-payment .modal-footer-check .cancel-button,
 #edit-expensesCheck .modal-footer-check .cancel-button{
     border-radius: 36px;
     background: transparent;
     border:1px solid #6B6C72;
 }
+#receive-payment label,
+#add-invoice label,
+#add-estimate label,
 #edit-expensesCheck label{
     font-weight: 700;
 }
+#receive-payment textarea,
+#add-invoice textarea,
+#add-estimate textarea,
 #edit-expensesCheck textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
@@ -596,11 +614,17 @@
     padding-left: 10px;
     color: #363636;
 }
+#receive-payment .table-container,
+#add-invoice .table-container,
+#add-estimate .table-container,
 #edit-expensesCheck .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
+#receive-payment .add-remove-line,
+#add-invoice .add-remove-line,
+#add-estimate .add-remove-line,
 #edit-expensesCheck .add-remove-line{
     border-radius: 5px;
     display: inline-block;
@@ -610,6 +634,9 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+#receive-payment .modal-footer-check  .middle-links,
+#add-invoice .modal-footer-check  .middle-links,
+#add-estimate .modal-footer-check  .middle-links,
 #edit-expensesCheck .modal-footer-check  .middle-links{
     display: inline-block;
     padding: 12px;
@@ -617,9 +644,15 @@
     font-weight: 600;
     border-right: 1px solid whitesmoke;
 }
+#receive-payment .modal-footer-check  .middle-links a,
+#add-invoice .modal-footer-check  .middle-links a,
+#add-estimate .modal-footer-check  .middle-links a,
 #edit-expensesCheck .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
+#receive-payment .modal-footer-check  .middle-links a:hover,
+#add-invoice .modal-footer-check  .middle-links a:hover,
+#add-estimate .modal-footer-check  .middle-links a:hover,
 #edit-expensesCheck .modal-footer-check  .middle-links a:hover{
     text-decoration: underline;
     color: #ffffff !important;;
@@ -627,6 +660,9 @@
     -moz-box-shadow:  0 10px 6px -6px #afafaf;
     box-shadow:  0 10px 6px -6px #afafaf;
 }
+#receive-payment .modal-footer-check  .end,
+#add-estimate .modal-footer-check  .end,
+#add-invoice .modal-footer-check  .end,
 #edit-expensesCheck .modal-footer-check  .end{
     border-right: none;
 }

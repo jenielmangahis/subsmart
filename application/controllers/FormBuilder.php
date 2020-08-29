@@ -150,6 +150,44 @@ class FormBuilder extends MY_Controller {
 		echo json_encode($data);
 		exit;
 	}
+	
+
+	public function getElementChoices($element_id){
+		
+		$data =  array(
+			"status" => 1,
+			"data" => $this->formsbuilder_model->getElementChoices($element_id)
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function addElementChoices(){
+		$query = $this->formsbuilder_model->addElementChoices($this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function updateElementChoices($element_id){
+		$query = $this->formsbuilder_model->updateElementChoices($element_id, $this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function deleteElementChoices($element_id){
+		$this->formsbuilder_model->deleteElementChoices($element_id);
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
 
 	public function submitForm($form_id){
 		

@@ -450,6 +450,9 @@ class Folders extends MY_Controller {
 	}
 
 	public function move($to_folder = 0, $folder_id = 0){
+		$uid = logged('id');
+		$company_id = logged('company_id');
+
 		$return = array(
 			'error' => ''
 		);
@@ -458,9 +461,67 @@ class Folders extends MY_Controller {
 			$return['error'] = 'Please select folder to move';
 		} else {
 			$folder = $this->folders_model->getById($folder_id);
+			$exists_count = $this->db->query(
+				'select count(*) as `exists` from file_folders where parent_id = ' . $to_folder . ' and lower(folder_name) = "' . strtolower($folder->folder_name) . '" and company_id = '
+			)->row();
+
+			if($exists_count->exists > 0){
+				$return['error'] = 'Cannot move. Folder name already exists in the destination folder';
+			} else {
+			//create top folder initially ---------------------------------------------------------------------------------
+				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $to_folder);
+				if($parent_folder->num_rows() > 0){
+					$parent_folder = $parent_folder->row();
+
+					$path = $parent_folder->path . $folder_name . '/';
+				} else {
+					$path = '/' . $folder_name . '/';
+				}
+
+				$data = array(
+					'folder_name' => $folder->folder_name,
+					'parent_id' => $folder->parent_id,
+					'description' => $folder->description,
+					'path' => $path,
+					'created_by' => $uid,
+					'create_date' => date('Y-m-d h:i:s'),
+					'company_id' => $company_id
+				);
+
+				if(!empty($folder->category_id)){
+					$data['category_id'] = $folder->category_id;
+				}
+
+				if($this->folders_model->trans_create($data)){
+					mkdir('./uploads/' . $this->company_folder . $path, 0777);
+
+					$latest_folder = $this->db->query($sql = 'select ' . 
+
+		               'a.*, '.
+		               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+		               'c.folder_name as c_folder '.
+
+		               'from file_folders a '.
+		               'left join users b on b.id = a.created_by '.
+		               'left join business_profile c on c.id = a.company_id '.
+
+		               'where a.company_id = ' . $company_id . ' and a.created_by = ' . $uid . ' ' .
+
+		               'order by create_date DESC limit 1')->row();
+
+					
+				} else {
+					$return['error'] = 'Error in creating folder. Please contact our support';
+				}
+			//create top folder initially ---------------------------------------------------------------------------------	
+			}
 		}
 
 		echo json_encode($return);
+	}
+
+	private function moveSubs($to_folder, $folder_id){
+
 	}
 }
 
