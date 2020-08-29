@@ -604,8 +604,17 @@ td.fc-datagrid-cell.fc-resource {
 
             },
             /* resources: [
-                { id: 'a', building: 'Employee', title: 'Bryann', imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png' },
-                { id: 'b', building: 'Employee', title: 'Tommy', imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
+                { 
+                    id: 'a', 
+                    building: 'Employee', 
+                    title: 'Bryann', 
+                    imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png' 
+                },
+                {   
+                    id: 'b', 
+                    building: 'Employee', 
+                    title: 'Tommy', 
+                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
             ],
             events:[
                 {
