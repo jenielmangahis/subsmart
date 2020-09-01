@@ -16,6 +16,21 @@ img.datagrid-image {
     object-fit: cover;
     margin-top: 10px;
 }
+a.calendar-profile-contact {
+    color: black;
+    position: relative;
+    top: 2px;
+    font-size: 16px;
+    width: 39%;
+    display: block;
+    float: left;
+}
+a.calendar-profile-contact:hover {
+    color: green;
+}
+.btn-calendar-small {
+    font-size: 12px;
+}
 td.fc-datagrid-cell.fc-resource {
     text-align: center;
 }
@@ -26,9 +41,20 @@ td.fc-datagrid-cell.fc-resource {
     margin-top: 10px;
     font-weight: 300;
 }
+span.calendar-email {
+    font-size: 12px;
+    position: relative;
+    left: 3px;
+}
 #right-calendar{
     margin-top: 10px;
     padding: 10px;
+}
+img.calendar-user-profile {
+    border-radius: 100px;
+    object-fit: cover;
+    position: relative;
+    top: 6px;
 }
 .dot {
   height: 25px;
@@ -240,12 +266,12 @@ td.fc-datagrid-cell.fc-resource {
 
 
                     <ul class="list-group">
-                      <?php if(isset($get_recent_users)){ 
+                      <?php if(isset($get_recent_users)){
                                 foreach ($get_recent_users as $key => $recent_user) {  ?>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col-xs-12 col-3 col-sm-3 col-md-3">
-                                             <?php 
+                                        <div class="col-xs-12 col-2 col-sm-2 col-md-2">
+                                             <?php
                                              $default_imp_img = base_url('uploads/users/default.png');
                                               if( $recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.png') ) {
                                                     $default_imp_img = $url_png;
@@ -257,22 +283,26 @@ td.fc-datagrid-cell.fc-resource {
                                                     $default_imp_img = base_url('uploads/users/default.png');
                                                 }
                                              ?>
-                                            <img src="<?php echo $default_imp_img ?>" alt="user" class="rounded-circle" style="inline">
+                                            <img class="calendar-user-profile" src="<?php echo $default_imp_img ?>" alt="user" class="rounded-circle" style="inline">
                                         </div>
-                                        <div class="col-xs-12 col-5 col-sm-5 col-md-5" style="text-align: left;">
+                                        <div class="col-xs-12 col-6 col-sm-6 col-md-6" style="text-align: left;">
                                             <span class="name"><i class="fa fa-user"></i> <?php echo $recent_user->FName . " " . $recent_user->LName  ?></span><br/>
-                                            <span><i class="fa fa-envelope-open"></i> <?php echo $recent_user->email ?></span>
+                                            <span><i class="fa fa-envelope-open"></i><span class="calendar-email"><?php echo $recent_user->email ?></span></span>
                                             <span class="visible-xs"> <span class="text-muted"></span>
                                         </div>
                                         <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
-                                            <a class="btn btn-default" href="javascript:void(0)">Send</a>
+                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-phone"></i></a>
+                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-envelope-o"></i></a>
+                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-comments-o"></i></a>
+                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-print"></i></a>
+                                            <!-- <a class="btn-calendar-small btn btn-default" href="javascript:void(0)">Contact</a> -->
                                         </div>
                                     </div>
-                                </li>                          
+                                </li>
                       <?php     }
                             } ?>
 
-                        
+
                     </ul>
                 </div>
             </div>
@@ -592,16 +622,16 @@ td.fc-datagrid-cell.fc-resource {
 
             },
             /* resources: [
-                { 
-                    id: 'a', 
-                    building: 'Employee', 
-                    title: 'Bryann', 
-                    imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png' 
+                {
+                    id: 'a',
+                    building: 'Employee',
+                    title: 'Bryann',
+                    imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png'
                 },
-                {   
-                    id: 'b', 
-                    building: 'Employee', 
-                    title: 'Tommy', 
+                {
+                    id: 'b',
+                    building: 'Employee',
+                    title: 'Tommy',
                     imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
             ],
             events:[
