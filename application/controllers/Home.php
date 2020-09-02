@@ -6,7 +6,6 @@ class Home extends MY_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		$this->checkLogin(1);
 		$this->page_data['page']->title = 'nSmart';
 	}
 

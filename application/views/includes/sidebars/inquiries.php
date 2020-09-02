@@ -26,6 +26,9 @@
         <li class="nav-header">Leads </li>
         <li class="submenus <?php if($this->uri->uri_string() == 'inquiries') { echo 'active'; }?>"><a href="<?php echo base_url('inquiries ') ?>" title="My Inquiries "><span
                         class="fa fa-user"></span>My Leads </a></li>
-        
+        <li class="submenus <?php if($this->uri->uri_string() == 'online_leads') { echo 'active'; }?>"><a href="<?php echo base_url('online_leads') ?>" title="My Inquiries "><span
+                        class="fa fa-list"></span>Online Lead Form </a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'video_estimate') { echo 'active'; }?>"><a href="<?php echo base_url('video_estimate') ?>" title="My Inquiries "><span
+                        class="fa fa-file"></span>Video Estimate</a></li>
     </ul>
 </nav>

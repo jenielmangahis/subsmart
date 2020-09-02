@@ -1,16 +1,23 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="col-xl-4 ui-state-default db-card" id="bulletin">
-    <div class="card">
-        <div class="card-body">
-            <div>
-                <h4 class="mt-0 header-title mb-4">Corporate Bulletin</h4>
+<div class="col-sm-4" id="bulletin">
+    <div class="expenses tile-container" style="top:0px; margin-bottom: 30px;">
+        <div class="inner-container">
+            <div class="tileContent">
+                <div class="clear">
+                    <div class="inner-content">
+                        <div class="header-container" style="border-bottom:1px solid gray;">
+                            <h3 class="header-content"><i class="fa fa-bullhorn" aria-hidden="true"></i> Corporate Bulletin</h3>
+                        </div>
+                        <div class="expenses-money-section" style="margin-top:10px;">
+                            <div class="inner-news">
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="inner-news">
-                <p></p>
-            </div>
-
         </div>
     </div>
 </div>

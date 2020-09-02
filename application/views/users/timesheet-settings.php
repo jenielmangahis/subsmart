@@ -143,8 +143,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         z-index: 10000;
         display: none;
     }
+    /*Sweet Alert Css*/
     .swal2-title{
         font-size: 20px!important;
+    }
+    .swal2-checkbox{
+        float: left;
+    }
+    .swal2-label{
+        font-weight: bold!important;
     }
 </style>
 <?php
@@ -198,11 +205,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-lg-12 table-responsive">
                                     <div class="ts-settings-menu">
                                         <div class="form-group">
-                                            <select name="" id="" class="form-control select2-employee-list">
-                                                <option value="teammates" selected>Teammates</option>
-<!--                                                --><?php //foreach ($users as $user): ?>
-<!--                                                    <option value="--><?php //echo $user->id?><!--">--><?php //echo $user->FName?><!-- --><?php //echo $user->LName;?><!--</option>-->
-<!--                                                --><?php //endforeach;?>
+                                            <select name="" id="tsUsersList" class="form-control select2-employee-list">
+                                                <option value="0" selected>Teammates</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -230,6 +234,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <button class="btn btn-default"><i class="fa fa-save" style="color: #56bb4d;"></i>&nbsp;Save as template</button>
                                         </div>
                                     </div>
+
+<!--                                    --><?php //echo $this->session->userdata('logged')['id'];?>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -249,6 +255,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <strong>Success!</strong> You've updated a duration.
     </div>
 </div>
+
 <!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
@@ -307,14 +314,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
 
         var selected_week = $('#ts-sorting-week').val();
-        $('#timesheet_settings').ready(showWeekList(selected_week));
-        function showWeekList(week) {
+        var user_id = $('#tsUsersList').val();
+        $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
+        function showWeekList(week,user_id) {
             if(week != null){
                 $.ajax({
                     url:"/timesheet/showTimesheetSettings",
                     type:"GET",
                     dataType:"json",
-                    data:{week:week},
+                    data:{week:week,user:user_id},
                     success:function (data) {
                         $('#timesheet_settings').html(data);
                         // Restriction of input field
@@ -329,9 +337,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 });
             }
         }
+        $(document).on('change','#tsUsersList',function () {
+             var user = $(this).val();
+             var week = $('#ts-sorting-week').val();
+            showWeekList(week,user);
+        });
         $(document).on('change','#ts-sorting-week',function () {
             var week = $(this).val();
-            showWeekList(week);
+            var user = $('#tsUsersList').val();
+            showWeekList(week,user);
         });
         //Updating duration
         // Monday
@@ -492,7 +506,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             total = total_hrs+':'+leftPad(min,2);
             $('#totalWeekDuration'+id).text(total);
             totalPerDay(id,day,day_date);
-            totalWeekDuration(day_date);
+            totalWeekDuration(day_date,day);
             $.ajax({
                url:"/timesheet/updateTotalWeekDuration",
                type:"POST",
@@ -514,6 +528,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var total_hrs = 0;
             var hrs = 0;
             var min = 0;
+            var user = $('#tsUsersList').val();
             $("input[name$='"+day+"']").each(function () {
                var duration = $(this).val();
                var split = duration.split(":");
@@ -567,15 +582,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 url:"/timesheet/addingTotalInDay",
                 type:"POST",
                 dataType:"json",
-                data:{id:day_total_id,total:total,day_date:day_date,day:day},
+                data:{id:day_total_id,total:total,day_date:day_date,day:day,user_id:user},
                 success:function () {
-                    showWeekList(selected_week);
+                    var week = $('#ts-sorting-week').val();
+                    var user = $('#tsUsersList').val();
+                    showWeekList(week,user);
                 }
             });
 
         }
 
         function totalWeekDuration(day_date) {
+            var week = $('#ts-sorting-week').val();
+            var user = $('#tsUsersList').val();
             var total = 0;
             var total_mins = 0;
             var total_hrs = 0;
@@ -597,13 +616,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             min = total_mins % 60;
             total_hrs += hrs;
             total = total_hrs+':'+leftPad(min,2);
-            $('#totalWeekDuration').text(total);
+            $('#totalWeekDuration-'+user).text(total);
+            var twd_id = $('#totalWeekDuration-'+user).attr('data-id');
             $.ajax({
                url:'/timesheet/updateTotalDuration',
                type:"POST",
                dataType:"json",
-               data:{total:total,date:day_date,week:selected_week},
-               success:function () {
+               data:{total:total,date:day_date,week:week,user_id:user,twd_id:twd_id},
+               success:function (data) {
 
                }
             });
@@ -618,39 +638,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
         // Adding Project
         $(document).on('click','#addProject',function () {
+            var week = $('#ts-sorting-week').val();
+            var user = $('#tsUsersList').val();
             Swal.fire({
                 title: 'Please enter project name',
-                input: 'text',
-                // html:
-                // '<input id="swal-input1" class="swal2-input">' +
-                // '<input id="swal-input2" class="swal2-input">',
-                // inputAttributes: {
-                //     autocapitalize: 'off'
-                // },
+                input: 'checkbox',
+                inputPlaceholder: 'For next week',
+                html:
+                '<input type="text" id="swal-project-name" class="form-control" placeholder="Enter project name" required>',
                 showCancelButton: true,
                 confirmButtonText: 'Submit',
                 confirmButtonColor: '#2ca01c',
-                // preConfirm: function () {
-                //     return new Promise(function (resolve) {
-                //         resolve([
-                //             $('#swal-input1').val(),
-                //             $('#swal-input2').val()
-                //         ])
-                //     })
-                // },
-                // onOpen: function () {
-                //     $('#swal-input1').focus()
-                // },
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve([
+                            $('#swal-project-name').val(),
+                            $('#swal2-checkbox').is(':checked'),
+                        ])
+                    }).then(response => {
+                        if (!response[0] != '') {
+                        throw new Error(response.statusText)
+                    }
+                    return response
+                })
+                .catch(error => {
+                        Swal.showValidationMessage(
+                       ` ${error} : Text field can not be null`
+                    )
+                })
+                },
+                onOpen: function () {
+                    $('#swal-project-name').focus();
+                },
+                allowOutsideClick: false
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
                         url:"/timesheet/addingProjects",
                         method:"POST",
                         dataType:"json",
-                        data:{project:result.value},
+                        data:{project:result.value[0],nxt_week:result.value[1],user:user},
                         cache:false,
                         success:function (data) {
-                            showWeekList(selected_week)
+                            console.log(data);
+                            showWeekList(week,user);
                             if(data == 1){
                                 Swal.fire(
                                     {
@@ -680,6 +711,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('click','#editProjectName',function () {
             var id = $(this).attr('data-id');
             var project_name = $(this).attr('data-name');
+            var week = $('#ts-sorting-week').val();
+            var user = $('#tsUsersList').val();
             Swal.fire({
                 title: 'Do you want to rename this project?',
                 input: 'text',
@@ -696,7 +729,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     method:"POST",
                     data:{id:id,name:result.value},
                     success:function (data) {
-                        showWeekList(selected_week);
+                        showWeekList(week,user);
                         Swal.fire(
                             {
                                 showConfirmButton: false,
@@ -714,6 +747,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $(document).on('click','#removeProject',function () {
             var id = $(this).attr('data-id');
             var project_name = $(this).attr('data-name');
+            var week = $('#ts-sorting-week').val();
+            var user = $('#tsUsersList').val();
             Swal.fire({
                 title: 'Are you sure to delete this?',
                 html: "Project name: <strong>"+project_name+"</strong>",
@@ -729,7 +764,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     method:"POST",
                     data:{id:id},
                     success:function () {
-                        showWeekList(selected_week);
+                        showWeekList(week,user);
                         Swal.fire(
                             {
                                 showConfirmButton: false,

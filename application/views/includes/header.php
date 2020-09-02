@@ -8,7 +8,7 @@
     <title>Home</title>
     <meta content="Admin Dashboard" name="description">
 
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo $url->assets?>plugins/font-awesome/css/font-awesome.min.css">
     <!--Chartist Chart CSS -->
 
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet">
+    <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css" rel="stylesheet"> -->
 
     <!-- taxes page -->
     <link href="<?php echo $url->assets ?>dashboard/css/responsive.css" rel="stylesheet" type="text/css">
@@ -140,15 +140,44 @@
                                 </div>
                             </li>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
-                                <div class="clock">
-                                    <div class="hour">
-                                        <div class="hr" id="hr"></div>
+                                <?php
+                                    $unset = array('break','on_break','timer_icon','remaining_time');
+                                    $this->session->unset_userdata($unset);
+                                ?>
+                                <input type="hidden" id="clock-session" value="">
+                                <input type="hidden" id="clock-end-time" value="<?php echo $this->session->userdata('break')?>">
+                                <input type="hidden" id="clock-server-time" value="">
+                                <input type="hidden" id="clock-status" value="<?php echo (!empty($this->session->userdata('active')))?$this->session->userdata('active'):3; ?>">
+                                <div class="clock-users " id="startBreak">
+                                    <div class="clock <?php echo $this->session->userdata('on_break'); ?>">
+                                        <div class="hour">
+                                            <div class="hr" id="hr"></div>
+                                        </div>
+                                        <div class="minute">
+                                            <div class="min" id="min"></div>
+                                        </div>
+                                        <div class="second">
+                                            <div class="sec" id="sec"></div>
+                                        </div>
                                     </div>
-                                    <div class="minute">
-                                        <div class="min" id="min"></div>
+                                </div>
+                                <div class="preview-clock-details">
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Check In:</span>
+                                        <span class="clock-details-text">10:00AM</span>
                                     </div>
-                                    <div class="second">
-                                        <div class="sec" id="sec"></div>
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Check Out:</span>
+                                        <span class="clock-details-text">Pending...</span>
+                                    </div>
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Break:</span>
+                                        <span class="clock-details-text"><span id="break-duration"><?php echo (!empty($this->session->userdata('remaining_time')))?$this->session->userdata('remaining_time'):'60:00'; ?></span>
+                                            <a href="#" id="stopBreak" <?php echo $this->session->userdata('timer_icon')?>><i class="fa fa-pause-circle"></i></a></span>
+                                    </div>
+                                    <div class="clock-section">
+                                        <span class="clock-details-title">Shift Duration:</span>
+                                        <span class="clock-details-text"></span>
                                     </div>
                                 </div>
                             </li>

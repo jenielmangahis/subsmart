@@ -223,9 +223,10 @@ loadFormElements = (id, mode = null) => {
           }).responseText).data
         }
 
-        if(elementType == 20){
+        if(elementType >= 20){
           document.querySelector('#windowPreviewContent').innerHTML += `
           ${(elementType == 20)?`
+            <!-- Header -->
             <div id="form-element-${el.fe_id}" class="bg-primary text-white col-xs-12 col-sm-12 px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
               <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                 <div class="btn-group" style="margin-y: auto">
@@ -236,7 +237,65 @@ loadFormElements = (id, mode = null) => {
               </div>
               <h1>${el.fe_label}</h1>
             </div>
-            `:""}
+          `:""}
+
+          ${(elementType == 21)?`
+            <!-- Formatted Text -->
+            <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                <div class="btn-group" style="margin-y: auto">
+                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+              </div>
+              <p>${el.fe_label}</p>
+            </div>
+          `:""}
+
+          ${(elementType == 22)?`
+            <!-- Image -->
+            <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                <div class="btn-group" style="margin-y: auto">
+                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+              </div>
+                <img src="https://via.placeholder.com/150" alt="image" style="width: 100%; height; 300px;">
+            </div>
+          `:""}
+
+          ${(elementType == 23)?`
+            <!-- Link -->
+            <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                <div class="btn-group" style="margin-y: auto">
+                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+              </div>
+              <a href="${el.fe_default_value}">${el.fe_label}</a>
+            </div>
+          `:""}
+
+          ${(elementType == 25)?`
+            <!-- Blank space -->
+            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-12" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                <div class="btn-group" style="margin-y: auto">
+                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+              </div>
+              ${(mode == "edit")?"/ Blank space /":""}
+              <br/>
+              <br/>
+            </div>
+          `:""}
           `
         }else{
           document.querySelector('#windowPreviewContent').innerHTML += `
@@ -254,10 +313,11 @@ loadFormElements = (id, mode = null) => {
               :""}
   
               ${(elementType == 1)?`
+                <!-- Radio -->
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 ${choices.map((choice,i) => `
                   <div class="form-check form-user-elements">
-                    <input type="radio" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}-${i}" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="choice.fc_choice">
+                    <input type="radio" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}-${i}" class="form-check-input" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="choice.fc_choice">
                     <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
                   </div>
                 `).join("")}
@@ -265,9 +325,10 @@ loadFormElements = (id, mode = null) => {
               `:""}
   
               ${(elementType == 2)?`
+                <!-- dropdown -->
                 <div class="form-group form-user-elements">
                   <label for="feinput-${el.fe_id}">${el.fe_label}</label>
-                  <select id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="custom-select">
+                  <select id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="custom-select" ${(el.fe_is_required == 1)?"required":""} >
                     ${choices.map(choice => `
                       <option>${choice.fc_choice}</option>
                     `).join("")}
@@ -275,51 +336,56 @@ loadFormElements = (id, mode = null) => {
                 </div>
               `:""}
               
-              
-              ${(elementType == 5 || elementType == 10)?`
-                <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                  <textarea name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"></textarea>
-                </div>
-              `:""}
-  
-              
-              ${(elementType == 6 || elementType == 4)?`
-                <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                  <input type="text" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
-                </div>
-              `:""}
-              
               ${(elementType == 3)?`
+                <!-- Checkbox -->
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
                 ${choices.map(choice => `
                   <div class="form-check form-user-elements">
-                    <input type="checkbox" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}-${i}" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
+                    <input type="checkbox" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}-${i}" class="form-check-input" ${(el.fe_is_required == 1)?"required":""} placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
                     <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
                   </div>
                   `).join("")}
               `:""}
               
-              ${(elementType == 7)?`
+              
+              ${(elementType == 6 || elementType == 4)?`
+                <!-- Short answer / Email -->
                 <div class="form-group form-user-elements">
                   <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                  <input type="date" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
+                  <input type="text" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
+                </div>
+              `:""}
+
+              ${(elementType == 5 || elementType == 10)?`
+                <!-- Long answer / Email List -->
+                <div class="form-group form-user-elements">
+                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <textarea name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"></textarea>
+                </div>
+              `:""}
+  
+              ${(elementType == 7)?`
+                <!-- Date -->
+                <div class="form-group form-user-elements">
+                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <input type="date" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
                 </div>
               `:""}
               
               ${(elementType == 8)?`
+                <!-- Number -->
                 <div class="form-group form-user-elements">
                   <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                  <input type="number" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
+                  <input type="number" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}">
                 </div>
               `:""} 
   
               ${(elementType == 9)?`
                 <!-- fix this part -->
+                <!-- File Upload-->
                 <div class="form-group form-user-elements">
                   <label for="${el.fe_id}">${el.fe_label}</label>
-                  <input type="file" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" >
+                  <input type="file" name="feinput-${el.fe_id}" ${(el.fe_is_required == 1)?"required":""}  id="feinput-${el.fe_id}" >
                 </div>
               `:""}
   

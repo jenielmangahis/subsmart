@@ -33,19 +33,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">First Name</label><br/>
-                    <input type="text" class="form-control" name="first_name" id="first_name" required/>
+                    <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Last Name</label><br/>
-                    <input type="text" class="form-control" name="last_name" id="last_name" required/>
+                    <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Middle Name</label><br/>
-                    <input type="text" class="form-control" name="middle_name" id="middle_name" required/>
+                    <input type="text" class="form-control" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
                 </div>
             </div>
             <div class="col-md-2">
@@ -107,37 +107,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-12">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Business Name</label><br/>
-                    <input type="text" class="form-control" name="business_name" id="business_name" required/>
+                    <input type="text" class="form-control" name="business_name" id="business_name" />
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Email</label><br/>
-                    <input type="email" class="form-control" name="email" id="email" required/>
+                    <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" required/>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">SSN</label><br/>
-                    <input type="number" class="form-control" name="ssn" id="ssn" required/>
+                    <input type="number" class="form-control" name="ssn" id="ssn" />
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Date Of Birth </label><br/>
-                    <input type="text" class="form-control" name="date_of_birth" id="date_of_birth" required/>
+                    <input type="text" class="form-control date_of_birth" id="date_of_birth" required/>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Phone (H)</label><br/>
-                    <input type="number" class="form-control" name="phone_h" id="phone_h" required/>
+                    <input type="number" class="form-control" name="phone_h" id="phone_h" />
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Phone (W)</label><br/>
-                    <input type="number" class="form-control" name="phone_w" id="phone_w" required/>
+                    <input type="number" class="form-control" name="phone_w" id="phone_w" />
                 </div>
             </div>
             <div class="col-md-3">
@@ -198,22 +198,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-6">
                 <div class="form-group" id="customer_type_group">
                     <label for="">Image/Logo File</label><br/>
-                    <input type="text" class="form-control" name="img_path" id="img_path" required/>
+                    <input type="text" class="form-control" name="img_path" id="img_path" />
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="checkbox" name="sched_conflict" id="sched_conflict">
+                    <input type="checkbox" name="sched_conflict" id="sched_conflict" value="1">
                     <label for="sched_conflict"><span>Check for Schedule Conflict</span></label>
                 </div>
             </div>
             <hr>
             <div class="col-sm-12">
-                <div class="col-md-1" style="display: none;">
+                <!--<div class="col-md-1" style="display: none;">
                     <div class="form-group" id="customer_type_group">
                         <input type="text" class="form-control" name="prof_id" id="prof_id" value="<?php if(isset($profile_info->prof_id)){ echo $profile_info->prof_id; } ?>">
                     </div>
-                </div>
+                </div>-->
                 <div class="col-sm-12 text-right-sm" style="align:right;">
                     <button type="submit" class="btn btn-flat btn-primary"><span class="fa fa-send"></span> Save</button>
                 </div>

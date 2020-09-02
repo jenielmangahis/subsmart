@@ -2,9 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="col-xl-4 ui-state-default db-card" id="activity">
-    <div class="card">
+    <div class="card tile-container" style="top:0px; margin-bottom: 30px; height:auto;">
         <div class="card-body">
-            <h4 class="mt-0 header-title mb-4">Activity</h4>
+            <h4 class="mt-0 header-title mb-4" style="border-bottom:1px solid gray; padding-bottom:15px;"><i class="fa fa-tag" aria-hidden="true"></i> Activity</h4>
             <ol class="activity-feed mb-0">
                 <li class="feed-item">
                     <div class="feed-item-list"><span class="date">Jan 22</span> <span

@@ -30,7 +30,7 @@ class Vendors_model extends MY_Model {
 		}
     }
 	public function updateVendorWithVendorID($id, $data){
-	    $this->db->where('vendor_idid', $id);
+	    $this->db->where('vendor_id', $id);
 		$vendor = $this->db->update('accounting_vendors', $data);
 		if($vendor){
 			return true;

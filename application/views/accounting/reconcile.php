@@ -25,7 +25,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     display: none !important;
 }
 </style>
-
+<?php 
+$accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id);
+?>
     <!-- Popup -->
     <div class="modal fade" id="popup-opn" role="dialog">
         <div class="modal-dialog">
@@ -76,6 +78,65 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- End Close Popup -->
 
+    <!-- Finish Popup -->
+    <div class="modal fade" id="popup-finish" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="reconciliblock">
+                    <div class="error-block">
+                        <div class="error-ic">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="error-dt">
+                            <h4>You reconciled this account</h4>
+                            <p>To see a report of this reconcilation, click <a href= "#">view reconilation report<a>.Otherwise, you're done!</p>
+                        </div>
+                    </div>
+
+                    <div class="action-popup">
+                        <a href="#" class="btn-main uplobtn" id="menuButton">Attach statement</a>
+                        <a href="#" class="btn-main">Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Finish Popup -->
+
+    <!-- Hold Popup -->
+    <div class="modal fade" id="popup-hold" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="reconciliblock">
+                    <div class="error-block">
+                        <div class="error-ic">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="error-dt">
+                            <h4>Hold on! Your difference isn't $0.00 yet.</h4>
+                            <p>You aren't ready to reconcile yet because your transactions in QuickBooks don't match your statement. When they match, you'll have a difference of $0.00. Help me find the problem</p>
+                            <p>If you'd still like to proceed, confirm the following below, and then click Add adjustment and finish.</p>
+                            <p>
+                                <label>Adjustment Date*</label>
+                                <div class="row">
+                                    <div class="col-xs-1 date_picker">
+                                        <input type="text" required="required" id="adjustment_date" name="adjustment_date" class="form-control">
+                                    </div>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="action-popup">
+                        <a href="#" class="btn-main uplobtn" id="menuButton" onclick="openFinishpop()">Add adjustment and finish</a>
+                        <a href="#" class="btn-main">Go back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hold Popup -->
+
 
     <!-- Add Custom Tax Sidebar -->
     <div id="overlay-cus-tx" class=""></div>
@@ -120,7 +181,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->service_charge?>.00</h4></div>
                     <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->interest_earned?>.00</h4></div>
-                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->ending_balance-111111?>.00</h4></div>
+                    <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?>.00</h4></div>
+                    <div class="diff" style="display: none;"><?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?></div>
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown show">
@@ -137,7 +199,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               </a>
 
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#">Finish Now</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal"  onclick="getDiff()" >Finish Now</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-opn">Save for later</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#popup-cls">Close without saving</a>
                               </div>
@@ -147,7 +209,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="row">
                     <div class="col-sm-2">Statement ending date:</div>
-                    <div class="col-md-3">July 10, 2020</div>
+                    <div class="col-md-3"><?=date("d.m.Y", strtotime($rows[0]->ending_date));?></div>
                     <div class="col-md-1 hide-col">1PAYMENT</div>
                     <div class="col-md-1 hide-col">1DEPOSIT</div>
                     <div class="col-md-1 hide-col">DIFFERENCE</div>
@@ -167,7 +229,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="row">
                                     <div class="col-md-4"><h3>$<?=$rows[0]->ending_balance?>.00</h3></div>
                                     <div class="col-md-1"><h4>-</h4></div>
-                                    <div class="col-md-4"><h3>$111,111.00</h3></div>
+                                    <div class="col-md-4"><h3>$<?=($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned?>.00</h3></div>
                                 </div>
                                  <div class="row">
                                     <div class="col-md-4">STATEMENT ENDING BALANCE</div>
@@ -176,12 +238,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                  <div class="row">
                                     <div class="col-md-1"></div>
-                                    <div class="col-md-3"><h4>$111,111.00</h4></div>
+                                    <div class="col-md-3"><h4>$<?=$accBalance?>.00</h4></div>
                                     <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-md-5"><h4>$<?=$rows[0]->service_charge?>.00</h4></div>
+                                            <div class="col-md-5"><h4>$<?=$rows[0]->service_charge?></h4></div>
                                             <div class="col-md-2"><h4>+</h4></div>
-                                            <div class="col-md-5"><h4>$<?=$rows[0]->interest_earned?>.00</h4></div>
+                                            <div class="col-md-5"><h4>$<?=$rows[0]->interest_earned?></h4></div>
                                         </div>
                                     </div>
                                 </div>
@@ -199,7 +261,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-3">
                                 <div class="row">
-                                    <div class="col-md-12"><h3>$<?=$rows[0]->ending_balance-111111?>.00</h3></div>
+                                    <div class="col-md-12"><h3>$<?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?>.00</h3></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">DIFFERENCE</div>
@@ -356,7 +418,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                              <?php
                              foreach($rows as $row)
                               {
-                                echo "<input id='ending_date' type='hidden' value='".$row->ending_date."'/>";
+                                echo "<input id='ending_date' type='hidden' value='".date("d.m.Y", strtotime($rows[0]->ending_date))."'/>";
                               }
                              ?>
                              <div class="row" id="filtername" style="margin-bottom: 20px">
@@ -659,6 +721,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         var ending_date = $("#ending_date").val();
         $('#to_date').val(ending_date);
         $('#to_date'). attr("disabled","disabled");
+        $('.disableFuturedate').datepicker().datepicker('setEndDate',ending_date);
         /*var temp_date = ending_date.split(".");
         var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];*/
         /*$('.disableFuturedate').datepicker({
@@ -868,4 +931,31 @@ function closedelete(val) {
     })
   }
 }
+</script>
+<script type="text/javascript">
+    function getDiff()
+    {
+        var diff = $('.diff').text();
+        if(diff == 0)
+        {
+            $("#popup-hold").modal('hide');
+            $("#popup-finish").modal('show');
+        }
+        else
+        {
+            $("#popup-finish").modal('hide');
+            $("#popup-hold").modal('show');
+        }
+    }
+
+    function openFinishpop()
+    {
+        $("#popup-hold").modal('hide');
+        $("#popup-finish").modal('show');
+    }
+
+    $("#adjustment_date").click(function() {
+        var minDate = $('#ending_date').val();
+        $(this).datepicker().datepicker('setEndDate',minDate)
+    });
 </script>

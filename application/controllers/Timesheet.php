@@ -144,6 +144,8 @@ class Timesheet extends MY_Controller {
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['timesheet_settings'] = $this->timesheet_model->getTimeSheetSettings();
         $this->page_data['timesheet_day'] = $this->timesheet_model->getTimeSheetDay();
+        $this->page_data['user_logged'] = $this->checkLogin();
+
 		$date_this_week = array(
             "Monday" => date("M d",strtotime('monday this week')),
             "Tuesday" => date("M d",strtotime('tuesday this week')),
@@ -541,47 +543,96 @@ class Timesheet extends MY_Controller {
 
 
 	}
+	public function attendance(){
+        $this->load->model('timesheet_model');
+        $this->load->model('users_model');
+        $this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+        $this->page_data['user_roles'] = $this->users_model->getRoles();
+        $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
+
+        // get total numbers of "In" employees
+        $this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
+        // get total numbers of "Out" employees
+        $this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
+        // get total numbers of "Not Logged In Today" employees
+        $this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
+        // get total numbers of "Not Logged In Today" employees
+        $this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
+
+        $this->load->view('users/timesheet-admin', $this->page_data);
+    }
+
+    public function checkingInEmployee(){
+        $user_id = $this->input->post('id');
+        $query = $this->timesheet_model->checkInEmployee($user_id);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+
+    public function checkingOutEmployee(){
+        $user_id = $this->input->post('id');
+        $query = $this->timesheet_model->checkingOutEmployee($user_id);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+
+    public function realTime(){
+	    $hours = date('h:');
+	    $minutes = date('i ');
+	    $meridies = date('A');
+	    echo json_encode($hours.$minutes.$meridies);
+    }
+
+
 
 	// timesheet 
-	public function clock_in()
-	{
-		print_r($this->input->post());
-		$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Clock In',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_in' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
-		);
-
-
-
-		$this->timesheet_model->clockIn($data);
-
-	}
-	public function clock_out()
-	{
-		$this->load->model('timesheet_model');
-		$data = array(
-			'employees_id' => $this->input->post('clockin_user_id'),
-			'action' => 'Clock Out',
-			'timestamp' => $this->input->post('current_time_in'),
-			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_out' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
-		);
-
-		$this->timesheet_model->clockOut($data);
-
-	}
+//	public function clock_in()
+//	{
+//		print_r($this->input->post());
+//		$this->load->model('timesheet_model');
+//		$data = array(
+//			'employees_id' => $this->input->post('clockin_user_id'),
+//			'action' => 'Clock In',
+//			'timestamp' => $this->input->post('current_time_in'),
+//			'entry_type' => 'Normal'
+//			/*'user_id' => $this->input->post('clockin_user_id'),
+//			'company_id' => $this->input->post('clockin_company_id'),
+//			'clock_in' => $this->input->post('current_time_in'),
+//			'session_key' => $this->input->post('clockin_sess'),
+//			'status' => $this->input->post('clockin_status')*/
+//		);
+//
+//
+//
+//		$this->timesheet_model->clockIn($data);
+//
+//	}
+//	public function clock_out()
+//	{
+//		$this->load->model('timesheet_model');
+//		$data = array(
+//			'employees_id' => $this->input->post('clockin_user_id'),
+//			'action' => 'Clock Out',
+//			'timestamp' => $this->input->post('current_time_in'),
+//			'entry_type' => 'Normal'
+//			/*'user_id' => $this->input->post('clockin_user_id'),
+//			'company_id' => $this->input->post('clockin_company_id'),
+//			'clock_out' => $this->input->post('current_time_in'),
+//			'session_key' => $this->input->post('clockin_sess'),
+//			'status' => $this->input->post('clockin_status')*/
+//		);
+//
+//		$this->timesheet_model->clockOut($data);
+//
+//	}
 
 
 	// timesheet 
@@ -791,8 +842,10 @@ class Timesheet extends MY_Controller {
 	}
 
 	public function addingProjects(){
+	    $user_id = $this->input->post('user');
         $project = $this->input->post('project');
-        $query = $this->timesheet_model->addingProjects($project);
+        $next_week = $this->input->post('nxt_week');
+        $query = $this->timesheet_model->addingProjects($project,$user_id,$next_week);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -841,7 +894,8 @@ class Timesheet extends MY_Controller {
 	    $day = $this->input->post('day');
         $date = $this->input->post('day_date');
         $total = $this->input->post('total');
-        $update = array('date'=>$date,'total_duration'=>$total,'day'=>$day);
+        $user_id = $this->input->post('user_id');
+        $update = array('date'=>$date,'total_duration'=>$total,'day'=>$day,'users_id'=>$user_id);
         $this->timesheet_model->addingTotalInDay($update,$id);
     }
 
@@ -849,8 +903,10 @@ class Timesheet extends MY_Controller {
 	    $week = $this->input->post('week');
 	    $date = $this->input->post('date');
 	    $total = $this->input->post('total');
+	    $user_id = $this->input->post('user_id');
+	    $twd_id = $this->input->post('twd_id');
 	    $update = array('date'=>$date,'total_duration'=>$total);
-	    $this->timesheet_model->updateTotalDuration($update,$week);
+	    $this->timesheet_model->updateTotalDuration($update,$week,$twd_id,$user_id);
     }
 
     public function updateProjectName(){
@@ -875,6 +931,7 @@ class Timesheet extends MY_Controller {
     }
 
     public function showTimesheetSettings(){
+	    $user_id = $this->input->get('user');
 	    $week = $this->input->get('week');
         $timesheet_id = null;
         $monday = null;
@@ -891,7 +948,6 @@ class Timesheet extends MY_Controller {
         $day_id_fri = null;
         $day_id_sat = null;
         $day_id_sun = null;
-        $timesheet_duration_w = "00:00";
         $date_this_week = array(
             "Monday" => date("M d",strtotime('monday '.$week)),
             "Tuesday" => date("M d",strtotime('tuesday '.$week)),
@@ -910,7 +966,8 @@ class Timesheet extends MY_Controller {
             5 => date("Y-m-d",strtotime('saturday '.$week)),
             6 => date("Y-m-d",strtotime('sunday '.$week)),
         );
-        $timesheet_settings = $this->timesheet_model->getTimeSheetDayByWeek($date_week_check);
+        $timesheet_settings = $this->timesheet_model->getTimeSheetByWeek($date_week_check);
+        $timesheet_by_user = $this->timesheet_model->getTimeSheetByUser($user_id);
 
 	    $display = '';
 	    $display .= '<thead>';
@@ -929,6 +986,7 @@ class Timesheet extends MY_Controller {
 	    $display .= '</thead>';
 	    $display .= '<tbody id="tsSettingsTblTbody">';
 	    foreach ($timesheet_settings as $setting):
+                if ($timesheet_by_user[0]->users_id == $setting->users_id):
             $timesheet_id = $setting->id;
             $timesheet_duration_w = (!empty($setting->total_duration_w))?$setting->total_duration_w:"00:00";
             $timesheet_day = $this->timesheet_model->getTimeSheetDayById($timesheet_id);
@@ -956,6 +1014,7 @@ class Timesheet extends MY_Controller {
                         $sunday = $days->duration;
                     }
             }
+
             $display .= '<tr data-id="'.$timesheet_id.'" id="tsSettingsRow">';
                 $display .= '<td><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->projects).'</span><a href="#" id="editProjectName" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->projects).'"><i class="fa fa-pencil-alt"></i></a></td>';
                 $display .= '<td><input type="text" name="monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" value="'.$monday.'" placeholder="HH:MM"></td>';
@@ -969,7 +1028,6 @@ class Timesheet extends MY_Controller {
                 $display .= '<td><a href="#" id="removeProject" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->projects).'"><i class="fa fa-times fa-lg"></i></a></td>';
             $display .= '</tr>';
             $timesheet_id = null;
-            $timesheet_duration_w = "00:00";
             $monday = null;
             $tuesday = null;
             $wednesday = null;
@@ -983,9 +1041,10 @@ class Timesheet extends MY_Controller {
             $day_id_thu = null;
             $day_id_fri = null;
             $day_id_sat = null;
+                endif;
         endforeach;
         $day_id_sun = null;
-            if ($week != 'last week'):
+            if (($week != 'last week') && ($week != 'next week')):
             $display .= '<tr>';
                 $display .= '<td><a href="#" id="addProject" style="color: #0b97c4;font-weight: bold"><i class="fa fa-plus"></i>&nbsp;Project</a></td>';
                 $display .= '<td><input type="text" class="form-control ts-duration" readonly></td>';
@@ -1016,6 +1075,7 @@ class Timesheet extends MY_Controller {
         $data_id_sun = null;
         $ts_total_duration_day = $this->timesheet_model->getTimeSheetTotalInDay($date_week_check);
 	    foreach ($ts_total_duration_day as $total_duration){
+            if ($timesheet_by_user[0]->users_id == $total_duration->users_id):
 	        if ($total_duration->day == 'monday'){
 	            $duration_mon = $total_duration->total_duration;
                 $data_id_mon = $total_duration->id;
@@ -1038,9 +1098,18 @@ class Timesheet extends MY_Controller {
                 $duration_sun = $total_duration->total_duration;
                 $data_id_sun = $total_duration->id;
             }
+            endif;
         }
+        $total_week_duration = "00:00";
+        $ts_total_duration_week_id = null;
         $ts_total_duration_week = $this->timesheet_model->getTotalWeekDuration($date_week_check);
-	    $total_week_duration = (!empty($ts_total_duration_week[0]->total_duration))?$ts_total_duration_week[0]->total_duration:"00:00";
+	    foreach ($ts_total_duration_week as $total_duration){
+            if ($timesheet_by_user[0]->users_id == $total_duration->users_id){
+                $total_week_duration = $total_duration->total_duration;
+                $ts_total_duration_week_id = $total_duration->id;
+            }
+        }
+
 	    $display .= '<tfoot>';
             $display .= '<tr>';
                 $display .= '<th>Total</th>';
@@ -1051,7 +1120,7 @@ class Timesheet extends MY_Controller {
                 $display .= '<th><span id="totalFriday" data-id="'.$data_id_fri.'">'.$duration_fri.'</span></th>';
                 $display .= '<th><span id="totalSaturday" data-id="'.$data_id_sat.'">'.$duration_sat.'</span></th>';
                 $display .= '<th><span id="totalSunday" data-id="'.$data_id_sun.'">'.$duration_sun.'</span></th>';
-                $display .= '<th><span id="totalWeekDuration">'.$total_week_duration.'</span></th>';
+                $display .= '<th><span id="totalWeekDuration-'.$user_id.'" data-id="'.$ts_total_duration_week_id.'">'.$total_week_duration.'</span></th>';
                 $display .= '<th></th>';
             $display .= '</tr>';
 	    $display .= '</tfoot>';
@@ -1060,28 +1129,100 @@ class Timesheet extends MY_Controller {
     public function getEmployees(){
 	    $name = $this->input->get('search');
 	    $users = $this->users_model->getUsersByName($name);
+	    $roles = $this->users_model->getRoles();
         $data = array();
         $data[] = array(
             'id' =>   'teammates',
             'text' => 'Teammates',
+            'subtext' => 'Default'
         );
 	    foreach ($users as $employee){
-	        $role = '';
-	        if ($employee->role == 6){
-                $role = 'IT';
-            }elseif ($employee->role == 3){
-                $role = 'Admin';
-            }elseif ($employee->role == 1){
-                $role = 'Owner';
+	        $users_role = '';
+	        foreach ($roles as $role){
+	            if ($role->id == $employee->role){
+                    $users_role = $role->title;
+                }
             }
             $data[] = array(
                 'id' =>   $employee->id,
                 'text' => $employee->FName." ".$employee->LName,
-                'subtext' => $role
+                'subtext' => $users_role
             );
         }
 
         echo json_encode($data);
+
+
+    }
+    public function serverTime(){
+	    $duration = '60 minute';
+	    $query = $this->db->get_where('user_break',array('user_id'=>$this->session->userdata('logged')['id'],'date'=>date('Y-m-d')));
+	    if ($query->num_rows() == 1){
+            $result = $query->result();
+            $remaining_time = explode(":",$result[0]->duration);
+            $duration = $remaining_time[0].' minute '.$remaining_time[1].' second';
+        }
+
+	    $date_time = date('M d, Y H:i:s');
+        $end_time = date('M d, Y H:i:s', strtotime($duration));
+	    $data = new stdClass();
+	    $data->date_time = $date_time;
+	    $data->end_time = $end_time;
+	    echo json_encode($data);
+    }
+
+    public function startBreak(){
+        $end_time = $this->input->post('break_time');
+        $today = date('Y-m-d');
+        $user_id =  $this->session->userdata('logged')['id'];
+        $query = $this->db->get_where('user_break',array('date'=>$today,'user_id'=>$user_id));
+        if ($query->num_rows() == 0){
+            $data = array(
+              'date' => $today,
+              'user_id' => $user_id,
+              'break_end_time' => date('Y-m-d H:i:s',strtotime($end_time)),
+              'duration' => '60:00',
+              'status' => 1
+            );
+            $this->db->insert('user_break',$data);
+            $break_id = $this->db->insert_id();
+            $break_end = $this->db->get_where('user_break',array('id' => $break_id));
+            $break_data = $break_end->result();
+            $break_session = array(
+                'break' => date('M d, Y H:i:s',strtotime($break_data[0]->break_end_time)),
+                'on_break' => 'clock-break',
+                'timer_icon' => 'style="color:red;" ',
+                'active' => 1
+            );
+            $this->session->set_userdata($break_session);
+
+        }
+        echo json_encode($this->session->userdata('break'));
+    }
+
+    public function stopBreak(){
+        $unset = array('break','on_break','timer_icon');
+        $this->session->unset_userdata($unset);
+	    $remaining_min = $this->input->post('minutes');
+	    $remaining_sec = $this->input->post('seconds');
+	    $user_id =  $this->session->userdata('logged')['id'];
+        $duration = $remaining_min.' minute'.$remaining_min.' second';
+	    $check = array(
+	        'user_id' => $user_id,
+            'date' => date('Y-m-d')
+        );
+	    $update = array(
+	        'break_end_time' => date('Y-m-d H:i:s', strtotime($duration)),
+	        'duration' => $remaining_min.":".$remaining_sec,
+            'status' => 2
+        );
+	    $this->db->where($check);
+	    $this->db->update('user_break',$update);
+        $break_session = array(
+            'remaining_time' => $remaining_min.":".$remaining_sec
+        );
+        $this->session->set_userdata($break_session);
+        echo json_encode($this->session->userdata('remaining_time'));
 
 
     }

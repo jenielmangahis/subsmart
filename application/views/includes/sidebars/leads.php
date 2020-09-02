@@ -25,6 +25,10 @@
         <li class="nav-header">Leads</li>
         <li class="submenus <?php if($this->uri->uri_string() == 'services') { echo 'active'; }?>"><a href="<?php echo base_url('services') ?>" title="My Leads"><span
                         class="fa fa-file"></span>My Leads</a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'services') { echo 'active'; }?>"><a href="<?php echo base_url('services') ?>" title="Online Lead Form"><span
+                        class="fa fa-file"></span>Online Lead Form</a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'services') { echo 'active'; }?>"><a href="<?php echo base_url('services') ?>" title="Online Lead Form"><span
+                        class="fa fa-file"></span>Video Estimate</a></li>
         <?php /*<li class="submenus <?php if($this->uri->uri_string() == 'items') { echo 'active'; }?>"><a href="<?php echo base_url('items') ?>" title="Services"><span class="fa fa-list"></span>Items</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'dashboard/blank') { echo 'active'; }?>"><a href="<?php echo base_url('dashboard/blank/?page=Item Vendors') ?>" title="Item Vendors"><span class="fa fa-cube"></span>Item Vendors</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'plans') { echo 'active'; }?>"><a href="<?php echo base_url('plans') ?>" title="Plans"><span class="fa fa-cubes"></span>Plans</a></li>

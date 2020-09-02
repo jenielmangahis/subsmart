@@ -255,6 +255,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div><!-- end row -->
 
+			<div class="row d-none d-lg-flex mb-1">
+				<div class="col-sm-6">
+					<div class="dropdown dropdown-inline filter-date">
+						<div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+							<span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name">This Year</span> <span class="caret"></span>
+						</div>
+						<ul class="dropdown-menu btn-block" role="menu">
+							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-12-31" data-name="This Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-09-30" data-name="This Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q3</a></li>
+							<li data-filter-date="item" data-date-start="2020-04-01" data-date-end="2020-06-30" data-name="This Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q2</a></li>
+							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-03-31" data-name="This Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q1</a></li>
+							<li data-filter-date="item" data-date-start="2020-08-01" data-date-end="2020-08-31" data-name="This Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Month</a></li>
+							<li data-filter-date="item" data-date-start="2020-08-03" data-date-end="2020-08-09" data-name="This Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Week</a></li>
+							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-12-31" data-name="Previous Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year</a></li>
+							<li data-filter-date="item" data-date-start="2019-10-01" data-date-end="2019-12-31" data-name="Previous Year - Q4" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q4</a></li>
+							<li data-filter-date="item" data-date-start="2019-07-01" data-date-end="2019-09-30" data-name="Previous Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q3</a></li>
+							<li data-filter-date="item" data-date-start="2019-04-01" data-date-end="2019-06-30" data-name="Previous Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q2</a></li>
+							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-03-31" data-name="Previous Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q1</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-07-31" data-name="Previous Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Month</a></li>
+							<li data-filter-date="item" data-date-start="2020-07-27" data-date-end="2020-08-02" data-name="Previous Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Week</a></li>
+							<li data-filter-date="item" data-date-start="2018-01-01" data-date-end="2018-12-31" data-name="FY 2018" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2018</a></li>
+							<li data-filter-date="item" data-date-start="2017-01-01" data-date-end="2017-12-31" data-name="FY 2017" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2017</a></li>
+							<li data-filter-date="item" data-date-start="2016-01-01" data-date-end="2016-12-31" data-name="FY 2016" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2016</a></li>
+						</ul>
+					</div>
+					<span class="margin-left">For <span data-date-filter="date-interval">01-Jan-2020 to 31-Dec-2020</span></span>
+				</div>
+				<div class="col-sm-6 text-right-sm">
+					<span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">customize</span>
+					<div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
+					</div>
+				</div>
+            </div>
+
+
+             <div class="row d-none d-lg-flex sortable2">
+                 <?php
+                 $modules = explode(",", $dashboard_sort->ds_values);
+                 for($x=0;$x<count($modules);$x++){
+					 include viewPath('dashboard/'.$modules[$x]);
+                 }
+                 ?>
+            </div><!-- end row -->
+			
             <div class="row d-none d-lg-flex">
                 <div class="col-xl-12">
                     <!-- TradingView Widget BEGIN -->
@@ -385,51 +430,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!-- TradingView Widget END -->
                 </div>
             </div>
-
-			<div class="row d-none d-lg-flex mb-1">
-				<div class="col-sm-6">
-					<div class="dropdown dropdown-inline filter-date">
-						<div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-							<span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name">This Year</span> <span class="caret"></span>
-						</div>
-						<ul class="dropdown-menu btn-block" role="menu">
-							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-12-31" data-name="This Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year</a></li>
-							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-09-30" data-name="This Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q3</a></li>
-							<li data-filter-date="item" data-date-start="2020-04-01" data-date-end="2020-06-30" data-name="This Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q2</a></li>
-							<li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-03-31" data-name="This Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Year - Q1</a></li>
-							<li data-filter-date="item" data-date-start="2020-08-01" data-date-end="2020-08-31" data-name="This Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Month</a></li>
-							<li data-filter-date="item" data-date-start="2020-08-03" data-date-end="2020-08-09" data-name="This Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">This Week</a></li>
-							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-12-31" data-name="Previous Year" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year</a></li>
-							<li data-filter-date="item" data-date-start="2019-10-01" data-date-end="2019-12-31" data-name="Previous Year - Q4" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q4</a></li>
-							<li data-filter-date="item" data-date-start="2019-07-01" data-date-end="2019-09-30" data-name="Previous Year - Q3" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q3</a></li>
-							<li data-filter-date="item" data-date-start="2019-04-01" data-date-end="2019-06-30" data-name="Previous Year - Q2" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q2</a></li>
-							<li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-03-31" data-name="Previous Year - Q1" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Year - Q1</a></li>
-							<li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-07-31" data-name="Previous Month" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Month</a></li>
-							<li data-filter-date="item" data-date-start="2020-07-27" data-date-end="2020-08-02" data-name="Previous Week" role="presentation"><a role="menuitem" tabindex="-1" href="#">Previous Week</a></li>
-							<li data-filter-date="item" data-date-start="2018-01-01" data-date-end="2018-12-31" data-name="FY 2018" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2018</a></li>
-							<li data-filter-date="item" data-date-start="2017-01-01" data-date-end="2017-12-31" data-name="FY 2017" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2017</a></li>
-							<li data-filter-date="item" data-date-start="2016-01-01" data-date-end="2016-12-31" data-name="FY 2016" role="presentation"><a role="menuitem" tabindex="-1" href="#">FY 2016</a></li>
-						</ul>
-					</div>
-					<span class="margin-left">For <span data-date-filter="date-interval">01-Jan-2020 to 31-Dec-2020</span></span>
-				</div>
-				<div class="col-sm-6 text-right-sm">
-					<span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">customize</span>
-					<div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-						<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize"> <label class="onoffswitch-label" for="onoff-customize"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
-					</div>
-				</div>
-            </div>
-
-
-             <div class="row d-none d-lg-flex sortable2">
-                 <?php
-                 $modules = explode(",", $dashboard_sort->ds_values);
-                 for($x=0;$x<count($modules);$x++){
-                     include viewPath('dashboard/'.$modules[$x]);
-                 }
-                 ?>
-            </div><!-- end row -->
         </div><!-- end container-fluid -->
     </div><!-- page wrapper end -->
 
@@ -988,4 +988,10 @@ options: {
 responsive: true
 }
 });
+$(document).ready(function() {
+	$('#myStatsTable').DataTable({
+		"paging": false,
+		"filter":false
+	});
+} );
 </script>

@@ -13,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Portal Status :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>Guardian</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($access_info)){  if($access_info->portal_status == 1){echo "On";}else{echo "Off";}; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Login :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1/11/1111</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->login; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>CustomFld1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->custom_field1; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Cancel Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> AC</b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($access_info)){ echo $access_info->cancel_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Cancel Reason :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->cancel_reason; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>
@@ -65,7 +65,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomFld2 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>Recuring</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($access_info)){ echo $access_info->custom_field2; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -74,7 +74,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Collection Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->collect_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -82,34 +82,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Collection Amt :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->collect_amount; }; ?></b> </label>
                             </td>
                         </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >SSN :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >DOB :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
-                            </td>
-                        </tr>
-
                         </tbody>
                     </table>
                 </div>
             </div>
-
             <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">View/Edit Module</a>&nbsp;&nbsp;
-
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
 

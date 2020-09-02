@@ -199,7 +199,7 @@ class Inventory extends MY_Controller
 
         $f = fopen('php://memory', 'w');
   
-        $fields = array('Model #', 'Name', 'Price', 'Description', 'Brand', 'Item Vendor', 'Item Type', 'Item Cost', 'Link/Url', 'Image', 'QTH-OH', 'Locations [loc->qty]');
+        $fields = array('Model #', 'Name', 'Price', 'Description', 'Brand', 'Item Vendor', 'Item Type', 'Item Cost', 'Link/Url', 'Image', 'QTH-OH', 'Locations');
         fputcsv($f, $fields, $delimiter);
 
         if (!empty($items)) {       

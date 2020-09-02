@@ -188,6 +188,7 @@ $route['accounting/reconcile/edit/(:any)'] = 'reconcile/edit/$1';
 $route['accounting/reconcile/update/(:any)'] = 'reconcile/update/$1';
 $route['accounting/reconcile/do_upload/(:any)'] = 'reconcile/do_upload/$1';
 $route['accounting/reconcile/delete/reconcile'] = 'reconcile/delete';
+$route['accounting/reconcile/view/report/(:any)'] = 'reconcile/report/$1';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
@@ -274,3 +275,6 @@ $route['settings/sms_templates'] = 'Settings/sms_templates';
 $route['settings/email_branding'] = 'Settings/email_branding';
 $route['settings/online_payments'] = 'Settings/online_payments';
 
+//leads
+$route['online_leads'] = 'Inquiries/online_lead';
+$route['video_estimate'] = 'Inquiries/video_estimate';

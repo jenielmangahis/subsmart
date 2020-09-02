@@ -1,5 +1,5 @@
 <script>
-    $(odcument).ready(function () {
+    $(document).ready(function () {
         var table_lt = $('#leadtype').DataTable({
             "lengthChange": false,
             "searching" : false,
