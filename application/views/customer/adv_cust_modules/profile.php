@@ -9,13 +9,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <tr>
                     <td width="50%" align="left" valign="top">
                         <div class="contacttext">
-                            <h3 style="font-size: 15px; margin-bottom: 10px;">Kyle Test</h3>
+                            <h3 style="font-size: 15px; margin-bottom: 10px;"><?php if(isset($profile_info)){ echo $profile_info->first_name.' '.$profile_info->last_name; } ?></h3>
                         </div>
 
                         <div class="contacttext">
                             <div>
-                                (850) 324-8636
-                                <a id="email-confirm" href="#" style="display:block;margin-top: 5px;" title="kylenguyenmailbox@gmail.com" class="js-qwynlraxz">kylenguyenmailbox@gmail.com</a>
+                                <?php if(isset($profile_info)){ echo $profile_info->phone_h; }; ?>
+                                <a id="email-confirm" href="#" style="display:block;margin-top: 5px;width:180px;" title="kylenguyenmailbox@gmail.com" class="js-qwynlraxz"><?php if(isset($profile_info)){ echo $profile_info->email; }; ?></a>
                                 <input type="hidden" name="email-confirm-hidden" id="email-confirm-hidden" value="kylenguyenmailbox@gmail.com">
 
                             </div>
@@ -31,7 +31,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                         </div>
                         <div style="margin-right:15px; margin-top:6px;" align="left" class="normaltext1">
-                            <a href="https://app.creditrepaircloud.com/userdesk/profile/NTk=" class="js-qwynlraxz">
+                            <!--<a href="<?php echo url('/customer/index/tab2/'.$profile_info->prof_id).'/mt5'; ?>" class="normaltext1" style="color:#58bc4f;">-->
+                            <a href="<?php echo url('/customer/add_advance/'.$profile_info->prof_id).'/tab1'; ?>" class="normaltext1" style="color:#58bc4f;">
                                 View/Edit Profile
                             </a>&nbsp;&nbsp;
                         </div>

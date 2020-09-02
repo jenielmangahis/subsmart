@@ -23,7 +23,8 @@ class Workcalender extends MY_Controller
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'assets/plugins/timeline_calendar/main.css',
+            'assets/libs/jcanvas/global.css',
+            'assets/plugins/timeline_calendar/main.css'
         ));
 
         add_footer_js(array(
@@ -206,16 +207,34 @@ class Workcalender extends MY_Controller
         }
 
         $get_users = $this->Users_model->getUsers();
+        $get_recent_users = $this->Users_model->getRecentUsers();
 
         $resources_users = array();
         $resources_user_events = array();
 
         if(!empty($get_users)) {
             $inc = 0;
+            $default_imp_img = base_url('uploads/users/default.png');
             foreach($get_users as $get_user) {
+
+                $url_png  = urlUpload('users/' .  $get_user->profile_img . '.png');
+                $url_jpeg = urlUpload('users/' .  $get_user->profile_img . '.jpeg');
+                $url_jpg  = urlUpload('users/' .  $get_user->profile_img . '.jpg');
+
+                if( $get_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $get_user->profile_img . '.png') ) {
+                    $default_imp_img = $url_png;
+                }elseif($get_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $get_user->profile_img . '.jpeg') ) {
+                    $default_imp_img = $url_jpeg;
+                }elseif($get_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $get_user->profile_img . '.jpg') ) {
+                    $default_imp_img = $url_jpg;
+                } else {
+                    $default_imp_img = base_url('uploads/users/default.png');
+                }
+
                 $resources_users[$inc]['id'] = $get_user->id;
                 $resources_users[$inc]['building'] = 'Employee';
                 $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
+                $resources_users[$inc]['imageurl'] = $default_imp_img; 
             $inc++;               
             }
         }
@@ -255,6 +274,7 @@ class Workcalender extends MY_Controller
             }
         }     
 
+        $this->page_data['get_recent_users'] = $get_recent_users;
         $this->load->model('Users_model', 'user_model');
         $this->page_data['resources_users'] = $resources_users;
         $this->page_data['resources_user_events'] = $resources_user_events;

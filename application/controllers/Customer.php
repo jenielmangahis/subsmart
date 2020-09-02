@@ -170,13 +170,75 @@ class Customer extends MY_Controller
         }else{
             echo "Error";
         }
+    }
 
+    public function crud_alarm_module(){
+        $input = $this->input->post();
+        unset($input['alarm_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_alarm")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+    }
+
+    public function crud_office_module(){
+        $input = $this->input->post();
+        $input['rebate'] = $input['rebate'][0];
+        $input['commision_scheme'] = $input['commision_scheme'][0];
+        $input['pso'] = $input['pso'][0];
+        unset($input['office_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_office")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+    }
+
+    public function crud_admin_module(){
+        $input = $this->input->post();
+        unset($input['admin_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_admin")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+    }
+
+    public function crud_tech_module(){
+        $input = $this->input->post();
+
+        unset($input['tech_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_tech")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
+    }
+
+    public function crud_access_module(){
+        $input = $this->input->post();
+        $input['portal_status'] = $input['portal_status'][0];
+        unset($input['access_switch']);
+
+        if($this->customer_ad_model->add($input,"acs_access")){
+            echo "Success";
+        }else{
+            echo "Error";
+        }
     }
 
     public function add_advance()
     {
+        $userid = $this->uri->segment(3);
         $user_id = logged('id');
-        $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"acs_profile");
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->load->view('customer/add_advance', $this->page_data);
     }
@@ -392,6 +454,7 @@ class Customer extends MY_Controller
         }
 
         $this->page_data['customers'] = $this->customer_model->getAllByUserId();
+
         $user_id = logged('id');
         $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
         if(!$check_if_exist){
@@ -400,10 +463,32 @@ class Customer extends MY_Controller
             $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
             $this->customer_ad_model->add($input,"ac_module_sort");
         }
+        $user_id = logged('id');
+
+        $userid = $this->uri->segment(4);
+
+        if(!isset($userid) || empty($userid)){
+            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+            $userid =  $get_id[0]->prof_id;
+        }
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['tech_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_tech");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['admin_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_admin");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['owner_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+        }
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['cust_tab'] = $this->uri->segment(3);
+        $this->page_data['minitab'] = $this->uri->segment(5);
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+
         $this->load->view('customer/list', $this->page_data);
     }
     public function view($id)

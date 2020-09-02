@@ -139,25 +139,26 @@ class Users extends MY_Controller {
 	}
 
 	// added for tracking Timesheet of employees: Attendance View
-	public function timesheet()
-	{	
-		$this->load->model('timesheet_model');
-		$this->load->model('users_model');
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-		$this->page_data['users'] = $this->users_model->getUsers();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-
-		// get total numbers of "In" employees
-		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
-		// get total numbers of "Out" employees
-		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
-		// get total numbers of "Not Logged In Today" employees
-		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
-		// get total numbers of "Not Logged In Today" employees
-		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
-		
-		$this->load->view('users/timesheet-admin', $this->page_data);
-	}
+//	public function timesheet()
+//	{
+//		$this->load->model('timesheet_model');
+//		$this->load->model('users_model');
+//		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+//		$this->page_data['users'] = $this->users_model->getUsers();
+//		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+//		$this->page_data['user_roles'] = $this->users_model->getRoles();
+//
+//		// get total numbers of "In" employees
+//		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
+//		// get total numbers of "Out" employees
+//		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
+//		// get total numbers of "Not Logged In Today" employees
+//		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
+//		// get total numbers of "Not Logged In Today" employees
+//		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
+//
+//		$this->load->view('users/timesheet-admin', $this->page_data);
+//	}
 
 	// added for tracking Timesheet of employees: Schedule View
 	public function employee()

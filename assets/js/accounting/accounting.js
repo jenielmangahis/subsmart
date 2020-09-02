@@ -1728,7 +1728,9 @@ $(document).ready(function () {
 
     });
     $(document).on('click','#updateVC',function () {
-        $('.loader').show();
+        $(".loader").fadeIn('fast',function(){
+            $('.loader').show();
+        });
         var transaction_id = $('#vcTransId').val();
         var vc_id = $('#vendorCreditId').val();
         var vendor_id = $('#vcVendorId').val();
@@ -1799,7 +1801,9 @@ $(document).ready(function () {
     });
     //Delete Vendor Credit
     $(document).on('click','#deleteVendorCredit',function () {
-        $('.loader').show();
+        $(".loader").fadeIn('fast',function(){
+            $('.loader').show();
+        });
         var id = $(this).attr('data-id');
         Swal.fire({
             title: 'Are you sure?',
@@ -2231,3 +2235,137 @@ $(document).on('click','#deleteReceipt',function () {
 });
 
 
+/** Invoice **/
+$(document).on('click','#closeAddInvoiceModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#add-invoice').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#add-invoice').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });
+	
+/** Receive Payment **/
+$(document).on('click','#closeReceivePaymentModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#receive-payment').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#receive-payment').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });
+	
+/** Estimate **/
+$(document).on('click','#closeAddEstimateModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#add-estimate').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#add-estimate').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });

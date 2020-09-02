@@ -111,24 +111,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="rb-01">
                                             <ul class="nav nav-tabs border-0">
                                                 <li class="nav-item">
-                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab==0){echo "active";} ?>" data-toggle="tab" href="#basic">Customer Manager</a>
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";} ?>" data-toggle="tab" href="#basic">Customer Manager</a>
                                                 </li>
+                                                <?php //if (isset($profile_info)) :  ?>
                                                 <li class="nav-item">
-                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab==1){echo "active";} ?>" data-toggle="tab" href="#advance">Customer Module Layout</a>
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab2'){echo "active";} ?>" data-toggle="tab" href="#advance">Customer Module Layout</a>
                                                 </li>
+                                                <?php //endif; ?>
                                             </ul>
                                         </div>
                                     </div>
 
                                     <div class="tab-content mt-4" >
-                                        <div class="tab-pane <?php if($cust_tab==0){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
+                                        <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
                                                 <div class="col-xl-9">
                                                     <div class="card">
                                                         <div class="card-body" style="padding-bottom:0px;">
-                                                            <div class="col-sm-6 col-md-12">
-                                                                <h3 class="page-title mobile-left">Customers List</h3>
-                                                            </div>
+
                                                             <div class="col-sm-6 col-md-12">
                                                                 <div class="float-right d-md-block">
                                                                     <div class="dropdown">
@@ -176,22 +176,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             </thead>
 
                                                                             <tbody>
-                                                                            <?php if (isset($customers)) : ?>
-                                                                                <?php foreach ($customers as $customer) : ?>
 
+                                                                           <?php foreach ($profiles as $customer) : ?>
                                                                                     <tr>
-                                                                                        <td><?php echo $customer->contact_name; ?></td>
-                                                                                        <td>&nbsp;</td>
-                                                                                        <td>&nbsp;</td>
+                                                                                        <td>
+                                                                                            <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>" style="color:#32243d;">
+                                                                                                <?= ($customer) ? $customer->first_name.' '.$customer->middle_name[0].'. '.$customer->last_name : ''; ?>
+                                                                                            </a>
+                                                                                        </td>
+                                                                                        <td><?= $customer->city; ?></td>
+                                                                                        <td><?= $customer->state; ?></td>
                                                                                         <td></td>
-                                                                                        <td><?php echo $customer->contact_email; ?></td>
-                                                                                        <td>&nbsp;</td>
+                                                                                        <td><?php echo $customer->email; ?></td>
+                                                                                        <td>&nbsp</td>
                                                                                         <td></td>
                                                                                         <td></td>
                                                                                         <td></td>
                                                                                         <td></td>
-                                                                                        <td><?php echo $customer->phone; ?></td>
-                                                                                        <td><?php echo $customer->status; ?></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
                                                                                         <td class="text-right">
                                                                                             <div class="dropdown dropdown-btn open">
                                                                                                 <button class="btn btn-default dropdown-toggle" type="button"
@@ -201,11 +204,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                             class="caret-holder"><span
                                                                                                                 class="caret"></span></span>
                                                                                                 </button>
-                                                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                                                                    aria-labelledby="dropdown-edit">
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-user icon"></span> View</a>
+                                                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"aria-labelledby="dropdown-edit">
+                                                                                                    <li role="presentation">
+                                                                                                        <a role="menuitem" tabindex="-1" href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>">
+                                                                                                            <span class="fa fa-user icon"></span> View
+                                                                                                        </a>
                                                                                                     </li>
                                                                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                                                                href="#"><span
@@ -249,7 +252,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                 <?php endforeach; ?>
-                                                                            <?php endif; ?>
                                                                             </tbody>
 
                                                                         </table>
@@ -278,11 +280,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     </thead>
 
                                                                     <tbody>
-                                                                    <?php if (isset($customers)) : ?>
-                                                                        <?php foreach ($customers as $customer) : ?>
-
+                                                                        <?php foreach ($profiles as $customer) : ?>
                                                                             <tr>
-                                                                                <td><?php echo $customer->contact_name; ?></td>
+                                                                                <td>
+                                                                                    <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>" style="color:#32243d;">
+                                                                                        <?= $customer->first_name.' '.$customer->middle_name[0].'. '.$customer->last_name; ?>
+                                                                                    </a>
+                                                                                </td>
                                                                                 <td>
                                                                                     <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
                                                                                         <img src="https://app.creditrepaircloud.com/application/images/email-icon.png" border="0" title="Internal Note">
@@ -302,7 +306,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 </td>
                                                                             </tr>
                                                                         <?php endforeach; ?>
-                                                                    <?php endif; ?>
+
                                                                     </tbody>
 
                                                                 </table>
@@ -318,10 +322,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </style>
                                         </div>
 
-                                        <div class="tab-pane <?php if($cust_tab==1){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
-                                            <div class="col-sm-6 col-md-12 col-xl-12">
-                                                <h3 class="page-title mobile-left">Customer List View</h3>
-                                            </div>
+                                        <div class="tab-pane <?php if($cust_tab=='tab2'){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
+
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
                                                     <div class="dropdown">
@@ -336,46 +338,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="rb-01">
                                                             <ul class="nav nav-tabs border-0">
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab active" data-toggle="tab" href="#dashboard">Client Dashboard</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt1' || $minitab==''){echo "active";} ?>" data-toggle="tab" href="#dashboard">Client Dashboard</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget1">Widget 1</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2'){echo "active";} ?>" data-toggle="tab" href="#widget1">Widget 1</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget2">Widget 2</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Widget 2</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#widget3">Widget 3</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4'){echo "active";} ?>" data-toggle="tab" href="#widget3">Widget 3</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#profle">Profile</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt5'){echo "active";} ?>" data-toggle="tab" href="#profle">Profile</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#educate">Educate</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt6'){echo "active";} ?>" data-toggle="tab" href="#educate">Educate</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#messages">Messages</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt7'){echo "active";} ?>" data-toggle="tab" href="#messages">Messages</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#notes">Internal Notes</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt8'){echo "active";} ?>" data-toggle="tab" href="#notes">Internal Notes</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#invoices">Invoices</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt9'){echo "active";} ?>" data-toggle="tab" href="#invoices">Invoices</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#activity">Activity</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt10'){echo "active";} ?>" data-toggle="tab" href="#activity">Activity</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#details">Detail Sheet</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#details">Detail Sheet</a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#settings">Settings</a>
+                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt12'){echo "active";} ?>" data-toggle="tab" href="#settings">Settings</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                     <div class="tab-content mt-4" >
-                                                        <div class="tab-pane active standard-accordion" id="dashboard">
+                                                        <div class="tab-pane <?php if($minitab=='mt1' || $minitab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="dashboard">
 
                                                             <div class="col-sm-12">
                                                                 <div class="col-sm-12 text-right-sm" style="align:right;">
@@ -409,29 +411,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 </div>-->
                                                             </div>
                                                         </div>
-                                                        <div class="tab-pane fade standard-accordion" id="profle">
+                                                        <div class="tab-pane <?php if($minitab=='mt5'){echo "active";}else{echo "fade";} ?> standard-accordion" id="profle">
                                                             <div class="card">
                                                                 <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                                     <div class="col-lg-12">
                                                                         <h6>Profile  <i>(John Doe)</i> </h6>
                                                                         <div class="row">
-                                                                            <div class="col-md-4">
+                                                                                <div class="col-md-4">
                                                                                 <div class="col-md-12">
                                                                                     <div class="form-group" id="customer_type_group">
                                                                                         <label for="">First name </label><span class="required">*</span><br/>
-                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                        <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->first_name; } ?>" name="contact_name" id="contact_name" required/>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <div class="form-group" id="customer_type_group">
                                                                                         <label for="">Last name</label><span class="required">*</span><br/>
-                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                        <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" name="contact_name" id="contact_name" required/>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <div class="form-group" id="customer_type_group">
                                                                                         <label for="">Email</label><br/>
-                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                                        <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" required/>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-12">
@@ -816,10 +818,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<?php include viewPath('customer/adv_cust/css_list'); ?>
-<?php include viewPath('customer/adv_cust/js_list'); ?>
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<?php include viewPath('customer/adv_cust/css_list'); ?>
+<?php include viewPath('customer/adv_cust/js_list'); ?>
 <style>
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
     #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }

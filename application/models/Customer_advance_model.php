@@ -44,6 +44,17 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
+
+    public function get_customer_data($user_id){
+        $this->db->from("acs_profile");
+        $this->db->where("fk_user_id", $user_id);
+        $this->db->select('*');
+        $this->db->join('acs_address as acs_add', 'acs_add.fk_prof_id = acs_profile.prof_id','left');
+        $query = $this->db->get();
+        return $query->result();
+
+    }
+
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {
         if(!empty($orderBy) || $orderBy!= null){

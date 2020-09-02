@@ -213,6 +213,18 @@ $(document).ready(function(){
       }
 
       $.ajax({
+        xhr: function() {
+                  var xhr = new window.XMLHttpRequest();
+                  xhr.addEventListener("progress", function(evt) {
+                      if (evt.lengthComputable) {
+                          var percentComplete = ((evt.loaded / evt.total) * 100);
+                          percentComplete = percentComplete.toFixed(0);
+                          $('#modal-folder-manager-uploading-percentage').text(percentComplete + '%');
+                      }
+                  }, false);
+                  return xhr;
+        },
+
         type: 'POST',
         url: vUrl,
         beforeSend: function(){
@@ -221,7 +233,7 @@ $(document).ready(function(){
         success: function(data){
           var result = jQuery.parseJSON(data);
 
-          if(result.error == ""){
+          if((result.error == "") || (result.error == null)){
             resetMoveProcess();
             
             getFoldersAndFiles(current_selected_folder);
@@ -350,8 +362,6 @@ $(document).ready(function(){
           contentType: false,
           processData: false,
           beforeSend: function(){
-            closeEntry();
-
             showUploading(file.name);
           }, 
           success: function(data){
@@ -362,6 +372,7 @@ $(document).ready(function(){
 
               showFolderManagerNotif('Error', result.error, 'error');  
             } else {
+              closeEntry();
               getFoldersAndFiles(current_selected_folder);
               get_recently_uploaded_files();
             }

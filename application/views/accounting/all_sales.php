@@ -150,7 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Invoice<span id="checkNUmberHeader"></span>
                         </div>
-                        <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeAddInvoiceModal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
                     <div class="modal-body">
@@ -391,7 +391,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Receive Payment<span id="checkNUmberHeader"></span>
                         </div>
-                        <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeReceivePaymentModal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
                     <div class="modal-body">
@@ -531,7 +531,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                             Estimate<span id="checkNUmberHeader"></span>
                         </div>
-                        <button type="button" class="close" id="closeCheckModal"><i class="fa fa-times fa-lg"></i></button>
+                        <button type="button" class="close" id="closeAddEstimateModal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
                     <div class="modal-body">

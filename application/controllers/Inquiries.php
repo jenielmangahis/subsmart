@@ -38,7 +38,9 @@ class Inquiries extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'assets/frontend/css/invoice/main.css'
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+            'assets/frontend/css/invoice/main.css',
+            'assets/frontend/css/leads/main.css'
         ));
 
         // JS to add only Customer module
@@ -48,6 +50,7 @@ class Inquiries extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js',
             'assets/frontend/js/creditcard.js',
             'assets/frontend/js/inquiry/add.js',
             'assets/js/invoice.js'
@@ -142,6 +145,14 @@ class Inquiries extends MY_Controller {
 
 //        print_r($this->page_data['statusCount']); die;
         $this->load->view('inquiry/inquiries', $this->page_data);
+    }
+
+    public function online_lead() {
+        $this->load->view('inquiry/online_lead', $this->page_data);
+    }
+
+    public function video_estimate() {
+        $this->load->view('inquiry/video_estimate', $this->page_data);
     }
 
 	public function add()
