@@ -21,6 +21,10 @@ $(document).ready(function () {
         $('#frm_add_new_source').submit();
     });
 
+    $('#color-picker, #button-color,#button-text-color').spectrum({
+        type: "component"
+      });
+
     $(document).on('submit', '#frm_add_new_source', function (e) {
 
         e.preventDefault();

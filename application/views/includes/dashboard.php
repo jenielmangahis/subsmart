@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-2">
                         <h1 class="page-title">Dashboard</h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Welcome to  Dashboard</li>
+                            <li class="breadcrumb-item active">Welcome to Dashboard</li>
                         </ol>
                     </div>
 
@@ -58,9 +58,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-sm-4">
                         <div class="float-right d-none d-md-block">
 						<ol class="breadcrumb">
-							<?php $image = base_url('uploads/users/default.png'); ?>
-							<img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;">
-                            <!-- <img src="<?php //echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
+							<!-- <?php $image = base_url('uploads/users/default.png'); ?>
+							<img src="<?php echo $image; ?>" alt="user" class="rounded-circle" style="height: 50px;"> -->
+                            <img src="<?php echo (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets ?>" alt="user" class="rounded-circle" style="height: 50px;">
                             <?php
                                /*$id = logged('id');
                                $query = $this->db->query("Select name from users where id = $id");
@@ -636,7 +636,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     							<img src="<?php echo $url->assets ?>dashboard/images/users/user-3.jpg" alt="">
     						</div>
     						<div class="spot-head">
-    							<h4>Today's Spotlight</h4>
+    							<h4>Today's Spotlight</h4> 
     						</div>
             			</div>
 

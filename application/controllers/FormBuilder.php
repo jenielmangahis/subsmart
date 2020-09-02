@@ -191,8 +191,9 @@ class FormBuilder extends MY_Controller {
 
 	public function submitForm($form_id){
 		
-		// var_dump($this->input->post());
+		var_dump($this->input->post());
 		// var_dump($_FILES);
+		exit;
 
 		$sid = rand(100000000,999999999);
 		foreach($this->input->post() as $key => $answer){

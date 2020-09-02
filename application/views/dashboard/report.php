@@ -2,9 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="col-xl-4 ui-state-default db-card" id="report">
-    <div class="card">
+    <div class="card tile-container" style="top:0px; margin-bottom: 30px; height:auto;">
         <div class="card-body">
-            <h4 class="mt-0 header-title mb-4">Sales Report</h4>
+            <h4 class="mt-0 header-title mb-4" style="border-bottom:1px solid gray; padding-bottom:15px;"><i class="fa fa-area-chart" aria-hidden="true"></i> Sales Report</h4>
             <div class="cleafix">
                 <p class="float-left"><i class="mdi mdi-calendar mr-1 text-primary"></i> Jan 01 - Jan 31
                 </p>

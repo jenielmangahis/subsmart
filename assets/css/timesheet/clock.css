@@ -58,7 +58,7 @@
     content: '';
     position: absolute;
     width: 1px;
-    height: 12px;
+    height: 13px;
     background: black;
     z-index: 10;
     border-radius: 6px 6px 0 0;
@@ -71,4 +71,69 @@
     background: red;
     z-index: 10;
     border-radius: 6px 6px 0 0;
+}
+.clock-active{
+    border-color:greenyellow!important;
+}
+.clock-break{
+    border-color:yellow!important;
+}
+/*Clock preview css*/
+.clock-users {
+    position: relative;
+    display: contents;
+}
+
+.clock-users + .preview-clock-details {
+    visibility: hidden;
+    width: 170px;
+    height: 100px;
+    background-color: #ffffff;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 20;
+    top: 125%;
+    margin-left: -60px;
+    padding: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.clock-users:hover + .preview-clock-details {
+    visibility: visible;
+}
+.visible{
+    visibility: visible;
+}
+
+.clock-users + .preview-clock-details::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
+}
+.clock-details-title{
+    width: 50%;
+    font-weight: bold;
+    float: left;
+    white-space: nowrap;
+}
+.clock-details-text{
+    width: 50%;
+    color: grey;
+    float: right;
+}
+.clock-section{
+    display: block;
+}
+#startBreak:disabled{
+    cursor: not-allowed;
+}
+#stopBreak{
+    margin-right: 10px;
+    color:grey
 }

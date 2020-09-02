@@ -16,6 +16,8 @@ class Accounting extends MY_Controller {
         $this->load->model('rules_model');
         $this->load->model('receipt_model');
         $this->load->model('categories_model');
+        $this->load->model('accounting_invoices_model');
+        $this->load->model('accounting_receive_payment_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1845,5 +1847,67 @@ class Accounting extends MY_Controller {
         }
         echo $html;
     }
-    /*chart_of_accounts end*/
+	
+	public function addInvoice()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'customer_email' => $this->input->post('customer_email'),
+            'online_payments' => $this->input->post('online_payments'),
+            'billing_address' => $this->input->post('billing_address'),
+            'terms' => $this->input->post('terms'),
+            'invoice_date' => $this->input->post('invoice_date'),
+            'due_date' => $this->input->post('due_date'),
+            'location_scale' => $this->input->post('location_scale'),
+            'products' => $this->input->post('products'),
+            'description' => $this->input->post('description'),
+            'qty' => $this->input->post('qty'),
+            'rate' => $this->input->post('rate'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'message_on_invoice' => $this->input->post('message_on_invoice'),
+            'message_on_statement' => $this->input->post('message_on_statement'),
+            'attachments' => $this->input->post('file_name'),
+            'status' => 1,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
+
+        if($addQuery > 0){
+            echo json_encode($addQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	public function addPayment()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'payment_date' => $this->input->post('payment_date'),
+            'payment_method' => $this->input->post('payment_method'),
+            'ref_number' => $this->input->post('ref_number'),
+            'deposit_to' => $this->input->post('deposit_to'),
+            'amount_received' => $this->input->post('amount_received'),
+            'memo' => $this->input->post('memo'),
+            'attachments' => $this->input->post('file_name'),
+            'status' => 1,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_receive_payment_model->createReceivePayment($new_data);
+
+        if($addQuery > 0){
+            echo json_encode($addQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
 }

@@ -13,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Welcome Kit :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>On</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($office_info)){ if($office_info->welcome_sent == 1){echo "On";}else{echo "Off";} }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CSO :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>On</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($office_info)){ if($office_info->commision_scheme == 1){echo "On";}else{echo "Off";} }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>Rep Comm. :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 100</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->rep_comm; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Rep Pay :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> 100</b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($office_info)){ echo $office_info->rep_upfront_pay; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Tech Comm. :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 110</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->tech_comm; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -54,7 +54,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Tech Pay :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 110</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; }; ?></b> </label>
                             </td>
                         </tr>
                         <!--<tr>
@@ -72,7 +72,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <div class="col-sm-6">
-                <div class="contacttext">
+                    <div class="contacttext">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
                         <tr>
@@ -80,7 +80,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Rep Payroll :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>On</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->rep_charge_back; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -89,7 +89,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >PSO :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>On</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->pso; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>Points :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 100</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->points_include; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -105,7 +105,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Price Point :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> 100</b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($office_info)){ echo $office_info->price_per_point; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -113,7 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Purchase $ :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 110</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->purchase_price; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -121,7 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Purchase X's :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 110</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->purchase_multiple; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>

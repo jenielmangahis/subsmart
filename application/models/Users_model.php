@@ -356,6 +356,10 @@ class Users_model extends MY_Model {
         $qry = $this->db->get($this->table);
         return $qry->result();
     }
+    public function getRoles(){
+	    $qry = $this->db->get('roles');
+	    return $qry->result();
+    }
 }
 
 

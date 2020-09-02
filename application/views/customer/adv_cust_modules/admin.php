@@ -13,8 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Entered by :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>Guardian</b> </label>
-
+                                <label class="alarm_answer"><b><?php if(isset($admin_info)){ echo $admin_info->entered_by; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -22,7 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Time Entered :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1/11/1111</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($admin_info)){ echo $admin_info->time_entered; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +29,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>Assign To :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->assign_to; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -38,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Pre Survey :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> AC</b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($admin_info)){ echo $admin_info->pre_install_survey; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomFld1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->custom_field1; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>
@@ -65,7 +64,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Language :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>Recuring</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($admin_info)){ echo $admin_info->language; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -74,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Date Enter :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->date_enter; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -82,7 +81,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Sales Rep :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->sales_rep; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -90,7 +89,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Post Survey:</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->post_install_survey; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -98,18 +97,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField2 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->custom_field2; }; ?></b> </label>
                             </td>
                         </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >Last Login :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> Sept 8th, 2020</b> </label>
-                            </td>
-                        </tr>
-
                         </tbody>
                     </table>
                 </div>

@@ -143,4 +143,12 @@ class Reconcile extends MY_Controller {
     	$id = $this->input->post('id');
         $this->reconcile_model->delete($id);
     }
+
+    public function report($id)
+    {
+    	$this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rows']  =  $this->reconcile_model->selectonwhere($id);
+		$this->load->view('accounting/reconcile/report', $this->page_data);
+    }
 }

@@ -23,7 +23,8 @@ class Workcalender extends MY_Controller
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'assets/plugins/timeline_calendar/main.css',
+            'assets/libs/jcanvas/global.css',
+            'assets/plugins/timeline_calendar/main.css'
         ));
 
         add_footer_js(array(

@@ -159,5 +159,6 @@ $autoload['model'] = array(
 	'wizard_suboptions_model',
     'reconcile_model',
     'file_folders_categories_model',
-    'timesheet_model'
+    'timesheet_model',
+    'AccountingVendors_model'
 );
