@@ -6,10 +6,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .steps-form {
     display: table;
     width: 100%;
-    position: relative; 
+    position: relative;
 }
 .steps-form .steps-row {
-    display: table-row; 
+    display: table-row;
 }
 .steps-form .steps-row:before {
     top: 14px;
@@ -18,19 +18,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     content: " ";
     width: 100%;
     height: 1px;
-    background-color: #ccc; 
+    background-color: #ccc;
 }
 .steps-form .steps-row .steps-step {
     display: table-cell;
     text-align: center;
-    position: relative; 
+    position: relative;
 }
 .steps-form .steps-row .steps-step p {
-    margin-top: 0.5rem; 
+    margin-top: 0.5rem;
 }
 .steps-form .steps-row .steps-step button[disabled] {
     opacity: 1 !important;
-    filter: alpha(opacity=100) !important; 
+    filter: alpha(opacity=100) !important;
 }
 .btn-circle {
     width: 30px;
@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     font-size: 12px;
     line-height: 1.428571429;
     border-radius: 15px;
-    margin-top: 0; 
+    margin-top: 0;
 }
 .btn-indigo {
     color: #fff;
@@ -50,20 +50,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     color: #fff;
     background-color: #2bbbad;
 }
+.sc-pl-2 {
+  padding-left: 16px !important;
+}
+.reg-sc.btn-default {
+  background-color: #7d7d7d;
+}
+.reg-sc.btn-default:hover {
+  color:white !important;
+}
+.reg-s1 {
+    margin: 0 auto;
+    width: 100%;
+    display: block;
+    text-align: center;
+    position: relative;
+    top: 20px;
+}
+.step2-btn {
+    background: #64477d !important;
+    border: 0px solid #64477d !important;
+}
+.step2-btn:hover {
+    color: #fde89d !important;
+}
 .plan-list{
 	list-style: none;
 }
 .plan-list li{
 	display: inline-block;
-	width:20%;
+	width:32%;
+  margin-bottom:40px;
 }
-.plan-list li h3{
-	font-size: 12px;
-	font-weight: 500;
+h3.plan-list-text {
+  font-size: 19px !important;
+  font-weight: 400;
+}
+p.plan-list-price {
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 17px;
+  font-weight: 700;
+  font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif !important;
+}
+@media only screen and (max-width: 700px) {
+  .plan-list li {
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 40px;
+  }
 }
 </style>
 <section page="register" message="" class="ng-isolate-scope">
-	<div class="f-height">
+	<div class="f-height-v2">
 		<div class="row">
 			<div class="col-md-5 col-sm-5 float-left pl-0 desktop-only">
 				<div id="side-image" class="side-image--regular image-fader left"></div>
@@ -83,15 +122,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						    <div class="steps-form">
 						      <div class="steps-row setup-panel">
 						        <div class="steps-step">
-						          <a href="#step-1" type="button" class="btn btn-indigo btn-circle">1</a>
+						          <a href="#step-1" type="button" class="btn reg-sc btn-indigo btn-circle">1</a>
 						          <p>Step 1</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+						          <a href="#step-2" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">2</a>
 						          <p>Step 2</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+						          <a href="#step-3" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">3</a>
 						          <p>Step 3</p>
 						        </div>
 						      </div>
@@ -100,23 +139,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						      <!-- First Step -->
 						      <div class="row setup-content" id="step-1">
 						        <div class="col-md-12">
-						          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 1 : Select Plan</strong></h3>
-						          <ul class="plan-list">
-						          <?php foreach($ns_plans as $p){ ?>
-						          	<li>
-						          		<h3><?= $p->plan_name; ?></h3>
-						          		<p>$<?= number_format($p->price, 2); ?></p>
-						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>">Select Plan</a>
-						          	</li>	
-						          <?php } ?>
-						      	  </ul>
+                      <div class="reg-s1">
+  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
+  						          <ul class="plan-list">
+  						          <?php foreach($ns_plans as $p){ ?>
+  						          	<li>
+  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
+  						          		<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
+  						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>">Select Plan</a>
+  						          	</li>
+  						          <?php } ?>
+  						      	  </ul>
+                      </div>
 						        </div>
 						      </div>
 
 						      <!-- Second Step -->
 						      <div class="row setup-content" id="step-2">
 						        <div class="col-md-12">
-						          	<h3 class="font-weight-bold pl-0 my-4"><strong>Step 2 : Personal Information</strong></h3>
+						          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
 						          	<div class="col-md-6 float-left z-100">
 										<div class="input-group z-100">
 											<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
@@ -194,8 +235,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
 										</div> -->
 									</div>
-						          	<button class="btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
-						          	<button class="btn btn-indigo btn-rounded nextBtn float-right" type="button">Next</button>
+                      <div class="pl-3 pr-3">
+  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
+  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" type="button">Next</button>
+                      </div>
 						        </div>
 						      </div>
 
