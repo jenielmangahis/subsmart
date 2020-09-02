@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title"><i class="fa fa-plus"></i> Add Feature</h1>
+                        <h1 class="page-title"><i class="fa fa-edit"></i> Edit Feature</h1>
                     </div>
                 </div>
             </div>
@@ -19,22 +19,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card" style="min-height: 400px !important;">
                         <hr />
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('nsmart_feature/create_feature', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-
+                        <?php echo form_open_multipart('nsmart_features/update_feature', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                          <input type="hidden" id="id" name="id" value="<?php echo $nSmartFeature->id; ?>"  class="form-control" />
                           <div class="form-group">
                               <label>Feature Name</label> <span class="form-required">*</span>
-                              <input type="text" name="feature_name" value=""  class="form-control" required="" autocomplete="off" />
+                              <input type="text" name="feature_name" value="<?php echo $nSmartFeature->feature_name; ?>"  class="form-control" required="" autocomplete="off" />
                           </div>
                           <div class="form-group">
                               <label>Description</label> <span class="form-required">*</span>
-                              <textarea class="form-control" style="height: 200px !important;" required="" name="feature_description"></textarea>
+                              <textarea class="form-control" style="height: 200px !important;" required="" name="feature_description" ><?php echo $nSmartFeature->feature_description; ?></textarea>
                           </div>
                          
                           <div class="form-group">
                             <label>Select Heading</label>
                             <select name="feature_heading" class="form-control">
                               <?php foreach($planHeadings as $p) { ?>
-                                <option value="<?php echo $p->id; ?>"><?php echo $p->title; ?></option>
+                                <option <?php if(  $nSmartFeature->plan_heading_id == $p->id ){ echo "Selected"; }?> value="<?php echo $p->id; ?>"><?php echo $p->title; ?></option>
                               <?php } ?>
                             </select>
                           </div>
@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <label>Select Plans</label>
                               <?php foreach($plans as $pln) { ?>
                                       <div class="input-group-text" style="margin-bottom: 10px; margin-left: 15px;">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
+                                        <input type="checkbox"  name="plans[<?= $pln->nsmart_plans_id; ?>]" aria-label="Checkbox for following text input" <?php if(isset($option_plan)){ if($pln->nsmart_plans_id == $option_plan->plan_heading_id){ ?> checked <?php } } ?> >
                                           &nbsp;&nbsp;<?php echo $pln->plan_name; ?>
                                       </div> 
                               <?php } ?>                         

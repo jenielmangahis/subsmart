@@ -82,6 +82,27 @@ class NsmartPlanModules_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function save($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+
+        return  $last_id;
+    }
+
+    public function updatePlanModules($plan_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $plan_id);
+        $this->db->update();
+    }
+
+     public function deletePlanModules($id){
+        
+        $this->db->delete($this->table, array('nsmart_feature_id' => $id));
+    } 
 }
 
 /* End of file NsmartPlanModules_model.php */

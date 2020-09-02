@@ -63,6 +63,14 @@ class NsmartFeature_model extends MY_Model
 
         return  $last_id;
     }
+
+    public function updateFeature($plan_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $plan_id);
+        $this->db->update();
+    }
 }
 
 /* End of file NsmartFeature_model.php */
