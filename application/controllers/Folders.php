@@ -271,13 +271,17 @@ class Folders extends MY_Controller {
 			'error' => ''
 		);
 
+		$section = $_POST['section'];
 		$folder_id = $_POST['folder_id'];
 		$parent_id = 0;
 
+		$folder = $this->folders_model->getById($folder_id);
 		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id . ' and softdelete <= 0')->row();
 		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id . ' and softdelete <= 0')->row();
 		if(($files->filescount > 0) || ($folders->folderscount > 0)){
 			$return['error'] = 'Cannot delete folder. Folder is not empty.';
+		} else if(($folder->created_by != $uid) && (($section == 'sharedlibrary') || ($section == 'businessformtemplates'))){
+			$return['error'] = 'Cannot delete folder. Folder is not yours.';
 		} else {			
 			$data = array(
 				'softdelete' => 1,
@@ -564,6 +568,12 @@ class Folders extends MY_Controller {
 				$this->vault_model->trans_update($data, array('file_id' => $file->file_id));
 			}
 		}
+	}
+
+	public function getFolder($folder_id){
+		$return = $this->db->query('select folder_id, folder_name, description, category_id from file_folders where folder_id = ' . $folder_id)->row_array();
+
+		echo json_encode($return);
 	}
 }
 

@@ -254,6 +254,8 @@ $route['plan_headings/delete_plan_heading'] = 'Plan_Headings/delete_plan_heading
 $route['nsmart_features/index'] = 'Nsmart_Features/index';
 $route['nsmart_features/add_new_feature'] = 'Nsmart_Features/add_new_feature';
 $route['nsmart_features/create_feature'] = 'Nsmart_Features/create_feature';
+$route['nsmart_features/edit_feature/(:any)'] = 'Nsmart_Features/edit_feature/$1';
+$route['nsmart_features/update_feature'] = 'Nsmart_Features/update_feature';
 
 $route['notification/calendar_notification_counter'] = 'Notification_Counter/calendar_notification_counter';
 

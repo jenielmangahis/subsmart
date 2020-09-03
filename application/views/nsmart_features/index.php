@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     echo implode(",", $modules['plans']);
                                                 ?>
                                             </td>
-                                            <td><a href="<?php echo base_url('nsmart_plans/edit_plan/'.$modules['feature_id']); ?>"><i class="fa fa-pencil"></i> Edit</a></td>
+                                            <td><a href="<?php echo base_url('nsmart_features/edit_feature/'.$modules['feature_id']); ?>"><i class="fa fa-pencil"></i> Edit</a></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>

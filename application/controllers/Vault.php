@@ -133,17 +133,22 @@ class Vault extends MY_Controller {
 			'error' => ''
 		);		
 
+		$section = $_POST['section'];
 		$file_id = $_POST['file_id'];
 		$file = $this->vault_model->getById($file_id);
 		
-		$data = array(
-			'softdelete' => 1,
-			'softdelete_date' => date('Y-m-d h:i:s'),
-			'softdelete_by' => $uid	
-		);	
+		if(($file->file_id != $uid) && (($section == 'sharedlibrary')||($section == 'businessformtemplates'))){
+			$return['error'] = 'Cannot delete file. File is not yours.';
+		} else {
+			$data = array(
+				'softdelete' => 1,
+				'softdelete_date' => date('Y-m-d h:i:s'),
+				'softdelete_by' => $uid	
+			);	
 
-		if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
-			$return['error'] = 'Error in deleting file';
+			if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
+				$return['error'] = 'Error in deleting file';
+			}
 		}
 
 		echo json_encode($return);
@@ -276,6 +281,12 @@ class Vault extends MY_Controller {
 		$files_and_folders = searchFilesOrFolders($keyword, $search_folders, $search_files, $ofUser, $ofCategorized);
 
 		echo json_encode($files_and_folders);
+	}
+
+	public function getFile($file_id){
+		$return = $this->db->query('select file_id, title, description, file_path, category_id from filevault where file_id = ' . $file_id)->row_array();
+
+		echo json_encode($return);
 	}
 }
 

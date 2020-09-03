@@ -109,8 +109,13 @@ class Users_model extends MY_Model {
 		$query = $this->db->get();
 
 		return $query->result();
-
 	}
+	public function getTotalUsers(){
+        $this->db->where('id', getLoggedUserID());
+	    $this->db->or_where('company_id',logged('company_id'));
+	    $qry = $this->db->get($this->table);
+	    return $qry->num_rows();
+    }
 
 	public function getRecentUsers() {
 

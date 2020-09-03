@@ -10,13 +10,33 @@ class Timesheet_model extends MY_Model {
 
     public $table = 'time_record';
     private $db_table = 'timesheet_logs';
+    private $attn_tbl = 'timesheet_attendance';
 
 //    public function clockIn($data)
 //    {
 //        $this->db->insert($this->table, $data);
 //    }
+    public function attendance($user_id,$status){
+        $qry = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id,'date' => date('Y-m-d')));
+        if ($qry->num_rows() == 0 && $status == 1){
+            $data = array(
+                'user_id' =>  $user_id,
+                'date' => date('Y-m-d'),
+                'status' => $status
+            );
+            $this->db->insert($this->attn_tbl,$data);
+        }elseif($qry->num_rows() == 1 && $status == 0){
+            $update = array(
+                'status' => $status
+            );
+            $check = array('user_id'=>$user_id,'date' => date('Y-m-d'));
+            $this->db->where($check);
+            $this->db->update($this->attn_tbl,$update);
+        }
+    }
 
     public function checkInEmployee($user_id){
+        $this->attendance($user_id,1);
         $qry = $this->db->get_where($this->db_table,array('user_id'=>$user_id,'action'=>'Check in','date'=>date('Y-m-d')));
         if ($qry->num_rows() == 0){
             $data = array(
@@ -34,6 +54,7 @@ class Timesheet_model extends MY_Model {
         }
     }
     public function checkingOutEmployee($user_id){
+        $this->attendance($user_id,0);
         $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'action'=>'Check in','date'=>date('Y-m-d')));
         if ($qry->num_rows() == 1){
             $data = array(
@@ -50,6 +71,32 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
+    public function breakIn($user_id){
+        $data = array(
+            'user_id' => $user_id,
+            'action' => 'Break in',
+            'date' => date('Y-m-d'),
+            'time' => date('H:i'),
+            'entry_type' => 'Normal',
+            'status' => 1
+        );
+        $this->db->insert($this->db_table,$data);
+        return true;
+    }
+
+    public function breakOut($user_id){
+        $data = array(
+            'user_id' => $user_id,
+            'action' => 'Break out',
+            'date' => date('Y-m-d'),
+            'time' => date('H:i'),
+            'entry_type' => 'Normal',
+            'status' => 1
+        );
+        $this->db->insert($this->db_table,$data);
+        return true;
+    }
+
     public function getTimesheetLogs(){
         $query = $this->db->get_where($this->db_table,array('date'=>date('Y-m-d')));
         return $query->result();
@@ -470,6 +517,20 @@ class Timesheet_model extends MY_Model {
         $this->db->from('users');
         /*$this->db->where('id !=', 1);*/
         $query = $this->db->get();
+        return $query->num_rows();
+    }
+    public function getTotalUsersLoggedIn(){
+        $total_users = $this->users_model->getTotalUsers();
+        $query =  $this->db->get_where('timesheet_attendance',array('date'=>date('Y-m-d')));
+        $logged_in = $query->num_rows();
+        return $total_users - $logged_in;
+    }
+    public function getInNow(){
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date'=>date('Y-m-d')));
+        return $query->num_rows();
+    }
+    public function getOutNow(){
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date'=>date('Y-m-d')));
         return $query->num_rows();
     }
 

@@ -3734,7 +3734,7 @@ Responsive
     position: relative;
     display: block;
     width: 100%;
-    height: 650px;
+    height: 100%;
     left: 0;
     opacity: 0;
     background: url(../images/bg-reg.jpeg) center right / cover no-repeat;
@@ -3743,6 +3743,10 @@ Responsive
   width: 600px;
   margin: 0 auto;
   padding-top: 25px;
+  padding-bottom: 35px;
+}
+button.reg-wbtn {
+  min-width: 95px;
 }
 .tw-radio-button .tw-radio-check {
   border-radius: 50%;
@@ -3851,6 +3855,9 @@ label.reg-def {
 }
 .f-height {
   height: 650px;
+}
+.f-height-v2 {
+  height: auto;
 }
 .image-fader {
   opacity: 1 !important;

@@ -175,7 +175,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-md-3">
             <div class="form-group" id="customer_type_group">
-                <label for="">Tech Departure Time</label><br/>
+                <label for="">Tech Departure Time</label>
                 <input type="text" class="form-control" name="tech_depart_time" id="tech_depart_time" />
             </div>
         </div>
