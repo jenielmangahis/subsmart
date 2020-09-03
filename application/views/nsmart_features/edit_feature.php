@@ -42,9 +42,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <div class="form-group">
                             <label>Select Plans</label>
                               <?php foreach($plans as $pln) { ?>
+                                      <?php 
+                                        $is_checked = "";
+                                        if (in_array($pln->nsmart_plans_id, $default_option_plans)) {
+                                            $is_checked = "checked";
+                                        }
+                                      ?>
                                       <div class="input-group-text" style="margin-bottom: 10px; margin-left: 15px;">
-                                        <input type="checkbox"  name="plans[<?= $pln->nsmart_plans_id; ?>]" aria-label="Checkbox for following text input" <?php if(isset($option_plan)){ if($pln->nsmart_plans_id == $option_plan->plan_heading_id){ ?> checked <?php } } ?> >
-                                          &nbsp;&nbsp;<?php echo $pln->plan_name; ?>
+                                        <input type="checkbox" name="plans[<?= $pln->nsmart_plans_id; ?>]" <?php echo $is_checked ?>>
+                                          &nbsp;&nbsp;<?php echo $pln->plan_name; ?> 
                                       </div> 
                               <?php } ?>                         
                           </div>

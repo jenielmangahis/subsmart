@@ -95,11 +95,19 @@ class Nsmart_Features extends MY_Controller {
 		$planHeadings   = $this->PlanHeadings_model->getAll();
 		$plans   = $this->NsmartPlan_model->getAll();
 
-		// echo "<pre>";
-		// print_r($option_plan);
-		// print_r($plans);
-		// echo "</pre>";
-		// exit();
+		//echo "<pre>";
+		//print_r($option_plan);
+		//print_r($plans);
+		//echo "</pre>";
+		//exit();
+
+		$option_plan_id_array = array();
+		if($option_plan) {
+			foreach($option_plan as $op) {
+				$option_plan_id_array[] = $op->nsmart_plans_id;
+			}
+		}		
+
 		if( $nSmartFeature ){
 			if($_POST){
 
@@ -119,16 +127,17 @@ class Nsmart_Features extends MY_Controller {
 	        			'feature_heading_id' => $post['feature_heading'],
 	        			'date_updated' => date("Y-m-d H:i:s")
 	    				];
+
 	    		$nsPlan = $this->NsmartFeature_model->updateFeature($post['id'],$data);
 	    		$this->session->set_flashdata('message', 'Feature was successfully updated');
 	        	$this->session->set_flashdata('alert_class', 'alert-success');
         	}
 
-        	
         	$this->page_data['planHeadings'] = $planHeadings;
 			$this->page_data['nSmartFeature'] = $nSmartFeature;
 			$this->page_data['plans'] = $plans;
 			$this->page_data['option_plan'] = $option_plan;
+			$this->page_data['default_option_plans'] = $option_plan_id_array;
 			$this->load->view('nsmart_features/edit_feature', $this->page_data);
 		}else{
 			$this->session->set_flashdata('message', 'Cannot find data');
@@ -137,12 +146,12 @@ class Nsmart_Features extends MY_Controller {
 		}
 	}
 
-
 	public function update_feature() {
 		postAllowed();
 		if($_POST){
 			$this->NsmartPlanModules_model->deletePlanModules($_POST['id']);
-			 $data_plan_modules = array();
+			$data_plan_modules = array();
+
 			foreach( $_POST['plans'] as $key => $value ){
     			$data_plan_modules = [
     				'nsmart_plans_id' => $key,
@@ -151,7 +160,6 @@ class Nsmart_Features extends MY_Controller {
     			];
     			$nsPlanFeature = $this->NsmartPlanModules_model->save($data_plan_modules);
     		}
-
 
     		$data = array();
 			$data = ['feature_name' => $_POST['feature_name'],
@@ -166,7 +174,6 @@ class Nsmart_Features extends MY_Controller {
 
     	 redirect('nsmart_features/edit_feature/'. $_POST['id'] );
 	}
-
 
 }
 
