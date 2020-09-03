@@ -550,6 +550,10 @@ class Timesheet extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
+        $this->page_data['total_users'] = $this->users_model->getTotalUsers();
+        $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
+        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
+        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
 
         // get total numbers of "In" employees
@@ -557,11 +561,26 @@ class Timesheet extends MY_Controller {
         // get total numbers of "Out" employees
         $this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
         // get total numbers of "Not Logged In Today" employees
-        $this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
+//        $this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
         // get total numbers of "Not Logged In Today" employees
         $this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
 
         $this->load->view('users/timesheet-admin', $this->page_data);
+    }
+
+    public function inNow(){
+	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date'=>date('Y-m-d')));
+	    echo json_encode($query->num_rows());
+    }
+    public function outNow(){
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date'=>date('Y-m-d')));
+        echo json_encode($query->num_rows());
+    }
+    public function loggedInToday(){
+        $total_users = $this->users_model->getTotalUsers();
+        $query =  $this->db->get_where('timesheet_attendance',array('date'=>date('Y-m-d')));
+        $logged_in = $query->num_rows();
+        echo json_encode($total_users - $logged_in);
     }
 
     public function checkingInEmployee(){
@@ -577,6 +596,25 @@ class Timesheet extends MY_Controller {
     public function checkingOutEmployee(){
         $user_id = $this->input->post('id');
         $query = $this->timesheet_model->checkingOutEmployee($user_id);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+
+    public function breakIn(){
+        $user_id = $this->input->post('id');
+        $query = $this->timesheet_model->breakIn($user_id);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+    public function breakOut(){
+        $user_id = $this->input->post('id');
+        $query = $this->timesheet_model->breakOut($user_id);
         if ($query == true){
             echo json_encode(1);
         }else{

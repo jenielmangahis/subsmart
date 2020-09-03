@@ -29,7 +29,15 @@ class Accounting_invoices_model extends MY_Model {
 			return false;
 		}
     }
-	
+	public function deleteInvoice($id){
+		$this->db->where('id',$id);
+        $query = $this->db->delete('accounting_invoices');
+        if ($query){
+            return true;
+        }else{
+            return false;
+        }
+    }
 	public function getInvoiceDetails($id){
 	    $vendor = $this->db->get_where('accounting_invoices', array('id' => $id));
 	    return $vendor->result();

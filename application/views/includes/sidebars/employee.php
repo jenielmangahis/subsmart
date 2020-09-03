@@ -28,7 +28,7 @@
                         class="fa fa-user"></span>Employees</a></li>
         <?php //dd(logged()); ?>
         <?php if( logged('role') == '3' ): ?>
-        <li class="submenus <?php if( strpos($uri,'timesheet') ){ echo 'active';}?>"><a href="<?php echo base_url('users/timesheet') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
+        <li class="submenus <?php if( strpos($uri,'timesheet') ){ echo 'active';}?>"><a href="<?php echo base_url('timesheet/attendance') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
         <?php else: ?>
             <li class="submenus <?php if( strpos($uri,'timesheet') ){ echo 'active';}?>"><a href="<?php echo base_url('users/timesheet_user') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
         <?php endif; ?>

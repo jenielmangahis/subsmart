@@ -125,7 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="tab-content mt-4" >
                                         <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
-                                                <div class="col-xl-9">
+                                                <div class="col-xl-10">
                                                     <div class="card">
                                                         <div class="card-body" style="padding-bottom:0px;">
 
@@ -158,30 +158,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                                         <table class="table table-hover" id="customer_list_table">
                                                                             <thead>
-                                                                            <tr>
-                                                                                <th>Name</th>
-                                                                                <th>City</th>
-                                                                                <th>State</th>
-                                                                                <th>Source</th>
-                                                                                <th>Email</th>
-                                                                                <th>Added</th>
-                                                                                <th>Sales Rep</th>
-                                                                                <th>Tech</th>
-                                                                                <th>System Type</th>
-                                                                                <th>MMR</th>
-                                                                                <th>Phone</th>
-                                                                                <th>Status</th>
-                                                                                <th>Actions</th>
-                                                                            </tr>
+                                                                                <tr>
+                                                                                    <th>Name</th>
+                                                                                    <th>City</th>
+                                                                                    <th>State</th>
+                                                                                    <th>Source</th>
+                                                                                    <th>Email</th>
+                                                                                    <th>Added</th>
+                                                                                    <th>Sales Rep</th>
+                                                                                    <th>Tech</th>
+                                                                                    <th>System Type</th>
+                                                                                    <th>MMR</th>
+                                                                                    <th>Phone</th>
+                                                                                    <th>Status</th>
+                                                                                    <th>Actions</th>
+                                                                                </tr>
                                                                             </thead>
-
                                                                             <tbody>
-
-                                                                           <?php foreach ($profiles as $customer) : ?>
+                                                                                <?php foreach ($profiles as $customer) : ?>
                                                                                     <tr>
-                                                                                        <td>
+                                                                                        <td style="width: 100%;">
                                                                                             <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>" style="color:#32243d;">
-                                                                                                <?= ($customer) ? $customer->first_name.' '.$customer->middle_name[0].'. '.$customer->last_name : ''; ?>
+                                                                                                <?=
+                                                                                                    ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
                                                                                             </a>
                                                                                         </td>
                                                                                         <td><?= $customer->city; ?></td>
@@ -263,11 +262,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-12 col-xl-3">
+                                                <div class="col-sm-12 col-xl-2">
                                                     <div class="card card-mobile">
                                                         <div class="row padding-mobile-cs">
                                                             <div class="col-sm-12">
-
                                                                 <h6 class="page-title">Quick Action</h6>
                                                             </div>
                                                             <div class="card-body">
@@ -278,13 +276,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         <th>Actions</th>
                                                                     </tr>
                                                                     </thead>
-
                                                                     <tbody>
                                                                         <?php foreach ($profiles as $customer) : ?>
                                                                             <tr>
-                                                                                <td>
+                                                                                <td >
                                                                                     <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>" style="color:#32243d;">
-                                                                                        <?= $customer->first_name.' '.$customer->middle_name[0].'. '.$customer->last_name; ?>
+                                                                                        <?= $customer->first_name.' '.$customer->last_name; ?>
                                                                                     </a>
                                                                                 </td>
                                                                                 <td>
@@ -306,9 +303,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 </td>
                                                                             </tr>
                                                                         <?php endforeach; ?>
-
                                                                     </tbody>
-
                                                                 </table>
                                                             </div>
                                                         </div>

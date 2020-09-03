@@ -89,7 +89,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         </div>
                         <div class="error-dt">
                             <h4>You reconciled this account</h4>
-                            <p>To see a report of this reconcilation, click <a href= "#">view reconilation report<a>.Otherwise, you're done!</p>
+                            <p>To see a report of this reconcilation, click <a href= "<?=url('accounting/reconcile/view/report/'.$rows[0]->chart_of_accounts_id.'')?>">view reconilation report<a>.Otherwise, you're done!</p>
                         </div>
                     </div>
 
@@ -177,7 +177,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         <h1 class="page-title">Reconcile</h1>
                     </div>
                     <div class="col-md-3">
-                        <h4>Cash on hand</h4>
+                        <h4><?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?></h4>
                     </div>
                     <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->service_charge?>.00</h4></div>
                     <div class="col-md-1 hide-col"><h4>$<?=$rows[0]->interest_earned?>.00</h4></div>

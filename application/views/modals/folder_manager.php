@@ -50,6 +50,7 @@
                           <td class="p-0 pb-1">
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit_permission" title="Edit Permission"><i class="fa fa-pencil"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit" title="Edit Folder/File"><i class="fa fa-pencil-square-o"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
                             <?php if($isBusinessFormTemplates){ ?>
@@ -140,6 +141,10 @@
             </div>
           </div>
           <div class="d-none w-100" id="file_entry">
+            <div class="col-md-12 form-group d-none" id="div_file_path_display">
+              <label for="file_path_display">Original File</label>
+              <input type="text" class="form-control" name="file_path_display" id="file_path_display" readonly/>  
+            </div>
             <div class="col-md-12 form-group">
               <label for="fullfile">Select File<small> (Allowed type: pdf, doc, docx, rtf, png, jpg, gif. Max size 8MB.)</small></label>
               <input type="file" class="form-control" name="fullfile" id="fullfile" placeholder="Upload File" accept=".gif, .jpeg, .jpg, .png, .doc, .rtf, .docx, .pdf" required>
@@ -173,7 +178,7 @@
                 </select>
               </div>
             </div> 
-            <div class="w-100 text-center">
+            <div class="w-100 text-center d-none" id="category_controls">
               <button type="button" class="btn btn-default bft-btn-control border-info" id="btn-modal-folder-manager-entry-create-category">Create</button>
               <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-edit-category">Edit</button>
               <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-delete-category">Delete</button>  

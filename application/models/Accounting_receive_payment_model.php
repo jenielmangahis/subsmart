@@ -29,7 +29,15 @@ class Accounting_receive_payment_model extends MY_Model {
 			return false;
 		}
     }
-	
+	public function deleteReceivePayment($id){
+		$this->db->where('id',$id);
+        $query = $this->db->delete('accounting_receive_payment');
+        if ($query){
+            return true;
+        }else{
+            return false;
+        }
+    }
 	public function getReceivePaymentDetails($id){
 	    $vendor = $this->db->get_where('accounting_receive_payment', array('id' => $id));
 	    return $vendor->result();
