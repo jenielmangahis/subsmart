@@ -108,7 +108,7 @@ p.plan-list-price {
 				<div id="side-image" class="side-image--regular image-fader left"></div>
 			</div>
 			<div class="col-sm-7 col-md-7 float-left pr-0 container-signup pt-5">
-				<form action="#" method="post">
+				
 					<input type="hidden" name="plan_id" id="plan_id" value="">
 					<input type="hidden" name="plan_price" id="plan_price" value="">
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
@@ -141,133 +141,138 @@ p.plan-list-price {
 						      </div>
 						    </div>
 
-						      <!-- First Step -->
-						      <div class="row setup-content" id="step-1">
-						        <div class="col-md-12">
-                      <div class="reg-s1">
-  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
-  						          <ul class="plan-list">
-  						          <?php foreach($ns_plans as $p){ ?>
-  						          	<li>
-  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
-  						          		<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
-  						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
-  						          	</li>
-  						          <?php } ?>
-  						      	  </ul>
-                      </div>
-						        </div>
-						      </div>
+						    	<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
+						      	<!-- First Step -->
+						      	<div class="row setup-content" id="step-1">
+							        <div class="col-md-12">
+		                      			<div class="reg-s1">
+		  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
+		  						          <ul class="plan-list">
+		  						          <?php foreach($ns_plans as $p){ ?>
+		  						          	<li>
+		  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
+		  						          		<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
+		  						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
+		  						          	</li>
+		  						          <?php } ?>
+		  						      	  </ul>
+		                      			</div>
+							        </div>
+						      	</div>
 
-						      <!-- Second Step -->
-						      <div class="row setup-content" id="step-2">
-						        <div class="col-md-12">
-						          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
-						          	<div class="col-md-6 float-left z-100">
-										<div class="input-group z-100">
-											<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
+						      	<!-- Second Step -->
+						      	<div class="row setup-content" id="step-2">
+							        <div class="col-md-12">
+							          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
+							          	<div class="col-md-6 float-left z-100">
+											<div class="input-group z-100">
+												<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
+											</div>
 										</div>
-									</div>
 
 
-									<div class="col-md-6 float-left z-100">
-										<div class="input-group z-100">
-											<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name">
+										<div class="col-md-6 float-left z-100">
+											<div class="input-group z-100">
+												<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name">
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-6 float-left">
-										<div class="input-group z-100">
-											<input autocomplete="off" type="email" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+										<div class="col-md-6 float-left">
+											<div class="input-group z-100">
+												<input autocomplete="off" type="email" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-6 float-left">
-										<div class="input-group z-100">
-											<input autocomplete="off" type="number" name="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number">
+										<div class="col-md-6 float-left">
+											<div class="input-group z-100">
+												<input autocomplete="off" type="number" name="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number">
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-6 float-left">
-										<div class="input-group z-100">
-											<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+										<div class="col-md-6 float-left">
+											<div class="input-group z-100">
+												<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-6 float-left">
-										<div class="input-group">
-											<select class="reg-select z-100" id="sel1">
-													<option value="0">Number of Employees</option>
-													<option value="1 (Just Me)">1 (Just Me)</option>
-													<option value="2-3">2-3</option>
-													<option value="4-10">4-10</option>
-													<option value="11-15">11-15</option>
-													<option value="16-20">16-20</option>
-													<option value="20+">20+</option>
-											</select>
+										<div class="col-md-6 float-left">
+											<div class="input-group">
+												<select class="reg-select z-100" id="sel1">
+														<option value="0">Number of Employees</option>
+														<option value="1 (Just Me)">1 (Just Me)</option>
+														<option value="2-3">2-3</option>
+														<option value="4-10">4-10</option>
+														<option value="11-15">11-15</option>
+														<option value="16-20">16-20</option>
+														<option value="20+">20+</option>
+												</select>
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-12 float-left">
-										<div class="input-group z-100">
-											<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
+										<div class="col-md-12 float-left">
+											<div class="input-group z-100">
+												<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-6 float-left">
-										<div class="input-group">
-											<select class="reg-select z-100 cmb-industry" id="sel2">
-												<option>--Select your Industry--</option>
-				                                <?php foreach( $business as $key => $values ){ ?>
-				                                    <optgroup label="<?php echo $key; ?>">
-				                                    <?php foreach( $values as $value ){ ?>
-				                                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
-				                                    <?php } ?>
-				                                <?php } ?>
-											</select>
+										<div class="col-md-6 float-left">
+											<div class="input-group">
+												<select class="reg-select z-100 cmb-industry" id="sel2">
+													<option>--Select your Industry--</option>
+					                                <?php foreach( $business as $key => $values ){ ?>
+					                                    <optgroup label="<?php echo $key; ?>">
+					                                    <?php foreach( $values as $value ){ ?>
+					                                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+					                                    <?php } ?>
+					                                <?php } ?>
+												</select>
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-6 float-left z-100">
-										<div class="input-group z-100">
-											<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+										<div class="col-md-6 float-left z-100">
+											<div class="input-group z-100">
+												<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+											</div>
 										</div>
-									</div>
 
-									<div class="col-md-12">
-										&nbsp;
-										<!-- <div class="input-group">
-											<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
-										</div> -->
-									</div>
-                      <div class="pl-3 pr-3">
-  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
-  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" type="button">Next</button>
-                      </div>
-						        </div>
-						      </div>
+										<div class="col-md-12">
+											&nbsp;
+											<!-- <div class="input-group">
+												<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
+											</div> -->
+										</div>
+	                      			<div class="pl-3 pr-3">
+	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
+	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" type="button">Next</button>
+	                      			</div>
+							        </div>
+						      	</div>
 
-						      <!-- Third Step -->
-						      <div class="row setup-content" id="step-3">
-						        <div class="col-md-12">
-						          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
-						          <div class="payment-method" style="display: block;margin-bottom: 74px;">
-						          	<label>Plan : <b><span class="plan-selected"></span></b></label><br />
-						          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
-						          	<hr />
-						          	<p><b>Payment Method</b></p>
-						          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
-						      	  </div>
-						          <button class="btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
-						          <button class="btn btn-default btn-rounded float-right" type="submit">Process to Payment</button>
-						        </div>
-						      </div>
-						      <div class="row setup-content" id="step-3">
-						        <div class="col-md-12">
-						          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
-						          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
-						        </div>
-						      </div>
+						      	<!-- Third Step -->
+						      	<div class="row setup-content" id="step-3">
+							        <div class="col-md-12">
+							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
+							          <div class="payment-method" style="display: block;margin-bottom: 74px;">
+							          	<label>Plan : <b><span class="plan-selected"></span></b></label><br />
+							          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
+							          	<hr />
+							          	<p><b>Payment Method</b></p>
+							          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+							      	  </div>
+							          <button class="btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
+							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment">Process to Payment</button>
+							        </div>
+						      	</div>
+
+						      	<!-- 4th Step -->
+						      	<div class="row setup-content" id="step-4">
+							        <div class="col-md-12">
+							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
+							          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
+							        </div>
+						      	</div>
+
+						      	<?php echo form_close(); ?>
 
 						  </div>
 						</div>
@@ -292,7 +297,7 @@ p.plan-list-price {
 						</div> -->
 
 					</div>
-				</form>
+
 			</div>
 
 		</div>
@@ -307,6 +312,7 @@ $(function(){
         allNextBtn = $('.nextBtn'),
         allPrevBtn = $('.prevBtn'),
         step2bBtn  = $('.step2-btn');
+        step3bBtnPrcPayment = $('.step3-btn-processPayment');
 
     allWells.hide();
 
@@ -367,6 +373,10 @@ $(function(){
 
     	nextStepWizard.removeAttr('disabled').trigger('click');
     });
+
+    step3bBtnPrcPayment.click(function(){
+    	$( "#subscribe-form-payment" ).submit();
+   	});
 
     $('div.setup-panel div a.btn-indigo').trigger('click');
 });
