@@ -48,9 +48,34 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
+            <div class="page-title-box" style="margin-top: 30px !important">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h1 class="page-title">Reconcilation Report</h1>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="<?=url('accounting/reconcile/view/summary')?>">Summary</a> | <a href="#">Reconcile</a>
+                    </div>
+                </div>
                 <div class="row align-items-center">
-                    
+                    <div class="col-md-5 col-sm-5">
+                        <div class="form-group">
+                            <label>Account</label>
+                            <select class="form-control" id="selectid">
+                                <?php
+                                   $i=1;
+                                   foreach($this->chart_of_accounts_model->select() as $row)
+                                   {
+                                    ?>
+                                    <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                    <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                                  <?php
+                                  $i++;
+                                  }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -69,7 +94,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     </div>
                                  </div>
                              </div>
-                             <div style="text-align: center;">
+                             <div style="text-align: center;margin-bottom: 10px;">
                                  <div class="row">
                                      <div class="col-md-12">
                                         ADI
@@ -87,7 +112,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                  </div>
                                  <div class="row">
                                      <div class="col-md-12">
-                                        Reconciled on : -
+                                        Reconciled on : <?=$rows[0]->adjustment_date?>
                                      </div>
                                  </div>
                                  <div class="row">
@@ -98,7 +123,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </div>
                             Any changes made to transactions after this date aren't included in this report.
                             <div class="line"></div>
-                            <div class="row">
+                            <div class="row" style="margin-top: 10px;">
                                 <div class="col-md-2">
                                     Summary
                                 </div>

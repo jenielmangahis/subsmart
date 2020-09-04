@@ -59,6 +59,18 @@ class Reconcile_model extends MY_Model {
 
 	}
 
+	public function selectsummary()  
+  	{  
+	  	$this->db->from('accounting_reconcile');  
+		$this->db->where('adjustment_date is NOT NULL', NULL, FALSE); 
+		$result =  $this->db->get()->result();
+	    return $result;
+  	}
 
+  	public function updatesingle($id,$adjustment_date)
+	{
+		$query="update accounting_reconcile set adjustment_date = '$adjustment_date' where id = '$id'";
+		echo $this->db->query($query);
+	}
 }
 ?>

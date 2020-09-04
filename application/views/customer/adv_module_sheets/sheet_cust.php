@@ -7,7 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-sm-12 text-right-sm" style="align:right;">
                 <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
                 <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
+                    <input type="checkbox" name="custom_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
                     <label class="onoffswitch-label" for="onoff-customize">
                         <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
                     </label>

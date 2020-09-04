@@ -67,7 +67,7 @@ class Vault extends MY_Controller {
 			$filename = $_FILES['fullfile']['name'];
 			$filesize = $_FILES['fullfile']['size'];
 
-			if($filesize < 8000000){
+			if($filesize <= 8000000){
 				$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 				$record = $this->db->query(
@@ -287,6 +287,136 @@ class Vault extends MY_Controller {
 		$return = $this->db->query('select file_id, title, description, file_path, category_id from filevault where file_id = ' . $file_id)->row_array();
 
 		echo json_encode($return);
+	}
+
+	public function move($to_folder = 0, $file_id = 0){
+		$uid = logged('id');
+
+		$return = array(
+			'error' => ''
+		);
+
+		if($file_id > 0){
+			$file = $this->vault_model->getById($file_id);
+			$old_path = './uploads/' . $this->company_folder . $file->file_path;
+			$new_path = './uploads/' . $this->company_folder . '/' . $file->title;
+			if($to_folder > 0){
+				$folder = $this->folders_model->getById($to_folder);
+				$new_path = './uploads/' . $this->company_folder . $folder->path . $file->title;
+			}
+
+			if(rename($old_path, $new_path)){
+				$data = array(
+					'folder_id' => $to_folder,
+					'file_path' => $new_path,
+					'modified' => date('Y-m-d h:i:s'),
+					'modified_by' => $uid
+				);
+
+				$this->vault_model->trans_update($data, array('file_id' => $file_id));
+			} else {
+				$return['error'] = 'Error in moving file ' . $file->title;
+			}
+		} else {
+			$return['error'] = 'Please select a file to update';
+		}
+
+		echo json_encode($return);
+	}
+
+	public function update(){
+		$return = array(
+			'error' => ''
+		);
+		
+		$new_file = false;
+		$uid = logged('id');
+		$company_id = logged('company_id');
+
+		$file_id = $_POST['file_id'];
+		$file = $this->vault_model->getById($file_id);
+
+		$folder_id = $_POST['folder_id'];
+		$file_desc = '';
+		$category = '';
+
+		if(isset($_POST['file_desc'])){
+			$file_desc = $_POST['file_desc'];
+		}
+
+		if(isset($_POST['category'])){
+			$category = $_POST['category'];
+		}
+
+		if(!empty($_FILES['fullfile'])) {
+			$filename = $_FILES['fullfile']['name'];
+			$filesize = $_FILES['fullfile']['size'];
+
+			if($filesize >= 8000000){
+				$return['error'] = 'File is larger than 8mb';
+			} else {
+				$new_file = true;
+			}
+		} else {
+			$filename = $file->title;
+		}
+
+		$record = $this->db->query(
+			'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id
+		)->row();
+
+		if($record->existing > 0){
+			$return['error'] = 'File already exists';
+			if(!empty($record->category_id)){
+				$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+			}	
+		} else {
+
+			$data = array(
+						'description' => $file_desc,
+						'modified' => date('Y-m-d h:i:s'),
+						'modified_by' => $uid
+					);
+
+			if($new_file){
+				$this->uploadlib->initialize([
+					'file_name' => $filename
+				]);
+
+				if($folder_id > 0){
+					$folder = $this->folders_model->getById($folder_id);
+					$folder_path = $folder->path;
+				} else {
+					$folder_path = '/';
+				}
+
+				$file_state = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
+
+				$data['title'] = $filename;
+				$data['file_path'] = $folder_path . $filename;
+				$data['file_size'] = $filesize;
+			} else {
+				$file_state['status'] = true;
+			}
+
+			if($file_state['status']){
+				if($category != ''){
+					$data['category_id'] = $category;
+				}
+
+				if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
+					$return['error'] = 'Error in updating file';
+				} else {
+					if($new_file){
+						unlink('./uploads/' . $this->company_folder . $file->file_path);
+					}
+				}
+			} else {
+				$return['error'] = 'Error uploading new file';
+			}	
+		}
+
+		echo json_encode($return);	
 	}
 }
 

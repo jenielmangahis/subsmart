@@ -128,7 +128,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
 
                     <div class="action-popup">
-                        <a href="#" class="btn-main uplobtn" id="menuButton" onclick="openFinishpop()">Add adjustment and finish</a>
+                        <a href="#" class="btn-main uplobtn" id="menuButton" onclick="openFinishpop(<?=$rows[0]->id?>)">Add adjustment and finish</a>
                         <a href="#" class="btn-main">Go back</a>
                     </div>
                 </div>
@@ -914,7 +914,6 @@ function closedelete(val) {
   var id = val;
   if(id!='')
   {
-    alert(id);
     $.ajax({
         url:"<?php echo url('accounting/reconcile/delete/reconcile') ?>",
         method: "POST",
@@ -948,10 +947,23 @@ function closedelete(val) {
         }
     }
 
-    function openFinishpop()
+    function openFinishpop(id)
     {
         $("#popup-hold").modal('hide');
         $("#popup-finish").modal('show');
+        var id = id;
+        var adjustment_date = $("#adjustment_date").val();
+        if(adjustment_date!='')
+        {
+            $.ajax({
+            url:"<?php echo url('accounting/reconcile/updatesingle/adjustment_date') ?>",
+            method: "POST",
+            data: {id:id,adjustment_date:adjustment_date},
+            success:function(data)
+            {
+            }
+        })
+        }
     }
 
     $("#adjustment_date").click(function() {

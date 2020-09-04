@@ -226,6 +226,7 @@ $(document).ready(function(){
           } else {
             $('#div_file_path_display').removeClass('d-none');
             $('#file_path_display').val(result.file_path);
+            $('#file_path_display').attr('filetitle',result.title);
             $('#file_desc').val(result.description);
 
             openEntry('edit_file');
@@ -429,6 +430,114 @@ $(document).ready(function(){
       } else {
         showFolderManagerNotif('Error', 'Please select category', 'error'); 
       }  
+    } else if(current_process == 'edit_folder'){
+      if(vContinue){
+        var folder_name = $('#folder_name').val();
+        var folder_desc = $('#folder_desc').val();
+        var parent_id = current_selected_folder;
+
+        folder_name = folder_name.trim();
+        folder_desc = folder_desc.trim();
+
+        if(isFolderNameValid(folder_name)){
+          $.ajax({
+            xhr: function() {
+                  var xhr = new window.XMLHttpRequest();
+                  xhr.upload.addEventListener("progress", function(evt) {
+                      if (evt.lengthComputable) {
+                          var percentComplete = ((evt.loaded / evt.total) * 100);
+                          percentComplete = percentComplete.toFixed(0);
+                          $('#modal-folder-manager-uploading-percentage').text(percentComplete + '%');
+                      }
+                  }, false);
+                  return xhr;
+            },
+            type: 'POST',
+            url: base_url + "folders/update",
+            data: {folder_id:selected,folder_name:folder_name,parent_id:parent_id,folder_desc:folder_desc,category:vCategory},
+            beforeSend: function(){
+              showUploading('Updating folder ' + folder_name, true);
+            },
+            success: function(data){
+              var result = jQuery.parseJSON(data);
+              if(result.error != ''){
+                hideUploading();
+
+                showFolderManagerNotif('Error', result.error, 'error');
+              } else {
+                getFoldersAndFiles(current_selected_folder);
+
+                closeEntry();
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              hideUploading();
+
+              showFolderManagerNotif(textStatus, errorThrown, 'error');  
+            }
+          });
+        } else {
+          showFolderManagerNotif('Error', 'Invalid folder name', 'error');
+        }
+      } else {
+        showFolderManagerNotif('Error', 'Please select category', 'error');
+      }  
+    } else if(current_process == 'edit_file'){ 
+      if(vContinue){
+        var formdata = new FormData();
+        var file = $('#fullfile').prop('files')[0];
+        var desc = $('#file_desc').val();
+        var folder_id = current_selected_folder; //selected folder's id
+        var title = $('#file_path_display').attr('filetitle');
+
+        formdata.append('fullfile', file);
+        formdata.append('file_id', selected);
+        formdata.append('file_desc', desc.trim());
+        formdata.append('folder_id', folder_id);
+        formdata.append('category', vCategory);
+
+        $.ajax({
+          xhr: function() {
+                  var xhr = new window.XMLHttpRequest();
+                  xhr.upload.addEventListener("progress", function(evt) {
+                      if (evt.lengthComputable) {
+                          var percentComplete = ((evt.loaded / evt.total) * 100);
+                          percentComplete = percentComplete.toFixed(0);
+                          $('#modal-folder-manager-uploading-percentage').text(percentComplete + '%');
+                      }
+                  }, false);
+                  return xhr;
+          },
+          type: 'POST',
+          url: base_url + "vault/update",
+          data: formdata,
+          contentType: false,
+          processData: false,
+          beforeSend: function(){
+            showUploading('Updating file ' + title, true);
+          }, 
+          success: function(data){
+            var result = jQuery.parseJSON(data);
+
+            if(result.error != ""){
+              hideUploading();
+
+              showFolderManagerNotif('Error', result.error, 'error');  
+            } else {
+              getFoldersAndFiles(current_selected_folder);
+
+              closeEntry();
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){ 
+            hideUploading();
+
+            showFolderManagerNotif(textStatus, errorThrown, 'error'); 
+          }
+        });
+      } else {
+        showFolderManagerNotif('Error', 'Please select category', 'error'); 
+      }
     } else if(current_process == 'add_category'){
       var vCName = $('#category_name').val();
       var vCDesc = $('#category_desc').val();

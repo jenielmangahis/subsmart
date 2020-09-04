@@ -143,7 +143,7 @@
           <div class="d-none w-100" id="file_entry">
             <div class="col-md-12 form-group d-none" id="div_file_path_display">
               <label for="file_path_display">Original File</label>
-              <input type="text" class="form-control" name="file_path_display" id="file_path_display" readonly/>  
+              <input type="text" class="form-control" name="file_path_display" id="file_path_display" filetitle="" readonly/>  
             </div>
             <div class="col-md-12 form-group">
               <label for="fullfile">Select File<small> (Allowed type: pdf, doc, docx, rtf, png, jpg, gif. Max size 8MB.)</small></label>
