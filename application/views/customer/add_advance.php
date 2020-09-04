@@ -24,7 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         flex-flow: wrap;
         flex: 0 0 41.666667%;
         max-width: 32%;
-        height: auto;
+        height: 100%;
     }
     .module_header{
         /** background-color: #5f0a87;
@@ -108,20 +108,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                 <div class="row" >
                     <div class="col-md-12">
-                        <div class="card">
+                        <div class="cards">
                             <div class="card-body">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="banking-tab-container">
+                                        <!--<div class="banking-tab-container">
                                             <div class="rb-01">
                                                 <ul class="nav nav-tabs border-0">
                                                     <li class="nav-item">
                                                         <a class="h6 mb-0 nav-link banking-sub-tab active" data-toggle="tab" href="#profile">Profile</a>
                                                     </li>
-                                                    <!--<li class="nav-item">
-                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#other">Other Info</a>
-                                                    </li>-->
-                                                    <?php //if (isset($profile_info)) :  ?>
                                                     <li class="nav-item">
                                                         <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#account">Account</a>
                                                     </li>
@@ -167,25 +163,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <?php //endif; ?>
                                                 </ul>
                                             </div>
-                                        </div>
-                                        <div class="tab-content mt-4" >
+                                        </div>-->
+                                        <!--<div class="tab-content mt-4" >
                                             <?php
-                                            include viewPath('customer/adv_module_sheets/sheet_profile');
-                                            include viewPath('customer/adv_module_sheets/sheet_account');
-                                            include viewPath('customer/adv_module_sheets/sheet_address');
-                                            include viewPath('customer/adv_module_sheets/sheet_billing');
-                                            include viewPath('customer/adv_module_sheets/sheet_alarm');
-                                            include viewPath('customer/adv_module_sheets/sheet_office');
-                                            include viewPath('customer/adv_module_sheets/sheet_admin');
-                                            include viewPath('customer/adv_module_sheets/sheet_tech');
-                                            include viewPath('customer/adv_module_sheets/sheet_access');
+//                                            include viewPath('customer/adv_module_sheets/sheet_profile');
+//                                            include viewPath('customer/adv_module_sheets/sheet_account');
+//                                            include viewPath('customer/adv_module_sheets/sheet_address');
+//                                            include viewPath('customer/adv_module_sheets/sheet_billing');
+//                                            include viewPath('customer/adv_module_sheets/sheet_alarm');
+//                                            include viewPath('customer/adv_module_sheets/sheet_office');
+//                                            include viewPath('customer/adv_module_sheets/sheet_admin');
+//                                            include viewPath('customer/adv_module_sheets/sheet_tech');
+//                                            include viewPath('customer/adv_module_sheets/sheet_access');
                                             //include viewPath('customer/adv_module_sheets/sheet_cust');
                                             ?>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="row">
-                                    <div class="col-md-4 module_ac">
-                                        <div class="row">
+                                        <div class="module_ac">
+                                            <div class="row">
                                             <div class="col-md-12 module_header">
                                                 <p class="module_title">Profile Module</p>
                                             </div>
@@ -472,20 +468,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </div>
                                                 </div>
                                             </div>
-                                                <br><br>
+                                            <br><br>
+
+                                        </div>
+                                    </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
                                             <div class="col-md-12 module_header">
                                                 <p class="module_title">Billing Information</p>
                                             </div>
                                             <div class="col-sm-12" id="billing_module">
-                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
-                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
-                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-                                                            <input type="checkbox" name="billing_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-bill">
-                                                            <label class="onoffswitch-label" for="onoff-bill">
-                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
-                                                            </label>
-                                                        </div>
+                                                <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                    <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                    <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                        <input type="checkbox" name="billing_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-bill">
+                                                        <label class="onoffswitch-label" for="onoff-bill">
+                                                            <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                        </label>
                                                     </div>
+                                                </div>
                                                 <div class="col-md-12 form-line">
                                                     <div class="row">
                                                         <div class="col-md-4">
@@ -824,9 +825,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </div>
                                                 </div>
                                             </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3 module_ac">
+                                        <div class=" module_ac">
                                         <div class="row">
                                             <div class="col-md-12 module_header">
                                                 <p class="module_title">Account Information</p>
@@ -1366,7 +1367,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                         </div>
                                     </div>
-                                        <div class="col-md-3 module_ac">
+                                        <div class=" module_ac">
                                             <div class="row">
                                                 <div class="col-md-12 module_header">
                                                     <p class="module_title">Address Information</p>
@@ -1485,8 +1486,1533 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Cell Phone </label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="phone_cell" id="phone_cell" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Alternate Phone </label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="phone_alternate" id="phone_alternate" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br><br>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact First Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact1_lastname" id="contact1_lastname" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Last Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact1_lastname" id="contact1_lastname" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Phone </label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    <input type="number" class="form-control" name="contact1_phone" id="contact1_phone" />
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <select id="contact1_phone_type" name="contact1_phone_type" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                                                        <option value="">Select</option>
+                                                                        <option value="Cell">Cell</option>
+                                                                        <option value="Fax">Fax</option>
+                                                                        <option value="Home">Home</option>
+                                                                        <option value="Pager">Pager</option>
+                                                                        <option value="Work">Work</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Relationship</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="contact1_relationship" name="contact1_relationship" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                                <option value="">- Select -</option>
+                                                                <option value="DLR">Dealer</option>
+                                                                <option value="EMP">Employee</option>
+                                                                <option value="FRND">Friend</option>
+                                                                <option value="JAN">Janitorial</option>
+                                                                <option value="MNT">Maintenance</option>
+                                                                <option value="MGR">Manager</option>
+                                                                <option value="NGH">Neighbor</option>
+                                                                <option value="SEC">On Site</option>
+                                                                <option selected="selected" value="OWN">Owner</option>
+                                                                <option value="REL">Relative</option>
+                                                                <option value="RES">Resident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <br><br>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact First Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact2_firstname" id="contact2_firstname" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Last Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact2_lastname" id="contact2_lastname" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Phone </label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    <input type="number" class="form-control" name="contact2_phone" id="contact2_phone" />
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <select id="contact2_phone_type" name="contact2_phone_type" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                                                                        <option value="">Select</option>
+                                                                        <option value="Cell">Cell</option>
+                                                                        <option value="Fax">Fax</option>
+                                                                        <option value="Home">Home</option>
+                                                                        <option value="Pager">Pager</option>
+                                                                        <option value="Work">Work</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Relationship</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="contact2_relationship" name="contact2_relationship" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                                                                <option value="">- Select -</option>
+                                                                <option value="DLR">Dealer</option>
+                                                                <option value="EMP">Employee</option>
+                                                                <option value="FRND">Friend</option>
+                                                                <option value="JAN">Janitorial</option>
+                                                                <option value="MNT">Maintenance</option>
+                                                                <option value="MGR">Manager</option>
+                                                                <option value="NGH">Neighbor</option>
+                                                                <option value="SEC">On Site</option>
+                                                                <option selected="selected" value="OWN">Owner</option>
+                                                                <option value="REL">Relative</option>
+                                                                <option value="RES">Resident</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
+                                                <div class="col-md-12 module_header">
+                                                    <p class="module_title">Alarm Information</p>
+                                                </div>
+                                                <div class="col-sm-12" id="address_module">
+                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                            <input type="checkbox" name="alarm_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-alarm">
+                                                            <label class="onoffswitch-label" for="onoff-alarm">
+                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Monitoring Company</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="monitor_comp" id="monitor_comp" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Monitoring ID</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="monitor_id" id="monitor_id" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Install Date</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control date_picker" name="install_date" id="install_date" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Credit Score</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="credit_score" id="credit_score" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Account Type</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select name="acct_type" id="acct_type" class="form-control">
+                                                                <option value=""></option>
+                                                                <option selected="selected" value="In-House">In-House</option>
+                                                                <option value="Purchase">Purchase</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Account Information</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="acct_info" id="acct_info" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Abort/Password Code</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="passcode" id="passcode" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Installer Code</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="install_code" id="install_code" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Monitoring Confirmation #</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="mcn" id="mcn" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Signal Confirmation #</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="scn" id="scn" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Name #1</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact1" id="contact1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Name #2</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact2" id="contact2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Name #3</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact3" id="contact3" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Name #4</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact4" id="contact4" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Contact Name #5</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="contact5" id="contact5" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Panel Type</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select name="panel_type" id="panel_type" class="form-control">
+                                                                <option value=""></option>
+                                                                <option selected="selected" value="DIGI">Landline</option>
+                                                                <option value="DW2W">Landline W/ 2-Way</option>
+                                                                <option value="DWCB">Landline W/ Cell Backup</option>
+                                                                <option value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
+                                                                <option value="CPDB">Cell Primary</option>
+                                                                <option value="CP2W">Cell Primary w/2Way</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">System Type</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="system_type" id="system_type" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Monitoring Waived</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="mon_waived" id="mon_waived" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rebate Offered:</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="rebate_offer" id="rebate_offer" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Verification:</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="verification" name="verification" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                                                                <option value="TrunsUnion">TrunsUnion</option>
+                                                                <option value="Experian">Experian </option>
+                                                                <option value="Equifax ">Equifax  </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rebate Check 1</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rebate Check 2</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Warranty Type</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="warranty_type" id="warranty_type" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 1</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field1" id="custom_field1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
+                                                <div class="col-md-12 module_header">
+                                                    <p class="module_title">Office Use Information</p>
+                                                </div>
+                                                <div class="col-sm-12" id="address_module">
+                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                            <input type="checkbox" name="office_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-office">
+                                                            <label class="onoffswitch-label" for="onoff-office">
+                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="welcome_sent"><span>Welcome kit Sent</span>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="checkbox" name="welcome_sent" value="1" id="welcome_sent">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <label for="rebate1"><span>Rebate Received</span>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <input type="radio" name="rebate[]" value="1" id="rebate1" checked required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label for="rebate"><span>Rebate Paid</span>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <input type="radio" name="rebate[]" value="0"  id="rebate">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <label for="">Commision Scheme Override</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="radio" name="commision_scheme[]" value="1" id="commision_scheme1" checked required>
+                                                            <label for="commision_scheme1"><span>On</span></label>
+
+                                                            <input type="radio" name="commision_scheme[]" value="0" id="commision_scheme">
+                                                            <label for="commision_scheme"><span>Off</span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rep Commission $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="rep_comm" id="rep_comm" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rep Upfront Pay</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="rep_upfront_pay" id="rep_upfront_pay" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Tech Commission $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="tech_comm" id="tech_comm" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="tech_upfront_pay">Tech Upfront Pay $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="tech_upfront_pay" id="tech_upfront_pay" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rep Tiered Upfront Bonus</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <i>$0.00</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rep Tiered Holdfund Bonus</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <i>$0.00</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rep Deductions Total</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <i>$0.00</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Tech Deductions Total</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <i>$0.00</i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">RepHold Fund Charge Back $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="rep_charge_back" id="rep_charge_back" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Rep Payroll Charge Back $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="rep_payroll_charge_back" id="rep_payroll_charge_back" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Points Scheme Override</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="radio" name="pso[]" value="1" id="pso1" checked required>
+                                                            <label for="pso1"><span>On</span></label>
+
+                                                            <input type="radio" name="pso[]" value="0" id="pso">
+                                                            <label for="pso"><span>Off</span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Points Included</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="points_include" id="points_include" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Price Per Point $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="price_per_point" id="price_per_point" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Purchase Price $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="purchase_price" id="purchase_price" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Purchase Multiple</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="purchase_multiple" id="purchase_multiple" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Purchase Discount $</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="purchase_discount" id="purchase_discount" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
+                                                <div class="col-md-12 module_header">
+                                                    <p class="module_title">Admin Information</p>
+                                                </div>
+                                                <div class="col-sm-12" id="address_module">
+                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                            <input type="checkbox" name="admin_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-admin">
+                                                            <label class="onoffswitch-label" for="onoff-admin">
+                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Entered by</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="entered_by" id="entered_by" required />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Time Entered</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="time_entered" name="time_entered" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                                <option value=""></option>
+                                                                <option value="7AM">7:00 AM</option>
+                                                                <option value="7.5AM">7:30 AM</option>
+                                                                <option selected="selected" value="8AM">8:00 AM</option>
+                                                                <option value="8.5AM">8:30 AM</option>
+                                                                <option value="9AM">9:00 AM</option>
+                                                                <option value="9.5AM">9:30 AM</option>
+                                                                <option value="10AM">10:00 AM</option>
+                                                                <option value="10.5AM" disabled="disabled">10:30 AM</option>
+                                                                <option value="11AM" disabled="disabled">11:00 AM</option>
+                                                                <option value="11.5AM" disabled="disabled">11:30 AM</option>
+                                                                <option value="12PM" disabled="disabled">12:00 PM</option>
+                                                                <option value="12.5PM" disabled="disabled">12:30 PM</option>
+                                                                <option value="1PM" disabled="disabled">1:00 PM</option>
+                                                                <option value="1.5PM" disabled="disabled">1:30 PM</option>
+                                                                <option value="2PM" disabled="disabled">2:00 PM</option>
+                                                                <option value="2.5PM" disabled="disabled">2:30 PM</option>
+                                                                <option value="3PM" disabled="disabled">3:00 PM</option>
+                                                                <option value="3.5PM" disabled="disabled">3:30 PM</option>
+                                                                <option value="4PM" disabled="disabled">4:00 PM</option>
+                                                                <option value="4.5PM" disabled="disabled">4:30 PM</option>
+                                                                <option value="5PM" disabled="disabled">5:00 PM</option>
+                                                                <option value="5.5PM" disabled="disabled">5:30 PM</option>
+                                                                <option value="6PM" disabled="disabled">6:00 PM</option>
+                                                                <option value="6.5PM" disabled="disabled">6:30 PM</option>
+                                                                <option value="7PM" disabled="disabled">7:00 PM</option>
+                                                                <option value="7.5PM" disabled="disabled">7:30 PM</option>
+                                                                <option value="8PM" disabled="disabled">8:00 PM</option>
+                                                                <option value="8.5PM" disabled="disabled">8:30 PM</option>
+                                                                <option value="9PM" disabled="disabled">9:00 PM</option>
+                                                                <option value="9.5PM" disabled="disabled">9:30 PM</option>
+                                                                <option value="10PM" disabled="disabled">10:00 PM</option>
+                                                                <option value="10.5PM" disabled="disabled">10:30 PM</option>
+                                                                <option value="11PM" disabled="disabled">11:00 PM</option>
+                                                                <option value="11.5PM" disabled="disabled">11:30 PM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Assign To</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="assign_to" id="assign_to" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Pre-install Survey</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="pre_install_survey" id="pre_install_survey" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 1</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field1" id="custom_field1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Language</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="language" id="language" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Date Enter</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control date_picker" name="date_enter" id="date_enter" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Sales Rep</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="sales_rep" name="sales_rep" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                                                                <option value="">Select</option>
+                                                                <?php foreach ($sales_area as $sa): ?>
+                                                                    <option value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
+                                                                <?php endforeach ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Post-install Survey</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="post_install_survey" id="post_install_survey" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 2</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field2" id="custom_field2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
+                                                <div class="col-md-12 module_header">
+                                                    <p class="module_title">Tech Information</p>
+                                                </div>
+                                                <div class="col-sm-12" id="address_module">
+                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                            <input type="checkbox" name="tech_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-tech">
+                                                            <label class="onoffswitch-label" for="onoff-tech">
+                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Tech Arrive Time</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="tech_arrive_time" name="tech_arrive_time" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                                <option value=""></option>
+                                                                <option value="7AM">7:00 AM</option>
+                                                                <option value="7.5AM">7:30 AM</option>
+                                                                <option selected="selected" value="8AM">8:00 AM</option>
+                                                                <option value="8.5AM">8:30 AM</option>
+                                                                <option value="9AM">9:00 AM</option>
+                                                                <option value="9.5AM">9:30 AM</option>
+                                                                <option value="10AM">10:00 AM</option>
+                                                                <option value="10.5AM" disabled="disabled">10:30 AM</option>
+                                                                <option value="11AM" disabled="disabled">11:00 AM</option>
+                                                                <option value="11.5AM" disabled="disabled">11:30 AM</option>
+                                                                <option value="12PM" disabled="disabled">12:00 PM</option>
+                                                                <option value="12.5PM" disabled="disabled">12:30 PM</option>
+                                                                <option value="1PM" disabled="disabled">1:00 PM</option>
+                                                                <option value="1.5PM" disabled="disabled">1:30 PM</option>
+                                                                <option value="2PM" disabled="disabled">2:00 PM</option>
+                                                                <option value="2.5PM" disabled="disabled">2:30 PM</option>
+                                                                <option value="3PM" disabled="disabled">3:00 PM</option>
+                                                                <option value="3.5PM" disabled="disabled">3:30 PM</option>
+                                                                <option value="4PM" disabled="disabled">4:00 PM</option>
+                                                                <option value="4.5PM" disabled="disabled">4:30 PM</option>
+                                                                <option value="5PM" disabled="disabled">5:00 PM</option>
+                                                                <option value="5.5PM" disabled="disabled">5:30 PM</option>
+                                                                <option value="6PM" disabled="disabled">6:00 PM</option>
+                                                                <option value="6.5PM" disabled="disabled">6:30 PM</option>
+                                                                <option value="7PM" disabled="disabled">7:00 PM</option>
+                                                                <option value="7.5PM" disabled="disabled">7:30 PM</option>
+                                                                <option value="8PM" disabled="disabled">8:00 PM</option>
+                                                                <option value="8.5PM" disabled="disabled">8:30 PM</option>
+                                                                <option value="9PM" disabled="disabled">9:00 PM</option>
+                                                                <option value="9.5PM" disabled="disabled">9:30 PM</option>
+                                                                <option value="10PM" disabled="disabled">10:00 PM</option>
+                                                                <option value="10.5PM" disabled="disabled">10:30 PM</option>
+                                                                <option value="11PM" disabled="disabled">11:00 PM</option>
+                                                                <option value="11.5PM" disabled="disabled">11:30 PM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Tech Complete Time</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="tech_complete_time" name="tech_complete_time" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                                <option value=""></option>
+                                                                <option value="7AM">7:00 AM</option>
+                                                                <option value="7.5AM">7:30 AM</option>
+                                                                <option selected="selected" value="8AM">8:00 AM</option>
+                                                                <option value="8.5AM">8:30 AM</option>
+                                                                <option value="9AM">9:00 AM</option>
+                                                                <option value="9.5AM">9:30 AM</option>
+                                                                <option value="10AM">10:00 AM</option>
+                                                                <option value="10.5AM" disabled="disabled">10:30 AM</option>
+                                                                <option value="11AM" disabled="disabled">11:00 AM</option>
+                                                                <option value="11.5AM" disabled="disabled">11:30 AM</option>
+                                                                <option value="12PM" disabled="disabled">12:00 PM</option>
+                                                                <option value="12.5PM" disabled="disabled">12:30 PM</option>
+                                                                <option value="1PM" disabled="disabled">1:00 PM</option>
+                                                                <option value="1.5PM" disabled="disabled">1:30 PM</option>
+                                                                <option value="2PM" disabled="disabled">2:00 PM</option>
+                                                                <option value="2.5PM" disabled="disabled">2:30 PM</option>
+                                                                <option value="3PM" disabled="disabled">3:00 PM</option>
+                                                                <option value="3.5PM" disabled="disabled">3:30 PM</option>
+                                                                <option value="4PM" disabled="disabled">4:00 PM</option>
+                                                                <option value="4.5PM" disabled="disabled">4:30 PM</option>
+                                                                <option value="5PM" disabled="disabled">5:00 PM</option>
+                                                                <option value="5.5PM" disabled="disabled">5:30 PM</option>
+                                                                <option value="6PM" disabled="disabled">6:00 PM</option>
+                                                                <option value="6.5PM" disabled="disabled">6:30 PM</option>
+                                                                <option value="7PM" disabled="disabled">7:00 PM</option>
+                                                                <option value="7.5PM" disabled="disabled">7:30 PM</option>
+                                                                <option value="8PM" disabled="disabled">8:00 PM</option>
+                                                                <option value="8.5PM" disabled="disabled">8:30 PM</option>
+                                                                <option value="9PM" disabled="disabled">9:00 PM</option>
+                                                                <option value="9.5PM" disabled="disabled">9:30 PM</option>
+                                                                <option value="10PM" disabled="disabled">10:00 PM</option>
+                                                                <option value="10.5PM" disabled="disabled">10:30 PM</option>
+                                                                <option value="11PM" disabled="disabled">11:00 PM</option>
+                                                                <option value="11.5PM" disabled="disabled">11:30 PM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Time Given</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="time_given" name="time_given" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                                <option value=""></option>
+                                                                <option value="7AM">7:00 AM</option>
+                                                                <option value="7.5AM">7:30 AM</option>
+                                                                <option selected="selected" value="8AM">8:00 AM</option>
+                                                                <option value="8.5AM">8:30 AM</option>
+                                                                <option value="9AM">9:00 AM</option>
+                                                                <option value="9.5AM">9:30 AM</option>
+                                                                <option value="10AM">10:00 AM</option>
+                                                                <option value="10.5AM" disabled="disabled">10:30 AM</option>
+                                                                <option value="11AM" disabled="disabled">11:00 AM</option>
+                                                                <option value="11.5AM" disabled="disabled">11:30 AM</option>
+                                                                <option value="12PM" disabled="disabled">12:00 PM</option>
+                                                                <option value="12.5PM" disabled="disabled">12:30 PM</option>
+                                                                <option value="1PM" disabled="disabled">1:00 PM</option>
+                                                                <option value="1.5PM" disabled="disabled">1:30 PM</option>
+                                                                <option value="2PM" disabled="disabled">2:00 PM</option>
+                                                                <option value="2.5PM" disabled="disabled">2:30 PM</option>
+                                                                <option value="3PM" disabled="disabled">3:00 PM</option>
+                                                                <option value="3.5PM" disabled="disabled">3:30 PM</option>
+                                                                <option value="4PM" disabled="disabled">4:00 PM</option>
+                                                                <option value="4.5PM" disabled="disabled">4:30 PM</option>
+                                                                <option value="5PM" disabled="disabled">5:00 PM</option>
+                                                                <option value="5.5PM" disabled="disabled">5:30 PM</option>
+                                                                <option value="6PM" disabled="disabled">6:00 PM</option>
+                                                                <option value="6.5PM" disabled="disabled">6:30 PM</option>
+                                                                <option value="7PM" disabled="disabled">7:00 PM</option>
+                                                                <option value="7.5PM" disabled="disabled">7:30 PM</option>
+                                                                <option value="8PM" disabled="disabled">8:00 PM</option>
+                                                                <option value="8.5PM" disabled="disabled">8:30 PM</option>
+                                                                <option value="9PM" disabled="disabled">9:00 PM</option>
+                                                                <option value="9.5PM" disabled="disabled">9:30 PM</option>
+                                                                <option value="10PM" disabled="disabled">10:00 PM</option>
+                                                                <option value="10.5PM" disabled="disabled">10:30 PM</option>
+                                                                <option value="11PM" disabled="disabled">11:00 PM</option>
+                                                                <option value="11.5PM" disabled="disabled">11:30 PM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Date Given</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control date_picker" name="date_given" id="date_given" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Tech Assign</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="tech_assign" id="tech_assign" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 1</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field1" id="custom_field1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 2</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field2" id="custom_field2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 3</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field3" id="custom_field3" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 4</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field4" id="custom_field4" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">URL</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="url" id="url" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
+                                                <div class="col-md-12 module_header">
+                                                    <p class="module_title">Access Information</p>
+                                                </div>
+                                                <div class="col-sm-12" id="access_module">
+                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                            <input type="checkbox" name="tech_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-tech">
+                                                            <label class="onoffswitch-label" for="onoff-tech">
+                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Portal Status (on/off)</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="radio" name="portal_status[]" value="1" id="portal_status1" checked required>
+                                                            <label for="portal_status1"><span>On</span></label>
+
+                                                            <input type="radio" name="portal_status[]" value="0"  id="portal_status">
+                                                            <label for="rebate"><span>Off</span></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Reset Password (Button)</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="reset_password" id="reset_password" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Login</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="login" id="login" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Password</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="password" id="password" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 1</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field1" id="custom_field1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 2</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="custom_field2" id="custom_field2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Cancellation Date</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control date_picker" name="cancel_date" id="cancel_date" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Collection Date</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control date_picker" name="collect_date" id="collect_date" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Cancellation Reason</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="cancel_reason" id="cancel_reason" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Collection Amount</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="collect_amount" id="collect_amount" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class=" module_ac">
+                                            <div class="row">
+                                                <div class="col-md-12 module_header">
+                                                    <p class="module_title">Customizable Module</p>
+                                                </div>
+                                                <div class="col-sm-12" id="access_module">
+                                                    <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                        <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                        <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                            <input type="checkbox" name="custom_switch" class="onoffswitch-checkbox" data-customize="open" id="onoff-cust">
+                                                            <label class="onoffswitch-label" for="onoff-cust">
+                                                                <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 1</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield1" id="customfield1" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 2</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield2" id="customfield2" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 3</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield3" id="customfield3" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 4</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield4" id="customfield4" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 5</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield5" id="customfield5" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 6</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield6" id="customfield6" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 7</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield7" id="customfield7" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 8</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield8" id="customfield8" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 9</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield9" id="customfield9" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 10</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield10" id="customfield10" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 11</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield11" id="customfield11" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 12</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield12" id="customfield12" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 13</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield13" id="customfield13" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 14</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield14" id="customfield14" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 15</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield15" id="customfield15" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 16</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield16" id="customfield16" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 17</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield17" id="customfield17" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 18</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield18" id="customfield18" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 19</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield19" id="customfield19" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 20</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield20" id="customfield20" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 21</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield21" id="customfield21" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 22</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield22" id="customfield22" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 23</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield23" id="customfield23" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 form-line">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="">Custom Field 24</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input type="text" class="form-control" name="customfield24" id="customfield24" />
+
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a href="#"><span style="padding-top:7px !important; " class="fa fa-pencil pull-right"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>

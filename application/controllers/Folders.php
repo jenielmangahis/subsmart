@@ -510,68 +510,177 @@ class Folders extends MY_Controller {
 	private function recurseFolder($to_folder_id, $to_folder, $folder, $move = false, $repath = false){
 		$uid = logged('id');
 
-		$old_path = './uploads/' . $this->company_folder . $folder->path;
-		if($to_folder_id == 0){
-			$new_path = './uploads/' . $this->company_folder . '/' . $folder->folder_name;
-		} else {
-			$new_path = './uploads/' . $this->company_folder . $to_folder->path . $folder->folder_name;
-		}
-
-		if(mkdir($new_path,0777)){
+		if($move){
+			$old_path = './uploads/' . $this->company_folder . $folder->path;
 			if($to_folder_id == 0){
-				$path = '/' . $folder->folder_name . '/';
+				$new_path = './uploads/' . $this->company_folder . '/' . $folder->folder_name;
 			} else {
-				$path = $to_folder->path . $folder->folder_name . '/';
+				$new_path = './uploads/' . $this->company_folder . $to_folder->path . $folder->folder_name;
 			}
 
-			if($to_folder_id == 0){
-				$parent_id = $to_folder_id;
-			} else {
-				$parent_id = $to_folder->folder_id;
-			}
-
-			$data = array(
-				'path' => $path,
-				'parent_id' => $parent_id,
-				'date_modified' => date('Y-m-d h:i:s'),
-				'modified_by' => $uid
-			);
-
-			if($this->folders_model->trans_update($data, array('folder_id' => $folder->folder_id))){
-				$new_folder = $this->folders_model->getById($folder->folder_id);
-				$folders = getFolders($new_folder->folder_id)->result();
-				foreach ($folders as $vFolder) {
-					$this->recurseFolder($new_folder->folder_id, $new_folder, $vFolder, true);
+			if(mkdir($new_path,0777)){
+				if($to_folder_id == 0){
+					$path = '/' . $folder->folder_name . '/';
+				} else {
+					$path = $to_folder->path . $folder->folder_name . '/';
 				}
 
-				$this->moveFiles($new_folder, $folder);
-				rmdir($old_path);	
+				if($to_folder_id == 0){
+					$parent_id = $to_folder_id;
+				} else {
+					$parent_id = $to_folder->folder_id;
+				}
+
+				$data = array(
+					'path' => $path,
+					'parent_id' => $parent_id,
+					'date_modified' => date('Y-m-d h:i:s'),
+					'modified_by' => $uid
+				);
+
+				if($this->folders_model->trans_update($data, array('folder_id' => $folder->folder_id))){
+					$new_folder = $this->folders_model->getById($folder->folder_id);
+					$folders = getFolders($new_folder->folder_id)->result();
+					foreach ($folders as $vFolder) {
+						$this->recurseFolder($new_folder->folder_id, $new_folder, $vFolder, true);
+					}
+
+					$this->moveFiles($new_folder, $folder);
+					rmdir($old_path);	
+				}
 			}
+		} else if($repath) {
+			$new_to_folder = $this->folders_model->getById($to_folder_id);
+			$folders = getFolders($to_folder_id)->result();
+			foreach ($folders as $vFolder) {
+				$new_path = $new_to_folder->path . $vFolder->folder_name . '/';
+
+				$data = array(
+					'path' => $new_path,
+					'modified_by' => $uid,
+					'date_modified' => date('Y-m-d h:i:s')
+				);
+
+				if($this->folders_model->trans_update($data, array('folder_id' => $vFolder->folder_id))){
+					$this->recurseFolder($vFolder->folder_id, $vFolder, null, false, true);
+				}
+			}
+
+			
+			$this->moveFiles(null, $new_to_folder, true);
 		}
 	}
 
-	private function moveFiles($to_folder, $folder){
+	private function moveFiles($to_folder, $folder, $repath = false){
 		$uid = logged('id');
 
 		$files = getFiles($folder->folder_id)->result();
 		foreach ($files as $file) {
-			$old_path = './uploads/' . $this->company_folder . $file->file_path;
-			$new_path = './uploads/' . $this->company_folder . $to_folder->path . $file->title;
+			if(!$repath){
+				$old_path = './uploads/' . $this->company_folder . $file->file_path;
+				$new_path = './uploads/' . $this->company_folder . $to_folder->path . $file->title;
 
-			if(rename($old_path, $new_path)){
+				if(rename($old_path, $new_path)){
+					$data = array(
+						'file_path' => $to_folder->path . $file->title,
+						'modified' => date('Y-m-d h:i:s'),
+						'modified_by' => $uid
+					);
+
+					$this->vault_model->trans_update($data, array('file_id' => $file->file_id));
+				}
+			} else {
 				$data = array(
-					'file_path' => $to_folder->path . $file->title,
+					'file_path' => $folder->path . $file->title,
 					'modified' => date('Y-m-d h:i:s'),
 					'modified_by' => $uid
 				);
 
-				$this->vault_model->trans_update($data, array('file_id' => $file->file_id));
+				$this->vault_model->trans_update($data, array('file_id' => $file->file_id));	
 			}
 		}
 	}
 
 	public function getFolder($folder_id){
 		$return = $this->db->query('select folder_id, folder_name, description, category_id from file_folders where folder_id = ' . $folder_id)->row_array();
+
+		echo json_encode($return);
+	}
+
+	public function update(){
+		$uid = logged('id');
+		$company_id = logged('company_id');
+
+		if($this->company_folder != ''){
+			$return = array(
+				'latest_folder' => array(),
+				'error' => ''
+			);
+
+			$folder_id = $_POST['folder_id'];
+			$folder_name = $_POST['folder_name'];
+			$parent_id = 0;
+			$category = '';
+			if(isset($_POST['parent_id'])){
+				$parent_id = $_POST['parent_id'];
+			}
+
+			if(isset($_POST['category'])){
+				$category = $_POST['category'];
+			}
+
+			$description = '';
+			$path = '';
+
+			$record = $this->db->query('select count(*) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and folder_id <> '. $folder_id .' and company_id = ' . $company_id)->row();
+
+			if($record->existing > 0){
+				$return['error'] = 'Folder already exists';
+				if(!empty($record->category_id)){
+					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+				}
+			} else {
+				$folder = $this->folders_model->getById($folder_id);
+				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
+				if($parent_folder->num_rows() > 0){
+					$parent_folder = $parent_folder->row();
+
+					$old_path = $parent_folder->path . $folder->folder_name . '/';
+					$new_path = $parent_folder->path . $folder_name . '/';
+				} else {
+					$old_path = '/' . $folder->folder_name . '/';
+					$new_path = '/' . $folder_name . '/';
+				}
+
+				if(isset($_POST['folder_desc'])){
+					$description = $_POST['folder_desc'];
+				}
+
+				$data = array(
+					'folder_name' => $folder_name,
+					'description' => $description,
+					'path' => $new_path,
+					'modified_by' => $uid,
+					'date_modified' => date('Y-m-d h:i:s')
+				);
+
+				if($category != ''){
+					$data['category_id'] = $category;
+				}
+
+				if($this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
+					if(rename('./uploads/' . $this->company_folder . $old_path, './uploads/' . $this->company_folder . $new_path)){
+						$this->recurseFolder($folder_id, $folder, null, false, true);
+					} else {
+						$return['error'] = 'Error in renaming the actual file. Please contact our support';
+					}
+				} else {
+					$return['error'] = 'Error in updating folder. Please contact our support';
+				}
+			}
+		} else {
+			$return['error'] = 'Error in initializing root folder';
+		}
 
 		echo json_encode($return);
 	}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2020 at 09:59 AM
+-- Generation Time: Sep 03, 2020 at 03:58 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reconcile`
+-- Table structure for table `accounting_reconcile`
 --
 
-CREATE TABLE `reconcile` (
+CREATE TABLE `accounting_reconcile` (
   `id` int(11) NOT NULL,
   `chart_of_accounts_id` int(11) NOT NULL,
   `ending_balance` varchar(255) NOT NULL,
@@ -38,24 +38,25 @@ CREATE TABLE `reconcile` (
   `expense_account` varchar(255) NOT NULL,
   `second_date` varchar(255) NOT NULL,
   `interest_earned` varchar(255) NOT NULL,
-  `income_account` varchar(255) NOT NULL
+  `income_account` varchar(255) NOT NULL,
+  `adjustment_date` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `reconcile`
+-- Dumping data for table `accounting_reconcile`
 --
 
-INSERT INTO `reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`) VALUES
-(2, 1, '2000', '28.08.2020', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand');
+INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`) VALUES
+(2, 1, '2000', '28.08.2020', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '20.08.2020');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `reconcile`
+-- Indexes for table `accounting_reconcile`
 --
-ALTER TABLE `reconcile`
+ALTER TABLE `accounting_reconcile`
   ADD PRIMARY KEY (`id`),
   ADD KEY `chart_of_accounts_id` (`chart_of_accounts_id`);
 
@@ -64,10 +65,10 @@ ALTER TABLE `reconcile`
 --
 
 --
--- AUTO_INCREMENT for table `reconcile`
+-- AUTO_INCREMENT for table `accounting_reconcile`
 --
-ALTER TABLE `reconcile`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `accounting_reconcile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

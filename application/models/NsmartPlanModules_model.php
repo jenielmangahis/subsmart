@@ -65,8 +65,8 @@ class NsmartPlanModules_model extends MY_Model
 
         $this->db->where('nsmart_feature_id', $id);
 
-        $query = $this->db->get()->row();
-        return $query;
+        $query = $this->db->get();
+        return $query->result();        
     }
 
     public function getAllByPlanHeadingId($id)

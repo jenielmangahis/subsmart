@@ -110,6 +110,7 @@ p.plan-list-price {
 			<div class="col-sm-7 col-md-7 float-left pr-0 container-signup pt-5">
 				<form action="#" method="post">
 					<input type="hidden" name="plan_id" id="plan_id" value="">
+					<input type="hidden" name="plan_price" id="plan_price" value="">
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
 					<span class="text-center block mt-3">Already signed up? <a href="#" class="reg-color">Log in</a></span>
 					<span class="text-reg-subtle">Studies show CRM Systems will increase your customer relationship by 74% and improves your sales by 87%</span>
@@ -133,6 +134,10 @@ p.plan-list-price {
 						          <a href="#step-3" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">3</a>
 						          <p>Step 3</p>
 						        </div>
+						        <div class="steps-step">
+						          <a href="#step-4" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">4</a>
+						          <p>Step 4</p>
+						        </div>
 						      </div>
 						    </div>
 
@@ -146,7 +151,7 @@ p.plan-list-price {
   						          	<li>
   						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
   						          		<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
-  						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>">Select Plan</a>
+  						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
   						          	</li>
   						          <?php } ?>
   						      	  </ul>
@@ -246,10 +251,21 @@ p.plan-list-price {
 						      <div class="row setup-content" id="step-3">
 						        <div class="col-md-12">
 						          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
-						          <input type="submit" class="btn btn-green-2" name="signup" value="Sign Up">
-						          <br />
+						          <div class="payment-method" style="display: block;margin-bottom: 74px;">
+						          	<label>Plan : <b><span class="plan-selected"></span></b></label><br />
+						          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
+						          	<hr />
+						          	<p><b>Payment Method</b></p>
+						          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+						      	  </div>
 						          <button class="btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
-						          <button class="btn btn-default btn-rounded float-right" type="submit">Submit</button>
+						          <button class="btn btn-default btn-rounded float-right" type="submit">Process to Payment</button>
+						        </div>
+						      </div>
+						      <div class="row setup-content" id="step-3">
+						        <div class="col-md-12">
+						          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
+						          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
 						        </div>
 						      </div>
 
@@ -337,11 +353,18 @@ $(function(){
 
     step2bBtn.click(function(){
     	var plan_id = $(this).attr("data-id");
+    	var plan_price = $(this).attr("data-price");
+    	var plan_name  = $(this).attr("data-plan");
     	var curStep = $(this).closest(".setup-content");
-    	var  curStepBtn    = curStep.attr("id");
+    	var curStepBtn    = curStep.attr("id");
     	var nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a");
 
     	$("#plan_id").val(plan_id);
+    	$("#plan_price").val(plan_price);
+
+    	$(".plan-selected").text(plan_name);
+    	$(".total-amount").text(plan_price);
+
     	nextStepWizard.removeAttr('disabled').trigger('click');
     });
 

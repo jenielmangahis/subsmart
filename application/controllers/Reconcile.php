@@ -151,4 +151,19 @@ class Reconcile extends MY_Controller {
         $this->page_data['rows']  =  $this->reconcile_model->selectonwhere($id);
 		$this->load->view('accounting/reconcile/report', $this->page_data);
     }
+
+    public function summary()
+    {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rows']  =  $this->reconcile_model->selectsummary();
+        $this->load->view('accounting/reconcile/summary', $this->page_data);
+    }
+
+    public function adjustment_date()
+    {
+        $id=$this->input->post('id');
+        $adjustment_date=$this->input->post('adjustment_date');
+        $this->reconcile_model->updatesingle($id,$adjustment_date);
+    }
 }
