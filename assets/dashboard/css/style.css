@@ -1732,6 +1732,33 @@ button:focus {
     .smart__grid {
       height: auto !important;
     }
+    .mobile-form {
+      width: 310px;
+    }
+    .mobile-form > span {
+      float: left;
+      margin-right: 15px;
+      position: relative;
+      top: 8px;
+    }
+    ul.mobile-invoice-ul li {
+      width: 50%;
+      float: left;
+      height: 39px;
+      font-size: 13px;
+    }
+    .dropdown-toggle.mobile-mt-2::after {
+      display: block;
+      position: absolute;
+      top: 64% !important;
+      right: 6px !important;
+    }
+    .mobile-mt-2 {
+      margin-top: 20px;
+    }
+    .mobile-form > .form-control, .mobile-form > button {
+      float:left;
+    }
     ::-webkit-scrollbar {
       display: none;
     }

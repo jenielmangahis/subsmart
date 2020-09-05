@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-auto text-right-sm d-flex align-items-center mb-fix-list">
                         <form style="display: inline;" class="form-inline form-search" name="form-search"
                               action="<?php echo base_url('estimate') ?>" method="get">
-                            <div class="form-group m-0" style="margin:0 !important;">
+                            <div class="form-group m-0 mobile-form" style="margin:0 !important;">
                                 <span>Search:</span> &nbsp;<input class="form-control form-control-md"
                                                                   name="search"
                                                                   value="<?php echo (!empty($search)) ? $search : '' ?>"
@@ -52,8 +52,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <?php } ?>
                             </div>
                         </form>
-                        <span class="margin-left-sec sc-2">Sort:</span> &nbsp;
-                        <div class="dropdown dropdown-inline open sc-2"><a class="btn btn-default dropdown-toggle"
+                        <span class="margin-left-sec sc-2 mobile-mt-2">Sort:</span> &nbsp;
+                        <div class="dropdown dropdown-inline open sc-2"><a class="btn btn-default dropdown-toggle mobile-mt-2"
                                                                       data-toggle="dropdown" aria-expanded="true"
                                                                       href="<?php echo base_url('estimate') ?>?order=added-desc">Newest
                                 first <span class="caret"></span></a>
