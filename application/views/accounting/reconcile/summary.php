@@ -51,7 +51,7 @@ position: absolute;
                       <h1 class="page-title">Reconcilation Summary</h1>
                     </div>
                     <div class="col-md-3">
-                        <a href="#">Reconcile</a> | <a href="#">History By account</a>
+                        <a href="<?=url('accounting/reconcile')?>">Reconcile</a> | <a href="#">History By account</a>
                     </div>
                 </div>
             </div>

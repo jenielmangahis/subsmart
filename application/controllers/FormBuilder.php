@@ -172,7 +172,8 @@ class FormBuilder extends MY_Controller {
 	}
 
 	public function updateElementChoices($element_id){
-		$query = $this->formsbuilder_model->updateElementChoices($element_id, $this->input->post());
+		$query = $this->formsbuilder_model->deleteElementChoices($element_id);
+		$query = $this->formsbuilder_model->addElementChoices($this->input->post());
 		$data = array(
 			"status" => 1
 		);
@@ -191,13 +192,13 @@ class FormBuilder extends MY_Controller {
 
 	public function submitForm($form_id){
 		
+		echo "<pre>";
 		var_dump($this->input->post());
 		// var_dump($_FILES);
 		exit;
 
 		$sid = rand(100000000,999999999);
 		foreach($this->input->post() as $key => $answer){
-			echo "<pre>";
 			$data = array(
 				"fa_form_id" => $form_id,
 				"fa_element_id" => explode('-', $key)[1],

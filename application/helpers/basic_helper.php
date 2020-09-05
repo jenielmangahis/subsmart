@@ -825,7 +825,8 @@ if (!function_exists('getFolders')) {
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name as c_folder, '.
                '(ifnull(d.total_sub_folders,0) + ifnull(e.total_files,0)) as `total_contents`, '.
-               'f.category_name '.
+               'f.category_name, '.
+               'f.category_desc '.
 
                'from file_folders a '.
                'left join users b on b.id = a.created_by '.
@@ -895,7 +896,8 @@ if (!function_exists('getFiles')) {
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name, '.
-               'd.category_name '.
+               'd.category_name, '.
+               'd.category_desc '.
 
                'from filevault a '.
                'left join users b on b.id = a.user_id '.

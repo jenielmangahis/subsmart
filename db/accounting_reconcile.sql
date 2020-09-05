@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 03, 2020 at 03:58 PM
+-- Generation Time: Sep 04, 2020 at 06:56 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -39,15 +39,17 @@ CREATE TABLE `accounting_reconcile` (
   `second_date` varchar(255) NOT NULL,
   `interest_earned` varchar(255) NOT NULL,
   `income_account` varchar(255) NOT NULL,
-  `adjustment_date` varchar(255) DEFAULT NULL
+  `adjustment_date` varchar(255) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 = inactive , 1 = active	'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `accounting_reconcile`
 --
 
-INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`) VALUES
-(2, 1, '2000', '28.08.2020', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '20.08.2020');
+INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `active`) VALUES
+(2, 1, '2000', '28.08.2020', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '20.08.2020', 1),
+(4, 2, '10000', '09.06.2020', '10.06.2020', '100', 'Cash on hand', '10.06.2020', '200', 'Cash on hand', NULL, 1);
 
 --
 -- Indexes for dumped tables
@@ -68,7 +70,7 @@ ALTER TABLE `accounting_reconcile`
 -- AUTO_INCREMENT for table `accounting_reconcile`
 --
 ALTER TABLE `accounting_reconcile`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

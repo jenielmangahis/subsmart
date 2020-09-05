@@ -226,19 +226,24 @@ $('#submit').on('click', function() {
 $("#ending_date").datepicker({
     todayBtn:  1,
     autoclose: true,
+    format: "dd.mm.yyyy",
 }).on('changeDate', function (selected) {
     var minDate = new Date(selected.date.valueOf());
     $('#first_date').datepicker('setStartDate', minDate);
     $('#second_date').datepicker('setStartDate', minDate);
 });
     
-$("#first_date").datepicker()
-    .on('changeDate', function (selected) {
+$("#first_date").datepicker({
+    autoclose: true,
+    format: "dd.mm.yyyy",
+}).on('changeDate', function (selected) {
         var minDate = new Date(selected.date.valueOf());
         $('#ending_date').datepicker('setEndDate', minDate);
     });
-$("#second_date").datepicker()
-    .on('changeDate', function (selected) {
+$("#second_date").datepicker({
+    autoclose: true,
+    format: "dd.mm.yyyy",
+}).on('changeDate', function (selected) {
         var minDate = new Date(selected.date.valueOf());
         $('#ending_date').datepicker('setEndDate', minDate);
     });

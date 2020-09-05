@@ -2530,12 +2530,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button">
-                                <a href="https://signup.quickbooks.intuit.com/?locale=en-us&amp;offerType=buy&amp;bc=OBI-LL7&amp;offerId=20016674&amp;product=qbse" data-wa-link="sebuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Self Employed" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sebuynow-diy"><span>Buy
+                                <a href="javascript:void(0);" data-wa-link="sebuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Self Employed" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sebuynow-diy"><span>Buy
                                         now</span></a>
                             </div>
                             <p class="or-text ">or</p>
                             <div class="tryit-free-link-url ">
-                                <a href="https://signup.quickbooks.intuit.com/?locale=en-us&amp;offerType=trial&amp;bc=OBI-LL7&amp;offerId=20016680&amp;product=qbse" data-wa-link="setrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Self Employed" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#setrial-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="javascript:void(00;)" data-wa-link="setrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Self Employed" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#setrial-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">

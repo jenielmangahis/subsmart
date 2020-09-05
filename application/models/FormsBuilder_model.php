@@ -106,7 +106,7 @@ class FormsBuilder_model extends MY_Model {
 	}
 
 	public function deleteElementChoices($element_id){
-		$this->db->where('fe_id', $element_id);
+		$this->db->where('fc_element_id', $element_id);
 		$query = $this->db->delete($this->choices_table);
 		return array(
 			"status" => 1
