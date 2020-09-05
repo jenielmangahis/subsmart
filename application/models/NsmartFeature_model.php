@@ -28,8 +28,6 @@ class NsmartFeature_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
