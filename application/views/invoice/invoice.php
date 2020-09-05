@@ -117,11 +117,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="summary-item-value" id="paid_total">$<?php echo get_invoice_amount('paid') ?></div>
                                     </div>
                                 </div>
-                            </div>                         
-                        </div>                         
+                            </div>
+                        </div>
 
                         <div class="tabs">
-                            <ul class="clearfix work__order" id="myTab" role="tablist">
+                            <ul class="clearfix work__order mobile-invoice-ul" id="myTab" role="tablist">
                                 <li <?php echo ((empty($tab)) || $tab == 1) ? "class='active'" : "" ?>>
                                     <a class="nav-link"
                                        id="profile-tab"
@@ -181,7 +181,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                                            
+
                                 <?php if (!empty($invoices)) { ?>
                                     <table class="table table-hover table-to-list" data-id="work_orders">
                                         <thead>

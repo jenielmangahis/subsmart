@@ -112,7 +112,7 @@ p.plan-list-price {
 					<input type="hidden" name="plan_id" id="plan_id" value="">
 					<input type="hidden" name="plan_price" id="plan_price" value="">
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
-					<span class="text-center block mt-3">Already signed up? <a href="#" class="reg-color">Log in</a></span>
+					<span class="text-center block mt-3">Already signed up? <a href="<?php echo url('login');?>" class="reg-color">Log in</a></span>
 					<span class="text-reg-subtle">Studies show CRM Systems will increase your customer relationship by 74% and improves your sales by 87%</span>
 					<div class="form-container-reg">
 
@@ -123,25 +123,26 @@ p.plan-list-price {
 						    <div class="steps-form">
 						      <div class="steps-row setup-panel">
 						        <div class="steps-step">
-						          <a href="#step-1" type="button" class="btn reg-sc btn-indigo btn-circle">1</a>
+						          <a href="#step-1" id="step1" type="button" class="btn reg-sc btn-indigo btn-circle">1</a>
 						          <p>Step 1</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-2" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">2</a>
+						          <a href="#step-2" id="step2" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">2</a>
 						          <p>Step 2</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-3" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">3</a>
+						          <a href="#step-3" id="step3" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">3</a>
 						          <p>Step 3</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-4" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">4</a>
+						          <a href="#step-4" id="step4" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">4</a>
 						          <p>Step 4</p>
 						        </div>
 						      </div>
 						    </div>
 
 						    	<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
+						      	
 						      	<!-- First Step -->
 						      	<div class="row setup-content" id="step-1">
 							        <div class="col-md-12">
@@ -268,6 +269,7 @@ p.plan-list-price {
 						      	<div class="row setup-content" id="step-4">
 							        <div class="col-md-12">
 							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
+							          <p>Please add paypal success of cancel data here..</p>
 							          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
 							        </div>
 						      	</div>
@@ -379,5 +381,11 @@ $(function(){
    	});
 
     $('div.setup-panel div a.btn-indigo').trigger('click');
+
+    <?php if($payment_status == 'success') { ?>
+    		$('div.setup-panel div a#step4').trigger('click');
+    <?php }elseif($payment_status == 'cancel') { ?>
+    		$('div.setup-panel div a#step4').trigger('click');
+    <?php } ?>
 });
 </script>
