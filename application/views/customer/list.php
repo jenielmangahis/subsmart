@@ -155,7 +155,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <br><br><br>
                                                                 <div class="tab-content" id="myTabContent">
                                                                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-
                                                                         <table class="table table-hover" id="customer_list_table">
                                                                             <thead>
                                                                                 <tr>

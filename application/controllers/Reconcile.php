@@ -166,4 +166,12 @@ class Reconcile extends MY_Controller {
         $adjustment_date=$this->input->post('adjustment_date');
         $this->reconcile_model->updatesingle($id,$adjustment_date);
     }
+
+    public function fetch_ending_date()
+    {
+        if($this->input->post('chart_of_accounts_id'))
+        {
+            echo $this->reconcile_model->fetch_ending_date($this->input->post('chart_of_accounts_id'));
+        }
+    }
 }

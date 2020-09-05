@@ -31,7 +31,9 @@ $(document).ready(function(){
 
   var dtu_files = {};
   var dtu_multiple_uploadable = 0;
-  var dtu_multiple_uploaded = 0; 
+  var dtu_multiple_uploaded = 0;
+
+  var categories = []; 
 
 // -------------------------------------------------------------------------------------------------------------
 // Load initial functions
@@ -1147,7 +1149,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
   selected = 0;
   selected_isFolder = 1;
 
-  var categories = [];
+  categories = [];
 
   var cur_count = 1;
   var category = '';
@@ -1174,10 +1176,17 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append = '<div class="card" id="bft_' + category + '">';
 
         card_append += '<div class="card-header">'+
-                       '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                       '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
                        '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
-                       '</a>'+
-                       '</div>';
+                       '</a><br>';
+
+        if((folder.category_desc != "") && (folder.category_desc != null)){
+          card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
+                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: rgba(0,0,0,.03)"></i><small>'+ folder.category_desc +
+                         '</small></a>';
+        }
+        
+        card_append += '</div>';
 
         card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
                        '<div class="card-body" id="'+ cur_body_id +'">'+
@@ -1194,7 +1203,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
 
     append = '';
 
-    if(categories[category]['col'] == 7){
+    if(categories[category]['col'] == 6){
       if(folders.length >= cur_count){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
@@ -1267,8 +1276,15 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append += '<div class="card-header">'+
                        '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'">'+
                        '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
-                       '</a>'+
-                       '</div>';
+                       '</a>';
+
+        if((file.category_desc != "") && (file.category_desc != null)){
+          card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
+                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: rgba(0,0,0,.03)"></i><small>'+ file.category_desc +
+                         '</small></a>';
+        }
+        
+        card_append += '</div>';
 
         card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
                        '<div class="card-body" id="'+ cur_body_id +'">'+
@@ -1285,7 +1301,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
 
     append = '';
 
-    if(categories[category]['col'] == 7){
+    if(categories[category]['col'] == 6){
       if(files.length >= cur_count){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +

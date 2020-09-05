@@ -61,7 +61,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     <div class="col-md-5 col-sm-5">
                         <div class="form-group">
                             <label>Account</label>
-                            <select class="form-control" id="selectid">
+                            <select class="form-control" id="account_name" name="account_name">
                                 <?php
                                    $i=1;
                                    foreach($this->chart_of_accounts_model->select() as $row)
@@ -69,6 +69,23 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     ?>
                                     <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
                                     <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                                  <?php
+                                  $i++;
+                                  }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <div class="form-group">
+                            <label>Statement ending date</label>
+                            <select class="form-control" id="ending_date_select" name="ending_date_select">
+                                <?php
+                                   $i=1;
+                                   foreach($this->reconcile_model->selectAll() as $row)
+                                   {
+                                    ?>
+                                    <option value="<?=$row->id?>"><?=$row->ending_date?></option>
                                   <?php
                                   $i++;
                                   }
@@ -225,3 +242,27 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
 </div>
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
+<script type="text/javascript">
+$('#account_name').on('change', function() {
+ select_acc(this.value);
+});
+$(document).ready(function () {
+    select_acc($('#account_name').val());
+});
+function select_acc(chart_of_accounts_id)
+{
+  var chart_of_accounts_id = chart_of_accounts_id;
+  if(chart_of_accounts_id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/view/fetch_ending_date') ?>",
+        method: "POST",
+        data: {chart_of_accounts_id:chart_of_accounts_id},
+        success:function(data)
+        {
+            $("#ending_date_select").html(data);
+        }
+    })
+  }
+}
+</script>
