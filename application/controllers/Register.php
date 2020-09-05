@@ -5,7 +5,8 @@ class Register extends MY_Controller {
 
 	public function __construct(){
 		parent::__construct();
-
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
 		/* Load Paypal Library */
 		$this->load->library('paypal_lib');
 
@@ -13,8 +14,8 @@ class Register extends MY_Controller {
 	}
 
 	public function index(){
-		$this->load->model('NsmartPlan_model');
-
+		// $this->load->model('NsmartPlan_model');
+  //       $this->load->model('Clients_model');
         $get_data = $this->input->get();  
 
         $payment_status = "";
@@ -40,6 +41,25 @@ class Register extends MY_Controller {
         /*$returnURL = base_url().'subscribe/success';
         $cancelURL = base_url().'subscribe/cancel';
         $notifyURL = base_url().'subscribe/ipn';*/
+
+        $data = [
+            'first_name' => $post['firstname'],
+            'last_name' => $post['lastname'],
+            'email_address' => $post['email'],
+            'phone_number' => $post['phone'],
+            'business_name' => $post['business_name'],
+            'business_address' => $post['business_address'],
+            'number_of_employee' => $post['number_of_employee'],
+            'industry' => $post['industry'],
+            'password' => $post['password'],
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        ];
+
+        $client = $this->Clients_model->create($data);
+
+
+
 
         $returnURL = base_url().'registration?status=success';
         $cancelURL = base_url().'registration?status=cancel';

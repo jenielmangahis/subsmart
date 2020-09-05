@@ -198,7 +198,7 @@ p.plan-list-price {
 
 										<div class="col-md-6 float-left">
 											<div class="input-group">
-												<select class="reg-select z-100" id="sel1">
+												<select class="reg-select z-100" id="number_of_employee" name="number_of_employee">
 														<option value="0">Number of Employees</option>
 														<option value="1 (Just Me)">1 (Just Me)</option>
 														<option value="2-3">2-3</option>
@@ -218,7 +218,7 @@ p.plan-list-price {
 
 										<div class="col-md-6 float-left">
 											<div class="input-group">
-												<select class="reg-select z-100 cmb-industry" id="sel2">
+												<select class="reg-select z-100 cmb-industry" id="industry" name="industry">
 													<option>--Select your Industry--</option>
 					                                <?php foreach( $business as $key => $values ){ ?>
 					                                    <optgroup label="<?php echo $key; ?>">
