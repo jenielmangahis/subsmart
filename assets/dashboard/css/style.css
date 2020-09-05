@@ -1741,6 +1741,9 @@ button:focus {
       position: relative;
       top: 8px;
     }
+    .time-clock-mobile div div div#dataTable1_length {
+      float: left;
+    }
     ul.mobile-invoice-ul li {
       width: 50%;
       float: left;
