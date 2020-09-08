@@ -68,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/users/timesheet')?>" class="banking-tab" style="text-decoration: none">Attendance</a>
+                        <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab" style="text-decoration: none">Attendance</a>
                         <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab"style="text-decoration: none">Employee</a>
                         <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="schedule")?:'-active';?>">Schedule</a>
                         <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>

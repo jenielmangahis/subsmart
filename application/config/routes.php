@@ -195,6 +195,7 @@ $route['accounting/reconcile/view/report/(:any)'] = 'reconcile/report/$1';
 $route['accounting/reconcile/view/summary'] = 'reconcile/summary';
 $route['accounting/reconcile/view/fetch_ending_date'] = 'reconcile/fetch_ending_date';
 $route['accounting/reconcile/updatesingle/adjustment_date'] = 'reconcile/adjustment_date';
+$route['accounting/reconcile/view/reportajax/(:any)'] = 'reconcile/reportajax/$1';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 

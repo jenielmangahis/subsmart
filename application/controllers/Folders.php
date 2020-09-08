@@ -314,8 +314,6 @@ class Folders extends MY_Controller {
 			$delete_result = $this->folders_model->trans_delete(array(), array('folder_id' => $folder_id));
 			if($delete_result['status']){
 				rmdir('./uploads/' . $this->company_folder . $folder->path);
-
-				//$return = getFoldersFiles($folder->parent_id, true);
 			} else {
 				$return['error'] = $delete_result['message'];
 			}

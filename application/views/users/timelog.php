@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <input type="text" class="form-control entry_date" name="timelog_date" placeholder="Select Date">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row time-clock-mobile">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="dataTable1" class="table table-bordered table-striped">
                                         <thead>
@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <!-- <th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th> -->
-                                            
+
                                             <th style="width: 150px !important;">Type</th>
                                             <th>Notes</th>
                                             <th>Action</th>
@@ -65,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <!-- last login -->
                                                 <td>
                                                     <?php //echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>
-                                                    
+
                                                     <?php
                                                         $data['user_id'] = $row->id;
                                                         $clockin_arr = $this->timesheet_model->getClockInTimelog($data);
@@ -82,39 +82,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?php else: ?>
                                                                 <?php echo date('h:iA', strtotime($clockin->timestamp))." Out"; ?>
                                                             <?php endif;?>
-                                                            
+
                                                         <?php endif; ?>
-                                                        
+
                                                     <?php endforeach; ?>
 
                                                 </td>
                                                 <!-- Tota Time/Hours -->
                                                 <td>
                                                     <?php foreach($clockin_arr as $k => $clockin): ?>
-                                                        
+
                                                         <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
                                                             <?php if($clockin->action == "Clock In"):?>
-                                                                <?php 
-                                                                    $date_clockin = strtotime($clockin->timestamp); 
+                                                                <?php
+                                                                    $date_clockin = strtotime($clockin->timestamp);
                                                                 ?>
                                                             <?php elseif($clockin->action == "Clock Out"): ?>
-                                                                <?php 
-                                                                    $date_clockout = strtotime($clockin->timestamp); 
+                                                                <?php
+                                                                    $date_clockout = strtotime($clockin->timestamp);
                                                                 ?>
                                                             <?php endif;?>
-                                                            <?php 
+                                                            <?php
                                                                 /*echo $date_clockin.'asd';
                                                                 echo $date_clockout.'bcd';*/
                                                                 //$diff = abs($date_clockout - $date_clockin);
                                                                 //echo $diff.'hrs';
                                                             ?>
-                                                            
+
                                                         <?php endif; ?>
-                                                        
+
                                                         <?php echo ' hrs';?>
                                                     <?php endforeach; ?>
-                                                    
-                                                    
+
+
                                                 </td>
                                                 <!-- <td width="60"><?php //echo $row->id ?></td> -->
                                                 <!-- <td width="50" class="text-center"> -->
@@ -126,7 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <?php //echo ucfirst($row->FName).' '.ucfirst($row->LName) ?>
                                                     <img src="<?php echo base_url('uploads/users/default.png');?>" width="30" height="30" alt="" class="img-avatar" style="float: left; border-radius: 50%; margin-right: 10px;"/>
                                                     <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
-                                                        <?php 
+                                                        <?php
                                                             if( !empty($this->roles_model->getById($row->role)->title) ){
                                                                 echo ucfirst($this->roles_model->getById($row->role)->title);
                                                             }
@@ -135,9 +135,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <!-- <td><?php //echo $row->email ?></td>
                                                 <td><?php //echo $row->password_plain ?></td> -->
                                                 <!-- <td>
-                                                    <?php 
+                                                    <?php
                                                         //echo ucfirst($this->roles_model->getById($row->role)->title) ?>
-                                                            
+
                                                         </td>
                                                 -->
                                                 <td>
@@ -151,7 +151,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>Clock In Out</span>
                                                             <?php endif; ?>
                                                         <?php endif; ?>
-                                                        
+
                                                     <?php //endif ?>
                                                 </td>
                                                 <!-- Notes -->
@@ -168,7 +168,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>
                                                 </td>
-                                                
+
                                                 <td>
                                                     <?php if (hasPermissions('users_edit')): ?>
                                                         <a href="<?php echo url('users/edit/' . $row->id) ?>"

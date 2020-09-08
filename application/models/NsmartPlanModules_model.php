@@ -73,11 +73,41 @@ class NsmartPlanModules_model extends MY_Model
     {
         $user_id = logged('id');
 
-        $this->db->select('nsmart_plans_has_modules.*,p.plan_name,f.feature_name');
+        $this->db->select('nsmart_plans_has_modules.*,p.plan_name,f.feature_name,f.feature_description');
         $this->db->from('nsmart_plans_has_modules');
         $this->db->join('nsmart_plans as p', 'nsmart_plans_has_modules.nsmart_plans_id = p.nsmart_plans_id', 'LEFT');
         $this->db->join('nsmart_features as f', 'nsmart_plans_has_modules.nsmart_feature_id = f.id', 'LEFT');
         $this->db->where('nsmart_plans_has_modules.plan_heading_id', $id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByPlanHeadingIdAndNsmartPlanId($plan_heading_id, $nsmart_plan_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('nsmart_plans_has_modules.*,p.plan_name,f.feature_name');
+        $this->db->from('nsmart_plans_has_modules');
+        $this->db->join('nsmart_plans as p', 'nsmart_plans_has_modules.nsmart_plans_id = p.nsmart_plans_id', 'LEFT');
+        $this->db->join('nsmart_features as f', 'nsmart_plans_has_modules.nsmart_feature_id = f.id', 'LEFT');
+        $this->db->where('nsmart_plans_has_modules.plan_heading_id', $plan_heading_id);
+        $this->db->where('nsmart_plans_has_modules.nsmart_plans_id', $nsmart_plan_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByNsmartPlanId($id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('nsmart_plans_has_modules.*,p.plan_name,f.feature_name,f.feature_description, ph.title as plan_heading_title');
+        $this->db->from('nsmart_plans_has_modules');
+        $this->db->join('nsmart_plans as p', 'nsmart_plans_has_modules.nsmart_plans_id = p.nsmart_plans_id', 'LEFT');
+        $this->db->join('nsmart_features as f', 'nsmart_plans_has_modules.nsmart_feature_id = f.id', 'LEFT');
+        $this->db->join('plan_headings as ph', 'nsmart_plans_has_modules.plan_heading_id = ph.id', 'LEFT');
+        $this->db->where('nsmart_plans_has_modules.nsmart_plans_id', $id);
 
         $query = $this->db->get();
         return $query->result();

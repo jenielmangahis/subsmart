@@ -5,7 +5,8 @@ class Register extends MY_Controller {
 
 	public function __construct(){
 		parent::__construct();
-
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
 		/* Load Paypal Library */
 		$this->load->library('paypal_lib');
 
@@ -13,10 +14,18 @@ class Register extends MY_Controller {
 	}
 
 	public function index(){
-		$this->load->model('NsmartPlan_model');
+		// $this->load->model('NsmartPlan_model');
+  //       $this->load->model('Clients_model');
+        $get_data = $this->input->get();  
+
+        $payment_status = "";
+        if($get_data && isset($get_data['status'])) {
+            $payment_status = $get_data['status'];
+        }
 
 		$ns_plans = $this->NsmartPlan_model->getAll();
 
+        $this->page_data['payment_status'] = $payment_status;
 		$this->page_data['ns_plans'] = $ns_plans;
 		$this->page_data['business'] = getIndustryBusiness();
 		$this->page_data['roles']    = getRegistrationRoles();
@@ -29,16 +38,39 @@ class Register extends MY_Controller {
         $post = $this->input->post();  
 
         // Set variables for paypal form
-        $returnURL = base_url().'subscribe/success';
+        /*$returnURL = base_url().'subscribe/success';
         $cancelURL = base_url().'subscribe/cancel';
-        $notifyURL = base_url().'subscribe/ipn';
+        $notifyURL = base_url().'subscribe/ipn';*/
+
+        $data = [
+            'first_name' => $post['firstname'],
+            'last_name' => $post['lastname'],
+            'email_address' => $post['email'],
+            'phone_number' => $post['phone'],
+            'business_name' => $post['business_name'],
+            'business_address' => $post['business_address'],
+            'number_of_employee' => $post['number_of_employee'],
+            'industry' => $post['industry'],
+            'password' => $post['password'],
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        ];
+
+        $client = $this->Clients_model->create($data);
+
+
+
+
+        $returnURL = base_url().'registration?status=success';
+        $cancelURL = base_url().'registration?status=cancel';
+        $notifyURL = base_url().'registration/ipn';
         
         // Get subscription data
         $subscription_id    = 1;
         $subscription_name  = "Essential";
         $subscription_price = 5;
         
-        // Get current user ID from the session
+        // Add custom data such as item/subscription id etc.
         $userID = 123456;
         
         // Add fields to paypal form

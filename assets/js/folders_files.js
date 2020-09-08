@@ -148,6 +148,9 @@ $(document).ready(function(){
   $('a[control="recycle"]').click(function(e){
     e.preventDefault();
 
+    $('#recycle_bin_selected_name').text("No Folder/File Selected");
+    $('#recycle_bin_selected_path').text("/../");
+    
     getTrashRecords();
   });
 
@@ -240,6 +243,35 @@ $(document).ready(function(){
       });
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder for editing','error');
+    }
+  });
+
+// remove a folder or file completely
+  $('a[control="remove"]').click(function(e){
+    e.preventDefault();
+
+    if(selected_trash != 0){
+      var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]');
+      
+      var confirm_text = '';
+      var confirm_path = $('#recycle_bin_selected_path').text();
+
+      confirm_path = confirm_path.trim() + div.attr('fnm');
+
+      if(selected_isFolder == 1){
+        current_process = 'remove_folder';
+        confirm_text = ' Folder ' + div.attr('fnm');
+      } else {
+        current_process = 'remove_file';
+        confirm_text = ' File ' + div.attr('fnm');
+      }
+
+      if(current_process != ''){
+        showFolderManagerNotif('Confirm Remove',
+                               'Remove' + confirm_text + '?<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently','confirm');
+      }
+    } else {
+      showFolderManagerNotif('Information','Please select a folder or file from the recycle bin','info');
     }
   });
 // -------------------------------------------------------------------------------------------------------------
@@ -804,6 +836,56 @@ $(document).ready(function(){
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         } 
       });   
+    } else if(current_process == 'remove_folder'){
+      var folder_id = selected_trash;
+
+      $.ajax({
+        type: 'POST',
+        url: base_url + "folders/remove",
+        data: {folder_id:folder_id,section:vType},
+        beforeSend: function(){
+
+        },
+        success: function(data){
+          var result = jQuery.parseJSON(data);
+          if(result.error != ''){
+            hideFolderManagerNotif();
+
+            showFolderManagerNotif('Error', result.error, 'error');      
+          } else {
+            getTrashRecords(false);
+
+            hideFolderManagerNotif();
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown){            
+          showFolderManagerNotif(textStatus, errorThrown, 'error');  
+        }
+      });
+    } else if(current_process == 'remove_file'){
+      var file_id = selected_trash;
+      
+      $.ajax({
+        type: 'POST',
+        url: base_url + "vault/remove",
+        data: {file_id:file_id,section:vType},
+        beforeSend: function(){
+
+        },
+        success: function(data){
+          var result = jQuery.parseJSON(data);
+          if(result.error != ''){
+            showFolderManagerNotif('Error', result.error, 'error');      
+          } else {
+            getTrashRecords(false);
+
+            hideFolderManagerNotif();
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown){            
+          showFolderManagerNotif(textStatus, errorThrown, 'error');  
+        } 
+      });
     }
   });
 
@@ -2107,6 +2189,9 @@ function setTrashRecords(folders, files){
 
     selected_trash = id;
     selected_trash_isFolder = isFolder;
+
+    $('#recycle_bin_selected_name').text(div.attr('fnm'));
+    $('#recycle_bin_selected_path').text('/root' + div.attr('path_temp'));
   });
 
 // On double click trash folder or file

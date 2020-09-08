@@ -25,12 +25,14 @@ class Timesheet extends MY_Controller {
 
         add_css(array(
             "assets/plugins/dropzone/dist/dropzone.css",
+//            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css",
         ));
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
             "assets/js/accounting/sweetalert2@9.js",
+//            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
 
 	}
@@ -880,10 +882,29 @@ class Timesheet extends MY_Controller {
 	}
 
 	public function addingProjects(){
-	    $user_id = $this->input->post('user');
-        $project = $this->input->post('project');
-        $next_week = $this->input->post('nxt_week');
-        $query = $this->timesheet_model->addingProjects($project,$user_id,$next_week);
+	    $project = $this->input->post('values[project]');
+	    $start_date = $this->input->post('values[start_date]');
+	    $start_time = $this->input->post('values[start_time]');
+	    $end_time = $this->input->post('values[end_time]');
+	    $user_id = $this->input->post('values[team_member]');
+	    $location = $this->input->post('values[location]');
+	    $notes = $this->input->post('values[notes]');
+	    $duration = $this->input->post('duration');
+        $week = $this->input->post('values[week]');
+	    $data = array(
+	        'project' => $project,
+            'start_date' => date('Y-m-d',strtotime($start_date)),
+            'start_time' => date('H:i',strtotime($start_time)),
+            'end_time' => date('H:i',strtotime($end_time)),
+            'user_id' => $user_id,
+            'location' => $location,
+            'notes' => $notes,
+            'duration' => $duration,
+            'day' => date('l',strtotime($start_date)),
+            'week' => $week
+        );
+        $query = $this->timesheet_model->addingProjects($data);
+
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -891,26 +912,79 @@ class Timesheet extends MY_Controller {
         }
     }
 
-    public function updateDuration(){
-	    $day_id = $this->input->post('day_id');
-	    $project_id = $this->input->post('project_id');
-	    $duration = $this->input->post('duration');
-	    $day = $this->input->post('day');
-	    $date = $this->input->post('date');
-	    $data = array(
-	        'day_id' => $day_id,
-	        'project_id' => $project_id,
+    public function getTimesheetData(){
+	    $timesheet_id = $this->input->get('timesheet_id');
+	    $day_id = $this->input->get('day_id');
+	    $ts_query = $this->db->get_where('timesheet_settings',array('id'=>$timesheet_id));
+	    if ($day_id != null){
+            $ts_day = $this->db->get_where('ts_settings_day',array('id'=>$day_id));
+        }
+        $users = $this->db->get_where('users',array('id'=> $ts_query->row()->user_id));
+	    $employee_name = ($ts_query->row()->user_id != 0)?$users->row()->FName." ".$users->row()->LName:"Teammates";
+
+        $data = new stdClass();
+	    $data->project_name = $ts_query->row()->project_name;
+	    $data->team_member = $employee_name;
+	    $data->location = $ts_query->row()->location;
+	    $data->notes = $ts_query->row()->notes;
+	    $data->start_time = (!empty($day_id))?date('h:i A',strtotime($ts_day->row()->start_time)):null;
+	    $data->end_time = (!empty($day_id))?date('h:i A',strtotime($ts_day->row()->end_time)):null;
+	    $data->total_duration = (!empty($day_id))?$ts_day->row()->duration:0;
+
+	    echo json_encode($data);
+    }
+
+    public function updateSchedule(){
+	    $timesheet_id = $this->input->post('values[timesheet_id]');
+	    $user_id = $this->input->post('values[user_id]');
+        $start_date = $this->input->post('date');
+        $start_time = $this->input->post('values[start_time]');
+        $end_time = $this->input->post('values[end_time]');
+        $duration = $this->input->post('duration');
+        $day = $this->input->post('values[day]');
+        $twd_id = $this->input->post('values[total_week_duration]');
+        $day_id = $this->input->post('values[day_id]');
+        $week = $this->input->post('values[week]');
+        $data = array(
+            'user_id' => $user_id,
+            'start_date' => date('Y-m-d',strtotime($start_date)),
+            'start_time' => date('H:i',strtotime($start_time)),
+            'end_time' => date('H:i',strtotime($end_time)),
             'duration' => $duration,
             'day' => $day,
-            'date' => $date
+            'twd_id' => $twd_id,
+            'day_id' => $day_id,
+            'week' => $week
         );
-	    $query = $this->timesheet_model->updateDuration($data);
+        $query = $this->timesheet_model->perDaySchedule($timesheet_id,$data);
+
 	    if ($query == true){
 	        echo json_encode(1);
         }else{
-	        echo json_encode(0);
+            echo json_encode(0);
         }
     }
+
+//    public function updateDuration(){
+//	    $day_id = $this->input->post('day_id');
+//	    $project_id = $this->input->post('project_id');
+//	    $duration = $this->input->post('duration');
+//	    $day = $this->input->post('day');
+//	    $date = $this->input->post('date');
+//	    $data = array(
+//	        'day_id' => $day_id,
+//	        'project_id' => $project_id,
+//            'duration' => $duration,
+//            'day' => $day,
+//            'date' => $date
+//        );
+//	    $query = $this->timesheet_model->updateDuration($data);
+//	    if ($query == true){
+//	        echo json_encode(1);
+//        }else{
+//	        echo json_encode(0);
+//        }
+//    }
 
     public function updateTotalWeekDuration(){
 	    $project_id = $this->input->post('id');
@@ -1006,6 +1080,7 @@ class Timesheet extends MY_Controller {
         );
         $timesheet_settings = $this->timesheet_model->getTimeSheetByWeek($date_week_check);
         $timesheet_by_user = $this->timesheet_model->getTimeSheetByUser($user_id);
+        $selected_user = (!empty($timesheet_by_user))?$timesheet_by_user[0]->user_id:null;
 
 	    $display = '';
 	    $display .= '<thead>';
@@ -1024,46 +1099,46 @@ class Timesheet extends MY_Controller {
 	    $display .= '</thead>';
 	    $display .= '<tbody id="tsSettingsTblTbody">';
 	    foreach ($timesheet_settings as $setting):
-                if ($timesheet_by_user[0]->users_id == $setting->users_id):
+                if ($selected_user == $setting->user_id || $selected_user != null):
             $timesheet_id = $setting->id;
-            $timesheet_duration_w = (!empty($setting->total_duration_w))?$setting->total_duration_w:"00:00";
+            $timesheet_duration_w = (!empty($setting->total_duration_w))?$setting->total_duration_w:"00h";
             $timesheet_day = $this->timesheet_model->getTimeSheetDayById($timesheet_id);
             foreach ($timesheet_day as $days){
                     if ($days->day == "Monday"){
                         $day_id_mon = $days->id;
-                        $monday = $days->duration;
+                        $monday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }elseif ($days->day == "Tuesday"){
                         $day_id_tue = $days->id;
-                        $tuesday = $days->duration;
+                        $tuesday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }elseif ($days->day == "Wednesday"){
                         $day_id_wed = $days->id;
-                        $wednesday = $days->duration;
+                        $wednesday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }elseif ($days->day == "Thursday"){
                         $day_id_thu = $days->id;
-                        $thursday = $days->duration;
+                        $thursday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }elseif ($days->day == "Friday"){
                         $day_id_fri = $days->id;
-                        $friday = $days->duration;
+                        $friday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }elseif ($days->day == "Saturday"){
                         $day_id_sat = $days->id;
-                        $saturday = $days->duration;
+                        $saturday =date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }elseif ($days->day == "Sunday"){
                         $day_id_sun = $days->id;
-                        $sunday = $days->duration;
+                        $sunday = date('ha',strtotime($days->start_time))."-".date('ha',strtotime($days->end_time));
                     }
             }
 
             $display .= '<tr data-id="'.$timesheet_id.'" id="tsSettingsRow">';
-                $display .= '<td><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->projects).'</span><a href="#" id="editProjectName" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->projects).'"><i class="fa fa-pencil-alt"></i></a></td>';
-                $display .= '<td><input type="text" name="monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" value="'.$monday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><input type="text" name="tuesday" id="tsTuesday" data-date="'.$date_week_check[1].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_tue.'" value="'.$tuesday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><input type="text" name="wednesday" id="tsWednesday" data-date="'.$date_week_check[2].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_wed.'" value="'.$wednesday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><input type="text" name="thursday" id="tsThursday" data-date="'.$date_week_check[3].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_thu.'" value="'.$thursday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><input type="text" name="friday" id="tsFriday" data-date="'.$date_week_check[4].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_fri.'" value="'.$friday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><input type="text" name="saturday" id="tsSaturday" data-date="'.$date_week_check[5].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sat.'" value="'.$saturday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><input type="text" name="sunday" id="tsSunday" data-date="'.$date_week_check[6].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sun.'" value="'.$sunday.'" placeholder="HH:MM"></td>';
-                $display .= '<td><span class="totalWeek" id="totalWeekDuration'.$timesheet_id.'">'.$timesheet_duration_w.'</span></td>';
-                $display .= '<td><a href="#" id="removeProject" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->projects).'"><i class="fa fa-times fa-lg"></i></a></td>';
+                $display .= '<td><i class="fa fa-circle ts-status"></i><span class="ts-project-name" id="showEditPen">'.ucfirst($setting->project_name).'</span><a href="#" id="editProjectName" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-pencil-alt"></i></a></td>';
+                $display .= '<td><input type="text" name="monday" data-day="Monday" id="tsMonday" data-date="'.$date_week_check[0].'" class="form-control ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_mon.'" data-user="'.$selected_user.'" value="'.$monday.'" readonly></td>';
+                $display .= '<td><input type="text" name="tuesday" data-day="Tuesday" id="tsTuesday" data-date="'.$date_week_check[1].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_tue.'" data-user="'.$selected_user.'" value="'.$tuesday.'" readonly></td>';
+                $display .= '<td><input type="text" name="wednesday" data-day="Wednesday" id="tsWednesday" data-date="'.$date_week_check[2].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_wed.'" data-user="'.$selected_user.'" value="'.$wednesday.'" readonly></td>';
+                $display .= '<td><input type="text" name="thursday" data-day="Thursday" id="tsThursday" data-date="'.$date_week_check[3].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_thu.'" data-user="'.$selected_user.'" value="'.$thursday.'" readonly></td>';
+                $display .= '<td><input type="text" name="friday" data-day="Friday" id="tsFriday" data-date="'.$date_week_check[4].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_fri.'" data-user="'.$selected_user.'" value="'.$friday.'" readonly></td>';
+                $display .= '<td><input type="text" name="saturday" data-day="Saturday" id="tsSaturday" data-date="'.$date_week_check[5].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sat.'" data-user="'.$selected_user.'" value="'.$saturday.'" readonly></td>';
+                $display .= '<td><input type="text" name="sunday" data-day="Sunday" id="tsSunday" data-date="'.$date_week_check[6].'" class="form-control ts-duration ts-duration ts-duration'.$timesheet_id.'" data-id="'.$day_id_sun.'" data-user="'.$selected_user.'" value="'.$sunday.'" readonly></td>';
+                $display .= '<td><span class="totalWeek" id="totalWeekDuration'.$timesheet_id.'">'.$timesheet_duration_w.'h</span></td>';
+                $display .= '<td><a href="#" id="removeProject" data-id="'.$setting->id.'" data-name="'.ucfirst($setting->project_name).'"><i class="fa fa-times fa-lg"></i></a></td>';
             $display .= '</tr>';
             $timesheet_id = null;
             $monday = null;
@@ -1079,9 +1154,9 @@ class Timesheet extends MY_Controller {
             $day_id_thu = null;
             $day_id_fri = null;
             $day_id_sat = null;
+            $day_id_sun = null;
                 endif;
         endforeach;
-        $day_id_sun = null;
             if (($week != 'last week') && ($week != 'next week')):
             $display .= '<tr>';
                 $display .= '<td><a href="#" id="addProject" style="color: #0b97c4;font-weight: bold"><i class="fa fa-plus"></i>&nbsp;Project</a></td>';
@@ -1092,18 +1167,18 @@ class Timesheet extends MY_Controller {
                 $display .= '<td><input type="text" class="form-control ts-duration" readonly></td>';
                 $display .= '<td><input type="text" class="form-control ts-duration" readonly></td>';
                 $display .= '<td><input type="text" class="form-control ts-duration" readonly></td>';
-                $display .= '<td><span style="color: #92969d;">00:00</span></td>';
+                $display .= '<td><span style="color: #92969d;">0h</span></td>';
                 $display .= '<td><a href="#"><i class="fa fa-times fa-lg" disabled></i></a></td>';
             $display .= '</tr>';
             endif;
 	    $display .= '</tbody>';
-        $duration_mon = '00:00';
-        $duration_tue = '00:00';
-        $duration_wed = '00:00';
-        $duration_thu = '00:00';
-        $duration_fri = '00:00';
-        $duration_sat = '00:00';
-        $duration_sun = '00:00';
+        $duration_mon = '0';
+        $duration_tue = '0';
+        $duration_wed = '0';
+        $duration_thu = '0';
+        $duration_fri = '0';
+        $duration_sat = '0';
+        $duration_sun = '0';
         $data_id_mon = null;
         $data_id_tue = null;
         $data_id_wed = null;
@@ -1113,36 +1188,36 @@ class Timesheet extends MY_Controller {
         $data_id_sun = null;
         $ts_total_duration_day = $this->timesheet_model->getTimeSheetTotalInDay($date_week_check);
 	    foreach ($ts_total_duration_day as $total_duration){
-            if ($timesheet_by_user[0]->users_id == $total_duration->users_id):
-	        if ($total_duration->day == 'monday'){
+            if ($selected_user == $total_duration->user_id || $selected_user != null):
+	        if ($total_duration->day == 'Monday'){
 	            $duration_mon = $total_duration->total_duration;
                 $data_id_mon = $total_duration->id;
-            }elseif ($total_duration->day == 'tuesday'){
+            }elseif ($total_duration->day == 'Tuesday'){
                 $duration_tue = $total_duration->total_duration;
                 $data_id_tue = $total_duration->id;
-            }elseif ($total_duration->day == 'wednesday'){
+            }elseif ($total_duration->day == 'Wednesday'){
                 $duration_wed = $total_duration->total_duration;
                 $data_id_wed = $total_duration->id;
-            }elseif ($total_duration->day == 'thursday'){
+            }elseif ($total_duration->day == 'Thursday'){
                 $duration_thu = $total_duration->total_duration;
                 $data_id_thu = $total_duration->id;
-            }elseif ($total_duration->day == 'friday'){
+            }elseif ($total_duration->day == 'Friday'){
                 $duration_fri = $total_duration->total_duration;
                 $data_id_fri = $total_duration->id;
-            }elseif ($total_duration->day == 'saturday'){
+            }elseif ($total_duration->day == 'Saturday'){
                 $duration_sat = $total_duration->total_duration;
                 $data_id_sat = $total_duration->id;
-            }elseif ($total_duration->day == 'sunday'){
+            }elseif ($total_duration->day == 'Sunday'){
                 $duration_sun = $total_duration->total_duration;
                 $data_id_sun = $total_duration->id;
             }
             endif;
         }
-        $total_week_duration = "00:00";
+        $total_week_duration = "0";
         $ts_total_duration_week_id = null;
         $ts_total_duration_week = $this->timesheet_model->getTotalWeekDuration($date_week_check);
 	    foreach ($ts_total_duration_week as $total_duration){
-            if ($timesheet_by_user[0]->users_id == $total_duration->users_id){
+            if ($selected_user == $total_duration->user_id || $selected_user != null){
                 $total_week_duration = $total_duration->total_duration;
                 $ts_total_duration_week_id = $total_duration->id;
             }
@@ -1151,14 +1226,14 @@ class Timesheet extends MY_Controller {
 	    $display .= '<tfoot>';
             $display .= '<tr>';
                 $display .= '<th>Total</th>';
-                $display .= '<th><span id="totalMonday" data-id="'.$data_id_mon.'">'.$duration_mon.'</span></th>';
-                $display .= '<th><span id="totalTuesday" data-id="'.$data_id_tue.'">'.$duration_tue.'</span></th>';
-                $display .= '<th><span id="totalWednesday" data-id="'.$data_id_wed.'">'.$duration_wed.'</span></th>';
-                $display .= '<th><span id="totalThursday" data-id="'.$data_id_thu.'">'.$duration_thu.'</span></th>';
-                $display .= '<th><span id="totalFriday" data-id="'.$data_id_fri.'">'.$duration_fri.'</span></th>';
-                $display .= '<th><span id="totalSaturday" data-id="'.$data_id_sat.'">'.$duration_sat.'</span></th>';
-                $display .= '<th><span id="totalSunday" data-id="'.$data_id_sun.'">'.$duration_sun.'</span></th>';
-                $display .= '<th><span id="totalWeekDuration-'.$user_id.'" data-id="'.$ts_total_duration_week_id.'">'.$total_week_duration.'</span></th>';
+                $display .= '<th><span id="totalMonday" data-id="'.$data_id_mon.'">'.$duration_mon.'h</span></th>';
+                $display .= '<th><span id="totalTuesday" data-id="'.$data_id_tue.'">'.$duration_tue.'h</span></th>';
+                $display .= '<th><span id="totalWednesday" data-id="'.$data_id_wed.'">'.$duration_wed.'h</span></th>';
+                $display .= '<th><span id="totalThursday" data-id="'.$data_id_thu.'">'.$duration_thu.'h</span></th>';
+                $display .= '<th><span id="totalFriday" data-id="'.$data_id_fri.'">'.$duration_fri.'h</span></th>';
+                $display .= '<th><span id="totalSaturday" data-id="'.$data_id_sat.'">'.$duration_sat.'h</span></th>';
+                $display .= '<th><span id="totalSunday" data-id="'.$data_id_sun.'">'.$duration_sun.'h</span></th>';
+                $display .= '<th><span id="totalWeekDuration-'.$user_id.'" data-id="'.$ts_total_duration_week_id.'">'.$total_week_duration.'h</span></th>';
                 $display .= '<th></th>';
             $display .= '</tr>';
 	    $display .= '</tfoot>';

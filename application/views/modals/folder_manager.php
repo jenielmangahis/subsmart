@@ -377,7 +377,7 @@
 </div>
 
 <div id="modal-folder-manager-recycle-bin" class="modal" role="dialog">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+  <div class="modal-dialog modal-dialog-scrollable" style="max-width: 1500px">
 
     <!-- Modal content-->
     <div class="modal-content">
@@ -386,13 +386,25 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body pt-2">
-        <nav class="navbar navbar-expand-sm bg-light navbar-light mb-2 justify-content-end">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="#" class="nodecontrol btn btn-sm btn-default nav-link" control="restore" title="Restore"><i class="fa fa-recycle" title="Restore"></i></a>
-            </li>
-          </ul>
-        </nav>
+          <div class="row mb-4 pt-2 pb-2" style="background-color: rgba(0,0,0,.03)">
+            <div class="col-md-8">
+              <h6 id="recycle_bin_selected_name" class="mb-0 mt-0">No Folder/File Selected</h6>
+              <small id="recycle_bin_selected_path">/../</small>
+            </div>
+            <div class="col-md-4">
+              <ul class="nav justify-content-end">
+                <li class="nav-item">
+                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link mr-1" control="restore" title="Restore"><i class="fa fa-recycle" title="Restore"></i></a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link mr-1" control="remove" title="Remove"><i class="fa fa-remove" title="Remove"></i></a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link" control="empty" title="Empty"><i class="fa fa-trash-o" title="Empty"></i></a>
+                </li>
+              </ul>
+            </div>
+        </div>
         <div id="recycle_bin">   
         </div>
       </div>
