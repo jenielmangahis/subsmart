@@ -66,10 +66,10 @@ class Register extends MY_Controller {
         $notifyURL = base_url().'registration/ipn';
         
         // Get subscription data
-        $subscription_id    = 1;
-        $subscription_name  = "Essential";
-        $subscription_price = 5;
-        
+        $subscription_id    = $post['plan_id'];
+        $subscription_name  = $post['plan_name'];
+        $subscription_price = $post['plan_price'];
+
         // Add custom data such as item/subscription id etc.
         $userID = 123456;
         
