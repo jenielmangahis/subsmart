@@ -41,7 +41,7 @@ position: absolute;
 }
 </style>
 <?php 
-$accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id);
+
 ?>
 
 <div class="wrapper" role="wrapper">
@@ -49,7 +49,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box" style="margin-top: 30px !important">
-                <div class="row">
+              <div class="row">
                     <div class="col-md-10">
                         <h1 class="page-title">Reconcilation Report</h1>
                     </div>
@@ -96,7 +96,11 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 </div>
             </div>
             <!-- end row -->
-           
+            <div id="changeme">
+           <?php foreach ($rows as $row) {
+            $accBalance = $this->chart_of_accounts_model->getBalance($row->chart_of_accounts_id);
+            $adjustment = $row->ending_balance-(($accBalance-$row->service_charge)+$row->interest_earned);
+            ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -119,7 +123,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                  </div>
                                  <div class="row">
                                      <div class="col-md-12">
-                                        <?=$this->chart_of_accounts_model->getName($rows[0]->chart_of_accounts_id)?>,Period Ending <?=$rows[0]->ending_date?>
+                                        <?=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)?>,Period Ending <?=$row->ending_date?>
                                      </div>
                                  </div>
                                  <div class="row">
@@ -129,7 +133,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                  </div>
                                  <div class="row">
                                      <div class="col-md-12">
-                                        Reconciled on : <?=$rows[0]->adjustment_date?>
+                                        Reconciled on : <?=$row->adjustment_date?>
                                      </div>
                                  </div>
                                  <div class="row">
@@ -155,7 +159,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </div>
                                 <div class="col-md-8 dott"></div>
                                 <div class="col-md-1">
-                                    <?=$accBalance?>.00
+                                    <?=number_format($accBalance,1)?>
                                 </div>
                             </div>
                             <div class="row">
@@ -164,7 +168,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </div>
                                 <div class="col-md-9 dott"></div>
                                 <div class="col-md-1">
-                                    -<?=$rows[0]->service_charge?>.00
+                                    -<?=number_format($row->service_charge,1)?>
                                 </div>
                             </div>
                             <div class="row">
@@ -173,7 +177,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </div>
                                 <div class="col-md-9 dott"></div>
                                 <div class="col-md-1">
-                                    <?=$rows[0]->interest_earned?>.00
+                                    <?=number_format($row->interest_earned,1)?>
                                 </div>
                             </div>
                             <div class="row">
@@ -200,7 +204,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </div>
                                 <div class="col-md-9 dott"></div>
                                 <div class="col-md-1">
-                                    <?=$rows[0]->ending_balance-(($accBalance-$rows[0]->service_charge)+$rows[0]->interest_earned)?>.00
+                                    <?=number_format($adjustment,1);?>
                                 </div>
                             </div>
                             <div class="row">
@@ -209,7 +213,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </div>
                                 <div class="col-md-8 dott"></div>
                                 <div class="col-md-1">
-                                    <?=$rows[0]->ending_balance?>.00
+                                    <?=number_format($row->ending_balance,1)?>
                                 </div>
                             </div>
                             <div class="row">
@@ -220,17 +224,19 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
-                                    Register balance as of <?=$rows[0]->ending_date?>
+                                    Register balance as of <?=$row->ending_date?>
                                 </div>
                                 <div class="col-md-8 dott"></div>
                                 <div class="col-md-1">
-                                    <?=$rows[0]->ending_balance?>.00
+                                    <?=number_format($row->ending_balance,1)?>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- end card -->
                 </div>
+            </div>
+            <?php } ?>
             </div>
             <?php echo form_close(); ?>
             <!-- end row -->
@@ -245,6 +251,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
 <script type="text/javascript">
 $('#account_name').on('change', function() {
  select_acc(this.value);
+ getReport(this.value);
 });
 $(document).ready(function () {
     select_acc($('#account_name').val());
@@ -261,6 +268,21 @@ function select_acc(chart_of_accounts_id)
         success:function(data)
         {
             $("#ending_date_select").html(data);
+        }
+    })
+  }
+}
+function getReport(chart_of_accounts_id)
+{
+  var chart_of_accounts_id = chart_of_accounts_id;
+  if(chart_of_accounts_id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/view/reportajax/') ?>"+chart_of_accounts_id,
+        method: "POST",
+        success:function(data)
+        {
+           $("#changeme").html(data);
         }
     })
   }

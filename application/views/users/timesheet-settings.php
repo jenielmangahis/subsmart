@@ -35,6 +35,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     th{
         text-align: center;
     }
+    #tsSettingsRow > td > input:read-only{
+        cursor: pointer;
+    }
     #timesheet_settings .fa-times, th{
         font-weight: lighter!important;
         color: #92969d;
@@ -153,6 +156,78 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .swal2-label{
         font-weight: bold!important;
     }
+    /*Creating project css*/
+    .modal-right-side .modal.right .modal-dialog {
+        position: fixed;
+        margin: auto;
+        min-width: 520px;
+        height: 100%;
+        -webkit-transform: translate3d(0%, 0, 0);
+        -ms-transform: translate3d(0%, 0, 0);
+        -o-transform: translate3d(0%, 0, 0);
+        transform: translate3d(0%, 0, 0);
+    }
+    .modal-right-side .modal.right .modal-content {
+        height: 100%;
+        overflow-y: auto;
+    }
+    .modal-right-side.modal-body {
+        padding: 20px;
+    }
+
+    .modal-right-side .modal.right.fade .modal-dialog {
+        right: 0;
+        -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+        transition: opacity 0.3s linear, right 0.3s ease-out;
+    }
+
+    .modal-right-side .modal.right.fade.in .modal-dialog {
+        right: 0;
+    }
+    .modal-right-side .modal-content {
+        border-radius: 0;
+        border: none;
+    }
+    .modal-right-side .modal-body .form-group label{
+        font-size: 16px;
+        color: #333333;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .modal-right-side .modal-body .form-group .form-control{
+        height: 36px!important;
+    }
+    .ts-start-date{
+        width: 212px;
+    }
+    .ts-time-section{
+        display: inline-block;
+        margin-right: 10px;
+    }
+    .ts-time{
+        width: 180px;
+    }
+    .modal-right-side .modal-body .form-group .select2-container{
+        display: block;
+        width: 250px!important;
+    }
+    .modal-right-side .modal-body{
+        margin-bottom: 30px;
+    }
+    .modal-right-side .modal-footer{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #FFFFFF;
+    }
+    .ui-timepicker-container {
+        z-index: 3500 !important;
+    }
+    #addProject:hover{
+        text-decoration: underline;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -186,7 +261,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
-                        <a href="<?php echo url('/users/timesheet')?>" class="banking-tab" style="text-decoration: none">Attendance</a>
+                        <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab" style="text-decoration: none">Attendance</a>
                         <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab"style="text-decoration: none">Employee</a>
                         <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
                         <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
@@ -234,7 +309,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <button class="btn btn-default"><i class="fa fa-save" style="color: #56bb4d;"></i>&nbsp;Save as template</button>
                                         </div>
                                     </div>
-
 <!--                                    --><?php //echo $this->session->userdata('logged')['id'];?>
                                 </div>
                             </div>
@@ -250,13 +324,78 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
+<div class="modal-right-side">
+    <div class="modal right fade" id="createProject" tabindex="" role="dialog" aria-labelledby="newProjectSettings">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="newProjectSettings" ><i class="fa fa-calendar-alt"></i> <span id="tsDate"><?php echo date('M d,Y')?></span></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form action="" method="post" id="formNewProject">
+                <div class="modal-body">
+                    <input type="hidden" name="timesheet_id" id="timesheetId">
+                    <input type="hidden" name="user_id" id="userId">
+                    <input type="hidden" name="day" id="selectedDay">
+                    <input type="hidden" name="total_week_duration" id="totalWeekDuration">
+                    <input type="hidden" name="day_id" id="tsScheduleId">
+                    <input type="hidden" name="week" id="weekType">
+                    <div class="form-group">
+                        <label for="">Project name</label>
+                        <input type="text" name="project" id="tsProjectName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Start Date</label>
+                        <input type="text" name="start_date" id="tsStartDate" class="form-control ts-start-date" value="<?php echo date('m/d/Y')?>">
+                    </div>
+                    <div class="form-group">
+                        <div class="ts-time-section">
+                            <label for="">Start time</label>
+                            <input type="text" name="start_time" id="tsStartTime" class="form-control ts-time start-time">
+                        </div>
+                        <div class="ts-time-section">
+                            <label for="">End time</label>
+                            <input type="text" name="end_time" id="tsEndTime" class="form-control ts-time end-time">
+                        </div>
+                        <div class="ts-time-section">
+                            <span class="total-duration"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Team members</label>
+                        <select name="team_member" id="tsTeamMember" class="form-control ts-team-member" >
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Location</label>
+                        <select name="location" id="tsLocation" class="form-control">
+                            <option value=""></option>
+                            <option value="ph">Philippines</option>
+                            <option value="ml">Malaysia</option>
+                            <option value="tw">Taiwan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Notes</label>
+                        <textarea name="notes" id="tsNotes" cols="30" rows="5" class="form-control" style="height: 100%!important;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="savedProject">Save</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="alert-message">
     <div class="alert alert-success">
         <strong>Success!</strong> You've updated a duration.
     </div>
 </div>
-
-<!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
     //Add row
@@ -266,6 +405,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     });
     //Select2 employee list
     $('.select2-employee-list').select2({
+        placeholder: 'Select employee',
+        width: 'resolve',
+        ajax:{
+            url:'/timesheet/getEmployees',
+            type:"GET",
+            dataType:"json",
+            delay:250,
+            data:function (params) {
+                var query = {
+                    search: params.term
+                };
+                return query;
+            },
+            processResults:function (response) {
+                return{results:response};
+            },
+            cache:true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        templateResult: function (d) {
+            var subtext = d.subtext;
+            if(subtext == undefined){subtext=''}
+            return '<span class="text-details">'+d.text+'</span><span class="pull-right subtext">'+subtext+'</span>';
+        }
+    });
+
+    $('.ts-team-member').select2({
         placeholder: 'Select employee',
         width: 'resolve',
         ajax:{
@@ -304,6 +472,96 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
     });
     $(document).ready(function() {
+        var selected_week = $('#ts-sorting-week').val();
+        var user_id = $('#tsUsersList').val();
+        $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
+        //Datetime picker
+        $(".ts-start-date").datepicker();
+        $(".start-time").timepicker({interval: 60,change: differenceTime});
+        $(".end-time").timepicker({change: differenceTime,interval: 60});
+        function differenceTime() {
+            var start_hour = null;
+            var end_hour = null;
+            if ($(this).attr('id') == 'tsStartTime'){
+                start_hour = convertTime12to24($(this).val()).split(':')[0];
+                end_hour = convertTime12to24($(this).parent('div').next('div').children('input').val()).split(':')[0];
+            }else{
+                start_hour = convertTime12to24($(this).parent('div').prev('div').children('input').val()).split(':')[0];
+                end_hour = convertTime12to24($(this).val()).split(':')[0];
+            }
+            var duration = end_hour - start_hour;
+            if(end_hour != '' && start_hour != '' || duration < 0){
+                $('.total-duration').text(duration+"h");
+            }
+
+
+        }
+        const convertTime12to24 = (time12h) => {
+            const [time, modifier] = time12h.split(' ');
+
+            let [hours, minutes] = time.split(':');
+
+            if (hours === '12') {
+                hours = '00';
+            }
+
+            if (modifier === 'PM') {
+                hours = parseInt(hours, 10) + 12;
+            }
+
+            return `${hours}:${minutes}`;
+        }
+
+        // Adding Project
+        $(document).on('click','#addProject',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
+            $('#tsProjectName').attr('disabled',null);
+            $('#tsTeamMember').attr('disabled',null);
+            $('#tsLocation').attr('disabled',null);
+            $('#tsNotes').attr('disabled',null);
+            var week = $('#ts-sorting-week').val();
+            $('#weekType').val(week);
+
+        });
+        $(document).on('click','#savedProject',function () {
+            var week = $('#ts-sorting-week').val();
+            var user_id = $('#tsUsersList').val();
+            var values = {};
+            $.each($('#formNewProject').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            var duration = $('.total-duration').text();
+            $.ajax({
+                url:"/timesheet/addingProjects",
+                type:"POST",
+                dataType:"json",
+                data:{values:values,duration:duration},
+                cache:false,
+                success:function (data) {
+                    $("#createProject").modal('hide');
+                    showWeekList(week,user_id);
+                    if(data == 1){
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "New project has been set",
+                                icon: 'success'
+                            });
+                    }else{
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Failed',
+                                html: "Something is wrong in the process!",
+                                icon: 'warning'
+                            });
+                    }
+                }
+            });
+        });
         //Toggle edit pen
         $(document).on('click','#showEditPen',function () {
             if($(this).next('a').css('display') =='none'){
@@ -312,10 +570,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 $(this).next('a').css('display','none');
             }
         });
-
-        var selected_week = $('#ts-sorting-week').val();
-        var user_id = $('#tsUsersList').val();
-        $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
         function showWeekList(week,user_id) {
             if(week != null){
                 $.ajax({
@@ -326,13 +580,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     success:function (data) {
                         $('#timesheet_settings').html(data);
                         // Restriction of input field
-                        var options =  {
-                            onKeyPress: function(cep, e, field, options) {
-                                var masks = ['00:00'];
-                                var mask = (cep.length>4) ? masks[1] : masks[0];
-                                $('.ts-duration').mask(mask, options);
-                            }};
-                        $('.ts-duration').mask("00:00",options);
+                        // var options =  {
+                        //     onKeyPress: function(cep, e, field, options) {
+                        //         var masks = ['00:00'];
+                        //         var mask = (cep.length>4) ? masks[1] : masks[0];
+                        //         $('.ts-duration').mask(mask, options);
+                        //     }};
+                        // $('.ts-duration').mask("00:00",options);
                     }
                 });
             }
@@ -347,133 +601,175 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var user = $('#tsUsersList').val();
             showWeekList(week,user);
         });
+        $.date = function(dateObject,text) {
+            var d = new Date(dateObject);
+            var day = d.getDate();
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            if (month < 10) {
+                month = "0" + month;
+            }
+            var date;
+            if(text == 1){
+                 date = month + "/" + day + "/" + year;
+            }else{
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                 date = monthNames[d.getMonth()] + " " + day + "," + year;
+            }
+
+
+            return date;
+        };
+        $(document).on('click','#updateSchedule',function () {
+            var week = $('#ts-sorting-week').val();
+            var user_id = $('#tsUsersList').val();
+            var values = {};
+            $.each($('#formNewProject').serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            var duration = $('.total-duration').text();
+            var date = $('#tsStartDate').val();
+            $.ajax({
+                url:'/timesheet/updateSchedule',
+                type:"POST",
+                dataType:"json",
+                data:{values:values,duration:duration,date:date},
+                success:function (data) {
+                    showWeekList(week,user_id);
+                    if(data == 1){
+                        $("#createProject").modal('hide');
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "Project has been updated",
+                                icon: 'success'
+                            });
+                    }
+                }
+            });
+        });
+        function getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week) {
+            $('#tsProjectName').attr('disabled','disabled');
+            $('#tsTeamMember').attr('disabled','disabled');
+            $('#tsLocation').attr('disabled','disabled');
+            $('#tsNotes').attr('disabled','disabled');
+            $('#tsStartDate').val($.date(date,1)).attr('disabled','disabled');
+            $('#tsDate').text($.date(date,0));
+            $('#savedProject').text('Update').attr('id','updateSchedule');
+            $('#timesheetId').val(timesheet_id);
+            $('#userId').val(user_id);
+            $('#selectedDay').val(day);
+            $('#totalWeekDuration').val(twd_id);
+            $('#tsScheduleId').val(day_id);
+            $('#weekType').val(week);
+
+            $.ajax({
+                url:"/timesheet/getTimesheetData",
+                type:"GET",
+                data:{timesheet_id:timesheet_id,day_id:day_id},
+                dataType:"json",
+                success:function (data) {
+                    $('#tsProjectName').val(data.project_name);
+                    $('#tsLocation').val(data.location);
+                    $('#tsNotes').val(data.notes);
+                    $('#tsTeamMember').next($('#select2-tsTeamMember-container').attr('title',data.team_member).html(data.team_member));
+                    $('#tsStartTime').val(data.start_time);
+                    $('#tsEndTime').val(data.end_time);
+                    $('.total-duration').text(data.total_duration+"h");
+                }
+            });
+        }
         //Updating duration
         // Monday
-        $(document).on('change','#tsMonday',function () {
-           var project_id = $(this).closest('tr').attr('data-id');
-           var day_id = $(this).attr('data-id');
-           var duration = $(this).val();
-           var day = "Monday";
-           var date = $(this).attr('data-date');
-           $.ajax({
-              url:"/timesheet/updateDuration",
-              type:"POST",
-              dataType:"json",
-              cache:false,
-              data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-              success:function (data) {
-
-              }
-           });
+        $(document).on('click','#tsMonday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
+            var day_id = $(this).attr('data-id');
+            var timesheet_id = $(this).closest('tr').attr('data-id');
+            var date = $(this).attr('data-date');
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         // Tuesday
-        $(document).on('change','#tsTuesday',function () {
-
-            var project_id = $(this).closest('tr').attr('data-id');
+        $(document).on('click','#tsTuesday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
             var day_id = $(this).attr('data-id');
-            var duration = $(this).val();
-            var day = "Tuesday";
+            var timesheet_id = $(this).closest('tr').attr('data-id');
             var date = $(this).attr('data-date');
-            $.ajax({
-                url:"/timesheet/updateDuration",
-                type:"POST",
-                dataType:"json",
-                cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-                success:function (data) {
-
-                }
-            });
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Wednesday
-        $(document).on('change','#tsWednesday',function () {
-            var project_id = $(this).closest('tr').attr('data-id');
+        $(document).on('click','#tsWednesday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
             var day_id = $(this).attr('data-id');
-            var duration = $(this).val();
-            var day = "Wednesday";
+            var timesheet_id = $(this).closest('tr').attr('data-id');
             var date = $(this).attr('data-date');
-            $.ajax({
-                url:"/timesheet/updateDuration",
-                type:"POST",
-                dataType:"json",
-                cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-                success:function () {
-
-                }
-            });
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Thursday
-        $(document).on('change','#tsThursday',function () {
-            var project_id = $(this).closest('tr').attr('data-id');
+        $(document).on('click','#tsThursday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
             var day_id = $(this).attr('data-id');
-            var duration = $(this).val();
-            var day = "Thursday";
+            var timesheet_id = $(this).closest('tr').attr('data-id');
             var date = $(this).attr('data-date');
-            $.ajax({
-                url:"/timesheet/updateDuration",
-                type:"POST",
-                dataType:"json",
-                cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-                success:function () {
-
-                }
-            });
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Friday
-        $(document).on('change','#tsFriday',function () {
-            var project_id = $(this).closest('tr').attr('data-id');
+        $(document).on('click','#tsFriday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
             var day_id = $(this).attr('data-id');
-            var duration = $(this).val();
-            var day = "Friday";
+            var timesheet_id = $(this).closest('tr').attr('data-id');
             var date = $(this).attr('data-date');
-            $.ajax({
-                url:"/timesheet/updateDuration",
-                type:"POST",
-                dataType:"json",
-                cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-                success:function () {
-
-                }
-            });
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Saturday
-        $(document).on('change','#tsSaturday',function () {
-            var project_id = $(this).closest('tr').attr('data-id');
+        $(document).on('click','#tsSaturday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
             var day_id = $(this).attr('data-id');
-            var duration = $(this).val();
-            var day = "Saturday";
+            var timesheet_id = $(this).closest('tr').attr('data-id');
             var date = $(this).attr('data-date');
-            $.ajax({
-                url:"/timesheet/updateDuration",
-                type:"POST",
-                dataType:"json",
-                cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-                success:function () {
-
-                }
-            });
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Sunday
-        $(document).on('change','#tsSunday',function () {
-            var project_id = $(this).closest('tr').attr('data-id');
+        $(document).on('click','#tsSunday',function () {
+            $('#createProject').modal({backdrop: 'static', keyboard: false});
             var day_id = $(this).attr('data-id');
-            var duration = $(this).val();
-            var day = "Sunday";
+            var timesheet_id = $(this).closest('tr').attr('data-id');
             var date = $(this).attr('data-date');
-            $.ajax({
-                url:"/timesheet/updateDuration",
-                type:"POST",
-                dataType:"json",
-                cache:false,
-                data:{day_id:day_id,project_id:project_id,duration:duration,day:day,date:date},
-                success:function () {
-
-                }
-            });
+            var user_id = $(this).attr('data-user');
+            var day = $(this).attr('data-day');
+            var twd_id = $('#totalWeekDuration-'+user_id).attr('data-id');
+            var week = $('#ts-sorting-week').val();
+            getTimesheetData(timesheet_id,user_id,day_id,date,day,twd_id,week);
         });
         //Calculation total duration
         $(document).on('change','.ts-duration',function () {
@@ -636,77 +932,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             return output;
         }
 
-        // Adding Project
-        $(document).on('click','#addProject',function () {
-            var week = $('#ts-sorting-week').val();
-            var user = $('#tsUsersList').val();
-            Swal.fire({
-                title: 'Please enter project name',
-                input: 'checkbox',
-                inputPlaceholder: 'For next week',
-                html:
-                '<input type="text" id="swal-project-name" class="form-control" placeholder="Enter project name" required>',
-                showCancelButton: true,
-                confirmButtonText: 'Submit',
-                confirmButtonColor: '#2ca01c',
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        resolve([
-                            $('#swal-project-name').val(),
-                            $('#swal2-checkbox').is(':checked'),
-                        ])
-                    }).then(response => {
-                        if (!response[0] != '') {
-                        throw new Error(response.statusText)
-                    }
-                    return response
-                })
-                .catch(error => {
-                        Swal.showValidationMessage(
-                       ` ${error} : Text field can not be null`
-                    )
-                })
-                },
-                onOpen: function () {
-                    $('#swal-project-name').focus();
-                },
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url:"/timesheet/addingProjects",
-                        method:"POST",
-                        dataType:"json",
-                        data:{project:result.value[0],nxt_week:result.value[1],user:user},
-                        cache:false,
-                        success:function (data) {
-                            console.log(data);
-                            showWeekList(week,user);
-                            if(data == 1){
-                                Swal.fire(
-                                    {
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        title: 'Success',
-                                        text: "New Project has been added!",
-                                        icon: 'success'
-                                    });
-                            }else{
-                                Swal.fire(
-                                    {
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        title: 'Failed',
-                                        text: "Something is wrong in the process!",
-                                        icon: 'warning'
-                                    });
-                            }
-                        }
-                    });
-                }
-            })
-
-        });
         //Updating Project name
         $(document).on('click','#editProjectName',function () {
             var id = $(this).attr('data-id');
