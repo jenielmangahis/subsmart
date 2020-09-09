@@ -122,19 +122,19 @@ p.plan-list-price {
 						    <div class="steps-form">
 						      <div class="steps-row setup-panel">
 						        <div class="steps-step">
-						          <a href="#step-1" id="step1" type="button" class="btn reg-sc btn-indigo btn-circle">1</a>
+						          <span class="btn reg-sc btn-indigo btn-circle step-1">1</span>
 						          <p>Step 1</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-2" id="step2" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">2</a>
+						          <span class="btn reg-sc btn-default btn-circle step-2">2</span>
 						          <p>Step 2</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-3" id="step3" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">3</a>
+						          <span class="btn reg-sc btn-default btn-circle step-3">3</span>
 						          <p>Step 3</p>
 						        </div>
 						        <div class="steps-step">
-						          <a href="#step-4" id="step4" type="button" class="btn reg-sc btn-default btn-circle" disabled="disabled">4</a>
+						          <span class="btn reg-sc btn-default btn-circle step-4">4</span>
 						          <p>Step 4</p>
 						        </div>
 						      </div>
@@ -172,6 +172,7 @@ p.plan-list-price {
 						      	<div class="row setup-content" id="step-2">
 							        <div class="col-md-12">
 							          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
+							          	<div class="step-2-error-msg"></div>
 							          	<div class="col-md-6 float-left z-100">
 											<div class="input-group z-100">
 												<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
@@ -181,7 +182,7 @@ p.plan-list-price {
 
 										<div class="col-md-6 float-left z-100">
 											<div class="input-group z-100">
-												<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name">
+												<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
 											</div>
 										</div>
 
@@ -205,7 +206,7 @@ p.plan-list-price {
 
 										<div class="col-md-6 float-left">
 											<div class="input-group">
-												<select class="reg-select z-100" id="number_of_employee" name="number_of_employee">
+												<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
 														<option value="0">Number of Employees</option>
 														<option value="1 (Just Me)">1 (Just Me)</option>
 														<option value="2-3">2-3</option>
@@ -225,7 +226,7 @@ p.plan-list-price {
 
 										<div class="col-md-6 float-left">
 											<div class="input-group">
-												<select class="reg-select z-100 cmb-industry" id="industry" name="industry">
+												<select class="reg-select z-100 cmb-industry" id="industry" name="industry" required="">
 													<option>--Select your Industry--</option>
 					                                <?php foreach( $business as $key => $values ){ ?>
 					                                    <optgroup label="<?php echo $key; ?>">
@@ -250,8 +251,8 @@ p.plan-list-price {
 											</div> -->
 										</div>
 	                      			<div class="pl-3 pr-3">
-	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
-	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" type="button">Next</button>
+	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" data-key="step-1" type="button">Previous</button>
+	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" data-key="step-3" type="button">Next</button>
 	                      			</div>
 							        </div>
 						      	</div>
@@ -267,8 +268,8 @@ p.plan-list-price {
 							          	<p><b>Payment Method</b></p>
 							          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
 							      	  </div>
-							          <button class="btn btn-indigo btn-rounded prevBtn float-left" type="button">Previous</button>
-							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment">Process to Payment</button>
+							          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
+							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Process to Payment</button>
 							        </div>
 						      	</div>
 
@@ -316,42 +317,34 @@ p.plan-list-price {
 <?php include viewPath('frontcommon/footer'); ?>
 <script>
 $(function(){
-	var navListItems = $('div.setup-panel div a'),
-        allWells = $('.setup-content'),
+	var allWells = $('.setup-content'),
         allNextBtn = $('.nextBtn'),
         allPrevBtn = $('.prevBtn'),
-        step2bBtn  = $('.step2-btn');
+        step1Container = $('#step-1'),
+        step2Container = $('#step-2'),
+        step2bBtn  = $('.step2-btn'),
         step3bBtnPrcPayment = $('.step3-btn-processPayment');
 
     allWells.hide();
-
-    navListItems.click(function (e) {
-        e.preventDefault();
-        var $target = $($(this).attr('href')),
-            $item = $(this);
-
-        if (!$item.hasClass('disabled')) {
-            navListItems.removeClass('btn-indigo').addClass('btn-default');
-            $item.addClass('btn-indigo');
-            allWells.hide();
-            $target.show();
-            $target.find('input:eq(0)').focus();
-        }
-    });
+    step1Container.show();
 
     allPrevBtn.click(function(){
+    	var step = $(this).attr("data-key");
         var curStep = $(this).closest(".setup-content");
         var curStepBtn = curStep.attr("id");
-        var prevStepSteps = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().prev().children("a");
 
-        prevStepSteps.removeAttr('disabled').trigger('click');
+        $("span." + curStepBtn).removeClass("btn-indigo");
+        $("span." + curStepBtn).addClass("btn-default");
+        $("span." + step).addClass("btn-indigo");
+        $("#" + step).show();
+        $("#" + curStepBtn).hide();
     });
 
     allNextBtn.click(function(){
+        var step = $(this).attr("data-key");
         var curStep = $(this).closest(".setup-content");
         var curStepBtn = curStep.attr("id");
-        var nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a");
-        var curInputs = curStep.find("input[type='text'],input[type='url']");
+        var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
         var isValid = true;
 
         $(".form-group").removeClass("has-error");
@@ -362,17 +355,24 @@ $(function(){
             }
         }
 
-        if (isValid)
-            nextStepWizard.removeAttr('disabled').trigger('click');
+        if( isValid ){
+	        $("span." + curStepBtn).removeClass("btn-indigo");
+	        $("span." + curStepBtn).addClass("btn-default");
+	        $("span." + step).addClass("btn-indigo");
+	        $("#" + step).show();
+	        $("#" + curStepBtn).hide();
+	        $("." + curStepBtn + "-error-msg").removeClass("alert alert-danger");
+	        $("." + curStepBtn + "-error-msg").html("");
+        }else{
+        	$("." + curStepBtn + "-error-msg").addClass("alert alert-danger");
+        	$("." + curStepBtn + "-error-msg").html("Cannot empty required fields");
+        }
     });
 
     step2bBtn.click(function(){
     	var plan_id = $(this).attr("data-id");
     	var plan_price = $(this).attr("data-price");
     	var plan_name  = $(this).attr("data-plan");
-    	var curStep = $(this).closest(".setup-content");
-    	var curStepBtn    = curStep.attr("id");
-    	var nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a");
 
     	$("#plan_id").val(plan_id);
     	$("#plan_price").val(plan_price);
@@ -380,7 +380,11 @@ $(function(){
     	$(".plan-selected").text(plan_name);
     	$(".total-amount").text(plan_price);
 
-    	nextStepWizard.removeAttr('disabled').trigger('click');
+    	step1Container.hide();
+    	step2Container.show();
+    	$("span.step-1").removeClass('btn-indigo');
+    	$("span.step-1").addClass("btn-default");
+    	$("span.step-2").addClass('btn-indigo');
     });
 
     step3bBtnPrcPayment.click(function(){
