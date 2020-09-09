@@ -193,6 +193,7 @@ $route['accounting/reconcile/do_upload/(:any)'] = 'reconcile/do_upload/$1';
 $route['accounting/reconcile/delete/reconcile'] = 'reconcile/delete';
 $route['accounting/reconcile/view/report/(:any)'] = 'reconcile/report/$1';
 $route['accounting/reconcile/view/summary'] = 'reconcile/summary';
+$route['accounting/reconcile/view/export_csv'] = 'reconcile/export_csv';
 $route['accounting/reconcile/view/fetch_ending_date'] = 'reconcile/fetch_ending_date';
 $route['accounting/reconcile/updatesingle/adjustment_date'] = 'reconcile/adjustment_date';
 $route['accounting/reconcile/view/reportajax/(:any)'] = 'reconcile/reportajax/$1';

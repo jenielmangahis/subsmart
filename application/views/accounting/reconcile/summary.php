@@ -68,7 +68,7 @@ position: absolute;
                                 <div class="col-md-1 form-group">
                                      <div class="dropdown">
                                        <a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a>
-                                       <a href="#"><i class="fa fa-download"></i></a>
+                                       <a href="<?=url('accounting/reconcile/view/export_csv')?>"><i class="fa fa-download"></i></a>
                                     </div>
                                  </div>
                              </div>

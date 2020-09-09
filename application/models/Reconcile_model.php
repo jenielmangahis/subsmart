@@ -41,6 +41,15 @@ class Reconcile_model extends MY_Model {
     	$result =  $this->db->get()->result();
         return $result;
 	  } 
+
+	public function selectonwherewithinactive($id)  
+	  {  
+	  	$this->db->from('accounting_reconcile');  
+    	$this->db->where('chart_of_accounts_id',$id); 
+    	$result =  $this->db->get()->result();
+        return $result;
+	  } 
+
 	public function getById($id)  
 	  {  
 	  	$this->db->from('accounting_reconcile');  

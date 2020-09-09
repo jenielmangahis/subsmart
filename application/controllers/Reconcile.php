@@ -148,7 +148,7 @@ class Reconcile extends MY_Controller {
     {
     	$this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['rows']  =  $this->reconcile_model->selectonwhere($id);
+        $this->page_data['rows']  =  $this->reconcile_model->selectonwherewithinactive($id);
 		$this->load->view('accounting/reconcile/report', $this->page_data);
     }
 
@@ -158,6 +158,25 @@ class Reconcile extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['rows']  =  $this->reconcile_model->selectsummary();
         $this->load->view('accounting/reconcile/summary', $this->page_data);
+    }
+
+    public function export_csv(){ 
+        // file name 
+        $filename = 'summary_'.date('Ymd').'.csv'; 
+        header("Content-Description: File Transfer"); 
+        header("Content-Disposition: attachment; filename=$filename"); 
+        header("Content-Type: application/csv; ");
+       // get data 
+        $rows = $this->reconcile_model->selectsummary();
+        // file creation 
+        $file = fopen('php://output','w');
+        $header = array("ACCOUNT","TYPE","STATEMENT ENDING DATE","RECONCILED ON"); 
+        fputcsv($file, $header);
+        foreach ($rows as $key=>$line){ 
+            fputcsv($file,$line); 
+        }
+        fclose($file); 
+        exit; 
     }
 
     public function adjustment_date()
@@ -177,7 +196,7 @@ class Reconcile extends MY_Controller {
 
     public function reportajax($id)
     {
-        $rows  =  $this->reconcile_model->selectonwhere($id);
+        $rows  =  $this->reconcile_model->selectonwherewithinactive($id);
         $html = "";
         foreach ($rows as $row) {
         $accBalance = $this->chart_of_accounts_model->getBalance($row->chart_of_accounts_id);

@@ -963,6 +963,19 @@ function closedelete(val) {
             {
             }
         })
+            $.ajax({
+            url:"<?php echo url('accounting/reconcile/delete/reconcile') ?>",
+            method: "POST",
+            data: {id:id},
+            success:function(data)
+            {
+                sweetAlert(
+                            'Deleted!',
+                            'Reconcile has been deleted.',
+                            'success'
+                        );
+            }
+        })
         }
     }
 

@@ -1,25 +1,51 @@
 $(document).ready(function () {
-    var server_time = 0;
     var break_end_time = 0;
     var minutes = 0;
     var seconds = 0;
     var end_of_break = new Date($('#clock-end-time').val()).getTime();
-    var serverTime = setInterval(function () {
-        $.ajax({
-            url:"/timesheet/serverTime",
-            dataType:"json",
-            success:function (data) {
-                server_time = data.date_time;
-                break_end_time = data.end_time;
-            }
-        });
-    },1000);
+    // var serverTime = setInterval(function () {
+    //     $.ajax({
+    //         url:"/timesheet/serverTime",
+    //         dataType:"json",
+    //         success:function (data) {
+    //             server_time = data.date_time;
+    //             break_end_time = data.end_time;
+    //         }
+    //     });
+    // },1000);
+    function serverTime () {
+        var server_time = 0;
+            $.ajax({
+                url:"/timesheet/serverTime",
+                dataType:"json",
+                async: false,
+                success:function (data) {
+                    server_time = data.date_time;
+                    break_end_time = data.end_time;
+                }
+            });
+        setTimeout(serverTime, 1000);
+        return server_time;
+    }
     // Set the date we're counting down to
 
     // Update the count down every 1 second
-    var breakTime = setInterval(function() {
+    // var breakTime = setInterval(function() {
+    //     // Get today's date and time
+    //     var now = new Date(server_time).getTime();
+    //     // Find the distance between now an the count down date
+    //     var distance = end_of_break - now;
+    //
+    //     // Time calculations for minutes and seconds
+    //     minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    //     seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    //     if (!isNaN(minutes) && !isNaN(seconds)){
+    //         $('#break-duration').text(remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
+    //     }
+    // }, 1000);
+    function breakTime() {
         // Get today's date and time
-        var now = new Date(server_time).getTime();
+        var now = new Date(serverTime ()).getTime();
         // Find the distance between now an the count down date
         var distance = end_of_break - now;
 
@@ -29,7 +55,8 @@ $(document).ready(function () {
         if (!isNaN(minutes) && !isNaN(seconds)){
             $('#break-duration').text(remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
         }
-    }, 1000);
+        setTimeout(breakTime, 1000);
+    }
     if ($('#clock-status').val() == 0 || $('#clock-status').val() == 2){
         clearInterval(breakTime);
     }
