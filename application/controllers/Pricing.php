@@ -46,10 +46,6 @@ class Pricing extends MY_Controller {
 
 		}
 
-		echo "<pre>";
-		print_r($aPlans);
-		exit;
-
 		$this->page_data['aPlans'] = $aPlans;
 		$this->load->view('pricing2', $this->page_data);
 	}

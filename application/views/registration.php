@@ -109,8 +109,7 @@ p.plan-list-price {
 			</div>
 			<div class="col-sm-7 col-md-7 float-left pr-0 container-signup pt-5">
 				
-					<input type="hidden" name="plan_id" id="plan_id" value="">
-					<input type="hidden" name="plan_price" id="plan_price" value="">
+					
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
 					<span class="text-center block mt-3">Already signed up? <a href="<?php echo url('login');?>" class="reg-color">Log in</a></span>
 					<span class="text-reg-subtle">Studies show CRM Systems will increase your customer relationship by 74% and improves your sales by 87%</span>
@@ -142,7 +141,9 @@ p.plan-list-price {
 						    </div>
 
 						    	<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
-						      	
+						      	<input type="hidden" name="plan_id" id="plan_id" value="">
+					            <input type="hidden" name="plan_price" id="plan_price" value="">
+					            <input type="hidden" name="plan_name" id="plan_name" value="">
 						      	<!-- First Step -->
 						      	<div class="row setup-content" id="step-1">
 							        <div class="col-md-12">
@@ -369,7 +370,7 @@ $(function(){
 
     	$("#plan_id").val(plan_id);
     	$("#plan_price").val(plan_price);
-
+        $("#plan_name").val(plan_name);
     	$(".plan-selected").text(plan_name);
     	$(".total-amount").text(plan_price);
 

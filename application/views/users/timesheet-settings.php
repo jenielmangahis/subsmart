@@ -90,8 +90,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         margin-bottom: 0!important;
         width: auto;
     }
-    .ts-settings-menu .form-group .ts-sorting{
+    .ts-settings-menu .form-group .ts-settings-datepicker{
         width: 200px;
+        display: inline-block;
     }
 
     .ts-settings-menu .form-group .btn{
@@ -107,7 +108,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .ts-settings-menu .form-group .btn > i{
         margin: 0 auto;
     }
-    .ts-settings-menu .ts-sorting{
+    .ts-settings-menu .ts-settings-datepicker{
         margin-right: -5px!important;
     }
     .ts-bottom-btn-section{
@@ -288,11 +289,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <button class="btn btn-default" type="button"><i class="fa fa-list"></i></button>
                                         </div>
                                         <div class="form-group">
-                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">
-                                                <option value="this week" selected>This week</option>
-                                                <option value="last week">Last week</option>
-                                                <option value="next week">Next week</option>
-                                            </select>
+<!--                                            <select name="" id="ts-sorting-week" class="form-control ts-sorting">-->
+<!--                                                <option value="this week" selected>This week</option>-->
+<!--                                                <option value="last week">Last week</option>-->
+<!--                                                <option value="next week">Next week</option>-->
+<!--                                            </select>-->
+                                            <input type="text" id="ts-sorting-week" class="form-control ts-settings-datepicker" value="<?php echo date('m/d/Y')?>">
                                             <button class="btn btn-default"><i class="fa fa-angle-left fa-lg"></i></button>
                                             <button class="btn btn-default right"><i class="fa fa-angle-right fa-lg"></i></button>
                                         </div>
@@ -477,6 +479,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $('#timesheet_settings').ready(showWeekList(selected_week,user_id));
         //Datetime picker
         $(".ts-start-date").datepicker();
+        $(".ts-settings-datepicker").datepicker();
         $(".start-time").timepicker({interval: 60,change: differenceTime});
         $(".end-time").timepicker({change: differenceTime,interval: 60});
         function differenceTime() {

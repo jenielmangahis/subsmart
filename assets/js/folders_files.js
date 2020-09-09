@@ -260,13 +260,12 @@ $(document).ready(function(){
 
       if(selected_isFolder == 1){
         current_process = 'remove_folder';
-        confirm_text = ' Folder ' + div.attr('fnm');
+
+        confirmRemoveFolder();
       } else {
         current_process = 'remove_file';
         confirm_text = ' File ' + div.attr('fnm');
-      }
 
-      if(current_process != ''){
         showFolderManagerNotif('Confirm Remove',
                                'Remove' + confirm_text + '?<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently','confirm');
       }
@@ -277,7 +276,46 @@ $(document).ready(function(){
 // -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
-// Move fole or folder extra controls
+// Remove files or folders extra
+// -------------------------------------------------------------------------------------------------------------
+
+  function confirmRemoveFolder(){
+    var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]');
+      
+    var confirm_text = '';
+    var confirm_path = $('#recycle_bin_selected_path').text();
+
+    confirm_path = confirm_path.trim() + div.attr('fnm');
+
+    $.ajax({
+      type: 'GET',
+      url: base_url + "folders/checkFolderContents/" + selected_trash,
+      success: function(data){
+        var result = jQuery.parseJSON(data);
+        if((result.error == "") || (result.error == null)){
+          if(result.total > 0){ 
+            confirm_text = 'Folder ' + div.attr('fnm') + ' is not empty, continue remove?';
+          } else {
+            confirm_text = 'Remove Folder ' + div.attr('fnm') + '?';    
+          }
+
+          confirm_text += '<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently';
+
+          showFolderManagerNotif('Confirm Remove',confirm_text,'confirm'); 
+        } else {
+          showFolderManagerNotif('Error', result.error, 'error');  
+        }
+      },
+      error: function(){
+        showFolderManagerNotif(textStatus, errorThrown, 'error'); 
+      }
+    }); 
+  }
+
+// -------------------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------------------
+// Move file or folder extra controls
 // -------------------------------------------------------------------------------------------------------------
   
   $('#move_proceed').click(function(){
@@ -837,28 +875,45 @@ $(document).ready(function(){
         } 
       });   
     } else if(current_process == 'remove_folder'){
+      var div = $('div.node_trash[fid="'+ selected_trash +'"][isFolder="'+ selected_trash_isFolder +'"]');
+
       var folder_id = selected_trash;
+      var folder_name = div.attr('fnm');
 
       $.ajax({
+        xhr: function() {
+                  var xhr = new window.XMLHttpRequest();
+                  xhr.addEventListener("progress", function(evt) {
+                      if (evt.lengthComputable) {
+                          var percentComplete = ((evt.loaded / evt.total) * 100);
+                          percentComplete = percentComplete.toFixed(0);
+                          $('#modal-folder-manager-uploading-percentage').text(percentComplete + '%');
+                      }
+                  }, false);
+                  return xhr;
+        },
+
         type: 'POST',
         url: base_url + "folders/remove",
         data: {folder_id:folder_id,section:vType},
         beforeSend: function(){
+          hideFolderManagerNotif();
 
+          showUploading('Removing folder ' + folder_name, true);
         },
         success: function(data){
           var result = jQuery.parseJSON(data);
           if(result.error != ''){
-            hideFolderManagerNotif();
+            hideUploading();
 
             showFolderManagerNotif('Error', result.error, 'error');      
           } else {
             getTrashRecords(false);
-
-            hideFolderManagerNotif();
           }
         },
-        error: function(jqXHR, textStatus, errorThrown){            
+        error: function(jqXHR, textStatus, errorThrown){   
+          hideUploading();
+                   
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });
@@ -2068,6 +2123,10 @@ function getTrashRecords(vShowRecycleBin = true, vUpdateMain = false, vFolder_id
 
       if((vUpdateMain) && (vFolder_id >= 0) && (vFolder_id == current_selected_folder)){
         getFoldersAndFiles(vFolder_id);
+      }
+
+      if(modalIsOpen('#modal-folder-manager-uploading')){
+        hideUploading();
       }
     }
   });

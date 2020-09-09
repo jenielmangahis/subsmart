@@ -276,11 +276,8 @@ class Folders extends MY_Controller {
 		$parent_id = 0;
 
 		$folder = $this->folders_model->getById($folder_id);
-		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id . ' and softdelete <= 0')->row();
-		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id . ' and softdelete <= 0')->row();
-		if(($files->filescount > 0) || ($folders->folderscount > 0)){
-			$return['error'] = 'Cannot delete folder. Folder is not empty.';
-		} else if(($folder->created_by != $uid) && (($section == 'sharedlibrary') || ($section == 'businessformtemplates'))){
+		
+		if(($folder->created_by != $uid) && (($section == 'sharedlibrary') || ($section == 'businessformtemplates'))){
 			$return['error'] = 'Cannot delete folder. Folder is not yours.';
 		} else {			
 			$data = array(
@@ -304,22 +301,66 @@ class Folders extends MY_Controller {
 
 		$folder_id = $_POST['folder_id'];
 		$parent_id = 0;
+		
+		$this->removeAll($folder_id);
+
+		echo json_encode($return);
+	}
+
+	public function checkFolderContents($folder_id, $internal = false){
+		$return = array(
+			'total' => 0,
+			'error' => ""
+		);
 
 		$files = $this->db->query('select count(*) as `filescount` from filevault where folder_id = ' . $folder_id)->row();
 		$folders = $this->db->query('select count(*) as `folderscount` from file_folders where parent_id = ' . $folder_id)->row();
-		if(($files->filescount > 0) || ($folders->folderscount > 0)){
-			$return['error'] = 'Cannot delete folder. Folder is not empty.';
+
+		$return['total'] = $files->filescount + $folders->folderscount;
+
+		if($internal){
+			return $return;
 		} else {
-			$folder = $this->folders_model->getById($folder_id);
-			$delete_result = $this->folders_model->trans_delete(array(), array('folder_id' => $folder_id));
-			if($delete_result['status']){
-				rmdir('./uploads/' . $this->company_folder . $folder->path);
-			} else {
-				$return['error'] = $delete_result['message'];
+			echo json_encode($return);
+		}
+	}
+
+	public function emptyTrash(){
+		$folders = $this->folders_model->getByWhere(array('softdelete' => 1));
+		foreach ($folders as $folder) {
+			$this->removeAll($folder->folder_id);
+		}
+
+		$files = $this->vault_model->getByWhere(array('softdelete' => 1));
+		foreach ($files as $file) {
+			$path = './uploads/' . $this->company_folder . $file->file_path;
+
+			if(unlink($path)){
+				$this->vault_model->trans_delete(array(), array('file_id' => $file->file_id));
+			}
+		}
+	}
+
+	private function removeAll($folder_id){
+		$folders = $this->folders_model->getByWhere(array('parent_id' => $folder_id));
+		foreach ($folders as $folder) {
+			$this->removeAll($folder->folder_id);
+		}
+
+		$files = $this->vault_model->getByWhere(array('folder_id' => $folder_id));
+		foreach ($files as $file) {
+			$path = './uploads/' . $this->company_folder . $file->file_path;
+
+			if(unlink($path)){
+				$this->vault_model->trans_delete(array(), array('file_id' => $file->file_id));
 			}
 		}
 
-		echo json_encode($return);
+		$folder = $this->folders_model->getById($folder_id);
+
+		if(rmdir('./uploads/' . $this->company_folder . $folder->path)){
+			$this->folders_model->trans_delete(array(), array('folder_id' => $folder_id));
+		}
 	}
 
 	public function update_permissions(){

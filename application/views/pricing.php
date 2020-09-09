@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="mobile-pricing-banner hero-item-pricing">
         <div class="container">
             <div class="row cls-price">
-              <h3 class="text-center cd-fs-start">Simple Start</h3>
+              <h3 class="text-center cd-fs-start">Simple Start2</h3>
               <br style="clear:both;"/>
               <br/>
               <div class="row eCommerce-product-div">
@@ -1310,7 +1310,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="eCommerce-product-div">
                             <div class="image-price-container">
-                                <div class="price-container-title-v2">Simple Start</div>
+                                <div class="price-container-title-v2">Simple Start1</div>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">

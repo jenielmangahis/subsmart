@@ -5,9 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 class Timesheet_model extends MY_Model {
-
-
-
     public $table = 'time_record';
     private $db_table = 'timesheet_logs';
     private $attn_tbl = 'timesheet_attendance';
@@ -17,7 +14,11 @@ class Timesheet_model extends MY_Model {
 //    {
 //        $this->db->insert($this->table, $data);
 //    }
-    public function attendance($user_id,$status){
+    public function getEmployeeAttendance(){
+        $qry = $this->db->get($this->attn_tbl);
+        return $qry->result();
+    }
+    public function attendance($user_id,$status,$shift,$break){
         $qry = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id,'date' => date('Y-m-d')));
         if ($qry->num_rows() == 0 && $status == 1){
             $data = array(
@@ -28,7 +29,9 @@ class Timesheet_model extends MY_Model {
             $this->db->insert($this->attn_tbl,$data);
         }elseif($qry->num_rows() == 1 && $status == 0){
             $update = array(
-                'status' => $status
+                'status' => $status,
+                'shift_duration' => $shift,
+                'break_duration' => $break
             );
             $check = array('user_id'=>$user_id,'date' => date('Y-m-d'));
             $this->db->where($check);
@@ -37,7 +40,7 @@ class Timesheet_model extends MY_Model {
     }
 
     public function checkInEmployee($user_id){
-        $this->attendance($user_id,1);
+        $this->attendance($user_id,1,null,null);
         $qry = $this->db->get_where($this->db_table,array('user_id'=>$user_id,'action'=>'Check in','date'=>date('Y-m-d')));
         if ($qry->num_rows() == 0){
             $data = array(
@@ -55,7 +58,6 @@ class Timesheet_model extends MY_Model {
         }
     }
     public function checkingOutEmployee($user_id){
-        $this->attendance($user_id,0);
         $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'action'=>'Check in','date'=>date('Y-m-d')));
         if ($qry->num_rows() == 1){
             $data = array(
@@ -67,10 +69,41 @@ class Timesheet_model extends MY_Model {
                 'status' => 1,
             );
             $this->db->insert($this->db_table,$data);
+            $shift = $this->calculateShiftDuration($user_id);
+            $break = $this->calculateBreakDuration($user_id);
+            $this->attendance($user_id,0,$shift,$break);
             return true;
         }else{
             return false;
         }
+    }
+    private function calculateShiftDuration($user_id){
+        $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'date'=>date('Y-m-d')))->result();
+        $start_time = 0;
+        $end_time = 0;
+        foreach ($qry as $time){
+            if ($time->action == 'Check in'){
+                $start_time = strtotime($time->time);
+            }elseif($time->action == 'Check out'){
+                $end_time = strtotime($time->time);
+            }
+        }
+        $diff = ($end_time - $start_time)/3600;
+        return $diff;
+    }
+    private function calculateBreakDuration($user_id){
+        $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'date'=>date('Y-m-d')))->result();
+        $start_time = 0;
+        $end_time = 0;
+        foreach ($qry as $time){
+            if ($time->action == 'Break in'){
+                $start_time = strtotime($time->time);
+            }elseif($time->action == 'Break out'){
+                $end_time = strtotime($time->time);
+            }
+        }
+        $diff = ($end_time - $start_time)/3600;
+        return round($diff,2);
     }
     public function breakIn($user_id){
         $data = array(
@@ -575,6 +608,7 @@ class Timesheet_model extends MY_Model {
     }
 
     public function addingProjects($data){
+        $week_convert = date('Y-m-d',strtotime($data['week']));
         $qry = $this->db->get_where($this->tbl_ts_settings,array('project_name' => $data['project'],'user_id' => $data['user_id']));
         if ($qry->num_rows() == 0){
             $insert = array(
@@ -583,7 +617,7 @@ class Timesheet_model extends MY_Model {
                 'location' => $data['location'],
                 'notes' => $data['notes'],
                 'total_duration_w' => intval($data['duration']),
-                'date_created' => date('Y-m-d'),
+                'date_created' => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
                 'status' => 1
             );
             $this->db->insert($this->tbl_ts_settings,$insert);
@@ -595,7 +629,7 @@ class Timesheet_model extends MY_Model {
         }
     }
     //Updating timesheet settings total duration
-    public function recalculateDuration($ts_id){
+    public function recalculateWeekDuration($ts_id){
         $total = 0;
         $query = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$ts_id))->result();
         foreach ($query as $durations){
@@ -617,7 +651,7 @@ class Timesheet_model extends MY_Model {
                 'duration' => intval($data['duration'])
             );
             $this->db->insert('ts_settings_day',$insert);
-            $this->recalculateDuration($ts_id);
+            $this->recalculateWeekDuration($ts_id);
         }else{
             $update = array(
                 'start_time' => $data['start_time'],
@@ -627,19 +661,21 @@ class Timesheet_model extends MY_Model {
             $array_check = array('ts_settings_id' => $ts_id,'start_date' => $data['start_date']);
             $this->db->where($array_check);
             $this->db->update('ts_settings_day',$update);
-            $this->recalculateDuration($ts_id);
+            $this->recalculateWeekDuration($ts_id);
+
         }
         $this->totalDurationPerDay($data);
         $this->totalWeekDuration($data);
         return true;
     }
+
     public function totalDurationPerDay($data){
-        $this->db->where('user_id', $data['user_id']);
-        $this->db->where('day',$data['day']);
-        if (!empty($data['day_id'])){
-            $this->db->or_where('id',$data['day_id']);
-        }
-        $qry = $this->db->get('ts_settings_total_day');
+//        $this->db->where('user_id', $data['user_id']);
+//        $this->db->where('day',$data['day']);
+//        if (!empty($data['day_id'])){
+//            $this->db->or_where('id',$data['day_id']);
+//        }
+        $qry = $this->db->get_where('ts_settings_total_day',array('user_id'=>$data['user_id'],'date'=>$data['start_date']));
         if ($qry->num_rows() == 0){
             $insert = array(
                 'user_id' => $data['user_id'],
@@ -649,51 +685,86 @@ class Timesheet_model extends MY_Model {
             );
             $this->db->insert('ts_settings_total_day',$insert);
         }else{
-            $update = array('total_duration'=>$data['duration']);
-            $this->db->where('date',$data['start_date']);
+            $day_duration = $this->db->get_where('ts_settings_day',array('user_id'=>$data['user_id'],'start_date'=>$data['start_date']))->result();
+            $recalculate = 0;
+                foreach ($day_duration as $duration){
+                    $recalculate += $duration->duration;
+                }
+            $update = array('total_duration'=>$recalculate);
+            $array_check = array('user_id'=>$data['user_id'],'date'=>$data['start_date']);
+            $this->db->where($array_check);
             $this->db->update('ts_settings_total_day',$update);
         }
-        return true;
+
     }
     public function totalWeekDuration($data){
+//        if (!empty($data['twd_id'])){
+//            $this->db->where('id',$data['twd_id']);
+//        }else{
+//
+//        }
+//        if (!empty($data['week'])){
+            $week_convert = date('Y-m-d',strtotime($data['week']));
+//            $date_week_check = array(
+//                0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
+//                1 => date("Y-m-d",strtotime('tuesday this week',strtotime($week_convert))),
+//                2 => date("Y-m-d",strtotime('wednesday this week',strtotime($week_convert))),
+//                3 => date("Y-m-d",strtotime('thursday this week',strtotime($week_convert))),
+//                4 => date("Y-m-d",strtotime('friday this week',strtotime($week_convert))),
+//                5 => date("Y-m-d",strtotime('saturday this week',strtotime($week_convert))),
+//                6 => date("Y-m-d",strtotime('sunday this week',strtotime($week_convert))),
+//            );
+//            for ($x = 0;$x < count($date_week_check);$x++){
+//                $this->db->or_where('date',$date_week_check[$x]);
+//            }
+//        }
+        $this->db->where('date',date("Y-m-d",strtotime('monday this week',strtotime($week_convert))));
         $this->db->where('user_id',$data['user_id']);
-        if (!empty($data['week'])){
-            $date_week_check = array(
-                0 => date("Y-m-d",strtotime('monday '.$data['week'])),
-                1 => date("Y-m-d",strtotime('tuesday '.$data['week'])),
-                2 => date("Y-m-d",strtotime('wednesday '.$data['week'])),
-                3 => date("Y-m-d",strtotime('thursday '.$data['week'])),
-                4 => date("Y-m-d",strtotime('friday '.$data['week'])),
-                5 => date("Y-m-d",strtotime('saturday '.$data['week'])),
-                6 => date("Y-m-d",strtotime('sunday '.$data['week'])),
-            );
-            for ($x = 0;$x < count($date_week_check);$x++){
-                $this->db->or_where('date',$date_week_check[$x]);
-            }
-        }
-
-        if (!empty($data['twd_id'])){
-            $this->db->or_where('id',$data['twd_id']);
-        }
         $qry = $this->db->get('ts_total_week_duration');
         if ($qry->num_rows() == 0){
             $insert = array(
                 'user_id' => $data['user_id'],
                 'total_duration' => intval($data['duration']),
-                'date' => $data['start_date']
+                'date' => date("Y-m-d",strtotime('monday this week',strtotime($week_convert)))
             );
             $this->db->insert('ts_total_week_duration',$insert);
         }else{
-            for ($x = 0;$x < count($date_week_check);$x++){
-                $this->db->or_where('date_created',$date_week_check[$x]);
-            }
+            $week_convert = date('Y-m-d',strtotime($data['week']));
+            $this->db->where('user_id',$data['user_id']);
+            $this->db->where('date_created',date("Y-m-d",strtotime('monday this week',strtotime($week_convert))));
+//            $date_week_check = array(
+//                0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
+//                1 => date("Y-m-d",strtotime('tuesday this week',strtotime($week_convert))),
+//                2 => date("Y-m-d",strtotime('wednesday this week',strtotime($week_convert))),
+//                3 => date("Y-m-d",strtotime('thursday this week',strtotime($week_convert))),
+//                4 => date("Y-m-d",strtotime('friday this week',strtotime($week_convert))),
+//                5 => date("Y-m-d",strtotime('saturday this week',strtotime($week_convert))),
+//                6 => date("Y-m-d",strtotime('sunday this week',strtotime($week_convert))),
+//            );
+//            for ($x = 0;$x < count($date_week_check);$x++){
+//                $this->db->or_where('date_created',$date_week_check[$x]);
+//            }
             $qry = $this->db->get('timesheet_settings')->result();
             $total = 0;
             foreach ($qry as $durations){
                 $total += $durations->total_duration_w;
             }
             $update = array('total_duration'=>$total);
-            $this->db->where('id',$data['twd_id']);
+            $this->db->where('user_id',$data['user_id']);
+            $week_convert = date('Y-m-d',strtotime($data['week']));
+            $this->db->where('date',date("Y-m-d",strtotime('monday this week',strtotime($week_convert))));
+//            $date_week_check = array(
+//                0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
+//                1 => date("Y-m-d",strtotime('tuesday this week',strtotime($week_convert))),
+//                2 => date("Y-m-d",strtotime('wednesday this week',strtotime($week_convert))),
+//                3 => date("Y-m-d",strtotime('thursday this week',strtotime($week_convert))),
+//                4 => date("Y-m-d",strtotime('friday this week',strtotime($week_convert))),
+//                5 => date("Y-m-d",strtotime('saturday this week',strtotime($week_convert))),
+//                6 => date("Y-m-d",strtotime('sunday this week',strtotime($week_convert))),
+//            );
+//            for ($x = 0;$x < count($date_week_check);$x++){
+//                $this->db->or_where('date',$date_week_check[$x]);
+//            }
             $this->db->update('ts_total_week_duration',$update);
         }
         return true;

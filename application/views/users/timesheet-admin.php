@@ -570,15 +570,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         "sort": false
     });
     //Real-time capture of time
-    setInterval(function () {
+    // setInterval(function () {
+    //     $.ajax({
+    //         url:"/timesheet/realTime",
+    //         dataType:"json",
+    //         success:function (data) {
+    //             $('#tbl-time').val(data);
+    //         }
+    //     });
+    // },1000);
+    function serverTime () {
+        var datetime = null;
         $.ajax({
             url:"/timesheet/realTime",
             dataType:"json",
+            async: false,
             success:function (data) {
-                $('#tbl-time').val(data);
+                datetime = data;
+                // $('#tbl-time').val(data);
             }
         });
-    },1000);
+        setTimeout(serverTime, 1000);
+        return datetime;
+    }
     $(document).ready(function () {
         var total_employe = $('#employeeTotal').val();
         function inNow() {
@@ -627,7 +641,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var id = $(this).attr('data-id');
             var emp_name = $(this).attr('data-name');
             var selected = this;
-            var time = $('#tbl-time').val();
+            var time = serverTime ();
+            console.log(time);
             Swal.fire({
                 title: 'Checking in?',
                 html: "Are you sure you want to Check-in this person?<br> <strong>"+emp_name+"</strong>",
@@ -683,7 +698,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var id = $(this).attr('data-id');
             var emp_name = $(this).attr('data-name');
             var selected = this;
-            var time = $('#tbl-time').val();
+            var time = serverTime();
             Swal.fire({
                 title: 'Checking out?',
                 html: "Are you sure you want to Check-Out this person?<br> <strong>"+emp_name+"</strong>",
@@ -742,7 +757,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var id = $(this).attr('data-id');
             var emp_name = $(this).attr('data-name');
             var selected = this;
-            var time = $('#tbl-time').val();
+            var time = serverTime();
             Swal.fire({
                 title: 'Take a break?',
                 html: "Are you sure you want to take a break this person?<br> <strong>"+emp_name+"</strong>",
@@ -796,7 +811,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var id = $(this).attr('data-id');
             var emp_name = $(this).attr('data-name');
             var selected = this;
-            var time = $('#tbl-time').val();
+            var time = serverTime();
             Swal.fire({
                 title: 'Back to work?',
                 html: "Are you sure you want to get back to work this person?<br> <strong>"+emp_name+"</strong>",
