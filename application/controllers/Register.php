@@ -7,6 +7,7 @@ class Register extends MY_Controller {
 		parent::__construct();
         $this->load->model('NsmartPlan_model');
         $this->load->model('Clients_model');
+        $this->load->model('Users_model');
 		/* Load Paypal Library */
 		$this->load->library('paypal_lib');
 
@@ -58,7 +59,18 @@ class Register extends MY_Controller {
 
         $client = $this->Clients_model->create($data);
 
-
+        $id = $this->users_model->create([
+            'role' => 0,
+            'FName' => $post['firstname'],
+            'LName' => $post['lastname'],
+            'username' => $post['email'],
+            'email' => $post['email'],
+            'company_id' => $client,
+            'status' => 1,
+            'password_plain' =>  $post['password'],
+            'password' => hash( "sha256", $post['password'] ),           
+            //'parent_id' => $user->id
+        ]);
 
 
         $returnURL = base_url().'registration?status=success';

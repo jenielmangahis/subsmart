@@ -394,7 +394,12 @@ $(function(){
     $('div.setup-panel div a.btn-indigo').trigger('click');
 
     <?php if($payment_status == 'success') { ?>
-    		$('div.setup-panel div a#step4').trigger('click');
+    		//$('div.setup-panel div a#step4').trigger('click');
+    		step1Container.hide();
+    	    step2Container.hide();
+    	    $('#step-3').hide();
+    	    $('#step-4').show();
+
     <?php }elseif($payment_status == 'cancel') { ?>
     		$('div.setup-panel div a#step4').trigger('click');
     <?php } ?>
