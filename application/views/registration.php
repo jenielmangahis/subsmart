@@ -153,8 +153,14 @@ p.plan-list-price {
 		  						          <?php foreach($ns_plans as $p){ ?>
 		  						          	<li>
 		  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
-		  						          		<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
-		  						          		<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
+		  						          		
+		  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
+		  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
+		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
+		  						          		<?php } else { ?>
+		  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
+		  						          			<a class="btn btn-info" href="<?php echo url('/contact') ?>">Contact Us</a>
+		  						          		<?php } ?>
 		  						          	</li>
 		  						          <?php } ?>
 		  						      	  </ul>

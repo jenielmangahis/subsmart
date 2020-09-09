@@ -15,7 +15,7 @@ class Register extends MY_Controller {
 
 	public function index(){
 		// $this->load->model('NsmartPlan_model');
-  //       $this->load->model('Clients_model');
+        // $this->load->model('Clients_model');
         $get_data = $this->input->get();  
 
         $payment_status = "";
