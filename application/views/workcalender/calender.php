@@ -700,7 +700,11 @@ img.calendar-user-profile {
 <script>
     var calendarEl = document.getElementById('right-calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        schedulerLicenseKey: '0531798248-fcs-1598103289'
+        schedulerLicenseKey: '0531798248-fcs-1598103289',
+        googleCalendarApiKey: 'AIzaSyBlrKD9mj1bAqe8DKn16idmbZfXtSeELvo',
+        events: {
+            googleCalendarId: 'bryann.revina03@gmail.com'
+        }
       /*headerToolbar: {
         center: 'monthView,dayView' // buttons for switching between views
       },
