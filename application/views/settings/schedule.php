@@ -16,7 +16,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="validation-error hide" style="display:none;"></div>
 
                         <div class="card">
-                            <div class="rows">
+                            <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Calendar Timezone</label>
@@ -92,8 +92,39 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="rows" style="text-align: left;">
-                                <div class="col-sm-12">
+                            <div class="row" style="text-align: left;">
+                                <div class="col-sm-6">
+                                    <label><b>Calendar Account</b></label>
+                                    <div class="form-group">
+                                        <label>Google Email</label>
+                                        <div class='input-group date timepicker'>
+                                            <input type='text'
+                                                   name="google_email" class="form-control"
+                                                   value=""
+                                                   id="google_email"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Outlook Email</label>
+                                        <div class='input-group date timepicker'>
+                                            <input type='text'
+                                                   name="google_email" class="form-control"
+                                                   value=""
+                                                   id="google_email"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Apple Email</label>
+                                        <div class='input-group date timepicker'>
+                                            <input type='text'
+                                                   name="google_email" class="form-control"
+                                                   value=""
+                                                   id="google_email"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
                                     <label><b>Calendar Event Display Options</b></label>
                                     <div class="help help-sm help-block">The details you will see for an event on
                                         main calendar
