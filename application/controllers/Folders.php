@@ -200,11 +200,13 @@ class Folders extends MY_Controller {
 			$description = '';
 			$path = '';
 
-			$record = $this->db->query('select count(*) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id)->row();
+			$record = $this->db->query('select count(*) as `existing`, category_id, softdelete from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id)->row();
 
 			if($record->existing > 0){
 				$return['error'] = 'Folder already exists';
-				if(!empty($record->category_id)){
+				if($record->softdelete > 0){
+					$return['error'] .= ' in recycle bin.';
+				} else if(!empty($record->category_id)){
 					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
 				}
 			} else {
@@ -325,13 +327,19 @@ class Folders extends MY_Controller {
 		}
 	}
 
-	public function emptyTrash(){
-		$folders = $this->folders_model->getByWhere(array('softdelete' => 1));
+	public function emptytrash(){
+		$return = array(
+			'error' => ''
+		);
+
+		$uid = logged('id');
+
+		$folders = $this->folders_model->getByWhere(array('softdelete' => 1,'created_by' => $uid));
 		foreach ($folders as $folder) {
 			$this->removeAll($folder->folder_id);
 		}
 
-		$files = $this->vault_model->getByWhere(array('softdelete' => 1));
+		$files = $this->vault_model->getByWhere(array('softdelete' => 1,'user_id' => $uid));
 		foreach ($files as $file) {
 			$path = './uploads/' . $this->company_folder . $file->file_path;
 
@@ -339,9 +347,14 @@ class Folders extends MY_Controller {
 				$this->vault_model->trans_delete(array(), array('file_id' => $file->file_id));
 			}
 		}
+
+		echo json_encode($return);
 	}
 
 	private function removeAll($folder_id){
+		$folder = $this->folders_model->getById($folder_id);
+		$folder_path = $folder->path;
+
 		$folders = $this->folders_model->getByWhere(array('parent_id' => $folder_id));
 		foreach ($folders as $folder) {
 			$this->removeAll($folder->folder_id);
@@ -356,9 +369,7 @@ class Folders extends MY_Controller {
 			}
 		}
 
-		$folder = $this->folders_model->getById($folder_id);
-
-		if(rmdir('./uploads/' . $this->company_folder . $folder->path)){
+		if(rmdir('./uploads/' . $this->company_folder . $folder_path)){
 			$this->folders_model->trans_delete(array(), array('folder_id' => $folder_id));
 		}
 	}
@@ -439,6 +450,8 @@ class Folders extends MY_Controller {
 	}
 
 	public function restoreFileOrFolder(){
+		$uid = logged('id');
+
 		$return = array(
 			'folder_id' => 0,
 			'error' => ''
@@ -453,37 +466,45 @@ class Folders extends MY_Controller {
 
 		if($isFolder == 1){
 			$f = $this->folders_model->getById($fid);
-			$folder_id = $f->parent_id;
+			if($f->created_by == $uid){
+				$folder_id = $f->parent_id;
 
-			$continue = true;
-			if($folder_id != 0){
-				$folder = $this->folders_model->getById($folder_id);
-				$continue = ($folder->softdelete <= 0);
-			}
+				$continue = true;
+				if($folder_id != 0){
+					$folder = $this->folders_model->getById($folder_id);
+					$continue = ($folder->softdelete <= 0);
+				}
 
-			if($continue){
-				if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
-					$return['error'] = 'Error restoring folder';
+				if($continue){
+					if(!$this->folders_model->trans_update($data, array('folder_id' => $fid))){
+						$return['error'] = 'Error restoring folder';
+					}
+				} else {
+					$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';	
 				}
 			} else {
-				$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';	
+				$return['error'] = 'Folder does not belong to you.';
 			}
 		} else {
 			$f = $this->vault_model->getById($fid);
-			$folder_id = $f->folder_id;
+			if($f->file_id == $uid){
+				$folder_id = $f->folder_id;
 
-			$continue = true;
-			if($folder_id != 0){
-				$folder = $this->folders_model->getById($folder_id);
-				$continue = ($folder->softdelete <= 0);
-			}
-			
-			if($continue){
-				if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
-					$return['error'] = 'Error restoring file';
+				$continue = true;
+				if($folder_id != 0){
+					$folder = $this->folders_model->getById($folder_id);
+					$continue = ($folder->softdelete <= 0);
+				}
+				
+				if($continue){
+					if(!$this->vault_model->trans_update($data, array('file_id' => $fid))){
+						$return['error'] = 'Error restoring file';
+					}
+				} else {
+					$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';
 				}
 			} else {
-				$return['error'] = 'Parent folder is also in trash.</br>Please restore the parent folder first.';
+				$return['error'] = 'File does not belong to you.';	
 			}
 		}
 

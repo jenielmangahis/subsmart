@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2020 at 02:47 AM
+-- Generation Time: Sep 10, 2020 at 05:14 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.2.19
 
@@ -67,13 +67,6 @@ CREATE TABLE `acs_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `acs_account`
---
-
-INSERT INTO `acs_account` (`acct_id`, `fk_prof_id`, `entered_by`, `time_entered`, `sales_date`, `credit_score`, `mon_comp`, `acct_type`, `mon_id`, `language`, `signal_confirm_num`, `mon_confirmation`, `abort_code`, `sales_rep`, `technician`, `save_date`, `save_by`, `cancel_date`, `cancel_reason`, `sched_conflict`, `install_date`, `tech_arrive_time`, `tech_depart_time`, `panel_type`, `pre_install_survey`, `post_install_survey`, `mon_waived`, `rebate_offer`, `rebate_check1`, `amount1`, `rebate_check2`, `amount2`, `activation_fee`, `way_of_pay`, `lead_source`) VALUES
-(1, 3, 'asadf', '654', '8/28/2020', 46, '1102', '', 6346, '', 456, '5546', 657, 0, '', '8/28/2020', '', '8/28/2020', '', 0, '8/28/2020', '567', '67', '', '', '', '0', 0, '6', '56.00', '6', '65.00', '0.00', '0', 'Door');
-
---
 -- Indexes for dumped tables
 --
 
@@ -91,7 +84,7 @@ ALTER TABLE `acs_account`
 -- AUTO_INCREMENT for table `acs_account`
 --
 ALTER TABLE `acs_account`
-  MODIFY `acct_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `acct_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

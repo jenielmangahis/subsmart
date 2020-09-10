@@ -152,6 +152,14 @@ class Reconcile extends MY_Controller {
 		$this->load->view('accounting/reconcile/report', $this->page_data);
     }
 
+    public function report_print($id)
+    {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rows']  =  $this->reconcile_model->selectonwherewithinactive($id);
+        $this->load->view('accounting/reconcile/report_print', $this->page_data);
+    }
+
     public function summary()
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
@@ -159,6 +167,7 @@ class Reconcile extends MY_Controller {
         $this->page_data['rows']  =  $this->reconcile_model->selectsummary();
         $this->load->view('accounting/reconcile/summary', $this->page_data);
     }
+    
 
     public function export_csv(){ 
         // file name 
@@ -172,9 +181,12 @@ class Reconcile extends MY_Controller {
         $file = fopen('php://output','w');
         $header = array("ACCOUNT","TYPE","STATEMENT ENDING DATE","RECONCILED ON"); 
         fputcsv($file, $header);
-        foreach ($rows as $key=>$line){ 
-            fputcsv($file,$line); 
+        foreach ($rows as $row){ 
+            $array=[];
+            array_push($array, $this->chart_of_accounts_model->getName($row->chart_of_accounts_id),$this->chart_of_accounts_model->getName($row->chart_of_accounts_id),$row->ending_date,$row->adjustment_date);
+            fputcsv($file, $array);
         }
+        
         fclose($file); 
         exit; 
     }
@@ -204,5 +216,13 @@ class Reconcile extends MY_Controller {
         $html .= "<div class='row'><div class='col-xl-12'><div class='card'><div class='card-body'><div class='row'><div class='col-md-4'></div><div class='col-md-4'></div><div class='col-md-3'></div><div class='col-md-1 form-group'><div class='dropdown'><a href='#' onclick = 'window.print()'><i class='fa fa-print'></i></a></div></div></div><div style='text-align: center;margin-bottom: 10px;'><div class='row'><div class='col-md-12'>ADI</div></div><div class='row'><div class='col-md-12'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id).",Period Ending ".$row->ending_date."</div></div><div class='row'><div class='col-md-12'>RCONCILATION REPORT</div></div><div class='row'><div class='col-md-12'>Reconciled on : ".$row->adjustment_date."</div></div><div class='row'><div class='col-md-12'>Reconciled by : -</div></div></div>Any changes made to transactions after this date aren't included in this report. <div class='line'></div><div class='row' style='margin-top: 10px;'><div class='col-md-2'>Summary</div><div class='col-md-9'></div><div class='col-md-1'>USD</div></div><div class='row'><div class='col-md-3'>Statement beginning balance</div><div class='col-md-8 dott'></div><div class='col-md-1'>".number_format($accBalance,1)."</div></div><div class='row'> <div class='col-md-2'>Service Charge</div><div class='col-md-9 dott'></div><div class='col-md-1'>-".number_format($row->service_charge,1)."</div></div><div class='row'><div class='col-md-2'>Interest Earned</div><div class='col-md-9 dott'></div><div class='col-md-1'>".number_format($row->interest_earned,1)."</div></div><div class='row'>    <div class='col-md-3'>Checks & payment cleared(0)</div><div class='col-md-8 dott'></div><div class='col-md-1'>0.00</div></div><div class='row'><div class='col-md-3'>Deposit & other credit cleared(0)</div><div class='col-md-8 dott'></div><div class='col-md-1'>0.00</div></div><div class='row'><div class='col-md-2'>Adjustment</div><div class='col-md-9 dott'></div><div class='col-md-1'>".number_format($adjustment, 1)."</div></div><div class='row'><div class='col-md-3'>Statement ending balance</div><div class='col-md-8 dott'></div><div class='col-md-1'>".number_format($row->ending_balance, 1)."</div></div><div class='row'><div class='col-md-11'></div><div class='col-md-1'>======</div></div><div class='row'><div class='col-md-3'>Register balance as of ".$row->ending_date."</div><div class='col-md-8 dott'></div><div class='col-md-1'>".number_format($row->ending_balance, 1)."</div></div></div></div></div></div>";
         }
         echo $html;
+    }
+
+    public function history()
+    {
+        $this->page_data['alert'] = 'accounting/alert_promt';
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['rows']  =  $this->reconcile_model->selectAll();
+        $this->load->view('accounting/reconcile/history', $this->page_data);
     }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2020 at 02:47 AM
+-- Generation Time: Sep 10, 2020 at 05:14 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.2.19
 
@@ -35,20 +35,13 @@ CREATE TABLE `acs_access` (
   `reset_password` varchar(100) NOT NULL,
   `login` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `custom_field1` varchar(100) NOT NULL,
-  `custom_field2` varchar(100) NOT NULL,
-  `cancel_date` varchar(20) NOT NULL,
-  `collect_date` varchar(20) NOT NULL,
-  `cancel_reason` varchar(250) NOT NULL,
+  `acs_custom_field1` varchar(100) NOT NULL,
+  `acs_custom_field2` varchar(100) NOT NULL,
+  `acs_cancel_date` varchar(20) NOT NULL,
+  `acs_collect_date` varchar(20) NOT NULL,
+  `acs_cancel_reason` varchar(250) NOT NULL,
   `collect_amount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `acs_access`
---
-
-INSERT INTO `acs_access` (`access_id`, `fk_prof_id`, `portal_status`, `reset_password`, `login`, `password`, `custom_field1`, `custom_field2`, `cancel_date`, `collect_date`, `cancel_reason`, `collect_amount`) VALUES
-(1, 3, '1', '', '', '', '', '', '8/29/2020', '8/29/2020', '', '0.00');
 
 --
 -- Indexes for dumped tables
@@ -68,7 +61,7 @@ ALTER TABLE `acs_access`
 -- AUTO_INCREMENT for table `acs_access`
 --
 ALTER TABLE `acs_access`
-  MODIFY `access_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `access_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

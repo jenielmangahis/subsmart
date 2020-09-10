@@ -104,12 +104,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">Time Employee Overview</h4>
                             <!-- Date Selector -->
                             <div class="row">
                                 <div class="col-lg-3" style="">
                                     <label for="tsEmployeeDatepicker" class="label-datepicker">Week of :</label>
-                                    <input type="text" class="form-control" id="tsEmployeeDatepicker" value="<?php echo date('m/d/Y')?>">
+                                    <input type="text" class="form-control" id="tsEmployeeDatepicker" value="<?php echo date('m/d/Y',strtotime('monday this week'))?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -135,7 +134,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 $role = null;
                                                 $bg_color = '#f71111bf';
                                                 $status = 'LOA';
-                                                $day_duration = null;
+                                                $mon_duration = null;
+                                                $tue_duration = null;
+                                                $wed_duration = null;
+                                                $thu_duration = null;
+                                                $fri_duration = null;
+                                                $sat_duration = null;
+                                                $sun_duration = null;
+                                                $shift_duration = null;
                                             ?>
                                             <?php foreach ($users as $user): ?>
                                                 <?php
@@ -147,7 +153,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     }
                                                 foreach ($ts_logs as $log){
                                                     if ($log->action == 'Check in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $btn_action = 'employeeCheckOut';
                                                         $bg_color = 'greenyellow';
                                                         $status = 'In';
                                                     }elseif($log->action == 'Check out' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
@@ -163,29 +168,63 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 }
                                                 foreach ($attendance as $attn){
                                                         if ($attn->user_id == $user->id && $attn->shift_duration > 0){
-                                                            $day_duration = $attn->shift_duration;
+                                                            switch ($attn->date){
+                                                                case (date('Y-m-d',strtotime('monday'))):
+                                                                    $mon_duration = $attn->shift_duration;
+                                                                break;
+                                                                case (date('Y-m-d',strtotime('tuesday'))):
+                                                                    $tue_duration = $attn->shift_duration;
+                                                                break;
+                                                                case (date('Y-m-d',strtotime('wednesday'))):
+                                                                    $wed_duration = $attn->shift_duration;
+                                                                break;
+                                                                case (date('Y-m-d',strtotime('thursday'))):
+                                                                    $thu_duration = $attn->shift_duration;
+                                                                break;
+                                                                case (date('Y-m-d',strtotime('friday'))):
+                                                                    $fri_duration = $attn->shift_duration;
+                                                                break;
+                                                                case (date('Y-m-d',strtotime('saturday'))):
+                                                                    $sat_duration = $attn->shift_duration;
+                                                                break;
+                                                                case (date('Y-m-d',strtotime('sunday'))):
+                                                                    $sun_duration = $attn->shift_duration;
+                                                                break;
+                                                            }
                                                         }
+                                                }
+                                                foreach ($week_duration as $week){
+                                                    if ($user->id == $week->user_id && $week->week_of == date('Y-m-d',strtotime('monday this week'))){
+                                                        $shift_duration = $week->total_shift;
+                                                    }
                                                 }
 
                                                 ?>
                                             <tr>
                                                 <td><span class="tbl-emp-name"><?php echo $name;?></span><span class="tbl-emp-role"><?php echo $role;?></span></td>
                                                 <td class="center" style="background-color: <?php echo $bg_color;?>"><span class="tbl-emp-status"><?php echo $status?></span></td>
-                                                <td class="center"></td>
-                                                <td class="center"><?php echo $day_duration;?></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
-                                                <td class="center"></td>
+                                                <td class="center"><?php echo $mon_duration;?></td>
+                                                <td class="center"><?php echo $tue_duration;?></td>
+                                                <td class="center"><?php echo $wed_duration;?></td>
+                                                <td class="center"><?php echo $thu_duration;?></td>
+                                                <td class="center"><?php echo $fri_duration;?></td>
+                                                <td class="center"><?php echo $sat_duration;?></td>
+                                                <td class="center"><?php echo $sun_duration;?></td>
+                                                <td class="center"><?php echo $shift_duration;?></td>
                                             </tr>
                                                 <?php
                                                     $name = null;
                                                     $role = null;
                                                     $bg_color = '#f71111bf';
                                                     $status = 'LOA';
-                                                    $day_duration = null;
+                                                    $mon_duration = null;
+                                                    $tue_duration = null;
+                                                    $wed_duration = null;
+                                                    $thu_duration = null;
+                                                    $fri_duration = null;
+                                                    $sat_duration = null;
+                                                    $sun_duration = null;
+                                                    $shift_duration = null;
                                                 ?>
                                             <?php endforeach; ?>
                                         </tbody>

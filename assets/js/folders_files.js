@@ -273,6 +273,22 @@ $(document).ready(function(){
       showFolderManagerNotif('Information','Please select a folder or file from the recycle bin','info');
     }
   });
+
+// empty recycle bin
+  $('a[control="empty"]').click(function(e){
+    current_process = 'empty_trash';
+
+    showFolderManagerNotif('Confirm Empty Recycle Bin',
+                           'Are you sure you want to empty recycle bin?<br>Please note that only files and folders that you have created will be removed.',
+                           'confirm');  
+  });
+
+// open general permissions form entry
+  $('a[control="set_g_permission"]').click(function(e){
+    current_process = 'general_permissions';
+
+    openEntry(current_process);
+  });
 // -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
@@ -941,6 +957,44 @@ $(document).ready(function(){
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         } 
       });
+    } else if(current_process == 'empty_trash'){
+      $.ajax({
+        xhr: function() {
+                  var xhr = new window.XMLHttpRequest();
+                  xhr.addEventListener("progress", function(evt) {
+                      if (evt.lengthComputable) {
+                          var percentComplete = ((evt.loaded / evt.total) * 100);
+                          percentComplete = percentComplete.toFixed(0);
+                          $('#modal-folder-manager-uploading-percentage').text(percentComplete + '%');
+                      }
+                  }, false);
+                  return xhr;
+        },
+
+        type: 'POST',
+        url: base_url + "folders/emptytrash",
+        data: {section:vType},
+        beforeSend: function(){
+          hideFolderManagerNotif();
+
+          showUploading('Emptying Recycle Bin', true);
+        },
+        success: function(data){
+          var result = jQuery.parseJSON(data);
+          if(result.error != ''){
+            hideUploading();
+
+            showFolderManagerNotif('Error', result.error, 'error');      
+          } else {
+            getTrashRecords(false);
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown){   
+          hideUploading();
+                   
+          showFolderManagerNotif(textStatus, errorThrown, 'error');  
+        }
+      });  
     }
   });
 
@@ -1859,6 +1913,11 @@ function openEntry(type){
     vTitle = 'Edit File';
 
     $('div#file_entry').removeClass('d-none');  
+  } else if(type == 'general_permissions'){
+    vTitle = 'General Permissions';
+
+    $('div#general_permissions_entry').removeClass('d-none');
+    $('div#modal-folder-manager-entry-dialog').addClass('modal-lg');
   }
 
   $('#modal-folder-manager-entry-title').text(vTitle);
@@ -1886,6 +1945,9 @@ function closeEntry(){
     $('div#folder_entry').addClass('d-none');  
   } else if(current_process == 'edit_file'){
     $('div#file_entry').addClass('d-none');  
+  } else if(current_process == 'general_permissions'){
+    $('div#general_permissions_entry').addClass('d-none');
+    $('div#modal-folder-manager-entry-dialog').removeClass('modal-lg');
   }
 
   current_process = '';

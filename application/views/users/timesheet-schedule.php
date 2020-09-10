@@ -2,36 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
-    .red{
-        background-color: red;
-    }
-    input[type='radio']:after {
-        width: 25px;
-        height: 24px;
-        border-radius: 15px;
-        top: -9px;
-        left: -6px;
-        position: relative;
-        /*background-color: #d1d3d1;*/
-        content: '';
-        display: inline-block;
-        visibility: visible;
-        border: 2px solid white;
-    }
-
-    input[type='radio']:checked:after {
-        width: 25px;
-        height: 24px;
-        border-radius: 15px;
-        top: -9px;
-        left: -6px;
-        position: relative;
-        background-color: red;
-        content: '';
-        display: inline-block;
-        visibility: visible;
-        border: 2px solid white;
-    }
     #ts_schedule_tbl thead td{
         text-align: center!important;
         font-size: 14px!important;
@@ -105,7 +75,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">Time Schedule Overview</h4>
                             <!-- Date Selector -->
                             <div class="row">
                                 <div class="col-lg-3" style="margin-bottom: 12px">
@@ -115,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!--                                        <option value="last week">Last week</option>-->
 <!--                                    </select>-->
                                     <label for="scheduleWeek" class="week-label">Week of :</label>
-                                    <input type="text" id="scheduleWeek" class="form-control ts_schedule" value="<?php echo date('m/d/Y')?>">
+                                    <input type="text" id="scheduleWeek" class="form-control ts_schedule" value="<?php echo date('m/d/Y',strtotime('monday this week'))?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -197,11 +166,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     $(document).ready(function () {
+
         //Datepicker
         $(".ts_schedule").datepicker();
 
         var selected_week = $('#scheduleWeek').val();
-        console.log(selected_week);
         $('#ts_schedule_tbl').ready(showScheduleTable(selected_week));
         $(document).on('change','#scheduleWeek',function () {
             var week = $(this).val();
@@ -209,6 +178,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             showScheduleTable(week);
         });
         function showScheduleTable(week) {
+            $("#ts_schedule_tbl").DataTable().destroy();
             if(week != null){
                 $.ajax({
                     url: "/timesheet/showScheduleTable",
@@ -216,10 +186,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     data:{week:week},
                     dataType:"json",
                     success:function (data) {
-                        $('#ts_schedule_tbl').html(data);
-                        $('#ts_schedule_tbl').DataTable({
-                            "sort": false
-                        });
+                        $('#ts_schedule_tbl').html(data).DataTable({"sort": false});
                     }
                 });
             }

@@ -79,11 +79,12 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
-        $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
-        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
-        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
+//        $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
+//        $this->page_data['in_now'] = $this->timesheet_model->getInNow();
+//        $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
+        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
 		$date_this_week = array(
             "Monday" => date("M d,y",strtotime('monday this week')),
             "Tuesday" => date("M d,y",strtotime('tuesday this week')),
@@ -98,7 +99,7 @@ class Timesheet extends MY_Controller {
 		$this->load->view('users/timesheet-employee', $this->page_data);
 	}
 
-	// added for tracking Timesheet of employees: Schedule View
+
 	public function schedule()
 	{	
 		$this->load->model('timesheet_model');
@@ -108,42 +109,43 @@ class Timesheet extends MY_Controller {
         $this->page_data['user_roles'] = $this->users_model->getRoles();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		$date_this_week = array(
-            "Monday" => date("M d",strtotime('monday this week')),
-            "Tuesday" => date("M d",strtotime('tuesday this week')),
-            "Wednesday" => date("M d",strtotime('wednesday this week')),
-            "Thursday" => date("M d",strtotime('thursday this week')),
-            "Friday" => date("M d",strtotime('friday this week')),
-            "Saturday" => date("M d",strtotime('saturday this week')),
-            "Sunday" => date("M d",strtotime('sunday this week')),
+            "Monday" => date("M d,y",strtotime('monday this week')),
+            "Tuesday" => date("M d,y",strtotime('tuesday this week')),
+            "Wednesday" => date("M d,y",strtotime('wednesday this week')),
+            "Thursday" => date("M d,y",strtotime('thursday this week')),
+            "Friday" => date("M d,y",strtotime('friday this week')),
+            "Saturday" => date("M d,y",strtotime('saturday this week')),
+            "Sunday" => date("M d,y",strtotime('sunday this week'))
         );
         $this->page_data['date_this_week'] = $date_this_week;
 		
 		$this->load->view('users/timesheet-schedule', $this->page_data);
 	}
 
-	// added for tracking Timesheet of employees: List View
 	public function list()
 	{	
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['user_roles'] = $this->users_model->getRoles();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+        $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
+//        $this->page_data['in_now'] = $this->timesheet_model->getInNowData();
 		$date_this_week = array(
-            "Monday" => date("Y-m-d",strtotime('monday this week')),
-            "Tuesday" => date("Y-m-d",strtotime('tuesday this week')),
-            "Wednesday" => date("Y-m-d",strtotime('wednesday this week')),
-            "Thursday" => date("Y-m-d",strtotime('thursday this week')),
-            "Friday" => date("Y-m-d",strtotime('friday this week')),
-            "Saturday" => date("Y-m-d",strtotime('saturday this week')),
-            "Sunday" => date("Y-m-d",strtotime('sunday this week')),
+            "Monday" => date("M d,y",strtotime('monday this week')),
+            "Tuesday" => date("M d,y",strtotime('tuesday this week')),
+            "Wednesday" => date("M d,y",strtotime('wednesday this week')),
+            "Thursday" => date("M d,y",strtotime('thursday this week')),
+            "Friday" => date("M d,y",strtotime('friday this week')),
+            "Saturday" => date("M d,y",strtotime('saturday this week')),
+            "Sunday" => date("M d,y",strtotime('sunday this week'))
         );
         $this->page_data['date_this_week'] = $date_this_week;
 		
 		$this->load->view('users/timesheet-list', $this->page_data);
 	}
 
-	// added for tracking Timesheet of employees: List View
 	public function settings()
 	{	
 		$this->load->model('timesheet_model');
@@ -162,7 +164,7 @@ class Timesheet extends MY_Controller {
             "Thursday" => date("M d",strtotime('thursday this week')),
             "Friday" => date("M d",strtotime('friday this week')),
             "Saturday" => date("M d",strtotime('saturday this week')),
-            "Sunday" => date("M d",strtotime('sunday this week')),
+            "Sunday" => date("M d",strtotime('sunday this week'))
         );
         $this->page_data['date_this_week'] = $date_this_week;
 		
@@ -707,6 +709,8 @@ class Timesheet extends MY_Controller {
         $this->page_data['in_now'] = $this->timesheet_model->getInNow();
         $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
         $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
+        $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
+        $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
 
         // get total numbers of "In" employees
         $this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
@@ -747,7 +751,9 @@ class Timesheet extends MY_Controller {
 
     public function checkingOutEmployee(){
         $user_id = $this->input->post('id');
-        $query = $this->timesheet_model->checkingOutEmployee($user_id);
+        $attn_id = $this->input->post('attn_id');
+        $week_id = $this->input->post('week_id');
+        $query = $this->timesheet_model->checkingOutEmployee($user_id,$week_id,$attn_id);
         if ($query == true){
             echo json_encode(1);
         }else{

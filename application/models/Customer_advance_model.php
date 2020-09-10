@@ -10,7 +10,8 @@ class Customer_advance_model extends MY_Model {
     public function add($input,$tablename)
     {
         if ($this->db->insert($tablename, $input)) {
-            return true;
+            return $this->db->insert_id();
+            //return true;
         } else {
             return false;
         }

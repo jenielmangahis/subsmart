@@ -71,12 +71,14 @@ class Vault extends MY_Controller {
 				$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 				$record = $this->db->query(
-					'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
+					'select count(*) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
 				)->row();
 
 				if($record->existing > 0){
 					$return['error'] = 'File already exists';
-					if(!empty($record->category_id)){
+					if($record->softdelete > 0){
+						$return['error'] .= ' in recycle bin.';
+					} else if(!empty($record->category_id)){
 						$return['error'] .= ' in <strong>Business Form Templates</strong> section';
 					}	
 				} else {

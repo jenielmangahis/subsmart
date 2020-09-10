@@ -113,6 +113,55 @@
             });
         }
 
+        $(".delete_cust").on( "click", function( event ) {
+            var ID=this.id;
+            // alert(ID);
+            Swal.fire({
+                title: 'Are you sure you want to DELETE this customer?',
+                text: "All customer data will be remove as well as module information.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/customer/remove_customer",
+                        data: {prof_id : ID}, // serializes the form's elements.
+                        success: function(data)
+                        {
+                            if(data === "Done"){
+                                sucess("Customer Remove Successfully!");
+                            }else{
+                                console.log(data);
+                            }
+
+                        }
+                    });
+                    // window.location.href="/customer";
+                }
+            });
+        });
+
+        function sucess(information){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href="/customer";
+                }
+            });
+        }
+
         $("body").delegate(".delete_leadtype", "click", function(){
             //alert("Delegated Button Clicked");
             var ID=this.id;

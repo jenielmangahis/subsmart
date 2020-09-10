@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2020 at 02:48 AM
+-- Generation Time: Sep 10, 2020 at 05:15 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.2.19
 
@@ -49,13 +49,6 @@ CREATE TABLE `acs_office` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `acs_office`
---
-
-INSERT INTO `acs_office` (`off_id`, `fk_prof_id`, `welcome_sent`, `rebate`, `commision_scheme`, `rep_comm`, `rep_upfront_pay`, `tech_comm`, `tech_upfront_pay`, `rep_charge_back`, `rep_payroll_charge_back`, `pso`, `points_include`, `price_per_point`, `purchase_price`, `purchase_multiple`, `purchase_discount`) VALUES
-(1, 3, 0, 1, 1, '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', 1, 0, '0.00', '3456.00', '0.00', '0.00');
-
---
 -- Indexes for dumped tables
 --
 
@@ -73,7 +66,7 @@ ALTER TABLE `acs_office`
 -- AUTO_INCREMENT for table `acs_office`
 --
 ALTER TABLE `acs_office`
-  MODIFY `off_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `off_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
