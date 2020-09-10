@@ -48,25 +48,24 @@
                       <tbody>
                         <tr>
                           <td class="p-0 pb-1">
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit_permission" title="Edit Permission"><i class="fa fa-pencil"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="set_g_permission" title="Set General Permissions"><i class="fa fa-universal-access"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="set_f_permission" title="Set File/Folder Permission"><i class="fa fa-lock"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="move" title="Move Folder/File"><i class="fa fa-scissors"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit" title="Edit Folder/File"><i class="fa fa-pencil-square-o"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
-                            <?php if($isBusinessFormTemplates){ ?>
-                              <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a>   
-                            <?php } ?>
                           </td>
                         </tr>
                         <tr>
                           <td class="p-0 pb-1">
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="move" title="Move Folder/File"><i class="fa fa-scissors"></i></a>
                           <?php if($isBusinessFormTemplates){ ?>  
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
-                          <?php } ?>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right mn-1" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a> 
+                          <?php } ?> 
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
                           </td>  
                         </tr>
                       </tbody>
@@ -121,7 +120,7 @@
 <?php } ?>
 
 <div id="modal-folder-manager-entry" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
-  <div class="modal-dialog">
+  <div class="modal-dialog" id="modal-folder-manager-entry-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
@@ -184,6 +183,8 @@
               <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-delete-category">Delete</button>  
             </div> 
           <?php } ?>
+          <div class="d-none w-100" id="general_permissions_entry">
+          </div>
         </div>
       </div>
       <div class="modal-footer">

@@ -1,7 +1,72 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-
+<!--<div class="banking-tab-container">
+                                            <div class="rb-01">
+                                                <ul class="nav nav-tabs border-0">
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab active" data-toggle="tab" href="#profile">Profile</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#account">Account</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#address">Address</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#billing">Billing</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#alarm">Alarm</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#office">Office Use</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#admin">Admin</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#tech">Tech</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#access">Access</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#customizable">Customizable</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#payment">Payment</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#owner">Owner</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#assign">Assigned</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#notes">Notes</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#devices">Devices</a>
+                                                    </li>
+                                                    <?php //endif; ?>
+                                                </ul>
+                                            </div>
+                                        </div>-->
+<!--<div class="tab-content mt-4" >
+                                            <?php
+//                                            include viewPath('customer/adv_module_sheets/sheet_profile');
+//                                            include viewPath('customer/adv_module_sheets/sheet_account');
+//                                            include viewPath('customer/adv_module_sheets/sheet_address');
+//                                            include viewPath('customer/adv_module_sheets/sheet_billing');
+//                                            include viewPath('customer/adv_module_sheets/sheet_alarm');
+//                                            include viewPath('customer/adv_module_sheets/sheet_office');
+//                                            include viewPath('customer/adv_module_sheets/sheet_admin');
+//                                            include viewPath('customer/adv_module_sheets/sheet_tech');
+//                                            include viewPath('customer/adv_module_sheets/sheet_access');
+//include viewPath('customer/adv_module_sheets/sheet_cust');
+?>
+                                        </div>-->
 
     <div class="tab-pane active standard-accordion" id="profile">
         <form id="profile_form">

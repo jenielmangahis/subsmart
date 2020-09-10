@@ -104,131 +104,293 @@ class Customer extends MY_Controller
     }
 
     public function add_data_sheet(){
+
         $user_id = logged('id');
         $input = $this->input->post();
-        $input['fk_user_id'] = $user_id;
 
-        // customer_ad_model
-//        if(empty($input['lead_id'])){
-//            unset($input['lead_id']);
-            if($this->customer_ad_model->add($input,"acs_profile")){
-                echo "Success";
-            }else{
-                echo "Error";
+        $input_profile = array();
+        $input_billing = array();
+        $input_account = array();
+        $input_address = array();
+        $input_alarm = array();
+        $input_office = array();
+        $input_admin = array();
+        $input_tech = array();
+        $input_custom = array();
+        $input_payment = array();
+        $input_owner = array();
+        $input_access = array();
+
+        $input_profile['fk_user_id'] = logged('id');
+        $input_profile['fk_sa_id'] = $input['fk_sa_id'];
+        $input_profile['first_name'] = $input['first_name'];
+        $input_profile['last_name'] = $input['last_name'];
+        $input_profile['middle_name'] = $input['middle_name'];
+        $input_profile['prefix'] = $input['prefix'];
+        $input_profile['prefix'] = $input['prefix'];
+        $input_profile['business_name'] = $input['business_name'];
+        $input_profile['email'] = $input['email'];
+        $input_profile['ssn'] = $input['ssn'];
+        $input_profile['date_of_birth'] = $input['date_of_birth'];
+        $input_profile['phone_h'] = $input['phone_h'];
+        $input_profile['phone_w'] = $input['phone_w'];
+        $input_profile['phone_m'] = $input['phone_m'];
+        $input_profile['fax'] = $input['fax'];
+        $input_profile['mail_add'] = $input['mail_add'];
+        $input_profile['city'] = $input['city'];
+        $input_profile['state'] = $input['state'];
+        $input_profile['country'] = $input['country'];
+        $input_profile['zip_code'] = $input['zip_code'];
+        $input_profile['cross_street'] = $input['cross_street'];
+        $input_profile['subdivision'] = $input['subdivision'];
+        $input_profile['img_path'] = $input['img_path'];
+
+
+
+
+        // billing data
+        $input_billing['card_fname'] = $input['card_fname'];
+        $input_billing['card_lname'] = $input['card_lname'];
+        $input_billing['card_address'] = $input['card_address'];
+        $input_billing['city'] = $input['city'];
+        $input_billing['state'] = $input['state'];
+        $input_billing['zip'] = $input['zip'];
+        $input_billing['mmr'] = $input['mmr'];
+        $input_billing['bill_freq'] = $input['bill_freq'];
+        $input_billing['bill_day'] = $input['bill_day'];
+        $input_billing['contract_term'] = $input['contract_term'];
+        $input_billing['bill_method'] = $input['bill_method'];
+        $input_billing['bill_start_date'] = $input['bill_start_date'];
+        $input_billing['bill_end_date'] = $input['bill_end_date'];
+        $input_billing['check_num'] = $input['check_num'];
+        $input_billing['routing_num'] = $input['routing_num'];
+        $input_billing['acct_num'] = $input['acct_num'];
+        $input_billing['credit_card_num'] = $input['credit_card_num'];
+        $input_billing['credit_card_exp'] = $input['credit_card_exp'];
+        $input_billing['credit_card_exp_mm_yyyy'] = $input['credit_card_exp_mm_yyyy'];
+        $input_billing['collect_date'] = $input['collect_date'];
+        $input_billing['collect_amt'] = $input['collect_amt'];
+        $input_billing['contract_ext_date'] = $input['contract_ext_date'];
+        $input_billing['ssn'] = $input['ssn'];
+
+        // account data
+        $input_account['entered_by'] = $input['entered_by'];
+        $input_account['time_entered'] = $input['time_entered'];
+        $input_account['sales_date'] = $input['sales_date'];
+        $input_account['credit_score'] = $input['credit_score'];
+        $input_account['mon_comp'] = $input['mon_comp'];
+        $input_account['acct_type'] = $input['acct_type'];
+        $input_account['mon_id'] = $input['mon_id'];
+        $input_account['language'] = $input['language'];
+        $input_account['signal_confirm_num'] = $input['signal_confirm_num'];
+        $input_account['mon_confirmation'] = $input['mon_confirmation'];
+        $input_account['abort_code'] = $input['abort_code'];
+        $input_account['sales_rep'] = $input['sales_rep'];
+        $input_account['technician'] = $input['technician'];
+        $input_account['save_date'] = $input['save_date'];
+        $input_account['save_by'] = $input['save_by'];
+        $input_account['cancel_date'] = $input['cancel_date'];
+        $input_account['cancel_reason'] = $input['cancel_reason'];
+        $input_account['sched_conflict'] = $input['sched_conflict'];
+        $input_account['install_date'] = $input['install_date'];
+        $input_account['tech_arrive_time'] = $input['tech_arrive_time'];
+        $input_account['tech_depart_time'] = $input['tech_depart_time'];
+        $input_account['panel_type'] = $input['panel_type'];
+        $input_account['pre_install_survey'] = $input['pre_install_survey'];
+        $input_account['post_install_survey'] = $input['post_install_survey'];
+        $input_account['mon_waived'] = $input['mon_waived'];
+        $input_account['rebate_offer'] = $input['rebate_offer'];
+        $input_account['rebate_check1'] = $input['rebate_check1'];
+        $input_account['amount1'] = $input['amount1'];
+        $input_account['rebate_check2'] = $input['rebate_check2'];
+        $input_account['amount2'] = $input['amount2'];
+        $input_account['activation_fee'] = $input['activation_fee'];
+        $input_account['way_of_pay'] = $input['way_of_pay'][0];
+        $input_account['lead_source'] = $input['lead_source'];
+
+        // address data
+        $input_address['fk_sa_id_add'] = $input['fk_sa_id_add'];
+        $input_address['company'] = $input['company'];
+        $input_address['address'] = $input['address'];
+        $input_address['cross_street'] = $input['cross_street'];
+        $input_address['subdivision'] = $input['subdivision'];
+        $input_address['city'] = $input['city'];
+        $input_address['state'] = $input['state'];
+        $input_address['zip'] = $input['zip'];
+        $input_address['country'] = $input['country'];
+        $input_address['phone_home'] = $input['phone_home'];
+        $input_address['phone_cell'] = $input['phone_cell'];
+        $input_address['phone_alternate'] = $input['phone_alternate'];
+        $input_address['contact1_firstname'] = $input['contact1_firstname'];
+        $input_address['contact1_lastname'] = $input['contact1_lastname'];
+        $input_address['contact1_phone'] = $input['contact1_phone'];
+        $input_address['contact1_phone_type'] = $input['contact1_phone_type'];
+        $input_address['contact1_relationship'] = $input['contact1_relationship'];
+        $input_address['contact2_firstname'] = $input['contact2_firstname'];
+        $input_address['contact2_lastname'] = $input['contact2_lastname'];
+        $input_address['contact2_phone'] = $input['contact2_phone'];
+        $input_address['contact2_phone_type'] = $input['contact2_phone_type'];
+        $input_address['contact2_relationship'] = $input['contact2_relationship'];
+
+        // alarm data
+        $input_alarm['monitor_comp'] = $input['monitor_comp'];
+        $input_alarm['monitor_id'] = $input['monitor_id'];
+        $input_alarm['install_date'] = $input['install_date'];
+        $input_alarm['credit_score_alarm'] = $input['credit_score_alarm'];
+        $input_alarm['acct_type'] = $input['acct_type'];
+        $input_alarm['acct_info'] = $input['acct_info'];
+        $input_alarm['passcode'] = $input['passcode'];
+        $input_alarm['install_code'] = $input['install_code'];
+        $input_alarm['mcn'] = $input['mcn'];
+        $input_alarm['scn'] = $input['scn'];
+        $input_alarm['contact1'] = $input['contact1'];
+        $input_alarm['contact2'] = $input['contact2'];
+        $input_alarm['contact3'] = $input['contact3'];
+        $input_alarm['contact4'] = $input['contact4'];
+        $input_alarm['contact5'] = $input['contact5'];
+        $input_alarm['panel_type'] = $input['panel_type'];
+        $input_alarm['system_type'] = $input['system_type'];
+        $input_alarm['mon_waived'] = $input['mon_waived'];
+        $input_alarm['rebate_offer'] = $input['rebate_offer'];
+        $input_alarm['verification'] = $input['verification'];
+        $input_alarm['rebate_check1'] = $input['rebate_check1'];
+        $input_alarm['rebate_check2'] = $input['rebate_check2'];
+        $input_alarm['warranty_type'] = $input['warranty_type'];
+        $input_alarm['custom_field1_alarm'] = $input['custom_field1_alarm'];
+
+        // office data
+        $input_office['welcome_sent'] = $input['welcome_sent'];
+        $input_office['rebate'] = $input['rebate'][0];
+        $input_office['commision_scheme'] = $input['commision_scheme'][0];
+        $input_office['rep_comm'] = $input['rep_comm'];
+        $input_office['rep_upfront_pay'] = $input['rep_upfront_pay'];
+        $input_office['tech_comm'] = $input['tech_comm'];
+        $input_office['tech_upfront_pay'] = $input['tech_upfront_pay'];
+        $input_office['rep_charge_back'] = $input['rep_charge_back'];
+        $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
+        $input_office['pso'] = $input['pso'][0];
+        $input_office['points_include'] = $input['points_include'];
+        $input_office['price_per_point'] = $input['price_per_point'];
+        $input_office['purchase_price'] = $input['purchase_price'];
+        $input_office['purchase_multiple'] = $input['purchase_multiple'];
+        $input_office['purchase_discount'] = $input['purchase_discount'];
+
+        // admin data
+        $input_admin['entered_by'] = $input['entered_by'];
+        $input_admin['time_entered'] = $input['time_entered'];
+        $input_admin['assign_to'] = $input['assign_to'];
+        $input_admin['pre_install_survey'] = $input['pre_install_survey'];
+        $input_admin['custom_field1_admin'] = $input['custom_field1_admin'];
+        $input_admin['language'] = $input['language'];
+        $input_admin['date_enter'] = $input['date_enter'];
+        $input_admin['sales_rep_admin'] = $input['sales_rep_admin'];
+        $input_admin['post_install_survey'] = $input['post_install_survey'];
+        $input_admin['custom_field2_admin'] = $input['custom_field2_admin'];
+
+        // tech data
+        $input_tech['tech_arrive_time'] = $input['tech_arrive_time'];
+        $input_tech['tech_complete_time'] = $input['tech_complete_time'];
+        $input_tech['time_given'] = $input['time_given'];
+        $input_tech['date_given'] = $input['date_given'];
+        $input_tech['tech_assign'] = $input['tech_assign'];
+        $input_tech['custom_field1_tech'] = $input['custom_field1_tech'];
+        $input_tech['custom_field2_tech'] = $input['custom_field2_tech'];
+        $input_tech['custom_field3_tech'] = $input['custom_field3_tech'];
+        $input_tech['custom_field4_tech'] = $input['custom_field4_tech'];
+        $input_tech['url'] = $input['url'];
+
+        //access data
+        $input_access['portal_status'] = $input['portal_status'];
+        $input_access['reset_password'] = $input['reset_password'];
+        $input_access['login'] = $input['login'];
+        $input_access['password'] = $input['password'];
+        $input_access['acs_custom_field1'] = $input['acs_custom_field1'];
+        $input_access['acs_custom_field2'] = $input['acs_custom_field2'];
+        $input_access['acs_cancel_date'] = $input['acs_cancel_date'];
+        $input_access['acs_collect_date'] = $input['acs_collect_date'];
+        $input_access['acs_cancel_reason'] = $input['acs_cancel_reason'];
+        $input_access['collect_amount'] = $input['collect_amount'];
+
+        // owner data
+        $input_owner['own_ssn'] = $input['own_ssn'];
+        $input_owner['own_fname'] = $input['own_fname'];
+        $input_owner['own_lname'] = $input['own_fname'];
+        $input_owner['own_address'] = $input['own_address'];
+        $input_owner['own_address'] = $input['own_address'];
+        $input_owner['own_city'] = $input['own_city'];
+        $input_owner['own_state'] = $input['own_state'];
+        $input_owner['own_zip'] = $input['own_zip'];
+        $input_owner['own_pay_history'] = $input['own_pay_history'];
+        $input_owner['own_sign'] = $input['own_sign'];
+
+
+
+        $fk_prod_id = $input['prof_id'];
+        if(empty($fk_prod_id)){
+            $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+
+            $input_owner['fk_prof_id'] = $fk_prod_id;
+            $input_access['fk_prof_id'] = $fk_prod_id;
+            $input_tech['fk_prof_id'] = $fk_prod_id;
+            $input_admin['fk_prof_id'] = $fk_prod_id;
+            $input_address['fk_prof_id'] = $fk_prod_id;
+            $input_office['fk_prof_id'] = $fk_prod_id;
+            $input_alarm['fk_prof_id'] = $fk_prod_id;
+            $input_account['fk_prof_id'] = $fk_prod_id;
+            $input_billing['fk_prof_id'] = $fk_prod_id;
+
+            $this->customer_ad_model->add($input_owner,"acs_owner");
+            $this->customer_ad_model->add($input_access,"acs_access");
+            $this->customer_ad_model->add($input_tech,"acs_tech");
+            $this->customer_ad_model->add($input_admin,"acs_admin");
+            $this->customer_ad_model->add($input_address,"acs_address");
+            $this->customer_ad_model->add($input_office,"acs_office");
+            $this->customer_ad_model->add($input_alarm,"acs_alarm");
+            $this->customer_ad_model->add($input_account,"acs_account");
+            $this->customer_ad_model->add($input_billing,"acs_billing");
+            echo "Added";
+        }else{
+            $input_profile['prof_id'] = $fk_prod_id;
+            $this->customer_ad_model->update_data($input_profile,"acs_profile","prof_id");
+
+            $input_owner['fk_prof_id'] = $fk_prod_id;
+            $input_access['fk_prof_id'] = $fk_prod_id;
+            $input_tech['fk_prof_id'] = $fk_prod_id;
+            $input_admin['fk_prof_id'] = $fk_prod_id;
+            $input_address['fk_prof_id'] = $fk_prod_id;
+            $input_office['fk_prof_id'] = $fk_prod_id;
+            $input_alarm['fk_prof_id'] = $fk_prod_id;
+            $input_account['fk_prof_id'] = $fk_prod_id;
+            $input_billing['fk_prof_id'] = $fk_prod_id;
+
+            $this->customer_ad_model->update_data($input_owner,"acs_owner","fk_prof_id");
+            $this->customer_ad_model->update_data($input_access,"acs_access","fk_prof_id");
+            $this->customer_ad_model->update_data($input_tech,"acs_tech","fk_prof_id");
+            $this->customer_ad_model->update_data($input_admin,"acs_admin","fk_prof_id");
+            $this->customer_ad_model->update_data($input_address,"acs_address","fk_prof_id");
+            $this->customer_ad_model->update_data($input_office,"acs_office","fk_prof_id");
+            $this->customer_ad_model->update_data($input_alarm,"acs_alarm","fk_prof_id");
+            $this->customer_ad_model->update_data($input_account,"acs_account","fk_prof_id");
+            $this->customer_ad_model->update_data($input_billing,"acs_billing","fk_prof_id");
+            echo "Updated";
+        }
+    }
+
+    public function remove_customer(){
+        $input = array();
+        $input['field_name'] = "prof_id";
+        $input['id'] = $_POST['prof_id'];
+        $input['tablename'] = "acs_profile";
+        $modules = array('acs_owner','acs_access','acs_tech','acs_admin','acs_address','acs_office','acs_alarm','acs_account','acs_billing');
+        if ($this->customer_ad_model->delete($input)) {
+            for($x=0;$x<count($modules);$x++){
+                $input_mod = array();
+                $input_mod['field_name'] = "fk_prof_id";
+                $input_mod['id'] = $_POST['prof_id'];
+                $input_mod['tablename'] = $modules[$x];
+                $this->customer_ad_model->delete($input_mod);
             }
-//        }else{
-//            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
-//                echo "Updated";
-//            }else{
-//                echo "Error";
-//            }
-//        }
-    }
-    public function crud_account_module(){
-        $user_id = logged('id');
-        $input = $this->input->post();
-        $input['way_of_pay'] = $input['way_of_pay'][0];
-        unset($input['account_switch']);
-
-        // customer_ad_model
-//        if(empty($input['lead_id'])){
-//            unset($input['lead_id']);
-        if($this->customer_ad_model->add($input,"acs_account")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-//        }else{
-//            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
-//                echo "Updated";
-//            }else{
-//                echo "Error";
-//            }
-//        }
-    }
-
-    public function crud_address_module(){
-        $user_id = logged('id');
-        $input = $this->input->post();
-        unset($input['address_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_address")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-
-    }
-
-    public function crud_billing_module(){
-        $user_id = logged('id');
-        $input = $this->input->post();
-        unset($input['billing_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_billing")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-    }
-
-    public function crud_alarm_module(){
-        $input = $this->input->post();
-        unset($input['alarm_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_alarm")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-    }
-
-    public function crud_office_module(){
-        $input = $this->input->post();
-        $input['rebate'] = $input['rebate'][0];
-        $input['commision_scheme'] = $input['commision_scheme'][0];
-        $input['pso'] = $input['pso'][0];
-        unset($input['office_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_office")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-    }
-
-    public function crud_admin_module(){
-        $input = $this->input->post();
-        unset($input['admin_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_admin")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-    }
-
-    public function crud_tech_module(){
-        $input = $this->input->post();
-
-        unset($input['tech_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_tech")){
-            echo "Success";
-        }else{
-            echo "Error";
-        }
-    }
-
-    public function crud_access_module(){
-        $input = $this->input->post();
-        $input['portal_status'] = $input['portal_status'][0];
-        unset($input['access_switch']);
-
-        if($this->customer_ad_model->add($input,"acs_access")){
-            echo "Success";
-        }else{
-            echo "Error";
+            echo "Done";
         }
     }
 
@@ -240,6 +402,8 @@ class Customer extends MY_Controller
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+
         $this->load->view('customer/add_advance', $this->page_data);
     }
 

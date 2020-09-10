@@ -249,6 +249,7 @@ position: absolute;
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 <script type="text/javascript">
+  window.print();
 $('#account_name').on('change', function() {
  select_acc(this.value);
  getReport(this.value);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2020 at 02:47 AM
+-- Generation Time: Sep 10, 2020 at 05:14 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.2.19
 
@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `acs_address` (
   `addr_id` int(11) NOT NULL,
   `fk_prof_id` int(2) NOT NULL,
-  `fk_sa_id` int(2) NOT NULL,
+  `fk_sa_id_add` int(2) NOT NULL,
   `company` varchar(200) NOT NULL,
   `address` varchar(200) NOT NULL,
   `cross_street` varchar(100) NOT NULL,
@@ -56,13 +56,6 @@ CREATE TABLE `acs_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `acs_address`
---
-
-INSERT INTO `acs_address` (`addr_id`, `fk_prof_id`, `fk_sa_id`, `company`, `address`, `cross_street`, `subdivision`, `city`, `state`, `zip`, `country`, `phone_home`, `phone_cell`, `phone_alternate`, `contact1_firstname`, `contact1_lastname`, `contact1_phone`, `contact1_phone_type`, `contact1_relationship`, `contact2_firstname`, `contact2_lastname`, `contact2_phone`, `contact2_phone_type`, `contact2_relationship`) VALUES
-(1, 3, 3, 'asdf', 'asdf', 'asdf', 'asdf', 'asdf', 'asdf', 'asf', 'Canada', '345', '345', '34543', 'asd', 'sdfg', '564', 'Cell', 'EMP', 'fdgh', 'fghf', '546', 'Fax', 'DLR');
-
---
 -- Indexes for dumped tables
 --
 
@@ -80,7 +73,7 @@ ALTER TABLE `acs_address`
 -- AUTO_INCREMENT for table `acs_address`
 --
 ALTER TABLE `acs_address`
-  MODIFY `addr_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `addr_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

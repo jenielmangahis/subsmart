@@ -18,32 +18,42 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get($this->attn_tbl);
         return $qry->result();
     }
-    public function attendance($user_id,$status,$shift,$break){
+    public function getWeekTotalDuration(){
+        $qry = $this->db->get('ts_weekly_total_shift');
+        return $qry->result();
+    }
+    public function attendance($user_id,$status,$shift,$break,$week_ID,$flag){
+        if ($flag == 0){
+            $week_id = $this->totalHoursShift($user_id,$week_ID);
+        }
         $qry = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id,'date' => date('Y-m-d')));
         if ($qry->num_rows() == 0 && $status == 1){
             $data = array(
+                'week_id' => $week_id,
                 'user_id' =>  $user_id,
                 'date' => date('Y-m-d'),
                 'status' => $status
             );
             $this->db->insert($this->attn_tbl,$data);
+            return $this->db->insert_id();
         }elseif($qry->num_rows() == 1 && $status == 0){
             $update = array(
                 'status' => $status,
                 'shift_duration' => $shift,
                 'break_duration' => $break
             );
-            $check = array('user_id'=>$user_id,'date' => date('Y-m-d'));
-            $this->db->where($check);
+            $this->db->where('week_id',$week_ID);
             $this->db->update($this->attn_tbl,$update);
+            $this->totalHoursShift($user_id,$week_ID);
         }
     }
 
     public function checkInEmployee($user_id){
-        $this->attendance($user_id,1,null,null);
+        $attn_id = $this->attendance($user_id,1,null,null,0,0);
         $qry = $this->db->get_where($this->db_table,array('user_id'=>$user_id,'action'=>'Check in','date'=>date('Y-m-d')));
         if ($qry->num_rows() == 0){
             $data = array(
+                'attendance_id'=> $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check in',
                 'date' => date('Y-m-d'),
@@ -57,10 +67,11 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
-    public function checkingOutEmployee($user_id){
+    public function checkingOutEmployee($user_id,$week_ID,$attn_id){
         $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'action'=>'Check in','date'=>date('Y-m-d')));
         if ($qry->num_rows() == 1){
             $data = array(
+                'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'date' => date('Y-m-d'),
@@ -71,7 +82,7 @@ class Timesheet_model extends MY_Model {
             $this->db->insert($this->db_table,$data);
             $shift = $this->calculateShiftDuration($user_id);
             $break = $this->calculateBreakDuration($user_id);
-            $this->attendance($user_id,0,$shift,$break);
+            $this->attendance($user_id,0,$shift,$break,$week_ID,1);
             return true;
         }else{
             return false;
@@ -104,6 +115,31 @@ class Timesheet_model extends MY_Model {
         }
         $diff = ($end_time - $start_time)/3600;
         return round($diff,2);
+    }
+    private function totalHoursShift($user_id,$week_ID){
+        $total_shift = 0;
+        $qry = $this->db->get_where($this->attn_tbl,array('week_id'=>$week_ID))->result();
+        foreach ($qry as $shift){
+            $total_shift += $shift->shift_duration;
+        }
+        //Inserting or Updating weekly total shift
+        $tbl_total_shift = $this->db->get_where('ts_weekly_total_shift',array('user_id'=>$user_id,'week_of'=>date("Y-m-d",strtotime('monday this week'))));
+        if ($tbl_total_shift->num_rows() == 0){
+            $insert = array(
+                'user_id' => $user_id,
+                'week_of' => date("Y-m-d",strtotime('monday this week')),
+                'total_shift' => $total_shift
+            );
+            $this->db->insert('ts_weekly_total_shift',$insert);
+            return $this->db->insert_id();
+        }else{
+            $update = array(
+                'total_shift' => $total_shift
+            );
+            $this->db->where('id',$week_ID);
+            $this->db->update('ts_weekly_total_shift',$update);
+            return $week_ID;
+        }
     }
     public function breakIn($user_id){
         $data = array(
@@ -567,6 +603,10 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date'=>date('Y-m-d')));
         return $query->num_rows();
     }
+//    public function getInNowData(){
+//        $query = $this->db->get_where($this->db_table,array('action'=>'Check in'));
+//        return $query->result();
+//    }
 
     public function getTimeSheetSettings(){
         $qry = $this->db->get('timesheet_settings');

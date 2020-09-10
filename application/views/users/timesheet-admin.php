@@ -2,69 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style type="text/css">
-    .red{
-        background-color: red;
-    }
-    input[type='radio']:after {
-        width: 25px;
-        height: 24px;
-        border-radius: 15px;
-        top: -9px;
-        left: -6px;
-        position: relative;
-        /*background-color: #d1d3d1;*/
-        content: '';
-        display: inline-block;
-        visibility: visible;
-        border: 2px solid white;
-    }
-
-    input[type='radio']:checked:after {
-        width: 25px;
-        height: 24px;
-        border-radius: 15px;
-        top: -9px;
-        left: -6px;
-        position: relative;
-        background-color: red;
-        content: '';
-        display: inline-block;
-        visibility: visible;
-        border: 2px solid white;
-    }
     th{
         text-align: center;
     }
-    td#name{
-        width: auto !important;
-    }
-
-    /* progress bars for audit */
-    .in-now{
-        background-color: #03fcf4 !important;
-    }
-    .out-now{
-        background-color: #ebe713 !important;
-    }
-    .not-logged-in-today{
-        background-color: #c71230 !important;
-    }
-    .employees{
-        background-color: #545ed6 !important;
-    }
-    .on-approved-leave{
-        background-color: #a3c95d !important;
-    }
-    .on-unapproved-leave{
-        background-color: #f5677e !important;
-    }
-    .on-leave{
-        background-color: #8f30bf !important;
-    }
-    .on-business-travel{
-        background-color: #5983de !important;
-    }
-
     .tile-container{
         -webkit-border-radius: 4px;
         -moz-border-radius: 4px;
@@ -465,6 +405,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $indicator_out = 'display:none';
                                             $indicator_in_break = 'display:none';
                                             $indicator_out_break = 'display:none';
+                                            $week_id = null;
+                                            $attn_id = null;
                                         ?>
                                         <?php foreach ($users as $cnt => $user): ?>
                                             <?php
@@ -510,6 +452,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         $indicator_in_break = 'display:none';
                                                         $indicator_out_break = 'display:block';
                                                     }
+                                                    foreach ($week_duration as $week){
+                                                        $week_id = $week->id;
+                                                    }
+                                                    foreach ($attendance as $attn){
+                                                        $attn_id = $attn->id;
+                                                    }
 
                                                 }
                                             ?>
@@ -525,7 +473,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span><?php echo $break_out;?></span></td>
                                                 <td class="tbl-emp-action">
                                                     <a href="javascript:void(0)" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                    <a href="javascript:void(0)" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>"><i class="fa fa-user-clock fa-lg"></i></a>
+                                                    <a href="javascript:void(0)" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-week="<?php echo $week_id?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>"><i class="fa fa-user-clock fa-lg"></i></a>
                                                     <i class="fa <?php echo $status;?> status"></i>
                                                 </td>
                                                 <td></td>
@@ -545,6 +493,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $indicator_out = 'display:none';
                                             $indicator_in_break = 'display:none';
                                             $indicator_out_break = 'display:none';
+                                            $week_id = null;
+                                            $attn_id = null;
                                         ?>
                                         <?php endforeach;?>
                                         </tbody>
@@ -698,6 +648,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var id = $(this).attr('data-id');
             var emp_name = $(this).attr('data-name');
             var selected = this;
+            var week_id = $(this).attr('data-week');
+            var attn_id = $(this).attr('data-attn');
             var time = serverTime();
             Swal.fire({
                 title: 'Checking out?',
@@ -713,7 +665,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/checkingOutEmployee',
                     method:"POST",
                     dataType:"json",
-                    data:{id:id},
+                    data:{id:id,week_id:week_id,attn_id:attn_id},
                     success:function (data) {
                         if (data == 1){
                             inNow();

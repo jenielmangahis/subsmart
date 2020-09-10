@@ -125,10 +125,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="tab-content mt-4" >
                                         <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
-                                                <div class="col-xl-10">
+                                                <div class="col-xl-12">
                                                     <div class="card">
                                                         <div class="card-body" style="padding-bottom:0px;">
-
+                                                            <div class="col-sm-12">
+                                                                <h6 class="page-title">Customers List</h6>
+                                                            </div>
                                                             <div class="col-sm-6 col-md-12">
                                                                 <div class="float-right d-md-block">
                                                                     <div class="dropdown">
@@ -193,8 +195,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         <td></td>
                                                                                         <td></td>
                                                                                         <td></td>
-                                                                                        <td class="text-right">
-                                                                                            <div class="dropdown dropdown-btn open">
+                                                                                        <td>
+                                                                                            <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                                                                <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
+                                                                                            </a>
+                                                                                            <a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
+                                                                                                <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
+                                                                                            </a>
+                                                                                           <!-- <div class="dropdown dropdown-btn open">
                                                                                                 <button class="btn btn-default dropdown-toggle" type="button"
                                                                                                         id="dropdown-edit" data-toggle="dropdown"
                                                                                                         aria-expanded="true">
@@ -246,14 +254,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                                                     class="fa fa-trash-o icon"></span> Delete
                                                                                                             customer</a></li>
                                                                                                 </ul>
-                                                                                            </div>
+                                                                                            </div> -->
                                                                                         </td>
                                                                                     </tr>
                                                                                 <?php endforeach; ?>
                                                                             </tbody>
-
                                                                         </table>
-
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -261,7 +267,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-sm-12 col-xl-2">
+                                                <div class="col-sm-12">
                                                     <div class="card card-mobile">
                                                         <div class="row padding-mobile-cs">
                                                             <div class="col-sm-12">
@@ -882,7 +888,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <?php include viewPath('customer/adv_cust/css_list'); ?>
 <?php include viewPath('customer/adv_cust/js_list'); ?>
 <style>

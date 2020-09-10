@@ -25,22 +25,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `acs_admin`
+-- Table structure for table `acs_owner`
 --
 
-CREATE TABLE `acs_admin` (
-  `admin_id` int(11) NOT NULL,
-  `fk_prof_id` int(2) NOT NULL,
-  `entered_by` varchar(100) NOT NULL,
-  `time_entered` varchar(20) NOT NULL,
-  `assign_to` varchar(100) NOT NULL,
-  `pre_install_survey` varchar(200) NOT NULL,
-  `custom_field1_admin` varchar(100) NOT NULL,
-  `language` varchar(20) NOT NULL,
-  `date_enter` varchar(20) NOT NULL,
-  `sales_rep_admin` int(2) NOT NULL,
-  `post_install_survey` varchar(100) NOT NULL,
-  `custom_field2_admin` varchar(100) NOT NULL
+CREATE TABLE `acs_owner` (
+  `own_id` int(11) NOT NULL,
+  `fk_prof_id` int(11) NOT NULL,
+  `own_ssn` varchar(50) NOT NULL,
+  `own_fname` varchar(100) NOT NULL,
+  `own_lname` varchar(100) NOT NULL,
+  `own_address` varchar(250) NOT NULL,
+  `own_city` varchar(50) NOT NULL,
+  `own_state` varchar(50) NOT NULL,
+  `own_zip` varchar(20) NOT NULL,
+  `own_pay_history` varchar(100) NOT NULL,
+  `own_sign` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -48,20 +47,20 @@ CREATE TABLE `acs_admin` (
 --
 
 --
--- Indexes for table `acs_admin`
+-- Indexes for table `acs_owner`
 --
-ALTER TABLE `acs_admin`
-  ADD PRIMARY KEY (`admin_id`);
+ALTER TABLE `acs_owner`
+  ADD PRIMARY KEY (`own_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `acs_admin`
+-- AUTO_INCREMENT for table `acs_owner`
 --
-ALTER TABLE `acs_admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `acs_owner`
+  MODIFY `own_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
