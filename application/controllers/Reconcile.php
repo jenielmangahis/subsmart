@@ -222,7 +222,7 @@ class Reconcile extends MY_Controller {
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['rows']  =  $this->reconcile_model->selectAll();
+        $this->page_data['rows']  =  $this->reconcile_model->selectsummary();
         $this->load->view('accounting/reconcile/history', $this->page_data);
     }
 }

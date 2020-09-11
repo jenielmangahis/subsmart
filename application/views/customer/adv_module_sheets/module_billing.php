@@ -75,10 +75,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">Monthly Monitoring Rate* $</label>
+                        <label for="">Rate Plan $</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="mmr" name="mmr" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                        <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select" >
                             <option value="0.00">0.00</option>
                             <option value="20.00">20.00</option>
                             <option value="24.99">24.99</option>
@@ -153,7 +153,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing Frequency</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                        <select id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select">
                             <option value="">- Select -</option>
                             <option value="One Time Only">One Time Only</option>
                             <option value="Every 1 Month">Every 1 Month</option>
@@ -170,7 +170,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing Day of Month</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                        <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select">
                             <option value="0"></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -210,7 +210,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Contract Term* (months)</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                        <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select" >
                             <option value="0"></option>
                             <option value="36">36</option>
                             <option value="60">60</option>
@@ -226,7 +226,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing Method</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                        <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select">
                             <option  value="0">None</option>
                             <option value="1">Credit Card</option>
                             <option value="2">Check</option>
@@ -340,16 +340,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <input type="text" class="form-control date_picker" name="contract_ext_date" id="contract_ext_date" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 form-line">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="">Social Security Number</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="number" class="form-control" name="ssn" id="ssn" />
                     </div>
                 </div>
             </div>

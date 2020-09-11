@@ -118,7 +118,6 @@ class Customer extends MY_Controller
         $input_tech = array();
         $input_custom = array();
         $input_payment = array();
-        $input_owner = array();
         $input_access = array();
 
         $input_profile['fk_user_id'] = logged('id');
@@ -144,9 +143,6 @@ class Customer extends MY_Controller
         $input_profile['cross_street'] = $input['cross_street'];
         $input_profile['subdivision'] = $input['subdivision'];
         $input_profile['img_path'] = $input['img_path'];
-
-
-
 
         // billing data
         $input_billing['card_fname'] = $input['card_fname'];
@@ -311,19 +307,9 @@ class Customer extends MY_Controller
         $input_access['acs_cancel_reason'] = $input['acs_cancel_reason'];
         $input_access['collect_amount'] = $input['collect_amount'];
 
-        // owner data
-        $input_owner['own_ssn'] = $input['own_ssn'];
-        $input_owner['own_fname'] = $input['own_fname'];
-        $input_owner['own_lname'] = $input['own_fname'];
-        $input_owner['own_address'] = $input['own_address'];
-        $input_owner['own_address'] = $input['own_address'];
-        $input_owner['own_city'] = $input['own_city'];
-        $input_owner['own_state'] = $input['own_state'];
-        $input_owner['own_zip'] = $input['own_zip'];
-        $input_owner['own_pay_history'] = $input['own_pay_history'];
-        $input_owner['own_sign'] = $input['own_sign'];
 
-
+        // payment data
+        $input_payment['own_sign'] = $input['mod_of_pay	'];
 
         $fk_prod_id = $input['prof_id'];
         if(empty($fk_prod_id)){
@@ -644,6 +630,8 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['owner_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['owner_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_owner");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
         }
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['cust_tab'] = $this->uri->segment(3);

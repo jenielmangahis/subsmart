@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>CustomFld1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->custom_field1; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->acs_custom_field1; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Cancel Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($access_info)){ echo $access_info->cancel_date; }; ?></b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($access_info)){ echo $access_info->acs_cancel_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Cancel Reason :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->cancel_reason; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->acs_cancel_reason; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>
@@ -65,7 +65,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomFld2 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b><?php if(isset($access_info)){ echo $access_info->custom_field2; }; ?></b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($access_info)){ echo $access_info->acs_custom_field2; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -74,7 +74,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Collection Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->collect_date; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->acs_collect_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>

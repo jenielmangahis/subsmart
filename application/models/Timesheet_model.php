@@ -142,7 +142,10 @@ class Timesheet_model extends MY_Model {
         }
     }
     public function breakIn($user_id){
+        //Get timesheet_attendance id
+        $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'date'=>date('Y-m-d')))->row()->id;
         $data = array(
+            'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break in',
             'date' => date('Y-m-d'),
@@ -155,7 +158,9 @@ class Timesheet_model extends MY_Model {
     }
 
     public function breakOut($user_id){
+        $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'date'=>date('Y-m-d')))->row()->id;
         $data = array(
+            'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break out',
             'date' => date('Y-m-d'),
@@ -170,6 +175,13 @@ class Timesheet_model extends MY_Model {
     public function getTimesheetLogs(){
         $query = $this->db->get_where($this->db_table,array('date'=>date('Y-m-d')));
         return $query->result();
+    }
+    public function getTSByDate($date_this_week){
+        for ($x = 0; $x < count($date_this_week);$x++){
+            $this->db->or_where('date',$date_this_week[$x]);
+        }
+        $qry = $this->db->get('timesheet_logs');
+        return $qry->result();
     }
 
     /**

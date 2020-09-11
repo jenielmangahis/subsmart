@@ -40,6 +40,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         font-style: italic;
         color: grey;
     }
+    /*Swal2 css*/
+    .swal2-image{
+        height: 110px;
+        width: 110px;
+        border-radius: 50%;
+    }
 </style>
 <?php
     //dd(logged());die;
@@ -91,183 +97,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-lg-5"></div>
                                 <div class="col-lg-4">
                                     <div class="action-btn-container">
-                                        <button class="btn btn-success action-btn">Clock In/Out</button>
+                                        <button class="btn btn-success action-btn" id="listClockInOut">Clock In/Out</button>
                                         <button class="btn btn-info action-btn">Adjust Entry</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="tbl-list" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Employee</th>
-                                                <th>Status</th>
-                                                <th class="day"><span class="thead-day">Mon</span><span class="thead-date"><?php echo $date_this_week['Monday']?></span></th>
-                                                <th class="day"><span class="thead-day">Tue</span><span class="thead-date"><?php echo $date_this_week['Tuesday']?></span></th>
-                                                <th class="day"><span class="thead-day">Wed</span><span class="thead-date"><?php echo $date_this_week['Wednesday']?></span></th>
-                                                <th class="day"><span class="thead-day">Thu</span><span class="thead-date"><?php echo $date_this_week['Thursday']?></span></th>
-                                                <th class="day"><span class="thead-day">Fri</span><span class="thead-date"><?php echo $date_this_week['Friday']?></span></th>
-                                                <th class="day"><span class="thead-day">Sat</span><span class="thead-date"><?php echo $date_this_week['Saturday']?></span></th>
-                                                <th class="day"><span class="thead-day">Sun</span><span class="thead-date"><?php echo $date_this_week['Sunday']?></span></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                                $user_id = 0;
-                                                $name = null;
-                                                $role = null;
-                                                $status = null;
-                                                $mon_logtime = null;
-                                                $tue_logtime = null;
-                                                $wed_logtime = null;
-                                                $thu_logtime = null;
-                                                $fri_logtime = null;
-                                                $sat_logtime = null;
-                                                $sun_logtime = null;
-                                            ?>
-                                            <?php foreach ($users as $user): ?>
-                                            <?php
-                                                $user_id = $user->id;
-                                                $name = $user->FName." ".$user->LName;
-                                                foreach ($user_roles as $roles){
-                                                    if ($roles->id == $user->role){
-                                                        $role = $roles->title;
-                                                    }
-                                                }
-                                                foreach ($ts_logs as $log){
-                                                    if ($log->action == 'Check in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'In';
-                                                        switch ($log->date){
-                                                            case (date('Y-m-d',strtotime('monday'))):
-                                                                $mon_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('tuesday'))):
-                                                                $tue_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('wednesday'))):
-                                                                $wed_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('thursday'))):
-                                                                $thu_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('friday'))):
-                                                                $fri_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('saturday'))):
-                                                                $sat_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('sunday'))):
-                                                                $sun_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                        }
-                                                    }elseif($log->action == 'Check out' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'Out';
-                                                        switch ($log->date){
-                                                            case (date('Y-m-d',strtotime('monday'))):
-                                                                $mon_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('tuesday'))):
-                                                                $tue_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('wednesday'))):
-                                                                $wed_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('thursday'))):
-                                                                $thu_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('friday'))):
-                                                                $fri_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('saturday'))):
-                                                                $sat_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('sunday'))):
-                                                                $sun_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                        }
-                                                    }elseif ($log->action == 'Break in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'On Lunch';
-                                                        switch ($log->date){
-                                                            case (date('Y-m-d',strtotime('monday'))):
-                                                                $mon_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('tuesday'))):
-                                                                $tue_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('wednesday'))):
-                                                                $wed_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('thursday'))):
-                                                                $thu_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('friday'))):
-                                                                $fri_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('saturday'))):
-                                                                $sat_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('sunday'))):
-                                                                $sun_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                        }
-                                                    }elseif ($log->action == 'Break out' && $log->user_id == $user->id && $log->date == date('Y-m-d')) {
-                                                        $status = 'In';
-                                                        switch ($log->date){
-                                                            case (date('Y-m-d',strtotime('monday'))):
-                                                                $mon_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('tuesday'))):
-                                                                $tue_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('wednesday'))):
-                                                                $wed_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('thursday'))):
-                                                                $thu_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('friday'))):
-                                                                $fri_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('saturday'))):
-                                                                $sat_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                            case (date('Y-m-d',strtotime('sunday'))):
-                                                                $sun_logtime = date('h:i A',strtotime($log->time));
-                                                                break;
-                                                        }
-                                                    }
-                                                }
-                                            ?>
-                                            <tr>
-                                                <td class="center"><input type="radio" name="selected" value="<?php echo $user_id?>"></td>
-                                                <td><span class="list-emp-name"><?php echo $name;?></span><span class="list-emp-role"><?php echo $role;?></span></td>
-                                                <td class="center"><span class="list-emp-status"><?php echo $status;?></span></td>
-                                                <td class="center"><?php echo $mon_logtime?></td>
-                                                <td class="center"><?php echo $tue_logtime?></td>
-                                                <td class="center"><?php echo $wed_logtime?></td>
-                                                <td class="center"><?php echo $thu_logtime?></td>
-                                                <td class="center"><?php echo $fri_logtime?></td>
-                                                <td class="center"><?php echo $sat_logtime?></td>
-                                                <td class="center"><?php echo $sun_logtime?></td>
-                                            </tr>
-                                            <?php
-                                                $user_id = 0;
-                                                $name = null;
-                                                $role = null;
-                                                $status = null;
-                                                $mon_logtime = null;
-                                                $tue_logtime = null;
-                                                $wed_logtime = null;
-                                                $thu_logtime = null;
-                                                $fri_logtime = null;
-                                                $sat_logtime = null;
-                                                $sun_logtime = null;
-                                            ?>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                    <table id="tbl-list" class="table table-bordered table-striped"></table>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -288,6 +125,172 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         //Datepicker
         $(".list_datepicker").datepicker();
         //DataTables
-        $('#tbl-list').DataTable({"sort": false});
+        // $('#tbl-list').DataTable({"sort": false});
+        var week_of = $('.list_datepicker').val();
+        $('#tbl-list').ready(showListTable(week_of));
+        $(document).on('change','#tsListPicker',function () {
+            $("#tbl-list").DataTable().destroy();
+           var week = $(this).val();
+           showListTable(week);
+        });
+        function showListTable(week) {
+            $.ajax({
+                url:"/timesheet/showListTable",
+                type:"GET",
+                dataType:"json",
+                data:{week:week},
+                success:function (data) {
+                    $('#tbl-list').html(data).DataTable({"sort": false});
+                }
+            });
+        }
+        $(document).on('click','#listClockInOut',function () {
+            var radio = $('input[name="selected"]:checked');
+            var user_id = radio.val();
+            var status = radio.parent('td').next('td').next('td').children('span').text();
+            var emp_name = radio.attr('data-name');
+            var week_id = radio.attr('data-week');
+            var attn_id = radio.attr('data-attn');
+            if (status == 'In'){
+                clockOut(emp_name,user_id,week_id,attn_id);
+            }else if(status == ''){
+                clockIn(emp_name,user_id);
+            }else if(status == 'On Lunch'){
+                backToWork(emp_name,user_id);
+            }
+
+        });
+        function clockIn(emp_name,user_id) {
+            Swal.fire({
+                title: 'Clock in?',
+                html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
+                imageUrl:"/assets/img/timesheet/default-profile.png",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Clock in this!'
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:'/timesheet/checkingInEmployee',
+                    method:"POST",
+                    dataType:"json",
+                    data:{id:user_id},
+                    success:function (data) {
+                        if (data == 1){
+                            $("#tbl-list").DataTable().destroy();
+                            showListTable(week_of);
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: '<strong>'+emp_name+"</strong> has been Clock-in",
+                                    icon: 'success'
+                                });
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    text: "Something is wrong in the process",
+                                    icon: 'warning'
+                                });
+                        }
+
+                    }
+                });
+            }
+            });
+        }
+        function clockOut(emp_name,user_id,week_id,attn_id) {
+            Swal.fire({
+                title: 'Clock out?',
+                html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
+                imageUrl:"/assets/img/timesheet/default-profile.png",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Clock out this!'
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:'/timesheet/checkingOutEmployee',
+                    method:"POST",
+                    dataType:"json",
+                    data:{id:user_id,week_id:week_id,attn_id:attn_id},
+                    success:function (data) {
+                        if (data == 1){
+                            $("#tbl-list").DataTable().destroy();
+                            showListTable(week_of);
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: '<strong>'+emp_name+"</strong> has been Clock-out",
+                                    icon: 'success'
+                                });
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    text: "Something is wrong in the process",
+                                    icon: 'warning'
+                                });
+                        }
+
+                    }
+                });
+            }
+            });
+        }
+        function backToWork(emp_name,user_id) {
+            Swal.fire({
+                title: 'Back to work?',
+                html: "Are you sure you want to get back to work this person?<br> <strong>"+emp_name+"</strong>",
+                imageUrl:"/assets/img/timesheet/default-profile.png",
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, back to work!'
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:'/timesheet/breakOut',
+                    method:"POST",
+                    dataType:"json",
+                    data:{id:user_id},
+                    success:function (data) {
+                        if (data == 1){
+                            $("#tbl-list").DataTable().destroy();
+                            showListTable(week_of);
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Success',
+                                    html: '<strong>'+emp_name+"</strong> is now back to work.",
+                                    icon: 'success'
+                                });
+                        }else{
+                            Swal.fire(
+                                {
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: 'Failed',
+                                    text: "Something is wrong in the process",
+                                    icon: 'warning'
+                                });
+                        }
+
+                    }
+                });
+            }
+        });
+        }
     });
 </script>

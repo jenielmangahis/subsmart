@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field1; }; ?></b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field1_tech; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField2 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field2; }; ?></b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field2_tech; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>
@@ -82,7 +82,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField3 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field3; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field3_tech; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -90,7 +90,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField4 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field4; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field4_tech; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>

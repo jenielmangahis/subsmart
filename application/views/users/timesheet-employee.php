@@ -113,122 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="tsEmployeeDataTable" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Employee</th>
-                                                <th><span class="tbl-status">Current</span><span class="tbl-status">Status</span></th>
-                                                <th class="day"><span class="tbl-day">Mon</span><span class="tbl-date"><?php echo $date_this_week['Monday']?></span></th>
-                                                <th class="day"><span class="tbl-day">Tue</span><span class="tbl-date"><?php echo $date_this_week['Tuesday']?></span></th>
-                                                <th class="day"><span class="tbl-day">Wed</span><span class="tbl-date"><?php echo $date_this_week['Wednesday']?></span></th>
-                                                <th class="day"><span class="tbl-day">Thu</span><span class="tbl-date"><?php echo $date_this_week['Thursday']?></span></th>
-                                                <th class="day"><span class="tbl-day">Fri</span><span class="tbl-date"><?php echo $date_this_week['Friday']?></span></th>
-                                                <th class="day"><span class="tbl-day">Sat</span><span class="tbl-date"><?php echo $date_this_week['Saturday']?></span></th>
-                                                <th class="day"><span class="tbl-day">Sun</span><span class="tbl-date"><?php echo $date_this_week['Sunday']?></span></th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                                $name = null;
-                                                $role = null;
-                                                $bg_color = '#f71111bf';
-                                                $status = 'LOA';
-                                                $mon_duration = null;
-                                                $tue_duration = null;
-                                                $wed_duration = null;
-                                                $thu_duration = null;
-                                                $fri_duration = null;
-                                                $sat_duration = null;
-                                                $sun_duration = null;
-                                                $shift_duration = null;
-                                            ?>
-                                            <?php foreach ($users as $user): ?>
-                                                <?php
-                                                    $name = $user->FName." ".$user->LName;
-                                                    foreach ($user_roles as $roles){
-                                                        if ($roles->id == $user->role){
-                                                            $role = $roles->title;
-                                                        }
-                                                    }
-                                                foreach ($ts_logs as $log){
-                                                    if ($log->action == 'Check in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $bg_color = 'greenyellow';
-                                                        $status = 'In';
-                                                    }elseif($log->action == 'Check out' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'Out';
-                                                        $bg_color = '#f71111bf';
-                                                    }elseif ($log->action == 'Break in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'On Lunch';
-                                                        $bg_color = '#ffc859';
-                                                    }elseif ($log->action == 'Break out' && $log->user_id == $user->id && $log->date == date('Y-m-d')) {
-                                                        $status = 'In';
-                                                        $bg_color = 'greenyellow';
-                                                    }
-                                                }
-                                                foreach ($attendance as $attn){
-                                                        if ($attn->user_id == $user->id && $attn->shift_duration > 0){
-                                                            switch ($attn->date){
-                                                                case (date('Y-m-d',strtotime('monday'))):
-                                                                    $mon_duration = $attn->shift_duration;
-                                                                break;
-                                                                case (date('Y-m-d',strtotime('tuesday'))):
-                                                                    $tue_duration = $attn->shift_duration;
-                                                                break;
-                                                                case (date('Y-m-d',strtotime('wednesday'))):
-                                                                    $wed_duration = $attn->shift_duration;
-                                                                break;
-                                                                case (date('Y-m-d',strtotime('thursday'))):
-                                                                    $thu_duration = $attn->shift_duration;
-                                                                break;
-                                                                case (date('Y-m-d',strtotime('friday'))):
-                                                                    $fri_duration = $attn->shift_duration;
-                                                                break;
-                                                                case (date('Y-m-d',strtotime('saturday'))):
-                                                                    $sat_duration = $attn->shift_duration;
-                                                                break;
-                                                                case (date('Y-m-d',strtotime('sunday'))):
-                                                                    $sun_duration = $attn->shift_duration;
-                                                                break;
-                                                            }
-                                                        }
-                                                }
-                                                foreach ($week_duration as $week){
-                                                    if ($user->id == $week->user_id && $week->week_of == date('Y-m-d',strtotime('monday this week'))){
-                                                        $shift_duration = $week->total_shift;
-                                                    }
-                                                }
-
-                                                ?>
-                                            <tr>
-                                                <td><span class="tbl-emp-name"><?php echo $name;?></span><span class="tbl-emp-role"><?php echo $role;?></span></td>
-                                                <td class="center" style="background-color: <?php echo $bg_color;?>"><span class="tbl-emp-status"><?php echo $status?></span></td>
-                                                <td class="center"><?php echo $mon_duration;?></td>
-                                                <td class="center"><?php echo $tue_duration;?></td>
-                                                <td class="center"><?php echo $wed_duration;?></td>
-                                                <td class="center"><?php echo $thu_duration;?></td>
-                                                <td class="center"><?php echo $fri_duration;?></td>
-                                                <td class="center"><?php echo $sat_duration;?></td>
-                                                <td class="center"><?php echo $sun_duration;?></td>
-                                                <td class="center"><?php echo $shift_duration;?></td>
-                                            </tr>
-                                                <?php
-                                                    $name = null;
-                                                    $role = null;
-                                                    $bg_color = '#f71111bf';
-                                                    $status = 'LOA';
-                                                    $mon_duration = null;
-                                                    $tue_duration = null;
-                                                    $wed_duration = null;
-                                                    $thu_duration = null;
-                                                    $fri_duration = null;
-                                                    $sat_duration = null;
-                                                    $sun_duration = null;
-                                                    $shift_duration = null;
-                                                ?>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                    <table id="tsEmployeeDataTable" class="table table-bordered table-striped"></table>
                                 </div>
                             </div>
                             <!-- end row -->
@@ -246,12 +131,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     $(document).ready(function () {
-        // DataTable
-        $('#tsEmployeeDataTable').DataTable({
-            "sort": false
-        });
         // Datepicker
         $("#tsEmployeeDatepicker").datepicker();
+        var week_of = $('#tsEmployeeDatepicker').val();
+        $('#tsEmployeeDataTable').ready(showEmployeeTable(week_of));
+
+        $(document).on('change','#tsEmployeeDatepicker',function () {
+            $("#tsEmployeeDataTable").DataTable().destroy();
+            var week = $(this).val();
+            showEmployeeTable(week);
+        });
+        function showEmployeeTable(week) {
+            $.ajax({
+                url:"/timesheet/showEmployeeTable",
+                type:"GET",
+                dataType:"json",
+                data:{week:week},
+                success:function (data) {
+                    $('#tsEmployeeDataTable').html(data).DataTable({"sort": false});
+                }
+            });
+        }
     });
 
 </script>

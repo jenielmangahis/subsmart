@@ -558,6 +558,7 @@
 }
 /*Check Expenses modal*/
 #receive-payment .modal-title,
+.all_sales_modal .modal-title,
 #add-invoice .modal-title,
 #add-estimate .modal-title,
 #edit-expensesCheck .modal-title{
@@ -567,6 +568,7 @@
     padding-left: 15px;
     vertical-align: middle;
 }
+.all_sales_modal .modal-header,
 #add-invoice .modal-header,
 #add-estimate .modal-header,
 #receive-payment .modal-header,
@@ -583,11 +585,13 @@
 }
 #add-estimate .remove-button,
 #add-invoice .remove-button,
+.all_sales_modal .remove-button,
 #receive-payment .remove-button,
 #edit-expensesCheck .remove-button{
     border-radius: 36px;
 }
 #add-estimate .modal-footer-check .cancel-button,
+.all_sales_modal .modal-footer-check .cancel-button,
 #add-invoice .modal-footer-check .cancel-button,
 #receive-payment .modal-footer-check .cancel-button,
 #edit-expensesCheck .modal-footer-check .cancel-button{
@@ -596,12 +600,14 @@
     border:1px solid #6B6C72;
 }
 #receive-payment label,
+.all_sales_modal label,
 #add-invoice label,
 #add-estimate label,
 #edit-expensesCheck label{
     font-weight: 700;
 }
 #receive-payment textarea,
+.all_sales_modal textarea,
 #add-invoice textarea,
 #add-estimate textarea,
 #edit-expensesCheck textarea{
@@ -615,6 +621,7 @@
     color: #363636;
 }
 #receive-payment .table-container,
+.all_sales_modal .table-container,
 #add-invoice .table-container,
 #add-estimate .table-container,
 #edit-expensesCheck .table-container{
@@ -623,6 +630,7 @@
     position: relative;
 }
 #receive-payment .add-remove-line,
+.all_sales_modal .add-remove-line,
 #add-invoice .add-remove-line,
 #add-estimate .add-remove-line,
 #edit-expensesCheck .add-remove-line{
@@ -635,6 +643,7 @@
     margin-bottom: 20px;
 }
 #receive-payment .modal-footer-check  .middle-links,
+.all_sales_modal .modal-footer-check  .middle-links,
 #add-invoice .modal-footer-check  .middle-links,
 #add-estimate .modal-footer-check  .middle-links,
 #edit-expensesCheck .modal-footer-check  .middle-links{
@@ -645,12 +654,14 @@
     border-right: 1px solid whitesmoke;
 }
 #receive-payment .modal-footer-check  .middle-links a,
+.all_sales_modal .modal-footer-check  .middle-links a,
 #add-invoice .modal-footer-check  .middle-links a,
 #add-estimate .modal-footer-check  .middle-links a,
 #edit-expensesCheck .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
 #receive-payment .modal-footer-check  .middle-links a:hover,
+.all_sales_modal .modal-footer-check  .middle-links a:hover,
 #add-invoice .modal-footer-check  .middle-links a:hover,
 #add-estimate .modal-footer-check  .middle-links a:hover,
 #edit-expensesCheck .modal-footer-check  .middle-links a:hover{
@@ -662,6 +673,7 @@
 }
 #receive-payment .modal-footer-check  .end,
 #add-estimate .modal-footer-check  .end,
+.all_sales_modal .modal-footer-check  .end,
 #add-invoice .modal-footer-check  .end,
 #edit-expensesCheck .modal-footer-check  .end{
     border-right: none;

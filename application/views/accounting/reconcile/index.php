@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-md-8 col-sm-7">
                                                             <div class="action-bar">
                                                                 <ul>
-                                                                    <li><a data-toggle="tab" href="#tax-history">Summary</a></li>
+                                                                    <li><a data-toggle="tab" href="<?=url('accounting/reconcile/view/summary')?>">Summary</a></li>
                                                                     <li><a href="#">History by account</a></li>
                                                                 </ul>
                                                             </div>
