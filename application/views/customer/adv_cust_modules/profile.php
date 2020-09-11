@@ -40,7 +40,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <td width="50%" valign="middle">
                         <div class="contactrighttab" style="margin-top:1px;">
                             <div class="widget_tab">
-
                                 <div class="contactrightimg">
                                     <img src="https://app.creditrepaircloud.com/application/images/dashboard-new.png" alt="1-click-import" width="25" height="35" style="padding-left: 2px;margin-top: -4px;">
                                 </div>
@@ -51,9 +50,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                         </div>
-
                         <div class="contactrighttab" >
-
                             <div class="widget_tab">
                                 <div class="contactrightimg">
                                     <img src="https://app.creditrepaircloud.com/application/images/dashboard1.png" alt="wzardimg">
@@ -84,23 +81,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div id="tail2-bottom"></div>
                             </div>
                         </div>
-                        <div class="">
+                        <div class=" " style="margin-left: 5px !important;margin-top :90px; ">
+                            <br/><br/>
+                            <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email" >
+                            <label for="notify_by_email"><span>Notify by SMS</span></label><br>
 
-                            <div class="col-sm-12">
-                                <div class="row">
-                                    <div class="form-group col-sm-12">
-                                        <div class="checkbox checkbox-sec">
-                                            <input type="checkbox" name="notify_by" value="Email" checked
-                                                   id="notify_by_email">
-                                            <label for="notify_by_email"><span>Notify by SMS</span></label><br>
-
-                                            <input type="checkbox" name="notify_by" value="Email" checked
-                                                   id="notify_by_email">
-                                            <label for="notify_by_email"><span> Notify by Email</span></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email">
+                            <label for="notify_by_email"><span> Notify by Email</span></label>
                         </div>
                     </td>
                 </tr>
@@ -109,3 +96,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
     </div>
 </div>
+<style>
+    #notify_by_email{
+        background-color: #0b62a4 !important;
+    }
+</style>

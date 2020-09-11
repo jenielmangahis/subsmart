@@ -13,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >SSN :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>Guardian</b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($owner_info)){ echo $owner_info->own_ssn; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Firstname :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1/11/1111</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_fname; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>Lastname :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_lname; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -38,15 +38,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Address :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> AC</b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($owner_info)){ echo $owner_info->own_address; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >City/State/Zip :</span> </label>
+                                <label class="alarm_label"> <span >State :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_state; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -54,7 +54,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Pay History :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1</b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_pay_history; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>

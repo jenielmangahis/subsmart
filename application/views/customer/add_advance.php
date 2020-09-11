@@ -22,8 +22,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
         overflow-x: auto;
         white-space: nowrap;
         flex-flow: wrap;
-        flex: 0 0 41.666667%;
-        max-width: 32%;
+        flex: 0 0 31.666667%;
+        max-width: 28%;
         height: 100%;
     }
     .module_ac_full {
@@ -86,15 +86,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     .form-control  {
         font-size: 11px !important;
-        height: 28px !important;
-        line-height: 150%;
+        height: 24px !important;
+        line-height: 10%;
     }
     .form-controls{
         font-size: 11px !important;
         line-height: 150%;
     }
     label{
-        font-size: 12px !important;
+        font-size: 10px !important;
         margin-bottom: 1px !important;
     }
     hr{
@@ -102,19 +102,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
         width: 100%;
     }
     .form-group {
-        margin-bottom: 3px !important;
+        margin-bottom: 2px !important;
     }
     .banking-tab-container {
         border-bottom: 1px solid grey;
         padding-left: 0;
     }
     .form-line{
-        padding-bottom: 4px;
+        padding-bottom: 1px;
     }
     .btn {
         font-size: 12px !important;
         background-repeat: no-repeat;
         padding: 6px 12px;
+    }
+    .input_select{
+        color: #363636;
+        border: 2px solid #e0e0e0;
+        box-shadow: none;
+        display: inline-block !important;
+        width: 100%;
+        background-color: #fff;
+        background-clip: padding-box;
+        font-size: 11px !important;
     }
 </style>
     <div class="wrapper" role="wrapper">
@@ -137,8 +147,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 } ?>
                             </ol>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="float-right d-none d-md-block" style="padding-right: 55px;">
+                        <div class="col-sm-6">
+                            <div class="float-right d-none d-md-block" >
                                 <div class="dropdown">
                                     <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
                                     <a href="<?php echo base_url('customer') ?>" class="btn btn-primary" aria-expanded="false">
@@ -164,35 +174,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-12">
                                     <form id="customer_form">
-                                        <div class="row pull-right" style="padding-right: 35px;">
-                                            <button type="submit" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
+                                        <div class="row pull-right">
+                                            <button type="button" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-remove"></span> Cancel </button> &nbsp;
+                                            <a href="<?php echo base_url('customer') ?>"><button type="submit" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button></a>
                                         </div>
-                                        <br><br>
                                         <div class="row">
                                             <?php
                                                 include viewPath('customer/adv_module_sheets/module_profile');
+
                                                 include viewPath('customer/adv_module_sheets/module_billing');
-                                                include viewPath('customer/adv_module_sheets/module_account');
-                                                include viewPath('customer/adv_module_sheets/module_address');
-                                                include viewPath('customer/adv_module_sheets/module_alarm');
-                                                include viewPath('customer/adv_module_sheets/module_office');
-                                                include viewPath('customer/adv_module_sheets/module_admin');
-                                                include viewPath('customer/adv_module_sheets/module_tech');
+                                            include viewPath('customer/adv_module_sheets/module_office');
+                                                //include viewPath('customer/adv_module_sheets/module_account');
+                                                //include viewPath('customer/adv_module_sheets/module_address');
                                                 include viewPath('customer/adv_module_sheets/module_access');
+                                                include viewPath('customer/adv_module_sheets/module_alarm');
+
+                                                //include viewPath('customer/adv_module_sheets/module_admin');
+                                                // include viewPath('customer/adv_module_sheets/module_tech');
+
                                                 //include viewPath('customer/adv_module_sheets/module_custom');
                                                 //include viewPath('customer/adv_module_sheets/module_payment');
-                                                include viewPath('customer/adv_module_sheets/module_owner');
+                                                //include viewPath('customer/adv_module_sheets/module_owner');
                                             ?>
                                         </div>
                                         <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
+
                                     </form>
                                 </div>
                         </div>
-
                     </div>
                 </div> <!-- end card -->
                 <br><br><br>
-
             </div>
         </div>
     </div>
@@ -234,6 +246,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
+
 <script>
     $(document).ready(function () {
         $("#date_of_birth").datetimepicker({
@@ -246,6 +260,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             //minDate: new Date(),
         });
         $('.date_picker').val(new Date().toLocaleDateString());
+
+        //$('.time_picker').val(new Date().toLocaleTimeString());
+
+        // $(".time_picker").datetimepicker({
+        //     format: "LT",
+        // });
+
+        $('.timepicker').timepicker('setTime', new Date().toLocaleTimeString());
 
         var table_assign_module = $('#assign_module_table').DataTable({
             "lengthChange": false,

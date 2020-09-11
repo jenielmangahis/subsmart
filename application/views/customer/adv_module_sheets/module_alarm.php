@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class=" module_ac" style="top:-300px;">
+<div class=" module_ac" style="top: -690px;">
     <div class="row">
         <div class="col-md-12 module_header">
             <p class="module_title">Alarm Information</p>
@@ -63,7 +63,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Account Type</label>
                 </div>
                 <div class="col-md-8">
-                    <select name="acct_type" id="acct_type" class="form-control">
+                    <select name="acct_type" id="acct_type" class="input_select">
                         <option value=""></option>
                         <option selected="selected" value="In-House">In-House</option>
                         <option value="Purchase">Purchase</option>
@@ -125,7 +125,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #1</label>
+                    <label for="">Contact Name #1 Phone</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact1" id="contact1" />
@@ -135,7 +135,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #2</label>
+                    <label for="">Contact Name #2 Phone</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact2" id="contact2" />
@@ -145,7 +145,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #3</label>
+                    <label for="">Contact Name #3 Phone</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact3" id="contact3" />
@@ -155,7 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #4</label>
+                    <label for="">Contact Name #4 Phone</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact4" id="contact4" />
@@ -165,7 +165,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #5</label>
+                    <label for="">Contact Name #5 Phone</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact5" id="contact5" />
@@ -178,7 +178,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Panel Type</label>
                 </div>
                 <div class="col-md-8">
-                    <select name="panel_type" id="panel_type" class="form-control">
+                    <select name="panel_type" id="panel_type" class="input_select">
                         <option value=""></option>
                         <option selected="selected" value="DIGI">Landline</option>
                         <option value="DW2W">Landline W/ 2-Way</option>
@@ -217,60 +217,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="rebate_offer" id="rebate_offer" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Verification:</label>
-                </div>
-                <div class="col-md-8">
-                    <select id="verification" name="verification" data-customer-source="dropdown" class="form-control searchable-dropdown" >
-                        <option value="TrunsUnion">TrunsUnion</option>
-                        <option value="Experian">Experian </option>
-                        <option value="Equifax ">Equifax  </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Rebate Check 1</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Rebate Check 2</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Warranty Type</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="warranty_type" id="warranty_type" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Custom Field 1</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="custom_field1_alarm" id="custom_field1_alarm" />
                 </div>
             </div>
         </div>

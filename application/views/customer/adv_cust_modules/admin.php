@@ -45,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomFld1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->custom_field1; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->custom_field1_admin; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>
@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField2 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->custom_field2; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($admin_info)){ echo $admin_info->custom_field2_admin	; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>

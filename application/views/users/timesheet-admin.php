@@ -453,10 +453,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         $indicator_out_break = 'display:block';
                                                     }
                                                     foreach ($week_duration as $week){
-                                                        $week_id = $week->id;
+                                                        if ($week->user_id == $user->id){
+                                                            $week_id = $week->id;
+                                                        }
+
                                                     }
                                                     foreach ($attendance as $attn){
-                                                        $attn_id = $attn->id;
+                                                        if ($attn->user_id == $user->id){
+                                                            $attn_id = $attn->id;
+                                                        }
                                                     }
 
                                                 }
@@ -592,7 +597,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var emp_name = $(this).attr('data-name');
             var selected = this;
             var time = serverTime ();
-            console.log(time);
             Swal.fire({
                 title: 'Checking in?',
                 html: "Are you sure you want to Check-in this person?<br> <strong>"+emp_name+"</strong>",

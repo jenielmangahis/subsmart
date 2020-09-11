@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Sales Area <span class="required"> *</span></label>
                     </div>
                     <div class="col-md-8">
-                        <select id="fk_sa_id" name="fk_sa_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                        <select id="fk_sa_id" name="fk_sa_id" data-customer-source="dropdown" class="input_select" required>
                             <?php foreach ($sales_area as $sa): ?>
                                 <option value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
                             <?php endforeach ?>
@@ -37,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Name Prefix</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                        <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select">
                             <option value=""></option>
                             <option value="Captain">Captain</option>
                             <option value="Cnl.">Cnl.</option>
@@ -119,7 +119,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Suffix</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="suffix" name="suffix" data-customer-source="dropdown" class="form-control searchable-dropdown" >
+                        <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select" >
                             <option value="">Select</option>
                             <option value="DS">DS</option>
                             <option value="Esq.">Esq.</option>
@@ -285,6 +285,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <input type="text" class="form-control" name="img_path" id="img_path" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 form-line">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="alarm_label"> <span >Pay History </span>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="own_pay_history" id="own_pay_history" />
                     </div>
                 </div>
             </div>

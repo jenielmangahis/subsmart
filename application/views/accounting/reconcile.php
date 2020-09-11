@@ -24,6 +24,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     display: none !important;
 }
+.upload-btn-wrapper,.ubw
+{
+    height: 150px !important;
+}
 </style>
 <?php 
 $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id);
@@ -151,7 +155,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         <div class="mainMenu nav">
             <div class="file-upload-block">
                 <div class="upload-btn-wrapper">
-                    <button class="btn">
+                    <button class="btn ubw">
                         <i class="fa fa-cloud-upload"></i>
                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                     </button>
@@ -161,7 +165,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         </div>
 
         <div class="save-act">
-            <button class="btn-cmn">Cancel</button>
+            <button type="button" class="btn-cmn" onclick="closeSideNav3()">Cancel</button>
             <button type="submit" class="savebtn">Done</button>
         </div>
     </div>

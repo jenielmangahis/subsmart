@@ -23,11 +23,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="notify_by_sms"><span>Mode of Payment</span>
                 </div>
                 <div class="col-md-8">
-                    <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
-                    <label for="notify_by_sms"><span>Credit Card</span></label>
+                    <input type="radio" name="mod_of_pay[]" value="1" id="mod_of_pay_cc" checked required>
+                    <label for="mod_of_pay_cc"><span>Credit Card</span></label>
 
-                    <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
-                    <label for="notify_by_sms"><span>eCheck</span></label>
+                    <input type="radio" name="mod_of_pay[]" value="2" id="mod_of_pay_echeck">
+                    <label for="mod_of_pay_echeck"><span>eCheck</span></label>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Card Number</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="contact_name" id="contact_name" />
+                    <input type="text" class="form-control" name="pay_card_number" id="pay_card_number" />
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">CIC</label>
                 </div>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="contact_name" id="contact_name" />
+                    <input type="text" class="form-control" name="pay_cic" id="pay_cic" />
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" name="contact_name" id="contact_name" />
+                            <input type="text" class="form-control" name="pay_cc_exp" id="pay_cc_exp" />
                         </div>
                         <small>(MM/YYYY)</small>
 
@@ -73,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Transaction Subtotal</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="contact_name" id="contact_name" />
+                    <input type="number" class="form-control" name="pay_subtotal" id="pay_subtotal" />
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Tax Amount</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="contact_name" id="contact_name" />
+                    <input type="number" class="form-control" name="pay_tax_amt" id="pay_tax_amt" />
                 </div>
             </div>
         </div>
@@ -93,7 +93,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Transaction Amount</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="contact_name" id="contact_name" />
+                    <input type="number" class="form-control" name="pay_amount" id="pay_amount" />
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Transaction Category</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="contact_name" id="contact_name" />
+                    <input type="number" class="form-control" name="pay_category" id="pay_category" />
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Note</label>
                 </div>
                 <div class="col-md-8">
-                    <textarea class="form-controls" cols="47" rows="5"></textarea>
+                    <textarea class="form-controls" cols="47" rows="5" name="pay_notes"></textarea>
                 </div>
             </div>
         </div>

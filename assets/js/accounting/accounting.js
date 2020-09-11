@@ -2369,3 +2369,182 @@ $(document).on('click','#closeAddEstimateModal',function () {
             }
         });
     });
+	
+/** Sales Receipt **/
+$(document).on('click','#closeSalesReceiptModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#sales-receipt').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#sales-receipt').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });
+	
+/** Credit Memo **/
+$(document).on('click','#closeCreditMemoModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#credit-memo').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#credit-memo').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });
+
+	/** Delayed Charge **/
+$(document).on('click','#closeDelayedChargeModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#delayed-charge').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#delayed-charge').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });
+	/** Sales Time Acitity **/
+$(document).on('click','#closeSalesTimeActivityModal',function () {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to leave without saving?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, leave without saving!'
+            }).then((result) => {
+                if (result.value) {
+                if(attachment == 0){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "There is/are a attachment that temporarily removed?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2ca01c',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, remove it permanently!'
+                    }).then((result) => {
+                        if (result.value) {
+                        $(".loader").fadeIn('fast',function(){
+                            $('.loader').show();
+                        });
+                        $('#sales-time-activity').modal('hide');
+                        $(".loader").fadeOut('fast',function(){
+                            $('.loader').hide();
+                        });
+                    }
+                });
+                }else{
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#sales-time-activity').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                }
+            }
+        });
+    });

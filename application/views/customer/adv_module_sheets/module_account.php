@@ -247,43 +247,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Tech Arrival Time</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="tech_arrive_time" name="tech_arrive_time" data-customer-source="dropdown" class="form-control searchable-dropdown">
-                            <option value=""></option>
-                            <option value="7AM">7:00 AM</option>
-                            <option value="7.5AM">7:30 AM</option>
-                            <option selected="selected" value="8AM">8:00 AM</option>
-                            <option value="8.5AM">8:30 AM</option>
-                            <option value="9AM">9:00 AM</option>
-                            <option value="9.5AM">9:30 AM</option>
-                            <option value="10AM">10:00 AM</option>
-                            <option value="10.5AM" disabled="disabled">10:30 AM</option>
-                            <option value="11AM" disabled="disabled">11:00 AM</option>
-                            <option value="11.5AM" disabled="disabled">11:30 AM</option>
-                            <option value="12PM" disabled="disabled">12:00 PM</option>
-                            <option value="12.5PM" disabled="disabled">12:30 PM</option>
-                            <option value="1PM" disabled="disabled">1:00 PM</option>
-                            <option value="1.5PM" disabled="disabled">1:30 PM</option>
-                            <option value="2PM" disabled="disabled">2:00 PM</option>
-                            <option value="2.5PM" disabled="disabled">2:30 PM</option>
-                            <option value="3PM" disabled="disabled">3:00 PM</option>
-                            <option value="3.5PM" disabled="disabled">3:30 PM</option>
-                            <option value="4PM" disabled="disabled">4:00 PM</option>
-                            <option value="4.5PM" disabled="disabled">4:30 PM</option>
-                            <option value="5PM" disabled="disabled">5:00 PM</option>
-                            <option value="5.5PM" disabled="disabled">5:30 PM</option>
-                            <option value="6PM" disabled="disabled">6:00 PM</option>
-                            <option value="6.5PM" disabled="disabled">6:30 PM</option>
-                            <option value="7PM" disabled="disabled">7:00 PM</option>
-                            <option value="7.5PM" disabled="disabled">7:30 PM</option>
-                            <option value="8PM" disabled="disabled">8:00 PM</option>
-                            <option value="8.5PM" disabled="disabled">8:30 PM</option>
-                            <option value="9PM" disabled="disabled">9:00 PM</option>
-                            <option value="9.5PM" disabled="disabled">9:30 PM</option>
-                            <option value="10PM" disabled="disabled">10:00 PM</option>
-                            <option value="10.5PM" disabled="disabled">10:30 PM</option>
-                            <option value="11PM" disabled="disabled">11:00 PM</option>
-                            <option value="11.5PM" disabled="disabled">11:30 PM</option>
-                        </select>
+                        <div class="input-group bootstrap-timepicker timepicker">
+                            <input id="tech_arrive_time" class="form-control timepicker" name="tech_arrive_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -293,43 +259,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Tech Departure Time</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="tech_depart_time" name="tech_depart_time" data-customer-source="dropdown" class="form-control searchable-dropdown">
-                            <option value=""></option>
-                            <option value="7AM">7:00 AM</option>
-                            <option value="7.5AM">7:30 AM</option>
-                            <option selected="selected" value="8AM">8:00 AM</option>
-                            <option value="8.5AM">8:30 AM</option>
-                            <option value="9AM">9:00 AM</option>
-                            <option value="9.5AM">9:30 AM</option>
-                            <option value="10AM">10:00 AM</option>
-                            <option value="10.5AM" disabled="disabled">10:30 AM</option>
-                            <option value="11AM" disabled="disabled">11:00 AM</option>
-                            <option value="11.5AM" disabled="disabled">11:30 AM</option>
-                            <option value="12PM" disabled="disabled">12:00 PM</option>
-                            <option value="12.5PM" disabled="disabled">12:30 PM</option>
-                            <option value="1PM" disabled="disabled">1:00 PM</option>
-                            <option value="1.5PM" disabled="disabled">1:30 PM</option>
-                            <option value="2PM" disabled="disabled">2:00 PM</option>
-                            <option value="2.5PM" disabled="disabled">2:30 PM</option>
-                            <option value="3PM" disabled="disabled">3:00 PM</option>
-                            <option value="3.5PM" disabled="disabled">3:30 PM</option>
-                            <option value="4PM" disabled="disabled">4:00 PM</option>
-                            <option value="4.5PM" disabled="disabled">4:30 PM</option>
-                            <option value="5PM" disabled="disabled">5:00 PM</option>
-                            <option value="5.5PM" disabled="disabled">5:30 PM</option>
-                            <option value="6PM" disabled="disabled">6:00 PM</option>
-                            <option value="6.5PM" disabled="disabled">6:30 PM</option>
-                            <option value="7PM" disabled="disabled">7:00 PM</option>
-                            <option value="7.5PM" disabled="disabled">7:30 PM</option>
-                            <option value="8PM" disabled="disabled">8:00 PM</option>
-                            <option value="8.5PM" disabled="disabled">8:30 PM</option>
-                            <option value="9PM" disabled="disabled">9:00 PM</option>
-                            <option value="9.5PM" disabled="disabled">9:30 PM</option>
-                            <option value="10PM" disabled="disabled">10:00 PM</option>
-                            <option value="10.5PM" disabled="disabled">10:30 PM</option>
-                            <option value="11PM" disabled="disabled">11:00 PM</option>
-                            <option value="11.5PM" disabled="disabled">11:30 PM</option>
-                        </select>
+                        <div class="input-group bootstrap-timepicker timepicker">
+                            <input id="tech_depart_time" class="form-control timepicker" name="tech_depart_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -534,6 +466,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <option value="Website">Website</option>
                             <option value="Yard Sign">Yard Sign</option>
                         </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 form-line">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="">URL</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="url" id="url" />
                     </div>
                 </div>
             </div>

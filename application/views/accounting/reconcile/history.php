@@ -39,7 +39,40 @@ position: absolute;
   width:40%;
   margin-top:20px; 
 }
+.upload-btn-wrapper,.ubw
+{
+    height: 150px !important;
+}
 </style>
+
+<!-- Add Custom Tax Sidebar -->
+    <div id="overlay-cus-tx" class=""></div>
+    <div id="side-menu-cus-tx" class="main-side-nav">
+        <div class="side-title">
+            <h4>Statement attachments - <div id="pop_name">Cash on hand</div></h4>
+            <a id="close-menu-cus-tx" class="menuCloseButton" onclick="closeSideNav3()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        
+        <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+        <div class="mainMenu nav">
+            <div class="file-upload-block">
+                <div class="upload-btn-wrapper">
+                    <button class="btn ubw">
+                        <i class="fa fa-cloud-upload"></i>
+                        <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                    </button>
+                    <input type="file" name="userfile" />
+                </div>
+            </div>
+        </div>
+
+        <div class="save-act">
+            <button type="button" class="btn-cmn" onclick="closeSideNav3()">Cancel</button>
+            <button type="submit" class="savebtn">Done</button>
+        </div>
+    </div>
+    <!-- End Add Custom Tax Sidebar -->
 
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -96,6 +129,7 @@ position: absolute;
                                     <th>STATEMENT ENDING DATE</th>
                                     <th>RECONCILED ON</th>
                                     <th>ENDING BALANCE</th>
+                                    <th>CHANGES</th>
                                     <th>AUTO ADJUSTMENT</th>
                                     <th>STATEMENT</th>
                                     <th>ACTION</th>
@@ -104,12 +138,18 @@ position: absolute;
                               <tbody>
                                   <?php $i=0;?>
                                 <?php foreach($rows as $row){?>
+                                <?php
+                                  $accBalance = $this->chart_of_accounts_model->getBalance($row->chart_of_accounts_id);
+                                  $adjustment = $row->ending_balance-(($accBalance-$row->service_charge)+$row->interest_earned);
+                                ?>
                                 <tr>
                                   <td><?=$row->ending_date?></td>
                                   <td><?=$row->adjustment_date?></td>
                                   <td><?=$row->ending_balance?></td>
                                   <td>0.00</td>
-                                  <td><a href="#">Attach</a></td>
+                                  <td><?=number_format($adjustment,2);?></td>
+                                  <?php $name=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id);?>
+                                  <td><a href="#" onclick="openSideNav3('<?=$name?>')">Attach</a></td>
                                   <td>
                                     <div class="dropdown show">
                                       <a class="dropdown-toggle" href="<?=url('accounting/reconcile/view/report/').$row->chart_of_accounts_id?>" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -126,7 +166,6 @@ position: absolute;
                                 <?php } ?>
                               </tbody>
                             </table>
-                            <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
                         </div>
                     </div>
                     <!-- end card -->
@@ -142,3 +181,16 @@ position: absolute;
 </div>
 <?php /*include viewPath('includes/footer');*/ ?>
 <?php include viewPath('includes/footer_accounting'); ?>
+<script type="text/javascript">
+function openSideNav3(name) {
+    $('#pop_name').text(name);
+    jQuery("#side-menu-cus-tx").addClass("open-side-nav");
+    jQuery("#overlay-cus-tx").addClass("overlay");
+}
+
+function closeSideNav3() {
+   
+    jQuery("#side-menu-cus-tx").removeClass("open-side-nav");
+    jQuery("#overlay-cus-tx").removeClass("overlay");
+}
+</script>

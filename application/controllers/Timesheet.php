@@ -126,10 +126,10 @@ class Timesheet extends MY_Controller {
 	{	
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
+        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
 //        $this->page_data['in_now'] = $this->timesheet_model->getInNowData();
 		$date_this_week = array(
@@ -554,6 +554,151 @@ class Timesheet extends MY_Controller {
 
 
 	}
+
+	public function showEmployeeTable(){
+	    $week = $this->input->get('week');
+	    $week_convert = date('Y-m-d',strtotime($week));
+        $date_this_week = array(
+            "Monday" => date("M d,y",strtotime('monday this week',strtotime($week_convert))),
+            "Tuesday" => date("M d,y",strtotime('tuesday this week',strtotime($week_convert))),
+            "Wednesday" => date("M d,y",strtotime('wednesday this week',strtotime($week_convert))),
+            "Thursday" => date("M d,y",strtotime('thursday this week',strtotime($week_convert))),
+            "Friday" => date("M d,y",strtotime('friday this week',strtotime($week_convert))),
+            "Saturday" => date("M d,y",strtotime('saturday this week',strtotime($week_convert))),
+            "Sunday" => date("M d,y",strtotime('sunday this week',strtotime($week_convert))),
+        );
+        $week_check = array(
+            0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
+            1 => date("Y-m-d",strtotime('tuesday this week',strtotime($week_convert))),
+            2 => date("Y-m-d",strtotime('wednesday this week',strtotime($week_convert))),
+            3 => date("Y-m-d",strtotime('thursday this week',strtotime($week_convert))),
+            4 => date("Y-m-d",strtotime('friday this week',strtotime($week_convert))),
+            5 => date("Y-m-d",strtotime('saturday this week',strtotime($week_convert))),
+            6 => date("Y-m-d",strtotime('sunday this week',strtotime($week_convert))),
+        );
+        $display = '';
+
+        $users = $this->users_model->getUsers();
+        $user_roles= $this->users_model->getRoles();
+        $ts_logs = $this->timesheet_model->getTSByDate($week_check);
+        $attendance = $this->timesheet_model->getEmployeeAttendance();
+        $week_duration = $this->timesheet_model->getWeekTotalDuration();
+
+        $name = null;
+        $role = null;
+        $bg_color = '#f71111bf';
+        $status = 'LOA';
+        $mon_duration = null;
+        $tue_duration = null;
+        $wed_duration = null;
+        $thu_duration = null;
+        $fri_duration = null;
+        $sat_duration = null;
+        $sun_duration = null;
+        $shift_duration = '0.00';
+
+        $display .= '<thead>';
+        $display .= '<tr>';
+        $display .= '<th>Employee</th>';
+        $display .= '<th><span class="tbl-status">Current</span><span class="tbl-status">Status</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Mon</span><span class="tbl-date">'.$date_this_week['Monday'].'</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Tue</span><span class="tbl-date">'.$date_this_week['Tuesday'].'</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Wed</span><span class="tbl-date">'.$date_this_week['Wednesday'].'</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Thu</span><span class="tbl-date">'.$date_this_week['Thursday'].'</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Fri</span><span class="tbl-date">'.$date_this_week['Friday'].'</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Sat</span><span class="tbl-date">'.$date_this_week['Saturday'].'</span></th>';
+        $display .= '<th class="day"><span class="tbl-day">Sun</span><span class="tbl-date">'.$date_this_week['Sunday'].'</span></th>';
+        $display .= '<th>Total</th>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody>';
+
+        foreach ($users as $user):
+            $name = $user->FName." ".$user->LName;
+            foreach ($user_roles as $roles){
+                if ($roles->id == $user->role){
+                    $role = $roles->title;
+                }
+            }
+            foreach ($ts_logs as $log){
+                    if ($log->action == 'Check in' && $log->user_id == $user->id){
+                        $bg_color = 'greenyellow';
+                        $status = 'In';
+                    }elseif($log->action == 'Check out' && $log->user_id == $user->id){
+                        $status = 'Out';
+                        $bg_color = '#f71111bf';
+                    }elseif ($log->action == 'Break in' && $log->user_id == $user->id){
+                        $status = 'On Lunch';
+                        $bg_color = '#ffc859';
+                    }elseif ($log->action == 'Break out' && $log->user_id == $user->id) {
+                        $status = 'In';
+                        $bg_color = 'greenyellow';
+                    }
+
+
+            }
+            foreach ($attendance as $attn){
+                if ($attn->user_id == $user->id && $attn->shift_duration > 0){
+                    switch ($attn->date){
+                        case (date('Y-m-d',strtotime('monday'))):
+                            $mon_duration = $attn->shift_duration;
+                            break;
+                        case (date('Y-m-d',strtotime('tuesday'))):
+                            $tue_duration = $attn->shift_duration;
+                            break;
+                        case (date('Y-m-d',strtotime('wednesday'))):
+                            $wed_duration = $attn->shift_duration;
+                            break;
+                        case (date('Y-m-d',strtotime('thursday'))):
+                            $thu_duration = $attn->shift_duration;
+                            break;
+                        case (date('Y-m-d',strtotime('friday'))):
+                            $fri_duration = $attn->shift_duration;
+                            break;
+                        case (date('Y-m-d',strtotime('saturday'))):
+                            $sat_duration = $attn->shift_duration;
+                            break;
+                        case (date('Y-m-d',strtotime('sunday'))):
+                            $sun_duration = $attn->shift_duration;
+                            break;
+                    }
+                }
+            }
+            foreach ($week_duration as $week){
+                if ($user->id == $week->user_id && $week->week_of == date('Y-m-d',strtotime('monday this week'))){
+                    $shift_duration = $week->total_shift;
+                }
+            }
+        $display .= '<tr>';
+        $display .= '<td><span class="tbl-emp-name">'.$name.'</span><span class="tbl-emp-role">'.$role.'</span></td>';
+        $display .= '<td class="center" style="background-color:'.$bg_color.'"><span class="tbl-emp-status">'.$status.'</span></td>';
+        $display .= '<td class="center">'.$mon_duration.'</td>';
+        $display .= '<td class="center">'.$tue_duration.'</td>';
+        $display .= '<td class="center">'.$wed_duration.'</td>';
+        $display .= '<td class="center">'.$thu_duration.'</td>';
+        $display .= '<td class="center">'.$fri_duration.'</td>';
+        $display .= '<td class="center">'.$sat_duration.'</td>';
+        $display .= '<td class="center">'.$sun_duration.'</td>';
+        $display .= '<td class="center">'.$shift_duration.'</td>';
+        $display .= '</tr>';
+            $name = null;
+            $role = null;
+            $bg_color = '#f71111bf';
+            $status = 'LOA';
+            $mon_duration = null;
+            $tue_duration = null;
+            $wed_duration = null;
+            $thu_duration = null;
+            $fri_duration = null;
+            $sat_duration = null;
+            $sun_duration = null;
+            $shift_duration = '0.00';
+        endforeach;
+        $display .= '</tbody>';
+
+        echo json_encode($display);
+    }
+
 	public function showScheduleTable(){
 	    $week = $this->input->get('week');
 	    $week_convert = date('Y-m-d',strtotime($week));
@@ -695,6 +840,214 @@ class Timesheet extends MY_Controller {
 	    $display .= '</tbody>';
 
 	    echo json_encode($display);
+    }
+
+    public function showListTable(){
+        $week = $this->input->get('week');
+        $week_convert = date('Y-m-d',strtotime($week));
+        $date_this_week = array(
+            "Monday" => date("M d,y",strtotime('monday this week',strtotime($week_convert))),
+            "Tuesday" => date("M d,y",strtotime('tuesday this week',strtotime($week_convert))),
+            "Wednesday" => date("M d,y",strtotime('wednesday this week',strtotime($week_convert))),
+            "Thursday" => date("M d,y",strtotime('thursday this week',strtotime($week_convert))),
+            "Friday" => date("M d,y",strtotime('friday this week',strtotime($week_convert))),
+            "Saturday" => date("M d,y",strtotime('saturday this week',strtotime($week_convert))),
+            "Sunday" => date("M d,y",strtotime('sunday this week',strtotime($week_convert))),
+        );
+        $week_check = array(
+            0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
+            1 => date("Y-m-d",strtotime('tuesday this week',strtotime($week_convert))),
+            2 => date("Y-m-d",strtotime('wednesday this week',strtotime($week_convert))),
+            3 => date("Y-m-d",strtotime('thursday this week',strtotime($week_convert))),
+            4 => date("Y-m-d",strtotime('friday this week',strtotime($week_convert))),
+            5 => date("Y-m-d",strtotime('saturday this week',strtotime($week_convert))),
+            6 => date("Y-m-d",strtotime('sunday this week',strtotime($week_convert))),
+        );
+	    $display = '';
+        $users = $this->users_model->getUsers();
+        $user_roles = $this->users_model->getRoles();
+        $ts_logs = $this->timesheet_model->getTSByDate($week_check);
+        $week_duration = $this->timesheet_model->getWeekTotalDuration();
+        $attendance = $this->timesheet_model->getEmployeeAttendance();
+        $display .= '<thead>';
+        $display .= '<tr>';
+        $display .= '<th></th>';
+        $display .= '<th>Employee</th>';
+        $display .= '<th>Status</th>';
+        $display .= '<th class="day"><span class="thead-day">Mon</span><span class="thead-date">'.$date_this_week['Monday'].'</span></th>';
+        $display .= '<th class="day"><span class="thead-day">Tue</span><span class="thead-date">'.$date_this_week['Tuesday'].'</span></th>';
+        $display .= '<th class="day"><span class="thead-day">Wed</span><span class="thead-date">'.$date_this_week['Wednesday'].'</span></th>';
+        $display .= '<th class="day"><span class="thead-day">Thu</span><span class="thead-date">'.$date_this_week['Thursday'].'</span></th>';
+        $display .= '<th class="day"><span class="thead-day">Fri</span><span class="thead-date">'.$date_this_week['Friday'].'</span></th>';
+        $display .= '<th class="day"><span class="thead-day">Sat</span><span class="thead-date">'.$date_this_week['Saturday'].'</span></th>';
+        $display .= '<th class="day"><span class="thead-day">Sun</span><span class="thead-date">'.$date_this_week['Sunday'].'</span></th>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody>';
+        $name = null;
+        $role = null;
+        $status = null;
+        $mon_logtime = null;
+        $tue_logtime = null;
+        $wed_logtime = null;
+        $thu_logtime = null;
+        $fri_logtime = null;
+        $sat_logtime = null;
+        $sun_logtime = null;
+        $week_id = 0;
+        $attn_id = 0;
+        foreach ($users as $user):
+            $user_id = $user->id;
+            $name = $user->FName." ".$user->LName;
+            foreach ($user_roles as $roles){
+                if ($roles->id == $user->role){
+                    $role = $roles->title;
+                }
+            }
+            foreach ($ts_logs as $log){
+                if ($log->action == 'Check in' && $log->user_id == $user->id){
+                    $status = 'In';
+                    switch ($log->date){
+                        case (date('Y-m-d',strtotime('monday'))):
+                            $mon_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('tuesday'))):
+                            $tue_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('wednesday'))):
+                            $wed_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('thursday'))):
+                            $thu_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('friday'))):
+                            $fri_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('saturday'))):
+                            $sat_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('sunday'))):
+                            $sun_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                    }
+                }elseif($log->action == 'Check out' && $log->user_id == $user->id){
+                    $status = 'Out';
+                    switch ($log->date){
+                        case (date('Y-m-d',strtotime('monday'))):
+                            $mon_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('tuesday'))):
+                            $tue_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('wednesday'))):
+                            $wed_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('thursday'))):
+                            $thu_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('friday'))):
+                            $fri_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('saturday'))):
+                            $sat_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('sunday'))):
+                            $sun_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                    }
+                }elseif ($log->action == 'Break in' && $log->user_id == $user->id){
+                    $status = 'On Lunch';
+                    switch ($log->date){
+                        case (date('Y-m-d',strtotime('monday'))):
+                            $mon_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('tuesday'))):
+                            $tue_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('wednesday'))):
+                            $wed_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('thursday'))):
+                            $thu_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('friday'))):
+                            $fri_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('saturday'))):
+                            $sat_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('sunday'))):
+                            $sun_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                    }
+                }elseif ($log->action == 'Break out' && $log->user_id == $user->id) {
+                    $status = 'In';
+                    switch ($log->date){
+                        case (date('Y-m-d',strtotime('monday'))):
+                            $mon_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('tuesday'))):
+                            $tue_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('wednesday'))):
+                            $wed_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('thursday'))):
+                            $thu_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('friday'))):
+                            $fri_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('saturday'))):
+                            $sat_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                        case (date('Y-m-d',strtotime('sunday'))):
+                            $sun_logtime = date('h:i A',strtotime($log->time));
+                            break;
+                    }
+                }
+            }
+
+            foreach ($week_duration as $week){
+                if ($week->user_id == $user_id){
+                    $week_id = $week->id;
+                }
+
+            }
+            foreach ($attendance as $attn){
+                if ($attn->user_id == $user_id){
+                    $attn_id = $attn->id;
+                }
+            }
+        $display .= '<tr>';
+        $display .= '<td class="center"><input type="radio" name="selected" data-week="'.$week_id.'" data-attn="'.$attn_id.'" data-name="'.$name.'" value="'.$user_id.'"></td>';
+        $display .= '<td><span class="list-emp-name">'.$name.'</span><span class="list-emp-role">'.$role.'</span></td>';
+        $display .= '<td class="center"><span class="list-emp-status">'.$status.'</span></td>';
+        $display .= '<td class="center">'.$mon_logtime.'</td>';
+        $display .= '<td class="center">'.$tue_logtime.'</td>';
+        $display .= '<td class="center">'.$wed_logtime.'</td>';
+        $display .= '<td class="center">'.$thu_logtime.'</td>';
+        $display .= '<td class="center">'.$fri_logtime.'</td>';
+        $display .= '<td class="center">'.$sat_logtime.'</td>';
+        $display .= '<td class="center">'.$sun_logtime.'</td>';
+        $display .= '</tr>';
+            $name = null;
+            $role = null;
+            $status = null;
+            $mon_logtime = null;
+            $tue_logtime = null;
+            $wed_logtime = null;
+            $thu_logtime = null;
+            $fri_logtime = null;
+            $sat_logtime = null;
+            $sun_logtime = null;
+            $week_id = 0;
+            $attn_id = 0;
+        endforeach;
+        $display .= '</tbody>';
+
+        echo json_encode($display);
+
     }
 
 	public function attendance(){
