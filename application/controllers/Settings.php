@@ -15,6 +15,7 @@ class Settings extends MY_Controller {
 
     public function schedule()
     {
+        $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
         $post = $this->input->post();
 
@@ -443,6 +444,28 @@ class Settings extends MY_Controller {
         
         redirect('settings/online_payments');
 
+    }
+
+    public function create_google_account()
+    {
+        $google_credentials = google_credentials();
+        $profile = google_get_oauth2_token($_POST['token'], $google_credentials['client_id'], $google_credentials['client_secret']);
+
+        $this->load->model('GoogleAccounts_model');
+
+        $user = $this->session->userdata('logged');
+        $data = [
+            'user_id' => $user['id'],
+            'google_email' => $profile['user']->email,
+            'google_access_token' => $profile['access_token'],
+            'google_refresh_token' => $profile['refreshToken'],
+            'date_created' => date("Y-m-d H:i:s")
+        ];
+        $googleAccount = $this->GoogleAccounts_model->create($data);
+
+        $return = ['is_success' => 1];
+
+        echo json_encode($return);
     }
 	
 }

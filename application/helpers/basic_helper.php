@@ -2806,3 +2806,71 @@ function getItemQtyOH($item_id) {
 
     return $qty;
 }
+
+function google_get_oauth2_token($code, $googleClientId, $googleSecretId) {
+
+    $redirect_uri = "postmessage";
+    $scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://mail.google.com/"; //google scope to access
+    $state = "profile"; //optional
+
+
+    $oauth2token_url = "https://accounts.google.com/o/oauth2/token";
+    $clienttoken_post = array(
+        "code" => $code,
+        "client_id" => $googleClientId,
+        "client_secret" => $googleSecretId,
+        "redirect_uri" => $redirect_uri,
+        'scope' => $scope,
+        'access_type' => "offline",
+        'prompt' => 'consent',
+        "grant_type" => "authorization_code"
+    );
+
+    $curl = curl_init($oauth2token_url);
+
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $clienttoken_post);
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+    $json_response = curl_exec($curl);
+    error_log($json_response);
+    curl_close($curl);   
+    $refreshToken = '';
+    $authObj = json_decode($json_response);  
+    if (isset($authObj->refresh_token)){
+        //refresh token only granted on first authorization for offline access
+        //save to db for future use (db saving not included in example)            
+        $refreshToken = $authObj->refresh_token;
+    }
+
+    $accessToken = $authObj->access_token;    
+    $accessUserProfile = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" . $accessToken;
+    $curl = curl_init($accessUserProfile);
+
+
+    curl_setopt($curl, CURLOPT_POST, false);        
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+    $json_response = curl_exec($curl);
+    error_log($json_response);
+    curl_close($curl);   
+    $googleUser = json_decode($json_response);   
+    $gData['user'] = $googleUser;
+    $gData['access_token'] = $accessToken; 
+    $gData['refreshToken'] = $refreshToken;
+    return $gData;
+}
+
+function google_credentials(){
+    $credentials = [
+        'client_id' => '646859198620-ll9trm7obk2olgaoigae4s2hshpf3sle.apps.googleusercontent.com',
+        'client_secret' => '-plXDxYZRwx6c1ttmNXE5L2p',
+        'api_key' => 'AIzaSyAzt0c6Rxf0SJo6bsCc046g7671s7TEj_U'
+    ];
+
+    return $credentials;
+}
