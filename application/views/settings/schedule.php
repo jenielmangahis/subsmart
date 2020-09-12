@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <label><b>Calendar Account</b></label>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                            <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                               <small class="plan">Gmail Account</small><br/>
                                               <i class="fab fa-google"></i>
                                               <big>Gmail / G Suite</big>
@@ -106,7 +106,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                               <small class="plan">Hotmail Account</small><br/>
                                               <i class="fab fa-hotmail"></i>
                                               <big>Microsoft Hotmail</big>
@@ -115,7 +115,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                               <small class="plan">Apple Account</small><br/>
                                               <i class="fab fa-apple"></i>
                                               <big>Apple</big>
@@ -262,12 +262,14 @@ function handleAuthResult(authResult) {
         
       },
       success: function(data) {  
-        location.href = base_url + 'settings/schedule';        
+        location.href = base_url + 'settings/schedule?calendar_update=1';        
       },    
       error: function(e) {
         console.log(e);
       }
     });
+  } else {
+    alert('warning!');
   }
 }
 </script>

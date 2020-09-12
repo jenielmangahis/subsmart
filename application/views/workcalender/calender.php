@@ -255,10 +255,9 @@ img.calendar-user-profile {
                     <h4  class="right-filter-header">CALENDARS</h4>
                     <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
                     <ul class="right-list-events">
-                        <li><label class="checkbox"><input type="checkbox" class=""> All</label></li>
-                        <li><label class="checkbox"><input type="checkbox" class=""> Family</label></li>
-                        <li><label class="checkbox"><input type="checkbox" class=""> Friends</label></li>
-                        <li><label class="checkbox"><input type="checkbox" class=""> Holidays</label></li>
+                        <?php foreach($calendar_list as $calendar) { ?>
+                                <li><label class="checkbox"><input type="checkbox" class=""> <?php echo $calendar['summary']; ?></label></li>
+                        <?php } ?> 
                     </ul>
                 </div>
                  <div class="col-12" style="margin-top: 15px;">

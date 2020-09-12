@@ -18,6 +18,7 @@ class Settings extends MY_Controller {
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
         $post = $this->input->post();
+        $get = $this->input->get();
 
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
@@ -29,7 +30,12 @@ class Settings extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'assets/frontend/js/settings/main.js',
-        ));        
+        ));      
+
+        if(isset($get['calendar_update']) && $get['calendar_update'] == 1) {
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Calendar Gmail/Gsuit Account Updated Successfully');  
+        }
 
         if (!empty($post)) {
 
