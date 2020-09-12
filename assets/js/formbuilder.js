@@ -1,8 +1,8 @@
 // import "https://formio.github.io/formio.js/#";
 
 
-const formBaseUrl = "/nsmartrac/"; // loc al
-// const formBaseUrl = `${window.location.origin}/` ; // online
+// const formBaseUrl = "/nsmartrac/"; // local
+const formBaseUrl = `${window.location.origin}/` ; // online
 
 // =====================================
 //     GLOBAL VALUES AND FUNCTIONS
@@ -13,7 +13,7 @@ const elementsList = [
     id: 1,
     type: "radio-button",
     category: 'common'
-  },
+  
   {
     id: 2,
     type: "dropdown",
@@ -154,6 +154,121 @@ const elementsList = [
     type: "checkbox-email-routing",
     category: 'email'
   },
+  {
+    id: 31,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 32,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 33,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 34,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 35,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 36,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 37,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 38,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 39,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 40,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 41,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 42,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 43,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 44,
+    type: "checkbox-email-routing",
+    category: 'email'
+  },
+  {
+    id: 45,
+    type: "radio-button-matrix",
+    category: 'matrix-items'
+  },
+  {
+    id: 46,
+    type: "radio-button-multi-scale",
+    category: 'matrix-items'
+  },
+  {
+    id: 47,
+    type: "dropdown-matrix",
+    category: 'matrix-items'
+  },
+  {
+    id: 48,
+    type: "dropdown-multi-scale",
+    category: 'matrix-items'
+  },
+  {
+    id: 49,
+    type: "checkbox-matrix",
+    category: 'matrix-items'
+  },
+  {
+    id: 50,
+    type: "checkbox-multi-scale",
+    category: 'matrix-items'
+  },
+  {
+    id: 51,
+    type: "short-answer-matrix",
+    category: 'matrix-items'
+  },
+  {
+    id: 52,
+    type: "long-answer-matrix",
+    category: 'matrix-items'
+  },
+  {
+    id: 53,
+    type: "star-matrix",
+    category: 'matrix-items'
+  },
 ]
 
 
@@ -214,7 +329,7 @@ loadFormElements = (id, mode = null) => {
         let elementType = el.fe_element_id;
         var choices = []
         
-        if(elementType == 1 || elementType == 2 || elementType == 3 ){
+        if(elementType == 1 || elementType == 2 || elementType == 3 || elementType >= 44){
           choices = JSON.parse($.ajax({
             url: `${formBaseUrl}formbuilder/form/element/choices/${el.fe_id}`,
             dataType: 'json',
@@ -223,7 +338,7 @@ loadFormElements = (id, mode = null) => {
           }).responseText).data
         }
 
-        if(elementType >= 20){
+        if(elementType >= 20 && elementType < 43){
           document.querySelector('#windowPreviewContent').innerHTML += `
           ${(elementType == 20)?`
             <!-- Header -->
@@ -339,12 +454,12 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 3)?`
                 <!-- Checkbox -->
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                ${choices.map(choice => `
+                ${choices.map((choice, i) => `
                   <div class="form-check form-user-elements">
-                    <input type="checkbox" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}-${i}" class="form-check-input" ${(el.fe_is_required == 1)?"required":""} placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
+                    <input type="checkbox" name="feinput-${el.fe_id}-chk-${i}" id="feinput-${el.fe_id}-chk" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
                     <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
                   </div>
-                  `).join("")}
+                `).join("")}
               `:""}
               
               
@@ -367,8 +482,8 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 7)?`
                 <!-- Date -->
                 <div class="form-group form-user-elements">
-                  <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                  <input type="date" name="feinput-${el.fe_id}" id="feinput-${el.fe_id}" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
+                  <label for="feinput-${el.fe_id}-date"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
+                  <input type="date" name="feinput-${el.fe_id}-date" id="feinput-${el.fe_id}-date" class="form-control" ${(el.fe_is_required == 1)?"required":""}  placeholder="${el.fe_placeholder_text}" value="${el.fe_default_value}"/>
                 </div>
               `:""}
               
@@ -387,6 +502,117 @@ loadFormElements = (id, mode = null) => {
                   <label for="${el.fe_id}">${el.fe_label}</label>
                   <input type="file" name="feinput-${el.fe_id}" ${(el.fe_is_required == 1)?"required":""}  id="feinput-${el.fe_id}" >
                 </div>
+              `:""}
+
+              ${(elementType == 44)?`
+                <!-- Radio Button Matrix -->
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>${el.fe_label}</th>
+                      ${choices.map((choice, i) => `
+                        ${choice.fc_row == null? `<th>${choice.fc_choice}</th>`:""}
+                      `).join('')}
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      ${choices.map((choice, rowIndex) => 
+                        `<tr>
+                          ${(choice.fc_column == null)?`
+                            <td>${choice.fc_choice}</td>
+                            ${choices.map((cell, columnIndex) => 
+                              `
+                                ${cell.fc_row == null?`
+                                <td>
+                                <div class="form-check">
+                                  ${columnIndex}
+                                  <input class="form-check-input" type="radio" name="feinput-${el.fe_id}-radmtx-${rowIndex}" id="feinput-${el.fe_id}-radmtx-${rowIndex}-${columnIndex}" value="${choice.fc_choice}">
+                                </div>
+                              </td>
+                                `:``}
+                              `
+                            ).join('')}
+                          `:""}
+                        </tr>`
+                      ).join('')}
+                    </tr>
+                  </tbody>
+                </table>
+              `:""}
+
+              ${(elementType == 48)?`
+                <!-- Checkbox Matrix -->
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>${el.fe_label}</th>
+                      ${choices.map((choice, i) => 
+                        choice.fc_row == null? `<th>${choice.fc_choice}</th>`:""
+                      ).join('')}
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      ${choices.map((choice, rowIndex) => 
+                        `<tr>
+                          ${(choice.fc_column == null)?`
+                            <td>${choice.fc_choice}</td>
+                            ${choices.map((cell, columnIndex) => 
+                              `
+                                ${cell.fc_row == null?`
+                                <td>
+                                <div class="form-check">
+                                  <input class="form-check-input custom-input" type="checkbox" name="feinput-${el.fe_id}-chkmtx-${rowIndex}-${columnIndex}" id="feinput-${el.fe_id}-chkmtx-${rowIndex}-${columnIndex}">
+                                </div>
+                              </td>
+                                `:``}
+                              `
+                            ).join('')}
+                          `:""}
+                        </tr>`
+                      ).join('')}
+                    </tr>
+                  </tbody>
+                  
+                </table>
+                
+              `:""}
+              ${(elementType == 50)?`
+                <!-- Short Answer Matrix -->
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>${el.fe_label}</th>
+                      ${choices.map((choice, i) => 
+                        choice.fc_row == null? `<th>${choice.fc_choice}</th>`:""
+                      ).join('')}
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      ${choices.map((choice, rowIndex) => 
+                        `<tr>
+                          ${(choice.fc_column == null)?`
+                            <td>${choice.fc_choice}</td>
+                            ${choices.map((cell, columnIndex) => 
+                              `
+                                ${cell.fc_row == null?`
+                                  <td>
+                                    <div class="form-group">
+                                      <input class="form-control" type="text" name="feinput-${el.fe_id}-txtmtx-${rowIndex}-${columnIndex}" id="feinput-${el.fe_id}-txtmtx-${rowIndex}-${columnIndex}">
+                                    </div>
+                                  </td>
+                                `:``}
+                              `
+                            ).join('')}
+                          `:""}
+                        </tr>`
+                      ).join('')}
+                    </tr>
+                  </tbody>
+                </table>
+                
               `:""}
   
               

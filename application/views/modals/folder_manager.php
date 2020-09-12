@@ -60,8 +60,8 @@
                         <tr>
                           <td class="p-0 pb-1">
                           <?php if($isBusinessFormTemplates){ ?>  
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right mn-1" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a> 
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="drop_to_upload" title="Drop to Upload"><i class="fa fa-cloud-upload" title="Drop to Upload"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a> 
                           <?php } ?> 
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
@@ -123,7 +123,7 @@
   <div class="modal-dialog" id="modal-folder-manager-entry-dialog">
 
     <!-- Modal content-->
-    <div class="modal-content">
+    <div class="modal-content" id="mfme-modal-content">
       <div class="modal-header bg-info">
         <h4 id="modal-folder-manager-entry-title" class="modal-title"></h4>
       </div>
@@ -184,6 +184,83 @@
             </div> 
           <?php } ?>
           <div class="d-none w-100" id="general_permissions_entry">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-7" style="height: 66vh; overflow: auto">
+                  <div class="card">
+                    <div class="card-header">
+                      <strong>Roles</strong>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-bordered" id="gpe_table_roles" tablefunc="getrolepermissions">
+                        <thead>
+                          <th class="d-none"></th>
+                          <th class="font-weight-bold">Title</th>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header">
+                      <strong>Users</strong>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-bordered" id="gpe_table_users" tablefunc="getuserpermissions">
+                        <thead>
+                          <th class="d-none"></th>
+                          <th class="font-weight-bold">Name</th>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="card">
+                    <div class="card-header">
+                      <strong>Permissions</strong>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input id="gpec_create_folder" type="checkbox" class="form-check-input" value="">Create Folder
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input id="gpec_add_file" type="checkbox" class="form-check-input" value="">Add File
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input id="gpec_edit_folder_file" type="checkbox" class="form-check-input" value="">Edit Folder/File
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input id="gpec_move_folder_file" type="checkbox" class="form-check-input" value="">Move Folder/File
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input id="gpec_trash_folder_file" type="checkbox" class="form-check-input" value="">Trasg Folder/File
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input id="gpec_remove_folder_file" type="checkbox" class="form-check-input" value="">Remove Folder/File
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>  
           </div>
         </div>
       </div>

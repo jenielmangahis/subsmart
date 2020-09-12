@@ -103,7 +103,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Rep Tiered Upfront Bonus</label>
                 </div>
                 <div class="col-md-8">
-                    <i>$0.00</i>
+                    <label>$0.00</label>
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Rep Tiered Holdfund Bonus</label>
                 </div>
                 <div class="col-md-8">
-                    <i>$0.00</i>
+                    <label>$0.00</label>
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Rep Deductions Total</label>
                 </div>
                 <div class="col-md-8">
-                    <i>$0.00</i>
+                    <label>$0.00</label>
                 </div>
             </div>
         </div>
@@ -133,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Tech Deductions Total</label>
                 </div>
                 <div class="col-md-8">
-                    <i>$0.00</i>
+                    <label>$0.00</label>
                 </div>
             </div>
         </div>
@@ -354,14 +354,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-8">
                     <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
                         <option value="">Select</option>
-                        <option value="Dissatisfied with Service">Dissatisfied with Service</option>
-                        <option value="Financial Hardship">Financial Hardship</option>
-                        <option value="Fulfilled Contract">Fulfilled Contract</option>
+                        <option value="DS">Dissatisfied with Service</option>
+                        <option value="FH">Financial Hardship</option>
+                        <option value="FC">Fulfilled Contract</option>
                         <option value="Moving">Moving</option>
-                        <option value="Non-Payment">Non-Payment</option>
+                        <option value="NP">Non-Payment</option>
                         <option value="Paid BOC">Paid BOC</option>
-                        <option value="Passed Away">Passed Away</option>
-                        <option value="Still Under Contruct">Still Under Contruct</option>
+                        <option value="PA">Passed Away</option>
+                        <option value="SUC">Still Under Contruct</option>
                     </select>
                 </div>
             </div>
@@ -592,26 +592,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <option value="Experian">Experian </option>
                         <option value="Equifax ">Equifax  </option>
                     </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Rebate Check 1</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Rebate Check 2</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" />
                 </div>
             </div>
         </div>

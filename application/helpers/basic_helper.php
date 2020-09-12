@@ -647,7 +647,7 @@ if (!function_exists('getLoggedUserID')) {
 
         $CI = &get_instance();
         $user = (object)$CI->session->userdata('logged');
-        return ($user) ? $user->id : 0;
+        return $user->id;
     }
 }
 
@@ -730,7 +730,7 @@ if (!function_exists('getCompany')){
         $CI = &get_instance();
         $company_id = logged('company_id');
 
-        return $CI->db->query('select * from business_profile where id = ' . $company_id);
+        return $CI->business_model->getById($company_id);
     }
 }
 
@@ -744,8 +744,7 @@ if (!function_exists('getCompanyFolder')){
             mkdir('./uploads/');
         }
 
-        if($company->num_rows() > 0) {
-            $company = $company->row();
+        if($company) {
             if($company->folder_name == ''){
                 $folder_name = generateRandomString();
                 while(file_exists('./uploads/' . $folder_name . '/')){
@@ -767,7 +766,6 @@ if (!function_exists('getCompanyFolder')){
                 $company_folder = $company->folder_name;
             }
         } 
-
         return $company_folder;
     }
 }
@@ -803,10 +801,6 @@ if (!function_exists('getFolders')) {
             $softdelete = '<= 0';
         } else {
             $softdelete = '>= 1';
-
-            if($ofUser){
-                $softdelete .= ' and softdelete_by = ' . $uid;
-            }
         }
 
         if($ofUser){
@@ -815,8 +809,6 @@ if (!function_exists('getFolders')) {
 
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
-        } else {
-            $category_filter = 'and a.category_id is null ';
         }
 
         $sql = 'select ' . 
@@ -825,8 +817,7 @@ if (!function_exists('getFolders')) {
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name as c_folder, '.
                '(ifnull(d.total_sub_folders,0) + ifnull(e.total_files,0)) as `total_contents`, '.
-               'f.category_name, '.
-               'f.category_desc '.
+               'f.category_name '.
 
                'from file_folders a '.
                'left join users b on b.id = a.created_by '.
@@ -872,13 +863,7 @@ if (!function_exists('getFiles')) {
         if(!$trashed){
             $softdelete = '<= 0 and a.folder_id = ' . $folder_id . ' ';
         } else {
-            $softdelete = '>= 1';
-
-            if($ofUser){
-                $softdelete .= ' and softdelete_by = ' . $uid . ' ';
-            } else {
-                $softdelete .= ' ';
-            }
+            $softdelete = '>= 1 ';
         }
 
         if($ofUser){
@@ -887,8 +872,6 @@ if (!function_exists('getFiles')) {
 
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
-        } else {
-            $category_filter = 'and a.category_id is null ';
         }
 
         $sql = 'select ' . 
@@ -896,8 +879,7 @@ if (!function_exists('getFiles')) {
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name, '.
-               'd.category_name, '.
-               'd.category_desc '.
+               'd.category_name '.
 
                'from filevault a '.
                'left join users b on b.id = a.user_id '.
@@ -921,7 +903,7 @@ if (!function_exists('getFiles')) {
 
 if (!function_exists('searchFilesOrFolders')) {
 
-    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0, $ofUser = false, $ofCategorized = false){
+    function searchFilesOrFolders($keyword, $findfolders = 0, $findfiles = 0, $ofUser = false){
         $CI = &get_instance();
         $uid = logged('id');
         $company_id = logged('company_id');
@@ -929,17 +911,9 @@ if (!function_exists('searchFilesOrFolders')) {
         $user_filter_folder = '';
         $user_filter_file = '';
 
-        $category_filter = '';
-
         if($ofUser){
             $user_filter_folder = 'and created_by = ' . $uid . ' ';
             $user_filter_file = 'and user_id = '. $uid . ' ';
-        }
-
-        if($ofCategorized){
-            $category_filter = 'and category_id is not null ';
-        } else {
-            $category_filter = 'and category_id is null ';
         }
 
         $sql_folders = 'select '.
@@ -950,7 +924,7 @@ if (!function_exists('searchFilesOrFolders')) {
 
                        'from file_folders '.
 
-                       'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_folder . $category_filter .
+                       'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_folder .
                           'and (lower(folder_name) like "%'. $keyword .'%" '.
                           'or lower(description) like "%'. $keyword .'%" '.
                           'or lower(path) like "%'. $keyword .'%" '.
@@ -964,7 +938,7 @@ if (!function_exists('searchFilesOrFolders')) {
 
                      'from filevault '.
 
-                     'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_file . $category_filter . 
+                     'where company_id = ' . $company_id . ' and softdelete <= 0 '. $user_filter_file .
                         'and (lower(title) like "%'. $keyword .'%" '.
                         'or lower(description) like "%'. $keyword .'%" '.
                         'or lower(file_path) like "%'. $keyword .'%" '.
@@ -985,66 +959,6 @@ if (!function_exists('searchFilesOrFolders')) {
 
         return $files_and_folders;
 
-    }
-
-}
-
-if (!function_exists('getTasks')){
-
-    function getTasks($array = false, $keyword = "", $status_id = "", $from_date = "", $to_date = ""){
-        $CI = &get_instance();
-        $uid = logged('id');
-
-        $filter = "";
-
-        if($keyword != ""){
-            $filter = ' and ((lower(a.subject) like "%'. $keyword .'%") or (lower(a.description) like "%'. $keyword .'%"))';
-        }
-
-        if($status_id != ""){
-            $filter .= ' and a.status_id = ' . $status_id;
-        }
-
-        if($from_date != ""){
-            $filter .= ' and a.date_created >= "'. $from_date .'"';
-        }
-
-        if($to_date != ""){
-            $filter .= ' and a.date_created <= "'. $to_date .' 23:59:59"';
-        }
-
-
-        $tasks = $CI->db->query(
-            'select ' .
-            'a.*, '.
-            'date_format(a.date_created, "%M %d, %Y %h:%i:%s") as `date_created_formatted_with_time`, '.
-            'date_format(a.date_created, "%M %d, %Y") as `date_created_formatted`, '.
-            'b.status_text, '.
-            'if(ISNULL(c.task_id),"no","yes") as `is_participant` '.
-            'from tasks a '.
-            'left join tasks_status b on b.status_id = a.status_id '.
-            'left join('.
-                'select '.
-
-                'task_id, '.
-                'user_id '.
-
-                'from tasks_participants '.
-
-                'where user_id = '. $uid . 
-            ') c on c.task_id = a.task_id '.
-            'where (a.created_by = ' . $uid . ' ' .
-               'or not ISNULL(c.task_id))'. $filter . ' ' .
-
-            'group by a.task_id '.
-            'order by a.date_created DESC'
-        );
-
-        if($array){
-            return $tasks->result_array();
-        } else {
-            return $tasks->result();
-        }
     }
 
 }
@@ -1076,26 +990,19 @@ if (!function_exists('getNewTasks')){
 
 function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessFormTemplates = false){
     $CI = &get_instance();
-    $uid = logged('id');
 
     $user_fname = logged('FName');
     $user_lname = logged('LName');
 
-    $company = getCompany()->row();
-    $categories = array();
-
-    if($isBusinessFormTemplates){
-        $categories = $CI->file_folders_categories_model->getByWhere(array('created_by' => $uid));
-    }
+    $company = getCompany();
 
     $params = array(
         'isMain' => $isMain,
         'isMyLibrary' => $isMyLibrary,
         'isBusinessFormTemplates' => $isBusinessFormTemplates,
-        'company_name' => $company->business_name,
+        'company_name' => $company->b_name,
         'user_fname' => $user_fname,
-        'user_lname' => $user_lname,
-        'categories' => $categories
+        'user_lname' => $user_lname
     );
 
     return $CI->load->view('modals/folder_manager', $params, TRUE);

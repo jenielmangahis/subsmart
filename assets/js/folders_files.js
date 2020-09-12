@@ -287,8 +287,91 @@ $(document).ready(function(){
   $('a[control="set_g_permission"]').click(function(e){
     current_process = 'general_permissions';
 
-    openEntry(current_process);
+    resetPermissions();
+    
+    $.ajax({
+      type: 'GET',
+      url: base_url + "vault/getrolesandusers",
+      success: function(data){
+        var result = jQuery.parseJSON(data);
+        var append = '';
+
+        $('#gpe_table_roles > tbody').empty();
+        $('#gpe_table_users > tbody').empty();
+
+        $.each(result.roles, function(index, role){
+          append += '<tr>';
+          append += '<td class="d-none">' + role.id + '</td>';
+          append += '<td>' + role.title + '</td>';
+          append += '</tr>';
+        });
+
+        $('#gpe_table_roles > tbody').append(append);
+
+        append = '';
+
+        $.each(result.users, function(index, user){
+          append += '<tr>';
+          append += '<td class="d-none">' + user.id + '</td>';
+          append += '<td>' + user.FName + ' ' + user.LName + '</td>';
+          append += '</tr>';
+        });
+
+        $('#gpe_table_users > tbody').append(append);
+
+        $('#gpe_table_users > tbody > tr > td,#gpe_table_roles > tbody > tr > td').click(function(){
+
+          $('#gpe_table_users > tbody > tr.table-primary').removeClass('table-primary');
+          $('#gpe_table_roles > tbody > tr.table-primary').removeClass('table-primary');
+
+          $(this).parent('tr').addClass('table-primary');
+
+          var id = $(this).parent('tr').children('td:eq(0)').text();
+          var tablefunc = $(this).closest('table').attr('tablefunc');
+
+          $.ajax({
+            type: 'GET',
+            url: base_url + "vault/"+ tablefunc +"/" + id,
+            success: function(data){
+              var result = jQuery.parseJSON(data);
+
+              if(result != null){
+                $('#gpec_create_folder').prop('checked', (result.create_folder == 1));
+                $('#gpec_add_file').prop('checked', (result.add_file == 1));
+                $('#gpec_edit_folder_file').prop('checked', (result.edit_folder_file == 1));
+                $('#gpec_move_folder_file').prop('checked', (result.move_folder_file == 1));
+                $('#gpec_trash_folder_file').prop('checked', (result.trash_folder_file == 1));
+                $('#gpec_remove_folder_file').prop('checked', (result.remove_folder_file == 1));
+              } else {
+                resetPermissions();   
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+              showFolderManagerNotif(textStatus, errorThrown, 'error');  
+            }
+          });
+        });
+
+        openEntry('general_permissions');
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        showFolderManagerNotif(textStatus, errorThrown, 'error');  
+      }
+    });
   });
+// -------------------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------------------
+// Set general permissions extra
+// -------------------------------------------------------------------------------------------------------------
+  function resetPermissions(){
+    $('#gpec_create_folder').prop('checked', false);
+    $('#gpec_add_file').prop('checked', false);
+    $('#gpec_edit_folder_file').prop('checked', false);
+    $('#gpec_move_folder_file').prop('checked', false);
+    $('#gpec_trash_folder_file').prop('checked', false);
+    $('#gpec_remove_folder_file').prop('checked', false);
+  }
 // -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
@@ -322,7 +405,7 @@ $(document).ready(function(){
           showFolderManagerNotif('Error', result.error, 'error');  
         }
       },
-      error: function(){
+      error: function(jqXHR, textStatus, errorThrown){
         showFolderManagerNotif(textStatus, errorThrown, 'error'); 
       }
     }); 
@@ -822,12 +905,6 @@ $(document).ready(function(){
       } else {
         var sc_text = selected_category.text();
         var sc_desc = selected_category.attr('catdesc');
-
-        sc_text = sc_text.trim();
-        
-        if(sc_desc != ""){  
-          sc_desc = sc_desc.trim();
-        }
 
         $('#category_name').val(sc_text);
         $('#category_desc').val(sc_desc);
@@ -1918,6 +1995,8 @@ function openEntry(type){
 
     $('div#general_permissions_entry').removeClass('d-none');
     $('div#modal-folder-manager-entry-dialog').addClass('modal-lg');
+
+    $('#mfme-modal-content').css({"height":"90vh"});
   }
 
   $('#modal-folder-manager-entry-title').text(vTitle);
@@ -1948,6 +2027,7 @@ function closeEntry(){
   } else if(current_process == 'general_permissions'){
     $('div#general_permissions_entry').addClass('d-none');
     $('div#modal-folder-manager-entry-dialog').removeClass('modal-lg');
+    $('#mfme-modal-content').css({"height":""});
   }
 
   current_process = '';

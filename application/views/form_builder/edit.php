@@ -44,7 +44,7 @@
     </nav>
     
       <div class="text-left">
-        <h1><?= $form->forms_title?> <a href="<?= base_url()?>form/<?=$form->forms_id?>" class="btn btn-outline-info"><i class="fa fa-eye"></i> View Form</a></h1>
+        <h1><?= $form->forms_title?> <button type="button" onclick="window.open('<?= base_url()?>form/<?=$form->forms_id?>', '_blank')" class="btn btn-outline-info"><i class="fa fa-eye"></i> View Form</button></h1>
       </div>
 
       <hr/>
@@ -759,7 +759,7 @@
 
                       <div class="form-group">
                         <label for="txtShareLink">Form Link</label>
-                        <input type="text" name="txtSharableLink" id="txtSharableLink" class="form-control" value="<?=base_url()?>form/test" readonly>
+                        <input type="text" name="txtSharableLink" id="txtSharableLink" class="form-control" value="<?= base_url()?>form/<?=$form->forms_id?>" readonly>
                         <div class="d-flex w-100 justify-content-between">
                           <div class="btn-group">
                             <button class="btn btn-link"><i class="fa fa-copy"></i> Copy</button>
@@ -799,53 +799,85 @@
                       <div class="card-content">
                         <h3>Results Table</h3>
                         <hr/>
-                      
-                        <table id="#resultsTable" class="table table-responsive table-bordered table-hover">
-                          <thead>
-                            <tr>
-                              <th><strong>Number</strong></th>
-                              <?php
-                                foreach($elements as $element_key => $element){
-                                  ?>
-                                    <th><strong><?= $element->fe_label?></strong></th>
-                                  <?php
-                                }
-                              ?>
-                            </tr>
-                          </thead>
-                          
-                          <tbody>
+                        
+                        
+                          <div class="row">
                             <?php 
+                              $i = 0;
                               $answerSessionKeys = array_unique(array_map(function($answer){
                                 return $answer->fa_session_id;
                               }, $answers));
-                            ?>
-                            <?php
-                              foreach($answerSessionKeys as $key => $sessionKey){
+                              
+                              if(empty($answers)){
                                 ?>
-                                  <tr>
-                                    <td><?= $key ?></td>
-                                    <?php
-                                      foreach($answers as $answer_key => $answer){
-                                        if($answer->fa_session_id == $sessionKey){
-                                          // update this part
-                                          foreach($elements as $element_key => $element){
-                                            if($element->fe_id == $answer->fa_element_id){
+                                  <div class="alert alert-secondary w-100">
+                                    <p class="text-center w-100">There are no entries to this form yet. </p>
+                                  </div>
+                                <?php
+                              }else{
+                                foreach($answerSessionKeys as $key => $sessionKey){
+                                  $i++;
+                                  ?>
+                                    <div class="col-xs-12 col-sm-6 col-md-4">
+                                      <div class="card">
+                                        <div class="card-body">
+                                          <h3 class="p-0 m-0">#<?= $i?>:</h3>
+                                          
+  
+                                          <?php 
+                                            usort($elements, function($a, $b){
+                                              return $b->fe_order < $a->fe_order;
+                                            });
+  
+                                            foreach($elements as $elementKey => $element){
+                                              
                                               ?>
-                                                <td><?= $answer->fa_value?></td>
+                                                <small><?= $element->fe_label?>: </small>
+                                                <?php 
+                                                  foreach($answers as $answerKey => $answer){
+                                                    if($answer->fa_element_id == $element->fe_id && $answer->fa_session_id == $sessionKey){
+                                                        switch($element->fe_element_id){
+                                                          case 3:
+                                                            ?>
+                                                              <li> - <?= $answer->fa_value?></li>
+                                                            <?php
+                                                            break;
+                                                          case 7:
+                                                            ?>
+                                                              <b><?= date("F d ,Y", strtotime($answer->fa_value))?></b>
+                                                            <?php
+                                                            break;
+                                                          default:
+                                                            ?><b><?= ( empty($answer->fa_value ) )? `<span class="text-danger">No value</span>` : $answer->fa_value?></b><?php
+                                                            break;
+                                                        }
+                                                    }
+                                                  }
+                                                ?>
+                                                
+                                                <br/>
                                               <?php
                                             }
-                                          }
-                                        }
-                                      }
-                                    ?>
-                                  </tr>
-                                <?php
+                                          
+                                            // foreach($answers as $answerKey => $answer){
+                                            //   if($answer->fa_session_id == $sessionKey){
+                                            //     var_dump($answer);
+                                            //   }
+                                            // }
+                                          ?>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  <?php
+                                }
                               }
-                            ?>
-                          </tbody>
-                        </table>
 
+                            ?>
+                          </div>
+                        
+                            
+                      
+                          
 
                       </div>
                     </div>
@@ -883,234 +915,268 @@
         </div>
         <button class="close" data-dismiss="modal">&times;</button>
       </div>
+      <div class="modal-body">
+        <div id="modalElementSettingsLoadingContent" style="min-height: 800px;">
+          Loading.. Please Wait..
+        </div>
 
-      <div id="modalElementSettingsLoadingContent" class="modal-body" style="min-height: 800px;">
-        Loading.. Please Wait..
-      </div>
+        <div id="modalElementSettingsContent" style="display: none; min-height: 800px;">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a href="#modal-element-settings-settings" class="nav-link active" data-toggle="tab">
+                Settings
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#modal-element-settings-default-value" class="nav-link" data-toggle="tab">
+                Default Value
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#modal-element-settings-rules" class="nav-link" data-toggle="tab">
+                Rules
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#modal-element-settings-calculations" class="nav-link" data-toggle="tab">
+                Calculations
+              </a>
+            </li>
+          </ul>
 
-      <div id="modalElementSettingsContent" class="modal-body" style="display: none; min-height: 800px">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a href="#modal-element-settings-settings" class="nav-link active" data-toggle="tab">
-              Settings
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#modal-element-settings-default-value" class="nav-link" data-toggle="tab">
-              Default Value
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#modal-element-settings-rules" class="nav-link" data-toggle="tab">
-              Rules
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#modal-element-settings-calculations" class="nav-link" data-toggle="tab">
-              Calculations
-            </a>
-          </li>
-        </ul>
+          <div class="tab-content">
 
-        <div class="tab-content">
-
-          <div id="modal-element-settings-settings" class="tab-pane fade show active">
-            
-            <div class="form-group">
-              <label for="txtElementSettingsFieldLabel" class="form-label">Field Label:</label>
-              <input type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control">
-            </div>
-
-            <div class="row">
-
-              <div class="col-xs-12 col-md-6">
-                <div id="modal-element-settings-text-section">
-                  <h4>Text Field</h4>
-                  <hr/>
-
-                  <div class="form-group">
-                    <label for="txtElementSettingsPlaceholderText">Placeholder Text</label>
-                    <input type="text" name="txtElementSettingsPlaceholderText" id="txtElementSettingsPlaceholderText" class="form-control">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="txtElementSettingsLength">Validation Type</label>
-                    <select name="txtElementSettingsValidation" id="txtElementSettingsValidation" class="custom-select">
-                      <option value="">None</option>
-                      <option value="">Text-only</option>
-                      <option value="">Number</option>
-                      <option value="">Alpha-Numeric</option>
-                      <option value="">CC Expiration Date</option>
-                      <option value="">URL</option>
-                      <option value="">Phone Number</option>
-                      <option value="">US Phone Number</option>
-                      <option value="">Currency</option>
-                      <option value="">Whole Number</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div id="modal-element-settings-choices-section">
-                  <h4>Choices</h4>
-                  <hr/>
-
-                  <div class="tab-content">
-
-                    <div class="tab-pane fade show active" id="choices-add-choice">
-                      <div class="form-group">
-                        <textarea name="txtElementChoices" id="txtElementChoices" cols="30" rows="10" class="form-control"></textarea>
-                        <small class="text-muted">Separated by spaces</small>
-                      </div>
-                    
-                    </div>
-
-                  </div>
-
-                </div>
-                
-                <div id="modal-element-settings-choices-row-section" style="display: none">
-                  <h4>Rows</h4>
-                  <hr/>
-                  <div class="tab-content">
-
-                    <div class="tab-pane fade show active" id="choices-add-choice">
-                      <div class="form-group">
-                        <textarea name="txtElementChoicesRow" id="txtElementChoicesRow" cols="30" rows="10" class="form-control"></textarea>
-                        <small class="text-muted">You can place values to each box, just separate them by a coma</small>
-                        <small class="text-muted">Separated by spaces</small>
-                      </div>
-                    
-                    </div>
-
-                  </div>
-
-
-                </div>
-
-              </div>
+            <div id="modal-element-settings-settings" class="tab-pane fade show active">
               
-              <div class="col-xs-12 col-md-6">
-                <div id="modal-element-settings-choices-column-section"  style="display: none">
-                  <h4>Columns</h4>
-                  <hr/>
-                  <div class="tab-content">
-
-                    <div class="tab-pane fade show active" id="choices-add-choice">
-                      <div class="form-group">
-                        <textarea name="txtElementChoicesColumn" id="txtElementChoicesColumn" cols="30" rows="10" class="form-control"></textarea>
-                        <small class="text-muted">You can place values to each box, just separate them by a coma</small>
-                        <small class="text-muted">Separated by spaces</small>
-                      </div>
-                    
-                    </div>
-
-                  </div>
-
-
-                </div>
-                <h4>Style</h4>
-                <hr/>
-                <div class="form-group">
-                  <label for="selElementSize">Element Size</label>
-                  <select name="selElementSize" id="selElementSize" class="custom-select">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                  </select>
-                </div>
-
-
-                <h4>Options</h4>
-                <hr/>
-                
-                <div class="form-check">
-                  <input type="checkbox" name="chkElementSettingsRequired" id="chkElementSettingsRequired" class="form-check-input">
-                  <label for="chkElementSettingsRequired">Required</label>
-                </div>
-
-                <div class="form-check">
-                  <input type="checkbox" name="chkElementSettingsReadonly" id="chkElementSettingsReadonly" class="form-check-input">
-                  <label for="chkElementSettingsReadonly">Read-Only</label>
-                </div>
-
-                <h5>Question Position</h5> 
-                <div class="form-check">
-                  <input type="radio" name="radElementSettingsQuestionPosition" value="1" id="selectedUserElement" class="form-check-input">
-                  <label for="radElementSettingsQuestionPosition">Top</label>
-                </div>
-                <div class="form-check">
-                  <input type="radio" name="radElementSettingsQuestionPosition" value="2" id="selectedUserElement" class="form-check-input">
-                  <label for="radElementSettingsQuestionPosition">Left</label>
-                </div>
-                <div class="form-check">
-                  <input type="radio" name="radElementSettingsQuestionPosition" value="3" id="selectedUserElement" class="form-check-input">
-                  <label for="radElementSettingsQuestionPosition">Right</label>
-                </div>
-                
+              <div class="form-group">
+                <label for="txtElementSettingsFieldLabel" class="form-label">Field Label:</label>
+                <input type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control">
               </div>
-            </div>
 
-          </div>
+              <div class="row">
 
-          <div id="modal-element-settings-default-value" class="tab-pane fade">
-            <div class="row">
-              <div class="col-xs-12 col-md-12">
-                <div class="form-group">
-                  <h4>Default Values</h4>
-                  <hr/>
-                  <label for="txtElementSettingsDefaultValue">Default Value:</label>
-                  <input type="text" name="txtElementSettingsDefaultValue" id="txtElementSettingsDefaultValue" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
+                <div class="col-xs-12 col-md-6">
+                  <div id="modal-element-settings-text-section">
+                    <h4>Text Field</h4>
+                    <hr/>
 
-          <div id="modal-element-settings-rules" class="tab-pane fade">
-            <h4>Display Rules</h4>
-            <hr/>
-            <p>Conditionally show or hide this item. Use this page to configure rules for all items at once.</p>
-            <div class="card">
-              <div class="card-content">
-                <label>Item #1</label>
-                <div class="card">
-                  <div class="card-content">
-
-                    <div class="form-row ">
-                      <div class="col-auto">
-                        <select name="asfd" id="asdf" class="custom-select">
-                          <option value="1">show</option>
-                          <option value="1">hide</option>
-                        </select>
-                      </div>
-                      <div class="col-auto">
-                        this item when 
-                      </div>
-                      <div class="col-auto">
-                        <select name="asfd" id="asdf" class="custom-select">
-                          <option value="1">all</option>
-                          <option value="1">any</option>
-                        </select>
-                      </div>
-                      <div class="col-auto">
-                        of it's criteria match:
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
                     <div class="form-group">
-                      <select name="asdf" id="asdf" class="custom-select">
-                        <option value="sss">always</option>
-                        <option value="sss">page 1</option>
+                      <label for="txtElementSettingsPlaceholderText">Placeholder Text</label>
+                      <input type="text" name="txtElementSettingsPlaceholderText" id="txtElementSettingsPlaceholderText" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="txtElementSettingsLength">Validation Type</label>
+                      <select name="txtElementSettingsValidation" id="txtElementSettingsValidation" class="custom-select">
+                        <option value="">None</option>
+                        <option value="">Text-only</option>
+                        <option value="">Number</option>
+                        <option value="">Alpha-Numeric</option>
+                        <option value="">CC Expiration Date</option>
+                        <option value="">URL</option>
+                        <option value="">Phone Number</option>
+                        <option value="">US Phone Number</option>
+                        <option value="">Currency</option>
+                        <option value="">Whole Number</option>
                       </select>
                     </div>
                   </div>
-                  <div class="col-6">
-                    <button class="btn btn-success">+</button>
-                    <button class="btn btn-danger">-</button>
+
+                  <div id="modal-element-settings-choices-section">
+                    <h4>Choices</h4>
+                    <hr/>
+
+                    <div class="tab-content">
+
+                      <div class="tab-pane fade show active" id="choices-add-choice">
+                        <div class="form-group">
+                          <textarea name="txtElementChoices" id="txtElementChoices" cols="30" rows="10" class="form-control"></textarea>
+                          <small class="text-muted">Separated by spaces</small>
+                        </div>
+                      
+                      </div>
+
+                    </div>
+
+                  </div>
+                  
+                  <div id="modal-element-settings-choices-row-section" style="display: none">
+                    <h4>Rows</h4>
+                    <hr/>
+                    <div class="tab-content">
+
+                      <div class="tab-pane fade show active" id="choices-add-choice">
+                        <div class="form-group">
+                          <textarea name="txtElementChoicesRow" id="txtElementChoicesRow" cols="30" rows="10" class="form-control"></textarea>
+                          <small class="text-muted">You can place values to each box, just separate them by a coma</small>
+                          <small class="text-muted">Separated by spaces</small>
+                        </div>
+                      
+                      </div>
+
+                    </div>
+
+
+                  </div>
+
+                </div>
+                
+                <div class="col-xs-12 col-md-6">
+                  <div id="modal-element-settings-choices-column-section"  style="display: none">
+                    <h4>Columns</h4>
+                    <hr/>
+                    <div class="tab-content">
+
+                      <div class="tab-pane fade show active" id="choices-add-choice">
+                        <div class="form-group">
+                          <textarea name="txtElementChoicesColumn" id="txtElementChoicesColumn" cols="30" rows="10" class="form-control"></textarea>
+                          <small class="text-muted">You can place values to each box, just separate them by a coma</small>  
+                          <small class="text-muted">Separated by spaces</small>
+                        </div>
+                      
+                      </div>
+
+                    </div>
+
+
+                  </div>
+                  <h4>Style</h4>
+                  <hr/>
+                  <div class="form-group">
+                    <label for="selElementSize">Element Size</label>
+                    <select name="selElementSize" id="selElementSize" class="custom-select">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>
+                  </div>
+
+
+                  <h4>Options</h4>
+                  <hr/>
+                  
+                  <div class="form-check">
+                    <input type="checkbox" name="chkElementSettingsRequired" id="chkElementSettingsRequired" class="form-check-input">
+                    <label for="chkElementSettingsRequired">Required</label>
+                  </div>
+
+                  <div class="form-check">
+                    <input type="checkbox" name="chkElementSettingsReadonly" id="chkElementSettingsReadonly" class="form-check-input">
+                    <label for="chkElementSettingsReadonly">Read-Only</label>
+                  </div>
+
+                  <h5>Question Position</h5> 
+                  <div class="form-check">
+                    <input type="radio" name="radElementSettingsQuestionPosition" value="1" id="selectedUserElement" class="form-check-input">
+                    <label for="radElementSettingsQuestionPosition">Top</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" name="radElementSettingsQuestionPosition" value="2" id="selectedUserElement" class="form-check-input">
+                    <label for="radElementSettingsQuestionPosition">Left</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" name="radElementSettingsQuestionPosition" value="3" id="selectedUserElement" class="form-check-input">
+                    <label for="radElementSettingsQuestionPosition">Right</label>
+                  </div>
+                  
+                </div>
+              </div>
+
+            </div>
+
+            <div id="modal-element-settings-default-value" class="tab-pane fade">
+              <div class="row">
+                <div class="col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <h4>Default Values</h4>
+                    <hr/>
+                    <label for="txtElementSettingsDefaultValue">Default Value:</label>
+                    <input type="text" name="txtElementSettingsDefaultValue" id="txtElementSettingsDefaultValue" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="modal-element-settings-rules" class="tab-pane fade">
+              <h4>Display Rules</h4>
+              <hr/>
+              <p>Conditionally show or hide this item. Use this page to configure rules for all items at once.</p>
+              <div class="card">
+                <div class="card-content">
+                  <label>Item #1</label>
+                  <div class="card">
+                    <div class="card-content">
+
+                      <div class="form-row ">
+                        <div class="col-auto">
+                          <select name="asfd" id="asdf" class="custom-select">
+                            <option value="1">show</option>
+                            <option value="1">hide</option>
+                          </select>
+                        </div>
+                        <div class="col-auto">
+                          this item when 
+                        </div>
+                        <div class="col-auto">
+                          <select name="asfd" id="asdf" class="custom-select">
+                            <option value="1">all</option>
+                            <option value="1">any</option>
+                          </select>
+                        </div>
+                        <div class="col-auto">
+                          of it's criteria match:
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select name="asdf" id="asdf" class="custom-select">
+                          <option value="sss">always</option>
+                          <option value="sss">page 1</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <button class="btn btn-success">+</button>
+                      <button class="btn btn-danger">-</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div id="modal-element-settings-calculations" class="tab-pane fade">
+              <div class="row">
+                <div class="col-xs-12 col-md-6">
+                  <h4>Calculation Values</h4>
+                  <hr/>
+                  <p>Assign values for:</p>
+                  <div class="form-check">
+                    <input type="radio" name="radCalculationValues" id="radCalculationOption1" class="form-check-input">
+                    <label for="radCalculationOption1">Entire Item</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" name="radCalculationValues" id="radCalculationOption2" class="form-check-input">
+                    <label for="radCalculationOption2">Each Choice</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" name="radCalculationValues" id="radCalculationOption3" class="form-check-input">
+                    <label for="radCalculationOption3">Directly</label>
+                  </div>
+                  <p>The number that users enter will be the value.</p>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                  <h4>Scoring</h4>
+                  <hr/>
+                  <div class="form-check">
+                    <input type="checkbox" name="chkElementSettingsScoringCheck" id="chkElementSettingsScoringCheck" class="form-check-input">
+                    <label for="chkElementSettingsScoringCheck">Enable Scoring</label>
+                    <small>Include Value in Scoring total.</small>
                   </div>
                 </div>
               </div>
@@ -1118,41 +1184,10 @@
 
           </div>
 
-          <div id="modal-element-settings-calculations" class="tab-pane fade">
-            <div class="row">
-              <div class="col-xs-12 col-md-6">
-                <h4>Calculation Values</h4>
-                <hr/>
-                <p>Assign values for:</p>
-                <div class="form-check">
-                  <input type="radio" name="radCalculationValues" id="radCalculationOption1" class="form-check-input">
-                  <label for="radCalculationOption1">Entire Item</label>
-                </div>
-                <div class="form-check">
-                  <input type="radio" name="radCalculationValues" id="radCalculationOption2" class="form-check-input">
-                  <label for="radCalculationOption2">Each Choice</label>
-                </div>
-                <div class="form-check">
-                  <input type="radio" name="radCalculationValues" id="radCalculationOption3" class="form-check-input">
-                  <label for="radCalculationOption3">Directly</label>
-                </div>
-                <p>The number that users enter will be the value.</p>
-              </div>
-              <div class="col-xs-12 col-md-6">
-                <h4>Scoring</h4>
-                <hr/>
-                <div class="form-check">
-                  <input type="checkbox" name="chkElementSettingsScoringCheck" id="chkElementSettingsScoringCheck" class="form-check-input">
-                  <label for="chkElementSettingsScoringCheck">Enable Scoring</label>
-                  <small>Include Value in Scoring total.</small>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
-
       </div>
+
+      
     </div>
   </div>
 </div>
@@ -1187,7 +1222,6 @@
       dataType: 'json',
       type: 'GET',
       success: function(res){
-        // console.log(res.data)
         let data = {
           "fe_form_id": <?= $form->forms_id?>,
           "fe_element_id": res.data.fe_element_id,
@@ -1221,8 +1255,6 @@
   editElement = elementId => {
     // opens up an interface of the element, allowing users
     // to make changes to a single element
-    console.log("editing element")
-    console.log(elementId)
 
     $('#modalElementSettings').modal('show')
     document.querySelector('#modalElementSettingsContent').style.display = "none"
@@ -1251,6 +1283,27 @@
             async: false
           }).responseText).data;
           document.querySelector("#txtElementChoices").value = choices.map(choice => `${choice.fc_choice}`).join("\n")
+        }else if(element.fe_element_id > 43 ){
+          choices = JSON.parse($.ajax({
+            url: `${formBaseUrl}formbuilder/form/element/choices/${element.fe_id}`,
+            dataType: 'json',
+            type: 'GET',
+            async: false
+          }).responseText).data;
+
+          rowChoices = choices.filter(choice => {
+            return choice.fc_column == null;
+          }).sort((a,b)=>{
+            return a.fc_row < b.fc_row;
+          })
+          columnChoices = choices.filter(choice => {
+            return choice.fc_row == null;
+          }).sort((a,b)=>{
+            return a.fc_column < b.fc_column;
+          })
+
+          document.querySelector("#txtElementChoicesRow").value = rowChoices.map(choice => `${choice.fc_choice}`).join("\n")
+          document.querySelector("#txtElementChoicesColumn").value = columnChoices.map(choice => `${choice.fc_choice}`).join("\n")
         }else{
           document.querySelector("#txtElementChoices").value = ""
         }
@@ -1267,7 +1320,7 @@
           document.querySelector('#modal-element-settings-text-section').style.display = "block"
         }
         
-        if(element.fe_element_id == 44 || element.fe_element_id == 45 || element.fe_element_id == 46 || element.fe_element_id == 47 || element.fe_element_id == 48){
+        if(element.fe_element_id == 44 || element.fe_element_id == 45 || element.fe_element_id == 46 || element.fe_element_id == 47 || element.fe_element_id == 48 || element.fe_element_id == 50){
           document.querySelector('#modal-element-settings-choices-row-section').style.display = "block"
           document.querySelector('#modal-element-settings-choices-column-section').style.display = "block"
         }
@@ -1276,7 +1329,6 @@
     })
 
     setTimeout(() => {
-      console.log(element.fe_element_id);
       selectedUserElement = element;
       document.querySelector('#modalElementSettingsLoadingContent').style.display = "none"
       document.querySelector('#modalElementSettingsContent').style.display = "block"
@@ -1324,6 +1376,8 @@
         const values = document.querySelector("#txtElementChoices").value.split("\n");
         const valuesRow = document.querySelector("#txtElementChoicesRow").value.split("\n");
         const valuesColumn = document.querySelector("#txtElementChoicesColumn").value.split("\n");
+        
+        
         if(values != ""){
           
           $.ajax({
@@ -1352,53 +1406,86 @@
               })
             }
           })
+        }else if(valuesRow != '' && valuesColumn != ''){
           
-          
+          $.ajax({
+            url: `${formBaseUrl}formbuilder/form/element/choices/delete/${selectedUserElement.fe_id}`,
+            dataType: 'json',
+            type: 'POST',
+            success: function(res){
+              valuesRow.map( (value, key) => {
+                let choicesdata = {
+                  "fc_element_id": selectedUserElement.fe_id,
+                  "fc_choice": value,
+                  "fc_is_correct_answer": 0,
+                  "fc_row": key
+                }
+
+                if(value == ""){
+                  choicesdata.choice = null
+                }
+                
+                if(value.includes(',')){
+                  value = value.split(',');
+                  value.map((a, i)=>{
+                    choicesdata.fc_choice = a;
+                    choicesdata.fc_column = i;
+                    $.ajax({
+                      url: `${formBaseUrl}formbuilder/form/element/choices/add`,
+                      data: choicesdata,
+                      dataType: 'json',
+                      type: 'POST',
+                      success: function(){
+                        return
+                      }
+                    })
+                  })
+                }else{
+                  $.ajax({
+                    url: `${formBaseUrl}formbuilder/form/element/choices/add`,
+                    data: choicesdata,
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function(){
+                      return
+                    }
+                  })
+                }
+                
+              })
+
+              valuesColumn.map( (value, key) => {
+                let choicesdata = {
+                  "fc_element_id": selectedUserElement.fe_id,
+                  "fc_choice": value,
+                  "fc_is_correct_answer": 0,
+                  "fc_column": key
+                }
+                
+                
+                if(value == ""){
+                  choicesdata.choice = null
+                }
+
+                $.ajax({
+                  url: `${formBaseUrl}formbuilder/form/element/choices/add`,
+                  data: choicesdata,
+                  dataType: 'json',
+                  type: 'POST',
+                  success: function(){
+                    return
+                  }
+                })
+              })
+
+            }
+          })
         }
+
         loadFormSettings(<?= $form->forms_id?>);
         loadFormElements(<?= $form->forms_id?>, "edit");
+        $('#modalElementSettings').modal('hide')
 
-        if(valuesRow != '' && valuesColumn != ''){
-          valuesRow.map( (value, key) => {
-            let choicesdata = {
-              "fc_element_id": selectedUserElement.fe_id,
-              "fc_choice": value,
-              "fc_is_correct_answer": 0,
-              "fc_row": key
-            }
-            
-            $.ajax({
-              url: `${formBaseUrl}formbuilder/form/element/choices/add`,
-              data: choicesdata,
-              dataType: 'json',
-              type: 'POST',
-              success: function(){
-                
-                $('#modalElementSettings').modal('hide')
-              }
-            })
-          })
-          valuesColumn.map( (value, key) => {
-            let choicesdata = {
-              "fc_element_id": selectedUserElement.fe_id,
-              "fc_choice": value,
-              "fc_is_correct_answer": 0,
-              "fc_column": key
-            }
-            
-            $.ajax({
-              url: `${formBaseUrl}formbuilder/form/element/choices/add`,
-              data: choicesdata,
-              dataType: 'json',
-              type: 'POST',
-              success: function(){
-                
-                $('#modalElementSettings').modal('hide')
-              }
-            })
-          })
-        }
-        
       }
 
     })
@@ -1411,7 +1498,6 @@
     loadFormSettings(<?= $form->forms_id?>);
     loadFormElements(<?= $form->forms_id?>, "edit");
     setTimeout(() => {
-      console.log(formUserElements.length)
     }, 500);
   };
 
@@ -1504,9 +1590,6 @@
   $('#windowPreviewContent').sortable({
     placeholder: 'col-xs-12 col-sm-3  bg-light card',
     update: function(event, ui){
-      console.log(event)
-      console.log(ui)
-      
       $(this).sortable("toArray").map((item, i)=>{
         let id = item.split('-')[2];
         let data = {

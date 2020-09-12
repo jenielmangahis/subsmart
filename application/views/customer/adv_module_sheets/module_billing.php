@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class=" module_ac">
+<div class=" module_ac" >
     <div class="row">
         <div class="col-md-12 module_header">
             <p class="module_title">Billing Information</p>
@@ -313,7 +313,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 form-line">
+            <!--<div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="">Collections Date</label>
@@ -342,7 +342,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" class="form-control date_picker" name="contract_ext_date" id="contract_ext_date" />
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
