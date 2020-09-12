@@ -96,30 +96,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <label><b>Calendar Account</b></label>
                                     <div class="form-group">
-                                        <label>Google Email</label>
                                         <div class='input-group date timepicker'>
-                                            <input type='text'
-                                                   name="google_email" class="form-control"
-                                                   value=""
-                                                   id="google_email"/>
+                                            <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                              <small class="plan">Gmail Account</small><br/>
+                                              <i class="fab fa-google"></i>
+                                              <big>Gmail / G Suite</big>
+                                            </a> 
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Outlook Email</label>
                                         <div class='input-group date timepicker'>
-                                            <input type='text'
-                                                   name="google_email" class="form-control"
-                                                   value=""
-                                                   id="google_email"/>
+                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                              <small class="plan">Hotmail Account</small><br/>
+                                              <i class="fab fa-hotmail"></i>
+                                              <big>Microsoft Hotmail</big>
+                                            </a> 
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Apple Email</label>
                                         <div class='input-group date timepicker'>
-                                            <input type='text'
-                                                   name="google_email" class="form-control"
-                                                   value=""
-                                                   id="google_email"/>
+                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                              <small class="plan">Apple Account</small><br/>
+                                              <i class="fab fa-apple"></i>
+                                              <big>Apple</big>
+                                            </a> 
                                         </div>
                                     </div>
                                 </div>
@@ -235,3 +235,39 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script src="https://apis.google.com/js/client.js?onload=checkAuth"/></script>
+<script type="text/javascript">
+function checkAuth() {
+  gapi.auth.authorize({
+    'client_id' : "<?= $google_credentials['client_id']; ?>",
+    'scope' : 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
+    'prompt' : 'consent',
+    'access_type' : 'offline',
+    'response_type': 'code token',
+  }, handleAuthResult);
+}
+
+function handleAuthResult(authResult) {
+  //console.log(authResult);  
+  var msg1 = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Connecting Gmail Account...</div>';
+  var url = base_url + "settings/create_google_account";
+  var auth_code = authResult['code'];
+  if (typeof auth_code !== "undefined") {
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data:{token: authResult['code']},
+      dataType: 'json',
+      beforeSend: function(data) {
+        
+      },
+      success: function(data) {  
+        location.href = base_url + 'settings/schedule';        
+      },    
+      error: function(e) {
+        console.log(e);
+      }
+    });
+  }
+}
+</script>

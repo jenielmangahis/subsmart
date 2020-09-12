@@ -11,19 +11,19 @@ class Accounting_sales_receipt_model extends MY_Model {
 	}
 
 	public function getSalesReceipts(){
-	    $vendor = $this->db->get('accounting_sales_receipt');
-	    return $vendor->result();
+	    $query = $this->db->get('accounting_sales_receipt');
+	    return $query->result();
     }
 	public function createSalesReceipt($data){
-	    $vendor = $this->db->insert('accounting_sales_receipt', $data);
+	    $query = $this->db->insert('accounting_sales_receipt', $data);
 	    $insert_id = $this->db->insert_id();
 
 		return  $insert_id;
     }
 	public function updateSalesReceipt($id, $data){
 	    $this->db->where('id', $id);
-		$vendor = $this->db->update('accounting_sales_receipt', $data);
-		if($vendor){
+		$query = $this->db->update('accounting_sales_receipt', $data);
+		if($query){
 			return true;
 		}else{
 			return false;
@@ -39,7 +39,7 @@ class Accounting_sales_receipt_model extends MY_Model {
         }
     }
 	public function getSalesReceiptDetails($id){
-	    $vendor = $this->db->get_where('accounting_sales_receipt', array('id' => $id));
-	    return $vendor->result();
+	    $query = $this->db->get_where('accounting_sales_receipt', array('id' => $id));
+	    return $query->result();
     }
 }

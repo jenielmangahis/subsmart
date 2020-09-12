@@ -59,9 +59,13 @@ class MY_Model extends CI_Model {
 	public function getById($id)
 
 	{
-
 		return $this->db->get_where($this->table, [ $this->table_key => $id ])->row();
+	}
 
+	public function getByIdArray($id)
+
+	{
+		return $this->db->get_where($this->table, [ $this->table_key => $id ])->row_array();
 	}
 
 
@@ -317,7 +321,7 @@ class MY_Model extends CI_Model {
 
 	  */
 
-	public function getByWhere($whereArg, $args = [])
+	public function getByWhere($whereArg, $args = [], $toArray = false)
 
 	{	
 
@@ -326,9 +330,11 @@ class MY_Model extends CI_Model {
 			$this->db->order_by($args['order'][0], $args['order'][1]);
 
 
-
-		return $this->db->get_where($this->table, $whereArg)->result();
-
+		if(!$toArray){
+			return $this->db->get_where($this->table, $whereArg)->result();
+		} else {
+			return $this->db->get_where($this->table, $whereArg)->result_array();
+		}
 	}
     
 	public function getRowByWhere($whereArg, $row){	

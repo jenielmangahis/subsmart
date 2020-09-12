@@ -13,6 +13,7 @@ class Vault extends MY_Controller {
 		$this->page_data['page']->menu = 'vault';
 
 		$this->company_folder = getCompanyFolder();
+		$this->load->model(array('file_folders_permissions_roles_model','file_folders_permissions_users_model'));
 	}
 
 	public function index()
@@ -419,6 +420,29 @@ class Vault extends MY_Controller {
 		}
 
 		echo json_encode($return);	
+	}
+
+	public function getRolesAndUsers(){
+		$company_id = logged('company_id');
+
+		$return = array(
+			'roles' => $this->roles_model->getByWhere(array('company_id' => $company_id),[],true),
+			'users' => $this->users_model->getByWhere(array('company_id' => $company_id),[],true)
+		);
+
+		echo json_encode($return);
+	}
+
+	public function getRolePermissions($id){
+		$return = $this->file_folders_permissions_roles_model->getByIdArray($id);
+
+		echo json_encode($return);
+	}
+
+	public function getUserPermissions($id){
+		$return = $this->file_folders_permissions_users_model->getByIdArray($id);
+
+		echo json_encode($return);
 	}
 }
 

@@ -7,24 +7,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .module_ac {
         background: #f2f2f2;
         border-radius: 1px;
-        flex-direction: column; /*added*/
-        display: inline-block;
-        grid-gap: 15px;
-        position: relative;
         padding-right: 15px;
         padding-left: 15px;
-        padding-bottom: 15px;
-        border: 2px solid #32243d !important;
+        padding-bottom: 10px;
+        border: 1px solid #32243d !important;
         margin-left: 10px;
         margin-bottom: 20px;
-        float: left;
-        overflow-y:auto;
-        overflow-x: auto;
         white-space: nowrap;
         flex-flow: wrap;
-        flex: 0 0 31.666667%;
-        max-width: 28%;
-        height: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
     }
     .module_ac_full {
         background: #f2f2f2;
@@ -70,14 +62,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         background-color: #32243d;
         color : #fff;
         text-align: center;
-        font-size: 15px;
-        font-weight: bold;
-        max-height: 30px;
+        font-size: 11px;
+        max-height: 20px;
         max-width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 3px;
     }
     .module_title{
-        padding-top: 3px;
+        padding-top: 1px;
     }
 
     .required{
@@ -86,8 +77,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     .form-control  {
         font-size: 11px !important;
-        height: 24px !important;
-        line-height: 10%;
+        height: 20px !important;
+        line-height: 5%;
     }
     .form-controls{
         font-size: 11px !important;
@@ -138,76 +129,80 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h4>New Advance Customer</h4>
                             <ol class="breadcrumb">
                                 <!--<li class="breadcrumb-item active">Add your new customer.</li>-->
-                                <?php if (!isset($profile_info)){ ?>
-                                    <li class="breadcrumb-item active">* Fill up Profile form in order to open up other modules *</li>
-                                <?php }else{
-                                    ?>
-                                    <li class="breadcrumb-item active">* Update customer info per module. *</li>
-                                    <?php
-                                } ?>
                             </ol>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="float-right d-none d-md-block" >
-                                <div class="dropdown">
-                                    <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('customer') ?>" class="btn btn-primary" aria-expanded="false">
-                                        <span class="fa fa-arrow-alt-circle-left"></span> Go Back to Customer
-                                    </a>
-                                    <?php //endif ?>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row" >
+                <div class="row">
                     <div class="col-md-12">
                         <div class="cards">
                             <div class="card-body">
-
                                 <div class="row" >
                                     <div class="col-md-12">
                                         <div class="cards">
                                             <div class="card-body">
-                                <div class="module_ac_">
-                                </div>
-                                <div class="col-md-12">
-                                    <form id="customer_form">
-                                        <div class="row pull-right">
-                                            <button type="button" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-remove"></span> Cancel </button> &nbsp;
-                                            <a href="<?php echo base_url('customer') ?>"><button type="submit" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button></a>
+                                                <div class="col-md-12">
+                                                    <form id="customer_form">
+                                                        <div class="row">
+                                                            <table cellpadding="0" cellspacing="0" width="900">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td align="left" valign="top">
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_profile');
+                                                                                ?>
+                                                                            </table>
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_billing');
+                                                                                ?>
+                                                                            </table>
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_alarm');
+                                                                                ?>
+                                                                            </table>
+                                                                        </td>
+                                                                        <td align="left" valign="top">
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_office');
+                                                                                ?>
+                                                                            </table>
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_access');
+                                                                                ?>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <a href="<?php echo base_url('customer') ?>">
+                                                                        <button type="button" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-remove"></span> Cancel </button> &nbsp;
+                                                                    </a>
+                                                                    <button type="submit" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6"></div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="row">
-                                            <?php
-                                                include viewPath('customer/adv_module_sheets/module_profile');
-
-                                                include viewPath('customer/adv_module_sheets/module_billing');
-                                            include viewPath('customer/adv_module_sheets/module_office');
-                                                //include viewPath('customer/adv_module_sheets/module_account');
-                                                //include viewPath('customer/adv_module_sheets/module_address');
-                                                include viewPath('customer/adv_module_sheets/module_access');
-                                                include viewPath('customer/adv_module_sheets/module_alarm');
-
-                                                //include viewPath('customer/adv_module_sheets/module_admin');
-                                                // include viewPath('customer/adv_module_sheets/module_tech');
-
-                                                //include viewPath('customer/adv_module_sheets/module_custom');
-                                                //include viewPath('customer/adv_module_sheets/module_payment');
-                                                //include viewPath('customer/adv_module_sheets/module_owner');
-                                            ?>
-                                        </div>
-                                        <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
-
-                                    </form>
+                                    </div> <!-- end card -->
+                                     <br><br><br>
                                 </div>
+                            </div>
                         </div>
                     </div>
-                </div> <!-- end card -->
-                <br><br><br>
-            </div>
-        </div>
-    </div>
         <!-- end container-fluid -->
 
                         <!-- Lead Type Modal -->
@@ -333,9 +328,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
         }
     });
 </script>
-<style>
-    .select2-container--open{       z-index: 0;}
-    span.select2-selection.select2-selection--single {
-        font-size: 16px;
-    }
-</style>
