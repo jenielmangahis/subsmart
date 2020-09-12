@@ -317,6 +317,9 @@ class Workcalender extends MY_Controller
 
         $calendar_list = $data->getItems();             
 
+        $email = $google_user_api->google_email;
+        
+        $this->page_data['gmail_email'] = $email;
         $this->page_data['get_recent_users'] = $get_recent_users;
         $this->load->model('Users_model', 'user_model');
         $this->page_data['resources_users'] = $resources_users;
