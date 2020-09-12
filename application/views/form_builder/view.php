@@ -2,6 +2,39 @@
   <title><?= $form->forms_title?> | nSmarTrac Form</title>
   <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    .form-group{
+      margin: 0
+    }
+
+    .form-control{
+      height: 1.5em
+    }
+
+    label{
+      font-weight: 500
+    }
+
+    p{
+      font-weight: 500;
+    }
+
+    .table td{
+      padding: 0
+    }
+
+    
+    @media print{
+      @page{
+        margin: 0,
+      }
+      body{
+        margin: 0
+      }
+    };
+  </style>
+  
 </head>
 <body>
   
@@ -18,7 +51,7 @@
 
             
           <button type="submit" id="btnFormSubmit" class="btn btn-success btn-block"><i class="fa fa-arrow-circle-up"></i> Submit</button>
-          <button class="btn btn-link btn-block text-muted">I want to answer this form from scratch again</button>
+          <button id="btnRedo" class="btn btn-link btn-block text-muted">I want to answer this form from scratch again</button>
         <?= form_close();?>
       </div>
 
@@ -35,7 +68,11 @@
       loadFormElements(<?= $form->forms_id?>);
     }
 
-    
+    window.print()
+
+    document.querySelector('#btnFormSubmit').addEventListener("click", () => {
+      window.alert("Form submitted");
+    })
 
   </script>
 </body>

@@ -192,21 +192,72 @@ class FormBuilder extends MY_Controller {
 
 	public function submitForm($form_id){
 		
-		echo "<pre>";
-		var_dump($this->input->post());
-		// var_dump($_FILES);
-		exit;
-
 		$sid = rand(100000000,999999999);
 		foreach($this->input->post() as $key => $answer){
-			$data = array(
-				"fa_form_id" => $form_id,
-				"fa_element_id" => explode('-', $key)[1],
-				"fa_value" => $answer,
-				"fa_session_id" => $sid
-			);
-			$this->formsbuilder_model->submitAnswers($data);
+			$input = explode("-", $key);
+
+			if($input[0] == "feinput"){
+				$data = array(
+					"fa_form_id" => $form_id,
+					"fa_element_id" => $input[1],
+					"fa_value" => $answer,
+					"fa_session_id" => $sid,
+					"fa_row" => null, 
+					"fa_column" => null
+				);
+				
+
+				// echo "<pre>";
+				// var_dump($this->input->post());
+				// var_dump($data);
+				// exit;
+				// var_dump($input);
+				// var_dump(explode("-", $key));
+				// var_dump(explode("-", $key)[2]);
+
+				
+				if($answer != null || !empty($answer)){
+					if(!empty($input[2])){
+						$type = $input[2];
+						
+						
+						switch($type){
+							case "date":
+								// $this->formsbuilder_model->submitAnswers($data);
+							break;
+							case "chk":
+								// $this->formsbuilder_model->submitAnswers($data);
+							break;
+							case "chkmtx":
+								$data["fa_row"] = $input[3];
+								if(!empty($input[4])){
+									$data["fa_column"] = $input[4];
+								}
+								// $this->formsbuilder_model->submitAnswers($data);
+							break;
+							case "rad":
+								// $this->formsbuilder_model->submitAnswers($data);
+							break;
+							case "radmtx":							
+								$data["fa_value"] = $answer;
+								$data["fa_column"] = $input[3];
+								if(!empty($input[4])){
+									$data["fa_row"] = $input[4];
+								}
+								// $this->formsbuilder_model->submitAnswers($data);
+							break;
+						}
+					}else{
+						if($answer != null || !empty($answer)){
+							$this->formsbuilder_model->submitAnswers($data);
+						}
+					}
+				}
+
+			}
+			
 		}
+		exit;
 		redirect('form/'.$form_id);
 		exit;
 	}

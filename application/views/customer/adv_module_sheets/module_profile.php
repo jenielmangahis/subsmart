@@ -87,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-4">
                         <label for="">Middle Initial</label>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <input type="text" class="form-control" maxlength="2" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
                     </div>
                 </div>

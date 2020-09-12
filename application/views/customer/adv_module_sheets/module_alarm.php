@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class=" module_ac" style="top: -690px;">
+<div class=" module_ac" style="top: -610px;">
     <div class="row">
         <div class="col-md-12 module_header">
             <p class="module_title">Alarm Information</p>

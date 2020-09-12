@@ -20,6 +20,8 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
+        $this->load->model('accounting_delayed_charge_model');
+        $this->load->model('accounting_sales_time_activity_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1911,7 +1913,7 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $updateQuery = $this->accounting_invoices_model->updateInvoice($new_data);
+        $updateQuery = $this->accounting_invoices_model->updateInvoice($this->input->post('id'), $new_data);
 
         if($addQuery){
             echo json_encode(1);
@@ -1974,7 +1976,7 @@ class Accounting extends MY_Controller {
             'date_modified' => date("Y-m-d H:i:s")
         );
 
-        $updateQuery = $this->accounting_receive_payment_model->updateReceivePayment($new_data);
+        $updateQuery = $this->accounting_receive_payment_model->updateReceivePayment($this->input->post('id'), $new_data);
 
         if($updateQuery){
             echo json_encode(1);
@@ -2031,6 +2033,51 @@ class Accounting extends MY_Controller {
         }
     }
 	
+	public function updateSalesReceipt()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'email' => $this->input->post('email'),
+            'sales_receipt_date' => $this->input->post('sales_receipt_date'),
+            'billing_address' => $this->input->post('billing_address'),
+            'location_scale' => $this->input->post('location_scale'),
+            'payment_method' => $this->input->post('payment_method'),
+            'ref_number' => $this->input->post('ref_number'),
+            'deposit_to' => $this->input->post('deposit_to'),
+            'products' => $this->input->post('products'),
+            'description' => $this->input->post('description'),
+            'qty' => $this->input->post('qty'),
+            'rate' => $this->input->post('rate'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'message_displayed_on_sales_receipt' => $this->input->post('message_displayed_on_sales_receipt'),
+            'message_on_statement' => $this->input->post('message_on_statement'),
+            'attachments' => $this->input->post('file_name'),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $updateQuery = $this->accounting_sales_receipt_model->updateSalesReceipt($this->input->post('id'), $new_data);
+
+        if($updateQuery > 0){
+            echo json_encode($updateQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function deleteSalesReceipt(){
+        $id = $this->input->post('id');
+        $query = $this->accounting_sales_receipt_model->deleteSalesReceipt($id);
+
+        if($query){
+            echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
 	public function addCreditMemo()
     {
         $new_data = array(
@@ -2065,4 +2112,102 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
+	
+	public function updateCreditMemo()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'email' => $this->input->post('email'),
+            'credit_memo_date' => $this->input->post('credit_memo_date'),
+            'billing_address' => $this->input->post('billing_address'),
+            'location_scale' => $this->input->post('location_scale'),
+            'products' => $this->input->post('products'),
+            'description' => $this->input->post('description'),
+            'qty' => $this->input->post('qty'),
+            'rate' => $this->input->post('rate'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'message_displayed_on_credit_memo' => $this->input->post('message_displayed_on_credit_memo'),
+            'message_on_statement' => $this->input->post('message_on_statement'),
+            'tax_rate' => $this->input->post('tax_rate'),
+            'see_the_math' => $this->input->post('see_the_math'),
+            'attachments' => $this->input->post('file_name'),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $updateQuery = $this->accounting_credit_memo_model->updateCreditMemo($this->input->post('id'), $new_data);
+
+        if($updateQuery > 0){
+            echo json_encode($updateQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function deleteCreditMemo(){
+        $id = $this->input->post('id');
+        $query = $this->accounting_credit_memo_model->deleteCreditMemo($id);
+
+        if($query){
+            echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function addDelayedCharge()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'delayed_charge_date' => $this->input->post('delayed_charge_date'),
+            'products' => $this->input->post('products'),
+            'description' => $this->input->post('description'),
+            'qty' => $this->input->post('qty'),
+            'rate' => $this->input->post('rate'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'memo' => $this->input->post('memo'),
+            'attachments' => $this->input->post('file_name'),
+            'status' => 1,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_delayed_charge_model->createDelayedCharge($new_data);
+
+        if($addQuery > 0){
+            echo json_encode($addQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function addSalesTimeActivity(){
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'date' => $this->input->post('date'),
+            'name' => $this->input->post('name'),
+            'customer' => $this->input->post('customer'),
+            'service' => $this->input->post('service'),
+            'billable' => $this->input->post('billable'),
+            'taxable' => $this->input->post('taxable'),
+            'start_time' => $this->input->post('start_time'),
+            'end_time' => $this->input->post('end_time'),
+            'break' => $this->input->post('breakTime'),
+            'time' => $this->input->post('time'),
+            'description' => $this->input->post('description')
+        );
+        $query = $this->accounting_sales_time_activity_model->createTimeActivity($new_data);
+        if ($query){
+             echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+
+	
 }

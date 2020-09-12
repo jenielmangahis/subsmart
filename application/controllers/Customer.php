@@ -110,15 +110,17 @@ class Customer extends MY_Controller
 
         $input_profile = array();
         $input_billing = array();
-        $input_account = array();
-        $input_address = array();
         $input_alarm = array();
         $input_office = array();
+        $input_access = array();
+
+        $input_account = array();
+        $input_address = array();
         $input_admin = array();
         $input_tech = array();
         $input_custom = array();
         $input_payment = array();
-        $input_access = array();
+
 
         $input_profile['fk_user_id'] = logged('id');
         $input_profile['fk_sa_id'] = $input['fk_sa_id'];
@@ -143,6 +145,7 @@ class Customer extends MY_Controller
         $input_profile['cross_street'] = $input['cross_street'];
         $input_profile['subdivision'] = $input['subdivision'];
         $input_profile['img_path'] = $input['img_path'];
+        $input_profile['pay_history'] = $input['pay_history'];
 
         // billing data
         $input_billing['card_fname'] = $input['card_fname'];
