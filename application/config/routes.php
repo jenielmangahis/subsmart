@@ -286,6 +286,8 @@ $route['settings/email_templates'] = 'Settings/email_templates';
 $route['settings/sms_templates'] = 'Settings/sms_templates';
 $route['settings/email_branding'] = 'Settings/email_branding';
 $route['settings/online_payments'] = 'Settings/online_payments';
+$route['settings/_update_enabled_google_calendar'] = 'Settings/ajax_update_enabled_google_calendar';
+$route['settings/_get_google_enabled_calendars'] = 'Settings/ajax_get_google_enabled_calendars';
 
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';

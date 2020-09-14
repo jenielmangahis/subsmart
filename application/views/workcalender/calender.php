@@ -100,6 +100,130 @@ img.calendar-user-profile {
 .hide{
     display: none;
 }
+
+/*Tooltip*/
+.tooltip-table td{
+  text-align: left;
+}
+.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
+    width: 101% !important;
+}
+.tooltip{
+  opacity: 1;
+}
+.calendar-tooltip .tooltip-inner{
+  background: #0B92FB;
+  color : #ffffff;
+}
+.calendar-tooltip .popper,.calendar-tooltip .tooltip {
+    position: absolute;
+    z-index: 9999;
+    background: #0B92FB;
+    color: #ffffff;
+    width: auto;
+    border-radius: 3px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    padding: 10px;
+    text-align: center;
+  }
+  .calendar-tooltip .style5 .tooltip {
+    background: #1E252B;
+    color: #FFFFFF;
+    max-width: 200px;
+    width: auto;
+    font-size: .8rem;
+    padding: .5em 1em;
+  }
+  .calendar-tooltip .popper .popper__arrow,
+  .calendar-tooltip .tooltip .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+  }
+
+  .calendar-tooltip .tooltip .tooltip-arrow,
+  .calendar-tooltip .popper .popper__arrow {
+    border-color: #0B92FB;
+  }
+  .calendar-tooltip .style5 .tooltip .tooltip-arrow {
+    border-color: #1E252B;
+  }
+  .calendar-tooltip .popper[x-placement^="top"],
+  .calendar-tooltip .tooltip[x-placement^="top"] {
+    margin-bottom: 5px;
+  }
+  .calendar-tooltip .popper[x-placement^="top"] .popper__arrow,
+  .calendar-tooltip .tooltip[x-placement^="top"] .tooltip-arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .calendar-tooltip .popper[x-placement^="bottom"],
+  .calendar-tooltip .tooltip[x-placement^="bottom"] {
+    margin-top: 5px;
+  }
+  .calendar-tooltip .tooltip[x-placement^="bottom"] .tooltip-arrow,
+  .calendar-tooltip .popper[x-placement^="bottom"] .popper__arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .calendar-tooltip .tooltip[x-placement^="right"],
+  .calendar-tooltip .popper[x-placement^="right"] {
+    margin-left: 5px;
+  }
+  .calendar-tooltip .popper[x-placement^="right"] .popper__arrow,
+  .calendar-tooltip .tooltip[x-placement^="right"] .tooltip-arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    left: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .calendar-tooltip .popper[x-placement^="left"],
+  .calendar-tooltip .tooltip[x-placement^="left"] {
+    margin-right: 5px;
+  }
+  .calendar-tooltip .popper[x-placement^="left"] .popper__arrow,
+  .calendar-tooltip .tooltip[x-placement^="left"] .tooltip-arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    right: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .right-calendar-loading{
+    position: absolute;
+    width: 90%;
+    left: 16px;  
+    top: 217px;
+    z-index: 99999;
+  }
+  .right-calendar-loading .alert-info{
+    border: 1px solid;
+  }
+  .right-calendar-loading img{
+    display: inline-block;
+    margin-right: 10px;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -238,7 +362,9 @@ img.calendar-user-profile {
         <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow-y: scroll; max-height: 800px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
+                    <div class="right-calendar-loading"></div>
                     <div id="right-calendar"></div>
+                    <div class="calendar-tooltip"></div>
                 </div>
                 <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">FILTER BY TIME OFF</h4>
@@ -256,7 +382,13 @@ img.calendar-user-profile {
                     <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
                     <ul class="right-list-events">
                         <?php foreach($calendar_list as $calendar) { ?>
-                                <li><label class="checkbox"><input type="checkbox" class=""> <?php echo $calendar['summary']; ?></label></li>
+                                <?php 
+                                    $is_checked = "";
+                                    if(in_array($calendar['id'], $enabled_calendar)){
+                                        $is_checked = 'checked="checked"';
+                                    }
+                                ?>
+                                <li><label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label></li>
                         <?php } ?> 
                     </ul>
                 </div>
@@ -382,6 +514,7 @@ img.calendar-user-profile {
 </style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script type="text/javascript" src="<?php echo $url->assets ?>/js/tooltip.min.js"></script>
 <script>
     var calendar;
 
@@ -698,30 +831,6 @@ img.calendar-user-profile {
 
 
 <script>
-    var calendarEl = document.getElementById('right-calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        schedulerLicenseKey: '0531798248-fcs-1598103289',
-        googleCalendarApiKey: 'AIzaSyAzt0c6Rxf0SJo6bsCc046g7671s7TEj_U',
-        events: {
-            googleCalendarId: '<?php echo $gmail_email; ?>'
-        }
-      /*headerToolbar: {
-        center: 'monthView,dayView' // buttons for switching between views
-      },
-      views: {
-        dayView: {
-          type: 'timeGridDay',
-          buttonText: 'Day'
-        },
-        monthView: {
-          type: 'dayGridMonth',
-          buttonText: 'Month'
-        }
-      }*/
-    });
-
-    calendar.render();
-
     $(".btn-right-nav-hide-show").click(function(){
         if( $(this).hasClass("show-right") ){
             $(this).removeClass("show-right");
@@ -748,4 +857,60 @@ img.calendar-user-profile {
         window.open("<?php echo base_url('workcalender/print_calender') ?>"+'?default_view='+defaultView, '_blank');
         //+'&default_date='+defaultDate;
     });
+
+    $(".chk-calendar-entries").change(function(){
+        var cid = $(this).attr("data-id");
+        var url = base_url + '/settings/_update_enabled_google_calendar';
+        if ($(this).is(':checked')) {
+            var show_calendar = 1;
+        }else{
+            var show_calendar = 0;
+        }
+
+        $.ajax({
+           type: "POST",
+           url: url,      
+           data: {cid:cid, show_calendar:show_calendar},
+           success: function(o)
+           {
+              load_calendar();
+           }
+        });
+    });
+
+    function load_calendar(){
+        var events_url = base_url + "/settings/_get_google_enabled_calendars";
+        var calendarEl = document.getElementById('right-calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          schedulerLicenseKey: '0531798248-fcs-1598103289',
+          initialView: 'dayGridMonth',      
+          events: {
+            url: events_url,
+            method: 'POST'
+          },
+          loading: function (isLoading) {
+            if (isLoading) {
+                $(".right-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading Events...</div>');
+            }
+            else {                
+                $(".right-calendar-loading").html('');
+            }
+           
+          },
+          eventDidMount: function(info) {
+            var tooltip = new Tooltip(info.el, {
+              title: info.event.extendedProps.description,
+              placement: 'top',
+              trigger: 'hover',
+              html:true,
+              container: '.calendar-tooltip'
+            });
+          },
+        });
+
+        calendar.render(); 
+    }
+
+    load_calendar();
+
 </script>

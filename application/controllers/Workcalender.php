@@ -315,10 +315,11 @@ class Workcalender extends MY_Controller
         $calendar     = new Google_Service_Calendar($client);
         $data = $calendar->calendarList->listCalendarList();
 
-        $calendar_list = $data->getItems();             
-
+        $calendar_list = $data->getItems(); 
         $email = $google_user_api->google_email;
+        $enabled_calendar = unserialize($google_user_api->enabled_calendars);
         
+        $this->page_data['enabled_calendar'] = $enabled_calendar;
         $this->page_data['gmail_email'] = $email;
         $this->page_data['get_recent_users'] = $get_recent_users;
         $this->load->model('Users_model', 'user_model');

@@ -97,11 +97,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <label><b>Calendar Account</b></label>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
-                                              <small class="plan">Gmail Account</small><br/>
-                                              <i class="fab fa-google"></i>
-                                              <big>Gmail / G Suite</big>
-                                            </a> 
+                                            <?php if($is_glink){ ?>
+                                                <a href="javascript:void(0);" class="btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
+                                                  <small class="plan">Gmail Account</small><br/>
+                                                  <i class="fab fa-google"></i>
+                                                  <big>Gmail / G Suite - Connected</big>
+                                                </a> 
+                                            <?php }else{ ?>
+                                                <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
+                                                  <small class="plan">Gmail Account</small><br/>
+                                                  <i class="fab fa-google"></i>
+                                                  <big>Gmail / G Suite</big>
+                                                </a> 
+                                            <?php } ?>
+                                            
                                         </div>
                                     </div>
                                     <div class="form-group">

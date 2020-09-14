@@ -71,6 +71,15 @@ class Settings extends MY_Controller {
             exit();
 
         } else {
+            $this->load->model('GoogleAccounts_model');
+
+            $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
+            $is_glink = false;
+            if( $googleAccount ){
+                $is_glink = true;
+            }
+
+            $this->page_data['is_glink'] = $is_glink;
             $this->page_data['page']->menu = 'settings';
             $this->load->view('settings/schedule', $this->page_data);
         }
@@ -473,7 +482,115 @@ class Settings extends MY_Controller {
 
         echo json_encode($return);
     }
+
+    public function ajax_update_enabled_google_calendar()
+    {
+        $this->load->model('GoogleAccounts_model');
+
+        $post          = $this->input->post();
+        $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
+
+        $calendars = array();
+        if( $googleAccount->enabled_calendars ){
+            $calendars = unserialize($googleAccount->enabled_calendars);
+        }
+
+        if( $post['show_calendar'] == 1 ){
+            if( !in_array($post['cid'], $calendars) ){
+                $calendars[] = $post['cid'];
+            }
+
+            $enabled_calendars = serialize($calendars);
+        }else{ 
+            foreach( $calendars as $key => $value ){
+                if( $value == $post['cid'] ){
+                    unset($calendars[$key]);
+                }
+            }
+
+            $enabled_calendars = serialize($calendars);
+        }
+
+        $this->GoogleAccounts_model->update($googleAccount->id, array(
+            'enabled_calendars' => $enabled_calendars
+        ));
+    }
 	
+    public function ajax_get_google_enabled_calendars()
+    {
+        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+
+        $this->load->model('GoogleAccounts_model');
+
+        $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
+        $enabled_calendars = unserialize($googleAccount->enabled_calendars);
+
+        $google_user_api = $this->GoogleAccounts_model->getByAuthUser();
+        $google_credentials = google_credentials();        
+
+        $access_token = "";
+        $refresh_token = "";
+        $google_client_id = "";
+        $google_secrect = "";
+
+        if(isset($google_user_api->google_access_token)) {
+            $access_token = $google_user_api->google_access_token;
+        }
+
+        if(isset($google_user_api->google_refresh_token)) {
+            $refresh_token = $google_user_api->google_refresh_token;
+        }
+
+        if(isset($google_credentials['client_id'])) {
+            $google_client_id = $google_credentials['client_id'];
+        }
+
+        if(isset($google_credentials['client_secret'])) {
+            $google_secrect = $google_credentials['client_secret'];
+        }    
+        
+        //Set Client
+        $client = new Google_Client();
+        $client->setClientId($google_client_id);
+        $client->setClientSecret($google_secrect);
+        $client->setAccessToken($access_token);
+        $client->refreshToken($refresh_token);
+        $client->setScopes(array(
+            'email',
+            'profile',
+            'https://www.googleapis.com/auth/calendar',
+        ));
+        $client->setApprovalPrompt('force');
+        $client->setAccessType('offline');
+
+        //Request
+        $access_token  = $client->getAccessToken();
+        $calendar      = new Google_Service_Calendar($client);
+        $calendar_data = array();
+
+        $c_index = 0;
+        foreach( $enabled_calendars as $c ){
+            $events = $calendar->events->listEvents($c,[]);
+            $colors = $calendar->colors->get();
+
+            foreach( $events->items as $event ){   
+                if( $event->colorId > 0 ){
+                    $bgcolor = $colors->calendar[$event->colorId]->background;
+                }else{
+                    $bgcolor = "#16b7f7";
+                }
+
+                $calendar_data[$c_index]['title'] =  $event->summary;
+                $calendar_data[$c_index]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
+                $calendar_data[$c_index]['start'] = $event->start->date;
+                $calendar_data[$c_index]['end']   = $event->end->date;
+                $calendar_data[$c_index]['color'] = $bgcolor;
+                $c_index++;
+            }
+        }
+
+        echo json_encode($calendar_data);
+    }
 }
 
 /* End of file Settings.php */
