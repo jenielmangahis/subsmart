@@ -570,14 +570,14 @@ class Settings extends MY_Controller {
 
         $c_index = 0;
         foreach( $enabled_calendars as $c ){
+            $calendarListEntry = $calendar->calendarList->get($c);
             $events = $calendar->events->listEvents($c,[]);
-            $colors = $calendar->colors->get();
+            //$colors = $calendar->colors->get();
 
-            foreach( $events->items as $event ){   
-                if( $event->colorId > 0 ){
-                    $bgcolor = $colors->calendar[$event->colorId]->background;
-                }else{
-                    $bgcolor = "#16b7f7";
+            foreach( $events->items as $event ){  
+                $bgcolor = "#38a4f8";
+                if( $calendarListEntry->backgroundColor != '' ){
+                    $bgcolor = $calendarListEntry->backgroundColor;
                 }
 
                 $calendar_data[$c_index]['title'] =  $event->summary;
@@ -590,6 +590,23 @@ class Settings extends MY_Controller {
         }
 
         echo json_encode($calendar_data);
+    }
+
+    public function calendar_unbind_account()
+    {
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['account_type'] == 'gmail' ){
+            $this->load->model('GoogleAccounts_model');
+
+            $this->GoogleAccounts_model->deleteByUserId($user['id']);
+        }
+
+        $this->session->set_flashdata('message', 'Calendar settings was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('settings/schedule');
     }
 }
 

@@ -53,6 +53,12 @@ class GoogleAccounts_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }    
+
+    public function deleteByUserId($user_id){
+
+        $this->db->delete($this->table, array('user_id' => $user_id));
+
+    }
 }
 
 /* End of file BookingCoupon_model.php */

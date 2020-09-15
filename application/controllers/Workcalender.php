@@ -272,58 +272,61 @@ class Workcalender extends MY_Controller
             }
         }  
 
-        $google_user_api = $this->GoogleAccounts_model->getByAuthUser();
-        $google_credentials = google_credentials();        
+        $enabled_calendar = array();
+        $calendar_list    = array();
+        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        if( $google_user_api ){
+            $google_credentials = google_credentials();        
 
-        $access_token = "";
-        $refresh_token = "";
-        $google_client_id = "";
-        $google_secrect = "";
-        $calendar_list = array();
+            $access_token = "";
+            $refresh_token = "";
+            $google_client_id = "";
+            $google_secrect = "";
+            $calendar_list = array();
 
-        if(isset($google_user_api->google_access_token)) {
-            $access_token = $google_user_api->google_access_token;
-        }
+            if(isset($google_user_api->google_access_token)) {
+                $access_token = $google_user_api->google_access_token;
+            }
 
-        if(isset($google_user_api->google_refresh_token)) {
-            $refresh_token = $google_user_api->google_refresh_token;
-        }
+            if(isset($google_user_api->google_refresh_token)) {
+                $refresh_token = $google_user_api->google_refresh_token;
+            }
 
-        if(isset($google_credentials['client_id'])) {
-            $google_client_id = $google_credentials['client_id'];
-        }
+            if(isset($google_credentials['client_id'])) {
+                $google_client_id = $google_credentials['client_id'];
+            }
 
-        if(isset($google_credentials['client_secret'])) {
-            $google_secrect = $google_credentials['client_secret'];
-        }    
-        
-        //Set Client
-        $client = new Google_Client();
-        $client->setClientId($google_client_id);
-        $client->setClientSecret($google_secrect);
-        $client->setAccessToken($access_token);
-        $client->refreshToken($refresh_token);
-        $client->setScopes(array(
-            'email',
-            'profile',
-            'https://www.googleapis.com/auth/calendar',
-        ));
-        $client->setApprovalPrompt('force');
-        $client->setAccessType('offline');
+            if(isset($google_credentials['client_secret'])) {
+                $google_secrect = $google_credentials['client_secret'];
+            }    
+            
+            //Set Client
+            $client = new Google_Client();
+            $client->setClientId($google_client_id);
+            $client->setClientSecret($google_secrect);
+            $client->setAccessToken($access_token);
+            $client->refreshToken($refresh_token);
+            $client->setScopes(array(
+                'email',
+                'profile',
+                'https://www.googleapis.com/auth/calendar',
+            ));
+            $client->setApprovalPrompt('force');
+            $client->setAccessType('offline');
 
-        //Request
-        $access_token = $client->getAccessToken();
-        $calendar     = new Google_Service_Calendar($client);
-        $data = $calendar->calendarList->listCalendarList();
+            //Request
+            $access_token = $client->getAccessToken();
+            $calendar     = new Google_Service_Calendar($client);
+            $data = $calendar->calendarList->listCalendarList();
 
-        $calendar_list = $data->getItems(); 
-        $email = $google_user_api->google_email;
-        $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+            $calendar_list = $data->getItems(); 
+            $email = $google_user_api->google_email;
+            $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+        }   
 
         $this->load->model('Users_model', 'user_model');
         
         $this->page_data['enabled_calendar'] = $enabled_calendar;
-        $this->page_data['gmail_email'] = $email;
         $this->page_data['get_recent_users'] = $get_recent_users;
         
         $this->page_data['resources_users'] = $resources_users;

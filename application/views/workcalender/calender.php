@@ -83,7 +83,8 @@ img.calendar-user-profile {
 }
 .right-list-events li{
     text-align: left;
-    margin: 19px;
+    margin: 5px;
+    padding: 10px;
 }
 .right-filter-header{
     font-size: 16px;
@@ -379,23 +380,32 @@ img.calendar-user-profile {
                 </div>
                 <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">CALENDARS</h4>
-                    <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
-                    <?php if(!empty($calendar_list)) { ?>
-                        <ul class="right-list-events">
-                            <?php foreach($calendar_list as $calendar) { ?>
-                                    <?php 
-                                        $is_checked = "";
-                                        if(!empty($enabled_calendar)) {
-                                          if(in_array($calendar['id'], $enabled_calendar)){
-                                              $is_checked = 'checked="checked"';
+                    <?php if(!empty($calendar_list)){ ?>
+                      <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
+                      <?php if(!empty($calendar_list)) { ?>
+                          <ul class="right-list-events">
+                              <?php foreach($calendar_list as $calendar) { ?>
+                                      <?php 
+                                          $is_checked = "";
+                                          if(!empty($enabled_calendar)) {
+                                            if(in_array($calendar['id'], $enabled_calendar)){
+                                                $is_checked = 'checked="checked"';
+                                            }
                                           }
-                                        }
 
-                                    ?>
-                                    <li><label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label></li>
-                            <?php } ?> 
-                        </ul>
+                                          $rowBgColor = '#38a4f8';
+                                          if( $calendar['backgroundColor'] != '' ){
+                                            $rowBgColor = $calendar['backgroundColor'];
+                                          }
+                                      ?>
+                                      <li style="background-color: <?php echo $rowBgColor; ?>"><label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label></li>
+                              <?php } ?> 
+                          </ul>
+                      <?php } ?>
+                    <?php }else{ ?>
+                      <p style="font-size: 13px;text-align: left;">To enable mini calendar events filtering, bind your gmail account in <a style="color:#44a73c;" href="<?= base_url()?>settings/schedule">Calendar Settings</a></p>
                     <?php } ?>
+                    
                 </div>
                  <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">RECENT CONTACTS</h4>
