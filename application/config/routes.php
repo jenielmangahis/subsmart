@@ -164,6 +164,8 @@ $route['find-pros/send'] = 'pages/ajax_send_find_pros';
 $route['before-after/main'] = 'Before_after';
 $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
+$route['offers'] = 'Offers';
+
 $route['register/subscribe'] = 'register/subscribe';
 
 // [Accounting]

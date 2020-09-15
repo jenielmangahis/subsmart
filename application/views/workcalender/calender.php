@@ -292,7 +292,7 @@ img.calendar-user-profile {
                                                       <select class="form-control custom-select" id="select-employee">
                                                           <option value="0">All Employees</option>
                                                           <?php foreach ($users as $user) { ?>
-                                                              <option value="<?php echo $user->id ?>"><?php echo $user->name ?></option>
+                                                              <option value="<?php echo $user->id ?>"><?php echo $user->FName ?> <?php echo $user->LName ?></option>
                                                           <?php } ?>
                                                       </select>
                                                   </div>
@@ -380,17 +380,22 @@ img.calendar-user-profile {
                 <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">CALENDARS</h4>
                     <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
-                    <ul class="right-list-events">
-                        <?php foreach($calendar_list as $calendar) { ?>
-                                <?php 
-                                    $is_checked = "";
-                                    if(in_array($calendar['id'], $enabled_calendar)){
-                                        $is_checked = 'checked="checked"';
-                                    }
-                                ?>
-                                <li><label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label></li>
-                        <?php } ?> 
-                    </ul>
+                    <?php if(!empty($calendar_list)) { ?>
+                        <ul class="right-list-events">
+                            <?php foreach($calendar_list as $calendar) { ?>
+                                    <?php 
+                                        $is_checked = "";
+                                        if(!empty($enabled_calendar)) {
+                                          if(in_array($calendar['id'], $enabled_calendar)){
+                                              $is_checked = 'checked="checked"';
+                                          }
+                                        }
+
+                                    ?>
+                                    <li><label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label></li>
+                            <?php } ?> 
+                        </ul>
+                    <?php } ?>
                 </div>
                  <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">RECENT CONTACTS</h4>

@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="input-group-addon" data-for="plan_price">
                                             <span class="fa fa-dollar input-dollar"></span>
                                         </div>
-                                        <input type="number" name="plan_price" value="" id="plan_price" class="form-control" required="" autocomplete="off" />
+                                        <input type="number" name="plan_price" value="" id="plan_price" class="form-control" required="" autocomplete="off" min="0" step="0.01" />
                                       </div>
                                   </div>
                               </div>
@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <div class="col-sm-4">
                                       <div class="form-group">
                                           <label>Discount</label> <span class="form-required">*</span>
-                                          <input type="number" name="plan_discount" value="" id="plan_discount" class="form-control" required="" autocomplete="off" />
+                                          <input type="number" name="plan_discount" value="" id="plan_discount" class="form-control" required="" autocomplete="off" min="0" step="0.01" />
                                       </div>
                                   </div>
                                   <div class="col-sm-4">
