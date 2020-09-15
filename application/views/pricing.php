@@ -2516,12 +2516,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <section class="ccontainer None pcard-layout-additional-text mt-features-single-row-text-only qb-se">
                         <div class="eCommerce-product-div">
                             <div class="image-price-container">
-                                <div class="price-container-title-v2">Industry Specific</div>
-                                <div class="price-container-freelancer">
+                                <div class="price-container-title-v2 ">Industry Specific</div>
+                                <div class="price-container-freelancer price-container default-product">
                                     <div class="pricing-section mbc-20">
-                                        <div class="price">
-                                          <p>Contact Us for a Demo</p>
-                                        </div>
+                                      <div class="price">
+                                          <span class="line-through"></span><span class="ct">$</span><span class="aw">299.99</span>
+                                          <span class="as"></span><span class="ac"></span>
+                                      </div>
+                                      <div class="red-price-text">
+                                          <span class="ct">$</span><span class="aw">249.99</span>
+                                          <span class="as"></span><span class="ac"></span>
+                                      </div>
+                                      <span class="per red-price-month">/mo</span>
 
                                     </div>
                                     <p class="offer-text" style="position: relative;right: 10px;"><span class="high-attention-text">Save 50%
