@@ -639,33 +639,33 @@ class Timesheet extends MY_Controller {
             }
             foreach ($attendance as $attn){
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0){
-                    switch ($attn->date){
-                        case (date('Y-m-d',strtotime('monday'))):
+                    switch ($attn->date_out){
+                        case ($week_check[0]):
                             $mon_duration = $attn->shift_duration;
                             break;
-                        case (date('Y-m-d',strtotime('tuesday'))):
+                        case ($week_check[1]):
                             $tue_duration = $attn->shift_duration;
                             break;
-                        case (date('Y-m-d',strtotime('wednesday'))):
+                        case ($week_check[2]):
                             $wed_duration = $attn->shift_duration;
                             break;
-                        case (date('Y-m-d',strtotime('thursday'))):
+                        case ($week_check[3]):
                             $thu_duration = $attn->shift_duration;
                             break;
-                        case (date('Y-m-d',strtotime('friday'))):
+                        case ($week_check[4]):
                             $fri_duration = $attn->shift_duration;
                             break;
-                        case (date('Y-m-d',strtotime('saturday'))):
+                        case ($week_check[5]):
                             $sat_duration = $attn->shift_duration;
                             break;
-                        case (date('Y-m-d',strtotime('sunday'))):
+                        case ($week_check[6]):
                             $sun_duration = $attn->shift_duration;
                             break;
                     }
                 }
             }
             foreach ($week_duration as $week){
-                if ($user->id == $week->user_id && $week->week_of == date('Y-m-d',strtotime('monday this week'))){
+                if ($user->id == $week->user_id && $week->week_of == $week_check[0]){
                     $shift_duration = $week->total_shift;
                 }
             }
@@ -873,7 +873,7 @@ class Timesheet extends MY_Controller {
         $display .= '<tr>';
         $display .= '<th></th>';
         $display .= '<th>Employee</th>';
-        $display .= '<th>Status</th>';
+        $display .= '<th>Current Status</th>';
         $display .= '<th class="day"><span class="thead-day">Mon</span><span class="thead-date">'.$date_this_week['Monday'].'</span></th>';
         $display .= '<th class="day"><span class="thead-day">Tue</span><span class="thead-date">'.$date_this_week['Tuesday'].'</span></th>';
         $display .= '<th class="day"><span class="thead-day">Wed</span><span class="thead-date">'.$date_this_week['Wednesday'].'</span></th>';
@@ -896,6 +896,13 @@ class Timesheet extends MY_Controller {
         $sun_logtime = null;
         $week_id = 0;
         $attn_id = 0;
+        $mon_status = null;
+        $tue_status = null;
+        $wed_status = null;
+        $thu_status = null;
+        $fri_status = null;
+        $sat_status = null;
+        $sun_status = null;
         foreach ($users as $user):
             $user_id = $user->id;
             $name = $user->FName." ".$user->LName;
@@ -908,102 +915,114 @@ class Timesheet extends MY_Controller {
                 if ($log->action == 'Check in' && $log->user_id == $user->id){
                     $status = 'In';
                     switch ($log->date){
-                        case (date('Y-m-d',strtotime('monday'))):
-                            $mon_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[0]):
+                            $mon_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('tuesday'))):
-                            $tue_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[1]):
+                            $tue_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('wednesday'))):
-                            $wed_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[2]):
+                            $wed_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('thursday'))):
-                            $thu_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[3]):
+                            $thu_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('friday'))):
-                            $fri_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[4]):
+                            $fri_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('saturday'))):
-                            $sat_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[5]):
+                            $sat_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('sunday'))):
-                            $sun_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[6]):
+                            $sun_logtime = date('h:i A',$log->time);
                             break;
+                    }
+                    if ($log->entry_type == 'Manual'){
+                        $mon_status = '#ffc859';
                     }
                 }elseif($log->action == 'Check out' && $log->user_id == $user->id){
                     $status = 'Out';
                     switch ($log->date){
-                        case (date('Y-m-d',strtotime('monday'))):
-                            $mon_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[0]):
+                            $mon_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('tuesday'))):
-                            $tue_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[1]):
+                            $tue_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('wednesday'))):
-                            $wed_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[2]):
+                            $wed_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('thursday'))):
-                            $thu_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[3]):
+                            $thu_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('friday'))):
-                            $fri_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[4]):
+                            $fri_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('saturday'))):
-                            $sat_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[5]):
+                            $sat_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('sunday'))):
-                            $sun_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[6]):
+                            $sun_logtime = date('h:i A',$log->time);
                             break;
+                    }
+                    if ($log->entry_type == 'Manual'){
+                        $mon_status = '#ffc859';
                     }
                 }elseif ($log->action == 'Break in' && $log->user_id == $user->id){
                     $status = 'On Lunch';
                     switch ($log->date){
-                        case (date('Y-m-d',strtotime('monday'))):
-                            $mon_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[0]):
+                            $mon_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('tuesday'))):
-                            $tue_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[1]):
+                            $tue_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('wednesday'))):
-                            $wed_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[2]):
+                            $wed_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('thursday'))):
-                            $thu_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[3]):
+                            $thu_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('friday'))):
-                            $fri_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[4]):
+                            $fri_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('saturday'))):
-                            $sat_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[5]):
+                            $sat_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('sunday'))):
-                            $sun_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[6]):
+                            $sun_logtime = date('h:i A',$log->time);
                             break;
+                    }
+                    if ($log->entry_type == 'Manual'){
+                        $mon_status = '#ffc859';
                     }
                 }elseif ($log->action == 'Break out' && $log->user_id == $user->id) {
                     $status = 'In';
                     switch ($log->date){
-                        case (date('Y-m-d',strtotime('monday'))):
-                            $mon_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[0]):
+                            $mon_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('tuesday'))):
-                            $tue_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[1]):
+                            $tue_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('wednesday'))):
-                            $wed_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[2]):
+                            $wed_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('thursday'))):
-                            $thu_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[3]):
+                            $thu_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('friday'))):
-                            $fri_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[4]):
+                            $fri_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('saturday'))):
-                            $sat_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[5]):
+                            $sat_logtime = date('h:i A',$log->time);
                             break;
-                        case (date('Y-m-d',strtotime('sunday'))):
-                            $sun_logtime = date('h:i A',strtotime($log->time));
+                        case ($week_check[6]):
+                            $sun_logtime = date('h:i A',$log->time);
                             break;
+                    }
+                    if ($log->entry_type == 'Manual'){
+                        $mon_status = '#ffc859';
                     }
                 }
             }
@@ -1023,13 +1042,13 @@ class Timesheet extends MY_Controller {
         $display .= '<td class="center"><input type="radio" name="selected" data-week="'.$week_id.'" data-attn="'.$attn_id.'" data-name="'.$name.'" value="'.$user_id.'"></td>';
         $display .= '<td><span class="list-emp-name">'.$name.'</span><span class="list-emp-role">'.$role.'</span></td>';
         $display .= '<td class="center"><span class="list-emp-status">'.$status.'</span></td>';
-        $display .= '<td class="center">'.$mon_logtime.'</td>';
-        $display .= '<td class="center">'.$tue_logtime.'</td>';
-        $display .= '<td class="center">'.$wed_logtime.'</td>';
-        $display .= '<td class="center">'.$thu_logtime.'</td>';
-        $display .= '<td class="center">'.$fri_logtime.'</td>';
-        $display .= '<td class="center">'.$sat_logtime.'</td>';
-        $display .= '<td class="center">'.$sun_logtime.'</td>';
+        $display .= '<td class="center" style="background: '.$mon_status.'">'.$mon_logtime.'</td>';
+        $display .= '<td class="center" style="">'.$tue_logtime.'</td>';
+        $display .= '<td class="center" style="">'.$wed_logtime.'</td>';
+        $display .= '<td class="center" style="">'.$thu_logtime.'</td>';
+        $display .= '<td class="center" style="">'.$fri_logtime.'</td>';
+        $display .= '<td class="center" style="">'.$sat_logtime.'</td>';
+        $display .= '<td class="center" style="">'.$sun_logtime.'</td>';
         $display .= '</tr>';
             $name = null;
             $role = null;
@@ -1043,6 +1062,13 @@ class Timesheet extends MY_Controller {
             $sun_logtime = null;
             $week_id = 0;
             $attn_id = 0;
+            $mon_status = null;
+            $tue_status = null;
+            $wed_status = null;
+            $thu_status = null;
+            $fri_status = null;
+            $sat_status = null;
+            $sun_status = null;
         endforeach;
         $display .= '</tbody>';
 
@@ -1055,7 +1081,7 @@ class Timesheet extends MY_Controller {
         $this->load->model('users_model');
         $this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
         $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
+//        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
         $this->page_data['total_users'] = $this->users_model->getTotalUsers();
         $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
@@ -1065,40 +1091,33 @@ class Timesheet extends MY_Controller {
         $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
 
-        // get total numbers of "In" employees
-        $this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
-        // get total numbers of "Out" employees
-        $this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
-        // get total numbers of "Not Logged In Today" employees
-//        $this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
-        // get total numbers of "Not Logged In Today" employees
-        $this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
-
         $this->load->view('users/timesheet-admin', $this->page_data);
     }
 
     public function inNow(){
-	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date'=>date('Y-m-d')));
+	    $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date_in'=>date('Y-m-d')));
 	    echo json_encode($query->num_rows());
     }
     public function outNow(){
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date'=>date('Y-m-d')));
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')));
         echo json_encode($query->num_rows());
     }
     public function loggedInToday(){
         $total_users = $this->users_model->getTotalUsers();
-        $query =  $this->db->get_where('timesheet_attendance',array('date'=>date('Y-m-d')));
+        $query =  $this->db->get_where('timesheet_attendance',array('date_in'=>date('Y-m-d')));
         $logged_in = $query->num_rows();
         echo json_encode($total_users - $logged_in);
     }
 
     public function checkingInEmployee(){
         $user_id = $this->input->post('id');
-        $query = $this->timesheet_model->checkInEmployee($user_id);
-        if ($query == true){
-            echo json_encode(1);
-        }else{
-            echo json_encode(0);
+        $entry = $this->input->post('entry');
+        $approved_by = $this->input->post('approved_by');
+        $query = $this->timesheet_model->checkInEmployee($user_id,$entry,$approved_by);
+        if ($query != 0){
+            echo json_encode($query);
+        }elseif($query == false){
+            echo json_encode(false);
         }
     }
 
@@ -1106,7 +1125,9 @@ class Timesheet extends MY_Controller {
         $user_id = $this->input->post('id');
         $attn_id = $this->input->post('attn_id');
         $week_id = $this->input->post('week_id');
-        $query = $this->timesheet_model->checkingOutEmployee($user_id,$week_id,$attn_id);
+        $entry = $this->input->post('entry');
+        $approved_by = $this->input->post('approved_by');
+        $query = $this->timesheet_model->checkingOutEmployee($user_id,$week_id,$attn_id,$entry,$approved_by);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -1116,7 +1137,9 @@ class Timesheet extends MY_Controller {
 
     public function breakIn(){
         $user_id = $this->input->post('id');
-        $query = $this->timesheet_model->breakIn($user_id);
+        $entry = $this->input->post('entry');
+        $approved_by = $this->input->post('approved_by');
+        $query = $this->timesheet_model->breakIn($user_id,$entry,$approved_by);
         if ($query == true){
             echo json_encode(1);
         }else{
@@ -1125,7 +1148,9 @@ class Timesheet extends MY_Controller {
     }
     public function breakOut(){
         $user_id = $this->input->post('id');
-        $query = $this->timesheet_model->breakOut($user_id);
+        $entry = $this->input->post('entry');
+        $approved_by = $this->input->post('approved_by');
+        $query = $this->timesheet_model->breakOut($user_id,$entry,$approved_by);
         if ($query == true){
             echo json_encode(1);
         }else{

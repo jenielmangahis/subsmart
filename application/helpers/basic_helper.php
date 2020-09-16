@@ -730,7 +730,7 @@ if (!function_exists('getCompany')){
         $CI = &get_instance();
         $company_id = logged('company_id');
 
-        return $CI->business_model->getById($company_id);
+        return $CI->db->query('select * from business_profile where id = ' . $company_id);
     }
 }
 
@@ -744,8 +744,9 @@ if (!function_exists('getCompanyFolder')){
             mkdir('./uploads/');
         }
 
-        if($company) {
-            if($company->folder_name == ''){
+        if($company->num_rows() > 0) {
+            $company = $company->row();
+            if(empty($company->folder_name)){
                 $folder_name = generateRandomString();
                 while(file_exists('./uploads/' . $folder_name . '/')){
                     $folder_name = generateRandomString();  
@@ -766,6 +767,7 @@ if (!function_exists('getCompanyFolder')){
                 $company_folder = $company->folder_name;
             }
         } 
+
         return $company_folder;
     }
 }
@@ -809,6 +811,8 @@ if (!function_exists('getFolders')) {
 
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
+        } else {
+            $category_filter = 'and a.category_id is null ';
         }
 
         $sql = 'select ' . 
@@ -817,7 +821,8 @@ if (!function_exists('getFolders')) {
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name as c_folder, '.
                '(ifnull(d.total_sub_folders,0) + ifnull(e.total_files,0)) as `total_contents`, '.
-               'f.category_name '.
+               'f.category_name, '.
+               'f.category_desc '.
 
                'from file_folders a '.
                'left join users b on b.id = a.created_by '.
@@ -872,6 +877,8 @@ if (!function_exists('getFiles')) {
 
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
+        } else {
+            $category_filter = 'and a.category_id is null ';
         }
 
         $sql = 'select ' . 
@@ -879,7 +886,8 @@ if (!function_exists('getFiles')) {
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
                'c.folder_name, '.
-               'd.category_name '.
+               'd.category_name, '.
+               'd.category_desc '.
 
                'from filevault a '.
                'left join users b on b.id = a.user_id '.
@@ -988,21 +996,80 @@ if (!function_exists('getNewTasks')){
     }
 }
 
+if (!function_exists('getUserFileVaultPermissions')){
+
+    function getUserFileVaultPermissions(){
+        $CI = &get_instance();
+
+        $company_id = logged('company_id');
+        $uid = logged('id');
+        $role_id = logged('role');
+
+        $user_permissions = $CI->file_folders_permissions_users_model->getByWhere(array('user_id' => $uid), [], true);
+        $role_permissions = $CI->file_folders_permissions_roles_model->getByWhere(array('role_id' => $role_id), [], true);
+        if(!empty($user_permissions)){
+            $user_permissions = $user_permissions[0];
+            $consider_no_user_permission = (($user_permissions['create_folder'] == 0) &&
+                                            ($user_permissions['add_file'] == 0) &&
+                                            ($user_permissions['edit_folder_file'] == 0) &&
+                                            ($user_permissions['move_folder_file'] == 0) &&
+                                            ($user_permissions['trash_folder_file'] == 0) &&
+                                            ($user_permissions['remove_folder_file'] == 0));
+            if(!$consider_no_user_permission){
+                $user_permissions['role_id'] = $role_id;
+                return $user_permissions;
+            } else if(!empty($role_permissions)){
+                $role_permissions[0]['user_id'] = $uid;
+                return $role_permissions[0];    
+            } else {
+                return array(
+                    'create_folder' => 0,
+                    'add_file' => 0,
+                    'edit_folder_file' => 0,
+                    'move_folder_file' => 0,
+                    'trash_folder_file' => 0,
+                    'remove_folder_file' => 0,
+                    'user_id' => $uid,
+                    'role_id' => $role_id
+                );    
+            }
+        } else if(!empty($role_permissions)){
+            $role_permissions[0]['user_id'] = $uid;
+            return $role_permissions[0];
+        } else {
+            return array(
+                'create_folder' => 0,
+                'add_file' => 0,
+                'edit_folder_file' => 0,
+                'move_folder_file' => 0,
+                'trash_folder_file' => 0,
+                'remove_folder_file' => 0,
+                'user_id' => $uid,
+                'role_id' => $role_id
+            );
+        }
+    }
+
+}
+
 function getFolderManagerView($isMain = true, $isMyLibrary = false, $isBusinessFormTemplates = false){
     $CI = &get_instance();
 
+    $company_id = logged('company_id');
     $user_fname = logged('FName');
     $user_lname = logged('LName');
 
-    $company = getCompany();
+    $company = getCompany()->row();
 
     $params = array(
         'isMain' => $isMain,
         'isMyLibrary' => $isMyLibrary,
         'isBusinessFormTemplates' => $isBusinessFormTemplates,
-        'company_name' => $company->b_name,
+        'company_name' => $company->business_name,
         'user_fname' => $user_fname,
-        'user_lname' => $user_lname
+        'user_lname' => $user_lname,
+        'categories' => $CI->file_folders_categories_model->getByWhere(array('company_id' => $company_id)),
+        'permissions' => getUserFileVaultPermissions()
     );
 
     return $CI->load->view('modals/folder_manager', $params, TRUE);

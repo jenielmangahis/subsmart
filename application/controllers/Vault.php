@@ -49,80 +49,85 @@ class Vault extends MY_Controller {
 			'error' => ''
 		);
 
-		$uid = logged('id');
-		$company_id = logged('company_id');
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['add_file'] == 1){
+			$uid = logged('id');
+			$company_id = logged('company_id');
 
-		$folder_id = $_POST['folder_id'];
-		$file_desc = '';
-		$category = '';
+			$folder_id = $_POST['folder_id'];
+			$file_desc = '';
+			$category = '';
 
-		if(isset($_POST['file_desc'])){
-			$file_desc = $_POST['file_desc'];
-		}
+			if(isset($_POST['file_desc'])){
+				$file_desc = $_POST['file_desc'];
+			}
 
-		if(isset($_POST['category'])){
-			$category = $_POST['category'];
-		}
+			if(isset($_POST['category'])){
+				$category = $_POST['category'];
+			}
 
-		if(!empty($_FILES['fullfile'])) {
-			$filename = $_FILES['fullfile']['name'];
-			$filesize = $_FILES['fullfile']['size'];
+			if(!empty($_FILES['fullfile'])) {
+				$filename = $_FILES['fullfile']['name'];
+				$filesize = $_FILES['fullfile']['size'];
 
-			if($filesize <= 8000000){
-				$ext = pathinfo($filename, PATHINFO_EXTENSION);
+				if($filesize <= 8000000){
+					$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-				$record = $this->db->query(
-					'select count(*) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
-				)->row();
+					$record = $this->db->query(
+						'select count(*) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
+					)->row();
 
-				if($record->existing > 0){
-					$return['error'] = 'File already exists';
-					if($record->softdelete > 0){
-						$return['error'] .= ' in recycle bin.';
-					} else if(!empty($record->category_id)){
-						$return['error'] .= ' in <strong>Business Form Templates</strong> section';
-					}	
-				} else {
-					if($folder_id > 0){
-						$folder = $this->folders_model->getById($folder_id);
-						$folder_path = $folder->path;
+					if($record->existing > 0){
+						$return['error'] = 'File already exists';
+						if($record->softdelete > 0){
+							$return['error'] .= ' in recycle bin.';
+						} else if(!empty($record->category_id)){
+							$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+						}	
 					} else {
-						$folder_path = '/';
+						if($folder_id > 0){
+							$folder = $this->folders_model->getById($folder_id);
+							$folder_path = $folder->path;
+						} else {
+							$folder_path = '/';
+						}
+
+						$this->uploadlib->initialize([
+							'file_name' => $filename
+						]);
+
+						$file = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
+
+						if($file['status']){
+							$data = array(
+								'title' => $filename,
+								'description' => $file_desc,
+								'file_path' => $folder_path . $filename,
+								'modified' => date('Y-m-d h:i:s'),
+								'created' => date('Y-m-d h:i:s'),
+								'file_size' => $filesize,
+								'folder_id' => $folder_id,
+								'user_id' => $uid,
+								'company_id' => $company_id
+							);
+
+							if($category != ''){
+								$data['category_id'] = $category;
+							}
+
+							if(!$this->vault_model->trans_create($data)){
+								$return['error'] = 'Error in uploading file';
+							}
+						}	
 					}
-
-					$this->uploadlib->initialize([
-						'file_name' => $filename
-					]);
-
-					$file = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
-
-					if($file['status']){
-						$data = array(
-							'title' => $filename,
-							'description' => $file_desc,
-							'file_path' => $folder_path . $filename,
-							'modified' => date('Y-m-d h:i:s'),
-							'created' => date('Y-m-d h:i:s'),
-							'file_size' => $filesize,
-							'folder_id' => $folder_id,
-							'user_id' => $uid,
-							'company_id' => $company_id
-						);
-
-						if($category != ''){
-							$data['category_id'] = $category;
-						}
-
-						if(!$this->vault_model->trans_create($data)){
-							$return['error'] = 'Error in uploading file';
-						}
-					}	
+				} else {
+					$return['error'] = 'File is larger than 8mb';
 				}
 			} else {
-				$return['error'] = 'File is larger than 8mb';
+				$return['error'] = 'No file to upload';
 			}
 		} else {
-			$return['error'] = 'No file to upload';
+			$return['error'] = 'You dont have permission for adding a file';
 		}
 
 		echo json_encode($return);
@@ -136,22 +141,27 @@ class Vault extends MY_Controller {
 			'error' => ''
 		);		
 
-		$section = $_POST['section'];
-		$file_id = $_POST['file_id'];
-		$file = $this->vault_model->getById($file_id);
-		
-		if(($file->file_id != $uid) && (($section == 'sharedlibrary')||($section == 'businessformtemplates'))){
-			$return['error'] = 'Cannot delete file. File is not yours.';
-		} else {
-			$data = array(
-				'softdelete' => 1,
-				'softdelete_date' => date('Y-m-d h:i:s'),
-				'softdelete_by' => $uid	
-			);	
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['trash_folder_file'] == 1){
+			$section = $_POST['section'];
+			$file_id = $_POST['file_id'];
+			$file = $this->vault_model->getById($file_id);
+			
+			if(($file->file_id != $uid) && (($section == 'sharedlibrary')||($section == 'businessformtemplates'))){
+				$return['error'] = 'Cannot delete file. File is not yours.';
+			} else {
+				$data = array(
+					'softdelete' => 1,
+					'softdelete_date' => date('Y-m-d h:i:s'),
+					'softdelete_by' => $uid	
+				);	
 
-			if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
-				$return['error'] = 'Error in deleting file';
+				if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
+					$return['error'] = 'Error in deleting file';
+				}
 			}
+		} else {
+			$return['error'] = 'You dont have permission to put a file to recycle bin';
 		}
 
 		echo json_encode($return);
@@ -163,15 +173,20 @@ class Vault extends MY_Controller {
 			'error' => ''
 		);		
 
-		$file_id = $_POST['file_id'];
-		$file = $this->vault_model->getById($file_id);
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['remove_folder_file'] == 1){
+			$file_id = $_POST['file_id'];
+			$file = $this->vault_model->getById($file_id);
 
-		if($this->vault_model->trans_delete(array(), array('file_id' => $file_id))){
-			unlink('./uploads/' . $this->company_folder . $file->file_path);
+			if($this->vault_model->trans_delete(array(), array('file_id' => $file_id))){
+				unlink('./uploads/' . $this->company_folder . $file->file_path);
 
-			$return['folder_id'] = $file->folder_id;
+				$return['folder_id'] = $file->folder_id;
+			} else {
+				$return['error'] = 'Error in deleting file';
+			}
 		} else {
-			$return['error'] = 'Error in deleting file';
+			$return['error'] = 'You dont have permission to delete a file permanently';
 		}
 
 		echo json_encode($return);
@@ -299,29 +314,34 @@ class Vault extends MY_Controller {
 			'error' => ''
 		);
 
-		if($file_id > 0){
-			$file = $this->vault_model->getById($file_id);
-			$old_path = './uploads/' . $this->company_folder . $file->file_path;
-			$new_path = './uploads/' . $this->company_folder . '/' . $file->title;
-			if($to_folder > 0){
-				$folder = $this->folders_model->getById($to_folder);
-				$new_path = './uploads/' . $this->company_folder . $folder->path . $file->title;
-			}
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['move_folder_file'] == 1){
+			if($file_id > 0){
+				$file = $this->vault_model->getById($file_id);
+				$old_path = './uploads/' . $this->company_folder . $file->file_path;
+				$new_path = './uploads/' . $this->company_folder . '/' . $file->title;
+				if($to_folder > 0){
+					$folder = $this->folders_model->getById($to_folder);
+					$new_path = './uploads/' . $this->company_folder . $folder->path . $file->title;
+				}
 
-			if(rename($old_path, $new_path)){
-				$data = array(
-					'folder_id' => $to_folder,
-					'file_path' => $new_path,
-					'modified' => date('Y-m-d h:i:s'),
-					'modified_by' => $uid
-				);
+				if(rename($old_path, $new_path)){
+					$data = array(
+						'folder_id' => $to_folder,
+						'file_path' => $new_path,
+						'modified' => date('Y-m-d h:i:s'),
+						'modified_by' => $uid
+					);
 
-				$this->vault_model->trans_update($data, array('file_id' => $file_id));
+					$this->vault_model->trans_update($data, array('file_id' => $file_id));
+				} else {
+					$return['error'] = 'Error in moving file ' . $file->title;
+				}
 			} else {
-				$return['error'] = 'Error in moving file ' . $file->title;
+				$return['error'] = 'Please select a file to update';
 			}
 		} else {
-			$return['error'] = 'Please select a file to update';
+			$return['error'] = 'You dont have permission to move a file';
 		}
 
 		echo json_encode($return);
@@ -332,91 +352,96 @@ class Vault extends MY_Controller {
 			'error' => ''
 		);
 		
-		$new_file = false;
-		$uid = logged('id');
-		$company_id = logged('company_id');
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['edit_folder_file'] == 1){
+			$new_file = false;
+			$uid = logged('id');
+			$company_id = logged('company_id');
 
-		$file_id = $_POST['file_id'];
-		$file = $this->vault_model->getById($file_id);
+			$file_id = $_POST['file_id'];
+			$file = $this->vault_model->getById($file_id);
 
-		$folder_id = $_POST['folder_id'];
-		$file_desc = '';
-		$category = '';
+			$folder_id = $_POST['folder_id'];
+			$file_desc = '';
+			$category = '';
 
-		if(isset($_POST['file_desc'])){
-			$file_desc = $_POST['file_desc'];
-		}
-
-		if(isset($_POST['category'])){
-			$category = $_POST['category'];
-		}
-
-		if(!empty($_FILES['fullfile'])) {
-			$filename = $_FILES['fullfile']['name'];
-			$filesize = $_FILES['fullfile']['size'];
-
-			if($filesize >= 8000000){
-				$return['error'] = 'File is larger than 8mb';
-			} else {
-				$new_file = true;
-			}
-		} else {
-			$filename = $file->title;
-		}
-
-		$record = $this->db->query(
-			'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id
-		)->row();
-
-		if($record->existing > 0){
-			$return['error'] = 'File already exists';
-			if(!empty($record->category_id)){
-				$return['error'] .= ' in <strong>Business Form Templates</strong> section';
-			}	
-		} else {
-
-			$data = array(
-						'description' => $file_desc,
-						'modified' => date('Y-m-d h:i:s'),
-						'modified_by' => $uid
-					);
-
-			if($new_file){
-				$this->uploadlib->initialize([
-					'file_name' => $filename
-				]);
-
-				if($folder_id > 0){
-					$folder = $this->folders_model->getById($folder_id);
-					$folder_path = $folder->path;
-				} else {
-					$folder_path = '/';
-				}
-
-				$file_state = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
-
-				$data['title'] = $filename;
-				$data['file_path'] = $folder_path . $filename;
-				$data['file_size'] = $filesize;
-			} else {
-				$file_state['status'] = true;
+			if(isset($_POST['file_desc'])){
+				$file_desc = $_POST['file_desc'];
 			}
 
-			if($file_state['status']){
-				if($category != ''){
-					$data['category_id'] = $category;
-				}
+			if(isset($_POST['category'])){
+				$category = $_POST['category'];
+			}
 
-				if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
-					$return['error'] = 'Error in updating file';
+			if(!empty($_FILES['fullfile'])) {
+				$filename = $_FILES['fullfile']['name'];
+				$filesize = $_FILES['fullfile']['size'];
+
+				if($filesize >= 8000000){
+					$return['error'] = 'File is larger than 8mb';
 				} else {
-					if($new_file){
-						unlink('./uploads/' . $this->company_folder . $file->file_path);
+					$new_file = true;
+				}
+			} else {
+				$filename = $file->title;
+			}
+
+			$record = $this->db->query(
+				'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id
+			)->row();
+
+			if($record->existing > 0){
+				$return['error'] = 'File already exists';
+				if(!empty($record->category_id)){
+					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+				}	
+			} else {
+
+				$data = array(
+							'description' => $file_desc,
+							'modified' => date('Y-m-d h:i:s'),
+							'modified_by' => $uid
+						);
+
+				if($new_file){
+					$this->uploadlib->initialize([
+						'file_name' => $filename
+					]);
+
+					if($folder_id > 0){
+						$folder = $this->folders_model->getById($folder_id);
+						$folder_path = $folder->path;
+					} else {
+						$folder_path = '/';
 					}
+
+					$file_state = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
+
+					$data['title'] = $filename;
+					$data['file_path'] = $folder_path . $filename;
+					$data['file_size'] = $filesize;
+				} else {
+					$file_state['status'] = true;
 				}
-			} else {
-				$return['error'] = 'Error uploading new file';
-			}	
+
+				if($file_state['status']){
+					if($category != ''){
+						$data['category_id'] = $category;
+					}
+
+					if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
+						$return['error'] = 'Error in updating file';
+					} else {
+						if($new_file){
+							unlink('./uploads/' . $this->company_folder . $file->file_path);
+						}
+					}
+				} else {
+					$return['error'] = 'Error uploading new file';
+				}	
+			}
+		} else {
+			$return['error'] = 'You dont have permission to update a file';
 		}
 
 		echo json_encode($return);	
@@ -433,14 +458,90 @@ class Vault extends MY_Controller {
 		echo json_encode($return);
 	}
 
-	public function getRolePermissions($id){
-		$return = $this->file_folders_permissions_roles_model->getByIdArray($id);
+	public function getRolePermissions($id, $internal = false){
+		$company_id = logged('company_id');
+		$return = $this->file_folders_permissions_roles_model->getByWhere(array('role_id' => $id, 'company_id' => $company_id), [], true);
+		if(!empty($return)){
+			$return = $return[0];
+		}
 
-		echo json_encode($return);
+		if(!$internal){
+			echo json_encode($return);
+		} else {
+			return $return;
+		}
 	}
 
-	public function getUserPermissions($id){
-		$return = $this->file_folders_permissions_users_model->getByIdArray($id);
+	public function getUserPermissions($id, $internal = false){
+		$company_id = logged('company_id');
+		$return = $this->file_folders_permissions_users_model->getByWhere(array('user_id' => $id, 'company_id' => $company_id), [], true);
+		if(!empty($return)){
+			$return = $return[0];
+		}
+
+		if(!$internal){
+			echo json_encode($return);
+		} else {
+			return $return;
+		}
+	}
+
+	public function savepermissions(){
+		$return = array(
+			'permissions' => array(),
+			'error' => ''
+		);
+
+		$uid = logged('id');
+		$role_id = logged('role');
+		$company_id = logged('company_id');
+
+		$id = $_POST['vpid'];
+		$type = $_POST['vptype'];
+
+		$data = array(
+			'create_folder' => (($_POST['create_folder'] == 'true') ? '1' : '0'),
+			'add_file' => (($_POST['add_file'] == 'true') ? '1' : '0'),
+			'edit_folder_file' => (($_POST['edit_folder_file'] == 'true') ? '1' : '0'),
+			'move_folder_file' => (($_POST['move_folder_file'] == 'true') ? '1' : '0'),
+			'trash_folder_file' => (($_POST['trash_folder_file'] == 'true') ? '1' : '0'),
+			'remove_folder_file' => (($_POST['remove_folder_file'] == 'true') ? '1' : '0'),
+			'company_id' => $company_id
+		);
+		
+		if($type == 'role'){
+			$count = $this->db->query('select * from file_folders_permissions_roles where role_id = ' . $id . ' and company_id = ' . $company_id);
+		} else {
+			$count = $this->db->query('select * from file_folders_permissions_users where user_id = ' . $id . ' and company_id = ' . $company_id);
+		}
+
+		if($count->num_rows() <= 0){
+			if($type == 'role'){
+				$data['role_id'] = $id;
+				if(!$this->file_folders_permissions_roles_model->trans_create($data)){
+					$return['error'] = 'Error in saving role permissions';
+				}
+			} else {
+				$data['user_id'] = $id;
+				if(!$this->file_folders_permissions_users_model->trans_create($data)){
+					$return['error'] = 'Error in saving user permissions';
+				}
+			}	
+		} else {
+			if($type == 'role'){
+				if(!$this->file_folders_permissions_roles_model->trans_update($data, array('role_id' => $id, 'company_id' => $company_id))){
+					$return['error'] = 'Error in saving role permissions';
+				}	
+			} else {
+				if(!$this->file_folders_permissions_users_model->trans_update($data, array('user_id' => $id, 'company_id' => $company_id))){
+					$return['error'] = 'Error in saving role permissions';
+				}	
+			}
+		}
+
+		if(empty($return['error'])){
+			$return['permissions'] = getUserFileVaultPermissions();
+		}
 
 		echo json_encode($return);
 	}

@@ -112,7 +112,47 @@ class Reconcile extends MY_Controller {
 		
 	}
 
-	public function do_upload($id)
+    public function update_pg($id)
+    {
+        $id=$id;
+        $first_date=$this->input->post('first_date');
+        $CHRG=$this->input->post('SVCCHRG');
+        $service_charge=$this->input->post('service_charge');
+        $payee_name=$this->input->post('payee_name');
+        $memo_sc=$this->input->post('memo_sc');
+        $expense_account=$this->input->post('expense_account');
+
+        $this->reconcile_model->updatepgrecords($id,$first_date,$service_charge,$expense_account);
+        
+    }
+
+    public function do_upload($id)
+    {
+            $config['upload_path']          = './uploads/';
+            $config['allowed_types']        = 'gif|jpg|png|jpeg|jpe|pdf|doc|docx|rtf|text|txt';
+            $config['max_size'] = 1024 * 8;
+            $config['encrypt_name'] = TRUE;
+            $config['max_width'] = '1024';
+            $config['max_height'] = '1024';
+
+            $this->load->library('upload', $config);
+
+            if ( ! $this->upload->do_upload('userfile'))
+            {
+                    $error = array('error' => $this->upload->display_errors());
+
+                    //$this->load->view('accounting/upload_success', $error);
+            }
+            else
+            {
+                    $data = array('upload_data' => $this->upload->data());
+                    $success = array('success' => "successfully added");
+                    //$this->load->view('accounting/upload_success', $success);
+            }
+            $this->index($id);
+    }
+
+	public function do_upload2($id)
     {
             $config['upload_path']          = './uploads/';
             $config['allowed_types']        = 'gif|jpg|png|jpeg|jpe|pdf|doc|docx|rtf|text|txt';
@@ -135,7 +175,7 @@ class Reconcile extends MY_Controller {
             		$success = array('success' => "successfully added");
                     //$this->load->view('accounting/upload_success', $success);
             }
-        $this->index($id);
+            redirect('accounting/reconcile/view/history');
     }
 
     public function delete()
@@ -224,5 +264,22 @@ class Reconcile extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['rows']  =  $this->reconcile_model->selectsummary();
         $this->load->view('accounting/reconcile/history', $this->page_data);
+    }
+
+    public function historyajax($chart_of_accounts_id)
+    {
+        $rows  =  $this->reconcile_model->selecthistorywhere($chart_of_accounts_id);
+        $html = "";
+        $i=0;
+        foreach ($rows as $row) {
+
+        $accBalance = $this->chart_of_accounts_model->getBalance($row->chart_of_accounts_id);
+        $adjustment = $row->ending_balance-(($accBalance-$row->service_charge)+$row->interest_earned);
+        $name=$this->chart_of_accounts_model->getName($row->chart_of_accounts_id);
+
+        $html .= "<tr><td>".$row->ending_date."</td><td>".$row->adjustment_date."</td><td>".$row->ending_balance."</td><td>0.00</td><td>".number_format($adjustment,2)."</td><td><a href='#' onclick='openSideNav3('".$name."')'>Attach</a></td><td><div class='dropdown show'><a class='dropdown-toggle' href=".url('accounting/reconcile/view/report/').$row->chart_of_accounts_id." id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><a href=".url('accounting/reconcile/view/report/').$row->chart_of_accounts_id.">View Report</a></a><div class='dropdown-menu' aria-labelledby='dropdownMenuLink'><a class='dropdown-item' href=".url('accounting/reconcile/view/report_print/').$row->chart_of_accounts_id." >Print</a></div></div></td></tr>";
+        $i++;
+        }
+        echo $html;
     }
 }

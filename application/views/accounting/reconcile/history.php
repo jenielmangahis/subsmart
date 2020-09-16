@@ -54,7 +54,7 @@ position: absolute;
             <i class="fa fa-times"></i></span></a>
         </div>
         
-        <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+        <?php echo form_open_multipart('accounting/reconcile/do_upload2/'.$rows[0]->chart_of_accounts_id);?>
         <div class="mainMenu nav">
             <div class="file-upload-block">
                 <div class="upload-btn-wrapper">
@@ -62,7 +62,7 @@ position: absolute;
                         <i class="fa fa-cloud-upload"></i>
                         <h6>Drag and drop files here or <span>browse to upload</span></h6>
                     </button>
-                    <input type="file" name="userfile" />
+                    <input type="file" name="userfile" id="userfile"/>
                 </div>
             </div>
         </div>
@@ -116,9 +116,9 @@ position: absolute;
                                 <div class="col-md-5 col-sm-5">
                                     <div class="form-group">
                                         <label>Report period</label>
-                                        <select class="form-control" id="report_period" name="report_period">
-                                            <option>Since 365 Days Ago</option>
-                                            <option>All</option>
+                                        <select class="form-control" id="report_period" name="report_period" onchange="onChange()">
+                                            <option value="all">All</option>
+                                            <option value="365">Since 365 Days Ago</option>
                                         </select>
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@ position: absolute;
                                     <th>ACTION</th>
                                 </tr>
                               </thead>
-                              <tbody>
+                              <tbody id="changeme">
                                   <?php $i=0;?>
                                 <?php foreach($rows as $row){?>
                                 <?php
@@ -192,5 +192,68 @@ function closeSideNav3() {
    
     jQuery("#side-menu-cus-tx").removeClass("open-side-nav");
     jQuery("#overlay-cus-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+  
+  var table = $('#history_table').DataTable({sDom: 'lrtip'});
+  function onChange()
+  {   
+    var selectBox = document.getElementById("report_period");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    if(selectedValue=='365')
+    {
+      var arr = [];
+      $("#history_table tr").each(function(){
+          arr.push($(this).find("td:first").text());
+      });
+      var xxx = "";
+      for (i=1;i<arr.length;i++)
+      {
+       var dt = arr[i];
+       var d = dt.split(".");
+       var newdt = new Date(d[2],d[1]-1,d[0]);
+       var today = new Date();
+       var dateLimit = new Date(new Date().setDate(today.getDate() - 365));
+       if (newdt > dateLimit) 
+       {    
+          if(xxx == '')
+            {
+                xxx =newdt;
+            }
+            else
+            {
+                xxx = xxx+'|'+newdt;
+            }
+
+       }
+      }
+      table.search(newdt,true,false).draw(); 
+      
+    }
+    else
+    {
+        table.search( '' ).columns().search( '' ).draw();
+    }
+  }
+</script>
+<script type="text/javascript">
+$('#account_name').on('change', function() {
+ getReport(this.value);
+});
+function getReport(chart_of_accounts_id)
+{
+  var chart_of_accounts_id = chart_of_accounts_id;
+  if(chart_of_accounts_id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/view/historyajax/') ?>"+chart_of_accounts_id,
+        method: "POST",
+        success:function(data)
+        {
+           $("#changeme").html(data);
+        }
+    })
+  }
 }
 </script>

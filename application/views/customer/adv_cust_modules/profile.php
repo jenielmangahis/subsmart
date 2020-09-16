@@ -29,10 +29,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <img src="https://app.creditrepaircloud.com/application/images/ajax-loader.gif" id="status_loading" style="display:none; vertical-align:middle;" border="0" width="16" height="16">
                                 <br>
                             </div>
+
+
                         </div>
                         <div style="margin-right:15px; margin-top:6px;" align="left" class="normaltext1">
-                            <!--<a href="<?php echo url('/customer/index/tab2/'.$profile_info->prof_id).'/mt5'; ?>" class="normaltext1" style="color:#58bc4f;">-->
-                            <a href="<?php echo url('/customer/add_advance/'.$profile_info->prof_id).'/tab1'; ?>" class="normaltext1" style="color:#58bc4f;">
+                            <!--<a href="<?php  if(isset($profile_info)){echo url('/customer/index/tab2/'.$profile_info->prof_id).'/mt5';} ?>" class="normaltext1" style="color:#58bc4f;">-->
+                            <a href="<?php if(isset($profile_info)){ echo url('/customer/add_advance/'.$profile_info->prof_id).'/tab1'; }?>" class="normaltext1" style="color:#58bc4f;">
                                 View/Edit Profile
                             </a>&nbsp;&nbsp;
                         </div>
@@ -81,7 +83,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div id="tail2-bottom"></div>
                             </div>
                         </div>
-                        <div class=" " style="margin-left: 5px !important;margin-top :90px; ">
+                        <div class=" " style="margin-left: 5px !important;margin-top :100px; ">
                             <br/><br/>
                             <input type="checkbox" name="notify_by" value="Email" checked id="notify_by_email" >
                             <label for="notify_by_email"><span>Notify by SMS</span></label><br>

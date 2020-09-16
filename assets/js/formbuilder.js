@@ -1,7 +1,7 @@
 // import "https://formio.github.io/formio.js/#";
 
 
-// const formBaseUrl = "/nsmartrac/"; // local
+// const formBaseUrl = "http://localhost/nsmartrac/"; // local
 const formBaseUrl = `${window.location.origin}/` ; // online
 
 // =====================================
@@ -13,7 +13,7 @@ const elementsList = [
     id: 1,
     type: "radio-button",
     category: 'common'
-  
+  },
   {
     id: 2,
     type: "dropdown",
@@ -151,13 +151,13 @@ const elementsList = [
   },
   {
     id: 30,
-    type: "checkbox-email-routing",
-    category: 'email'
+    type: "order-form-table-list",
+    category: 'order-form'
   },
   {
     id: 31,
-    type: "checkbox-email-routing",
-    category: 'email'
+    type: "order-form-table-list",
+    category: 'order-form-table'
   },
   {
     id: 32,
@@ -275,6 +275,7 @@ const elementsList = [
 
 
 
+
 // =====================================
 //            VIEW PAGE
 // =====================================
@@ -329,7 +330,7 @@ loadFormElements = (id, mode = null) => {
         let elementType = el.fe_element_id;
         var choices = []
         
-        if(elementType == 1 || elementType == 2 || elementType == 3 || elementType >= 44){
+        if(elementType == 1 || elementType == 2 || elementType == 3 || elementType >= 44 ){
           choices = JSON.parse($.ajax({
             url: `${formBaseUrl}formbuilder/form/element/choices/${el.fe_id}`,
             dataType: 'json',
@@ -338,7 +339,7 @@ loadFormElements = (id, mode = null) => {
           }).responseText).data
         }
 
-        if(elementType >= 20 && elementType < 43){
+        if(elementType >= 20 && elementType < 30){
           document.querySelector('#windowPreviewContent').innerHTML += `
           ${(elementType == 20)?`
             <!-- Header -->
@@ -503,6 +504,7 @@ loadFormElements = (id, mode = null) => {
                   <input type="file" name="feinput-${el.fe_id}" ${(el.fe_is_required == 1)?"required":""}  id="feinput-${el.fe_id}" >
                 </div>
               `:""}
+              
 
               ${(elementType == 44)?`
                 <!-- Radio Button Matrix -->
@@ -539,6 +541,41 @@ loadFormElements = (id, mode = null) => {
                     </tr>
                   </tbody>
                 </table>
+              `:""}
+
+              ${(elementType == 30)?`
+              <!-- product table list-->
+                ${
+                  (mode == "edit")?"":`
+                    ${setTimeout(() => {
+                      getProductSelection(el.fe_id)
+                    }, 500)}
+                  `
+                }
+                <div class="container-fluid">
+                  <table class="table" id="table-${el.fe_id}">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Product</th>
+                            <th class="text-left">Quantity</th>
+                            <th class="text-left">Price</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-product-list-${el.fe_id}"></tbody>
+                  </table>
+                  <div class="d-flex w-100 justify-content-between">
+                    <div class="form-group">
+                      <select name="selProduct-${el.fe_id}" id="selProduct-${el.fe_id}" class="product-dropdowns custom-select-sm">
+                        
+                      </select>
+                    </div>
+                    <button type="button" onclick="addProductToTable(${el.fe_id})" id="btnAddProduct" class="btn btn-info"><i class="fa fa-plus"></i> Add New Product</button>
+                  </div>
+                  <hr/>
+                  <span id="table-product-total-price-all-${el.fe_id}" class="text-left">Total: $0.0</span>
+                </div>
+                
               `:""}
 
               ${(elementType == 48)?`
@@ -625,6 +662,7 @@ loadFormElements = (id, mode = null) => {
     }
   })
 }
+
 
 // =====================================
 //            EDIT PAGE

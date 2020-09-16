@@ -11,9 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         padding-left: 15px;
         padding-bottom: 10px;
         border: 1px solid #32243d !important;
-        margin-left: 10px;
         margin-bottom: 20px;
-        white-space: nowrap;
         flex-flow: wrap;
         flex: 0 0 100%;
         max-width: 100%;
@@ -21,24 +19,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .module_ac_full {
         background: #f2f2f2;
         border-radius: 1px;
-        flex-direction: column; /*added*/
-        display: inline-block;
-        grid-gap: 15px;
-        position: relative;
         padding-right: 15px;
         padding-left: 15px;
-        padding-bottom: 15px;
-        border: 2px solid #32243d !important;
-        margin-left: 10px;
+        padding-bottom: 10px;
+        border: 1px solid #32243d !important;
         margin-bottom: 20px;
-        float: left;
-        overflow-y:auto;
-        overflow-x: auto;
-        white-space: nowrap;
         flex-flow: wrap;
-        flex: 0 0 97.33%;
+        flex: 0 0 100%;
         max-width: 100%;
-        height: 100%;
     }
     .module_ac_{
         flex: 0 0 97.33%;
@@ -123,19 +111,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <!-- page wrapper start -->
         <div wrapper__section>
             <div class="container-fluid">
-                <div class="page-title-box">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6" style="padding-left: 45px;">
-                            <h4>New Advance Customer</h4>
-                            <ol class="breadcrumb">
-                                <!--<li class="breadcrumb-item active">Add your new customer.</li>-->
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="col-md-12">
+                        <div class="col-md-6" style="padding-left: 40px;">
+                            <h6 >New Advance Customer</h6>
+                            <a class="btn btn-primary btn-md" href="#"><span class="fa fa-print "></span> Print</a>
+                        </div>
+
                         <div class="cards">
                             <div class="card-body">
                                 <div class="row" >
@@ -145,16 +127,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-md-12">
                                                     <form id="customer_form">
                                                         <div class="row">
-                                                            <table cellpadding="0" cellspacing="0" width="900">
+                                                            <table cellpadding="0" cellspacing="0" width="900" style="border-collapse: collapse;">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td align="left" valign="top">
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                        <td align="" valign="top">
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;padding-right:-41px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_profile');
                                                                                 ?>
                                                                             </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_billing');
                                                                                 ?>
@@ -165,35 +147,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                 ?>
                                                                             </table>
                                                                         </td>
-                                                                        <td align="left" valign="top">
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                        <td align="" valign="top" >
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_office');
                                                                                 ?>
                                                                             </table>
-                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0">
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
                                                                                 <?php
                                                                                     include viewPath('customer/adv_module_sheets/module_access');
                                                                                 ?>
                                                                             </table>
+                                                                            <table width="440" border="0" cellspacing="0" cellpadding="0" style="margin-top:-21px !important;">
+                                                                                <?php
+                                                                                    include viewPath('customer/adv_module_sheets/module_notes');
+                                                                                ?>
+                                                                            </table>
                                                                         </td>
                                                                     </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                            <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td >
+                                                                        <table width="" border="0" cellspacing="0" cellpadding="0">
+                                                                            <?php
+                                                                                include viewPath('customer/adv_module_sheets/module_devices');
+                                                                            ?>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                         <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
                                                         <div class="col-md-12">
-                                                            <div class="col-md-6">
                                                                 <div class="row">
                                                                     <a href="<?php echo base_url('customer') ?>">
-                                                                        <button type="button" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-remove"></span> Cancel </button> &nbsp;
+                                                                        <button type="button" class="btn btn-primary btn-md "><span class="fa fa-remove"></span> Cancel </button> &nbsp;
                                                                     </a>
-                                                                    <button type="submit" class="btn btn-primary btn-md " name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
+                                                                    <button type="submit" class="btn btn-primary btn-md" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-6"></div>
                                                         </div>
                                                     </form>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -245,8 +244,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <script>
     $(document).ready(function () {
-        $("#date_of_birth").datetimepicker({
-            format: "L",
+        $("#date_picker").datetimepicker({
+            format: "l",
             //minDate: new Date(),
         });
         $(".date_picker").datetimepicker({

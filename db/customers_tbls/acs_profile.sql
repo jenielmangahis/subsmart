@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2020 at 05:15 AM
+-- Generation Time: Sep 13, 2020 at 06:28 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.2.19
 
@@ -52,15 +52,9 @@ CREATE TABLE `acs_profile` (
   `zip_code` varchar(20) NOT NULL,
   `cross_street` varchar(100) NOT NULL,
   `subdivision` varchar(100) NOT NULL,
-  `img_path` text NOT NULL
+  `img_path` text NOT NULL,
+  `pay_history` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `acs_profile`
---
-
-INSERT INTO `acs_profile` (`prof_id`, `fk_user_id`, `fk_sa_id`, `first_name`, `last_name`, `middle_name`, `prefix`, `suffix`, `business_name`, `email`, `ssn`, `date_of_birth`, `phone_h`, `phone_w`, `phone_m`, `fax`, `mail_add`, `city`, `state`, `country`, `zip_code`, `cross_street`, `subdivision`, `img_path`) VALUES
-(22, 2, 1, 'John2', 'Doe', 'M', '', '', '', 'johndoe@gmail.com', '', '9/9/2020', '', '', '', '', '', '', '', 'USA', '', '', '', '');
 
 --
 -- Indexes for dumped tables
@@ -80,7 +74,7 @@ ALTER TABLE `acs_profile`
 -- AUTO_INCREMENT for table `acs_profile`
 --
 ALTER TABLE `acs_profile`
-  MODIFY `prof_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `prof_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
