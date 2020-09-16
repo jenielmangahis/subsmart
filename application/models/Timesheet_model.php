@@ -15,6 +15,8 @@ class Timesheet_model extends MY_Model {
 //        $this->db->insert($this->table, $data);
 //    }
     public function getEmployeeAttendance(){
+        $this->db->or_where('date_in',date('Y-m-d'));
+        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
         $qry = $this->db->get($this->attn_tbl);
         return $qry->result();
     }
@@ -22,16 +24,17 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get('ts_weekly_total_shift');
         return $qry->result();
     }
-    public function attendance($user_id,$status,$shift,$break,$week_ID,$flag){
+    public function attendance($user_id,$status,$attn_id,$shift,$break,$week_ID,$flag){
         if ($flag == 0){
             $week_id = $this->totalHoursShift($user_id,$week_ID);
         }
-        $qry = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id,'date' => date('Y-m-d')));
+        $qry = $this->db->get_where($this->attn_tbl,array('user_id' => $user_id,'shift_duration' => 0));
         if ($qry->num_rows() == 0 && $status == 1){
             $data = array(
                 'week_id' => $week_id,
                 'user_id' =>  $user_id,
-                'date' => date('Y-m-d'),
+                'date_in' => date('Y-m-d'),
+                'date_out' => date('Y-m-d'),
                 'status' => $status
             );
             $this->db->insert($this->attn_tbl,$data);
@@ -39,133 +42,148 @@ class Timesheet_model extends MY_Model {
         }elseif($qry->num_rows() == 1 && $status == 0){
             $update = array(
                 'status' => $status,
+                'date_out' => date('Y-m-d'),
                 'shift_duration' => $shift,
                 'break_duration' => $break
             );
-            $this->db->where('week_id',$week_ID);
+            $this->db->where('id',$attn_id);
             $this->db->update($this->attn_tbl,$update);
             $this->totalHoursShift($user_id,$week_ID);
         }
     }
 
-    public function checkInEmployee($user_id){
-        $attn_id = $this->attendance($user_id,1,null,null,0,0);
-        $qry = $this->db->get_where($this->db_table,array('user_id'=>$user_id,'action'=>'Check in','date'=>date('Y-m-d')));
+    public function checkInEmployee($user_id,$entry,$approved_by){
+        $attn_id = $this->attendance($user_id,1,0,null,null,0,0);
+        $qry = $this->db->get_where($this->db_table,array('attendance_id'=>$attn_id,'action' => 'Check in'));
         if ($qry->num_rows() == 0){
             $data = array(
                 'attendance_id'=> $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check in',
                 'date' => date('Y-m-d'),
-                'time' => date('H:i'),
-                'entry_type' => 'Normal',
+                'time' => time(),
+                'entry_type' => $entry,
+                'approved_by' => $approved_by,
                 'status' => 1,
             );
             $this->db->insert($this->db_table,$data);
-            return true;
+            return $attn_id;
         }else{
             return false;
         }
     }
-    public function checkingOutEmployee($user_id,$week_ID,$attn_id){
-        $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'action'=>'Check in','date'=>date('Y-m-d')));
+    public function checkingOutEmployee($user_id,$week_ID,$attn_id,$entry,$approved_by){
+        $qry = $this->db->get_where($this->db_table,array('attendance_id'=> $attn_id,'action' => 'Check in'));
         if ($qry->num_rows() == 1){
             $data = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'date' => date('Y-m-d'),
-                'time' => date('H:i'),
-                'entry_type' => 'Normal',
+                'time' => time(),
+                'entry_type' => $entry,
+                'approved_by' => $approved_by,
                 'status' => 1,
             );
             $this->db->insert($this->db_table,$data);
-            $shift = $this->calculateShiftDuration($user_id);
-            $break = $this->calculateBreakDuration($user_id);
-            $this->attendance($user_id,0,$shift,$break,$week_ID,1);
+            $shift = $this->calculateShiftDuration($attn_id);
+            $break = $this->calculateBreakDuration($attn_id);
+            $this->attendance($user_id,0,$attn_id,$shift,$break,$week_ID,1);
             return true;
         }else{
             return false;
         }
     }
-    private function calculateShiftDuration($user_id){
-        $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'date'=>date('Y-m-d')))->result();
+    private function calculateShiftDuration($attn_id){
+        $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
         $start_time = 0;
         $end_time = 0;
         foreach ($qry as $time){
             if ($time->action == 'Check in'){
-                $start_time = strtotime($time->time);
+                $start_time = $time->time;
             }elseif($time->action == 'Check out'){
-                $end_time = strtotime($time->time);
+                $end_time = $time->time;
             }
         }
         $diff = ($end_time - $start_time)/3600;
         return $diff;
     }
-    private function calculateBreakDuration($user_id){
-        $qry = $this->db->get_where($this->db_table,array('user_id'=> $user_id,'date'=>date('Y-m-d')))->result();
+    private function calculateBreakDuration($attn_id){
+        $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
         $start_time = 0;
         $end_time = 0;
         foreach ($qry as $time){
             if ($time->action == 'Break in'){
-                $start_time = strtotime($time->time);
+                $start_time = $time->time;
             }elseif($time->action == 'Break out'){
-                $end_time = strtotime($time->time);
+                $end_time = $time->time;
             }
         }
         $diff = ($end_time - $start_time)/3600;
-        return round($diff,2);
+        if ($diff > 0){
+            $result = round($diff,2);
+        }else{
+            $result = null;
+        }
+        return $result;
     }
     private function totalHoursShift($user_id,$week_ID){
         $total_shift = 0;
-        $qry = $this->db->get_where($this->attn_tbl,array('week_id'=>$week_ID))->result();
-        foreach ($qry as $shift){
-            $total_shift += $shift->shift_duration;
+        if ($week_ID != 0){
+            $qry = $this->db->get_where($this->attn_tbl,array('week_id'=>$week_ID))->result();
+            foreach ($qry as $shift){
+                $total_shift += $shift->shift_duration;
+            }
         }
+
         //Inserting or Updating weekly total shift
         $tbl_total_shift = $this->db->get_where('ts_weekly_total_shift',array('user_id'=>$user_id,'week_of'=>date("Y-m-d",strtotime('monday this week'))));
         if ($tbl_total_shift->num_rows() == 0){
             $insert = array(
                 'user_id' => $user_id,
-                'week_of' => date("Y-m-d",strtotime('monday this week')),
+                'week_of' => (date('D',strtotime('tomorrow')) == "Mon")?date("Y-m-d",strtotime('monday next week')):date("Y-m-d",strtotime('monday this week')),
                 'total_shift' => $total_shift
             );
             $this->db->insert('ts_weekly_total_shift',$insert);
             return $this->db->insert_id();
         }else{
-            $update = array(
-                'total_shift' => $total_shift
-            );
-            $this->db->where('id',$week_ID);
-            $this->db->update('ts_weekly_total_shift',$update);
-            return $week_ID;
+            if ($week_ID != 0){
+                $update = array(
+                    'total_shift' => $total_shift
+                );
+                $this->db->where('id',$week_ID);
+                $this->db->update('ts_weekly_total_shift',$update);
+            }
+            return $tbl_total_shift->row()->id;
         }
     }
-    public function breakIn($user_id){
+    public function breakIn($user_id,$entry,$approved_by){
         //Get timesheet_attendance id
-        $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'date'=>date('Y-m-d')))->row()->id;
+        $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
         $data = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break in',
             'date' => date('Y-m-d'),
-            'time' => date('H:i'),
-            'entry_type' => 'Normal',
+            'time' => time(),
+            'entry_type' => $entry,
+            'approved_by' => $approved_by,
             'status' => 1
         );
         $this->db->insert($this->db_table,$data);
         return true;
     }
 
-    public function breakOut($user_id){
-        $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'date'=>date('Y-m-d')))->row()->id;
+    public function breakOut($user_id,$entry,$approved_by){
+        $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
         $data = array(
             'attendance_id' => $attn_id,
             'user_id' => $user_id,
             'action' => 'Break out',
             'date' => date('Y-m-d'),
-            'time' => date('H:i'),
-            'entry_type' => 'Normal',
+            'time' => time(),
+            'entry_type' => $entry,
+            'approved_by' => $approved_by,
             'status' => 1
         );
         $this->db->insert($this->db_table,$data);
@@ -173,7 +191,7 @@ class Timesheet_model extends MY_Model {
     }
 
     public function getTimesheetLogs(){
-        $query = $this->db->get_where($this->db_table,array('date'=>date('Y-m-d')));
+        $query = $this->db->get($this->db_table);
         return $query->result();
     }
     public function getTSByDate($date_this_week){
@@ -603,16 +621,16 @@ class Timesheet_model extends MY_Model {
     }
     public function getTotalUsersLoggedIn(){
         $total_users = $this->users_model->getTotalUsers();
-        $query =  $this->db->get_where('timesheet_attendance',array('date'=>date('Y-m-d')));
+        $query =  $this->db->get_where('timesheet_attendance',array('date_in'=>date('Y-m-d')));
         $logged_in = $query->num_rows();
         return $total_users - $logged_in;
     }
     public function getInNow(){
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date'=>date('Y-m-d')));
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date_in'=>date('Y-m-d')));
         return $query->num_rows();
     }
     public function getOutNow(){
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date'=>date('Y-m-d')));
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_in'=>date('Y-m-d')));
         return $query->num_rows();
     }
 //    public function getInNowData(){

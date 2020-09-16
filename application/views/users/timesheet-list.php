@@ -46,6 +46,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         width: 110px;
         border-radius: 50%;
     }
+    .legend-container{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+    .legend-section{
+        margin-right: 10px;
+    }
+    .legend-section,.legend-title,.legend-manual,.legend-missing{
+        display: inline-block;
+    }
+    .legend-section,.legend-title{
+        font-weight: bold;
+    }
+    .legend-section .legend-manual,.legend-missing{
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        border: 3px solid grey;
+        vertical-align: bottom;
+    }
+    .legend-missing{
+        background-color: #f71111bf;
+    }
+    .legend-manual{
+        background-color: #ffc859;
+    }
+
 </style>
 <?php
     //dd(logged());die;
@@ -94,10 +122,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label class="label-date" for="tsListPicker">Week of :</label>
                                     <input type="text" id="tsListPicker" class="form-control list_datepicker" value="<?php echo date('m/d/Y',strtotime('monday this week'))?>">
                                 </div>
-                                <div class="col-lg-5"></div>
+                                <div class="col-lg-5">
+                                    <div class="legend-container">
+                                        <div class="legend-section">
+                                            <div class="legend-manual"></div>
+                                            <span class="legend-title">Manual</span>
+                                        </div>
+                                        <div class="legend-section">
+                                            <div class="legend-missing"></div>
+                                            <span class="legend-title">Possibly Missing Entry</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-4">
                                     <div class="action-btn-container">
-                                        <button class="btn btn-success action-btn" id="listClockInOut">Clock In/Out</button>
+                                        <button class="btn btn-success action-btn" id="listClockInOut" data-approved="<?php echo $this->session->userdata('logged')['id']?>">Clock In/Out</button>
                                         <button class="btn btn-info action-btn">Adjust Entry</button>
                                     </div>
                                 </div>
@@ -146,24 +185,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
         $(document).on('click','#listClockInOut',function () {
             var radio = $('input[name="selected"]:checked');
-            var user_id = radio.val();
-            var status = radio.parent('td').next('td').next('td').children('span').text();
-            var emp_name = radio.attr('data-name');
-            var week_id = radio.attr('data-week');
-            var attn_id = radio.attr('data-attn');
-            if (status == 'In'){
-                clockOut(emp_name,user_id,week_id,attn_id);
-            }else if(status == ''){
-                clockIn(emp_name,user_id);
-            }else if(status == 'On Lunch'){
-                backToWork(emp_name,user_id);
-            }
+            var approved_by = $(this).attr('data-approved');
+            if (radio.length == 0){
 
+            }else{
+                var user_id = radio.val();
+                var status = radio.parent('td').next('td').next('td').children('span').text();
+                var emp_name = radio.attr('data-name');
+                var week_id = radio.attr('data-week');
+                var attn_id = radio.attr('data-attn');
+                if (status == 'In'){
+                    clockOut(emp_name,user_id,week_id,attn_id,approved_by);
+                }else if(status == ''){
+                    clockIn(emp_name,user_id,approved_by);
+                }else if(status == 'On Lunch'){
+                    backToWork(emp_name,user_id,approved_by);
+                }
+            }
         });
-        function clockIn(emp_name,user_id) {
+        function clockIn(emp_name,user_id,approved_by) {
+            var entry = 'Manual';
             Swal.fire({
                 title: 'Clock in?',
-                html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
+                html: "Are you sure you want to Clock-in this person?<br> <strong>"+emp_name+"</strong>",
                 imageUrl:"/assets/img/timesheet/default-profile.png",
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
@@ -175,9 +219,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/checkingInEmployee',
                     method:"POST",
                     dataType:"json",
-                    data:{id:user_id},
+                    data:{id:user_id,entry:entry,approved_by:approved_by},
                     success:function (data) {
-                        if (data == 1){
+                        if (data != 0){
                             $("#tbl-list").DataTable().destroy();
                             showListTable(week_of);
                             Swal.fire(
@@ -188,7 +232,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     html: '<strong>'+emp_name+"</strong> has been Clock-in",
                                     icon: 'success'
                                 });
-                        }else{
+                        }else if (data == false){
                             Swal.fire(
                                 {
                                     showConfirmButton: false,
@@ -204,7 +248,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
             });
         }
-        function clockOut(emp_name,user_id,week_id,attn_id) {
+        function clockOut(emp_name,user_id,week_id,attn_id,approved_by) {
+            var entry = 'Manual';
             Swal.fire({
                 title: 'Clock out?',
                 html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
@@ -219,7 +264,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/checkingOutEmployee',
                     method:"POST",
                     dataType:"json",
-                    data:{id:user_id,week_id:week_id,attn_id:attn_id},
+                    data:{id:user_id,week_id:week_id,attn_id:attn_id,entry:entry,approved_by:approved_by},
                     success:function (data) {
                         if (data == 1){
                             $("#tbl-list").DataTable().destroy();
@@ -248,7 +293,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
             });
         }
-        function backToWork(emp_name,user_id) {
+        function backToWork(emp_name,user_id,approved_by) {
+            var entry = 'Manual';
             Swal.fire({
                 title: 'Back to work?',
                 html: "Are you sure you want to get back to work this person?<br> <strong>"+emp_name+"</strong>",
@@ -263,7 +309,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/breakOut',
                     method:"POST",
                     dataType:"json",
-                    data:{id:user_id},
+                    data:{id:user_id,entry:entry,approved_by:approved_by},
                     success:function (data) {
                         if (data == 1){
                             $("#tbl-list").DataTable().destroy();

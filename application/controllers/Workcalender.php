@@ -8,6 +8,9 @@ class Workcalender extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+
+        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+
         $this->checkLogin();
         $this->page_data['page']->title = 'Work Calender';
         $this->page_data['page']->menu  = 'Workcalender';
@@ -16,6 +19,7 @@ class Workcalender extends MY_Controller
         //$this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Workzone_model', 'workzone_model');
         $this->load->model('Users_model');
+        $this->load->model('GoogleAccounts_model');
 
         $user_id = getLoggedUserID();
 
@@ -38,7 +42,7 @@ class Workcalender extends MY_Controller
     public function index()
     {
         $this->load->model('Event_model', 'event_model');
-
+        
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
@@ -239,12 +243,6 @@ class Workcalender extends MY_Controller
             }
         }
 
-        /*$resources_user_events[0]['resourceId'] = 2;
-        $resources_user_events[0]['title'] = 'My repeating event';
-        $resources_user_events[0]['start'] = '2020-08-27 10:00';
-        $resources_user_events[0]['end'] = '2020-08-27 13:00';
-        $resources_user_events[0]['eventColor'] = '#378006';*/
-
         if(!empty($events)) {
             $inc = 0;
             foreach($events as $event) {
@@ -272,14 +270,71 @@ class Workcalender extends MY_Controller
                    
                 }
             }
-        }     
+        }  
 
-        $this->page_data['get_recent_users'] = $get_recent_users;
+        $enabled_calendar = array();
+        $calendar_list    = array();
+        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        if( $google_user_api ){
+            $google_credentials = google_credentials();        
+
+            $access_token = "";
+            $refresh_token = "";
+            $google_client_id = "";
+            $google_secrect = "";
+            $calendar_list = array();
+
+            if(isset($google_user_api->google_access_token)) {
+                $access_token = $google_user_api->google_access_token;
+            }
+
+            if(isset($google_user_api->google_refresh_token)) {
+                $refresh_token = $google_user_api->google_refresh_token;
+            }
+
+            if(isset($google_credentials['client_id'])) {
+                $google_client_id = $google_credentials['client_id'];
+            }
+
+            if(isset($google_credentials['client_secret'])) {
+                $google_secrect = $google_credentials['client_secret'];
+            }    
+            
+            //Set Client
+            $client = new Google_Client();
+            $client->setClientId($google_client_id);
+            $client->setClientSecret($google_secrect);
+            $client->setAccessToken($access_token);
+            $client->refreshToken($refresh_token);
+            $client->setScopes(array(
+                'email',
+                'profile',
+                'https://www.googleapis.com/auth/calendar',
+            ));
+            $client->setApprovalPrompt('force');
+            $client->setAccessType('offline');
+
+            //Request
+            $access_token = $client->getAccessToken();
+            $calendar     = new Google_Service_Calendar($client);
+            $data = $calendar->calendarList->listCalendarList();
+
+            $calendar_list = $data->getItems(); 
+            $email = $google_user_api->google_email;
+            $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+        }   
+
         $this->load->model('Users_model', 'user_model');
+        
+        $this->page_data['enabled_calendar'] = $enabled_calendar;
+        $this->page_data['get_recent_users'] = $get_recent_users;
+        
         $this->page_data['resources_users'] = $resources_users;
         $this->page_data['resources_user_events'] = $resources_user_events;
         $this->page_data['is_mobile'] = $is_mobile;
         $this->page_data['users'] = $this->user_model->getUsers();
+
+        $this->page_data['calendar_list'] = $calendar_list;
 
         $this->load->view('workcalender/calender', $this->page_data);
     }

@@ -30,12 +30,36 @@
     color: #FFFFFF;
     border: 2px solid #555;
   }
+
+
+  /* form css */
+  #windowPreviewTemplate .form-group{
+      margin: 0
+    }
+
+    #windowPreviewTemplate .form-control{
+    height: 1.5em
+  }
+
+  #windowPreviewTemplate label{
+    font-weight: 500
+  }
+
+  #windowPreviewTemplate p{
+    font-weight: 500;
+  }
+
+  #windowPreviewTemplate .table td{
+    padding: 0
+  }
+
+  
   
 </style>
 
 <div class="wrapper">
   <div __wrapper_section>
-    <div class="card my-2">
+    <div class="card my-2" style="height: 1000px">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?php echo base_url()?>formbuilder">Form Builder</a></li>
@@ -399,10 +423,21 @@
                     
     
                         <li class="list-group-item" data-toggle="collapse" data-target="#collapseOrderFormMenu" aria-expanded="true" aria-controls="collapse0">
-                          Order Form Items
+                          Order Form Tables
                         </li>
                         <div id="collapseOrderFormMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                          <p class="text-muted">Coming soon</p>
+                          <div class="row" style="overflow-x: auto; heightL 250px;">
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="31">
+                                <div class="card p-1">
+                                  <div class="card-content">
+                                    <span><i class="fa fa-calendar"></i> Table List</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
                         </div>
                     
     
@@ -525,10 +560,32 @@
                   
               </div>
               <div class="col-xs-12 col-md-9">
-                <div id="windowPreviewTemplate" class="card" style="max-height: 150.58923px;">
-                  <div class="row container-fluid overflow-auto" id="windowPreviewContent">
-                    <!-- MAIN WINDOW FOR THE FORM -->
+
+
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a href="#windowEditor" class="nav-link active" data-toggle="tab">Editor</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#windowLiveForm" class="nav-link" data-toggle="tab">Live</a>
+                  </li>
+                </ul>
+
+                <div class="tab-content">
+                  <div id="windowEditor" class="tab-pane fade show active" style="height: 150px">
+                    <div id="windowPreviewTemplate" class="card" style="height:500px;">
+                      <div class="row container-fluid overflow-auto" id="windowPreviewContent">
+                        <!-- MAIN WINDOW FOR THE FORM -->
+                      </div>
+                    </div>
                   </div>
+                  
+                  <div id="windowLiveForm" class="tab-pane fade" style="height: 150px">
+                    <div class="card container-fluid">
+                      <iframe src="<?= base_url()?>/form/<?= $form->forms_id?>?preview" frameborder="0" class="w-100" style="height: 500px"></iframe>
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
             </div>

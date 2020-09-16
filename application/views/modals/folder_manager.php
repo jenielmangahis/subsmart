@@ -49,12 +49,11 @@
                         <tr>
                           <td class="p-0 pb-1">
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="set_g_permission" title="Set General Permissions"><i class="fa fa-universal-access"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="set_f_permission" title="Set File/Folder Permission"><i class="fa fa-lock"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="move" title="Move Folder/File"><i class="fa fa-scissors"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="edit" title="Edit Folder/File"><i class="fa fa-pencil-square-o"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
-                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['trash_folder_file'] == 1) ? '' : 'd-none'); ?>" control="delete" title="Trash Folder/File"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['move_folder_file'] == 1) ? '' : 'd-none'); ?>" control="move" title="Move Folder/File"><i class="fa fa-scissors"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['edit_folder_file'] == 1) ? '' : 'd-none'); ?>" control="edit" title="Edit Folder/File"><i class="fa fa-pencil-square-o"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['add_file'] == 1) ? '' : 'd-none'); ?>" control="add_file" title="Add File"><i class="fa fa-file"></i></a>
+                            <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1 <?php echo (($permissions['create_folder'] == 1) ? '' : 'd-none'); ?>" control="create_folder" title="Create Folder"><i class="fa fa-plus"></i></a>
                           </td>
                         </tr>
                         <tr>
@@ -195,6 +194,7 @@
                       <table class="table table-bordered" id="gpe_table_roles" tablefunc="getrolepermissions">
                         <thead>
                           <th class="d-none"></th>
+                          <th class="d-none"></th>
                           <th class="font-weight-bold">Title</th>
                         </thead>
                         <tbody>
@@ -210,6 +210,7 @@
                     <div class="card-body">
                       <table class="table table-bordered" id="gpe_table_users" tablefunc="getuserpermissions">
                         <thead>
+                          <th class="d-none"></th>
                           <th class="d-none"></th>
                           <th class="font-weight-bold">Name</th>
                         </thead>
@@ -248,7 +249,7 @@
                       </div>
                       <div class="form-check">
                         <label class="form-check-label">
-                          <input id="gpec_trash_folder_file" type="checkbox" class="form-check-input" value="">Trasg Folder/File
+                          <input id="gpec_trash_folder_file" type="checkbox" class="form-check-input" value="">Trash Folder/File
                         </label>
                       </div>
                       <div class="form-check">
@@ -475,10 +476,10 @@
                   <a href="#" class="nodecontrol btn btn-sm btn-default nav-link mr-1" control="restore" title="Restore"><i class="fa fa-recycle" title="Restore"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link mr-1" control="remove" title="Remove"><i class="fa fa-remove" title="Remove"></i></a>
+                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link mr-1 <?php echo (($permissions['remove_folder_file'] == 1) ? '' : 'd-none'); ?>" control="remove" title="Remove"><i class="fa fa-remove" title="Remove"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link" control="empty" title="Empty"><i class="fa fa-trash-o" title="Empty"></i></a>
+                  <a href="#" class="nodecontrol btn btn-sm btn-default nav-link mr-1 <?php echo (($permissions['remove_folder_file'] == 1) ? '' : 'd-none'); ?>" control="empty" title="Empty"><i class="fa fa-trash-o" title="Empty"></i></a>
                 </li>
               </ul>
             </div>

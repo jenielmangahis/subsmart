@@ -13,42 +13,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Arrival Time :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b><?php if(isset($tech_info)){ echo $tech_info->tech_arrive_time; }; ?></b> </label>
-
+                                <label class="alarm_answer"><b><?php if(isset($office_info)){ echo $office_info->tech_arrive_time; }; ?></b> </label>
                             </td>
                         </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >Time Given :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->time_given; }; ?></b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span>Tech Assign :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->tech_assign; }; ?></b> </label>
-                            </td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span>Tech Assign :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b> --><?php ////if(isset($office_info)){ echo $office_info->tech_assign; }; ?><!--</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
                         <tr>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >CustomField1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field1_tech; }; ?></b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($office_info)){ echo $office_info->office_custom_field1; }; ?></b> </label>
                             </td>
                         </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >CustomField2 :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field2_tech; }; ?></b> </label>
-                            </td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span >CustomField2 :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"><b> --><?php //if(isset($tech_info)){ echo $tech_info->custom_field2_tech; }; ?><!--</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
                         </tbody>
                     </table>
                     <!--<label > <span >Monitoring Co:</span> <b class="pull-right">Guardian</b></label>
@@ -62,7 +53,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tbody>
                         <tr>
                             <td width="50%" align="left" valign="top">
-                                <label class="alarm_label"> <span >Complete Time :</span> </label>
+                                <label class="alarm_label"> <span >Departure Time :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_answer"><b><?php if(isset($tech_info)){ echo $tech_info->tech_complete_time; }; ?></b> </label>
@@ -107,7 +98,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
+            <div style="margin-right:15px; padding-top:50px;" align="left" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">View/Edit Module</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>

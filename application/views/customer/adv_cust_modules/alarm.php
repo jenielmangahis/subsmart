@@ -88,7 +88,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >RebateCheck1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($acs_alarm)){ echo $acs_alarm->rebate_check1; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->rebate_check1; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -190,7 +190,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Rebate Offer :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($acs_alarm)){ echo $acs_alarm->rebate_offer; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->rebate_offer; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -198,7 +198,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Verification :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($acs_alarm)){ echo $acs_alarm->verification; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->verification; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -206,7 +206,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >RebateCheck2 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($acs_alarm)){ echo $acs_alarm->rebate_check2; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->rebate_check2; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -214,7 +214,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >CustomField 1 :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($acs_alarm)){ echo $acs_alarm->custom_field1_alarm; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->office_custom_field1; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -225,7 +225,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_answer"><b><br> <br> <?php if(isset($acs_alarm)){ echo $acs_alarm->scn; } ?></b> </label>
                             </td>
                         </tr>
-
                         </tbody>
                     </table>
                 </div>

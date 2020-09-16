@@ -5,6 +5,7 @@ class FormsBuilder_model extends MY_Model {
 	private $elements_table = "fb_forms_elements";
 	private $answers_table = "fb_forms_answers";
 	private $choices_table = "fb_choices";
+	private $products_table = "fb_forms_products";
 
 	public function __construct(){
 		parent::__construct();
@@ -135,6 +136,25 @@ class FormsBuilder_model extends MY_Model {
 			"status" => 1
 		);
 	}
+
+	public function addFormProducts($data){
+		$this->db->insert($this->products_table, $data);
+		return array(
+			"status" => 1,
+			"id" => $this->db->insert_id()
+		);
+	}
+
+	
+	// foreign data
+	public function getProductsList(){
+		$this->db->select("*");
+		$query=  $this->db->get('items');
+		return $query->result();
+	}
+
+
+
 
 }
 

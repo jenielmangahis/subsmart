@@ -285,6 +285,8 @@ $(document).ready(function(){
 
 // open general permissions form entry
   $('a[control="set_g_permission"]').click(function(e){
+    e.preventDefault();
+
     current_process = 'general_permissions';
 
     resetPermissions();
@@ -301,6 +303,7 @@ $(document).ready(function(){
 
         $.each(result.roles, function(index, role){
           append += '<tr>';
+          append += '<td class="d-none">role</td>';
           append += '<td class="d-none">' + role.id + '</td>';
           append += '<td>' + role.title + '</td>';
           append += '</tr>';
@@ -312,6 +315,7 @@ $(document).ready(function(){
 
         $.each(result.users, function(index, user){
           append += '<tr>';
+          append += '<td class="d-none">user</td>';
           append += '<td class="d-none">' + user.id + '</td>';
           append += '<td>' + user.FName + ' ' + user.LName + '</td>';
           append += '</tr>';
@@ -326,7 +330,7 @@ $(document).ready(function(){
 
           $(this).parent('tr').addClass('table-primary');
 
-          var id = $(this).parent('tr').children('td:eq(0)').text();
+          var id = $(this).parent('tr').children('td:eq(1)').text();
           var tablefunc = $(this).closest('table').attr('tablefunc');
 
           $.ajax({
@@ -836,8 +840,142 @@ $(document).ready(function(){
       } else {
         showFolderManagerNotif('Information',vError,'info'); 
       }
+    } else if(current_process == 'general_permissions'){
+      var gpec_create_folder = $('#gpec_create_folder').is(':checked');
+      var gpec_add_file = $('#gpec_add_file').is(':checked');
+      var gpec_edit_folder_file = $('#gpec_edit_folder_file').is(':checked');
+      var gpec_move_folder_file = $('#gpec_move_folder_file').is(':checked');
+      var gpec_trash_folder_file = $('#gpec_trash_folder_file').is(':checked');
+      var gpec_remove_folder_file = $('#gpec_remove_folder_file').is(':checked');
+
+      if($('#gpe_table_roles > tbody > tr.table-primary').length){
+        var vPId = $('#gpe_table_roles > tbody > tr.table-primary').children('td:eq(1)').text();
+        var vPType = 'role'; 
+      } else if($('#gpe_table_users > tbody > tr.table-primary').length){
+        var vPId = $('#gpe_table_users > tbody > tr.table-primary').children('td:eq(1)').text();
+        var vPType = 'user';
+      } else {
+        var vPId = '';
+        var vPType = '';
+      }
+
+      if(vPId != ''){
+        $.ajax({
+          type: 'POST',
+          url: base_url + "vault/savepermissions",
+          data: {
+            create_folder:gpec_create_folder,
+            add_file:gpec_add_file,
+            edit_folder_file:gpec_edit_folder_file,
+            move_folder_file:gpec_move_folder_file,
+            trash_folder_file:gpec_trash_folder_file,
+            remove_folder_file:gpec_remove_folder_file,
+            vpid:vPId,
+            vptype:vPType
+          },
+          success: function(data){
+            var result = jQuery.parseJSON(data);
+
+            if((result.error == '') || (result.error == null)){
+              showFolderManagerNotif('Successful','Permission set to the ' + vPType,'success');
+
+              ApplyPermissions(result.permissions);
+            } else {
+              showFolderManagerNotif('Error', result.error, 'error');   
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            showFolderManagerNotif(textStatus, errorThrown, 'error');  
+          }
+        });
+      } else {
+        showFolderManagerNotif('Error','Please select <strong>role</strong> or <strong>user</strong> to apply permissions','error');
+      }
     }
   });
+
+// -------------------------------------------------------------------------------------------------------------
+// General Permissions Extras
+// -------------------------------------------------------------------------------------------------------------
+  function ApplyPermissions(permissions){
+    var b_create_folder = $('a[control="create_folder"]');
+    var b_add_file = $('a[control="add_file"]');
+    var b_edit_folder_file = $('a[control="edit"]');
+    var b_move_folder_file = $('a[control="move"]');
+    var b_trash_folder_file = $('a[control="delete"]');
+    var b_remove_folder_file = $('a[control="remove"]');
+    var b_empty_folder_file = $('a[control="empty"]');
+
+    if(permissions.create_folder == 1){
+      if(b_create_folder.hasClass('d-none')){
+        b_create_folder.removeClass('d-none');
+      }  
+    } else {
+      if(!b_create_folder.hasClass('d-none')){
+        b_create_folder.addClass('d-none');
+      }
+    }
+
+    if(permissions.add_file == 1){
+      if(b_add_file.hasClass('d-none')){
+        b_add_file.removeClass('d-none');
+      }  
+    } else {
+      if(!b_add_file.hasClass('d-none')){
+        b_add_file.addClass('d-none');
+      }
+    }
+
+    if(permissions.edit_folder_file == 1){
+      if(b_edit_folder_file.hasClass('d-none')){
+        b_edit_folder_file.removeClass('d-none');
+      }  
+    } else {
+      if(!b_edit_folder_file.hasClass('d-none')){
+        b_edit_folder_file.addClass('d-none');
+      }
+    }
+
+    if(permissions.move_folder_file == 1){
+      if(b_move_folder_file.hasClass('d-none')){
+        b_move_folder_file.removeClass('d-none');
+      }  
+    } else {
+      if(!b_move_folder_file.hasClass('d-none')){
+        b_move_folder_file.addClass('d-none');
+      }
+    }
+
+    if(permissions.trash_folder_file == 1){
+      if(b_trash_folder_file.hasClass('d-none')){
+        b_trash_folder_file.removeClass('d-none');
+      }  
+    } else {
+      if(!b_trash_folder_file.hasClass('d-none')){
+        b_trash_folder_file.addClass('d-none');
+      }
+    }
+
+    if(permissions.remove_folder_file == 1){
+      if(b_remove_folder_file.hasClass('d-none')){
+        b_remove_folder_file.removeClass('d-none');
+      }  
+
+      if(b_empty_folder_file.hasClass('d-none')){
+        b_empty_folder_file.removeClass('d-none');
+      }
+    } else {
+      if(!b_remove_folder_file.hasClass('d-none')){
+        b_remove_folder_file.addClass('d-none');
+      }
+
+      if(!b_empty_folder_file.hasClass('d-none')){
+        b_empty_folder_file.addClass('d-none');
+      }
+    }
+  }
+
+// -------------------------------------------------------------------------------------------------------------
 
   $('#btn-modal-folder-manager-entry-cancel').click(function(){
     closeEntry();
@@ -1334,7 +1472,7 @@ function setFoldersAndFiles_MyLibrary(folders, files){
       } 
 
       append += '<td class="fname">' + folder.folder_name + '</td>';
-      append += '<td class="fpath">/root/' + folder.path + '</td>';
+      append += '<td class="fpath">/root' + folder.path + '</td>';
 
     append += '</tr>';
   });
@@ -1997,6 +2135,9 @@ function openEntry(type){
     $('div#modal-folder-manager-entry-dialog').addClass('modal-lg');
 
     $('#mfme-modal-content').css({"height":"90vh"});
+    if(vType == 'businessformtemplates'){
+      $('#category_selection').addClass('d-none');
+    }
   }
 
   $('#modal-folder-manager-entry-title').text(vTitle);
@@ -2028,6 +2169,9 @@ function closeEntry(){
     $('div#general_permissions_entry').addClass('d-none');
     $('div#modal-folder-manager-entry-dialog').removeClass('modal-lg');
     $('#mfme-modal-content').css({"height":""});
+    if(vType == 'businessformtemplates'){
+      $('#category_selection').removeClass('d-none');
+    }
   }
 
   current_process = '';
@@ -2199,6 +2343,10 @@ function showFolderManagerNotif(title, text, theme) {
 
     $('#btn-modal-folder-manager-alert-confirm').removeClass('d-none');
     $('#btn-modal-folder-manager-alert-cancel').removeClass('d-none');
+  } else if (theme == "success"){
+    title_class = "bg-success";
+
+    $('#btn-modal-folder-manager-alert-ok').removeClass('d-none');
   }
 
   $("#modal-folder-manager-alert-title-div").addClass(title_class);
@@ -2214,13 +2362,16 @@ function hideFolderManagerNotif(){
     $('#btn-modal-folder-manager-alert-cancel').addClass('d-none');
 
     $("#modal-folder-manager-alert-title-div").removeClass('bg-warning');
-  } else {
+  } else if((current_alert_theme == 'error') || (current_alert_theme == 'info')){
     if(current_alert_theme == 'error'){
       $("#modal-folder-manager-alert-title-div").removeClass('bg-danger');  
     } else {
       $("#modal-folder-manager-alert-title-div").removeClass('bg-info');  
     }
 
+    $('#btn-modal-folder-manager-alert-ok').addClass('d-none');  
+  } else if(current_alert_theme == 'success'){
+    $("#modal-folder-manager-alert-title-div").removeClass('bg-success');
     $('#btn-modal-folder-manager-alert-ok').addClass('d-none');  
   }
 

@@ -54,10 +54,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="city" id="city" />
+                                <input type="text" class="form-control" name="billing_city" id="billing_city" />
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" name="state" id="state" />
+                                <input type="text" class="form-control" name="billing_state" id="billing_state" />
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-4">
                     </div>
                     <div class="col-md-5">
-                        <input type="text" class="form-control" name="zip" id="zip" />
+                        <input type="text" class="form-control" name="billing_zip" id="billing_zip" />
                     </div>
                 </div>
             </div>
@@ -242,7 +242,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing Start Date</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control date_picker" name="bill_start_date" id="bill_start_date" />
+                        <input type="text" class="form-control " name="bill_start_date" id="date_picker" />
                     </div>
                 </div>
             </div>
@@ -252,7 +252,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing End Date</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control date_picker" name="bill_end_date" id="bill_end_date" />
+                        <input type="text" class="form-control " name="bill_end_date" id="date_picker" />
                     </div>
                 </div>
             </div>

@@ -97,16 +97,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <label><b>Calendar Account</b></label>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left;">
-                                              <small class="plan">Gmail Account</small><br/>
-                                              <i class="fab fa-google"></i>
-                                              <big>Gmail / G Suite</big>
-                                            </a> 
+                                            <?php if($is_glink){ ?>
+                                                <a href="javascript:void(0);" class="btn btn-outline-secondary btn-disconnect-gmail" style="text-align: left; width: 100% !important;">
+                                                  <small class="plan">Gmail Account <span style="color:red;">(Unbind Account)</span></small><br/>
+                                                  <i class="fab fa-google"></i>
+                                                  <big>Gmail / G Suite - Connected</big>
+                                                </a> 
+                                            <?php }else{ ?>
+                                                <a href="javascript:void(0);" onclick="javascript:checkAuth()" id="gp_login" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
+                                                  <small class="plan">Gmail Account</small><br/>
+                                                  <i class="fab fa-google"></i>
+                                                  <big>Gmail / G Suite</big>
+                                                </a> 
+                                            <?php } ?>
+                                            
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                               <small class="plan">Hotmail Account</small><br/>
                                               <i class="fab fa-hotmail"></i>
                                               <big>Microsoft Hotmail</big>
@@ -115,7 +124,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="form-group">
                                         <div class='input-group date timepicker'>
-                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left;">
+                                            <a href="javascript:void(0);" class="gp_login btn btn-outline-secondary" style="text-align: left; width: 100% !important;">
                                               <small class="plan">Apple Account</small><br/>
                                               <i class="fab fa-apple"></i>
                                               <big>Apple</big>
@@ -233,6 +242,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         </div>
     </div>
+
+    <!-- MODAL UNBIND GMAIL -->
+    <div class="modal fade" id="modalUnbindConfirmation" tabindex="-1" role="dialog" aria-labelledby="modalDeleteCategoryTitle" aria-hidden="true">
+        <?php echo form_open_multipart('settings/calendar_unbind_account', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <?php echo form_input(array('name' => 'account_type', 'type' => 'hidden', 'value' => '', 'id' => 'account_type'));?>
+           <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-question"></i> Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body unbind-message" style="font-size: 19px;"></div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                  </div>
+                </div>
+            </div>
+      <?php echo form_close(); ?>
+    </div>
+
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script src="https://apis.google.com/js/client.js?onload=checkAuth"/></script>
@@ -262,12 +294,21 @@ function handleAuthResult(authResult) {
         
       },
       success: function(data) {  
-        location.href = base_url + 'settings/schedule';        
+        location.href = base_url + 'settings/schedule?calendar_update=1';        
       },    
       error: function(e) {
         console.log(e);
       }
     });
+  } else {
+    alert('warning!');
   }
 }
+
+$(".btn-disconnect-gmail").click(function(){
+    $("#modalUnbindConfirmation").modal("show");
+
+    $("#account_type").val("gmail");
+    $(".unbind-message").html("<p>Unbind your <b>Gmail</b> account?</p>");
+});
 </script>

@@ -2186,6 +2186,47 @@ class Accounting extends MY_Controller {
         }
     }
 	
+	public function updateDelayedCharge()
+    {
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'delayed_charge_date' => $this->input->post('delayed_charge_date'),
+            'products' => $this->input->post('products'),
+            'description' => $this->input->post('description'),
+            'qty' => $this->input->post('qty'),
+            'rate' => $this->input->post('rate'),
+            'amount' => $this->input->post('amount'),
+            'tax' => $this->input->post('tax'),
+            'memo' => $this->input->post('memo'),
+            'attachments' => $this->input->post('file_name'),
+            'status' => 1,
+            'created_by' => logged('id'),
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->accounting_delayed_charge_model->updateDelayedCharge($this->input->post('id'), $new_data);
+
+        if($addQuery > 0){
+            echo json_encode($addQuery);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function deleteDelayedCharge(){
+        $id = $this->input->post('id');
+        $query = $this->accounting_delayed_charge_model->deleteDelayedCharge($id);
+
+        if($query){
+            echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	
 	public function addSalesTimeActivity(){
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
@@ -2208,6 +2249,41 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
+	
+	public function updateSalesTimeActivity()
+    {
+        $new_data = array(
+            'vendor_id' => $this->input->post('vendor_id'),
+            'date' => $this->input->post('date'),
+            'name' => $this->input->post('name'),
+            'customer' => $this->input->post('customer'),
+            'service' => $this->input->post('service'),
+            'billable' => $this->input->post('billable'),
+            'taxable' => $this->input->post('taxable'),
+            'start_time' => $this->input->post('start_time'),
+            'end_time' => $this->input->post('end_time'),
+            'break' => $this->input->post('breakTime'),
+            'time' => $this->input->post('time'),
+            'description' => $this->input->post('description')
+        );
+        $query = $this->accounting_sales_time_activity_model->updateTimeActivity($this->input->post('id'), $new_data);
+        if ($query){
+             echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function deleteSalesTimeActivity(){
+        $id = $this->input->post('id');
+        $query = $this->accounting_sales_time_activity_model->deleteTimeActivity($id);
 
+        if($query){
+            echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
 	
 }

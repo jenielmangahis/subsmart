@@ -142,9 +142,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h1 class="page-title">Attendance View</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage Timesheets</li>
-                        </ol>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
@@ -175,6 +172,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="today-date">
+                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y');?></span></h6>
+                            </div>
                             <div class="row" style="margin-bottom: 20px">
                                 <div class="col-md-3">
                                     <div class="tile-container">
@@ -407,6 +407,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $indicator_out_break = 'display:none';
                                             $week_id = null;
                                             $attn_id = null;
+                                            $yesterday_in = null;
+                                            $yesterday_out = null;
+                                            $clock_in_2nd = 0;
                                         ?>
                                         <?php foreach ($users as $cnt => $user): ?>
                                             <?php
@@ -415,55 +418,82 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         $u_role = $role->title;
                                                     }
                                                 }
-                                                foreach ($ts_logs as $log){
-                                                    if ($log->action == 'Check in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $time_in = date('h:i A',strtotime($log->time));
-                                                        $btn_action = 'employeeCheckOut';
-                                                        $status = 'fa-check';
-                                                        $break = null;
-                                                        $break_id = 'employeeBreakIn';
-                                                        $indicator_in = 'display:block';
-                                                    }elseif($log->action == 'Check out' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'fa-times-circle';
-                                                        $btn_action = null;
-                                                        $time_out = date('h:i A',strtotime($log->time));
-                                                        $disabled = 'disabled="disabled" ';
-                                                        $break = 'disabled="disabled"';
-                                                        $break_id = null;
-                                                        $indicator_in = 'display:none';
-                                                        $indicator_out = 'display:block';
-                                                        $indicator_in_break = 'display:none';
-                                                        $indicator_out_break = 'display:none';
-                                                    }elseif ($log->action == 'Break in' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $break_id = 'employeeBreakOut';
-                                                        $status = 'fa-mug-hot';
-                                                        $break_in = date('h:i A',strtotime($log->time));
-                                                        $indicator_in = 'display:none';
-                                                        $indicator_out = 'display:none';
-                                                        $indicator_in_break = 'display:block';
-                                                        $indicator_out_break = 'display:none';
-                                                    }elseif ($log->action == 'Break out' && $log->user_id == $user->id && $log->date == date('Y-m-d')){
-                                                        $status = 'fa-check';
-                                                        $break_out = date('h:i A',strtotime($log->time));
-                                                        $break = 'disabled="disabled"';
-                                                        $break_id = null;
-                                                        $indicator_in = 'display:none';
-                                                        $indicator_out = 'display:none';
-                                                        $indicator_in_break = 'display:none';
-                                                        $indicator_out_break = 'display:block';
-                                                    }
-                                                    foreach ($week_duration as $week){
-                                                        if ($week->user_id == $user->id){
-                                                            $week_id = $week->id;
-                                                        }
+                                                foreach ($attendance as $attn){
+                                                    if ($attn->user_id == $user->id){
+                                                        $attn_id = $attn->id;
+                                                        foreach ($ts_logs as $log){
+                                                            if ($log->action == 'Check in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->date_in == date('Y-m-d')){
+                                                                    $time_in = date('h:i A',$log->time);
+                                                                    $time_out = null;
+                                                                    $break_in = null;
+                                                                    $break_out = null;
+                                                                    $btn_action = 'employeeCheckOut';
+                                                                    $status = 'fa-check';
+                                                                    $break = null;
+                                                                    $disabled = null;
+                                                                    $break_id = 'employeeBreakIn';
+                                                                    $indicator_in = 'display:block';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:none';
+                                                                    $yesterday_in = null;
+                                                                    $clock_in_2nd = 0;
+                                                                }
+                                                                if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                    $time_in = date('h:i A',$log->time);
+                                                                    $yesterday_in = "(Yesterday)";
+                                                                    $btn_action = 'employeeCheckOut';
+                                                                    $clock_in_2nd = 1;
+                                                                }
+                                                            }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                                    $status = 'fa-times-circle';
+                                                                    $btn_action = null;
+                                                                    $time_out = date('h:i A',$log->time);
+                                                                    $disabled = 'disabled="disabled"';
+                                                                    $break = 'disabled="disabled"';
+                                                                    $break_id = null;
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:block';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:none';
+                                                                }
+                                                                if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                    $disabled = null;
+                                                                    $btn_action = 'employeeCheckIn';
+                                                                }
+                                                            }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                                    $break_id = 'employeeBreakOut';
+                                                                    $status = 'fa-mug-hot';
+                                                                    $break_in = date('h:i A',$log->time);
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:block';
+                                                                    $indicator_out_break = 'display:none';
+                                                                }
+                                                            }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                                    $status = 'fa-check';
+                                                                    $break_out = date('h:i A',$log->time);
+                                                                    $break = 'disabled="disabled"';
+                                                                    $break_id = null;
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:block';
+                                                                }
+                                                            }
 
-                                                    }
-                                                    foreach ($attendance as $attn){
-                                                        if ($attn->user_id == $user->id){
-                                                            $attn_id = $attn->id;
+                                                            foreach ($week_duration as $week){
+                                                                if ($week->user_id == $user->id){
+                                                                    $week_id = $week->id;
+                                                                }
+                                                            }
+
                                                         }
                                                     }
-
                                                 }
                                             ?>
                                             <tr>
@@ -472,13 +502,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="tbl-employee-name"><?php echo $user->FName;?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
                                                     <span class="tbl-emp-role"><?php echo $u_role;?></span>
                                                 </td>
-                                                <td class="tbl-chk-in"><div class="red-indicator" style="<?php echo $indicator_in?>"></div> <span><?php echo $time_in?></span> <input type="hidden" id="tbl-time" value=""></td>
-                                                <td class="tbl-chk-out"><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span><?php echo $time_out?></span></td>
-                                                <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span><?php echo $break_in;?></span></td>
-                                                <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span><?php echo $break_out;?></span></td>
+                                                <td class="tbl-chk-in"><div class="red-indicator" style="<?php echo $indicator_in?>"></div> <span class="clock-in-time"><?php echo $time_in?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in;?></span></td>
+                                                <td class="tbl-chk-out"><div class="red-indicator" style="<?php echo $indicator_out?>"></div> <span class="clock-out-time"><?php echo $time_out?></span><input type="hidden" id="clockIn2nd" value="<?php echo $clock_in_2nd;?>"></td>
+                                                <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span class="break-in-time"><?php echo $break_in;?></span></td>
+                                                <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span class="break-out-time"><?php echo $break_out;?></span></td>
                                                 <td class="tbl-emp-action">
-                                                    <a href="javascript:void(0)" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                    <a href="javascript:void(0)" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-week="<?php echo $week_id?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>"><i class="fa fa-user-clock fa-lg"></i></a>
+                                                    <a href="javascript:void(0)" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-coffee fa-lg"></i></a>
+                                                    <a href="javascript:void(0)" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-week="<?php echo $week_id?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-user-clock fa-lg"></i></a>
                                                     <i class="fa <?php echo $status;?> status"></i>
                                                 </td>
                                                 <td></td>
@@ -500,6 +530,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $indicator_out_break = 'display:none';
                                             $week_id = null;
                                             $attn_id = null;
+                                            $yesterday_in = null;
+                                            $yesterday_out = null;
+                                            $clock_in_2nd = 0
                                         ?>
                                         <?php endforeach;?>
                                         </tbody>
@@ -525,15 +558,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         "sort": false
     });
     //Real-time capture of time
-    // setInterval(function () {
-    //     $.ajax({
-    //         url:"/timesheet/realTime",
-    //         dataType:"json",
-    //         success:function (data) {
-    //             $('#tbl-time').val(data);
-    //         }
-    //     });
-    // },1000);
     function serverTime () {
         var datetime = null;
         $.ajax({
@@ -542,7 +566,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             async: false,
             success:function (data) {
                 datetime = data;
-                // $('#tbl-time').val(data);
             }
         });
         setTimeout(serverTime, 1000);
@@ -597,6 +620,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var emp_name = $(this).attr('data-name');
             var selected = this;
             var time = serverTime ();
+            var entry = 'Manual';
+            var approved_by = $(this).attr('data-approved');
             Swal.fire({
                 title: 'Checking in?',
                 html: "Are you sure you want to Check-in this person?<br> <strong>"+emp_name+"</strong>",
@@ -611,18 +636,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/checkingInEmployee',
                     method:"POST",
                     dataType:"json",
-                    data:{id:id},
+                    data:{id:id,entry:entry,approved_by:approved_by},
                     success:function (data) {
-                        if (data == 1){
+                        if (data != 0){
                             inNow();
                             notLoggedIn();
+                            $(selected).attr('data-attn',data);
                             $(selected).next('i').removeClass('fa-times-circle');
                             $(selected).next('i').addClass('fa-check');
-                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('span').text(time);
+                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').text(time);
+                            $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-yesterday').text(null);
                             $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
                             $(selected).attr('id','employeeCheckOut');
                             $(selected).prev('a').attr('disabled',null);
                             $(selected).prev('a').attr('id','employeeBreakIn');
+                            $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(null);
+                            $(selected).parent('td').prev('td').children('.break-out-time').text(null);
+                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(null);
+                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
                             Swal.fire(
                                 {
                                     showConfirmButton: false,
@@ -631,7 +662,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     html: '<strong>'+emp_name+"</strong> has been Checked-in",
                                     icon: 'success'
                                 });
-                        }else{
+                        }else if(data == false){
                             Swal.fire(
                                 {
                                     showConfirmButton: false,
@@ -655,6 +686,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var week_id = $(this).attr('data-week');
             var attn_id = $(this).attr('data-attn');
             var time = serverTime();
+            var entry = 'Manual';
+            var approved_by = $(this).attr('data-approved');
             Swal.fire({
                 title: 'Checking out?',
                 html: "Are you sure you want to Check-Out this person?<br> <strong>"+emp_name+"</strong>",
@@ -669,21 +702,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/checkingOutEmployee',
                     method:"POST",
                     dataType:"json",
-                    data:{id:id,week_id:week_id,attn_id:attn_id},
+                    data:{id:id,week_id:week_id,attn_id:attn_id,entry:entry,approved_by:approved_by},
                     success:function (data) {
                         if (data == 1){
                             inNow();
                             outNow();
                             $(selected).next('i').removeClass('fa-check');
                             $(selected).next('i').addClass('fa-times-circle');
-                            $(selected).parent('td').prev('td').prev('td').prev('td').children('span').text(time);
+                            $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
                             $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
                             $(selected).parent('td').prev('td').prev('td').prev('td').children('.red-indicator').show();
                             $(selected).parent('td').prev('td').children('.red-indicator').hide();
-                            $(selected).attr('id',null);
-                            $(selected).attr('disabled','disabled');
-                            $(selected).prev('a').attr('disabled','disabled');
-                            $(selected).prev('a').attr('id',null);
+                            var second_in = $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val();
+                            if (second_in == 0){
+                                $(selected).attr('id',null);
+                                $(selected).attr('disabled','disabled');
+                                $(selected).prev('a').attr('disabled','disabled');
+                                $(selected).prev('a').attr('id',null);
+                            }else{
+                                $(selected).attr('id','employeeCheckIn');
+                                $(selected).parent('td').prev('td').prev('td').prev('td').children('#clockIn2nd').val(0);
+                            }
                             Swal.fire(
                                 {
                                     showConfirmButton: false,
@@ -714,6 +753,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var emp_name = $(this).attr('data-name');
             var selected = this;
             var time = serverTime();
+            var entry = 'Manual';
+            var approved_by = $(this).attr('data-approved');
             Swal.fire({
                 title: 'Take a break?',
                 html: "Are you sure you want to take a break this person?<br> <strong>"+emp_name+"</strong>",
@@ -728,12 +769,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/breakIn',
                     method:"POST",
                     dataType:"json",
-                    data:{id:id},
+                    data:{id:id,approved_by:approved_by,entry:entry},
                     success:function (data) {
                         if (data == 1){
                             $(selected).next('a').next('i').removeClass('fa-check');
                             $(selected).next('a').next('i').addClass('fa-mug-hot');
-                            $(selected).parent('td').prev('td').prev('td').children('span').text(time);
+                            $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(time);
                             $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.red-indicator').hide();
                             $(selected).parent('td').prev('td').prev('td').children('.red-indicator').show();
                             $(selected).attr('id','employeeBreakOut');
@@ -768,6 +809,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var emp_name = $(this).attr('data-name');
             var selected = this;
             var time = serverTime();
+            var entry = 'Manual';
+            var approved_by = $(this).attr('data-approved');
             Swal.fire({
                 title: 'Back to work?',
                 html: "Are you sure you want to get back to work this person?<br> <strong>"+emp_name+"</strong>",
@@ -782,12 +825,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     url:'/timesheet/breakOut',
                     method:"POST",
                     dataType:"json",
-                    data:{id:id},
+                    data:{id:id,approved_by:approved_by,entry:entry},
                     success:function (data) {
                         if (data == 1){
                             $(selected).next('a').next('i').removeClass('fa-mug-hot');
                             $(selected).next('a').next('i').addClass('fa-check');
-                            $(selected).parent('td').prev('td').children('span').text(time);
+                            $(selected).parent('td').prev('td').children('.break-out-time').text(time);
                             $(selected).parent('td').prev('td').prev('td').children('.red-indicator').hide();
                             $(selected).parent('td').prev('td').children('.red-indicator').show();
                             $(selected).attr('id',null);

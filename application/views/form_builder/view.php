@@ -47,11 +47,16 @@
         
           <?= form_open_multipart('form/submit/'.$form->forms_id, array("id" => "formMain"));?>
             <div id="windowPreviewcontent" class="row">
+              
             </div>
-
-            
-          <button type="submit" id="btnFormSubmit" class="btn btn-success btn-block"><i class="fa fa-arrow-circle-up"></i> Submit</button>
-          <button id="btnRedo" class="btn btn-link btn-block text-muted">I want to answer this form from scratch again</button>
+          <?php
+            if(!isset($_GET["preview"])){
+              ?>
+                <button type="submit" id="btnFormSubmit" class="btn btn-success btn-block"><i class="fa fa-arrow-circle-up"></i> Submit</button>
+                <button id="btnRedo" class="btn btn-link btn-block text-muted">I want to answer this form from scratch again</button>
+              <?php
+            }
+          ?>
         <?= form_close();?>
       </div>
 
@@ -64,15 +69,158 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
   <script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
   <script>
+    var selectedProducts = []
+    var totalPrice = 0
+    
     window.onload = () => {
       loadFormElements(<?= $form->forms_id?>);
     }
 
-    window.print()
+    calculateTotalPrices = elementId => {
+      totalPrice = 0
+      selectedProducts.map(product => {
+        totalPrice += (product.quantity * product.data.price)
+      })
+      document.querySelector(`#table-product-total-price-all-${elementId}`).innerHTML = `Total: $${totalPrice.toFixed(2)}`
+    }
 
-    document.querySelector('#btnFormSubmit').addEventListener("click", () => {
-      window.alert("Form submitted");
-    })
+    addQuantity = (elementId, productId) => {
+      selectedProducts.map((product,i) => {
+        if( product.data.id == productId){
+          
+          selectedProducts[i].quantity++
+          document.querySelector(`#table-product-quantity-text-${productId}`).innerHTML = product.quantity;
+          document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `$${(product.quantity * product.data.price).toFixed(2)} <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
+          calculateTotalPrices(elementId)
+        }
+      })
+    }
+
+    decreaseQuantity = (elementId, productId) => {
+      selectedProducts.map((product,i) => {
+        if( product.data.id == productId){
+          if(product.quantity > 1){
+            selectedProducts[i].quantity--
+            document.querySelector(`#table-product-quantity-text-${productId}`).innerHTML = product.quantity;
+            document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `$ ${(product.quantity * product.data.price).toFixed(2)} <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
+          }
+        }
+      })
+      calculateTotalPrices(elementId)
+    }
+    
+    addProductToTable = (elementId) => {
+      let value = document.querySelector(`#selProduct-${elementId}`).value
+      let temp = productsList.find(product => { return product.id == value })
+      document.querySelector(`#table-product-list-${elementId}`).innerHTML += `
+      <tr>
+        <td><strong>${temp.title} ${(temp.brand == "")?``:`${temp.brand}`}</strong></td>
+        <td>
+          <button type="button" id="btnDecreaseQuantity${temp.id}" onclick="decreaseQuantity(${elementId}, ${temp.id})" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
+          <span id="table-product-quantity-text-${temp.id}">1</span>
+          <button type="button" id="btnAddQuantity${temp.id}" onclick="addQuantity(${elementId}, ${temp.id})" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+        </td>
+        <td>$${temp.price}</td>
+        <td id="table-product-total-price-${temp.id}" class="text-right">
+          $${temp.price}
+          <button type="button" id="btnDelete${temp.id}" onclick="deleteProductFromTable(${elementId}, ${temp.id})" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+        </td>
+      </tr>
+      `;
+      selectedProducts.push({
+        elementId: elementId,
+        quantity: 1,
+        data:temp
+      });
+      calculateTotalPrices(elementId)
+    }
+
+    deleteProductFromTable = (elementId, productId) => {
+      document.querySelector(`#table-product-list-${elementId}`).innerHTML = ``;
+      console.log(selectedProducts);
+      selectedProducts.map((product, i) => {
+        if(product.data.id == productId){
+          selectedProducts.splice(i, 1);
+        }
+      }) 
+
+      selectedProducts.map(temp => {
+        document.querySelector(`#table-product-list-${elementId}`).innerHTML += `
+          <tr>
+            <td><strong>${temp.data.title} ${(temp.data.brand == "")?``:`${temp.data.brand}`}</strong></td>
+            <td>
+              <button type="button" id="btnDecreaseQuantity${temp.data.id}" onclick="decreaseQuantity(${elementId}, ${temp.data.id})" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
+              <span id="table-product-quantity-text-${temp.data.id}">${temp.quantity}</span>
+              <button type="button" id="btnAddQuantity${temp.data.id}" onclick="addQuantity(${elementId}, ${temp.data.id})" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+            </td>
+            <td>$${temp.price}</td>
+            <td id="table-product-total-price-${temp.data.id}" class="text-right">
+              $${temp.price}
+              <button type="button" id="btnDelete${temp.id}"  onclick="deleteProductFromTable(${elementId}, ${temp.data.id})" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+        calculateTotalPrices(elementId)
+      })
+    }
+
+// might add form products table for this one
+
+    fetchProducts = () => {
+      let temp = []
+      $.ajax({
+        async: false,
+        url: `${formBaseUrl}formbuilder/form/element/products`,
+        dataType: 'json',
+        type: 'GET'
+      })
+      .done( function( data, textStatus){
+        temp = data.data
+      })
+      return temp
+    }
+
+    var productsList = fetchProducts();
+
+    getProductSelection = elementId => {
+      setTimeout(() => {
+        productsList.map(product => {
+          document.querySelector(`#selProduct-${elementId}`).innerHTML += `<option value="${product.id}">${product.title}</option>`
+        })
+      }, 500);
+    }
+    
+    
+    <?php
+      if(!isset($_GET["preview"])){
+        ?>
+          document.querySelector('#btnFormSubmit').addEventListener("click", (e) => {
+            selectedProducts.map(product => {
+              let data = {
+                "fp_form_id": <?= $form->forms_id?>,
+                "fp_element_id": product.elementId,
+                "fp_item_id": product.data.id,
+                "fp_quantity": product.quantity,
+                "fp_total_price": product.quantity * product.data.price 
+              }
+              
+              $.ajax({
+                async: false,
+                data: data,
+                url: `${formBaseUrl}formbuilder/form/element/products/add`,
+                dataType: 'json',
+                type: 'POST'
+              })
+            })
+
+            window.alert("form submitted")
+          })
+
+
+        <?php
+      }
+    ?>
+    
 
   </script>
 </body>

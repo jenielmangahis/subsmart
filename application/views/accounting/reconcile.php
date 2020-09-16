@@ -449,12 +449,13 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                               $o=1;
                               foreach($rows as $row)
                               {
+                                echo "<input style='display:none' type='text' id='id' value='".$row->id."'/>";
                                 echo "<tr id='payments' onclick='trClick(".$o.")'>";
-                                echo "<td contenteditable='true'>".$row->first_date."</td>";
+                                echo "<td >".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td class='refno' contenteditable='true'>SVCCHRG</td>";
+                                echo "<td class='refno' >SVCCHRG</td>";
                                 echo "<td class='account'>".$row->expense_account."</td>";
-                                echo "<td name='payee' class='payee' contenteditable='true'>";
+                                echo "<td name='payee' class='payee' >";
                                     echo "<select name='payee' class='form-control select2'>";
                                     echo "<option value='' disabled selected>Payee</option>";
                                     foreach($this->AccountingVendors_model->select() as $ro)
@@ -463,30 +464,42 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     }
                                     echo  "</select>";
                                 echo "</td>";
-                                echo "<td class='memo' contenteditable='true'>Service Charges</td>";
+                                echo "<td class='memo' >Service Charges</td>";
                                 /*echo  "<td class='status'></td>";*/
-                                echo  "<td contenteditable='true'>".$row->service_charge."</td>";
+                                echo  "<td >".$row->service_charge."</td>";
                                 echo  "<td></td>";
                                 echo "<td><input type='checkbox'></td>";
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><input type='text' name='' placeholder='07/01/2020' class='form-control'></td>";
-                                echo "<td>Check</td>";
-                                echo "<td><input type='text' name='' placeholder='SVCCHRD' class='form-control'></td>";
-                                echo "<td><select class='form-control'>
-                                        <option>Bank Charges</option>
-                                    </select></td>";
-                                echo "<td><input type='text' name='' placeholder='Service Charge' class='form-control'></td>";
-                                echo "<td><input type='text' name='' placeholder='20.00' class='form-control'></td>";
-                                echo "<td>Payment</td>";                                
+                                echo "<td><div class='col-xs-10 date_picker'><input type='text' name='first_date' id='first_date' value='".$row->first_date."' class='form-control'></div></td>";
+                                echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
+                                echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='SVCCHRG' class='form-control'></td>";
+                                echo "<td><select name='expense_account' id='expense_account' class='form-control'>";
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                           echo "<option ";
+                                           if($row->expense_account == $rw->sub_acc_name){
+                                            echo "selected";
+                                            }
+                                            echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
+                                        }
+                                echo "</select></td>";
+                                echo "<td><select name='payee_name' id='payee_name' class='form-control'>
+                                        <option value='' disabled selected>Payee</option>";
+                                        foreach($this->AccountingVendors_model->select() as $ro)
+                                        {
+                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                        }
+                                echo "</select></td>";
+                                echo "<td><input type='text' name='sc' id='sc' value='Service Charge' class='form-control'></td>";
+                                echo "<td><input type='text' name='service_charge' id='service_charge' value='".$row->service_charge."' class='form-control'></td>";   
                                 echo "<td></td>";                                
                                 echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
+                                echo "<td><a href='#' class='btn-ed' onclick='crossClick(".$o.")'>Cancel</a></td>";
                                 echo "<td><a href='#' class='btn-ed'>Edit</a></td>";
-                                echo "<td><a href='#' class='btn-ed savebt'>Save</a></td>";
-                                echo "<td></td>";
+                                echo "<td><a href='#' class='btn-ed savebt1'>Save</a></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
@@ -516,23 +529,35 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<td><input type='checkbox'></td>";
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
-                                echo "<td><input type='text' name='' placeholder='07/01/2020' class='form-control'></td>";
-                                echo "<td>Check</td>";
-                                echo "<td><input type='text' name='' placeholder='SVCCHRD' class='form-control'></td>";
-                                echo "<td><select class='form-control'>
-                                        <option>Bank Charges</option>
-                                    </select></td>";
-                                echo "<td><input type='text' name='' placeholder='Service Charge' class='form-control'></td>";
-                                echo "<td><input type='text' name='' placeholder='20.00' class='form-control'></td>";
-                                echo "<td>Payment</td>";                                
-                                echo "<td>Payment</td>";                                
+                                echo "<td><div class='col-xs-10 date_picker'><input type='text' name='second_date' id='second_date' value='".$row->second_date."' class='form-control'></div></td>";
+                                echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
+                                echo "<td><input disabled type='text' name='INTEREST' id='INTEREST' value='INTEREST' class='form-control'></td>";
+                                echo "<td><select name='interest_earned' id='interest_earned' class='form-control'>";
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                           echo "<option ";
+                                           if($row->interest_earned == $rw->sub_acc_name){
+                                            echo "selected";
+                                            }
+                                            echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
+                                        }
+                                echo "</select></td>";
+                                 echo "<td><select disabled name='' id='' class='form-control'>
+                                        <option value='' disabled selected>Payee</option>";
+                                        foreach($this->AccountingVendors_model->select() as $ro)
+                                        {
+                                        echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
+                                        }
+                                echo "</select></td>";
+                                echo "<td><input type='text' name='it' value='INTEREST' class='form-control'></td>";
+                                echo "<td></td>";                                
+                                echo "<td><input type='text' name='interest_earned' value='".$row->interest_earned."' class='form-control'></td>";
                                 echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
                                 echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
                                 echo "<td><a href='#' class='btn-ed'>Edit</a></td>";
                                 echo "<td><a href='#' class='btn-ed savebt'>Save</a></td>";
-                                echo "<td></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
@@ -987,4 +1012,31 @@ function closedelete(val) {
         var minDate = $('#ending_date').val();
         $(this).datepicker().datepicker('setEndDate',minDate)
     });
+</script>
+<script type="text/javascript">
+$('.savebt1').on('click', function() {
+  var id = $('#id').val();
+  var first_date = $('#first_date').val();
+  var SVCCHRG = $('#SVCCHRG').val();
+  var expense_account = $('#expense_account').val();
+  var payee_name = $('#payee_name').val();
+  var memo_sc = $('#sc').val();
+  var service_charge = $('#service_charge').val();
+  if(id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/update_pg/') ?>"+id,
+        method: "POST",
+        data: {first_date:first_date,SVCCHRG:SVCCHRG,expense_account:expense_account,payee_name:payee_name,memo_sc:memo_sc,service_charge:service_charge},
+        success:function(data)
+        {
+            sweetAlert(
+                            'Updated!',
+                            'Reconcile has been updated.',
+                            'success'
+                        );
+        }
+    })
+  }
+});
 </script>

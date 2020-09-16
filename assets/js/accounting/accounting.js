@@ -2460,7 +2460,7 @@ $(document).on('click','#closeCreditMemoModal',function () {
         });
     });
 
-	/** Delayed Charge **/
+/** Delayed Charge **/
 $(document).on('click','#closeDelayedChargeModal',function () {
             Swal.fire({
                 title: 'Are you sure?',
@@ -2480,7 +2480,7 @@ $(document).on('click','#closeDelayedChargeModal',function () {
                         showCancelButton: true,
                         confirmButtonColor: '#2ca01c',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, remove it permanently!'
+                        confirmButtonText: 'Yes, remove it now!'
                     }).then((result) => {
                         if (result.value) {
                         $(".loader").fadeIn('fast',function(){
@@ -2504,6 +2504,7 @@ $(document).on('click','#closeDelayedChargeModal',function () {
             }
         });
     });
+
 	/** Sales Time Acitity **/
 $(document).on('click','#closeSalesTimeActivityModal',function () {
             Swal.fire({
@@ -2524,7 +2525,7 @@ $(document).on('click','#closeSalesTimeActivityModal',function () {
                         showCancelButton: true,
                         confirmButtonColor: '#2ca01c',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, remove it permanently!'
+                        confirmButtonText: 'Yes, remove it now!'
                     }).then((result) => {
                         if (result.value) {
                         $(".loader").fadeIn('fast',function(){

@@ -40,6 +40,25 @@ class GoogleAccounts_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function getByAuthUser()
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $user_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }    
+
+    public function deleteByUserId($user_id){
+
+        $this->db->delete($this->table, array('user_id' => $user_id));
+
+    }
 }
 
 /* End of file BookingCoupon_model.php */

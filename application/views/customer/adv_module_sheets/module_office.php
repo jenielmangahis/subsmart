@@ -257,7 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Sales Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control date_picker" name="sales_date" id="sales_date" />
+                    <input type="text" class="form-control" name="sales_date" id="date_picker" />
                 </div>
             </div>
         </div>
@@ -293,7 +293,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Sales Rep</label>
                 </div>
                 <div class="col-md-8">
-                    <select id="sales_rep" name="sales_rep" data-customer-source="dropdown" class="input_select" >
+                    <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
                         <option value="">Select</option>
                         <?php foreach ($sales_area as $sa): ?>
                             <option value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
@@ -320,7 +320,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Save Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control date_picker" name="save_date" id="save_date" />
+                    <input type="text" class="form-control" name="save_date" id="date_picker" />
                 </div>
             </div>
         </div>
@@ -342,7 +342,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Cancellation Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control date_picker" name="cancel_date" id="cancel_date" />
+                    <input type="text" class="form-control" name="cancel_date" id="date_picker" />
                 </div>
             </div>
         </div>
@@ -382,7 +382,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Install Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control date_picker" name="install_date" id="install_date" />
+                    <input type="text" class="form-control" name="install_date" id="date_picker" />
                 </div>
             </div>
         </div>
@@ -446,7 +446,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="rebate_offer"><span>Rebate Offered</span>
                 </div>
                 <div class="col-md-8">
-                    <input type="checkbox" name="rebate_offer" value="1" id="rebate_offer">
+                    <input type="checkbox" name="rebate_offer" value="1" checked id="rebate_offer">
                 </div>
             </div>
         </div>
@@ -462,7 +462,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Amount $</label>
                 </div>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" name="amount1" id="amount1" />
+                    <input type="number" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" />
                 </div>
             </div>
         </div>
@@ -478,7 +478,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Amount $</label>
                 </div>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" name="amount2" id="amount2" />
+                    <input type="number" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" />
                 </div>
             </div>
         </div>
@@ -611,7 +611,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Custom Field 1</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="custom_field1_alarm" id="custom_field1_alarm" />
+                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" />
                 </div>
             </div>
         </div>

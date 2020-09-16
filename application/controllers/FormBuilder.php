@@ -223,20 +223,20 @@ class FormBuilder extends MY_Controller {
 						
 						switch($type){
 							case "date":
-								// $this->formsbuilder_model->submitAnswers($data);
+								$this->formsbuilder_model->submitAnswers($data);
 							break;
 							case "chk":
-								// $this->formsbuilder_model->submitAnswers($data);
+								$this->formsbuilder_model->submitAnswers($data);
 							break;
 							case "chkmtx":
 								$data["fa_row"] = $input[3];
 								if(!empty($input[4])){
 									$data["fa_column"] = $input[4];
 								}
-								// $this->formsbuilder_model->submitAnswers($data);
+								$this->formsbuilder_model->submitAnswers($data);
 							break;
 							case "rad":
-								// $this->formsbuilder_model->submitAnswers($data);
+								$this->formsbuilder_model->submitAnswers($data);
 							break;
 							case "radmtx":							
 								$data["fa_value"] = $answer;
@@ -244,7 +244,7 @@ class FormBuilder extends MY_Controller {
 								if(!empty($input[4])){
 									$data["fa_row"] = $input[4];
 								}
-								// $this->formsbuilder_model->submitAnswers($data);
+								$this->formsbuilder_model->submitAnswers($data);
 							break;
 						}
 					}else{
@@ -270,5 +270,26 @@ class FormBuilder extends MY_Controller {
 		echo json_encode($data);
 		exit;
 	}
+
+	public function addFormProducts(){
+		$query = $this->formsbuilder_model->addFormProducts($this->input->post());
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+
+
+	public function getProducts(){
+		$data = array(
+			"status" => 1,
+			"data" => $this->formsbuilder_model->getProductsList()
+		);
+		echo json_encode($data);
+		exit;
+	}
+
 
 }

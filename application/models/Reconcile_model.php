@@ -17,6 +17,12 @@ class Reconcile_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
+	public function updatepgrecords($id,$first_date,$service_charge,$expense_account)
+	{
+		$query="update accounting_reconcile set first_date ='$first_date', service_charge = '$service_charge', expense_account ='$expense_account' where id = '$id'";;
+		echo $this->db->query($query);
+	}
+
 	public function select()  
 	  {  
 	    /*$query = $this->db->get('accounting_reconcile');  
@@ -90,6 +96,15 @@ class Reconcile_model extends MY_Model {
   	{  
 	  	$this->db->from('accounting_reconcile');  
 		$this->db->where('adjustment_date is NOT NULL', NULL, FALSE); 
+		$result =  $this->db->get()->result();
+	    return $result;
+  	}
+
+  	public function selecthistorywhere($chart_of_accounts_id)  
+  	{  
+	  	$this->db->from('accounting_reconcile');  
+		$this->db->where('adjustment_date is NOT NULL', NULL, FALSE); 
+		$this->db->where('chart_of_accounts_id',$chart_of_accounts_id); 
 		$result =  $this->db->get()->result();
 	    return $result;
   	}

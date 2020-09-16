@@ -213,16 +213,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Rebate Offered:</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="rebate_offer" id="rebate_offer" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
                 </div>
                 <div class="col-md-8">
                 </div>

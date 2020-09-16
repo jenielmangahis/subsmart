@@ -13,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >SSN :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b><?php if(isset($owner_info)){ echo $owner_info->own_ssn; }; ?></b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($profile_info)){ echo $profile_info->ssn; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Firstname :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_fname; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($profile_info)){ echo $profile_info->first_name; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span>Lastname :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_lname; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($profile_info)){ echo $profile_info->last_name; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -38,7 +38,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Address :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($owner_info)){ echo $owner_info->own_address; }; ?></b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($profile_info)){ echo $profile_info->country; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >State :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_state; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($profile_info)){ echo $profile_info->state; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -54,7 +54,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Pay History :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($owner_info)){ echo $owner_info->own_pay_history; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($profile_info)){ echo $profile_info->pay_history; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>

@@ -126,8 +126,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
                                                 <div class="col-xl-12">
-                                                    <div class="card">
-                                                        <div class="card-body" style="padding-bottom:0px;">
+                                                    <div class="card card-mobile">
+                                                        <div class="card-body">
                                                             <div class="col-sm-12">
                                                                 <h6 class="page-title">Customers List</h6>
                                                             </div>
@@ -178,22 +178,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <tbody>
                                                                                 <?php foreach ($profiles as $customer) : ?>
                                                                                     <tr>
-                                                                                        <td style="width: 100%;">
+                                                                                        <td>
                                                                                             <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>" style="color:#32243d;">
-                                                                                                <?=
-                                                                                                    ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
+                                                                                                <?= ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
                                                                                             </a>
                                                                                         </td>
-                                                                                        <td><?= $customer->city; ?></td>
-                                                                                        <td><?= $customer->state; ?></td>
+                                                                                        <td><?php echo ($customer) ? $customer->city : ''; ?></td>
+                                                                                        <td><?php echo ($customer) ? $customer->state : ''; ?></td>
                                                                                         <td></td>
                                                                                         <td><?php echo $customer->email; ?></td>
-                                                                                        <td>&nbsp</td>
                                                                                         <td></td>
+                                                                                        <td><?php echo ($customer) ? $customer->FName. ' ' .$customer->LName : ''; ?></td>
                                                                                         <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->system_type; ?></td>
+                                                                                        <td><?php echo $customer->mmr; ?></td>
+                                                                                        <td><?php echo $customer->phone_h; ?></td>
                                                                                         <td></td>
                                                                                         <td>
                                                                                             <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">

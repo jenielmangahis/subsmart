@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2020 at 05:15 AM
+-- Generation Time: Sep 13, 2020 at 06:27 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.2.19
 
@@ -49,14 +49,15 @@ CREATE TABLE `acs_alarm` (
   `contact6` varchar(100) NOT NULL,
   `panel_type` varchar(100) NOT NULL,
   `system_type` varchar(100) NOT NULL,
-  `mon_waived` varchar(100) NOT NULL,
-  `rebate_offer` decimal(10,2) NOT NULL,
-  `verification` varchar(100) NOT NULL,
-  `rebate_check1` decimal(10,2) NOT NULL,
-  `rebate_check2` decimal(10,2) NOT NULL,
-  `warranty_type` varchar(100) NOT NULL,
-  `custom_field1_alarm` varchar(100) NOT NULL
+  `mon_waived` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `acs_alarm`
+--
+
+INSERT INTO `acs_alarm` (`alarm_id`, `fk_prof_id`, `monitor_comp`, `monitor_id`, `install_date`, `credit_score_alarm`, `acct_type`, `acct_info`, `passcode`, `install_code`, `mcn`, `scn`, `contact1`, `contact2`, `contact3`, `contact4`, `contact5`, `contact6`, `panel_type`, `system_type`, `mon_waived`) VALUES
+(5, 31, '', 0, '9/12/2020', 0, 'In-House', '', '', 0, 0, 0, '', '', '', '', '', '', 'DIGI', '', '');
 
 --
 -- Indexes for dumped tables
@@ -76,7 +77,7 @@ ALTER TABLE `acs_alarm`
 -- AUTO_INCREMENT for table `acs_alarm`
 --
 ALTER TABLE `acs_alarm`
-  MODIFY `alarm_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `alarm_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -92,31 +92,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="contacttext">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >1-Time Method :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b>Recuring</b> </label>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >One Time Amt :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> 1123</b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span > Activation :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
-                            </td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span >1-Time Method :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b>Recuring</b> </label>-->
+<!---->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span >One Time Amt :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b> 1123</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span > Activation :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b> AC</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
                         <tr>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >MMR :</span> </label>
@@ -165,30 +165,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_answer"><b> <?php if(isset($billing_info)){ echo $billing_info->bill_end_date; }; ?></b> </label>
                             </td>
                         </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >Ext. Date :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($billing_info)){ echo $billing_info->contract_ext_date; }; ?></b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >Tot Equip Rev :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >CustomField4 :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> AC</b> </label>
-                            </td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span >Ext. Date :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b> --><?php //if(isset($billing_info)){ echo $billing_info->contract_ext_date; }; ?><!--</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span >Tot Equip Rev :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b> AC</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_label"> <span >CustomField4 :</span> </label>-->
+<!--                            </td>-->
+<!--                            <td width="50%" align="right" valign="top">-->
+<!--                                <label class="alarm_answer"><b> AC</b> </label>-->
+<!--                            </td>-->
+<!--                        </tr>-->
 
                         </tbody>
                     </table>

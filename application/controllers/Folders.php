@@ -180,87 +180,92 @@ class Folders extends MY_Controller {
 		$uid = logged('id');
 		$company_id = logged('company_id');
 
-		if($this->company_folder != ''){
-			$return = array(
-				'latest_folder' => array(),
-				'error' => ''
-			);
-
-			$folder_name = $_POST['folder_name'];
-			$parent_id = 0;
-			$category = '';
-			if(isset($_POST['parent_id'])){
-				$parent_id = $_POST['parent_id'];
-			}
-
-			if(isset($_POST['category'])){
-				$category = $_POST['category'];
-			}
-
-			$description = '';
-			$path = '';
-
-			$record = $this->db->query('select count(*) as `existing`, category_id, softdelete from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id)->row();
-
-			if($record->existing > 0){
-				$return['error'] = 'Folder already exists';
-				if($record->softdelete > 0){
-					$return['error'] .= ' in recycle bin.';
-				} else if(!empty($record->category_id)){
-					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
-				}
-			} else {
-				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
-				if($parent_folder->num_rows() > 0){
-					$parent_folder = $parent_folder->row();
-
-					$path = $parent_folder->path . $folder_name . '/';
-				} else {
-					$path = '/' . $folder_name . '/';
-				}
-
-				if(isset($_POST['folder_desc'])){
-					$description = $_POST['folder_desc'];
-				}
-
-				$data = array(
-					'folder_name' => $folder_name,
-					'parent_id' => $parent_id,
-					'description' => $description,
-					'path' => $path,
-					'created_by' => $uid,
-					'create_date' => date('Y-m-d h:i:s'),
-					'company_id' => $company_id
+		$return = array(
+					'latest_folder' => array(),
+					'error' => ''
 				);
 
-				if($category != ''){
-					$data['category_id'] = $category;
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['create_folder'] == 1){
+			if($this->company_folder != ''){
+				$folder_name = $_POST['folder_name'];
+				$parent_id = 0;
+				$category = '';
+				if(isset($_POST['parent_id'])){
+					$parent_id = $_POST['parent_id'];
 				}
 
-				if($this->folders_model->trans_create($data)){
-					mkdir('./uploads/' . $this->company_folder . $path, 0777);
+				if(isset($_POST['category'])){
+					$category = $_POST['category'];
+				}
 
-					$latest_folder = $this->db->query($sql = 'select ' . 
+				$description = '';
+				$path = '';
 
-		               'a.*, '.
-		               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
-		               'c.folder_name as c_folder '.
+				$record = $this->db->query('select count(*) as `existing`, category_id, softdelete from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and company_id = ' . $company_id)->row();
 
-		               'from file_folders a '.
-		               'left join users b on b.id = a.created_by '.
-		               'left join business_profile c on c.id = a.company_id '.
-
-		               'where a.company_id = ' . $company_id . ' and a.created_by = ' . $uid . ' ' .
-
-		               'order by create_date DESC limit 1')->row();
-
-					$return['latest_folder'] = $latest_folder;
+				if($record->existing > 0){
+					$return['error'] = 'Folder already exists';
+					if($record->softdelete > 0){
+						$return['error'] .= ' in recycle bin.';
+					} else if(!empty($record->category_id)){
+						$return['error'] .= ' in <strong>Business Form Templates</strong> section';
+					}
 				} else {
-					$return['error'] = 'Error in creating folder. Please contact our support';
+					$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
+					if($parent_folder->num_rows() > 0){
+						$parent_folder = $parent_folder->row();
+
+						$path = $parent_folder->path . $folder_name . '/';
+					} else {
+						$path = '/' . $folder_name . '/';
+					}
+
+					if(isset($_POST['folder_desc'])){
+						$description = $_POST['folder_desc'];
+					}
+
+					$data = array(
+						'folder_name' => $folder_name,
+						'parent_id' => $parent_id,
+						'description' => $description,
+						'path' => $path,
+						'created_by' => $uid,
+						'create_date' => date('Y-m-d h:i:s'),
+						'company_id' => $company_id
+					);
+
+					if($category != ''){
+						$data['category_id'] = $category;
+					}
+
+					if($this->folders_model->trans_create($data)){
+						mkdir('./uploads/' . $this->company_folder . $path, 0777);
+
+						$latest_folder = $this->db->query($sql = 'select ' . 
+
+			               'a.*, '.
+			               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
+			               'c.folder_name as c_folder '.
+
+			               'from file_folders a '.
+			               'left join users b on b.id = a.created_by '.
+			               'left join business_profile c on c.id = a.company_id '.
+
+			               'where a.company_id = ' . $company_id . ' and a.created_by = ' . $uid . ' ' .
+
+			               'order by create_date DESC limit 1')->row();
+
+						$return['latest_folder'] = $latest_folder;
+					} else {
+						$return['error'] = 'Error in creating folder. Please contact our support';
+					}
 				}
+			} else {
+				$return['error'] = 'Error in initializing root folder';
 			}
 		} else {
-			$return['error'] = 'Error in initializing root folder';
+			$return['error'] = 'You dont have permission to create a folder';
 		}
 
 		echo json_encode($return);
@@ -273,24 +278,29 @@ class Folders extends MY_Controller {
 			'error' => ''
 		);
 
-		$section = $_POST['section'];
-		$folder_id = $_POST['folder_id'];
-		$parent_id = 0;
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['trash_folder_file'] == 1){
+			$section = $_POST['section'];
+			$folder_id = $_POST['folder_id'];
+			$parent_id = 0;
 
-		$folder = $this->folders_model->getById($folder_id);
-		
-		if(($folder->created_by != $uid) && (($section == 'sharedlibrary') || ($section == 'businessformtemplates'))){
-			$return['error'] = 'Cannot delete folder. Folder is not yours.';
-		} else {			
-			$data = array(
-				'softdelete' => 1,
-				'softdelete_date' => date('Y-m-d h:i:s'),
-				'softdelete_by' => $uid
-			);
+			$folder = $this->folders_model->getById($folder_id);
+			
+			if(($folder->created_by != $uid) && (($section == 'sharedlibrary') || ($section == 'businessformtemplates'))){
+				$return['error'] = 'Cannot delete folder. Folder is not yours.';
+			} else {			
+				$data = array(
+					'softdelete' => 1,
+					'softdelete_date' => date('Y-m-d h:i:s'),
+					'softdelete_by' => $uid
+				);
 
-			if(!$this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
-				$return['error'] = 'Error in deleting folder';
+				if(!$this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
+					$return['error'] = 'Error in deleting folder';
+				}
 			}
+		} else {
+			$return['error'] = 'You dont have permission to put a folder to recycle bin';
 		}
 
 		echo json_encode($return);	
@@ -301,10 +311,15 @@ class Folders extends MY_Controller {
 			'error' => ''
 		);
 
-		$folder_id = $_POST['folder_id'];
-		$parent_id = 0;
-		
-		$this->removeAll($folder_id);
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['remove_folder_file'] == 1){
+			$folder_id = $_POST['folder_id'];
+			$parent_id = 0;
+			
+			$this->removeAll($folder_id);
+		} else {
+			$return['error'] = 'You dont have permission to delete a folder permanently';
+		}
 
 		echo json_encode($return);
 	}
@@ -332,20 +347,25 @@ class Folders extends MY_Controller {
 			'error' => ''
 		);
 
-		$uid = logged('id');
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['remove_folder_file'] == 1){
+			$uid = logged('id');
 
-		$folders = $this->folders_model->getByWhere(array('softdelete' => 1,'created_by' => $uid));
-		foreach ($folders as $folder) {
-			$this->removeAll($folder->folder_id);
-		}
-
-		$files = $this->vault_model->getByWhere(array('softdelete' => 1,'user_id' => $uid));
-		foreach ($files as $file) {
-			$path = './uploads/' . $this->company_folder . $file->file_path;
-
-			if(unlink($path)){
-				$this->vault_model->trans_delete(array(), array('file_id' => $file->file_id));
+			$folders = $this->folders_model->getByWhere(array('softdelete' => 1,'created_by' => $uid));
+			foreach ($folders as $folder) {
+				$this->removeAll($folder->folder_id);
 			}
+
+			$files = $this->vault_model->getByWhere(array('softdelete' => 1,'user_id' => $uid));
+			foreach ($files as $file) {
+				$path = './uploads/' . $this->company_folder . $file->file_path;
+
+				if(unlink($path)){
+					$this->vault_model->trans_delete(array(), array('file_id' => $file->file_id));
+				}
+			}
+		} else {
+			$return['error'] = 'You dont have permission to delete a folder or file permanently';
 		}
 
 		echo json_encode($return);
@@ -372,12 +392,6 @@ class Folders extends MY_Controller {
 		if(rmdir('./uploads/' . $this->company_folder . $folder_path)){
 			$this->folders_model->trans_delete(array(), array('folder_id' => $folder_id));
 		}
-	}
-
-	public function update_permissions(){
-	}
-
-	public function getFolderPermissions(){
 	}
 
 	public function getFoldersFiles($parent_id = 0, $getByCurrentUser = 0, $getByWithCategory = 0, $internal = false){
@@ -521,26 +535,31 @@ class Folders extends MY_Controller {
 			'error' => ''
 		);
 
-		if($folder_id == 0){
-			$return['error'] = 'Please select folder to move';
-		} else if($to_folder == $folder_id){
-			$return['error'] = 'Moving to self is not allowed at the moment';
-		} else if($this->IfSameAncestor($to_folder, $folder_id)){ 
-			$return['error'] = 'Moving to sub folder is not allowed at the moment';
-	    } else {
-			$folder = $this->folders_model->getById($folder_id);
-			$exists_count = $this->db->query(
-				'select count(*) as `exists` from file_folders where parent_id = ' . $to_folder . ' and lower(folder_name) = "' . strtolower($folder->folder_name) . '" and company_id = ' . $company_id
-			)->row();
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['move_folder_file'] == 1){
+			if($folder_id == 0){
+				$return['error'] = 'Please select folder to move';
+			} else if($to_folder == $folder_id){
+				$return['error'] = 'Moving to self is not allowed at the moment';
+			} else if($this->IfSameAncestor($to_folder, $folder_id)){ 
+				$return['error'] = 'Moving to sub folder is not allowed at the moment';
+		    } else {
+				$folder = $this->folders_model->getById($folder_id);
+				$exists_count = $this->db->query(
+					'select count(*) as `exists` from file_folders where parent_id = ' . $to_folder . ' and lower(folder_name) = "' . strtolower($folder->folder_name) . '" and company_id = ' . $company_id
+				)->row();
 
-			if($exists_count->exists > 0){
-				$return['error'] = 'Cannot move. Folder name already exists in the destination folder';
-			} else {
-			//create top folder initially ---------------------------------------------------------------------------------
-				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $to_folder)->row();
+				if($exists_count->exists > 0){
+					$return['error'] = 'Cannot move. Folder name already exists in the destination folder';
+				} else {
+				//create top folder initially ---------------------------------------------------------------------------------
+					$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $to_folder)->row();
 
-				$this->recurseFolder($to_folder, $parent_folder, $folder, true);
+					$this->recurseFolder($to_folder, $parent_folder, $folder, true);
+				}
 			}
+		} else {
+			$return['error'] = 'You dont have permission to move a folder';
 		}
 
 		echo json_encode($return);
@@ -671,77 +690,82 @@ class Folders extends MY_Controller {
 		$uid = logged('id');
 		$company_id = logged('company_id');
 
-		if($this->company_folder != ''){
-			$return = array(
+		$return = array(
 				'latest_folder' => array(),
 				'error' => ''
 			);
 
-			$folder_id = $_POST['folder_id'];
-			$folder_name = $_POST['folder_name'];
-			$parent_id = 0;
-			$category = '';
-			if(isset($_POST['parent_id'])){
-				$parent_id = $_POST['parent_id'];
-			}
-
-			if(isset($_POST['category'])){
-				$category = $_POST['category'];
-			}
-
-			$description = '';
-			$path = '';
-
-			$record = $this->db->query('select count(*) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and folder_id <> '. $folder_id .' and company_id = ' . $company_id)->row();
-
-			if($record->existing > 0){
-				$return['error'] = 'Folder already exists';
-				if(!empty($record->category_id)){
-					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
-				}
-			} else {
-				$folder = $this->folders_model->getById($folder_id);
-				$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
-				if($parent_folder->num_rows() > 0){
-					$parent_folder = $parent_folder->row();
-
-					$old_path = $parent_folder->path . $folder->folder_name . '/';
-					$new_path = $parent_folder->path . $folder_name . '/';
-				} else {
-					$old_path = '/' . $folder->folder_name . '/';
-					$new_path = '/' . $folder_name . '/';
+		$permissions = getUserFileVaultPermissions();
+		if($permissions['edit_folder_file'] == 1){
+			if($this->company_folder != ''){
+				$folder_id = $_POST['folder_id'];
+				$folder_name = $_POST['folder_name'];
+				$parent_id = 0;
+				$category = '';
+				if(isset($_POST['parent_id'])){
+					$parent_id = $_POST['parent_id'];
 				}
 
-				if(isset($_POST['folder_desc'])){
-					$description = $_POST['folder_desc'];
+				if(isset($_POST['category'])){
+					$category = $_POST['category'];
 				}
 
-				$data = array(
-					'folder_name' => $folder_name,
-					'description' => $description,
-					'path' => $new_path,
-					'modified_by' => $uid,
-					'date_modified' => date('Y-m-d h:i:s')
-				);
+				$description = '';
+				$path = '';
 
-				if($category != ''){
-					$data['category_id'] = $category;
-				}
+				$record = $this->db->query('select count(*) as `existing`, category_id from file_folders where lower(folder_name) = "' . strtolower($folder_name) . '" and parent_id = ' . $parent_id . ' and folder_id <> '. $folder_id .' and company_id = ' . $company_id)->row();
 
-				if($this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
-					if(rename('./uploads/' . $this->company_folder . $old_path, './uploads/' . $this->company_folder . $new_path)){
-						$this->recurseFolder($folder_id, $folder, null, false, true);
-					} else {
-						$return['error'] = 'Error in renaming the actual file. Please contact our support';
+				if($record->existing > 0){
+					$return['error'] = 'Folder already exists';
+					if(!empty($record->category_id)){
+						$return['error'] .= ' in <strong>Business Form Templates</strong> section';
 					}
 				} else {
-					$return['error'] = 'Error in updating folder. Please contact our support';
+					$folder = $this->folders_model->getById($folder_id);
+					$parent_folder = $this->db->query('select * from file_folders where folder_id = ' . $parent_id);
+					if($parent_folder->num_rows() > 0){
+						$parent_folder = $parent_folder->row();
+
+						$old_path = $parent_folder->path . $folder->folder_name . '/';
+						$new_path = $parent_folder->path . $folder_name . '/';
+					} else {
+						$old_path = '/' . $folder->folder_name . '/';
+						$new_path = '/' . $folder_name . '/';
+					}
+
+					if(isset($_POST['folder_desc'])){
+						$description = $_POST['folder_desc'];
+					}
+
+					$data = array(
+						'folder_name' => $folder_name,
+						'description' => $description,
+						'path' => $new_path,
+						'modified_by' => $uid,
+						'date_modified' => date('Y-m-d h:i:s')
+					);
+
+					if($category != ''){
+						$data['category_id'] = $category;
+					}
+
+					if($this->folders_model->trans_update($data, array('folder_id' => $folder_id))){
+						if(rename('./uploads/' . $this->company_folder . $old_path, './uploads/' . $this->company_folder . $new_path)){
+							$this->recurseFolder($folder_id, $folder, null, false, true);
+						} else {
+							$return['error'] = 'Error in renaming the actual file. Please contact our support';
+						}
+					} else {
+						$return['error'] = 'Error in updating folder. Please contact our support';
+					}
 				}
+			} else {
+				$return['error'] = 'Error in initializing root folder';
 			}
 		} else {
-			$return['error'] = 'Error in initializing root folder';
+			$return['error'] = 'You dont have permission to update a folder';
 		}
-
+		
 		echo json_encode($return);
 	}
 }

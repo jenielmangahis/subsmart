@@ -87,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Cancellation Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control date_picker" name="acs_cancel_date" id="acs_cancel_date" />
+                    <input type="text" class="form-control" name="acs_cancel_date" id="date_picker" />
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Collection Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control date_picker" name="acs_collect_date" id="acs_collect_date" />
+                    <input type="text" class="form-control" name="acs_collect_date" id="date_picker" />
                 </div>
             </div>
         </div>
