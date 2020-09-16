@@ -149,6 +149,10 @@ p.plan-list-price {
 							        <div class="col-md-12">
 		                      			<div class="reg-s1">
 		  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
+		  						          <select class="form-control subscription-type" style="width: auto;margin: 33px auto;">
+		  						          	<option value="prospect">3 months 50% off</option>
+		  						          	<option value="trial">Free Trial</option>
+		  						          </select>
 		  						          <ul class="plan-list">
 		  						          <?php foreach($ns_plans as $p){ ?>
 		  						          	<li>
@@ -262,7 +266,7 @@ p.plan-list-price {
 							        <div class="col-md-12">
 							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
 							          <div class="payment-method" style="display: block;margin-bottom: 74px;">
-							          	<label>Plan : <b><span class="plan-selected"></span></b></label><br />
+							          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
 							          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
 							          	<hr />
 							          	<p><b>Payment Method</b></p>
@@ -322,6 +326,8 @@ $(function(){
         allPrevBtn = $('.prevBtn'),
         step1Container = $('#step-1'),
         step2Container = $('#step-2'),
+        step3Container = $('#step-3'),
+        step4Container = $('#step-4'),
         step2bBtn  = $('.step2-btn'),
         step3bBtnPrcPayment = $('.step3-btn-processPayment');
 
@@ -372,16 +378,27 @@ $(function(){
     step2bBtn.click(function(){
     	var plan_id = $(this).attr("data-id");
     	var plan_price = $(this).attr("data-price");
+    	var price_discount = (plan_price * 3) / 2;
     	var plan_name  = $(this).attr("data-plan");
+    	var subscription_type = $(".subscription-type").val();
 
     	$("#plan_id").val(plan_id);
-    	$("#plan_price").val(plan_price);
+    	$("#plan_price").val(price_discount);
         $("#plan_name").val(plan_name);
-    	$(".plan-selected").text(plan_name);
-    	$(".total-amount").text(plan_price);
+    	$(".plan-selected").text(plan_name);  
+    	$(".plan-price").text("$" + plan_price);  	
 
     	step1Container.hide();
-    	step2Container.show();
+
+    	if( subscription_type == 'trial' ){   
+    		$(".total-amount").text("0.00 (Free Trial)");
+    		$("#plan_price").val(0);
+    		step3Container.show();
+    	}else{
+    		$(".total-amount").text("$" + price_discount  + " (3 months 50% off)");
+    		step2Container.show();
+    	}
+    	
     	$("span.step-1").removeClass('btn-indigo');
     	$("span.step-1").addClass("btn-default");
     	$("span.step-2").addClass('btn-indigo');
