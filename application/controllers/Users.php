@@ -447,6 +447,7 @@ class Users extends MY_Controller {
 				'file_name' => $id.'.'.$ext
 
 			]);
+			$profile_image = $id.'.'.$ext;
 
 			$image = $this->uploadlib->uploadImage('image', '/users');
 
@@ -454,7 +455,7 @@ class Users extends MY_Controller {
 
 			if($image['status']){
 
-				$this->users_model->update($id, ['img_type' => $ext]);
+				$this->users_model->update($id, ['profile_img' => $profile_image , 'img_type' => $ext]);
 
 			}
 
