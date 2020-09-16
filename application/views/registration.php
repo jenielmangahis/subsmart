@@ -390,18 +390,21 @@ $(function(){
 
     	step1Container.hide();
 
+    	$("span.step-1").removeClass('btn-indigo');
+	    $("span.step-1").addClass("btn-default");
+
     	if( subscription_type == 'trial' ){   
     		$(".total-amount").text("0.00 (Free Trial)");
     		$("#plan_price").val(0);
     		step3Container.show();
+    		$("span.step-3").addClass('btn-indigo');
     	}else{
     		$(".total-amount").text("$" + price_discount  + " (3 months 50% off)");
     		step2Container.show();
+	    	$("span.step-2").addClass('btn-indigo');
     	}
     	
-    	$("span.step-1").removeClass('btn-indigo');
-    	$("span.step-1").addClass("btn-default");
-    	$("span.step-2").addClass('btn-indigo');
+    	
     });
 
     step3bBtnPrcPayment.click(function(){
