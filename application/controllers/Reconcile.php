@@ -122,7 +122,19 @@ class Reconcile extends MY_Controller {
         $memo_sc=$this->input->post('memo_sc');
         $expense_account=$this->input->post('expense_account');
 
-        $this->reconcile_model->updatepgrecords($id,$first_date,$service_charge,$expense_account);
+        $this->reconcile_model->updatepgrecords($id,$first_date,$service_charge,$expense_account,$CHRG,$memo_sc);
+        
+    }
+
+    public function update_pg2($id)
+    {
+        $id=$id;
+        $second_date=$this->input->post('second_date');
+        $interest_earned=$this->input->post('interest_earned');
+        $memo_it=$this->input->post('memo_it');
+        $income_account=$this->input->post('income_account');
+
+        $this->reconcile_model->updatepg2records($id,$second_date,$interest_earned,$income_account,$memo_it);
         
     }
 

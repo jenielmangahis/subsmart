@@ -141,7 +141,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Attendance View</h1>
+                        <h1 class="page-title">Attendance</h1>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
@@ -464,7 +464,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     $btn_action = 'employeeCheckIn';
                                                                 }
                                                             }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
                                                                     $break_id = 'employeeBreakOut';
                                                                     $status = 'fa-mug-hot';
                                                                     $break_in = date('h:i A',$log->time);
@@ -472,9 +472,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     $indicator_out = 'display:none';
                                                                     $indicator_in_break = 'display:block';
                                                                     $indicator_out_break = 'display:none';
-                                                                }
+//                                                                }
                                                             }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
                                                                     $status = 'fa-check';
                                                                     $break_out = date('h:i A',$log->time);
                                                                     $break = 'disabled="disabled"';
@@ -483,7 +483,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     $indicator_out = 'display:none';
                                                                     $indicator_in_break = 'display:none';
                                                                     $indicator_out_break = 'display:block';
-                                                                }
+//                                                                }
                                                             }
 
                                                             foreach ($week_duration as $week){

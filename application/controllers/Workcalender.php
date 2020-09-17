@@ -221,16 +221,8 @@ class Workcalender extends MY_Controller
             $default_imp_img = base_url('uploads/users/default.png');
             foreach($get_users as $get_user) {
 
-                $url_png  = urlUpload('users/' .  $get_user->profile_img . '.png');
-                $url_jpeg = urlUpload('users/' .  $get_user->profile_img . '.jpeg');
-                $url_jpg  = urlUpload('users/' .  $get_user->profile_img . '.jpg');
-
-                if( $get_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $get_user->profile_img . '.png') ) {
-                    $default_imp_img = $url_png;
-                }elseif($get_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $get_user->profile_img . '.jpeg') ) {
-                    $default_imp_img = $url_jpeg;
-                }elseif($get_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $get_user->profile_img . '.jpg') ) {
-                    $default_imp_img = $url_jpg;
+                if( $get_user->profile_img != null ) {
+                        $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );                     
                 } else {
                     $default_imp_img = base_url('uploads/users/default.png');
                 }

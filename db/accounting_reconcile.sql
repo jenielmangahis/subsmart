@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 04, 2020 at 06:56 PM
+-- Generation Time: Sep 16, 2020 at 11:24 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -40,6 +40,9 @@ CREATE TABLE `accounting_reconcile` (
   `interest_earned` varchar(255) NOT NULL,
   `income_account` varchar(255) NOT NULL,
   `adjustment_date` varchar(255) DEFAULT NULL,
+  `CHRG` varchar(255) NOT NULL DEFAULT 'SVCCHRG',
+  `memo_sc` varchar(255) NOT NULL DEFAULT 'Service Charge',
+  `memo_it` varchar(255) NOT NULL DEFAULT 'Interest Earned',
   `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0 = inactive , 1 = active	'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -47,9 +50,9 @@ CREATE TABLE `accounting_reconcile` (
 -- Dumping data for table `accounting_reconcile`
 --
 
-INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `active`) VALUES
-(2, 1, '2000', '28.08.2020', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '20.08.2020', 1),
-(4, 2, '10000', '09.06.2020', '10.06.2020', '100', 'Cash on hand', '10.06.2020', '200', 'Cash on hand', NULL, 1);
+INSERT INTO `accounting_reconcile` (`id`, `chart_of_accounts_id`, `ending_balance`, `ending_date`, `first_date`, `service_charge`, `expense_account`, `second_date`, `interest_earned`, `income_account`, `adjustment_date`, `CHRG`, `memo_sc`, `memo_it`, `active`) VALUES
+(2, 1, '2000', '28.08.2019', '28.08.2020', '200', 'Cash on hand', '20.08.2020', '20', 'Cash on hand', '08.08.2020', 'SVCCHRG', 'Service Charge', 'Interest Earned', 0),
+(4, 2, '10000', '09.06.2020', '11.06.2020', '100', 'Corporate Account (XXXXXX 5850)', '20.06.2020', '300', 'Cash on hand', NULL, 'SVCCHRG', 'Service Charge', 'Interest Earned', 1);
 
 --
 -- Indexes for dumped tables

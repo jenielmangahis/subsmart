@@ -419,12 +419,9 @@ img.calendar-user-profile {
                                         <div class="col-xs-12 col-2 col-sm-2 col-md-2">
                                              <?php
                                              $default_imp_img = base_url('uploads/users/default.png');
-                                              if( $recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.png') ) {
-                                                    $default_imp_img = $url_png;
-                                                }elseif($recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.jpeg') ) {
-                                                    $default_imp_img = $url_jpeg;
-                                                }elseif($recent_user->profile_img != null && file_exists(FCPATH."/uploads/users/" . $recent_user->profile_img . '.jpg') ) {
-                                                    $default_imp_img = $url_jpg;
+                                              if( $recent_user->profile_img != null) {
+                                                    $img_filename = $recent_user->profile_img .'.'.$recent_user->img_type;
+                                                    $default_imp_img = base_url('uploads/users/'.$img_filename);
                                                 } else {
                                                     $default_imp_img = base_url('uploads/users/default.png');
                                                 }
@@ -560,7 +557,7 @@ img.calendar-user-profile {
     }
 
 
-    ////////
+    
     function get_employee_dropdown() {
         jQuery.ajax({
             url: base_url + 'users/ajax_user_dropdown',

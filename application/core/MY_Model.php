@@ -337,12 +337,16 @@ class MY_Model extends CI_Model {
 		}
 	}
     
-	public function getRowByWhere($whereArg, $row){	
+	public function getRowByWhere($whereArg, $row, $toArray = false){	
 
 		if(isset($args['order']))
 			$this->db->order_by($args['order'][0], $args['order'][1]);
 
-		return $this->db->get_where($this->table, $whereArg)->row()->{$row};
+		if(!$toArray){
+			return $this->db->get_where($this->table, $whereArg)->row()->{$row};
+		} else {
+			return $this->db->get_where($this->table, $whereArg)->row_array();	
+		}
 
 	}
 
