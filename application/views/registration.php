@@ -78,18 +78,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	list-style: none;
 }
 .plan-list li{
-	display: inline-block;
-	width:32%;
+  display: inline-block;
+  width:30%;
   margin-bottom:40px;
+  box-shadow: 0 0 9px -1px #222;
+  min-height: 300px;
+  vertical-align: middle;
+  margin: 4px;
+  background-color: #c9c9c9;
+  padding-top: 10%;
 }
 h3.plan-list-text {
-  font-size: 19px !important;
-  font-weight: 400;
+  font-size: 22px !important;
+  font-weight: 600;
 }
 p.plan-list-price {
   font-size: 25px;
   margin-top: 10px;
-  margin-bottom: 17px;
+  margin-bottom: 30px;
   font-weight: 700;
   font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif !important;
 }
@@ -159,7 +165,17 @@ p.plan-list-price {
 		  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
 		  						          		
 		  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
-		  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
+			  						          		<div class="discounted-price">
+			  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;">$<?= number_format($p->price, 2); ?></p>
+			  						          			<?php 
+			  						          				$discount_price = $p->price / 2;
+			  						          			?>
+			  						          			<p class="plan-list-price">$<?= number_format($discount_price, 2); ?> /mo</p>
+			  						          		</div>
+			  						          		<div class="trial-price" style="display: none;">
+			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?> /mo</p>
+			  						          		</div>
+		  						          			<br />
 		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
 		  						          		<?php } else { ?>
 		  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
@@ -329,6 +345,7 @@ $(function(){
         step3Container = $('#step-3'),
         step4Container = $('#step-4'),
         step2bBtn  = $('.step2-btn'),
+        subType = $(".subscription-type"),
         step3bBtnPrcPayment = $('.step3-btn-processPayment');
 
     allWells.hide();
@@ -423,5 +440,17 @@ $(function(){
     <?php }elseif($payment_status == 'cancel') { ?>
     		$('div.setup-panel div a#step4').trigger('click');
     <?php } ?>
+
+    subType.change(function(){
+    	var type = $(this).val();
+
+    	if( type == 'trial' ){
+    		$(".discounted-price").hide();
+    		$(".trial-price").show();
+    	}else{
+    		$(".discounted-price").show();
+    		$(".trial-price").hide();
+    	}
+    });
 });
 </script>
