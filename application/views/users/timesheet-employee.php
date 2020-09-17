@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Time Employee Overview </h1>
+                        <h1 class="page-title">Time Employee</h1>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol> -->

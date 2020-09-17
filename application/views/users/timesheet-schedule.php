@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title">Time Schedule Overview </h1>
+                        <h1 class="page-title">Time Schedule</h1>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Manage Timesheets</li>
                         </ol> -->
@@ -78,11 +78,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- Date Selector -->
                             <div class="row">
                                 <div class="col-lg-3" style="margin-bottom: 12px">
-<!--                                    <select name="" id="scheduleWeek" class="form-control">-->
-<!--                                        <option value="this week" selected>This week</option>-->
-<!--                                        <option value="next week">Next week</option>-->
-<!--                                        <option value="last week">Last week</option>-->
-<!--                                    </select>-->
                                     <label for="scheduleWeek" class="week-label">Week of :</label>
                                     <input type="text" id="scheduleWeek" class="form-control ts_schedule" value="<?php echo date('m/d/Y',strtotime('monday this week'))?>">
                                 </div>

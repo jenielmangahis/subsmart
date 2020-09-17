@@ -7,7 +7,7 @@ class Reconcile_model extends MY_Model {
 
 	public function saverecords($chart_of_accounts_id,$ending_balance,$ending_date,$first_date,$service_charge,$expense_account,$second_date,$interest_earned,$income_account)
 	{
-		$query="insert into accounting_reconcile values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','1')";
+		$query="insert into accounting_reconcile values('','$chart_of_accounts_id','$ending_balance','$ending_date','$first_date','$service_charge','$expense_account','$second_date','$interest_earned','$income_account','','SVCCHRG','Service Charge','Interest Earned','1')";
 		echo $this->db->query($query);
 	}
 
@@ -17,9 +17,15 @@ class Reconcile_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
-	public function updatepgrecords($id,$first_date,$service_charge,$expense_account)
+	public function updatepgrecords($id,$first_date,$service_charge,$expense_account,$CHRG,$memo_sc)
 	{
-		$query="update accounting_reconcile set first_date ='$first_date', service_charge = '$service_charge', expense_account ='$expense_account' where id = '$id'";;
+		$query="update accounting_reconcile set first_date ='$first_date', service_charge = '$service_charge', expense_account ='$expense_account',CHRG = '$CHRG', memo_sc = '$memo_sc' where id = '$id'";;
+		echo $this->db->query($query);
+	}
+
+	public function updatepg2records($id,$second_date,$interest_earned,$income_account,$memo_it)
+	{
+		$query="update accounting_reconcile set second_date ='$second_date', income_account = '$income_account', interest_earned ='$interest_earned', memo_it = '$memo_it' where id = '$id'";;
 		echo $this->db->query($query);
 	}
 

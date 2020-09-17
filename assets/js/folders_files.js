@@ -906,7 +906,7 @@ $(document).ready(function(){
     var b_remove_folder_file = $('a[control="remove"]');
     var b_empty_folder_file = $('a[control="empty"]');
 
-    if(permissions.create_folder == 1){
+    if(permissions.create_folder == '1'){
       if(b_create_folder.hasClass('d-none')){
         b_create_folder.removeClass('d-none');
       }  
@@ -916,7 +916,7 @@ $(document).ready(function(){
       }
     }
 
-    if(permissions.add_file == 1){
+    if(permissions.add_file == '1'){
       if(b_add_file.hasClass('d-none')){
         b_add_file.removeClass('d-none');
       }  
@@ -926,7 +926,7 @@ $(document).ready(function(){
       }
     }
 
-    if(permissions.edit_folder_file == 1){
+    if(permissions.edit_folder_file == '1'){
       if(b_edit_folder_file.hasClass('d-none')){
         b_edit_folder_file.removeClass('d-none');
       }  
@@ -936,7 +936,7 @@ $(document).ready(function(){
       }
     }
 
-    if(permissions.move_folder_file == 1){
+    if(permissions.move_folder_file == '1'){
       if(b_move_folder_file.hasClass('d-none')){
         b_move_folder_file.removeClass('d-none');
       }  
@@ -946,7 +946,7 @@ $(document).ready(function(){
       }
     }
 
-    if(permissions.trash_folder_file == 1){
+    if(permissions.trash_folder_file == '1'){
       if(b_trash_folder_file.hasClass('d-none')){
         b_trash_folder_file.removeClass('d-none');
       }  
@@ -956,7 +956,7 @@ $(document).ready(function(){
       }
     }
 
-    if(permissions.remove_folder_file == 1){
+    if(permissions.remove_folder_file == '1'){
       if(b_remove_folder_file.hasClass('d-none')){
         b_remove_folder_file.removeClass('d-none');
       }  

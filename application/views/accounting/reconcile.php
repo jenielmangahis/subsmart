@@ -171,6 +171,23 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     </div>
     <!-- End Add Custom Tax Sidebar -->
 
+    <!-- Add New -->
+    <div id="overlay-full-tx" class=""></div>
+    <div id="side-menu-full-tx" class="main-side-nav">
+        <div class="side-title">
+            <h4>Edit - Cash on hand</h4>
+            <a id="close-menu-full-tx" class="menuCloseButton" onclick="closeFullNav()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        
+     
+        <div class="save-act">
+            <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
+            <button type="submit" class="savebtn">Done</button>
+        </div>
+    </div>
+    <!-- End Add New -->
+
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -416,7 +433,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         </div>
                                     </section>
                                  </div>
-                                 <div class="col-md-3"><a href="#"><i class="fa fa-close"></i>Statment ending date</a></div>
+                                 <div class="col-md-3"><!-- <a href="#"><i class="fa fa-close"></i>Statment ending date</a> --></div>
                                  <div class="col-md-2"><a href="#">Clear All / View All</a></div>
                              </div>
                              <?php
@@ -453,7 +470,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<tr id='payments' onclick='trClick(".$o.")'>";
                                 echo "<td >".$row->first_date."</td>";
                                 echo "<td class='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td class='refno' >SVCCHRG</td>";
+                                echo "<td class='refno' >".$row->CHRG."</td>";
                                 echo "<td class='account'>".$row->expense_account."</td>";
                                 echo "<td name='payee' class='payee' >";
                                     echo "<select name='payee' class='form-control select2'>";
@@ -464,7 +481,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     }
                                     echo  "</select>";
                                 echo "</td>";
-                                echo "<td class='memo' >Service Charges</td>";
+                                echo "<td class='memo' >".$row->memo_sc."</td>";
                                 /*echo  "<td class='status'></td>";*/
                                 echo  "<td >".$row->service_charge."</td>";
                                 echo  "<td></td>";
@@ -473,7 +490,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
                                 echo "<td><div class='col-xs-10 date_picker'><input type='text' name='first_date' id='first_date' value='".$row->first_date."' class='form-control'></div></td>";
                                 echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
-                                echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='SVCCHRG' class='form-control'></td>";
+                                echo "<td><input type='text' name='SVCCHRG' id='SVCCHRG' value='".$row->CHRG."' class='form-control'></td>";
                                 echo "<td><select name='expense_account' id='expense_account' class='form-control'>";
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
@@ -491,14 +508,14 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
                                         }
                                 echo "</select></td>";
-                                echo "<td><input type='text' name='sc' id='sc' value='Service Charge' class='form-control'></td>";
+                                echo "<td><input type='text' name='sc' id='sc' value='".$row->memo_sc."' class='form-control'></td>";
                                 echo "<td><input type='text' name='service_charge' id='service_charge' value='".$row->service_charge."' class='form-control'></td>";   
                                 echo "<td></td>";                                
                                 echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
                                 echo "<td><a href='#' class='btn-ed' onclick='crossClick(".$o.")'>Cancel</a></td>";
-                                echo "<td><a href='#' class='btn-ed'>Edit</a></td>";
+                                echo "<td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>";
                                 echo "<td><a href='#' class='btn-ed savebt1'>Save</a></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
@@ -522,7 +539,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     }
                                     echo  "</select>";
                                 echo "</td>";
-                                echo "<td class='memo' contenteditable='true'>Interest Earned</td>";
+                                echo "<td class='memo' contenteditable='true'>".$row->memo_it."</td>";
                                 /*echo  "<td class='status'></td>";*/
                                 echo  "<td contenteditable='true'></td>";
                                 echo  "<td>".$row->interest_earned."</td>";
@@ -532,11 +549,11 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 echo "<td><div class='col-xs-10 date_picker'><input type='text' name='second_date' id='second_date' value='".$row->second_date."' class='form-control'></div></td>";
                                 echo "<td id='type'>".$this->chart_of_accounts_model->getName($row->chart_of_accounts_id)."</td>";
                                 echo "<td><input disabled type='text' name='INTEREST' id='INTEREST' value='INTEREST' class='form-control'></td>";
-                                echo "<td><select name='interest_earned' id='interest_earned' class='form-control'>";
+                                echo "<td><select name='income_account' id='income_account' class='form-control'>";
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
                                            echo "<option ";
-                                           if($row->interest_earned == $rw->sub_acc_name){
+                                           if($row->income_account == $rw->sub_acc_name){
                                             echo "selected";
                                             }
                                             echo " value='".$rw->sub_acc_name."'>".$rw->sub_acc_name."</option>";
@@ -549,15 +566,15 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         echo "<option value='".$ro->id."'>".$ro->f_name." ".$ro->l_name."</option>";
                                         }
                                 echo "</select></td>";
-                                echo "<td><input type='text' name='it' value='INTEREST' class='form-control'></td>";
+                                echo "<td><input type='text' name='it' id='it' value='".$row->memo_it."' class='form-control'></td>";
                                 echo "<td></td>";                                
-                                echo "<td><input type='text' name='interest_earned' value='".$row->interest_earned."' class='form-control'></td>";
+                                echo "<td><input type='text' name='interest_earned' id='interest_earned' value='".$row->interest_earned."' class='form-control'></td>";
                                 echo "<td><i class='fa fa-times' onclick='crossClick(".$o.")'></i></td>";    
                                 echo "</tr>";
                                 echo "<tr class='tr_class_".$o."' style='display:none'>";
                                 echo "<td><a href='#' class='btn-ed'>Cancel</a></td>";
-                                echo "<td><a href='#' class='btn-ed'>Edit</a></td>";
-                                echo "<td><a href='#' class='btn-ed savebt'>Save</a></td>";
+                                echo "<td><a href='#' class='btn-ed' onclick='openFullNav()'>Edit</a></td>";
+                                echo "<td><a href='#' class='btn-ed savebt2'>Save</a></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
                                 echo "<td></td>";
@@ -1039,4 +1056,41 @@ $('.savebt1').on('click', function() {
     })
   }
 });
+$('.savebt2').on('click', function() {
+  var id = $('#id').val();
+  var second_date = $('#second_date').val();
+  var income_account = $('#income_account').val();
+  var memo_it = $('#it').val();
+  var interest_earned = $('#interest_earned').val();
+  if(id!='')
+  {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/update_pg2/') ?>"+id,
+        method: "POST",
+        data: {second_date:second_date,income_account:income_account,memo_it:memo_it,interest_earned:interest_earned},
+        success:function(data)
+        {
+            sweetAlert(
+                            'Updated!',
+                            'Reconcile has been updated.',
+                            'success'
+                        );
+        }
+    })
+  }
+});
+</script>
+<script type="text/javascript">
+function openFullNav() {
+    jQuery("#side-menu-full-tx").addClass("open-side-nav");
+    jQuery("#side-menu-full-tx").css("width","100%");
+    jQuery("#overlay-full-tx").addClass("overlay");
+}
+
+function closeFullNav() {
+   
+    jQuery("#side-menu-full-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-full-tx").css("width","0%");
+    jQuery("#overlay-full-tx").removeClass("overlay");
+}
 </script>

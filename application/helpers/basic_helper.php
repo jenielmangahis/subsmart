@@ -1005,10 +1005,9 @@ if (!function_exists('getUserFileVaultPermissions')){
         $uid = logged('id');
         $role_id = logged('role');
 
-        $user_permissions = $CI->file_folders_permissions_users_model->getByWhere(array('user_id' => $uid), [], true);
-        $role_permissions = $CI->file_folders_permissions_roles_model->getByWhere(array('role_id' => $role_id), [], true);
+        $user_permissions = $CI->file_folders_permissions_users_model->getRowByWhere(array('user_id' => $uid), 0, true);
+        $role_permissions = $CI->file_folders_permissions_roles_model->getRowByWhere(array('role_id' => $role_id), 0, true);
         if(!empty($user_permissions)){
-            $user_permissions = $user_permissions[0];
             $consider_no_user_permission = (($user_permissions['create_folder'] == 0) &&
                                             ($user_permissions['add_file'] == 0) &&
                                             ($user_permissions['edit_folder_file'] == 0) &&
@@ -1019,8 +1018,8 @@ if (!function_exists('getUserFileVaultPermissions')){
                 $user_permissions['role_id'] = $role_id;
                 return $user_permissions;
             } else if(!empty($role_permissions)){
-                $role_permissions[0]['user_id'] = $uid;
-                return $role_permissions[0];    
+                $role_permissions['user_id'] = $uid;
+                return $role_permissions;    
             } else {
                 return array(
                     'create_folder' => 0,
@@ -1034,8 +1033,8 @@ if (!function_exists('getUserFileVaultPermissions')){
                 );    
             }
         } else if(!empty($role_permissions)){
-            $role_permissions[0]['user_id'] = $uid;
-            return $role_permissions[0];
+            $role_permissions['user_id'] = $uid;
+            return $role_permissions;
         } else {
             return array(
                 'create_folder' => 0,
