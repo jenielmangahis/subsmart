@@ -2,6 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
+
+<style>
+    .btn {
+        font-size: 12px !important;
+        background-repeat: no-repeat;
+        padding: 6px 12px;
+    }
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
     <!-- page wrapper start -->
@@ -25,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="dropdown">
                                             <a class="btn btn-primary btn-md"
                                                href="<?php echo url('customer/add_lead') ?>"><span
-                                                    class="fa fa-plus"></span>Add New Lead</a>
+                                                    class="fa fa-plus"></span> Add New Lead</a>
                                             <?php //endif ?>
                                         </div>
                                     </div>
@@ -62,11 +70,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td><?= $lead->date_of_birth; ?></td>
                                                 <td><?= $lead->phone_home; ?></td>
                                                 <td>
-                                                    <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"><span class="fa fa-pencil-square-o icon"></span>Edit</span>
+                                                    <button class="btn btn-primary" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label"><span class="fa fa-pencil-square-o icon"></span> Edit</span>
                                                     </button>
-                                                    <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"><span class="fa fa-trash-o icon"></span>Delete</span>
+                                                    <button class="btn btn-primary delete_lead" id="<?php echo $lead->leads_id; ?>" type="button">
+                                                        <span class="btn-label"><span class="fa fa-trash-o icon"></span> Delete</span>
                                                     </button>
 
                                                 </td>
@@ -105,11 +113,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     $('#leads_list_table').DataTable({
-        "lengthChange": false,
-        "searching" : false,
-        "pageLength": 20,
-        "info": false
+        "lengthChange": true,
+        "searching" : true,
+        "pageLength": 10,
+        "info": true
+    });
+    $(".delete_lead").on( "click", function( event ) {
+        var ID=this.id;
+        // alert(ID);
+        Swal.fire({
+            title: 'Are you sure you want to DELETE this lead?',
+            text: "All lead data will be remove.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/customer/remove_customer",
+                    data: {prof_id : ID}, // serializes the form's elements.
+                    success: function(data)
+                    {
+                        if(data === "Done"){
+                            sucess("Customer Remove Successfully!");
+                        }else{
+                            console.log(data);
+                        }
+
+                    }
+                });
+                // window.location.href="/customer";
+            }
+        });
     });
 </script>

@@ -26,6 +26,16 @@ class Users extends MY_Controller {
 
 		$this->page_data['page']->menu = 'users';
 
+		add_css(array( 
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+        ));
+
 	}
 
 
@@ -344,15 +354,15 @@ class Users extends MY_Controller {
 				'file_name' => $id.'.'.$ext
 			]);
 
-			$image = $this->uploadlib->uploadImage('image', '/users');
+			$image = $this->uploadlib->uploadImage('image', '/users/user-profile');
 
 			if($image['status']){
 				$this->users_model->update($id, ['profile_img' => $ext]);
 			}else{
-				copy(FCPATH.'uploads/users/default.png', 'uploads/users/'.$id.'.png');
+				copy(FCPATH.'uploads/users/default.png', 'uploads/users/user-profile/p_'.$id.'.png');
 			}
 		}else{
-			copy(FCPATH.'uploads/users/default.png', 'uploads/users/'.$id.'.png');
+			copy(FCPATH.'uploads/users/default.png', 'uploads/users/user-profile/p_'.$id.'.png');
 		}
 
 
@@ -444,12 +454,12 @@ class Users extends MY_Controller {
 
 			$this->uploadlib->initialize([
 
-				'file_name' => $id.'.'.$ext
+				'file_name' => 'p_' .$id.'.'.$ext
 
 			]);
 			$profile_image = $id.'.'.$ext;
 
-			$image = $this->uploadlib->uploadImage('image', '/users');
+			$image = $this->uploadlib->uploadImage('image', '/users/user-profile');
 
 
 

@@ -125,7 +125,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #1 Phone</label>
+                    <label for="">Contact Phone 1</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact1" id="contact1" />
@@ -135,7 +135,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #2 Phone</label>
+                    <label for="">Contact Name 1</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="contact_name1" id="contact_name1" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-line">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="">Contact Phone 2</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact2" id="contact2" />
@@ -145,7 +155,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #3 Phone</label>
+                    <label for="">Contact Name 2</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="contact_name2" id="contact_name2" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 form-line">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="">Contact Phone 3</label>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="contact3" id="contact3" />
@@ -155,20 +175,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Contact Name #4 Phone</label>
+                    <label for="">Contact Name 3</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="contact4" id="contact4" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 form-line">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="">Contact Name #5 Phone</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="contact5" id="contact5" />
+                    <input type="text" class="form-control" name="contact_name3" id="contact_name3" />
                 </div>
             </div>
         </div>
@@ -196,7 +206,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">System Type</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="system_type" id="system_type" />
+                    <input type="text" class="form-control" name="system_type" id="system_type" value="<?php if(isset($alarm_info)){ echo $alarm_info->system_type; } ?>" required/>
                 </div>
             </div>
         </div>

@@ -175,11 +175,108 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <div id="overlay-full-tx" class=""></div>
     <div id="side-menu-full-tx" class="main-side-nav">
         <div class="side-title">
-            <h4>Edit - Cash on hand</h4>
+            <h4 id="memo_sc_nm"></h4>
             <a id="close-menu-full-tx" class="menuCloseButton" onclick="closeFullNav()"><span id="side-menu-close-text">
             <i class="fa fa-times"></i></span></a>
         </div>
-        
+
+        <div style="margin-left: 20px">
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-3">
+                    <select name="payee_popup" class="form-control">
+                        <option value="" disabled="" selected>Payee</option>
+                        <?php
+                        foreach($this->AccountingVendors_model->select() as $ro)
+                        {
+                        ?>
+                        <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="account_popup">
+                        <?php
+                           $i=1;
+                           foreach($this->chart_of_accounts_model->select() as $row)
+                           {
+                            ?>
+                            <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                          <?php
+                          $i++;
+                          }
+                           ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <h6>Balance:<?=number_format($this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id),2);?></h6>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2">
+                    <h6>Amount:<?=number_format($rows[0]->service_charge,2);?></h6>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2">
+                    <label>Mailing Address:</label>
+                    <textarea name="mailing_add" rows="4"></textarea>
+                </div>
+                <div class="col-md-2">
+                    <label>Payment date:</label>
+                    <div class="col-xs-10 date_picker">
+                        <input type="text" name="date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-2">
+                    <label>Check no.</label>
+                    <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
+                    </br>
+                    </br>
+                    <input type="checkbox" name="print_check">Print Later
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-8"></div>
+                <div class="col-md-2">
+                    <label>Check no.</label>
+                    <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label>Memo</label>
+                    </br>
+                    <textarea name="mailing_add" rows="4"><?=$rows[0]->memo_sc?></textarea>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-2">
+                    <h6>Total : <?=number_format($rows[0]->service_charge,2)?></h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label><i class="fa fa-paperclip"></i>Attachment</label>
+                    </br>
+                    <div class="file-upload-block">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn ubw">
+                                <i class="fa fa-cloud-upload"></i>
+                                <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                            </button>
+                            <input type="file" name="attachment_file" />
+                        </div>
+                    </div>
+                    </br>
+                    <a href="#">Show existing</a>
+                </div>
+            </div>
+        </div>
+
+
      
         <div class="save-act">
             <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
@@ -1085,6 +1182,7 @@ function openFullNav() {
     jQuery("#side-menu-full-tx").addClass("open-side-nav");
     jQuery("#side-menu-full-tx").css("width","100%");
     jQuery("#overlay-full-tx").addClass("overlay");
+    $("#memo_sc_nm").text("Check - #"+$("#SVCCHRG").val());
 }
 
 function closeFullNav() {

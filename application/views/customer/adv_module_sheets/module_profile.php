@@ -24,7 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-8">
                         <select id="fk_sa_id" name="fk_sa_id" data-customer-source="dropdown" class="input_select" required>
                             <?php foreach ($sales_area as $sa): ?>
-                                <option value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
+                                <option <?php if(isset($profile_info)){ if($profile_info->fk_sa_id == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -38,34 +38,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select">
-                            <option value=""></option>
-                            <option value="Captain">Captain</option>
-                            <option value="Cnl.">Cnl.</option>
-                            <option value="Colonel">Colonel</option>
-                            <option value="Dr.">Dr.</option>
-                            <option value="Gen.">Gen.</option>
-                            <option value="Judge">Judge</option>
-                            <option value="Lady">Lady</option>
-                            <option value="Lieutenant">Lieutenant</option>
-                            <option value="Lord">Lord</option>
-                            <option value="Lt.">Lt.</option>
-                            <option value="Madam">Madam</option>
-                            <option value="Major">Major</option>
-                            <option value="Master">Master</option>
-                            <option value="Miss">Miss</option>
-                            <option value="Mister">Mister</option>
-                            <option value="Mr.">Mr.</option>
-                            <option value="Maj.">Maj.</option>
-                            <option value="Mrs.">Mrs.</option>
-                            <option value="Ms.">Ms.</option>
-                            <option value="Pastor">Pastor</option>
-                            <option value="Private">Private</option>
-                            <option value="Prof.">Prof.</option>
-                            <option value="Pvt.">Pvt.</option>
-                            <option value="Rev.">Rev.</option>
-                            <option value="Sergeant">Sergeant</option>
-                            <option value="Sgt">Sgt</option>
-                            <option value="Sir">Sir</option>
+                            <?php
+                                for ($prefix=0;$prefix<28;$prefix++){
+                                    ?>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->prefix == prefix_name($prefix)){ echo 'selected'; } } ?> value="<?= prefix_name($prefix); ?>"><?= prefix_name($prefix); ?></option>
+                                    <?php
+                                }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -88,7 +67,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Middle Initial</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="text" class="form-control" maxlength="2" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
+                        <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
                     </div>
                 </div>
             </div>
@@ -109,7 +88,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Date Of Birth </label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="date_of_birth" id="date_picker" />
+                        <input type="text" class="form-control" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -120,20 +99,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select" >
-                            <option value="">Select</option>
-                            <option value="DS">DS</option>
-                            <option value="Esq.">Esq.</option>
-                            <option value="II">II</option>
-                            <option value="III">III</option>
-                            <option value="IV">IV</option>
-                            <option value="Jr.">Jr.</option>
-                            <option value="MA">MA</option>
-                            <option value="MBA">MBA</option>
-                            <option value="MD">MD</option>
-                            <option value="MS">MS</option>
-                            <option value="PhD">PhD</option>
-                            <option value="RN">RN</option>
-                            <option value="Sr.">Sr.</option>
+                            <?php
+                                for ($suffix=0;$suffix<14;$suffix++){
+                                    ?>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->suffix == suffix_name($prefix)){ echo 'selected'; } } ?> value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
+                                    <?php
+                                }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -144,7 +116,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Business Name</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="business_name" id="business_name" />
+                        <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -164,7 +136,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Social Security Number</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="ssn" id="ssn" />
+                        <div class="row">
+                            <?php
+                                if(isset($profile_info)){
+                                    $ssn = explode("-", $profile_info->ssn);
+                                }
+                            ?>
+                            <div class="col-md-4">
+                                <input type="tel" pattern="\d*" maxlength="3" class="form-control" name="ssn[]" value="<?php if(isset($ssn) && count($ssn)>0){ echo $ssn[0]; } ?>" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="tel" maxlength="2" class="form-control" name="ssn[]" value="<?php if(isset($ssn) && count($ssn)>1){ echo $ssn[1]; } ?>"/>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="tel" maxlength="3" class="form-control" name="ssn[]" value="<?php if(isset($ssn) && count($ssn)>2){ echo $ssn[2]; } ?>"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Phone (H)</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="phone_h" id="phone_h" />
+                        <input type="number" class="form-control" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
                     </div>
                 </div>
             </div>
@@ -184,7 +171,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Phone (W)</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="phone_w" id="phone_w" />
+                        <input type="number" class="form-control" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
                     </div>
                 </div>
             </div>
@@ -194,7 +181,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Phone (M)</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>"  />
+                        <input type="number" class="form-control" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
                     </div>
                 </div>
             </div>
@@ -224,7 +211,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">City</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
+                        <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
                     </div>
                 </div>
             </div>
@@ -234,7 +221,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">State</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" />
+                        <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
                     </div>
                 </div>
             </div>
@@ -278,23 +265,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 form-line">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="">Image/Logo File</label><br/>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" class="form-control" name="img_path" id="img_path" />
-                    </div>
-                </div>
-            </div>
+<!--            <div class="col-md-12 form-line">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-md-4">-->
+<!--                        <label for="">Image/Logo File</label><br/>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <input type="file" class="form-control" name="img_path" id="img_path" />-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
                         <label class="alarm_label"> <span >Pay History </span>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="pay_history" id="pay_history" />
+                        <select id="pay_history" name="pay_history" class="input_select">
+                            <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 1){ echo 'selected'; } } ?> value="1">1</option>
+                            <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 2){ echo 'selected'; } } ?> value="2">2</option>
+                            <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 3){ echo 'selected'; } } ?> value="3">3</option>
+                            <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 4){ echo 'selected'; } } ?> value="4">4</option>
+                            <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 5){ echo 'selected'; } } ?> value="5">5</option>
+                        </select>
                     </div>
                 </div>
             </div>

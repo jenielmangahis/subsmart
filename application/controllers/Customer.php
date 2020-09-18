@@ -24,17 +24,14 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'My Customers';
 
         $this->page_data['page']->menu = 'customers';
-
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
-
-
         $this->checkLogin();
-
-
         $this->load->library('session');
         $this->load->library('form_validation');
+
+        $this->load->helper('functions');
 
         $user_id = getLoggedUserID();
 
@@ -123,7 +120,17 @@ class Customer extends MY_Controller
         $input_profile['prefix'] = $input['prefix'];
         $input_profile['business_name'] = $input['business_name'];
         $input_profile['email'] = $input['email'];
-        $input_profile['ssn'] = $input['ssn'];
+
+        if(is_array($input['ssn']) && !empty($input['ssn'])){
+           // echo $input['ssn'];
+            if(empty($input['ssn'][0])){
+                $input_profile['ssn'] = '';
+            }else{
+                $input_profile['ssn'] = $input['ssn'][0].'-'.$input['ssn'][1].'-'.$input['ssn'][2];
+            }
+        }else{
+            $input_profile['ssn'] = '';
+        }
         $input_profile['date_of_birth'] = $input['date_of_birth'];
         $input_profile['phone_h'] = $input['phone_h'];
         $input_profile['phone_w'] = $input['phone_w'];
@@ -136,10 +143,10 @@ class Customer extends MY_Controller
         $input_profile['zip_code'] = $input['zip_code'];
         $input_profile['cross_street'] = $input['cross_street'];
         $input_profile['subdivision'] = $input['subdivision'];
-        $input_profile['img_path'] = $input['img_path'];
+       // $input_profile['img_path'] = $input['img_path'];
         $input_profile['pay_history'] = $input['pay_history'];
         $input_profile['notes'] = $input['notes'];
-        $input_profile['assign'] = $input['assign'];
+       // $input_profile['assign'] = $input['assign'];
 
         // billing data
         $input_billing['card_fname'] = $input['card_fname'];
@@ -176,14 +183,20 @@ class Customer extends MY_Controller
         $input_alarm['contact1'] = $input['contact1'];
         $input_alarm['contact2'] = $input['contact2'];
         $input_alarm['contact3'] = $input['contact3'];
-        $input_alarm['contact4'] = $input['contact4'];
-        $input_alarm['contact5'] = $input['contact5'];
+        //$input_alarm['contact_name1'] = $input['contact_name1'];
+        //$input_alarm['contact_name2'] = $input['contact_name2'];
+        //$input_alarm['contact_name3'] = $input['contact_name3'];
         $input_alarm['panel_type'] = $input['panel_type'];
         $input_alarm['system_type'] = $input['system_type'];
         $input_alarm['mon_waived'] = $input['mon_waived'];
 
         // office data
-        $input_office['welcome_sent'] = $input['welcome_sent'];
+        if(isset($input['welcome_sent'])){
+            $input_office['welcome_sent'] = $input['welcome_sent'];
+        }else{
+            $input_office['welcome_sent'] = 0;
+        }
+
         $input_office['rebate'] = $input['rebate'][0];
         $input_office['commision_scheme'] = $input['commision_scheme'][0];
         $input_office['rep_comm'] = $input['rep_comm'];
@@ -210,13 +223,25 @@ class Customer extends MY_Controller
         $input_office['save_by'] = $input['save_by'];
         $input_office['cancel_date'] = $input['cancel_date'];
         $input_office['cancel_reason'] = $input['cancel_reason'];
-        $input_office['sched_conflict'] = $input['sched_conflict'];
+
+        if(isset($input['sched_conflict'])){
+            $input_office['sched_conflict'] = $input['sched_conflict'];
+        }else{
+            $input_office['sched_conflict'] = 0;
+        }
+
         $input_office['install_date'] = $input['install_date'];
         $input_office['tech_arrive_time'] = $input['tech_arrive_time'];
         $input_office['tech_depart_time'] = $input['tech_depart_time'];
         $input_office['pre_install_survey'] = $input['pre_install_survey'];
         $input_office['post_install_survey	'] = $input['post_install_survey'];
-        $input_office['rebate_offer'] = $input['rebate_offer'];
+
+        if(isset($input['rebate_offer'])){
+            $input_office['rebate_offer'] = $input['rebate_offer'];
+        }else{
+            $input_office['rebate_offer'] = 0;
+        }
+
         $input_office['rebate_check1'] = $input['rebate_check1'];
         $input_office['rebate_check1_amt'] = $input['rebate_check1_amt'];
         $input_office['rebate_check2'] = $input['rebate_check2'];
@@ -296,6 +321,10 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
@@ -366,6 +395,7 @@ class Customer extends MY_Controller
             }
         }
     }
+
     public function add_leadsource_ajax(){
         $input = $this->input->post();
         // customer_ad_model
@@ -390,14 +420,17 @@ class Customer extends MY_Controller
         $lead_types = $this->customer_ad_model->get_all(FALSE, "", "DESC", "ac_leadtypes", "lead_id");
         echo json_encode($lead_types);
     }
+
     public function fetch_leadsource_data(){
         $lead_source = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadsource","ls_id");
         echo json_encode($lead_source);
     }
+
     public function fetch_salesarea_data(){
         $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_salesarea","sa_id");
         echo json_encode($lead_types);
     }
+
     public function delete_data(){
         $tbl = $_POST['table'];
         $input = array();

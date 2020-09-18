@@ -78,7 +78,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Rate Plan $</label>
                     </div>
                     <div class="col-md-8">
-                        <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select" >
+                        <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select" required>
                             <option value="0.00">0.00</option>
                             <option value="20.00">20.00</option>
                             <option value="24.99">24.99</option>

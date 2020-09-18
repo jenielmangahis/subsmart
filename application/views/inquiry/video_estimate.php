@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/inquiries'); ?>
+    <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>

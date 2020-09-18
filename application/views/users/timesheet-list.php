@@ -308,13 +308,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     $('#valFri').val(data.input_fri);
                     $('#valSat').val(data.input_sat);
                     $('#valSun').val(data.input_sun);
-                    $('input[name="monday"]').attr('data-id',day_id[0]).val(data.mon_logtime);
-                    $('input[name="tuesday"]').attr('data-id',day_id[1]).val(data.tue_logtime);
-                    $('input[name="wednesday"]').attr('data-id',day_id[2]).val(data.wed_logtime);
-                    $('input[name="thursday"]').attr('data-id',day_id[3]).val(data.thu_logtime);
-                    $('input[name="friday"]').attr('data-id',day_id[4]).val(data.fri_logtime);
-                    $('input[name="saturday"]').attr('data-id',day_id[5]).val(data.sat_logtime);
-                    $('input[name="sunday"]').attr('data-id',day_id[6]).val(data.sun_logtime);
+                    $('input[name="monday"]').attr('data-attn',data.mon_attnId).attr('data-id',day_id[0]).val(data.mon_logtime);
+                    $('input[name="tuesday"]').attr('data-attn',data.tue_attnId).attr('data-id',day_id[1]).val(data.tue_logtime);
+                    $('input[name="wednesday"]').attr('data-attn',data.wed_attnId).attr('data-id',day_id[2]).val(data.wed_logtime);
+                    $('input[name="thursday"]').attr('data-attn',data.thu_attnId).attr('data-id',day_id[3]).val(data.thu_logtime);
+                    $('input[name="friday"]').attr('data-attn',data.fri_attnId).attr('data-id',day_id[4]).val(data.fri_logtime);
+                    $('input[name="saturday"]').attr('data-attn',data.sat_attnId).attr('data-id',day_id[5]).val(data.sat_logtime);
+                    $('input[name="sunday"]').attr('data-attn',data.sun_attnId).attr('data-id',day_id[6]).val(data.sun_logtime);
+                    if(data.mon_logtime == null){
+                        $('#valMon').attr('disabled',true);
+                    }else{
+                        $('#valMon').attr('disabled',false);
+                    }
+                    if(data.tue_logtime == null){
+                        $('#valTue').attr('disabled',true);
+                    }else{
+                        $('#valTue').attr('disabled',false);
+                    }
+                    if(data.wed_logtime == null){
+                        $('#valWed').attr('disabled',true);
+                    }else{
+                        $('#valWed').attr('disabled',false);
+                    }
+                    if(data.thu_logtime == null){
+                        $('#valThu').attr('disabled',true);
+                    }else{
+                        $('#valThu').attr('disabled',false);
+                    }
+                    if(data.fri_logtime == null){
+                        $('#valFri').attr('disabled',true);
+                    }else{
+                        $('#valFri').attr('disabled',false);
+                    }
+                    if(data.sat_logtime == null){
+                        $('#valSat').attr('disabled',true);
+                    }else{
+                        $('#valSat').attr('disabled',false);
+                    }
+                    if(data.sun_logtime == null){
+                        $('#valSun').attr('disabled',true);
+                    }else{
+                        $('#valSun').attr('disabled',false);
+                    }
+
                 }
             });
         }
@@ -327,7 +363,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         }
         $(document).on('click','#savedAdjustEntry',function () {
             var name = $('input[name="selected"]:checked').attr('data-name');
-            var date = getCheckedDate($('input[name*="adjust"]:checked'));
+            var date = getCheckedDate($('input[name*="adjust"]'));
             var values = {};
             $.each($('#formAdjustEntry').serializeArray(), function (i, field) {
                 values[field.name] = field.value;
@@ -348,15 +384,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             // attn_id.push($('input[name="friday"]').attr('data-attn'));
             // attn_id.push($('input[name="saturday"]').attr('data-attn'));
             // attn_id.push($('input[name="sunday"]').attr('data-attn'));
-            var count = date.length;
+
             $.ajax({
                 url:"/timesheet/adjustEntry",
                 type:"POST",
                 dataType:"json",
-                data:{values:values,day_id:day_id,date:date,count:count},
+                data:{values:values,day_id:day_id,date:date},
                 success:function (data) {
-                    console.log(data);
-                    if (data == 1){
+                    if (data != 0){
                         $("#tbl-list").DataTable().destroy();
                         showListTable(week_of);
                         Swal.fire(
@@ -374,6 +409,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
         $('#valMon').click(function () {
             $('input[name="monday"]').toggle(this.checked);
+
         });
         $('#valTue').click(function () {
             $('input[name="tuesday"]').toggle(this.checked);

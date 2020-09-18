@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  $("#yrMybus").datetimepicker({
+    viewMode: 'years',
+    format: 'YYYY'
+  });
 });
 
 function getplanItems(pid) {

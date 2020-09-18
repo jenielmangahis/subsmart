@@ -194,7 +194,7 @@ $user_id = getLoggedUserID();
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo base_url('/tools/business_tools') ?>"><i class="mdi mdi-wallet m-r-5"></i> <b>Business Tools</b></a>
                         <a class="dropdown-item" href="<?php echo base_url('/esignmain') ?>"><i class="mdi mdi-wallet m-r-5"></i> eSign</a>
-                        <a class="dropdown-item" href="<?php echo base_url('/users') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
+                        <a class="dropdown-item" href="<?php echo base_url('/affiliate') ?>"><i class="mdi mdi-wallet m-r-5"></i> Affiliates</a>
                         <a class="dropdown-item" href="<?php echo base_url('/inventory') ?>"><i class="mdi mdi-wallet m-r-5"></i> Inventory</a>
                         <a class="dropdown-item" href="<?php echo base_url('/formbuilder') ?>"><i class="mdi mdi-wallet m-r-5"></i> Form Builder</a>
                         <a class="dropdown-item" href="<?php echo base_url('/tools/api_connectors') ?>"><i class="mdi mdi-wallet m-r-5"></i> API Connectors</a>
@@ -226,6 +226,7 @@ $user_id = getLoggedUserID();
                 </li>
 
 
+
                 <li class="has-submenu">
                     <a class="dropdown-toggle" href="<?php //echo base_url('dashboard/blank/?page=More') ?>" role="button"
                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -234,9 +235,6 @@ $user_id = getLoggedUserID();
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                         <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
                             <i class="fa fa-level-up"></i> Upgrades
-                        </a>
-                        <a class="dropdown-item" href="<?php //echo url('/more/upgrades') ?>">
-                            <i class="fa fa-video-camera"></i> Video Estimate
                         </a>
                         <a class="dropdown-item" href="<?php echo url('/nsmart_plans/index') ?>">
                             <i class="fa fa-cubes"></i> Plan Builder

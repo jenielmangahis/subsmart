@@ -11,7 +11,7 @@ class Inquiries extends MY_Controller {
 
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
-        // $this->load->model('Inquiry_model', 'inquiry_model');
+        $this->load->model('Inquiry_model', 'inquiry_model');
 
         $this->checkLogin();
 
@@ -53,6 +53,7 @@ class Inquiries extends MY_Controller {
             'https://cdn.jsdelivr.net/npm/spectrum-colorpicker2@2.0.0/dist/spectrum.min.js',
             'assets/frontend/js/creditcard.js',
             'assets/frontend/js/inquiry/add.js',
+            'assets/frontend/js/inquiry/lead.js',
             'assets/js/invoice.js'
         ));
 
@@ -148,6 +149,10 @@ class Inquiries extends MY_Controller {
     }
 
     public function online_lead() {
+        $company_id = logged('company_id');
+        $this->page_data['lead_forms'] = $this->inquiry_model->getAllLeadFormByCompany($company_id);
+        $this->page_data['customize_lead_forms'] = $this->inquiry_model->getAllCustomizeLeadFormByCompany($company_id, 'lead_form');
+        $this->page_data['customize_lead_forms_default'] = $this->inquiry_model->getAllCustomizeLeadFormByDefault();
         $this->load->view('inquiry/online_lead', $this->page_data);
     }
 
@@ -706,6 +711,56 @@ class Inquiries extends MY_Controller {
     {
         // pass the $this so that we can use it to load view, model, library or helper classes
         $customerSource = new CustomerSource($this);
+    }
+
+    public function save_online_lead_form()
+    {
+        $user = (object)$this->session->userdata('logged');
+
+        $company_id = logged('company_id');
+
+        $data = array(
+            'type' => post('type'),
+            'company_id' => $company_id,
+            'iframe_code' => post('iframe_code'),
+            'javascript_code' => post('javascript_code'),
+            'contact_page_url' => post('contact_page_url'),
+            'text_color' => post('text_color'),
+            'text_size' => post('text_size'),
+            'text_font' => post('text_font'),
+            'button_color' => post('button_color'),
+            'button_text_color' => post('button_text_color'),
+            'app_notification' => post('app_notification'),
+            'email_notification' => post('email_notification'),
+            'google_analytics_tracking_id' => post('google_analytics_tracking_id'),
+            'google_analytics_origin' => post('google_analytics_origin')
+        );
+
+        $dataField = array(
+            'company_id' => $company_id,
+            'field' => '',
+            'visible' => 1,
+            'required' => 1,
+            'type' => post('type')
+        );
+
+        $cid = post('ol_id');
+
+
+        if (!empty($cid)) {
+            $id = $this->inquiry_model->table_2->update($cid, $data);
+        } else {
+            $this->db->insert($this->inquiry_model->table_2, $data);
+        }
+
+
+        $this->activity_model->add("Added Online Lead form");
+
+        $this->session->set_flashdata('alert-type', 'success');
+
+        $this->session->set_flashdata('alert', 'Added Online Lead form');
+
+        redirect('online_leads');
     }
 }
 

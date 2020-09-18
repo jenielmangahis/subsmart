@@ -12,6 +12,11 @@
       height: 1.5em
     }
 
+    .custom-select{
+      height: 1.5em;
+      padding: 0 10px;
+    }
+
     label{
       font-weight: 500
     }
@@ -23,6 +28,7 @@
     .table td{
       padding: 0
     }
+
 
     
     @media print{
@@ -46,13 +52,11 @@
         
         
           <?= form_open_multipart('form/submit/'.$form->forms_id, array("id" => "formMain"));?>
-            <div id="windowPreviewcontent" class="row">
-              
-            </div>
+            <div id="windowPreviewcontent" class="row"></div>
           <?php
             if(!isset($_GET["preview"])){
               ?>
-                <button type="submit" id="btnFormSubmit" class="btn btn-success btn-block"><i class="fa fa-arrow-circle-up"></i> Submit</button>
+                <button type="submit" id="btnFormSubmit" class="btn btn-success btn-block my-2"><i class="fa fa-arrow-circle-up"></i> Submit</button>
                 <button id="btnRedo" class="btn btn-link btn-block text-muted">I want to answer this form from scratch again</button>
               <?php
             }
@@ -71,17 +75,21 @@
   <script>
     var selectedProducts = []
     var totalPrice = 0
+    var tax = 0.25
     
     window.onload = () => {
       loadFormElements(<?= $form->forms_id?>);
     }
 
     calculateTotalPrices = elementId => {
-      totalPrice = 0
+      subTotalPrice = 0
       selectedProducts.map(product => {
-        totalPrice += (product.quantity * product.data.price)
+        subTotalPrice += (product.quantity * product.data.price)
       })
-      document.querySelector(`#table-product-total-price-all-${elementId}`).innerHTML = `Total: $${totalPrice.toFixed(2)}`
+      
+      totalPrice = subTotalPrice + (subTotalPrice * tax) ;
+      document.querySelector(`#table-product-tax-addition-${elementId}`).innerHTML = `Tax: <strong>${tax * 100}%</strong> (+ $${(subTotalPrice * tax).toFixed(2)})`
+      document.querySelector(`#table-product-total-price-all-${elementId}`).innerHTML = `Total: <strong>$${totalPrice.toFixed(2)}</strong>`
     }
 
     addQuantity = (elementId, productId) => {
@@ -90,7 +98,7 @@
           
           selectedProducts[i].quantity++
           document.querySelector(`#table-product-quantity-text-${productId}`).innerHTML = product.quantity;
-          document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `$${(product.quantity * product.data.price).toFixed(2)} <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
+          document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `<strong>$${(product.quantity * product.data.price).toFixed(2)}</strong> <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
           calculateTotalPrices(elementId)
         }
       })
@@ -102,7 +110,7 @@
           if(product.quantity > 1){
             selectedProducts[i].quantity--
             document.querySelector(`#table-product-quantity-text-${productId}`).innerHTML = product.quantity;
-            document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `$ ${(product.quantity * product.data.price).toFixed(2)} <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
+            document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `<strong>$ ${(product.quantity * product.data.price).toFixed(2)}</strong> <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
           }
         }
       })
@@ -116,14 +124,16 @@
       <tr>
         <td><strong>${temp.title} ${(temp.brand == "")?``:`${temp.brand}`}</strong></td>
         <td>
-          <button type="button" id="btnDecreaseQuantity${temp.id}" onclick="decreaseQuantity(${elementId}, ${temp.id})" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
+          <button type="button" id="btnDecreaseQuantity${temp.id}" onclick="decreaseQuantity(${elementId}, ${temp.id})" class="btn btn-secondary btn-sm"><i class="fa fa-minus"></i></button>
           <span id="table-product-quantity-text-${temp.id}">1</span>
-          <button type="button" id="btnAddQuantity${temp.id}" onclick="addQuantity(${elementId}, ${temp.id})" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+          <button type="button" id="btnAddQuantity${temp.id}" onclick="addQuantity(${elementId}, ${temp.id})" class="btn btn-secondary btn-sm"><i class="fa fa-plus"></i></button>
         </td>
         <td>$${temp.price}</td>
         <td id="table-product-total-price-${temp.id}" class="text-right">
-          $${temp.price}
-          <button type="button" id="btnDelete${temp.id}" onclick="deleteProductFromTable(${elementId}, ${temp.id})" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+          <strong>
+            $${temp.price}
+          </strong>
+          <button type="button" id="btnDelete${temp.id}" onclick="deleteProductFromTable(${elementId}, ${temp.id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
         </td>
       </tr>
       `;
@@ -143,6 +153,7 @@
           selectedProducts.splice(i, 1);
         }
       }) 
+      calculateTotalPrices(elementId)
 
       selectedProducts.map(temp => {
         document.querySelector(`#table-product-list-${elementId}`).innerHTML += `
@@ -153,14 +164,16 @@
               <span id="table-product-quantity-text-${temp.data.id}">${temp.quantity}</span>
               <button type="button" id="btnAddQuantity${temp.data.id}" onclick="addQuantity(${elementId}, ${temp.data.id})" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
             </td>
-            <td>$${temp.price}</td>
+            <td>
+              $${temp.data.price}</td>
             <td id="table-product-total-price-${temp.data.id}" class="text-right">
-              $${temp.price}
+              <strong>
+                $${temp.data.price}
+              </strong>
               <button type="button" id="btnDelete${temp.id}"  onclick="deleteProductFromTable(${elementId}, ${temp.data.id})" class="btn btn-danger"><i class="fa fa-trash"></i></button>
             </td>
           </tr>
         `;
-        calculateTotalPrices(elementId)
       })
     }
 

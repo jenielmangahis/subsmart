@@ -174,13 +174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      <div class="form-group">
                         <label>Year of Establishment</label> <span class="form-required">*</span>
                         <div class="help help-block help-sm">Enter the year of company establishment.</div>
-                        <select name="year_est" class="form-control">
-                        <?php if($profiledata) : ?>
-                           <?php for($i=2020;$i>=1920;$i--){ ?>
-                              <option value="<?php echo $i; ?>" <?php if($profiledata->year_est == $i) echo 'selected'; ?>><?php echo $i ?></option>
-                           <?php } ?>
-                        <?php endif;?>
-                        </select>
+                        <input type="text" class="form-control" value="<?php ($profiledata) ? $profiledata->year_est : '' ;?>" id="yrMybus">
                         <span class="validation-error-field" data-formerrors-for-name="year_est" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>

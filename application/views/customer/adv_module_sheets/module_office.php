@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="welcome_sent"><span>Welcome kit Sent</span>
                 </div>
                 <div class="col-md-8">
-                    <input type="checkbox" name="welcome_sent" checked value="1" id="welcome_sent">
+                    <input type="checkbox" name="welcome_sent" value="1" id="welcome_sent">
                 </div>
             </div>
         </div>
@@ -177,7 +177,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Assign To</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="assign_to" id="assign_to" />
+                    <select id="assign_to" name="assign_to"  class="input_select">
+                        <option value="">Select</option>
+                        <?php foreach ($users as $user): ?>
+                            <option value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                        <?php endforeach ?>
+                    </select>
                 </div>
             </div>
         </div>
@@ -257,7 +262,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Sales Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="sales_date" id="date_picker" />
+                    <input type="text" class="form-control date_picker" name="sales_date" id="" />
                 </div>
             </div>
         </div>
@@ -308,8 +313,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Technician</label>
                 </div>
                 <div class="col-md-8">
-                    <select id="technician" name="technician" data-customer-source="dropdown" class="input_select" >
-                        <option value="">- Select -</option>
+                    <select id="technician" name="technician"  class="input_select">
+                        <option value="">Select</option>
+                        <?php foreach ($users as $user): ?>
+                            <option value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                        <?php endforeach ?>
                     </select>
                 </div>
             </div>
@@ -320,7 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Save Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="save_date" id="date_picker" />
+                    <input type="text" class="form-control date_picker" name="save_date" id="" />
                 </div>
             </div>
         </div>
@@ -372,7 +380,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="sched_conflict"><span>Check for Schedule Conflict</span></label>
                 </div>
                 <div class="col-md-7">
-                    <input type="checkbox" name="sched_conflict" value="Email" checked id="sched_conflict">
+                    <input type="checkbox" name="sched_conflict" value="1" id="sched_conflict">
                 </div>
             </div>
         </div>
@@ -382,7 +390,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Install Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="install_date" id="date_picker" />
+                    <input type="text" class="form-control date_picker" name="install_date" id="" />
                 </div>
             </div>
         </div>
@@ -446,7 +454,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="rebate_offer"><span>Rebate Offered</span>
                 </div>
                 <div class="col-md-8">
-                    <input type="checkbox" name="rebate_offer" value="1" checked id="rebate_offer">
+                    <input type="checkbox" name="rebate_offer" value="1"  id="rebate_offer">
                 </div>
             </div>
         </div>

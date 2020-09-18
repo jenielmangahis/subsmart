@@ -323,7 +323,7 @@
                               <div class="form-elements-draggable" data-element-id="21">
                                 <div class="card p-1">
                                   <div class="card-content">
-                                    <span><i class="fa fa-caret-square-o-down"></i> Formatted Text</span>
+                                    <span><i class="fa fa-caret-square-o-down"></i> Text</span>
                                   </div>
                                 </div>
                               </div>
@@ -578,6 +578,7 @@
                         <!-- MAIN WINDOW FOR THE FORM -->
                       </div>
                     </div>
+                    <button id="btnEditorScrollDown" class="btn btn-secondary btn-block"><i class="fa fa-arrow-down"></i> Scroll down</button>
                   </div>
                   
                   <div id="windowLiveForm" class="tab-pane fade" style="height: 150px">
@@ -1267,6 +1268,10 @@
   }
   let elementChoices = []
 
+  document.querySelector('#btnEditorScrollDown').addEventListener('click', ()=>{
+    console.log("test sscroll") ;
+    document.querySelector('#windowPreviewContent').scrollTo(0, 99999999);
+  })
 
   toggleElementSettings = (elementId, value) => {
     document.querySelector('#form-elements-settings-' + elementId).style.display = (value == 1)? "block" : "none"
@@ -1554,8 +1559,6 @@
   window.onload = () => {
     loadFormSettings(<?= $form->forms_id?>);
     loadFormElements(<?= $form->forms_id?>, "edit");
-    setTimeout(() => {
-    }, 500);
   };
 
   document.querySelector('#btnSaveGeneralSettings').addEventListener('click', () => {
@@ -1688,19 +1691,22 @@
       }
       
       // insert switch case here
-
       $.ajax({
         url: "<?= base_url()?>formbuilder/form/element/add",
         data: data,
         dataType: 'json',
         type: 'POST',
         success: function(res){
-          // window.alert('Element added!');
           loadFormSettings(<?= $form->forms_id?>);
           loadFormElements(<?= $form->forms_id?>, "edit");
           return;
         }
       })
+
+      setTimeout(() => {
+        document.querySelector('#windowPreviewContent').scrollTo(0, 99999999);
+      }, 2000);
+      
     }
   })
 
