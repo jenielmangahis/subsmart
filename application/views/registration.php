@@ -78,18 +78,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	list-style: none;
 }
 .plan-list li{
-	display: inline-block;
-	width:32%;
+  display: inline-block;
+  width:30%;
   margin-bottom:40px;
+  box-shadow: 0 0 9px -1px #222;
+  min-height: 300px;
+  vertical-align: middle;
+  margin: 4px;
+  background-color: #c9c9c9;
+  padding-top: 10%;
 }
 h3.plan-list-text {
-  font-size: 19px !important;
-  font-weight: 400;
+  font-size: 22px !important;
+  font-weight: 600;
 }
 p.plan-list-price {
   font-size: 25px;
   margin-top: 10px;
-  margin-bottom: 17px;
+  margin-bottom: 30px;
   font-weight: 700;
   font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif !important;
 }
@@ -149,13 +155,27 @@ p.plan-list-price {
 							        <div class="col-md-12">
 		                      			<div class="reg-s1">
 		  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
+		  						          <select class="form-control subscription-type" style="width: auto;margin: 33px auto;">
+		  						          	<option value="prospect">3 months 50% off</option>
+		  						          	<option value="trial">Free Trial</option>
+		  						          </select>
 		  						          <ul class="plan-list">
 		  						          <?php foreach($ns_plans as $p){ ?>
 		  						          	<li>
 		  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
 		  						          		
 		  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
-		  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?></p>
+			  						          		<div class="discounted-price">
+			  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;">$<?= number_format($p->price, 2); ?></p>
+			  						          			<?php 
+			  						          				$discount_price = $p->price / 2;
+			  						          			?>
+			  						          			<p class="plan-list-price">$<?= number_format($discount_price, 2); ?> /mo</p>
+			  						          		</div>
+			  						          		<div class="trial-price" style="display: none;">
+			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?> /mo</p>
+			  						          		</div>
+		  						          			<br />
 		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
 		  						          		<?php } else { ?>
 		  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
@@ -262,7 +282,7 @@ p.plan-list-price {
 							        <div class="col-md-12">
 							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
 							          <div class="payment-method" style="display: block;margin-bottom: 74px;">
-							          	<label>Plan : <b><span class="plan-selected"></span></b></label><br />
+							          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
 							          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
 							          	<hr />
 							          	<p><b>Payment Method</b></p>
@@ -322,7 +342,10 @@ $(function(){
         allPrevBtn = $('.prevBtn'),
         step1Container = $('#step-1'),
         step2Container = $('#step-2'),
+        step3Container = $('#step-3'),
+        step4Container = $('#step-4'),
         step2bBtn  = $('.step2-btn'),
+        subType = $(".subscription-type"),
         step3bBtnPrcPayment = $('.step3-btn-processPayment');
 
     allWells.hide();
@@ -372,19 +395,33 @@ $(function(){
     step2bBtn.click(function(){
     	var plan_id = $(this).attr("data-id");
     	var plan_price = $(this).attr("data-price");
+    	var price_discount = (plan_price * 3) / 2;
     	var plan_name  = $(this).attr("data-plan");
+    	var subscription_type = $(".subscription-type").val();
 
     	$("#plan_id").val(plan_id);
-    	$("#plan_price").val(plan_price);
+    	$("#plan_price").val(price_discount);
         $("#plan_name").val(plan_name);
-    	$(".plan-selected").text(plan_name);
-    	$(".total-amount").text(plan_price);
+    	$(".plan-selected").text(plan_name);  
+    	$(".plan-price").text("$" + plan_price);  	
 
     	step1Container.hide();
-    	step2Container.show();
+
     	$("span.step-1").removeClass('btn-indigo');
-    	$("span.step-1").addClass("btn-default");
-    	$("span.step-2").addClass('btn-indigo');
+	    $("span.step-1").addClass("btn-default");
+
+    	if( subscription_type == 'trial' ){   
+    		$(".total-amount").text("0.00 (Free Trial)");
+    		$("#plan_price").val(0);
+    		step3Container.show();
+    		$("span.step-3").addClass('btn-indigo');
+    	}else{
+    		$(".total-amount").text("$" + price_discount  + " (3 months 50% off)");
+    		step2Container.show();
+	    	$("span.step-2").addClass('btn-indigo');
+    	}
+    	
+    	
     });
 
     step3bBtnPrcPayment.click(function(){
@@ -403,5 +440,17 @@ $(function(){
     <?php }elseif($payment_status == 'cancel') { ?>
     		$('div.setup-panel div a#step4').trigger('click');
     <?php } ?>
+
+    subType.change(function(){
+    	var type = $(this).val();
+
+    	if( type == 'trial' ){
+    		$(".discounted-price").hide();
+    		$(".trial-price").show();
+    	}else{
+    		$(".discounted-price").show();
+    		$(".trial-price").hide();
+    	}
+    });
 });
 </script>

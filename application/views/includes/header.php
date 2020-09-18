@@ -139,7 +139,7 @@
                                     class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                                 </div>
                             </li>
-                            <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle">
+                            <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                                 <?php
                                     $unset = array('break','on_break','timer_icon','remaining_time');
                                     $this->session->unset_userdata($unset);
@@ -148,7 +148,7 @@
                                 <input type="hidden" id="clock-end-time" value="<?php echo $this->session->userdata('break')?>">
                                 <input type="hidden" id="clock-server-time" value="">
                                 <input type="hidden" id="clock-status" value="<?php echo (!empty($this->session->userdata('active')))?$this->session->userdata('active'):3; ?>">
-                                <div class="clock-users " id="startBreak">
+                                <div class="clock-users " id="clockIn">
                                     <div class="clock <?php echo $this->session->userdata('on_break'); ?>">
                                         <div class="hour">
                                             <div class="hr" id="hr"></div>
@@ -163,11 +163,11 @@
                                 </div>
                                 <div class="preview-clock-details">
                                     <div class="clock-section">
-                                        <span class="clock-details-title">Check In:</span>
+                                        <span class="clock-details-title">Clock In:</span>
                                         <span class="clock-details-text">10:00AM</span>
                                     </div>
                                     <div class="clock-section">
-                                        <span class="clock-details-title">Check Out:</span>
+                                        <span class="clock-details-title">Clock Out:</span>
                                         <span class="clock-details-text">Pending...</span>
                                     </div>
                                     <div class="clock-section">

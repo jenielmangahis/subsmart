@@ -31,7 +31,7 @@ class Timesheet extends MY_Controller {
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.js",
-            "assets/js/accounting/sweetalert2@9.js",
+//            "assets/js/accounting/sweetalert2@9.js",
 //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
 
@@ -1133,21 +1133,21 @@ class Timesheet extends MY_Controller {
                             break;
                     }
                 }
-            }
-            if ($mon_status == null){
-                $mon_status = $missing;
-            }elseif ($tue_status == null){
-                $tue_status = $missing;
-            }elseif ($wed_status == null){
-                $wed_status = $missing;
-            }elseif ($thu_status == null){
-                $thu_status = $missing;
-            }elseif ($fri_status == null){
-                $fri_status = $missing;
-            }elseif ($sat_status == null){
-                $sat_status = $missing;
-            }elseif ($sun_status == null){
-                $sun_status = $missing;
+                if ($mon_status == null && $week_check[0] <= date('Y-m-d')){
+                    $mon_status = $missing;
+                }elseif ($tue_status == null && $week_check[1] <= date('Y-m-d')){
+                    $tue_status = $missing;
+                }elseif ($wed_status == null && $week_check[2] <= date('Y-m-d')){
+                    $wed_status = $missing;
+                }elseif ($thu_status == null && $week_check[3] <= date('Y-m-d')){
+                    $thu_status = $missing;
+                }elseif ($fri_status == null && $week_check[4] <= date('Y-m-d')){
+                    $fri_status = $missing;
+                }elseif ($sat_status == null && $week_check[5] <= date('Y-m-d')){
+                    $sat_status = $missing;
+                }elseif ($sun_status == null && $week_check[6] <= date('Y-m-d')){
+                    $sun_status = $missing;
+                }
             }
 
             foreach ($week_duration as $week){
@@ -1281,8 +1281,9 @@ class Timesheet extends MY_Controller {
     }
     public function adjustEntry(){
 	    $table = 'timesheet_logs';
-	    $count = $this->input->post('count');
 	    $date = $this->input->post('date');
+//	    $attn_id = $this->input->post('attn_id');
+	    $user_id = $this->input->post('values[user_id]');
         $monday_log = $this->input->post('values[monday]');
         $tuesday_log = $this->input->post('values[tuesday]');
         $wednesday_log = $this->input->post('values[wednesday]');
@@ -1300,21 +1301,15 @@ class Timesheet extends MY_Controller {
             5 => $saturday_log,
             6 => $sunday_log
         );
-
-        for ($x = 0;$x < count($date);$x++){
-            $update = array(
-                'time' => strtotime($date[$x]." ".$logs_array[$x])
-            );
-            $this->db->where('id',$day_id[$x]);
-            $this->db->update($table,$update);
+        for ($x = 0;$x < count($day_id);$x++){
+            if ($day_id[$x] != null){
+                $update = array(
+                    'time' => strtotime($date[$x]." ".$logs_array[$x])
+                );
+                $this->db->where('id',$day_id[$x]);
+                $this->db->update($table,$update);
+            }
         }
-//            if ($day_id[0] != 0){
-//                $update = array(
-//                    'time' => strtotime($date[0]." ".$monday_log)
-//                );
-//                $this->db->where('id',$day_id[0]);
-//                $this->db->update($table,$update);
-//            }
         echo json_encode(1);
     }
 	public function attendance(){
@@ -1332,7 +1327,7 @@ class Timesheet extends MY_Controller {
         $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
 
-        $this->load->view('users/timesheet-admin', $this->page_data);
+        $this->load->view('users/timesheet_attendance', $this->page_data);
     }
 
     public function inNow(){
@@ -2061,6 +2056,9 @@ class Timesheet extends MY_Controller {
 	    $data->date_time = $date_time;
 	    $data->end_time = $end_time;
 	    echo json_encode($data);
+    }
+    public function clockInEmployee(){
+        $clock_in = $this->input->post('clock_in');
     }
 
     public function startBreak(){

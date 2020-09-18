@@ -58,7 +58,7 @@
             <span class="fa fa-address-card"></span>Online Booking</a>
         </li>
         
-        <li class="submenus"><a href="#" title="Lead Contact Form" style="color: #fff;">
+        <li class="submenus <?= ($this->uri->uri_string() == 'online_leads') ? "active" : "";  ?>"><a href="<?php echo base_url('online_leads') ?>" title="Lead Contact Form" style="color: #fff;">
             <span class="fa fa-address-card-o"></span>Lead Contact Form</a>
         </li>     
         <li class="submenus"><a href="#" title="Ask for Review" style="color: #fff;">
@@ -81,6 +81,9 @@
         </li>
         <li class="submenus"><a href="#" title="Credit Report" style="color: #fff;">
             <span class="fa fa-credit-card-alt"></span>Credit Report</a>
+        </li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'video_estimate') ? "active" : "";  ?>"><a href="<?php echo base_url('video_estimate') ?>" title="Video Estimate" style="color: #fff;">
+            <span class="fa fa-video-camera"></span>Video Estimate</a>
         </li>
         <li class="submenus"><a href="#" title="Payroll" style="color: #fff;">
             <span class="fa fa-gear"></span>Payroll</a>

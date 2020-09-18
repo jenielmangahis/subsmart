@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="module_ac">
     <div class="row">
         <div class="col-md-12 module_header">
-            <p class="module_title">Others</p>
+            <p class="module_title">Notes</p>
         </div>
         <div class="col-sm-12" id="access_module">
             <div class="col-sm-12 text-right-sm" style="align:right;">

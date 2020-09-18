@@ -5,6 +5,8 @@ class Inquiry_model extends MY_Model
 {
 
     public $table = 'inquiries';
+    public $table_2 = 'online_lead_form';
+    public $table_3 = 'customize_lead_forms';
 
 
     public function getAll()
@@ -351,6 +353,37 @@ class Inquiry_model extends MY_Model
 
         $query = $this->db->get();
 //        echo $this->db->last_query(); die;
+        return $query->result();
+    }
+
+    public function getAllLeadFormByCompany($comp_id) {
+        $this->db->select('*');
+        $this->db->from($this->table_2);
+        $this->db->where('company_id', $comp_id);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+    
+    public function getAllCustomizeLeadFormByCompany($comp_id, $type) {
+        $array = array('company_id' => $comp_id, 'type' => $type);
+        
+        $this->db->select('*');
+        $this->db->from($this->table_3);
+        $this->db->where($array);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getAllCustomizeLeadFormByDefault() {
+        $array = array('company_id' => 0, 'type' => 'default');
+        
+        $this->db->select('*');
+        $this->db->from($this->table_3);
+        $this->db->where($array);
+        $query = $this->db->get();
+
         return $query->result();
     }
 }

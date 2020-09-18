@@ -131,6 +131,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         margin-bottom: 5px;
         box-shadow:0 2px 5px 2px rgba(0, 0, 0, 0.51);
     }
+    /*Employee css*/
+    .user-logs-container{
+        height: 220px;
+    }
+    .user-logs-container .user-card-title{
+        border-bottom: 1px solid #cbd0da;
+        width: 100%;
+        padding-bottom: 8px;
+    }
+    .user-clock-in-title,.user-clock-out-title,.user-lunch-in-title,.user-lunch-out-title{
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #92969d;
+    }
+    .user-clock-in,.user-clock-out,.user-lunch-in,.user-lunch-out{
+        margin-bottom: 10px;
+        display: block;
+        text-align: right;
+    }
+    .user-logs{
+        width: 100%;
+    }
+    .user-logs-section{
+        position: relative;
+        width: 49%;
+        display: inline-block;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -144,25 +171,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h1 class="page-title">Attendance</h1>
                     </div>
                     <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry
-                                    </a>
-                                <?php endif ?>
-                            </div>
-                        </div>
+<!--                        <div class="float-right d-none d-md-block">-->
+<!--                            <div class="dropdown">-->
+<!--                                --><?php //if (hasPermissions('users_add')): ?>
+<!--                                    <a href="--><?php //echo url('users/add_timesheet_entry') ?><!--" class="btn btn-primary"-->
+<!--                                       aria-expanded="false">-->
+<!--                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry-->
+<!--                                    </a>-->
+<!--                                --><?php //endif ?>
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="attendance")?:'-active';?>" style="text-decoration: none">Attendance</a>
+                        <?php if ($this->session->userdata('logged')['role'] < 5):?>
                         <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab">Employee</a>
                         <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
                         <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
                         <a href="<?php echo url('/timesheet/settings')?>" class="banking-tab">Settings</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -175,6 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="today-date">
                                 <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y');?></span></h6>
                             </div>
+                            <?php if ($this->session->userdata('logged')['role'] < 5):?>
                             <div class="row" style="margin-bottom: 20px">
                                 <div class="col-md-3">
                                     <div class="tile-container">
@@ -375,126 +405,126 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-lg-12 table-responsive">
                                     <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">
                                         <thead>
-                                            <tr>
-                                                <th rowspan="2">ID</th>
-                                                <th rowspan="2">Employee Name</th>
-                                                <th rowspan="2">In</th>
-                                                <th rowspan="2">Out</th>
-                                                <th colspan="2">Lunch</th>
-                                                <th rowspan="2">Action</th>
-                                                <th rowspan="2">Comments/Location</th>
-                                            </tr>
-                                            <tr>
-                                                <th>In</th>
-                                                <th>Out</th>
-                                            </tr>
+                                        <tr>
+                                            <th rowspan="2">ID</th>
+                                            <th rowspan="2">Employee Name</th>
+                                            <th rowspan="2">In</th>
+                                            <th rowspan="2">Out</th>
+                                            <th colspan="2">Lunch</th>
+                                            <th rowspan="2">Action</th>
+                                            <th rowspan="2">Comments/Location</th>
+                                        </tr>
+                                        <tr>
+                                            <th>In</th>
+                                            <th>Out</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
                                         <?php
-                                            $u_role = null;
-                                            $status = 'fa-times-circle';
-                                            $time_in = null;
-                                            $time_out = null;
-                                            $btn_action = 'employeeCheckIn';
-                                            $disabled = null;
-                                            $break = 'disabled="disabled"';
-                                            $break_id = null;
-                                            $break_in = null;
-                                            $break_out = null;
-                                            $indicator_in = 'display:none';
-                                            $indicator_out = 'display:none';
-                                            $indicator_in_break = 'display:none';
-                                            $indicator_out_break = 'display:none';
-                                            $week_id = null;
-                                            $attn_id = null;
-                                            $yesterday_in = null;
-                                            $yesterday_out = null;
-                                            $clock_in_2nd = 0;
+                                        $u_role = null;
+                                        $status = 'fa-times-circle';
+                                        $time_in = null;
+                                        $time_out = null;
+                                        $btn_action = 'employeeCheckIn';
+                                        $disabled = null;
+                                        $break = 'disabled="disabled"';
+                                        $break_id = null;
+                                        $break_in = null;
+                                        $break_out = null;
+                                        $indicator_in = 'display:none';
+                                        $indicator_out = 'display:none';
+                                        $indicator_in_break = 'display:none';
+                                        $indicator_out_break = 'display:none';
+                                        $week_id = null;
+                                        $attn_id = null;
+                                        $yesterday_in = null;
+                                        $yesterday_out = null;
+                                        $clock_in_2nd = 0;
                                         ?>
                                         <?php foreach ($users as $cnt => $user): ?>
                                             <?php
-                                                foreach ($user_roles as $role){
-                                                    if ($role->id == $user->role){
-                                                        $u_role = $role->title;
-                                                    }
+                                            foreach ($user_roles as $role){
+                                                if ($role->id == $user->role){
+                                                    $u_role = $role->title;
                                                 }
-                                                foreach ($attendance as $attn){
-                                                    if ($attn->user_id == $user->id){
-                                                        $attn_id = $attn->id;
-                                                        foreach ($ts_logs as $log){
-                                                            if ($log->action == 'Check in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                                if ($attn->date_in == date('Y-m-d')){
-                                                                    $time_in = date('h:i A',$log->time);
-                                                                    $time_out = null;
-                                                                    $break_in = null;
-                                                                    $break_out = null;
-                                                                    $btn_action = 'employeeCheckOut';
-                                                                    $status = 'fa-check';
-                                                                    $break = null;
-                                                                    $disabled = null;
-                                                                    $break_id = 'employeeBreakIn';
-                                                                    $indicator_in = 'display:block';
-                                                                    $indicator_out = 'display:none';
-                                                                    $indicator_in_break = 'display:none';
-                                                                    $indicator_out_break = 'display:none';
-                                                                    $yesterday_in = null;
-                                                                    $clock_in_2nd = 0;
-                                                                }
-                                                                if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
-                                                                    $time_in = date('h:i A',$log->time);
-                                                                    $yesterday_in = "(Yesterday)";
-                                                                    $btn_action = 'employeeCheckOut';
-                                                                    $clock_in_2nd = 1;
-                                                                }
-                                                            }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
-                                                                    $status = 'fa-times-circle';
-                                                                    $btn_action = null;
-                                                                    $time_out = date('h:i A',$log->time);
-                                                                    $disabled = 'disabled="disabled"';
-                                                                    $break = 'disabled="disabled"';
-                                                                    $break_id = null;
-                                                                    $indicator_in = 'display:none';
-                                                                    $indicator_out = 'display:block';
-                                                                    $indicator_in_break = 'display:none';
-                                                                    $indicator_out_break = 'display:none';
-                                                                }
-                                                                if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
-                                                                    $disabled = null;
-                                                                    $btn_action = 'employeeCheckIn';
-                                                                }
-                                                            }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
-                                                                    $break_id = 'employeeBreakOut';
-                                                                    $status = 'fa-mug-hot';
-                                                                    $break_in = date('h:i A',$log->time);
-                                                                    $indicator_in = 'display:none';
-                                                                    $indicator_out = 'display:none';
-                                                                    $indicator_in_break = 'display:block';
-                                                                    $indicator_out_break = 'display:none';
-//                                                                }
-                                                            }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
-                                                                    $status = 'fa-check';
-                                                                    $break_out = date('h:i A',$log->time);
-                                                                    $break = 'disabled="disabled"';
-                                                                    $break_id = null;
-                                                                    $indicator_in = 'display:none';
-                                                                    $indicator_out = 'display:none';
-                                                                    $indicator_in_break = 'display:none';
-                                                                    $indicator_out_break = 'display:block';
-//                                                                }
+                                            }
+                                            foreach ($attendance as $attn){
+                                                if ($attn->user_id == $user->id){
+                                                    $attn_id = $attn->id;
+                                                    foreach ($ts_logs as $log){
+                                                        if ($log->action == 'Check in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                            if ($attn->date_in == date('Y-m-d')){
+                                                                $time_in = date('h:i A',$log->time);
+                                                                $time_out = null;
+                                                                $break_in = null;
+                                                                $break_out = null;
+                                                                $btn_action = 'employeeCheckOut';
+                                                                $status = 'fa-check';
+                                                                $break = null;
+                                                                $disabled = null;
+                                                                $break_id = 'employeeBreakIn';
+                                                                $indicator_in = 'display:block';
+                                                                $indicator_out = 'display:none';
+                                                                $indicator_in_break = 'display:none';
+                                                                $indicator_out_break = 'display:none';
+                                                                $yesterday_in = null;
+                                                                $clock_in_2nd = 0;
                                                             }
-
-                                                            foreach ($week_duration as $week){
-                                                                if ($week->user_id == $user->id){
-                                                                    $week_id = $week->id;
-                                                                }
+                                                            if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
+                                                                $time_in = date('h:i A',$log->time);
+                                                                $yesterday_in = "(Yesterday)";
+                                                                $btn_action = 'employeeCheckOut';
+                                                                $clock_in_2nd = 1;
                                                             }
-
+                                                        }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+                                                            if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                                $status = 'fa-times-circle';
+                                                                $btn_action = null;
+                                                                $time_out = date('h:i A',$log->time);
+                                                                $disabled = 'disabled="disabled"';
+                                                                $break = 'disabled="disabled"';
+                                                                $break_id = null;
+                                                                $indicator_in = 'display:none';
+                                                                $indicator_out = 'display:block';
+                                                                $indicator_in_break = 'display:none';
+                                                                $indicator_out_break = 'display:none';
+                                                            }
+                                                            if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                                                $disabled = null;
+                                                                $btn_action = 'employeeCheckIn';
+                                                            }
+                                                        }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                            $break_id = 'employeeBreakOut';
+                                                            $status = 'fa-mug-hot';
+                                                            $break_in = date('h:i A',$log->time);
+                                                            $indicator_in = 'display:none';
+                                                            $indicator_out = 'display:none';
+                                                            $indicator_in_break = 'display:block';
+                                                            $indicator_out_break = 'display:none';
+//                                                                }
+                                                        }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
+//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
+                                                            $status = 'fa-check';
+                                                            $break_out = date('h:i A',$log->time);
+                                                            $break = 'disabled="disabled"';
+                                                            $break_id = null;
+                                                            $indicator_in = 'display:none';
+                                                            $indicator_out = 'display:none';
+                                                            $indicator_in_break = 'display:none';
+                                                            $indicator_out_break = 'display:block';
+//                                                                }
                                                         }
+
+                                                        foreach ($week_duration as $week){
+                                                            if ($week->user_id == $user->id){
+                                                                $week_id = $week->id;
+                                                            }
+                                                        }
+
                                                     }
                                                 }
+                                            }
                                             ?>
                                             <tr>
                                                 <td class="tbl-id-number"><?php echo $cnt+1?></td>
@@ -513,7 +543,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </td>
                                                 <td></td>
                                             </tr>
-                                        <?php
+                                            <?php
                                             $u_role = null;
                                             $status = 'fa-times-circle';
                                             $time_in = null;
@@ -533,13 +563,123 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             $yesterday_in = null;
                                             $yesterday_out = null;
                                             $clock_in_2nd = 0
-                                        ?>
+                                            ?>
                                         <?php endforeach;?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <!-- end row -->
+                            <?php if ($this->session->userdata('logged')['role'] > 5): ?>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Today's logs</span>
+                                                        </div>
+                                                        <?php
+                                                            $clock_in = '-';
+                                                            $clock_out = '-';
+                                                            $lunch_in = '-';
+                                                            $lunch_out = '-';
+                                                            foreach ($users as $user ){
+                                                                if ($user->id == $this->session->userdata('logged')['id']){
+                                                                    foreach ($attendance as $attn){
+                                                                        if ($attn->user_id == $this->session->userdata('logged')['id']){
+                                                                            foreach ($ts_logs as $log){
+                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Check in'){
+                                                                                    $clock_in = date('h:i A',$log->time);
+                                                                                }
+                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Check out' && $attn->date_out == date('Y-m-d')){
+                                                                                    $clock_out = date('h:i A',$log->time);
+                                                                                }
+                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Break in'){
+                                                                                    $lunch_in = date('h:i A',$log->time);
+                                                                                }
+                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Break out'){
+                                                                                    $lunch_out = date('h:i A',$log->time);
+                                                                                }
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        ?>
+                                                        <div class="user-logs">
+                                                            <div class="user-logs-section">
+                                                                <div class="user-clock-in-title">Clock-in: </div>
+                                                                <div class="user-clock-out-title">Clock-out: </div>
+                                                                <div class="user-lunch-in-title">Lunch-in: </div>
+                                                                <div class="user-lunch-out-title">Lunch-out: </div>
+                                                            </div>
+                                                            <div class="user-logs-section">
+                                                                <div class="user-clock-in"><?php echo $clock_in;?></div>
+                                                                <div class="user-clock-out"><?php echo $clock_out?></div>
+                                                                <div class="user-lunch-in"><?php echo $lunch_in?></div>
+                                                                <div class="user-lunch-out"><?php echo $lunch_out?></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Today's Task</span>
+                                                        </div>
+                                                        <div class="user-logs">
+                                                            <div class="user-logs-section">
+                                                                <div class="user-clock-in-title">Task: </div>
+                                                                <div class="user-clock-out-title">Start time: </div>
+                                                                <div class="user-lunch-in-title">End time: </div>
+                                                                <div class="user-lunch-out-title">Estimated time duration: </div>
+                                                            </div>
+                                                            <div class="user-logs-section" style="vertical-align: top">
+                                                                <div class="user-clock-in"><i class="fa fa-info-circle"></i> Sample task</div>
+                                                                <div class="user-clock-out">8:00 AM</div>
+                                                                <div class="user-lunch-in">5:00 PM</div>
+                                                                <div class="user-lunch-out">9hour/s</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Yesterday worked comment</span>
+                                                        </div>
+                                                        <div class="user-logs">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endif;?>
                         </div>
                     </div>
                     <!-- end card -->

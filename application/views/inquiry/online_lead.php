@@ -3,13 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/inquiries'); ?>
+    <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
-
             </div>
             <!-- end row -->
             <div class="row">
@@ -23,6 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 Copy/Paste the iframe or javascript code on a page on your website.
                             </p>
                             <div id="app-builder">
+                            <?php echo form_open('/inquiries/save_online_lead_form', ['method' => 'POST', 'autocomplete' => 'off']); ?>
                                 <div class="margin-bottom">
                                     <div class="row margin-bottom-ter">
                                         <div class="col-sm-6">
@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 Iframe Code
                                             </div> 
                                             <div style="margin-bottom: 10px;">
-                                                <textarea rows="3" readonly="readonly" id="code.iframe" class="input-focus form-control"></textarea>
+                                                <textarea rows="3" readonly="readonly" name="iframe_code" id="code.iframe" class="input-focus form-control"><?php echo $lead_forms->iframe_code; ?></textarea>
                                             </div> 
                                             <div class="c2c"><!----> 
                                                 <a href="#" class="a-ter">
@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 Javascript Code
                                             </div> 
                                             <div style="margin-bottom: 10px;">
-                                                <textarea rows="3" readonly="readonly" id="code.javascript" class="input-focus form-control"></textarea>
+                                                <textarea rows="3" readonly="readonly" name="javascript_code" id="code.javascript" class="input-focus form-control"><?php echo $lead_forms->javascript_code; ?></textarea>
                                             </div> 
                                             <div class="c2c"><!----> 
                                                 <a href="#" class="a-ter"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="col-sm-6">
                                             <div style="margin-bottom: 5px;">Contact Page URL</div> 
                                             <div style="margin-bottom: 10px;">
-                                                <textarea rows="1" readonly="readonly" id="code.pageUrl" class="input-focus form-control"></textarea>
+                                                <textarea rows="1" readonly="readonly" name="contact_page_url" id="code.pageUrl" class="input-focus form-control"><?php echo $lead_forms->contact_page_url; ?></textarea>
                                             </div> 
                                             <div class="c2c"><!----> 
                                                 <a href="#" class="a-ter"><span class="fa fa-clipboard fa-margin-right"></span> Copy to clipboard</a>
@@ -84,186 +84,91 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="col-sm-3">Required</div>
                                             </div>
                                         </div> 
-                                        <ul class="fields-list">
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
+                                        <ul id="customFieldList" class="fields-list">
+                                            <?php foreach($customize_lead_forms_default as $form) : ?>
+                                                <?php if ($form->field == "Name" || $form->field == "Phone") : ?>
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="fields-list__name-cnt">
+                                                                    <div class="fields-list__sortable_handle">
+                                                                        <span class="fa fa-ellipsis-v"></span> 
+                                                                        <span class="fa fa-ellipsis-v"></span>
+                                                                    </div> 
+                                                                    <div class="fields-list__name"><?php echo $form->field; ?></div>
+                                                                </div>
                                                             </div> 
-                                                            <div class="fields-list__name">Name</div>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <span class="fa fa-check form-checked"></span>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
-                                                            <span class="fa fa-check form-checked"></span> <!---->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
+                                                            <div class="col-sm-3">
+                                                                <span class="fa fa-check form-checked"></span>
                                                             </div> 
-                                                            <div class="fields-list__name">Phone</div>
+                                                            <div class="col-sm-3">
+                                                                <div class="fields-list__col-last">
+                                                                    <span class="fa fa-check form-checked"></span> <!---->
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <span class="fa fa-check form-checked"></span>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
-                                                            <span class="fa fa-check form-checked"></span> <!---->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
+                                                    </li>
+                                                <?php else : ?>
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="fields-list__name-cnt">
+                                                                    <div class="fields-list__sortable_handle">
+                                                                        <span class="fa fa-ellipsis-v"></span> 
+                                                                        <span class="fa fa-ellipsis-v"></span>
+                                                                    </div> 
+                                                                    <div class="fields-list__name"><?php echo $form->field; ?></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="checkbox checkbox-sec no-margin">
+                                                                    <input type="checkbox" id="<?php echo "visible" . $form->field; ?>" data-name="<?php echo $form->field; ?>" data-type="visible" data-prefix="pf" <?php echo ($form->visible) ? 'checked' : '' ; ?> true-value="1"> 
+                                                                    <label for="<?php echo "visible" . $form->field; ?>"></label>
+                                                                </div>
                                                             </div> 
-                                                            <div class="fields-list__name">Email</div>
+                                                            <div class="col-sm-3">
+                                                                <div class="fields-list__col-last">
+                                                                    <div class="checkbox checkbox-sec no-margin">
+                                                                        <input type="checkbox" id="<?php echo "required" . $form->field; ?>" data-name="<?php echo $form->field; ?>" data-type="required" data-prefix="pf_req" <?php echo ($form->required) ? 'checked' : '' ; ?> true-value="1"> 
+                                                                        <label for="<?php echo "required" . $form->field; ?>"></label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="checkbox checkbox-sec no-margin">
-                                                            <input type="checkbox" id="email_visible" true-value="1"> 
-                                                            <label for="email_visible"></label>
+                                                    </li>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            <?php foreach($customize_lead_forms as $form) : ?>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="fields-list__name-cnt">
+                                                                <div class="fields-list__sortable_handle">
+                                                                    <span class="fa fa-ellipsis-v"></span> 
+                                                                    <span class="fa fa-ellipsis-v"></span>
+                                                                </div> 
+                                                                <div class="fields-list__name"><?php echo $form->field; ?></div>
+                                                            </div>
                                                         </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
+                                                        <div class="col-sm-3">
                                                             <div class="checkbox checkbox-sec no-margin">
-                                                                <input type="checkbox" id="email_required" true-value="1"> 
-                                                                <label for="email_required"></label>
-                                                            </div> <!---->
+                                                                <input type="checkbox" id="<?php echo "visible" . substr(str_replace(' ', '', $form->field), 0, 8); ?>" data-name="<?php echo substr(str_replace(' ', '', $form->field), 0, 8); ?>" data-type="visible" data-prefix="pf" <?php echo ($form->visible) ? 'checked' : '' ; ?> true-value="1"> 
+                                                                <label for="<?php echo "visible" . substr(str_replace(' ', '', $form->field), 0, 8); ?>"></label>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="col-sm-3">
+                                                            <div class="fields-list__col-last">
+                                                                <div class="checkbox checkbox-sec no-margin">
+                                                                    <input type="checkbox" id="<?php echo "required" . substr(str_replace(' ', '', $form->field), 0, 8); ?>" data-name="<?php echo substr(str_replace(' ', '', $form->field), 0, 8); ?>" data-type="required" data-prefix="pf_req" <?php echo ($form->required) ? 'checked' : '' ; ?> true-value="1"> 
+                                                                    <label for="<?php echo "required" . substr(str_replace(' ', '', $form->field), 0, 8); ?>"></label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
-                                                            </div> 
-                                                            <div class="fields-list__name">Address</div>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="checkbox checkbox-sec no-margin">
-                                                            <input type="checkbox" id="address_visible" true-value="1"> 
-                                                            <label for="address_visible"></label>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
-                                                            <div class="checkbox checkbox-sec no-margin">
-                                                                <input type="checkbox" id="address_required" true-value="1"> 
-                                                                <label for="address_required"></label>
-                                                            </div> <!---->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
-                                                            </div> 
-                                                            <div class="fields-list__name">Message</div>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="checkbox checkbox-sec no-margin">
-                                                            <input type="checkbox" id="message_visible" true-value="1"> 
-                                                            <label for="message_visible"></label>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
-                                                            <div class="checkbox checkbox-sec no-margin">
-                                                                <input type="checkbox" id="message_required" true-value="1"> 
-                                                                <label for="message_required"></label>
-                                                            </div> <!---->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
-                                                            </div> 
-                                                            <div class="fields-list__name">Preferred time to contact</div>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="checkbox checkbox-sec no-margin">
-                                                            <input type="checkbox" id="contactTime_visible" true-value="1"> 
-                                                            <label for="contactTime_visible"></label>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
-                                                            <div class="checkbox checkbox-sec no-margin">
-                                                                <input type="checkbox" id="contactTime_required" true-value="1"> 
-                                                                <label for="contactTime_required"></label>
-                                                            </div> <!---->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="fields-list__name-cnt">
-                                                            <div class="fields-list__sortable_handle">
-                                                                <span class="fa fa-ellipsis-v"></span> 
-                                                                <span class="fa fa-ellipsis-v"></span>
-                                                            </div> 
-                                                            <div class="fields-list__name">How did you hear about us</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-3">
-                                                        <div class="checkbox checkbox-sec no-margin">
-                                                            <input type="checkbox" id="referral_visible" true-value="1"> 
-                                                            <label for="referral_visible"></label>
-                                                        </div>
-                                                    </div> 
-                                                    <div class="col-sm-3">
-                                                        <div class="fields-list__col-last">
-                                                            <div class="checkbox checkbox-sec no-margin">
-                                                                <input type="checkbox" id="referral_required" true-value="1"> 
-                                                                <label for="referral_required"></label>
-                                                            </div> <!---->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            <?php endforeach; ?>
                                         </ul> 
-                                        <a href="#" class="a-sec item-add-line-btn"><span class="fa fa-plus-square fa-margin-right"></span>Add form field</a> 
+                                        <a href="javascript:void(0)" id="addFormField" class="a-sec item-add-line-btn"><span class="fa fa-plus-square fa-margin-right"></span>Add form field</a> 
                                         <!----> 
                                         <div class="appearance margin-top">
                                             <div class="weight-medium">Appearance</div> 
@@ -271,14 +176,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="form-group row">
                                                 <label class="col-sm-6 weight-normal form-control-text">Text Color</label> 
                                             <div class="col-sm-5 pl-0 pr-5">
-                                                <input id="color-picker" class="form-control" value='#276cb8' />
+                                                <input id="color-picker" name="text_color" class="form-control" value='<?php echo $lead_forms->text_color; ?>' />
                                             </div>
                                         </div> 
                                         <div class="form-group row">
                                             <label class="col-sm-6 weight-normal form-control-text">Text Size</label> 
                                             <div class="col-sm-18">
                                                 <div class="form-inline">
-                                                    <select name="options.textSize" class="form-control options-text">
+                                                    <select name="options.textSize" name="text_size" class="form-control options-text">
+                                                        <option selected value="<?php echo $lead_forms->text_size; ?>"><?php echo $lead_forms->text_size; ?> px</option> 
                                                         <option value="10">10 px</option> 
                                                         <option value="11">11 px</option> 
                                                         <option value="12">12 px</option> 
@@ -302,7 +208,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label class="col-sm-6 weight-normal form-control-text">Text Font</label>
                                             <div class="col-sm-18">
                                                 <div class="form-inline">
-                                                    <select name="options.textFont" class="form-control options-text">
+                                                    <select name="options.textFont" name="text_font" class="form-control options-text">
+                                                        <option selected value="<?php echo $lead_forms->text_font; ?>"><?php echo $lead_forms->text_font; ?></option> 
                                                         <option value="roboto">Roboto</option> 
                                                         <option value="Open Sans">Open Sans</option> 
                                                         <option value="Lato">Lato</option> 
@@ -319,7 +226,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-18">
                                                 <div class="form-inline" style="position: relative; z-index: 2;">
                                                     <div class="col-sm-5 pl-0 pr-5">
-                                                        <input id="button-color" class="form-control" value='#276cb8' />
+                                                        <input id="button-color" name="button_color" class="form-control" value='<?php echo $lead_forms->button_color; ?>' />
                                                     </div>
                                                 </div>
                                             </div>
@@ -329,7 +236,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-18">
                                                 <div class="form-inline" style="position: relative; z-index: 1;">
                                                     <div class="col-sm-5 pl-0 pr-5">
-                                                        <input id="button-text-color" class="form-control" value='#276cb8' />
+                                                        <input id="button-text-color" name="button_text_color" class="form-control" value='<?php echo $lead_forms->button_text_color; ?>' />
                                                     </div>
                                                 </div>
                                             </div>
@@ -339,11 +246,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="weight-medium">Notifications</div> 
                                         <div class="help margin-bottom-sec">Select how you want to be notified on a new inquiry.</div>
                                         <div class="checkbox checkbox-sec margin-right">
-                                            <input type="checkbox" id="options.notify.email" true-value="1"> 
+                                            <input type="checkbox" name="email_notification" id="options.notify.email" <?php echo ($lead_forms->email_notification) ? 'checked' : '' ; ?> true-value="1"> 
                                             <label for="options.notify.email"> Email</label>
                                         </div>
                                         <div class="checkbox checkbox-sec">
-                                            <input type="checkbox" id="options.notify.push" true-value="1">
+                                            <input type="checkbox" name="app_notification" id="options.notify.push" true-value="1">
                                             <label for="options.notify.push"> App Notification</label>
                                         </div>
                                     </div> 
@@ -371,7 +278,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="text" name="google_analytics_origin" value="" autocomplete="off" class="form-control">
                                     </div> 
                                     <hr class="card-hr"> 
-                                    <button data-on-click-label="Saving..." class="btn btn-primary margin-right">Save Plugin Settings</button>
+                                    <button type="submit" data-on-click-label="Saving..." class="btn btn-primary margin-right">Save Plugin Settings</button>
                                 </div> 
                                 <div class="col-sm-6">
                                     <div style="padding: 40px; border: 0px solid rgb(221, 221, 221); background: rgb(242, 242, 242) none repeat scroll 0% 0%; min-height: 1100px;">
@@ -379,42 +286,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div style="background: rgb(255, 255, 255) none repeat scroll 0% 0%; padding: 30px;">
                                             <div id="app" class="markate-widget-contact" style="color: rgb(34, 34, 34); font-size: 16px; font-family: &quot;roboto&quot;, Arial, Helvetica, sans-serif;"><!----> 
                                                 <form name="widget-contact" method="post">
-                                                    <div class="form-group">
-                                                        <label>Name</label> 
-                                                        <span class="form-required">*</span> 
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Phone</label> 
-                                                        <span class="form-required">*</span> 
-                                                        <input type="tel" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Email</label> <!----> 
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Address</label> <!----> 
-                                                        <input type="text" id="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Message</label> <!----> 
-                                                        <textarea rows="2" class="form-control"></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Preferred time to contact</label> <!----> 
-                                                        <select name="form.contactTime" class="form-control">
-                                                            <option value="0" selected="selected">Any time</option> 
-                                                            <option value="1">7am to 10am</option> 
-                                                            <option value="2">10am to Noon</option> 
-                                                            <option value="3">Noon to 4pm</option> 
-                                                            <option value="4">4pm to 7pm</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>How did you hear about us</label> <!----> 
-                                                        <input type="text" class="form-control">
-                                                    </div>
+                                                    <?php foreach($customize_lead_forms_default as $form) : ?>
+                                                            <div id="<?php echo 'pf'.$form->field; ?>" class="form-group">
+                                                                <label><?php echo $form->field; ?></label> 
+                                                                <span id="<?php echo 'pf_req'.$form->field; ?>" class="form-required">*</span> 
+                                                                <input type="text" class="form-control">
+                                                            </div>
+                                                    <?php endforeach; ?>
+                                                    <?php foreach($customize_lead_forms as $form) : ?>
+                                                        <div id="<?php echo 'pf' . substr(str_replace(' ', '', $form->field), 0, 8); ?>" class="form-group">
+                                                            <label><?php echo $form->field; ?></label> 
+                                                            <span id="<?php echo 'pf_req' . substr(str_replace(' ', '', $form->field), 0, 8); ?>" class="form-required">*</span> 
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    <?php endforeach; ?>
                                                 </form> 
                                                 <hr class="card-hr"> 
                                                 <div class="widget-contact-submit">
@@ -424,6 +309,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                            <?php echo form_close(); ?>
                             </div>
                         </div>
                         </div>

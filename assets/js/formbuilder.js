@@ -351,7 +351,7 @@ loadFormElements = (id, mode = null) => {
                   <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                 </div>
               </div>
-              <h1>${el.fe_label}</h1>
+              <h1 class="form-user-elements">${el.fe_label}</h1>
             </div>
           `:""}
 
@@ -365,7 +365,7 @@ loadFormElements = (id, mode = null) => {
                   <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                 </div>
               </div>
-              <p>${el.fe_label}</p>
+              <p class="form-user-elements">${el.fe_label}</p>
             </div>
           `:""}
 
@@ -379,7 +379,7 @@ loadFormElements = (id, mode = null) => {
                   <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                 </div>
               </div>
-                <img src="https://via.placeholder.com/150" alt="image" style="width: 100%; height; 300px;">
+                <img src="https://via.placeholder.com/150" alt="image" class="form-user-elements" style="width: 100%; height; 300px;">
             </div>
           `:""}
 
@@ -393,13 +393,13 @@ loadFormElements = (id, mode = null) => {
                   <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                 </div>
               </div>
-              <a href="${el.fe_default_value}">${el.fe_label}</a>
+              <a href="${el.fe_default_value}" class="form-user-elements">${el.fe_label}</a>
             </div>
           `:""}
 
           ${(elementType == 25)?`
             <!-- Blank space -->
-            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-12" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+            <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-12 form-user-elements" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
               <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                 <div class="btn-group" style="margin-y: auto">
                   <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -407,6 +407,7 @@ loadFormElements = (id, mode = null) => {
                   <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                 </div>
               </div>
+              <span class="form-user-elements"></span>
               ${(mode == "edit")?"/ Blank space /":""}
               <br/>
               <br/>
@@ -508,7 +509,7 @@ loadFormElements = (id, mode = null) => {
 
               ${(elementType == 44)?`
                 <!-- Radio Button Matrix -->
-                <table class="table table-hover">
+                <table class="table table-hover form-user-elements">
                   <thead>
                     <tr>
                       <th>${el.fe_label}</th>
@@ -552,7 +553,8 @@ loadFormElements = (id, mode = null) => {
                     }, 500)}
                   `
                 }
-                <div class="container-fluid">
+                <div class="container-fluid form-user-elements">
+                  <p>${el.fe_label}</p>
                   <table class="table" id="table-${el.fe_id}">
                     <thead>
                         <tr>
@@ -570,17 +572,20 @@ loadFormElements = (id, mode = null) => {
                         
                       </select>
                     </div>
-                    <button type="button" onclick="addProductToTable(${el.fe_id})" id="btnAddProduct" class="btn btn-info"><i class="fa fa-plus"></i> Add New Product</button>
+                    <button type="button" onclick="addProductToTable(${el.fe_id})" id="btnAddProduct" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> Add New Product</button>
                   </div>
                   <hr/>
-                  <span id="table-product-total-price-all-${el.fe_id}" class="text-left">Total: $0.0</span>
+                  <div class="text-right">
+                    <span id="table-product-tax-addition-${el.fe_id}" class="text-left">Tax: <strong>25%</strong> (+ $0.00)</span><br/>
+                    <span id="table-product-total-price-all-${el.fe_id}" class="text-left">Total: <strong>$0.0</strong></span>
+                  </div>
                 </div>
                 
               `:""}
 
               ${(elementType == 48)?`
                 <!-- Checkbox Matrix -->
-                <table class="table table-hover">
+                <table class="table table-hover form-user-elements">
                   <thead>
                     <tr>
                       <th>${el.fe_label}</th>
@@ -617,7 +622,7 @@ loadFormElements = (id, mode = null) => {
               `:""}
               ${(elementType == 50)?`
                 <!-- Short Answer Matrix -->
-                <table class="table table-hover">
+                <table class="table table-hover form-user-elements">
                   <thead>
                     <tr>
                       <th>${el.fe_label}</th>
@@ -658,6 +663,7 @@ loadFormElements = (id, mode = null) => {
           
         }
       });
+      
       return;
     }
   })

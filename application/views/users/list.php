@@ -51,14 +51,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>Web Access</th>
                                             <th>Action</th>
                                         </tr>
-                                        </thead>
+                                        </thead> 
                                         <tbody>
                                         <?php foreach ($users as $row): ?>
                                             <tr>
                                                 <td width="60"><?php echo $row->id ?></td>
                                                 <td width="50" class="text-center">
-                                                    <!-- <img src="<?php //echo userProfile($row->id) ?>" width="40"
-                                                         height="40" alt="" class="img-avtar"> -->
+                                                    <img src="<?php echo userProfileImage($row->id) ?>" width="40"
+                                                         height="40" alt="" class="img-avtar">
 
                                                      <?php    
                                                             if($row->profile_img <> 0){

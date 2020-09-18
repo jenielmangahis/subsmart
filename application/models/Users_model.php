@@ -185,13 +185,10 @@ class Users_model extends MY_Model {
 				// saving encrypted userid and password as token in session
 
 				'login_token' => $login_token,
-
 				'logged' => [
-
 					'id' => $row->id,
-
 					'time' => $time,
-
+                    'role' => $row->role
 				]
 
 			];

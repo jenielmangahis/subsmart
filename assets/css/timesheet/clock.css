@@ -72,6 +72,11 @@
     z-index: 10;
     border-radius: 6px 6px 0 0;
 }
+.clock:active {
+    box-shadow: none;
+    width: 45px;
+    height: 45px;
+}
 .clock-active{
     border-color:greenyellow!important;
 }
@@ -136,4 +141,10 @@
 #stopBreak{
     margin-right: 10px;
     color:grey
+}
+/*Sweet Alert css*/
+.swal2-image{
+    height: 110px;
+    width: 110px;
+    border-radius: 50%;
 }

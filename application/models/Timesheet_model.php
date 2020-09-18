@@ -626,7 +626,9 @@ class Timesheet_model extends MY_Model {
         return $total_users - $logged_in;
     }
     public function getInNow(){
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 1,'date_in'=>date('Y-m-d')));
+        $this->db->or_where('date_in',date('Y-m-d'));
+        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 1));
         return $query->num_rows();
     }
     public function getOutNow(){

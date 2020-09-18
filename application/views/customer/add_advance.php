@@ -127,7 +127,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-md-12">
                                                     <form id="customer_form">
                                                         <div class="row">
-                                                            <table cellpadding="0" cellspacing="0" width="900" style="border-collapse: collapse;">
+                                                            <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
                                                                 <tbody>
                                                                     <tr>
                                                                         <td align="" valign="top">
