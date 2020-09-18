@@ -312,7 +312,7 @@ p.plan-list-price {
 							          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
 							      	  </div>
 							          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
-							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Process to Payment</button>
+							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
 							        </div>
 						      	</div>
 
@@ -436,8 +436,12 @@ $(function(){
     	if( subscription_type == 'trial' ){
     		$(".total-amount").text("0.00 (Free Trial)");
     		$("#plan_price").val(0);
-    		step3Container.show();
-    		$("span.step-3").addClass('btn-indigo');
+    		/*step3Container.show(); 
+    		$("span.step-3").addClass('btn-indigo');*/
+
+    		step2Container.show();
+	    	$("span.step-2").addClass('btn-indigo');
+
     	}else{
     		$(".total-amount").text("$" + price_discount  + " (3 months 50% off)");
     		step2Container.show();
