@@ -197,25 +197,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <label for="">Billing address</label>
                                 <textarea name="billing_address" id="billing_address" cols="30" rows="4" placeholder="" style="resize: none;"></textarea>
                             </div>
-                            
-                            <div class="col-md-2">
-								<label for="">Terms</label>
-								<select name="terms" id="billTerms" class="form-control select2-bill-terms">
-									<option></option>
-									<option>Due on receipt</option>
-									<option>Net 15</option>
-									<option>Net 30</option>
-									<option>Net 60</option>
-								</select>
+                             <div class="col-md-6">
+								<div class="row">
+									<div class="col-md-4">
+										<label for="">Terms</label>
+										<select name="terms" id="billTerms" class="form-control select2-bill-terms">
+											<option></option>
+											<option>Due on receipt</option>
+											<option>Net 15</option>
+											<option>Net 30</option>
+											<option>Net 60</option>
+										</select>
+									</div>
+									<div class="col-md-4">
+										<label for="">Invoice Date</label>
+										<input type="date" name="invoice_date" id="invoice_date" class="form-control">
+									</div>
+									<div class="col-md-4">
+										<label for="">Due Date</label>
+										<input type="date" name="invoice_date" id="invoice_date" class="form-control">
+									</div>
+								</div>
+								<div class="row mt-3">
+									<div class="col-4">
+										<label for="">Ship Via</label>
+										<input type="text" name="ship_via" id="ship_via" class="form-control">
+									</div>
+									<div class="col-4">
+										<label for="">Shipping Date</label>
+										<input type="date" name="shipping_date" id="shipping_date" class="form-control">
+									</div>
+									<div class="col-4">
+										<label for="">Tracking No.</label>
+										<input type="text" name="tracking_no" id="tracking_no" class="form-control">
+									</div>
+								</div>
 							</div>
-							<div class="col-md-2">
-                                <label for="">Invoice Date</label>
-                                <input type="date" name="invoice_date" id="invoice_date" class="form-control">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="">Due Date</label>
-                                <input type="date" name="invoice_date" id="invoice_date" class="form-control">
-                            </div>
                             <div class="col-md-1">
 							</div>
 							<div class="col-md-2">
@@ -224,7 +241,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <input type="text" name="location_sale" id="location_sale" class="form-control" value="1">
                                 </div>
                             </div>
-                            <div class="col-md-2"></div>
+                        </div>
+						<div class="row" style="margin-top: 20px">
+                             <div class="col-3">
+                                <label for="">Shipping to</label>
+                                <textarea name="shipping_to_address" id="shipping_to_address" cols="30" rows="4" placeholder="" style="resize: none;" spellcheck="false"></textarea>
+                            </div>
                         </div>
                         <div class="table-container mt-5">
                             <div class="table-loader">

@@ -183,9 +183,9 @@ class Customer extends MY_Controller
         $input_alarm['contact1'] = $input['contact1'];
         $input_alarm['contact2'] = $input['contact2'];
         $input_alarm['contact3'] = $input['contact3'];
-        //$input_alarm['contact_name1'] = $input['contact_name1'];
-        //$input_alarm['contact_name2'] = $input['contact_name2'];
-        //$input_alarm['contact_name3'] = $input['contact_name3'];
+        $input_alarm['contact_name1'] = $input['contact_name1'];
+        $input_alarm['contact_name2'] = $input['contact_name2'];
+        $input_alarm['contact_name3'] = $input['contact_name3'];
         $input_alarm['panel_type'] = $input['panel_type'];
         $input_alarm['system_type'] = $input['system_type'];
         $input_alarm['mon_waived'] = $input['mon_waived'];

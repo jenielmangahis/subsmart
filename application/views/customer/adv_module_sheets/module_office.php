@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="welcome_sent"><span>Welcome kit Sent</span>
                 </div>
                 <div class="col-md-8">
-                    <input type="checkbox" name="welcome_sent" value="1" id="welcome_sent">
+                    <input type="checkbox" name="welcome_sent" value="1" id="welcome_sent" <?php if(isset($office_info)){ echo $office_info->welcome_sent == 1 ? 'checked': ''; } ?>>
                 </div>
             </div>
         </div>
