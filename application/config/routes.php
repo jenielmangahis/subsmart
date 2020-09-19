@@ -298,3 +298,6 @@ $route['settings/calendar_unbind_account'] = 'Settings/calendar_unbind_account';
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';
 $route['video_estimate'] = 'Inquiries/video_estimate';
+
+//paypal
+$route['subscription/index'] = 'Subscription/index';
