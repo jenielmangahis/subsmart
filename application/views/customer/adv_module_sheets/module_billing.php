@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Card Holder First Name</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="card_fname" id="card_fname" />
+                        <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?php if(isset($billing_info)){ echo $billing_info->card_fname; } ?>" />
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Card Holder Last Name</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="card_lname" id="card_lname" />
+                        <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?php if(isset($billing_info)){ echo $billing_info->card_lname; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Card Holder Address </label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="card_address" id="card_address" />
+                        <input type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -54,10 +54,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="billing_city" id="billing_city" />
+                                <input type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" name="billing_state" id="billing_state" />
+                                <input type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-4">
                     </div>
                     <div class="col-md-5">
-                        <input type="text" class="form-control" name="billing_zip" id="billing_zip" />
+                        <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -154,12 +154,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select">
-                            <option value="">- Select -</option>
-                            <option value="One Time Only">One Time Only</option>
-                            <option value="Every 1 Month">Every 1 Month</option>
-                            <option value="Every 3 Months">Every 3 Months</option>
-                            <option value="Every 6 Months">Every 6 Months</option>
-                            <option value="Every 1 Year">Every 1 Year</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == ""){echo "selected";} } ?> value="">- Select -</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "One Time Only"){echo "selected";} } ?> value="One Time Only">One Time Only</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 1 Month"){echo "selected";} } ?> value="Every 1 Month">Every 1 Month</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 3 Months"){echo "selected";} } ?> value="Every 3 Months">Every 3 Months</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 6 Months"){echo "selected";} } ?> value="Every 6 Months">Every 6 Months</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 1 Year"){echo "selected";} } ?> value="Every 1 Year">Every 1 Year</option>
                         </select>
                     </div>
                 </div>
@@ -171,35 +171,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select">
-                            <option value="0"></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
+                            <?php
+                                for ($days=0;$days<14;$days++){
+                                    ?>
+                                        <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($prefix)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
+                                    <?php
+                                }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -211,11 +189,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select" >
-                            <option value="0"></option>
-                            <option value="36">36</option>
-                            <option value="60">60</option>
-                            <option value="12">12</option>
-                            <option value="24">24</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 0){echo "selected";} } ?> value="0"></option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 36){echo "selected";} } ?> value="36">36</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 60){echo "selected";} } ?> value="60">60</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 12){echo "selected";} } ?> value="12">12</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 24){echo "selected";} } ?> value="24">24</option>
                         </select>
                     </div>
                 </div>
@@ -227,11 +205,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-8">
                         <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select">
-                            <option  value="0">None</option>
-                            <option value="1">Credit Card</option>
-                            <option value="2">Check</option>
-                            <option value="3">eCheck</option>
-                            <option value="4">Manual Billing</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 0){echo "selected";} } ?>  value="0">None</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 1){echo "selected";} } ?> value="1">Credit Card</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 2){echo "selected";} } ?> value="2">Check</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 3){echo "selected";} } ?> value="3">eCheck</option>
+                            <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 4){echo "selected";} } ?> value="4">Manual Billing</option>
                         </select>
                     </div>
                 </div>
@@ -242,7 +220,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing Start Date</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control " name="bill_start_date" id="date_picker" />
+                        <input type="text" class="form-control " name="bill_start_date" id="date_picker" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
                     </div>
                 </div>
             </div>
@@ -252,7 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing End Date</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control " name="bill_end_date" id="date_picker" />
+                        <input type="text" class="form-control " name="bill_end_date" id="date_picker" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -262,7 +240,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Check Number</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="check_num" id="check_num" />
+                        <input type="number" class="form-control" name="check_num" id="check_num" value="<?php if(isset($billing_info)){ echo $billing_info->check_num; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -272,7 +250,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Routing Number</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="routing_num" id="routing_num" />
+                        <input type="number" class="form-control" name="routing_num" id="routing_num" value="<?php if(isset($billing_info)){ echo $billing_info->routing_num; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -282,7 +260,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Account Number</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="acct_num" id="acct_num" />
+                        <input type="number" class="form-control" name="acct_num" id="acct_num" value="<?php if(isset($billing_info)){ echo $billing_info->acct_num; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -292,7 +270,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Credit Card Number</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="credit_card_num" id="credit_card_num" />
+                        <input type="number" class="form-control" name="credit_card_num" id="credit_card_num" value="<?php if(isset($billing_info)){  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; } ?>"/>
                     </div>
                 </div>
             </div>
@@ -304,10 +282,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-4">
-                                <input type="text" class="form-control" name="credit_card_exp" id="credit_card_exp" />
+                                <input type="text" class="form-control" name="credit_card_exp" id="credit_card_exp" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp; } ?>"/>
                             </div>/
                             <div class="col-md-4">
-                                <input type="text" class="form-control" name="credit_card_exp_mm_yyyy" id="credit_card_exp_mm_yyyy" />
+                                <input type="text" class="form-control" name="credit_card_exp_mm_yyyy" id="credit_card_exp_mm_yyyy" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp_mm_yyyy; } ?>"/>
                             </div> <small>(MM/YYYY)</small>
                         </div>
                     </div>

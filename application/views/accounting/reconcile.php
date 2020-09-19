@@ -28,6 +28,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     height: 150px !important;
 }
+.hide
+{
+    display: none;
+}
 </style>
 <?php 
 $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id);
@@ -174,89 +178,139 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     <!-- Add New -->
     <div id="overlay-full-tx" class=""></div>
     <div id="side-menu-full-tx" class="main-side-nav">
-        <div class="side-title">
-            <h4 id="memo_sc_nm"></h4>
-            <a id="close-menu-full-tx" class="menuCloseButton" onclick="closeFullNav()"><span id="side-menu-close-text">
-            <i class="fa fa-times"></i></span></a>
+        <div style="background-color: #f4f5f8">
+            <div class="side-title">
+                <h4 id="memo_sc_nm"></h4>
+                <a id="close-menu-full-tx" class="menuCloseButton" onclick="closeFullNav()"><span id="side-menu-close-text">
+                <i class="fa fa-times"></i></span></a>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-3">
+                        <select name="payee_popup" class="form-control">
+                            <option value="" disabled="" selected>Payee</option>
+                            <?php
+                            foreach($this->AccountingVendors_model->select() as $ro)
+                            {
+                            ?>
+                            <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="account_popup">
+                            <?php
+                               $i=1;
+                               foreach($this->chart_of_accounts_model->select() as $row)
+                               {
+                                ?>
+                                <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                              <?php
+                              $i++;
+                              }
+                               ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Balance:<?=number_format($this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id),2);?></h6>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <h6>Amount:<?=number_format($rows[0]->service_charge,2);?></h6>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-2">
+                        <label>Mailing Address:</label>
+                        <textarea name="mailing_add" rows="4"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Payment date:</label>
+                        <div class="col-xs-10 date_picker">
+                            <input type="text" name="date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <label>Check no.</label>
+                        <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
+                        </br>
+                        </br>
+                        <input type="checkbox" name="print_check">Print Later
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-2">
+                        <label>Check no.</label>
+                        <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-4">
+                        <label>Memo</label>
+                        </br>
+                        <textarea name="mailing_add" rows="4"><?=$rows[0]->memo_sc?></textarea>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2">
+                        <h6>Total : <?=number_format($rows[0]->service_charge,2)?></h6>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div style="margin-left: 20px">
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-3">
-                    <select name="payee_popup" class="form-control">
-                        <option value="" disabled="" selected>Payee</option>
-                        <?php
-                        foreach($this->AccountingVendors_model->select() as $ro)
-                        {
-                        ?>
-                        <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select class="form-control" id="account_popup">
-                        <?php
-                           $i=1;
-                           foreach($this->chart_of_accounts_model->select() as $row)
-                           {
-                            ?>
-                            <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
-                            <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
-                          <?php
-                          $i++;
-                          }
-                           ?>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <h6>Balance:<?=number_format($this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id),2);?></h6>
-                </div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2">
-                    <h6>Amount:<?=number_format($rows[0]->service_charge,2);?></h6>
-                </div>
-            </div>
+            <section class="table-wrapper">
+                <div class="container">
+                    <table class="table" id="participantTable">
+                        <thead>
+                            <tr>
+                               <th></th>
+                               <th>#</th>
+                               <th>Category</th>
+                               <th>Description</th>
+                               <th>Amount</th>
+                               <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fa fa-th"></i></td>
+                                <td>1</td>
+                                <td><?=$rows[0]->expense_account?></td>
+                                <td></td>
+                                <td><?=number_format($rows[0]->service_charge,2)?></td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa fa-th"></i></td>
+                                <td>2</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr class="pr participantRow hide">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>3</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-2">
-                    <label>Mailing Address:</label>
-                    <textarea name="mailing_add" rows="4"></textarea>
-                </div>
-                <div class="col-md-2">
-                    <label>Payment date:</label>
-                    <div class="col-xs-10 date_picker">
-                        <input type="text" name="date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                    <div class="btn-group">
+                        <a href="javascript:void(0);" class="btn-add-bx add">Add Lines</a>
+                        <a href="javascript:void(0);" class="btn-add-bx clear">Clear All Lines</a>
                     </div>
                 </div>
-                <div class="col-md-4"></div>
-                <div class="col-md-2">
-                    <label>Check no.</label>
-                    <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
-                    </br>
-                    </br>
-                    <input type="checkbox" name="print_check">Print Later
-                </div>
-            </div>
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-8"></div>
-                <div class="col-md-2">
-                    <label>Check no.</label>
-                    <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
-                </div>
-            </div>
-            <div class="row" style="margin-bottom:20px">
-                <div class="col-md-4">
-                    <label>Memo</label>
-                    </br>
-                    <textarea name="mailing_add" rows="4"><?=$rows[0]->memo_sc?></textarea>
-                </div>
-                <div class="col-md-6"></div>
-                <div class="col-md-2">
-                    <h6>Total : <?=number_format($rows[0]->service_charge,2)?></h6>
-                </div>
-            </div>
+            </section>
             <div class="row" style="margin-bottom:20px">
                 <div class="col-md-4">
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
@@ -271,19 +325,107 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         </div>
                     </div>
                     </br>
-                    <a href="#">Show existing</a>
+                    <a href="#" onclick="openSideNav()">Show existing</a>
                 </div>
             </div>
         </div>
-
-
      
-        <div class="save-act">
+        <!-- <div class="save-act">
             <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
             <button type="submit" class="savebtn">Done</button>
-        </div>
+        </div> -->
     </div>
     <!-- End Add New -->
+
+        <!-- Add Agency Sidebar -->
+    <div id="overlay" class=""></div>
+    <div id="side-menu" class="main-side-nav">
+        <div class="side-title">
+            <h4>Add to Bank Deposit</h4>
+            <a id="close-menu" class="menuCloseButton" onclick="closeSideNav()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        <div class="mainMenu nav">
+            <div class="existing-listing">
+                <div class="inner-like">
+                    <div class="dropdown">
+                        <button class="btn-exisitng dropdown-toggle" type="button" data-toggle="dropdown">Unliked
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">All</a></li>
+                            <li><a href="#">Unliked</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="existing-box">
+                    <h4>data_entry.docx <span>08/12/2020</span></h4>
+
+                    <div class="priview-img">
+                        <img src="img/download.svg" alt="">
+                    </div>
+
+                    <div class="act-br">
+                        <a href="#" class="txbtn">Add</a>
+                        <a href="#" class="txbtn previewbtn">Preview</a>
+                    </div>
+                </div>
+
+                <div class="existing-box">
+                    <h4>data_entry.docx <span>08/12/2020</span></h4>
+
+                    <div class="priview-img">
+                        <img src="img/download.svg" alt="">
+                    </div>
+
+                    <div class="act-br">
+                        <a href="#" class="txbtn">Add</a>
+                        <a href="#" class="txbtn previewbtn">Preview</a>
+                    </div>
+                </div>
+
+                <div class="existing-box">
+                    <h4>data_entry.docx <span>08/12/2020</span></h4>
+
+                    <div class="priview-img">
+                        <img src="img/download.svg" alt="">
+                    </div>
+
+                    <div class="act-br">
+                        <a href="#" class="txbtn">Add</a>
+                        <a href="#" class="txbtn previewbtn">Preview</a>
+                    </div>
+                </div>
+
+                <div class="existing-box">
+                    <h4>data_entry.docx <span>08/12/2020</span></h4>
+
+                    <div class="priview-img">
+                        <img src="img/download.svg" alt="">
+                    </div>
+
+                    <div class="act-br">
+                        <a href="#" class="txbtn">Add</a>
+                        <a href="#" class="txbtn previewbtn">Preview</a>
+                    </div>
+                </div>
+
+                <div class="existing-box">
+                    <h4>data_entry.docx <span>08/12/2020</span></h4>
+
+                    <div class="priview-img">
+                        <img src="img/download.svg" alt="">
+                    </div>
+
+                    <div class="act-br">
+                        <a href="#" class="txbtn">Add</a>
+                        <a href="#" class="txbtn previewbtn">Preview</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Add Agency Sidebar -->
 
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -1181,6 +1323,8 @@ $('.savebt2').on('click', function() {
 function openFullNav() {
     jQuery("#side-menu-full-tx").addClass("open-side-nav");
     jQuery("#side-menu-full-tx").css("width","100%");
+    jQuery("#side-menu-full-tx").css("overflow-y","auto");
+    jQuery("#side-menu-full-tx").css("overflow-x","hidden");
     jQuery("#overlay-full-tx").addClass("overlay");
     $("#memo_sc_nm").text("Check - #"+$("#SVCCHRG").val());
 }
@@ -1190,5 +1334,92 @@ function closeFullNav() {
     jQuery("#side-menu-full-tx").removeClass("open-side-nav");
     jQuery("#side-menu-full-tx").css("width","0%");
     jQuery("#overlay-full-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+    /* Variables */
+    var p = $("#participants").val();
+    var p = 1;
+    var row = $(".participantRow");
+
+    /* Functions */
+    function getP(){
+      p = $("#participants").val();
+    }
+
+    function addRow() {
+      row.clone(true, true).removeClass('hide table-line').appendTo("#participantTable");
+    }
+
+    function removeRow(button) {
+        console.log(button.closest("tr").text());
+      button.closest("tr").remove();
+    }
+    /* Doc ready */
+    $(".add").on('click', function () {
+      getP();
+      if($("#participantTable tr").length < 17) {
+        addRow();
+        var i = Number(p)+1;
+        $("#participants").val(i);
+      }
+      $(this).closest("tr").appendTo("#participantTable");
+      if ($("#participantTable tr").length === 3) {
+        $(".remove").hide();
+      } else {
+        $(".remove").show();
+      }
+    });
+    $(".remove").on('click', function () {
+      getP();
+      if($("#participantTable tr").length === 4) {
+        //alert("Can't remove row.");
+        $(".remove").hide();
+      } else if($("#participantTable tr").length - 1 ==4) {
+        $(".remove").hide();
+        removeRow($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      } else {
+        removeRow($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      }
+    });
+    $("#participants").change(function () {
+      var i = 0;
+      p = $("#participants").val();
+      var rowCount = $("#participantTable tr").length - 2;
+      if(p > rowCount) {
+        for(i=rowCount; i<p; i+=1){
+          addRow();
+        }
+        $("#participantTable #addButtonRow").appendTo("#participantTable");
+      } else if(p < rowCount) {
+      }
+    });
+    $(".clear").on('click', function () {
+      if($("#participantTable tr").length - 1 >3) {
+        x = 1;
+        $('#participantTable > tbody  > tr').each(function() {
+            if(x >3)
+            {
+                $(this).remove();
+            }
+            x = x+1;
+        });
+      }
+    });
+</script>
+<script type="text/javascript">
+function openSideNav() {
+     
+    jQuery("#side-menu").addClass("open-side-nav");
+    jQuery("#overlay").addClass("overlay");
+}
+function closeSideNav() {
+   
+    jQuery("#side-menu").removeClass("open-side-nav");
+    jQuery("#overlay").removeClass("overlay");
 }
 </script>

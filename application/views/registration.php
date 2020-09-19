@@ -32,6 +32,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     opacity: 1 !important;
     filter: alpha(opacity=100) !important;
 }
+.form-control-dr {
+    display: block;
+    width: 100%;
+    height: 50px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 20px) calc(1em + 5px), calc(100% - 15px) calc(1em + 5px), calc(100% - 2.5em) 20em;
+    background-size: 5px 5px, 5px 5px, 1px 1.5em;
+    background-repeat: no-repeat;
+}
 .btn-circle {
     width: 30px;
     height: 30px;
@@ -68,7 +89,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     top: 20px;
 }
 .step2-btn {
-    background: #64477d !important;
+    background: #000000 !important;
     border: 0px solid #64477d !important;
 }
 .step2-btn:hover {
@@ -79,24 +100,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .plan-list li{
   display: inline-block;
-  width:30%;
-  margin-bottom:40px;
+  width: 31%;
+  margin-bottom: 40px;
   box-shadow: 0 0 9px -1px #222;
   min-height: 300px;
   vertical-align: middle;
   margin: 4px;
-  background-color: #c9c9c9;
+  background-color: #785aef;
   padding-top: 10%;
 }
 h3.plan-list-text {
   font-size: 22px !important;
-  font-weight: 600;
+  font-weight: 800;
+  color: white;
 }
 p.plan-list-price {
   font-size: 25px;
   margin-top: 10px;
   margin-bottom: 30px;
   font-weight: 700;
+  color: #3ce405;
   font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif !important;
 }
 @media only screen and (max-width: 700px) {
@@ -114,8 +137,8 @@ p.plan-list-price {
 				<div id="side-image" class="side-image--regular image-fader left"></div>
 			</div>
 			<div class="col-sm-7 col-md-7 float-left pr-0 container-signup pt-5">
-				
-					
+
+
 					<h2 class="m-b-2 ng-scope text-center reg-header">Welcome to a new way to take control of your business.</h2>
 					<span class="text-center block mt-3">Already signed up? <a href="<?php echo url('login');?>" class="reg-color">Log in</a></span>
 					<span class="text-reg-subtle">Studies show CRM Systems will increase your customer relationship by 74% and improves your sales by 87%</span>
@@ -155,7 +178,7 @@ p.plan-list-price {
 							        <div class="col-md-12">
 		                      			<div class="reg-s1">
 		  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
-		  						          <select class="form-control subscription-type" style="width: auto;margin: 33px auto;">
+		  						          <select class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
 		  						          	<option value="prospect">3 months 50% off</option>
 		  						          	<option value="trial">Free Trial</option>
 		  						          </select>
@@ -163,11 +186,11 @@ p.plan-list-price {
 		  						          <?php foreach($ns_plans as $p){ ?>
 		  						          	<li>
 		  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
-		  						          		
+
 		  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
 			  						          		<div class="discounted-price">
-			  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;">$<?= number_format($p->price, 2); ?></p>
-			  						          			<?php 
+			  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;color: #ffe215;">$<?= number_format($p->price, 2); ?></p>
+			  						          			<?php
 			  						          				$discount_price = $p->price / 2;
 			  						          			?>
 			  						          			<p class="plan-list-price">$<?= number_format($discount_price, 2); ?> /mo</p>
@@ -289,7 +312,7 @@ p.plan-list-price {
 							          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
 							      	  </div>
 							          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
-							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Process to Payment</button>
+							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
 							        </div>
 						      	</div>
 
@@ -402,26 +425,30 @@ $(function(){
     	$("#plan_id").val(plan_id);
     	$("#plan_price").val(price_discount);
         $("#plan_name").val(plan_name);
-    	$(".plan-selected").text(plan_name);  
-    	$(".plan-price").text("$" + plan_price);  	
+    	$(".plan-selected").text(plan_name);
+    	$(".plan-price").text("$" + plan_price);
 
     	step1Container.hide();
 
     	$("span.step-1").removeClass('btn-indigo');
 	    $("span.step-1").addClass("btn-default");
 
-    	if( subscription_type == 'trial' ){   
+    	if( subscription_type == 'trial' ){
     		$(".total-amount").text("0.00 (Free Trial)");
     		$("#plan_price").val(0);
-    		step3Container.show();
-    		$("span.step-3").addClass('btn-indigo');
+    		/*step3Container.show(); 
+    		$("span.step-3").addClass('btn-indigo');*/
+
+    		step2Container.show();
+	    	$("span.step-2").addClass('btn-indigo');
+
     	}else{
     		$(".total-amount").text("$" + price_discount  + " (3 months 50% off)");
     		step2Container.show();
 	    	$("span.step-2").addClass('btn-indigo');
     	}
-    	
-    	
+
+
     });
 
     step3bBtnPrcPayment.click(function(){

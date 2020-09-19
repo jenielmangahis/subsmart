@@ -12,13 +12,33 @@ function prefix_name($index=0){
 }
 
 function suffix_name($index=0){
-    $name_suffix = array('','DS','Esq..', 'II', 'III','IV.','Jr.','MA','MBA','MD','MS','PhD','RN','Sr.');
+    $name_suffix = array('','DS','Esq.', 'II', 'III','IV.','Jr.','MA','MBA','MD','MS','PhD','RN','Sr.');
     if($index<0 || $index>=count($name_suffix)){
         $index=0;
     }else if(!is_int($index)){
         $index=0;
     }
     return $name_suffix[$index];
+}
+
+function mmr($index=0){
+    $mmrate = array('0.00','20.00','24.99', 'II', 'III','IV.','Jr.','MA','MBA','MD','MS','PhD','RN','Sr.');
+    if($index<0 || $index>=count($mmrate)){
+        $index=0;
+    }else if(!is_int($index)){
+        $index=0;
+    }
+    return $mmrate[$index];
+}
+
+function days_of_month($index=0){
+    $days = array('0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30');
+    if($index<0 || $index>=count($days)){
+        $index=0;
+    }else if(!is_int($index)){
+        $index=0;
+    }
+    return $days[$index];
 }
 
 ?>

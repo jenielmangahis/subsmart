@@ -22,6 +22,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_sales_time_activity_model');
+        $this->load->model('ccounting_customers_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -1859,6 +1860,10 @@ class Accounting extends MY_Controller {
             'customer_email' => $this->input->post('customer_email'),
             'online_payments' => $this->input->post('online_payments'),
             'billing_address' => $this->input->post('billing_address'),
+            'shipping_to_address' => $this->input->post('shipping_to_address'),
+            'ship_via' => $this->input->post('ship_via'),
+            'shipping_date' => $this->input->post('shipping_date'),
+            'tracking_number' => $this->input->post('tracking_number'),
             'terms' => $this->input->post('terms'),
             'invoice_date' => $this->input->post('invoice_date'),
             'due_date' => $this->input->post('due_date'),
@@ -2286,4 +2291,94 @@ class Accounting extends MY_Controller {
         }
     }
 	
+	public function addCustomersAccounting(){
+        $new_data = array(
+            'prof_id' => $this->input->post('prof_id'),
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'middle_name' => $this->input->post('middle_name'),
+            'prefix' => $this->input->post('prefix'),
+            'suffix' => $this->input->post('suffix'),
+            'business_name' => $this->input->post('business_name'),
+            'email' => $this->input->post('email'),
+            'ssn' => $this->input->post('ssn'),
+            'date_of_birth' => $this->input->post('date_of_birth'),
+            'phone_h' => $this->input->post('phone_h'),
+            'phone_w' => $this->input->post('phone_w'),
+            'phone_m' => $this->input->post('phone_m'),
+            'fax' => $this->input->post('fax'),
+            'mail_add' => $this->input->post('mail_add'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'country' => $this->input->post('country'),
+            'zip_code' => $this->input->post('zip_code'),
+            'cross_street' => $this->input->post('cross_street'),
+            'subdivision' => $this->input->post('subdivision'),
+            'img_path' => $this->input->post('img_path'),
+            'pay_history' => $this->input->post('pay_history')
+        );
+        $query = $this->accounting_customer_model->createCustomer($new_data);
+        if ($query){
+             echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+	
+	public function updateCustomersAccounting(){
+        $new_data = array(
+            'prof_id' => $this->input->post('prof_id'),
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'middle_name' => $this->input->post('middle_name'),
+            'prefix' => $this->input->post('prefix'),
+            'suffix' => $this->input->post('suffix'),
+            'business_name' => $this->input->post('business_name'),
+            'email' => $this->input->post('email'),
+            'ssn' => $this->input->post('ssn'),
+            'date_of_birth' => $this->input->post('date_of_birth'),
+            'phone_h' => $this->input->post('phone_h'),
+            'phone_w' => $this->input->post('phone_w'),
+            'phone_m' => $this->input->post('phone_m'),
+            'fax' => $this->input->post('fax'),
+            'mail_add' => $this->input->post('mail_add'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'country' => $this->input->post('country'),
+            'zip_code' => $this->input->post('zip_code'),
+            'cross_street' => $this->input->post('cross_street'),
+            'subdivision' => $this->input->post('subdivision'),
+            'img_path' => $this->input->post('img_path'),
+            'pay_history' => $this->input->post('pay_history')
+        );
+        $query = $this->accounting_customer_model->updateCustomer($this->input->post('id'), $new_data);
+        if ($query){
+             echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+	public function deleteCustomersAccounting(){
+        $id = $this->input->post('id');
+        $query = $this->accounting_customer_model->deleteCustomer($id);
+
+        if($query){
+            echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+	public function searchCustomersAccounting(){
+        $id = $this->input->post('id');
+        $searchCustomer = $this->input->post('word');
+        $query = $this->accounting_customer_model->searchCustomer($id,$searchCustomer);
+
+        if($query){
+            echo json_encode(1);
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
 }
