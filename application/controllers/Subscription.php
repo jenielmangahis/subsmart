@@ -284,10 +284,6 @@ class Subscription extends MY_Controller {
 		$client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z"; 
 	    $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; 
 
-	    //$payment_success_url = base_url().'registration?status=success'; //"https://nsmartrac.com/payment_success";
-	    $payment_success_url = "http://localhost/nguyen/subsmart/subscription/activate_plan";
-	    $payment_cancel_url  = "https://nsmartrac.com/payment_cancel";
-
 	    //Add paypal client id & secret
 	    $apiContext = new \PayPal\Rest\ApiContext(
 	            new \PayPal\Auth\OAuthTokenCredential(
