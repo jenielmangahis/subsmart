@@ -135,7 +135,7 @@ class Subscription extends MY_Controller {
 
     }
 
-    public function index() {
+    public function create_payment() {
     	$client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z"; 
         $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; 
 
@@ -278,6 +278,116 @@ class Subscription extends MY_Controller {
 		    $plan = $agreement->getPlan();
 		    $payment = $plan->getPaymentDefinitions()[0];
 		}
+	}
+
+	public function subscribe(){
+		$client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z"; 
+	    $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; 
+
+	    //$payment_success_url = base_url().'registration?status=success'; //"https://nsmartrac.com/payment_success";
+	    $payment_success_url = "http://localhost/nguyen/subsmart/subscription/activate_plan";
+	    $payment_cancel_url  = "https://nsmartrac.com/payment_cancel";
+
+	    //Add paypal client id & secret
+	    $apiContext = new \PayPal\Rest\ApiContext(
+	            new \PayPal\Auth\OAuthTokenCredential(
+	                $client_id,  
+	                $client_secret
+	            )
+	    );
+
+	    // Create a new billing plan
+		$plan = new \PayPal\Api\Plan();
+		$plan->setName('T-Shirt of the Month Club Plan')
+		  ->setDescription('Template creation.')
+		  ->setType('fixed');
+
+		// Set billing plan definitions
+		$paymentDefinition = new \PayPal\Api\PaymentDefinition();
+		$paymentDefinition->setName('Regular Payments')
+		  ->setType('REGULAR')
+		  ->setFrequency('Month')
+		  ->setFrequencyInterval('2')
+		  ->setCycles('12')
+		  ->setAmount(new \PayPal\Api\Currency(array('value' => 100, 'currency' => 'USD')));
+
+		// Set charge models
+		$chargeModel = new \PayPal\Api\ChargeModel();
+		$chargeModel->setType('SHIPPING')
+		  ->setAmount(new \PayPal\Api\Currency(array('value' => 10, 'currency' => 'USD')));
+		$paymentDefinition->setChargeModels(array($chargeModel));
+
+		// Set merchant preferences
+		$return_url = 'http://localhost/nhuyen/subsmart/subscription/create_payment';
+		$cancel_url = 'http://localhost/nhuyen/subsmart/subscription/cancel_subscription';
+		$merchantPreferences = new \PayPal\Api\MerchantPreferences();
+		$merchantPreferences->setReturnUrl($return_url)
+		  ->setCancelUrl($cancel_url)
+		  ->setAutoBillAmount('yes')
+		  ->setInitialFailAmountAction('CONTINUE')
+		  ->setMaxFailAttempts('0')
+		  ->setSetupFee(new \PayPal\Api\Currency(array('value' => 1, 'currency' => 'USD')));
+
+		$plan->setPaymentDefinitions(array($paymentDefinition));
+		$plan->setMerchantPreferences($merchantPreferences);
+
+
+		//create plan
+		try {
+		  $createdPlan = $plan->create($apiContext);
+
+		  try {
+		    $patch = new \PayPal\Api\Patch();
+		    $value = new \PayPal\Common\PayPalModel('{"state":"ACTIVE"}');
+		    $patch->setOp('replace')
+		      ->setPath('/')
+		      ->setValue($value);
+		    $patchRequest = new \PayPal\Api\PatchRequest();
+		    $patchRequest->addPatch($patch);
+		    $createdPlan->update($patchRequest, $apiContext);
+		    $plan = \PayPal\Api\Plan::get($createdPlan->getId(), $apiContext);
+		    $plan_id = $plan->getId();
+		  } catch (PayPal\Exception\PayPalConnectionException $ex) {	    
+		    die($ex);
+		  } catch (Exception $ex) {
+		    die($ex);
+		  }
+		} catch (PayPal\Exception\PayPalConnectionException $ex) {	  
+		  die($ex);
+		} catch (Exception $ex) {
+		  die($ex);
+		}
+
+		//set agreement
+		$datetime = new DateTime('2020-12-30 23:21:46');
+	    $subscription_date = $datetime->format(DateTime::ATOM);
+		$agreement = new Agreement();
+
+		$agreement->setName('Base Agreement')
+		    ->setDescription('Basic Agreement')
+		    ->setStartDate($subscription_date);
+
+		$plan = new Plan();
+
+		$plan->setId($plan_id);
+		$agreement->setPlan($plan);
+
+		$payer = new Payer();
+		$payer->setPaymentMethod('paypal');
+		$agreement->setPayer($payer);
+
+		try {
+		    $agreement = $agreement->create($apiContext);
+
+		    $approvalUrl = $agreement->getApprovalLink();
+
+		} catch (Exception $ex) {
+		    echo "Failed to get activate";
+		    var_dump($ex);
+		    exit();
+		}
+
+		header("Location:" . $approvalUrl);
 	}
      
 }
