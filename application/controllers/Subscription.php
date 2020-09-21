@@ -11,6 +11,130 @@ class Subscription extends MY_Controller {
 
     }
 
+    public function test_subscription()
+    {
+    	$client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z"; 
+        $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; 
+
+        $payment_success_url = base_url().'registration?status=success'; //"https://nsmartrac.com/payment_success";
+        $payment_cancel_url  = "https://nsmartrac.com/payment_cancel";
+
+        $datetime = new DateTime('2020-12-30 23:21:46');
+        $subscription_date = $datetime->format(DateTime::ATOM);
+        $plan_id = 'P-3SU40258FM212761AV56BOUI';
+
+
+        //Add paypal client id & secret
+        $apiContext = new \PayPal\Rest\ApiContext(
+                new \PayPal\Auth\OAuthTokenCredential(
+                    $client_id,  
+                    $client_secret
+                )
+        );
+
+        $agreement = new \PayPal\Api\Agreement();
+		$agreement->setName('Base Agreement')
+		  ->setDescription('Basic Agreement')
+		  ->setStartDate($subscription_date);
+
+		// Set plan id
+		$plan = new \PayPal\Api\Plan();
+		$plan->setId($plan_id);
+		$agreement->setPlan($plan);
+
+		// Add payer type
+		$payer = new \PayPal\Api\Payer();
+		$payer->setPaymentMethod('paypal');
+		$agreement->setPayer($payer);
+
+		try {
+		  // Create agreement
+		  $agreement = $agreement->create($apiContext);
+
+		  // Extract approval URL to redirect user
+		  $approvalUrl = $agreement->getApprovalLink();
+		  echo "<pre>";
+		  print_r($agreement);
+		  exit;
+		} catch (PayPal\Exception\PayPalConnectionException $ex) {
+			echo 4;
+		  echo "<pre>";
+		  print_r($ex);
+		  echo $ex->getCode();
+		  echo $ex->getData();
+		  die($ex);
+		} catch (Exception $ex) {
+			echo 6;
+		  die($ex);
+		}
+
+		exit;
+
+    }
+
+    public function index2() {
+        echo '<h2>Subscription Test</h2><hr />';
+
+        $client_id     = "AY25WV2YZlLiW3h23bmArrKKcKFl9rwo7WpibqSz1UYbKac5oHx6BgzXOXDSlWO57H4eJ0NaKyVxBQ8R";
+        $client_secret = "EIPYJtmSOBR0jiesGfIqxmG_nV9sWJB4ZHeiraZuRYOq9ryJIjrj4_7mSirslPT_azcpOW8ZZ7vbfJiw";
+
+        $payment_success_url = "https://nsmartrac.com/payment_success";
+        $payment_cancel_url  = "https://nsmartrac.com/payment_cancel";
+
+        //Add paypal client id & secret
+        $apiContext = new \PayPal\Rest\ApiContext(
+                new \PayPal\Auth\OAuthTokenCredential(
+                    $client_id,  
+                    $client_secret
+                )
+        );
+
+        /*
+         * To do: setup paypal subscription
+        */
+
+        //Setup paypal payment 
+        
+        $payer = new \PayPal\Api\Payer();
+        $payer->setPaymentMethod('paypal');
+
+        $amount = new \PayPal\Api\Amount();
+        $amount->setTotal('1.00');
+        $amount->setCurrency('USD');
+
+        $transaction = new \PayPal\Api\Transaction();
+        $transaction->setAmount($amount);
+
+        //Add here success and cancel url link
+        $redirectUrls = new \PayPal\Api\RedirectUrls();
+        $redirectUrls->setReturnUrl($payment_success_url)
+            ->setCancelUrl($payment_cancel_url);
+
+        $payment = new \PayPal\Api\Payment();
+        $payment->setIntent('sale')
+            ->setPayer($payer)
+            ->setTransactions(array($transaction))
+            ->setRedirectUrls($redirectUrls);
+
+
+        // After Step 3
+        try {
+            $payment->create($apiContext);
+
+            /*echo $payment;
+            echo "\n\nRedirect user to approval_url: " . $payment->getApprovalLink() . "\n";*/
+            
+            header("Location: " . $payment->getApprovalLink());
+        }
+        catch (\PayPal\Exception\PayPalConnectionException $ex) {
+
+            // This will print the detailed information on the exception.
+            //REALLY HELPFUL FOR DEBUGGING
+            echo $ex->getData();
+        }            
+
+    }
+
     public function index() {
         echo '<h2>Subscription Test</h2><hr />';
 
@@ -98,6 +222,8 @@ class Subscription extends MY_Controller {
 		    echo "user canceled agreement";
 		}
 
+		exit;
+
 
         // // $transaction = new \PayPal\Api\Transaction();
         // // $transaction->setAmount($amount);
@@ -136,8 +262,8 @@ class Subscription extends MY_Controller {
 
     	 echo '<h2>Subscription Test</h2><hr />';
 
-        $client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z";  // "AY25WV2YZlLiW3h23bmArrKKcKFl9rwo7WpibqSz1UYbKac5oHx6BgzXOXDSlWO57H4eJ0NaKyVxBQ8R";
-        $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; //"EIPYJtmSOBR0jiesGfIqxmG_nV9sWJB4ZHeiraZuRYOq9ryJIjrj4_7mSirslPT_azcpOW8ZZ7vbfJiw";
+        $client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z"; 
+        $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; 
 
         $payment_success_url = base_url().'registration?status=success'; //"https://nsmartrac.com/payment_success";
         $payment_cancel_url  = "https://nsmartrac.com/payment_cancel";
@@ -191,14 +317,14 @@ class Subscription extends MY_Controller {
 
 		  try {
 		    $patch = new \PayPal\Api\Patch();
-		    $value = new PayPalModel('{"state":"ACTIVE"}');
+		    $value = new \PayPal\Common\PayPalModel('{"state":"ACTIVE"}');
 		    $patch->setOp('replace')
 		      ->setPath('/')
 		      ->setValue($value);
 		    $patchRequest = new \PayPal\Api\PatchRequest();
 		    $patchRequest->addPatch($patch);
 		    $createdPlan->update($patchRequest, $apiContext);
-		    $plan = Plan::get($createdPlan->getId(), $apiContext);
+		    $plan = \PayPal\Api\Plan::get($createdPlan->getId(), $apiContext);
 
 		    // Output plan id
 		    echo $plan->getId();
