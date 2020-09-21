@@ -173,7 +173,7 @@ class Subscription extends MY_Controller {
 
     public function create_plan() {
 
-    	 echo '<h2>Subscription Test</h2><hr />';
+    	echo '<h2>Subscription Test</h2><hr />';
 
         $client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z"; 
         $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT"; 
@@ -314,8 +314,8 @@ class Subscription extends MY_Controller {
 		$paymentDefinition->setChargeModels(array($chargeModel));
 
 		// Set merchant preferences
-		$return_url = 'http://localhost/nhuyen/subsmart/subscription/create_payment';
-		$cancel_url = 'http://localhost/nhuyen/subsmart/subscription/cancel_subscription';
+		$return_url = 'http://localhost/nguyen/nsmartrac_web/subscription/create_payment';
+		$cancel_url = 'http://localhost/nguyen/nsmartrac_web/subscription/cancel_subscription';
 		$merchantPreferences = new \PayPal\Api\MerchantPreferences();
 		$merchantPreferences->setReturnUrl($return_url)
 		  ->setCancelUrl($cancel_url)
@@ -355,20 +355,30 @@ class Subscription extends MY_Controller {
 		}
 
 		//set agreement
-		$datetime = new DateTime('2020-12-30 23:21:46');
-	    $subscription_date = $datetime->format(DateTime::ATOM);
-		$agreement = new Agreement();
+		//$datetime = new DateTime('2020-12-30 23:21:46');
+	    //$subscription_date = $datetime->format(DateTime::ATOM);
+
+        $datetime = new DateTime( date('Y-m-d H:i:s', strtotime("+1 day")) );
+        $subscription_date = $datetime->format(DateTime::ATOM);	 
+
+		//$date = date('Y-m-d H:i:s', strtotime("+1 day"));           
+
+		//$agreement = new Agreement();
+		$agreement = new \PayPal\Api\Agreement();
 
 		$agreement->setName('Base Agreement')
 		    ->setDescription('Basic Agreement')
 		    ->setStartDate($subscription_date);
 
-		$plan = new Plan();
+		//$plan = new Plan();
+		$plan = new \PayPal\Api\Plan();
 
 		$plan->setId($plan_id);
 		$agreement->setPlan($plan);
 
-		$payer = new Payer();
+		//$payer = new Payer();
+		$payer = new \PayPal\Api\Payer();
+
 		$payer->setPaymentMethod('paypal');
 		$agreement->setPayer($payer);
 
@@ -379,7 +389,9 @@ class Subscription extends MY_Controller {
 
 		} catch (Exception $ex) {
 		    echo "Failed to get activate";
+		    echo '<pre>';
 		    var_dump($ex);
+		    echo '</pre>';
 		    exit();
 		}
 

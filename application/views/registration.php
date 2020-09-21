@@ -320,7 +320,7 @@ p.plan-list-price {
 						      	<div class="row setup-content" id="step-4">
 							        <div class="col-md-12">
 							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
-							          <p>Please add paypal success of cancel data here..</p>
+							          <p>Please add paypal success here..</p>
 							          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
 							        </div>
 						      	</div>
