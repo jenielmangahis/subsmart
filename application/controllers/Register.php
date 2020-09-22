@@ -246,18 +246,6 @@ class Register extends MY_Controller {
         
     }
 
-    function success(){
-    	echo 'paypal success here';
-    }
-
-    function cancel(){
-    	echo 'paypal cancel here';
-    }
-
-    function ipn(){
-    	echo 'paypal notify url here';
-    }
-
 }
 
 /* End of file Register.php */
