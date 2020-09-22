@@ -23,10 +23,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Portal Status (on/off)</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="radio" name="portal_status" value="1" id="portal_status1" checked >
+                    <input type="radio" name="portal_status" value="1" id="portal_status1" <?php if(isset($access_info)){ echo $access_info->portal_status == 1 ? 'checked': ''; } ?> >
                     <label for="portal_status1"><span>On</span></label>
 
-                    <input type="radio" name="portal_status" value="0"  id="portal_status">
+                    <input type="radio" name="portal_status" value="0"  id="portal_status" <?php if(isset($access_info)){ echo $access_info->portal_status == 0 ? 'checked': ''; } ?>>
                     <label for="rebate"><span>Off</span></label>
                 </div>
             </div>
@@ -37,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Reset Password (Button)</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="reset_password" id="reset_password" />
+                    <input type="text" class="form-control" name="reset_password" id="reset_password" value="<?php if(isset($access_info)){ echo $access_info->reset_password; } ?>"/>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Login</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="login" id="login" />
+                    <input type="text" class="form-control" name="login" id="login" value="<?php if(isset($access_info)){ echo $access_info->login; } ?>"/>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Password</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="password" id="password" />
+                    <input type="text" class="form-control" name="password" id="password" value="<?php if(isset($access_info)){ echo $access_info->password; } ?>"/>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Custom Field 1</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="acs_custom_field1" id="acs_custom_field1" />
+                    <input type="text" class="form-control" name="acs_custom_field1" id="acs_custom_field1" value="<?php if(isset($access_info)){ echo $access_info->acs_custom_field1; } ?>" />
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Custom Field 2</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2" />
+                    <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2" value="<?php if(isset($access_info)){ echo $access_info->acs_custom_field2; } ?>" />
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Cancellation Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="acs_cancel_date" id="date_picker" />
+                    <input type="text" class="form-control date_picker" name="acs_cancel_date" id="date_picker" value="<?php if(isset($access_info)){ echo $access_info->acs_cancel_date; } ?>" />
                 </div>
             </div>
         </div>
@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Collection Date</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="acs_collect_date" id="date_picker" />
+                    <input type="text" class="form-control date_picker" name="acs_collect_date" id="date_picker" value="<?php if(isset($access_info)){ echo $access_info->acs_collect_date; } ?>" />
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Cancellation Reason</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="acs_cancel_reason" id="acs_cancel_reason" />
+                    <input type="text" class="form-control" name="acs_cancel_reason" id="acs_cancel_reason" value="<?php if(isset($access_info)){ echo $access_info->acs_cancel_reason; } ?>" />
                 </div>
             </div>
         </div>
@@ -117,7 +117,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Collection Amount</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="collect_amount" id="collect_amount" />
+                    <input type="number" class="form-control" name="collect_amount" id="collect_amount" value="<?php if(isset($access_info)){ echo $access_info->collect_amount; } ?>" />
                 </div>
             </div>
         </div>

@@ -120,7 +120,7 @@
                             </li>
                             <?php $newtasks = getNewTasks(); ?>
                             <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style=""class="material-icons" aria-hidden="true">assignment</i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
+                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style=""class="fa fa-calendar-check-o" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
                                     <?php } ?></a>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->
@@ -140,16 +140,13 @@
                                 </div>
                             </li>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
-                                <?php
-                                    $unset = array('break','on_break','timer_icon','remaining_time');
-                                    $this->session->unset_userdata($unset);
-                                ?>
                                 <input type="hidden" id="clock-session" value="">
-                                <input type="hidden" id="clock-end-time" value="<?php echo $this->session->userdata('break')?>">
+                                <input type="hidden" id="clock-end-time" value="<?php echo ($this->session->userdata('end_break'))?$this->session->userdata('end_break'):null; ?>">
                                 <input type="hidden" id="clock-server-time" value="">
-                                <input type="hidden" id="clock-status" value="<?php echo (!empty($this->session->userdata('active')))?$this->session->userdata('active'):3; ?>">
-                                <div class="clock-users " id="clockIn">
-                                    <div class="clock <?php echo $this->session->userdata('on_break'); ?>">
+                                <input type="hidden" id="clock-status" value="<?php echo ($this->session->userdata('active') == 'clock-break')?1:0; ?>">
+                                <input type="hidden" id="attendanceId" value="<?php echo $this->session->userdata('attn-id');?>">
+                                <div class="clock-users " id="<?php echo ($this->session->userdata('clock-btn'))?$this->session->userdata('clock-btn'):"clockIn";?>" >
+                                    <div class="clock <?php echo $this->session->userdata('active'); ?>">
                                         <div class="hour">
                                             <div class="hr" id="hr"></div>
                                         </div>
@@ -164,20 +161,19 @@
                                 <div class="preview-clock-details">
                                     <div class="clock-section">
                                         <span class="clock-details-title">Clock In:</span>
-                                        <span class="clock-details-text">10:00AM</span>
+                                        <span class="clock-details-text in"><?php echo ($this->session->userdata('clock-in-time'))?$this->session->userdata('clock-in-time'):'-' ?></span>
                                     </div>
                                     <div class="clock-section">
                                         <span class="clock-details-title">Clock Out:</span>
-                                        <span class="clock-details-text">Pending...</span>
+                                        <span class="clock-details-text out"><?php echo ($this->session->userdata('clock-out-time'))?$this->session->userdata('clock-out-time'):'-' ?></span>
                                     </div>
                                     <div class="clock-section">
-                                        <span class="clock-details-title">Break:</span>
+                                        <span class="clock-details-title">Lunch:</span>
                                         <span class="clock-details-text"><span id="break-duration"><?php echo (!empty($this->session->userdata('remaining_time')))?$this->session->userdata('remaining_time'):'60:00'; ?></span>
-                                            <a href="#" id="stopBreak" <?php echo $this->session->userdata('timer_icon')?>><i class="fa fa-pause-circle"></i></a></span>
                                     </div>
                                     <div class="clock-section">
                                         <span class="clock-details-title">Shift Duration:</span>
-                                        <span class="clock-details-text"></span>
+                                        <span class="clock-details-text" id="shiftDuration"><?php echo ($this->session->userdata('shift_duration'))?$this->session->userdata('shift_duration'):'-'; ?></span>
                                     </div>
                                 </div>
                             </li>

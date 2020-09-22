@@ -70,9 +70,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td><?= $lead->date_of_birth; ?></td>
                                                 <td><?= $lead->phone_home; ?></td>
                                                 <td>
-                                                    <button class="btn btn-primary" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <a href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" >
+                                                    <button class="btn btn-primary" type="button">
                                                         <span class="btn-label"><span class="fa fa-pencil-square-o icon"></span> Edit</span>
                                                     </button>
+                                                    </a>
                                                     <button class="btn btn-primary delete_lead" id="<?php echo $lead->leads_id; ?>" type="button">
                                                         <span class="btn-label"><span class="fa fa-trash-o icon"></span> Delete</span>
                                                     </button>
@@ -137,12 +139,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "/customer/remove_customer",
-                    data: {prof_id : ID}, // serializes the form's elements.
+                    url: "/customer/remove_lead",
+                    data: {lead_id : ID}, // serializes the form's elements.
                     success: function(data)
                     {
                         if(data === "Done"){
-                            sucess("Customer Remove Successfully!");
+                            sucess("Lead Remove Successfully!");
                         }else{
                             console.log(data);
                         }
@@ -153,4 +155,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
     });
+    function sucess(information){
+        Swal.fire({
+            title: 'Good job!',
+            text: information,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                window.location.href="/customer/leads";
+            }
+        });
+    }
 </script>

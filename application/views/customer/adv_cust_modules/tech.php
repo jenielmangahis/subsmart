@@ -16,14 +16,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_answer"><b><?php if(isset($office_info)){ echo $office_info->tech_arrive_time; }; ?></b> </label>
                             </td>
                         </tr>
-<!--                        <tr>-->
-<!--                            <td width="50%" align="right" valign="top">-->
-<!--                                <label class="alarm_label"> <span>Tech Assign :</span> </label>-->
-<!--                            </td>-->
-<!--                            <td width="50%" align="right" valign="top">-->
-<!--                                <label class="alarm_answer"><b> --><?php ////if(isset($office_info)){ echo $office_info->tech_assign; }; ?><!--</b> </label>-->
-<!--                            </td>-->
-<!--                        </tr>-->
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span>Tech Assign :</span> </label>
+                           </td>
+                           <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->technician; }; ?></b> </label>
+                            </td>
+                       </tr>
                         <tr>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >CustomField1 :</span> </label>
@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Departure Time :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b><?php if(isset($tech_info)){ echo $tech_info->tech_complete_time; }; ?></b> </label>
+                                <label class="alarm_answer"><b><?php if(isset($office_info)){ echo $office_info->tech_depart_time; }; ?></b> </label>
 
                             </td>
                         </tr>
@@ -65,23 +65,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Date Given :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->date_given; }; ?></b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="left" valign="top">
-                                <label class="alarm_label"> <span >CustomField3 :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field3_tech; }; ?></b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="left" valign="top">
-                                <label class="alarm_label"> <span >CustomField4 :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->custom_field4_tech; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->save_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -89,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Link :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($tech_info)){ echo $tech_info->url; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->url; }; ?></b> </label>
                             </td>
                         </tr>
 
@@ -98,7 +82,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div style="margin-right:15px; padding-top:50px;" align="left" class="normaltext1">
+            <div style="margin-right:15px; padding-top:85px;" align="left" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">View/Edit Module</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>

@@ -877,9 +877,9 @@ $(document).ready(function(){
             var result = jQuery.parseJSON(data);
 
             if((result.error == '') || (result.error == null)){
-              showFolderManagerNotif('Successful','Permission set to the ' + vPType,'success');
-
               ApplyPermissions(result.permissions);
+              
+              showFolderManagerNotif('Successful','Permission set to the ' + vPType,'success');
             } else {
               showFolderManagerNotif('Error', result.error, 'error');   
             }
