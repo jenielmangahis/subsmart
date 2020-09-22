@@ -95,8 +95,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         vertical-align: bottom;
     }
     .swal2-image{
-        height: 110px;
-        width: 110px;
+        height: 120px;
+        width: 120px;
         border-radius: 50%;
     }
     .tbl-emp-action .employee-in-out[disabled="disabled"]{
@@ -157,6 +157,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         position: relative;
         width: 49%;
         display: inline-block;
+    }
+    .user-logs-title{
+        display: inline-block;
+    }
+    .user-logs-title .fa-coffee{
+        color: #92969d;
+    }
+    .user-logs-title a[disabled="disabled"]{
+        cursor: not-allowed;
+    }
+    .right{
+        float: right;
     }
 </style>
 <div class="wrapper" role="wrapper">
@@ -524,6 +536,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                     }
                                                 }
+
                                             }
                                             ?>
                                             <tr>
@@ -580,28 +593,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="clear">
                                                     <div class="inner-content">
                                                         <div class="card-title user-card-title">
-                                                            <span>Today's logs</span>
+                                                            <span class="user-logs-title">Today's logs</span>
+                                                            <span class="user-logs-title right"><a href="javascript:void(0)" class="employeeLunch" id="<?php echo ($this->session->userdata('lunch-active')==true)?'lunchOut':null; ?>" <?php echo (empty($this->session->userdata('lunch-in')))?"disabled=disabled":null; ?>><i class="fa <?php echo ($this->session->userdata('lunch-active') == true)?'fa-mug-hot':'fa-coffee' ?> fa-lg"></i></a></span>
                                                         </div>
                                                         <?php
                                                             $clock_in = '-';
                                                             $clock_out = '-';
                                                             $lunch_in = '-';
                                                             $lunch_out = '-';
+                                                            $task_name = '-';
+                                                            $start_time = '-';
+                                                            $end_time = '-';
+                                                            $task_duration = '-';
                                                             foreach ($users as $user ){
                                                                 if ($user->id == $this->session->userdata('logged')['id']){
                                                                     foreach ($attendance as $attn){
                                                                         if ($attn->user_id == $this->session->userdata('logged')['id']){
                                                                             foreach ($ts_logs as $log){
                                                                                 if ($log->attendance_id == $attn->id && $log->action == 'Check in'){
-                                                                                    $clock_in = date('h:i A',$log->time);
+                                                                                    if ($attn->date_in == date('Y-m-d',strtotime('yesterday')) || $attn->date_in == date('Y-m-d')){
+                                                                                        $clock_in = date('h:i A',$log->time);
+                                                                                    }
                                                                                 }
                                                                                 if ($log->attendance_id == $attn->id && $log->action == 'Check out' && $attn->date_out == date('Y-m-d')){
                                                                                     $clock_out = date('h:i A',$log->time);
                                                                                 }
-                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Break in'){
+                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Break in'  && $attn->date_out == date('Y-m-d')){
                                                                                     $lunch_in = date('h:i A',$log->time);
                                                                                 }
-                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Break out'){
+                                                                                if ($log->attendance_id == $attn->id && $log->action == 'Break out' && $attn->date_out == date('Y-m-d')){
                                                                                     $lunch_out = date('h:i A',$log->time);
                                                                                 }
 
@@ -610,6 +630,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     }
                                                                 }
                                                             }
+//                                                        $session = array('active', 'clock-in-time','clock-out-time','attn-id','clock-btn','lunch-in','lunch-btn','lunch-active','end_break','shift_duration','remaining_time');
+//                                                        $this->session->unset_userdata($session);
+
+                                                        //Employee's task
+                                                        foreach ($schedule as $sched){
+                                                                foreach ($tasks as $task){
+                                                                    if ($sched->user_id == $this->session->userdata('logged')['id'] && $task->ts_settings_id == $sched->id){
+                                                                        $task_name = $sched->project_name;
+                                                                        $start_time = date('h:i A',strtotime($task->start_time));
+                                                                        $end_time = date('h:i A',strtotime($task->end_time));
+                                                                        $task_duration = $task->duration."hour/s";
+                                                                    }
+                                                                }
+                                                        }
                                                         ?>
                                                         <div class="user-logs">
                                                             <div class="user-logs-section">
@@ -619,10 +653,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="user-lunch-out-title">Lunch-out: </div>
                                                             </div>
                                                             <div class="user-logs-section">
-                                                                <div class="user-clock-in"><?php echo $clock_in;?></div>
-                                                                <div class="user-clock-out"><?php echo $clock_out?></div>
-                                                                <div class="user-lunch-in"><?php echo $lunch_in?></div>
-                                                                <div class="user-lunch-out"><?php echo $lunch_out?></div>
+                                                                <div class="user-clock-in" id="userClockIn"><?php echo $clock_in;?></div>
+                                                                <div class="user-clock-out" id="userClockOut"><?php echo $clock_out?></div>
+                                                                <div class="user-lunch-in" id="userLunchIn"><?php echo $lunch_in?></div>
+                                                                <div class="user-lunch-out" id="userLunchOut"><?php echo $lunch_out?></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -648,10 +682,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="user-lunch-out-title">Estimated time duration: </div>
                                                             </div>
                                                             <div class="user-logs-section" style="vertical-align: top">
-                                                                <div class="user-clock-in"><i class="fa fa-info-circle"></i> Sample task</div>
-                                                                <div class="user-clock-out">8:00 AM</div>
-                                                                <div class="user-lunch-in">5:00 PM</div>
-                                                                <div class="user-lunch-out">9hour/s</div>
+                                                                <div class="user-clock-in"><i class="fa fa-info-circle"></i> <?php echo $task_name?></div>
+                                                                <div class="user-clock-out"><?php echo $start_time;?></div>
+                                                                <div class="user-lunch-in"><?php echo $end_time?></div>
+                                                                <div class="user-lunch-out"><?php echo $task_duration?></div>
                                                             </div>
                                                         </div>
                                                     </div>

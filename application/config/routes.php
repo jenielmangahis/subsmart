@@ -204,6 +204,7 @@ $route['accounting/reconcile/updatesingle/adjustment_date'] = 'reconcile/adjustm
 $route['accounting/reconcile/view/reportajax/(:any)'] = 'reconcile/reportajax/$1';
 $route['accounting/reconcile/view/history'] = 'reconcile/history';
 $route['accounting/reconcile/view/report_print/(:any)'] = 'reconcile/report_print/$1';
+$route['accounting/reconcile/view/showData'] = 'reconcile/showData';
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
@@ -298,3 +299,6 @@ $route['settings/calendar_unbind_account'] = 'Settings/calendar_unbind_account';
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';
 $route['video_estimate'] = 'Inquiries/video_estimate';
+
+//paypal
+$route['subscription/index'] = 'Subscription/index';

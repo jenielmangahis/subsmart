@@ -254,7 +254,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 </div>
             </div><!-- end row -->
-
+            
+<!-- Earnings Display -->
 			<div class="row d-none d-lg-flex mb-1">
 				<div class="col-sm-6">
 					<div class="dropdown dropdown-inline filter-date">
@@ -289,7 +290,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 				</div>
             </div>
-
+<!-- Earnings Display -->
 
              <div class="row d-none d-lg-flex sortable2">
                  <?php
@@ -920,7 +921,7 @@ data: {
 labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
 datasets: [{
 label: '# of Votes',
-data: [12, 19, 3, 5, 2, 3],
+data: [12, 19, 3, 5, 2, 10],
 backgroundColor: [
 'rgba(255, 99, 132, 0.2)',
 'rgba(54, 162, 235, 0.2)',

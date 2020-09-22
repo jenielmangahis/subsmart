@@ -278,12 +278,18 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr onclick="trClickEdit()">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>1</td>
-                                <td><?=$rows[0]->expense_account?></td>
+                                <td>
+                                    <input type="hidden" id="edit_expense_account" name="edit_expense_account" value="<?=$rows[0]->expense_account?>">
+                                    <div class="edit_expense_account"><?=$rows[0]->expense_account?></div>
+                                </td>
                                 <td></td>
-                                <td><?=number_format($rows[0]->service_charge,2)?></td>
+                                <td>
+                                     <input type="hidden" id="edit_service_charge" name="edit_service_charge" value="<?=number_format($rows[0]->service_charge,2)?>">
+                                    <div class="edit_service_charge"><?=number_format($rows[0]->service_charge,2)?></div>
+                                </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <tr>
@@ -309,19 +315,24 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         <a href="javascript:void(0);" class="btn-add-bx add">Add Lines</a>
                         <a href="javascript:void(0);" class="btn-add-bx clear">Clear All Lines</a>
                     </div>
+                    <div class="btn-group hideme" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx">Save<i class="fa fa-check" onclick="rightclick()"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx">Cancel<i class="fa fa-close" onclick="crossClickEdit()"></i>
+                    </div>
                 </div>
             </section>
             <div class="row" style="margin-bottom:20px">
                 <div class="col-md-4">
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
                     </br>
+                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
                     <div class="file-upload-block">
                         <div class="upload-btn-wrapper">
                             <button class="btn ubw">
                                 <i class="fa fa-cloud-upload"></i>
                                 <h6>Drag and drop files here or <span>browse to upload</span></h6>
                             </button>
-                            <input type="file" name="attachment_file" />
+                            <input type="file" name="userfile" />
                         </div>
                     </div>
                     </br>
@@ -861,11 +872,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
     } );
 
     var table = $('#reconcile_table').DataTable({sDom: 'lrtip'});
-    /*$('#find').on( 'keyup', function () {
-        table.search( this.value ).draw();
-    } );*/
 
-    //$('#apply-btn').on( 'click', function () {
     function applybtn(){
         var filtername = document.getElementById('filtername').innerHTML;
         var find = $('#find').val();
@@ -986,7 +993,6 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
          let ele = document.getElementById('textContent');
           ele.innerHTML = "";
        }
-    //});
     }
 
     function myfunc() {
@@ -1007,15 +1013,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         $('#to_date').val(ending_date);
         $('#to_date'). attr("disabled","disabled");
         $('.disableFuturedate').datepicker().datepicker('setEndDate',ending_date);
-        /*var temp_date = ending_date.split(".");
-        var new_date = temp_date[2]+'-'+temp_date[1]+'-'+temp_date[0];*/
-        /*$('.disableFuturedate').datepicker({
-            onSelect: function() {
-              maxDate: '0'
-            };
-          }).on('changeDate', function (ev) {
-             $(this).datepicker('hide');
-          });*/
+        
        }
        else
        {
@@ -1422,4 +1420,51 @@ function closeSideNav() {
     jQuery("#side-menu").removeClass("open-side-nav");
     jQuery("#overlay").removeClass("overlay");
 }
+</script>
+<script type="text/javascript">
+function showData() {
+    $.ajax({
+        url:"<?php echo url('accounting/reconcile/view/showData') ?>",
+        method: "POST",
+        success:function(data)
+        {
+            
+        }
+    })
+}
+</script>
+<script type="text/javascript">
+    function trClickEdit()
+    {
+        if($('#edit_expense_account').attr("type")== 'hidden')
+        {
+            $('.edit_expense_account').css('display','none');
+            $('#edit_expense_account').removeAttr('type','hidden');
+            $('.hideme').show();
+        }
+        if($('#edit_service_charge').attr("type")== 'hidden')
+        {
+            $('.edit_service_charge').css('display','none');
+            $('#edit_service_charge').removeAttr('type','hidden');
+            $('.hideme').show();
+        }
+    }
+    function rightclick()
+    {
+        $('.edit_expense_account').show();
+        $('.edit_expense_account').text($('#edit_expense_account').val());
+        $('#edit_expense_account').attr('type','hidden');
+        $('.edit_service_charge').show();
+        $('.edit_service_charge').text($('#edit_service_charge').val());
+        $('#edit_service_charge').attr('type','hidden');
+        $('.hideme').hide();
+    }
+    function crossClickEdit()
+    {
+        $('.edit_expense_account').show();
+        $('#edit_expense_account').attr('type','hidden');
+        $('.edit_service_charge').show();
+        $('#edit_service_charge').attr('type','hidden');
+        $('.hideme').hide();
+    }
 </script>

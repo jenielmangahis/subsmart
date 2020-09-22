@@ -294,4 +294,9 @@ class Reconcile extends MY_Controller {
         }
         echo $html;
     }
+
+    public function showData()
+    {
+
+    }
 }

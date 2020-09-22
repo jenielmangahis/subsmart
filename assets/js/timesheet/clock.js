@@ -2,8 +2,9 @@ $(document).ready(function () {
     var break_end_time = 0;
     var minutes = 0;
     var seconds = 0;
-    var end_of_break = new Date($('#clock-end-time').val()).getTime();
-    var get_server_time,break_time;
+    var remaining_time = 0;
+    var get_server_time,countdown;
+    var difference = 0;
     function serverTime () {
         var server_time;
             $.ajax({
@@ -18,15 +19,14 @@ $(document).ready(function () {
         get_server_time = setTimeout(serverTime, 1000);
         return server_time;
     }
-    $('.clock-users').click(function () {
-        $('.preview-clock-details').removeClass('visible');
-    });
-    $('.clock-users').dblclick(function () {
-        $('.preview-clock-details').addClass('visible');
-    });
+    // $('.clock-users').click(function () {
+    //     $('.preview-clock-details').removeClass('visible');
+    // });
+    // $('.clock-users').dblclick(function () {
+    //     $('.preview-clock-details').addClass('visible');
+    // });
     $(document).on('click','#clockIn',function () {
-        var clock_in = serverTime();
-        clearTimeout(get_server_time);
+        var selected = this;
         Swal.fire({
             title: 'Clock in?',
             html: "Are you sure you want to Clock-in?",
@@ -41,48 +41,181 @@ $(document).ready(function () {
                url:'/timesheet/clockInEmployee',
                type:"POST",
                dataType:'json',
-               data:{clock_in:clock_in},
-               success:function () {
-
+               // data:{clock_in:clock_in},
+               success:function (data) {
+                    if (data != null){
+                        $(selected).attr('id','clockOut');
+                        $('.clock').addClass('clock-active');
+                        $('#attendanceId').val(data.attendance_id);
+                        $('.in').text(data.clock_in_time);
+                        $('.out').text(data.clock_out_time);
+                        $('#userClockIn').text(data.clock_in_time);
+                        $('.employeeLunch').attr('id','lunchIn').attr('disabled',false);
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "You are now Clock-in",
+                                icon: 'success'
+                            });
+                    }
                } 
             });
         }
     });
     });
-    // Set the date we're counting down to
-
-    // Update the count down every 1 second
-    // var breakTime = setInterval(function() {
-    //     // Get today's date and time
-    //     var now = new Date(server_time).getTime();
-    //     // Find the distance between now an the count down date
-    //     var distance = end_of_break - now;
-    //
-    //     // Time calculations for minutes and seconds
-    //     minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    //     seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    //     if (!isNaN(minutes) && !isNaN(seconds)){
-    //         $('#break-duration').text(remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
-    //     }
-    // }, 1000);
+    $(document).on('click','#clockOut',function () {
+        var selected = this;
+        var attn_id = $('#attendanceId').val();
+        Swal.fire({
+            title: 'Clock out?',
+            html: "Are you sure you want to Clock-out?",
+            imageUrl:"/assets/img/timesheet/clock-out.png",
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, I want to Clock-out!'
+        }).then((result) => {
+            if (result.value) {
+            $.ajax({
+                url:'/timesheet/clockOutEmployee',
+                type:"POST",
+                dataType:'json',
+                data:{attn_id:attn_id},
+                success:function (data) {
+                    if (data != null){
+                        $(selected).attr('id',null);
+                        $('.clock').removeClass('clock-active');
+                        $('.out').text(data.clock_out_time);
+                        $('#userClockOut').text(data.clock_out_time);
+                        $('#shiftDuration').text(data.shift_duration);
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "You are now Clock-out",
+                                icon: 'success'
+                            });
+                    }
+                }
+            });
+        }
+    });
+    });
+    $(document).on('click','#lunchIn',function () {
+        var selected = this;
+        var attn_id = $('#attendanceId').val();
+        Swal.fire({
+            title: 'Lunch in?',
+            html: "Are you sure you want to Lunch-in?",
+            imageUrl:"/assets/img/timesheet/lunch.png",
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, I want to Lunch-in!'
+        }).then((result) => {
+            if (result.value) {
+            var time = new Date();
+            var end_of_break = time.setMinutes(time.getMinutes() + 60);
+            $.ajax({
+                url:'/timesheet/lunchInEmployee',
+                type:"POST",
+                dataType:'json',
+                data:{attn_id:attn_id,end_of_break:end_of_break},
+                success:function (data) {
+                    if (data != null){
+                        $(selected).attr('id','lunchOut');
+                        $('.clock').removeClass('clock-active').addClass('clock-break');
+                        $('#userLunchIn').text(data.lunch_in_time);
+                        $(selected).children('.fa-coffee').removeClass('fa-coffee').addClass('fa-mug-hot');
+                        break_end_time = data.end_break;
+                        $('#clock-end-time').val(break_end_time);
+                        breakTime();
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "You are now Lunch-in",
+                                icon: 'success'
+                            });
+                    }
+                }
+            });
+        }
+    });
+    });
+    if($('#clock-status').val() == 1){
+        breakTime();
+    }
     function breakTime() {
+        var end =  $('#clock-end-time').val();
         // Get today's date and time
-        var now = new Date(serverTime ()).getTime();
-        clearTimeout(get_server_time);
+        var now = new Date().getTime();
+        // clearTimeout(get_server_time);
         // Find the distance between now an the count down date
-        var distance = end_of_break - now;
+        difference = end - now;
 
         // Time calculations for minutes and seconds
-        minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((difference % (1000 * 60)) / 1000);
         if (!isNaN(minutes) && !isNaN(seconds)){
             $('#break-duration').text(remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
+            remaining_time = remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2);
+        }else{
+            clearTimeout(countdown);
         }
-        break_time = setTimeout(breakTime, 1000);
+        countdown = setTimeout(breakTime, 1000);
     }
-    if ($('#clock-status').val() == 0 || $('#clock-status').val() == 2){
-        clearInterval(break_time);
+    function remainTwoDigit(number, targetLength) {
+        var output = number + '';
+        while (output.length < targetLength) {
+            output = '0' + output;
+        }
+        return output;
     }
+    $(document).on('click','#lunchOut',function () {
+        var selected = this;
+        var attn_id = $('#attendanceId').val();
+        Swal.fire({
+            title: 'Lunch out?',
+            html: "Are you sure you want to Lunch-out?",
+            imageUrl:"/assets/img/timesheet/work.png",
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, I want to Lunch-out!'
+        }).then((result) => {
+            if (result.value) {
+            $.ajax({
+                url:'/timesheet/lunchOutEmployee',
+                type:"POST",
+                dataType:'json',
+                data:{attn_id:attn_id,remaining_time:remaining_time},
+                success:function (data) {
+                    if (data != null){
+                        $(selected).attr('id',null);
+                        $('.clock').removeClass('clock-break').addClass('clock-active');
+                        $('#userLunchOut').text(data.lunch_out_time);
+                        $(selected).children('.fa-mug-hot').removeClass('fa-mug-hot').addClass('fa-coffee');
+                        $('#clock-end-time').val(data.remaining);
+                        clearTimeout(countdown);
+                        Swal.fire(
+                            {
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                html: "You are now Lunch-out",
+                                icon: 'success'
+                            });
+                    }
+                }
+            });
+        }
+    });
+    });
 
     // $('#startBreak').click(function (e) {
     //     if ($(this).attr('disabled')){
@@ -126,13 +259,7 @@ $(document).ready(function () {
     //         }
     //     })
     // });
-    function remainTwoDigit(number, targetLength) {
-        var output = number + '';
-        while (output.length < targetLength) {
-            output = '0' + output;
-        }
-        return output;
-    }
+
 });
 
 //Live Clock JS

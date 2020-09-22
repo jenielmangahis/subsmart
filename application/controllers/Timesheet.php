@@ -1326,6 +1326,8 @@ class Timesheet extends MY_Controller {
         $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
         $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
+        $this->page_data['schedule'] = $this->timesheet_model->getTimeSheetSettings();
+        $this->page_data['tasks'] = $this->timesheet_model->getTimeSheetDay();
 
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
@@ -2058,7 +2060,166 @@ class Timesheet extends MY_Controller {
 	    echo json_encode($data);
     }
     public function clockInEmployee(){
-        $clock_in = $this->input->post('clock_in');
+	    $clock_in = time();
+	    $user_id = $this->session->userdata('logged')['id'];
+        $check_week = $this->db->get_where('ts_weekly_total_shift',array('user_id' => $user_id,'week_of'=>date('Y-m-d',strtotime('monday this week'))));
+        if ($check_week->num_rows() == 1){
+            $week_id = $check_week->row()->id;
+        }else{
+            $week_insert = array(
+                'user_id' => $user_id,
+                'week_of' => date('Y-m-d',strtotime('monday this week')),
+                'total_shift' => 0
+            );
+            $this->db->insert('ts_weekly_total_shift',$week_insert);
+            $week_id = $this->db->insert_id();
+        }
+        $attendance = array(
+            'week_id' => $week_id,
+            'user_id' => $user_id,
+            'date_in' => date('Y-m-d'),
+            'date_out' => date('Y-m-d'),
+            'status' => 1
+        );
+        $this->db->insert('timesheet_attendance',$attendance);
+        $attn_id = $this->db->insert_id();
+
+        $logs_insert = array(
+            'attendance_id' => $attn_id,
+            'user_id' => $user_id,
+            'action' => 'Check in',
+            'date' => date('Y-m-d'),
+            'time' => $clock_in,
+            'entry_type' => 'Normal',
+            'status' => 1
+        );
+        $this->db->insert('timesheet_logs',$logs_insert);
+        if($this->db->affected_rows() != 1){
+            echo json_encode(0);
+        }else{
+            $session = array(
+                'clock-btn' => 'clockOut',
+                'active' => 'clock-active',
+                'clock-in-time' => date('h:i A',$clock_in),
+                'clock-out-time' => 'Pending...',
+                'attn-id' => $attn_id,
+                'lunch-in' => true,
+                'lunch-active' => false
+            );
+            $this->session->set_userdata($session);
+            $data = new stdClass();
+            $data->clock_in_time = date('h:i A',$clock_in);
+            $data->clock_out_time = 'Pending...';
+            $data->attendance_id = $attn_id;
+            echo json_encode($data);
+        }
+
+    }
+
+    public function clockOutEmployee(){
+        $attn_id = $this->input->post('attn_id');
+        $clock_out = time();
+        $user_id = $this->session->userdata('logged')['id'];
+        $check_attn = $this->db->get_where('timesheet_attendance',array('id' => $attn_id,'user_id' => $user_id));
+        if ($check_attn->num_rows() == 1){
+            $out = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => 'Check out',
+                'date' => date('Y-m-d'),
+                'time' => $clock_out,
+                'entry_type' => 'Normal',
+                'status' => 1
+            );
+            $this->db->insert('timesheet_logs',$out);
+            $shift_duration = $this->timesheet_model->calculateShiftDuration($attn_id);
+            $break_duration = $this->timesheet_model->calculateBreakDuration($attn_id);
+            $update = array(
+                'shift_duration' => $shift_duration,
+                'break_duration' => $break_duration,
+                'date_out' => date('Y-m-d'),
+                'status' => 0
+            );
+            $this->db->where('id',$attn_id);
+            $this->db->update('timesheet_attendance',$update);
+            if($this->db->affected_rows() != 1){
+                echo json_encode(0);
+            }else{
+                $unset = array('active','lunch-active');
+                $this->session->unset_userdata($unset);
+                $session = array(
+                    'clock-btn' => 'preventLogIn',
+                    'clock-out-time' => date('h:i A',$clock_out),
+                    'attn-id' => $attn_id,
+                    'shift_duration' => $shift_duration
+                );
+                $this->session->set_userdata($session);
+                $data = new stdClass();
+                $data->clock_out_time = date('h:i A',$clock_out);
+                $data->attendance_id = $attn_id;
+                $data->shift_duration = $shift_duration;
+                echo json_encode($data);
+            }
+
+        }
+    }
+
+    public function lunchInEmployee(){
+	    $end_break = $this->input->post('end_of_break');
+        $attn_id = $this->input->post('attn_id');
+        $lunch_in = time();
+        $user_id = $this->session->userdata('logged')['id'];
+        $lunch = array(
+            'attendance_id' => $attn_id,
+            'user_id' => $user_id,
+            'action' => 'Break in',
+            'date' => date('Y-m-d'),
+            'time' => $lunch_in,
+            'entry_type' => 'Normal',
+            'status' => 1
+        );
+        $this->db->insert('timesheet_logs',$lunch);
+        $lunch_sess = array(
+            'active' => 'clock-break',
+            'lunch_in_time' => date('h:i A',$lunch_in),
+            'lunch-active' => true,
+            'end_break' => $end_break
+        );
+        $this->session->set_userdata($lunch_sess);
+        $data = new stdClass();
+        $data->lunch_in_time = date('h:i A',$lunch_in);
+        $data->end_break = $end_break;
+        echo json_encode($data);
+    }
+
+    public function lunchOutEmployee(){
+        $attn_id = $this->input->post('attn_id');
+        $remaining_time = $this->input->post('remaining_time');
+        $lunch_out = time();
+        $user_id = $this->session->userdata('logged')['id'];
+        $lunch = array(
+            'attendance_id' => $attn_id,
+            'user_id' => $user_id,
+            'action' => 'Break out',
+            'date' => date('Y-m-d'),
+            'time' => $lunch_out,
+            'entry_type' => 'Normal',
+            'status' => 1
+        );
+        $this->db->insert('timesheet_logs',$lunch);
+
+        $lunch_sess = array(
+                'active' => 'clock-active',
+                'remaining_time' => $remaining_time,
+                'lunch-active' => false
+        );
+        $this->session->set_userdata($lunch_sess);
+        $lunch_unset = array('lunch_in_time','end_break');
+        $this->session->unset_userdata($lunch_unset);
+        $data = new stdClass();
+        $data->lunch_out_time = date('h:i A',$lunch_out);
+        $data->remaining = $remaining_time;
+        echo json_encode($data);
     }
 
     public function startBreak(){

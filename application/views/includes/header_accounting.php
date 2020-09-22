@@ -131,7 +131,7 @@
                             </li>
                             <?php $newtasks = getNewTasks(); ?>
                             <li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style=""class="material-icons" aria-hidden="true">assignment</i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
+                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="" role="button" aria-haspopup="false" aria-expanded="false"><i style=""class="fa fa-calendar-check-o" aria-hidden="true"></i><?php if(count($newtasks) > 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo count($newtasks); ?></span>
                                     <?php } ?></a>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->

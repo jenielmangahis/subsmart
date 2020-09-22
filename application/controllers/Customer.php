@@ -315,6 +315,15 @@ class Customer extends MY_Controller
         }
     }
 
+    public function remove_lead(){
+        $input = array();
+        $input['field_name'] = "leads_id";
+        $input['id'] = $_POST['lead_id'];
+        $input['tablename'] = "ac_leads";
+        $this->customer_ad_model->delete($input);
+        echo "Done";
+    }
+
     public function add_advance()
     {
         $userid = $this->uri->segment(3);
@@ -332,8 +341,11 @@ class Customer extends MY_Controller
         $this->load->view('customer/add_advance', $this->page_data);
     }
 
-    public function add_lead()
+    public function add_lead($lead_id=0)
     {
+        if(isset($lead_id)){
+            $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
+        }
         $input = $this->input->post();
         if($input){
             unset($input['credit_report']);
@@ -342,10 +354,20 @@ class Customer extends MY_Controller
             $input['phone_cell'] = $input['phone_cell'][0].'-'.$input['phone_cell'][1].'-'.$input['phone_cell'][2];
             $input['sss_num'] = $input['sss_num'][0].'-'.$input['sss_num'][1].'-'.$input['sss_num'][2];
             print_r($input);
-            if($this->customer_ad_model->add($input,"ac_leads")){
-                redirect(base_url('customer/leads'));
+
+            if(isset($input['leads_id'])){
+                if($this->customer_ad_model->update_data($input,"ac_leads","leads_id")){
+                    redirect(base_url('customer/leads'));
+                }else{
+                    echo "Error";
+                }
             }else{
-                echo "Error";
+                if($this->customer_ad_model->add($input,"ac_leads")){
+                    redirect(base_url('customer/leads'));
+                }else{
+                    echo "Error";
+
+                }
             }
         }else{
             $user_id = logged('id');
@@ -571,6 +593,7 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+           // print_r($this->page_data['alarm_info']);
         }
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['cust_tab'] = $this->uri->segment(3);

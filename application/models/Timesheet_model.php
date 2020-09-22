@@ -94,7 +94,7 @@ class Timesheet_model extends MY_Model {
             return false;
         }
     }
-    private function calculateShiftDuration($attn_id){
+    public function calculateShiftDuration($attn_id){
         $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
         $start_time = 0;
         $end_time = 0;
@@ -106,9 +106,9 @@ class Timesheet_model extends MY_Model {
             }
         }
         $diff = ($end_time - $start_time)/3600;
-        return $diff;
+        return round($diff,2);
     }
-    private function calculateBreakDuration($attn_id){
+    public function calculateBreakDuration($attn_id){
         $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
         $start_time = 0;
         $end_time = 0;
