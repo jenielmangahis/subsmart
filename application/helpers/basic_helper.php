@@ -101,9 +101,27 @@ if (!function_exists('userProfileImage')) {
 
         $CI = &get_instance();
         $url = urlUpload('users/user-profile/p_' . $id . '.png?' . time());
+        $user = $CI->users_model->getUser($id);
+        
+        $img_ext = 'png';
+        if( $user->img_type != '' ){
+            $img_ext = $user->img_type;
+        }
 
-        if ($id != 'default')
-            $url = urlUpload('users/user-profile/p_' . $id . '.' . $CI->users_model->getRowById($id, 'img_type') . '?' . time());
+        $profile_img = 'default';
+        if( $user->profile_img != '' ){
+            $profile_img = $user->profile_img;
+        }
+        
+        if ($profile_img != 'default'){
+            $url = urlUpload('users/user-profile/' . $profile_img . '.' . $img_ext . '?' . time());
+
+            if( !file_exists(FCPATH."uploads/users/user-profile/".$profile_img . '.' . $img_ext) ){
+                $url = urlUpload('users/default.png');
+            }
+        }else{
+            $url = urlUpload('users/default.png');
+        }
 
         return $url;
     }

@@ -220,12 +220,12 @@ class Workcalender extends MY_Controller
             $inc = 0;
             $default_imp_img = base_url('uploads/users/default.png');
             foreach($get_users as $get_user) {
-
+                $default_imp_img = userProfileImage($get_user->id);/*
                 if( $get_user->profile_img != null ) {
                         $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );                     
                 } else {
                     $default_imp_img = base_url('uploads/users/default.png');
-                }
+                }*/
 
                 $resources_users[$inc]['id'] = $get_user->id;
                 $resources_users[$inc]['building'] = 'Employee';

@@ -349,20 +349,20 @@ class Users extends MY_Controller {
 		if (!empty($_FILES['image']['name'])) {
 
 			$path = $_FILES['image']['name'];
-			$ext = pathinfo($path, PATHINFO_EXTENSION);
+			$ext  = pathinfo($path, PATHINFO_EXTENSION);
 			$this->uploadlib->initialize([
-				'file_name' => $id.'.'.$ext
+				'file_name' => 'p_' . $id.'.'.$ext
 			]);
 
 			$image = $this->uploadlib->uploadImage('image', '/users/user-profile');
 
 			if($image['status']){
-				$this->users_model->update($id, ['profile_img' => $ext]);
+				$this->users_model->update($id, ['profile_img' => 'p_' . $id, 'img_type' => $ext]);
 			}else{
-				copy(FCPATH.'uploads/users/default.png', 'uploads/users/user-profile/p_'.$id.'.png');
+				copy(FCPATH.'uploads/users/default.png', 'uploads/users/user-profile/p_'.$id.'.'.$ext);
 			}
 		}else{
-			copy(FCPATH.'uploads/users/default.png', 'uploads/users/user-profile/p_'.$id.'.png');
+			copy(FCPATH.'uploads/users/default.png', 'uploads/users/user-profile/p_'.$id.'.'.$ext);
 		}
 
 
@@ -457,7 +457,7 @@ class Users extends MY_Controller {
 				'file_name' => 'p_' .$id.'.'.$ext
 
 			]);
-			$profile_image = $id.'.'.$ext;
+			$profile_image = 'p_' . $id;
 
 			$image = $this->uploadlib->uploadImage('image', '/users/user-profile');
 

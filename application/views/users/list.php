@@ -57,18 +57,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <td width="60"><?php echo $row->id ?></td>
                                                 <td width="50" class="text-center">
+                                                    <?php 
+                                                        
+                                                    ?>
                                                     <img src="<?php echo userProfileImage($row->id) ?>" width="40"
                                                          height="40" alt="" class="img-avtar">
-
-                                                     <?php    
-                                                            if($row->profile_img <> 0){
-                                                                $avatar = $row->profile_img .".".$row->img_type;
-                                                            }else{
-                                                                $avatar = "default.png";
-                                                            }
-                                                     ?>       
-
-                                                    <img src="<?php echo base_url('uploads/users/'.$avatar);?>" width="40" height="40" alt="" class="img-avatar" />
                                                 </td>
                                                 <td>
                                                     <?php echo $row->FName.' '.$row->LName ?>
