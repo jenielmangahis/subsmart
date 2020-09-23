@@ -83,10 +83,9 @@ class Register extends MY_Controller {
         postAllowed();
         $post = $this->input->post();  
 
-        echo '<pre>';
+        /*echo '<pre>';
         print_r($post);
-        echo '</pre>';
-
+        echo '</pre>';*/
         //exit;
 
         $data = [

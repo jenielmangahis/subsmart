@@ -426,9 +426,9 @@ $(function(){
     	var plan_name  = $(this).attr("data-plan");
     	var subscription_type = $(".subscription-type").val();
 
-    	alert(plan_price);
-    	alert(plan_price_discounted);
-    	alert(subscription_type);
+    	//alert(plan_price);
+    	//alert(plan_price_discounted);
+    	//alert(subscription_type);
 
     	$("#plan_id").val(plan_id);
     	$("#plan_price").val(plan_price);
@@ -444,7 +444,7 @@ $(function(){
 
     	if( subscription_type == 'trial' ){
     		$(".total-amount").text("0.00 (Free Trial)");
-    		
+
     		//$("#plan_price").val(0);
     		/*step3Container.show(); 
     		$("span.step-3").addClass('btn-indigo');*/
