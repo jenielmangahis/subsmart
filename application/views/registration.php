@@ -194,10 +194,10 @@ p.plan-list-price {
 			  						          			<?php
 			  						          				$discount_price = $p->price / 2;
 			  						          			?>
-			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?> /mo</p>
+			  						          			<p class="plan-list-price">$<?= number_format($p->discount, 2); ?>/mo</p>
 			  						          		</div>
 			  						          		<div class="trial-price" style="display: none;">
-			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?> /mo</p>
+			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?>/mo</p>
 			  						          		</div>
 		  						          			<br />
 		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
