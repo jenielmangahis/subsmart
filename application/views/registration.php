@@ -147,187 +147,197 @@ p.plan-list-price {
 						<!-- Steps form -->
 						<div class="card" style="border: none;">
 						  <div class="card-body mb-4">
-						    <!-- Stepper -->
-						    <div class="steps-form">
-						      <div class="steps-row setup-panel">
-						        <div class="steps-step">
-						          <span class="btn reg-sc btn-indigo btn-circle step-1">1</span>
-						          <p>Step 1</p>
-						        </div>
-						        <div class="steps-step">
-						          <span class="btn reg-sc btn-default btn-circle step-2">2</span>
-						          <p>Step 2</p>
-						        </div>
-						        <div class="steps-step">
-						          <span class="btn reg-sc btn-default btn-circle step-3">3</span>
-						          <p>Step 3</p>
-						        </div>
-						        <div class="steps-step">
-						          <span class="btn reg-sc btn-default btn-circle step-4">4</span>
-						          <p>Step 4</p>
-						        </div>
-						      </div>
-						    </div>
+						    	<?php if( $payment_complete ){ ?>
+						    		<div class="alert alert-success alert-dismissible fade show" style="width: 100%;margin-top: 10px;margin-bottom: 10px;">
+									  <p><?php echo $payment_message; ?></p>
+									</div>
+						    	<?php }else{ ?>
+						    		<?php if( $payment_message != '' ){ ?>
+						    			<div class="alert alert-danger alert-dismissible fade show" style="width: 100%;margin-top: 10px;margin-bottom: 10px;">
+										  <p><?php echo $payment_message; ?></p>
+										</div>
+						    		<?php } ?>
+						    		<!-- Stepper -->
+								    <div class="steps-form">
+								      <div class="steps-row setup-panel">
+								        <div class="steps-step">
+								          <span class="btn reg-sc btn-indigo btn-circle step-1">1</span>
+								          <p>Step 1</p>
+								        </div>
+								        <div class="steps-step">
+								          <span class="btn reg-sc btn-default btn-circle step-2">2</span>
+								          <p>Step 2</p>
+								        </div>
+								        <div class="steps-step">
+								          <span class="btn reg-sc btn-default btn-circle step-3">3</span>
+								          <p>Step 3</p>
+								        </div>
+								        <div class="steps-step">
+								          <span class="btn reg-sc btn-default btn-circle step-4">4</span>
+								          <p>Step 4</p>
+								        </div>
+								      </div>
+								    </div>
 
-						    	<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
-						      	<input type="hidden" name="plan_id" id="plan_id" value="">
-					            <input type="hidden" name="plan_price" id="plan_price" value="">
-					            <input type="hidden" name="plan_price_discounted" id="plan_price_discounted" value="">
-					            <input type="hidden" name="plan_name" id="plan_name" value="">
-						      	<!-- First Step -->
-						      	<div class="row setup-content" id="step-1">
-							        <div class="col-md-12">
-		                      			<div class="reg-s1">
-		  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
-		  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
-		  						          	<option value="prospect">3 months 50% off</option>
-		  						          	<option value="trial">Free Trial (30 Days)</option>
-		  						          </select>
-		  						          <ul class="plan-list">
-		  						          <?php foreach($ns_plans as $p){ ?>
-		  						          	<li>
-		  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
+						    		<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
+							      	<input type="hidden" name="plan_id" id="plan_id" value="">
+						            <input type="hidden" name="plan_price" id="plan_price" value="">
+						            <input type="hidden" name="plan_price_discounted" id="plan_price_discounted" value="">
+						            <input type="hidden" name="plan_name" id="plan_name" value="">
+							      	<!-- First Step -->
+							      	<div class="row setup-content" id="step-1">
+								        <div class="col-md-12">
+			                      			<div class="reg-s1">
+			  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
+			  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
+			  						          	<option value="prospect">3 months 50% off</option>
+			  						          	<option value="trial">Free Trial (30 Days)</option>
+			  						          </select>
+			  						          <ul class="plan-list">
+			  						          <?php foreach($ns_plans as $p){ ?>
+			  						          	<li>
+			  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
 
-		  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
-			  						          		<div class="discounted-price">
-			  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;color: #ffe215;">$<?= number_format($p->price, 2); ?></p>
-			  						          			<?php
-			  						          				$discount_price = $p->price / 2;
-			  						          			?>
-			  						          			<p class="plan-list-price">$<?= number_format($p->discount, 2); ?>/mo</p>
-			  						          		</div>
-			  						          		<div class="trial-price" style="display: none;">
-			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?>/mo</p>
-			  						          		</div>
-		  						          			<br />
-		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
-		  						          		<?php } else { ?>
-		  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
-		  						          			<a class="btn btn-info" href="<?php echo url('/contact') ?>">Contact Us</a>
-		  						          		<?php } ?>
-		  						          	</li>
-		  						          <?php } ?>
-		  						      	  </ul>
+			  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
+				  						          		<div class="discounted-price">
+				  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;color: #ffe215;">$<?= number_format($p->price, 2); ?></p>
+				  						          			<?php
+				  						          				$discount_price = $p->price / 2;
+				  						          			?>
+				  						          			<p class="plan-list-price">$<?= number_format($p->discount, 2); ?>/mo</p>
+				  						          		</div>
+				  						          		<div class="trial-price" style="display: none;">
+				  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?>/mo</p>
+				  						          		</div>
+			  						          			<br />
+			  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
+			  						          		<?php } else { ?>
+			  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
+			  						          			<a class="btn btn-info" href="<?php echo url('/contact') ?>">Contact Us</a>
+			  						          		<?php } ?>
+			  						          	</li>
+			  						          <?php } ?>
+			  						      	  </ul>
+			                      			</div>
+								        </div>
+							      	</div>
+
+							      	<!-- Second Step -->
+							      	<div class="row setup-content" id="step-2">
+								        <div class="col-md-12">
+								          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
+								          	<div class="step-2-error-msg"></div>
+								          	<div class="col-md-6 float-left z-100">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
+												</div>
+											</div>
+
+
+											<div class="col-md-6 float-left z-100">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="email" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="number" name="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number">
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left">
+												<div class="input-group z-100">
+													<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left">
+												<div class="input-group">
+													<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
+															<option value="0">Number of Employees</option>
+															<option value="1 (Just Me)">1 (Just Me)</option>
+															<option value="2-3">2-3</option>
+															<option value="4-10">4-10</option>
+															<option value="11-15">11-15</option>
+															<option value="16-20">16-20</option>
+															<option value="20+">20+</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-md-12 float-left">
+												<div class="input-group z-100">
+													<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left">
+												<div class="input-group">
+													<select class="reg-select z-100 cmb-industry" id="industry" name="industry" required="">
+														<option>--Select your Industry--</option>
+						                                <?php foreach( $business as $key => $values ){ ?>
+						                                    <optgroup label="<?php echo $key; ?>">
+						                                    <?php foreach( $values as $value ){ ?>
+						                                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+						                                    <?php } ?>
+						                                <?php } ?>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left z-100">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+												</div>
+											</div>
+
+											<div class="col-md-12">
+												&nbsp;
+												<!-- <div class="input-group">
+													<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
+												</div> -->
+											</div>
+		                      			<div class="pl-3 pr-3">
+		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" data-key="step-1" type="button">Previous</button>
+		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" data-key="step-3" type="button">Next</button>
 		                      			</div>
-							        </div>
-						      	</div>
+								        </div>
+							      	</div>
 
-						      	<!-- Second Step -->
-						      	<div class="row setup-content" id="step-2">
-							        <div class="col-md-12">
-							          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
-							          	<div class="step-2-error-msg"></div>
-							          	<div class="col-md-6 float-left z-100">
-											<div class="input-group z-100">
-												<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
-											</div>
-										</div>
+							      	<!-- Third Step -->
+							      	<div class="row setup-content" id="step-3">
+								        <div class="col-md-12">
+								          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
+								          <div class="payment-method" style="display: block;margin-bottom: 74px;">
+								          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
+								          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
+								          	<hr />
+								          	<p><b>Payment Method</b></p>
+								          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+								      	  </div>
+								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
+								          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
+								        </div>
+							      	</div>
 
+							      	<!-- 4th Step -->
+							      	<div class="row setup-content" id="step-4">
+								        <div class="col-md-12">
+								          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
+								          <p>Please add paypal success here..</p>
+								          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
+								        </div>
+							      	</div>
 
-										<div class="col-md-6 float-left z-100">
-											<div class="input-group z-100">
-												<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
-											</div>
-										</div>
-
-										<div class="col-md-6 float-left">
-											<div class="input-group z-100">
-												<input autocomplete="off" type="email" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
-											</div>
-										</div>
-
-										<div class="col-md-6 float-left">
-											<div class="input-group z-100">
-												<input autocomplete="off" type="number" name="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number">
-											</div>
-										</div>
-
-										<div class="col-md-6 float-left">
-											<div class="input-group z-100">
-												<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
-											</div>
-										</div>
-
-										<div class="col-md-6 float-left">
-											<div class="input-group">
-												<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
-														<option value="0">Number of Employees</option>
-														<option value="1 (Just Me)">1 (Just Me)</option>
-														<option value="2-3">2-3</option>
-														<option value="4-10">4-10</option>
-														<option value="11-15">11-15</option>
-														<option value="16-20">16-20</option>
-														<option value="20+">20+</option>
-												</select>
-											</div>
-										</div>
-
-										<div class="col-md-12 float-left">
-											<div class="input-group z-100">
-												<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
-											</div>
-										</div>
-
-										<div class="col-md-6 float-left">
-											<div class="input-group">
-												<select class="reg-select z-100 cmb-industry" id="industry" name="industry" required="">
-													<option>--Select your Industry--</option>
-					                                <?php foreach( $business as $key => $values ){ ?>
-					                                    <optgroup label="<?php echo $key; ?>">
-					                                    <?php foreach( $values as $value ){ ?>
-					                                        <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
-					                                    <?php } ?>
-					                                <?php } ?>
-												</select>
-											</div>
-										</div>
-
-										<div class="col-md-6 float-left z-100">
-											<div class="input-group z-100">
-												<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
-											</div>
-										</div>
-
-										<div class="col-md-12">
-											&nbsp;
-											<!-- <div class="input-group">
-												<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
-											</div> -->
-										</div>
-	                      			<div class="pl-3 pr-3">
-	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" data-key="step-1" type="button">Previous</button>
-	  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" data-key="step-3" type="button">Next</button>
-	                      			</div>
-							        </div>
-						      	</div>
-
-						      	<!-- Third Step -->
-						      	<div class="row setup-content" id="step-3">
-							        <div class="col-md-12">
-							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
-							          <div class="payment-method" style="display: block;margin-bottom: 74px;">
-							          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
-							          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
-							          	<hr />
-							          	<p><b>Payment Method</b></p>
-							          	<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
-							      	  </div>
-							          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
-							          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
-							        </div>
-						      	</div>
-
-						      	<!-- 4th Step -->
-						      	<div class="row setup-content" id="step-4">
-							        <div class="col-md-12">
-							          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
-							          <p>Please add paypal success here..</p>
-							          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
-							        </div>
-						      	</div>
-
-						      	<?php echo form_close(); ?>
-
+							      	<?php echo form_close(); ?>
+						    	<?php } ?>
 						  </div>
 						</div>
 						<!-- Steps form -->

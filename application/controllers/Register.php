@@ -29,6 +29,8 @@ class Register extends MY_Controller {
         }*/
 
         //Paypal subscription process after success - Start
+        $payment_complete = false;
+        $payment_message  = '';
         if( ($get_data && isset($get_data['status'])) && $get_data['status'] == 'success' ) {
 
             $client_id     = paypal_credential('client_id');
@@ -50,10 +52,13 @@ class Register extends MY_Controller {
                     //Success
                     $agreement->execute($token, $apiContext);
                     $payment_status = $get_data['status'];
+                    $is_success = true;
                 } catch (Exception $ex) {
-                    echo "Failed to get activate";
+                	$is_success = false;
+                	$payment_message = 'Cannot process payment';
+                    /*
                     var_dump($ex);
-                    exit();
+                    exit();*/
                 }
 
                 $agreement = \PayPal\Api\Agreement::get($agreement->getId(), $apiContext);
@@ -62,6 +67,22 @@ class Register extends MY_Controller {
                 $payerInfo = $payer->getPayerInfo();
                 $plan = $agreement->getPlan();
                 $payment = $plan->getPaymentDefinitions()[0];
+
+                if( $is_success ){
+                	$cid = $this->session->userdata('regiserClientId');
+                	$uid = $this->session->userdata('regiserUserId');
+
+                	$this->Clients_model->update($cid, array(
+		        		'is_plan_active' => 1
+		    		));
+
+		    		$this->users_model->update($uid,[
+			            'status' => 1
+			        ]);
+
+                	$payment_complete = true;
+                	$payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
+                }
             }      
 
         }elseif( ($get_data && isset($get_data['status'])) && $get_data['status'] == 'cancel' ) {
@@ -71,7 +92,9 @@ class Register extends MY_Controller {
 
 		$ns_plans = $this->NsmartPlan_model->getAll();      
 
-        $this->page_data['payment_status'] = $payment_status;
+		$this->page_data['payment_complete'] = $payment_complete; 
+		$this->page_data['payment_message']  = $payment_message;
+        $this->page_data['payment_status']   = $payment_status;
 		$this->page_data['ns_plans'] = $ns_plans;
 		$this->page_data['business'] = getIndustryBusiness();
 		$this->page_data['roles']    = getRegistrationRoles();
@@ -81,14 +104,9 @@ class Register extends MY_Controller {
     function subscribe(){
 
         postAllowed();
-        $post = $this->input->post();  
+        $post = $this->input->post(); 
 
-        /*echo '<pre>';
-        print_r($post);
-        echo '</pre>';*/
-        //exit;
-
-        $data = [
+        $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
             'last_name'  => $post['lastname'],
             'email_address' => $post['email'],
@@ -100,18 +118,16 @@ class Register extends MY_Controller {
             'password' => $post['password'],
             'date_created'  => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")
-        ];
+        ]);
 
-        $client = $this->Clients_model->create($data);
-
-        $id = $this->users_model->create([
+        $uid = $this->users_model->create([
             'role' => 0,
             'FName' => $post['firstname'],
             'LName' => $post['lastname'],
             'username' => $post['email'],
             'email' => $post['email'],
-            'company_id' => $client,
-            'status' => 1,
+            'company_id' => $cid,
+            'status' => 0,
             'password_plain' =>  $post['password'],
             'password' => hash( "sha256", $post['password'] ),
         ]);
@@ -192,7 +208,7 @@ class Register extends MY_Controller {
 
             // Set charge models
             $chargeModel = new \PayPal\Api\ChargeModel();
-            $chargeModel->setType('SHIPPING')
+            $chargeModel->setType('TAX')
               ->setAmount(new \PayPal\Api\Currency(array('value' => 0, 'currency' => 'USD')));
             $paymentDefinition->setChargeModels(array($chargeModel));
 
@@ -274,6 +290,15 @@ class Register extends MY_Controller {
                 exit();
 
             }
+
+            $this->Clients_model->update($cid, array(
+    			'paypal_plan_id' => $plan_id,
+        		'nsmart_plan_id' => $post['plan_id'],
+        		'is_plan_active' => 0
+    		));
+
+            $this->session->set_userdata('regiserUserId', $uid);
+            $this->session->set_userdata('regiserClientId', $cid);
 
             header("Location:" . $approvalUrl);
 
