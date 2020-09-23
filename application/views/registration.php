@@ -172,15 +172,16 @@ p.plan-list-price {
 						    	<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
 						      	<input type="hidden" name="plan_id" id="plan_id" value="">
 					            <input type="hidden" name="plan_price" id="plan_price" value="">
+					            <input type="hidden" name="plan_price_discounted" id="plan_price_discounted" value="">
 					            <input type="hidden" name="plan_name" id="plan_name" value="">
 						      	<!-- First Step -->
 						      	<div class="row setup-content" id="step-1">
 							        <div class="col-md-12">
 		                      			<div class="reg-s1">
 		  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
-		  						          <select class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
+		  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
 		  						          	<option value="prospect">3 months 50% off</option>
-		  						          	<option value="trial">Free Trial</option>
+		  						          	<option value="trial">Free Trial (30 Days)</option>
 		  						          </select>
 		  						          <ul class="plan-list">
 		  						          <?php foreach($ns_plans as $p){ ?>
@@ -193,13 +194,13 @@ p.plan-list-price {
 			  						          			<?php
 			  						          				$discount_price = $p->price / 2;
 			  						          			?>
-			  						          			<p class="plan-list-price">$<?= number_format($discount_price, 2); ?> /mo</p>
+			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?> /mo</p>
 			  						          		</div>
 			  						          		<div class="trial-price" style="display: none;">
 			  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?> /mo</p>
 			  						          		</div>
 		  						          			<br />
-		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>">Select Plan</a>
+		  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
 		  						          		<?php } else { ?>
 		  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
 		  						          			<a class="btn btn-info" href="<?php echo url('/contact') ?>">Contact Us</a>
@@ -416,14 +417,22 @@ $(function(){
     });
 
     step2bBtn.click(function(){
+
     	var plan_id = $(this).attr("data-id");
     	var plan_price = $(this).attr("data-price");
+    	var plan_price_discounted = $(this).attr("data-price-discounted");
+
     	var price_discount = (plan_price * 3) / 2;
     	var plan_name  = $(this).attr("data-plan");
     	var subscription_type = $(".subscription-type").val();
 
+    	alert(plan_price);
+    	alert(plan_price_discounted);
+    	alert(subscription_type);
+
     	$("#plan_id").val(plan_id);
-    	$("#plan_price").val(price_discount);
+    	$("#plan_price").val(plan_price);
+    	$("#plan_price_discounted").val(plan_price_discounted);
         $("#plan_name").val(plan_name);
     	$(".plan-selected").text(plan_name);
     	$(".plan-price").text("$" + plan_price);
@@ -435,7 +444,8 @@ $(function(){
 
     	if( subscription_type == 'trial' ){
     		$(".total-amount").text("0.00 (Free Trial)");
-    		$("#plan_price").val(0);
+    		
+    		//$("#plan_price").val(0);
     		/*step3Container.show(); 
     		$("span.step-3").addClass('btn-indigo');*/
 
@@ -443,7 +453,7 @@ $(function(){
 	    	$("span.step-2").addClass('btn-indigo');
 
     	}else{
-    		$(".total-amount").text("$" + price_discount  + " (3 months 50% off)");
+    		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
     		step2Container.show();
 	    	$("span.step-2").addClass('btn-indigo');
     	}

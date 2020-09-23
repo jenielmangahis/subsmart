@@ -47,7 +47,7 @@ class Register extends MY_Controller {
                 $agreement = new \PayPal\Api\Agreement();
 
                 try {
-                    //echo "success";
+                    //Success
                     $agreement->execute($token, $apiContext);
                     $payment_status = $get_data['status'];
                 } catch (Exception $ex) {
@@ -83,6 +83,12 @@ class Register extends MY_Controller {
         postAllowed();
         $post = $this->input->post();  
 
+        echo '<pre>';
+        print_r($post);
+        echo '</pre>';
+
+        //exit;
+
         $data = [
             'first_name' => $post['firstname'],
             'last_name'  => $post['lastname'],
@@ -108,17 +114,18 @@ class Register extends MY_Controller {
             'company_id' => $client,
             'status' => 1,
             'password_plain' =>  $post['password'],
-            'password' => hash( "sha256", $post['password'] ),           
-            //'parent_id' => $user->id
+            'password' => hash( "sha256", $post['password'] ),
         ]);
 
         //Get subscription data
         $subscription_id    = $post['plan_id'];
         $subscription_name  = $post['plan_name'];
         $subscription_price = $post['plan_price'];
+        $subscription_price_discounted = $post['plan_price_discounted'];
+        $subscription_type  = $post['subscription_type'];
 
         //Add custom data such as item/subscription id etc.
-        $userID = 123456;        
+        //$userID = 123456;        
 
         /*
          * Paypal Process Here - Start
@@ -145,13 +152,44 @@ class Register extends MY_Controller {
               ->setType('fixed');
 
             // Set billing plan definitions
-            $paymentDefinition = new \PayPal\Api\PaymentDefinition();
-            $paymentDefinition->setName('Regular Payments')
-              ->setType('REGULAR')
-              ->setFrequency('Month')
-              ->setFrequencyInterval('3')
-              ->setCycles('12')
-              ->setAmount(new \PayPal\Api\Currency(array('value' => $subscription_price, 'currency' => 'USD')));
+
+            if($subscription_type == 'prospect') {
+
+                $paymentDefinition = new \PayPal\Api\PaymentDefinition();
+                $paymentDefinition->setName($subscription_name . ' Regular Payments (Discounted)')
+                  ->setType('REGULAR')
+                  ->setFrequency('Month')
+                  ->setFrequencyInterval('3')
+                  ->setCycles('1')
+                  ->setAmount(new \PayPal\Api\Currency(array('value' => $subscription_price_discounted, 'currency' => 'USD')));
+
+                $paymentDefinition = new \PayPal\Api\PaymentDefinition();
+                $paymentDefinition->setName($subscription_name . ' Regular Payments')
+                  ->setType('REGULAR')
+                  ->setFrequency('Month')
+                  ->setFrequencyInterval('1')
+                  ->setCycles('12')
+                  ->setAmount(new \PayPal\Api\Currency(array('value' => $subscription_price, 'currency' => 'USD')));
+
+            }elseif($subscription_type == 'trial') {
+
+                $paymentDefinition = new \PayPal\Api\PaymentDefinition();
+                $paymentDefinition->setName($subscription_name . " (Free Trial)")
+                  ->setType('TRIAL')
+                  ->setFrequency('Month')
+                  ->setFrequencyInterval('1')
+                  ->setCycles('1')
+                  ->setAmount(new \PayPal\Api\Currency(array('value' => 0, 'currency' => 'USD')));
+
+                $paymentDefinition = new \PayPal\Api\PaymentDefinition();
+                $paymentDefinition->setName($subscription_name . " (Regular Payment)")
+                  ->setType('REGULAR')
+                  ->setFrequency('Month')
+                  ->setFrequencyInterval('1')
+                  ->setCycles('12')
+                  ->setAmount(new \PayPal\Api\Currency(array('value' => $subscription_price, 'currency' => 'USD')));                 
+
+            }
 
             // Set charge models
             $chargeModel = new \PayPal\Api\ChargeModel();
