@@ -418,10 +418,9 @@ img.calendar-user-profile {
                                     <div class="row">
                                         <div class="col-xs-12 col-2 col-sm-2 col-md-2">
                                              <?php
-                                             $default_imp_img = base_url('uploads/users/default.png');
-                                              if( $recent_user->profile_img != null) {
-                                                    $img_filename = $recent_user->profile_img .'.'.$recent_user->img_type;
-                                                    $default_imp_img = base_url('uploads/users/'.$img_filename);
+                                               if( $recent_user->profile_img != null) {
+                                                    $img_filename = userProfileImage($recent_user->id);
+                                                    $default_imp_img = $img_filename;
                                                 } else {
                                                     $default_imp_img = base_url('uploads/users/default.png');
                                                 }
