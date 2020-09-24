@@ -41,4 +41,19 @@ function days_of_month($index=0){
     return $days[$index];
 }
 
+function string_max_length($string, $max_length)
+{
+    if (!is_string($string)) {
+       return "";
+    }
+    if (!is_int($max_length) || $max_length < 3) {
+        $max_length = 50;
+    }
+    if (strlen($string) > $max_length) {
+        return mb_strimwidth($string, 0, $max_length - 2, '...');
+    } else {
+        return $string;
+    }
+}
+
 ?>

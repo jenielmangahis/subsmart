@@ -13,7 +13,6 @@ class Customer extends MY_Controller
 
 {
 
-
     public function __construct()
 
     {
@@ -86,7 +85,7 @@ class Customer extends MY_Controller
     public function leads()
     {
         $user_id = logged('id');
-        $this->page_data['leads'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leads","leads_id");
+        $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('customer/leads', $this->page_data);
     }
 
@@ -197,15 +196,31 @@ class Customer extends MY_Controller
             $input_office['welcome_sent'] = 0;
         }
 
-        $input_office['rebate'] = $input['rebate'][0];
-        $input_office['commision_scheme'] = $input['commision_scheme'][0];
+        if(isset($input['rebate'])){
+            $input_office['rebate'] = $input['rebate'][0];
+        }else{
+            $input_office['rebate'] = 2;
+        }
+
+        if(isset($input['commision_scheme'])){
+            $input_office['commision_scheme'] = $input['commision_scheme'][0];
+        }else{
+            $input_office['commision_scheme'] = 2;
+        }
+
         $input_office['rep_comm'] = $input['rep_comm'];
         $input_office['rep_upfront_pay'] = $input['rep_upfront_pay'];
         $input_office['tech_comm'] = $input['tech_comm'];
         $input_office['tech_upfront_pay'] = $input['tech_upfront_pay'];
         $input_office['rep_charge_back'] = $input['rep_charge_back'];
         $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
-        $input_office['pso'] = $input['pso'][0];
+
+        if(isset($input['pso'])){
+            $input_office['pso'] = $input['pso'][0];
+        }else{
+            $input_office['pso'] = 2;
+        }
+
         $input_office['assign_to'] = $input['assign_to'];
         $input_office['points_include'] = $input['points_include'];
         $input_office['price_per_point'] = $input['price_per_point'];
@@ -247,7 +262,8 @@ class Customer extends MY_Controller
         $input_office['rebate_check2'] = $input['rebate_check2'];
         $input_office['rebate_check2_amt'] = $input['rebate_check2_amt'];
         $input_office['activation_fee'] = $input['activation_fee'];
-        $input_office['way_of_pay'] = $input['way_of_pay'][0];
+        $input_office['way_of_pay'] = $input['way_of_pay'];
+
         $input_office['lead_source'] = $input['lead_source'];
         $input_office['url'] = $input['url'];
         $input_office['verification'] = $input['verification'];
@@ -255,7 +271,11 @@ class Customer extends MY_Controller
         $input_office['office_custom_field1'] = $input['office_custom_field1'];
 
         //access data
-        $input_access['portal_status'] = $input['portal_status'];
+        if(isset($input['portal_status'])){
+            $input_access['portal_status'] = $input['portal_status'];
+        }else{
+            $input_access['portal_status'] = 2;
+        }
         $input_access['reset_password'] = $input['reset_password'];
         $input_access['login'] = $input['login'];
         $input_access['password'] = $input['password'];
@@ -347,35 +367,57 @@ class Customer extends MY_Controller
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
         }
         $input = $this->input->post();
-        if($input){
-            unset($input['credit_report']);
-            unset($input['report_history']);
-            $input['phone_home'] = $input['phone_home'][0].'-'.$input['phone_home'][1].'-'.$input['phone_home'][2];
-            $input['phone_cell'] = $input['phone_cell'][0].'-'.$input['phone_cell'][1].'-'.$input['phone_cell'][2];
-            $input['sss_num'] = $input['sss_num'][0].'-'.$input['sss_num'][1].'-'.$input['sss_num'][2];
-            print_r($input);
 
-            if(isset($input['leads_id'])){
-                if($this->customer_ad_model->update_data($input,"ac_leads","leads_id")){
-                    redirect(base_url('customer/leads'));
-                }else{
-                    echo "Error";
-                }
-            }else{
-                if($this->customer_ad_model->add($input,"ac_leads")){
-                    redirect(base_url('customer/leads'));
-                }else{
-                    echo "Error";
+        $convert_lead = $this->input->post('convert_customer');
+        if(isset($convert_lead)){
+            $input_profile = array();
+            $input_profile['fk_user_id'] = logged('id');
+            //$input_profile['fk_sa_id'] = $input['fk_sa_id'];
+            $input_profile['first_name'] = $input['firstname'];
+            $input_profile['middle_name'] = strtoupper($input['middle_initial']);
+            $input_profile['last_name'] = $input['lastname'];
+            $input_profile['suffix'] = $input['suffix'];
+            $input_profile['country'] = $input['country'];
+            $input_profile['zip_code'] = $input['zip'];
+            $input_profile['state'] = $input['state'];
+            $input_profile['city'] = $input['city'];
+            $input_profile['email'] = $input['email_add'];
 
-                }
+            $profile_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+
+            if(isset($profile_id)){
+                redirect(base_url('customer/add_advance/'.$profile_id));
             }
-        }else{
-            $user_id = logged('id');
-            $this->page_data['plans'] = "";
-            $this->page_data['users'] = $this->users_model->getUsers();
-            $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_leadtypes","lead_id");
-            $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-            $this->load->view('customer/add_lead', $this->page_data);
+            //print_r($input);
+            //echo "Convert na";
+        }else {
+            if ($input) {
+                unset($input['credit_report']);
+                unset($input['report_history']);
+                print_r($input);
+
+                if (isset($input['leads_id'])) {
+                    if ($this->customer_ad_model->update_data($input, "ac_leads", "leads_id")) {
+                        redirect(base_url('customer/leads'));
+                    } else {
+                        echo "Error";
+                    }
+                } else {
+                    if ($this->customer_ad_model->add($input, "ac_leads")) {
+                        redirect(base_url('customer/leads'));
+                    } else {
+                        echo "Error";
+
+                    }
+                }
+            } else {
+                $user_id = logged('id');
+                $this->page_data['plans'] = "";
+                $this->page_data['users'] = $this->users_model->getUsers();
+                $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
+                $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_salesarea", "sa_id");
+                $this->load->view('customer/add_lead', $this->page_data);
+            }
         }
     }
 

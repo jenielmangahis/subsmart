@@ -207,7 +207,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                {
                                 ?>
                                 <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
-                                <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                                <?php endif ?> <?php if($row->id == $rows[0]->chart_of_accounts_id): echo "selected"; endif?> value="<?=$row->id?>"><?=$row->name?></option>
                               <?php
                               $i++;
                               }
@@ -249,17 +249,6 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         <input type="text" name="checkno" value="<?=$rows[0]->CHRG?>"/>
                     </div>
                 </div>
-                <div class="row" style="margin-bottom:20px">
-                    <div class="col-md-4">
-                        <label>Memo</label>
-                        </br>
-                        <textarea name="mailing_add" rows="4"><?=$rows[0]->memo_sc?></textarea>
-                    </div>
-                    <div class="col-md-6"></div>
-                    <div class="col-md-2">
-                        <h6>Total : <?=number_format($rows[0]->service_charge,2)?></h6>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -282,7 +271,16 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <td><i class="fa fa-th"></i></td>
                                 <td>1</td>
                                 <td>
-                                    <input type="hidden" id="edit_expense_account" name="edit_expense_account" value="<?=$rows[0]->expense_account?>">
+                                    <select name='edit_expense_account' id='edit_expense_account' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($rows[0]->expense_account == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
                                     <div class="edit_expense_account"><?=$rows[0]->expense_account?></div>
                                 </td>
                                 <td></td>
@@ -295,17 +293,47 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             <tr>
                                 <td><i class="fa fa-th"></i></td>
                                 <td>2</td>
+                                <td>
+                                    <select name='edit_expense_account_' id='edit_expense_account_' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_expense_account_"></div>
+                                </td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    <input type="hidden" id="edit_service_charge_" name="edit_service_charge_" value="">
+                                    <div class="edit_service_charge_"></div>
+                                </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <tr class="pr participantRow hide">
                                 <td><i class="fa fa-th"></i></td>
-                                <td>3</td>
+                                <td>0</td>
+                                <td>
+                                    <select name='edit_expense_account_' id='edit_expense_account_' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="edit_expense_account_"></div>
+                                </td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    <input type="hidden" id="edit_service_charge_" name="edit_service_charge_" value="">
+                                    <div class="edit_service_charge_"></div>
+                                </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         </tbody>
@@ -321,6 +349,18 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                 </div>
             </section>
+
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label>Memo</label>
+                    </br>
+                    <textarea name="memo" rows="4"><?=$rows[0]->memo_sc?></textarea>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-2">
+                    <h6>Total : $<?=number_format($rows[0]->service_charge,2)?></h6>
+                </div>
+            </div>
             <div class="row" style="margin-bottom:20px">
                 <div class="col-md-4">
                     <label><i class="fa fa-paperclip"></i>Attachment</label>
@@ -341,14 +381,319 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             </div>
         </div>
      
-        <!-- <div class="save-act">
+        <div class="save-act" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
+            <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
             <button type="submit" class="savebtn">Done</button>
-        </div> -->
+        </div>
     </div>
     <!-- End Add New -->
 
-        <!-- Add Agency Sidebar -->
+    <!-- Print popup -->
+    <div id="overlay-print-tx" class=""></div>
+    <div id="side-menu-print-tx" class="main-side-nav" style="background-color: #f4f5f8">
+        <div class="side-title">
+            <h4>Print Checks</h4>
+            <a id="close-menu-print-tx" class="menuCloseButton" onclick="closePrintNav()"><span id="side-menu-close-text">
+            <i class="fa fa-times"></i></span></a>
+        </div>
+        <div style="margin-left: 20px;">
+            <div class="row">
+                <div class="col-md-3">
+                    <select class="form-control" id="account_printpopup">
+                        <?php
+                           $i=1;
+                           foreach($this->chart_of_accounts_model->select() as $row)
+                           {
+                            ?>
+                            <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                            <?php endif ?> <?php if($row->id == $rows[0]->chart_of_accounts_id): echo "selected"; endif?> value="<?=$row->id?>"><?=$row->name?></option>
+                          <?php
+                          $i++;
+                          }
+                           ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <h6>Balance:<?=number_format($this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id),2);?></h6>
+                </div>
+                <div class="col-md-4">
+                    <h6 id="check_count">1 Checks selected</h6><div id="check_amount">$<?=number_format($rows[0]->service_charge,2)?></div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                    <button type="button" class="form-control" onclick="addCheck()">Add checks</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <button type="button" class="form-control">Remove from list</button>
+                </div>
+                <div class="col-md-2">
+                   <!--  <select name="sort_print" class="form-control">
+                        <option>Sort by Payee</option>
+                        <option>Sort by Order created</option>
+                        <option>Sort by Date/ Payee</option>
+                        <option selected>Sort by Date/ Order created</option>
+                    </select> -->
+                </div>
+                <div class="col-md-2">
+                    <select name="showall_print" class="form-control">
+                        <option>Show all checks</option>
+                        <option>Show regular checks</option>
+                        <option>Show bill payment checks</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Starting check no.</label>
+                    <input type="text" name="starting_check_no" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label>On first page print</label>
+                    <select name="checks_print" class="form-control">
+                        <option>1 checks</option>
+                        <option>2 checks</option>
+                        <option>3 checks</option>
+                    </select>
+                </div>
+                 <div class="col-md-2">
+                    <i class="fa fa-print" onclick="window.print()"></i>
+                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        Columns<br/>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_date_print()" name="chk_date_print" id="chk_date_print"> Date</p>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_type_print()" name="chk_type_print" id="chk_type_print"> Type</p>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_payee_print()" name="chk_payee_print" id="chk_payee_print"> Payee Type</p>
+                        <p class="p-padding"><input type="checkbox" checked="checked" onchange="col_amount_print()" name="chk_amount_print" id="chk_amount_print"> Amount</p>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <section class="table-wrapper">
+                    <div class="container">
+                        <table class="table" id="print_table">
+                            <thead>
+                                <tr>
+                                   <th></th>
+                                   <th class="date_print">Date</th>
+                                   <th class="type_print">Type</th>
+                                   <th class="payee_print">Payee</th>
+                                   <th class="amount_print">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" checked name="print_service_charge_checkbox" id="print_service_charge_checkbox" onclick="Changecheck()"></td>
+                                    <td class="date_print"><?=$rows[0]->first_date?></td>
+                                    <td class="type_print">Check</td>
+                                    <td class="payee_print"></td>
+                                    <td class="amount_print">
+                                        $<div id="print_service_charge"><?=number_format($rows[0]->service_charge,2)?></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    
+
+        <div class="save-act" style="position: unset !important;">
+            <button type="button" class="btn-cmn" onclick="closePrintNav()">Cancel</button>
+            <button type="submit" class="savebtn">Done</button>
+        </div>
+    </div>
+    <!-- End Print popup -->
+
+    <!-- Add Check -->
+    <div id="overlay-check-tx" class=""></div>
+    <div id="side-menu-check-tx" class="main-side-nav">
+        <div style="background-color: #f4f5f8">
+            <div class="side-title">
+                <h4 id="memo_sc_nm"></h4>
+                <a id="close-menu-check-tx" class="menuCloseButton" onclick="closeCheck()"><span id="side-menu-close-text">
+                <i class="fa fa-times"></i></span></a>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-3">
+                        <select name="check_payee_popup" class="form-control">
+                            <option value="" disabled="" selected>Payee</option>
+                            <?php
+                            foreach($this->AccountingVendors_model->select() as $ro)
+                            {
+                            ?>
+                            <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="check_account_popup">
+                            <?php
+                               $i=1;
+                               foreach($this->chart_of_accounts_model->select() as $row)
+                               {
+                                ?>
+                                <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                <?php endif ?> <?php if($row->id == $rows[0]->chart_of_accounts_id): echo "selected"; endif?> value="<?=$row->id?>"><?=$row->name?></option>
+                              <?php
+                              $i++;
+                              }
+                               ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Balance:<?=number_format($this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id),2);?></h6>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <h6>Amount:$0.00</h6>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-2">
+                        <label>Mailing Address:</label>
+                        <textarea name="check_mailing_add" rows="4"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Payment date:</label>
+                        <div class="col-xs-10 date_picker">
+                            <input type="text" name="check_date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <label>Check no.</label>
+                        <input type="text" name="check_checkno" value=""/>
+                        </br>
+                        </br>
+                        <input type="checkbox" name="check_print_check">Print Later
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-2">
+                        <label>Check no.</label>
+                        <input type="text" name="check_checkno" value=""/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-left: 20px">
+            <section class="table-wrapper">
+                <div class="container">
+                    <table class="table" id="participantCheckTable">
+                        <thead>
+                            <tr>
+                               <th></th>
+                               <th>#</th>
+                               <th>Category</th>
+                               <th>Description</th>
+                               <th>Amount</th>
+                               <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="trClickCheck()">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>1</td>
+                                <td>
+                                    <select name='check_expense_account' id='check_expense_account' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="check_expense_account"></div>
+                                </td>
+                                <td></td>
+                                <td>
+                                     <input type="hidden" id="check_service_charge" name="check_service_charge" value="">
+                                    <div class="check_service_charge"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa fa-th"></i></td>
+                                <td>2</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr class="pr participantCheckRow Checkhide">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>3</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="btn-group">
+                        <a href="javascript:void(0);" class="btn-add-bx add">Add Lines</a>
+                        <a href="javascript:void(0);" class="btn-add-bx clear">Clear All Lines</a>
+                    </div>
+                    <div class="btn-group hideme" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx">Save<i class="fa fa-check" onclick="rightclick()"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx">Cancel<i class="fa fa-close" onclick="crossClickEdit()"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label>Memo</label>
+                    </br>
+                    <textarea name="check_memo" rows="4"></textarea>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-2">
+                    <h6>Total : $0.00</h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label><i class="fa fa-paperclip"></i>Attachment</label>
+                    </br>
+                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                    <div class="file-upload-block">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn ubw">
+                                <i class="fa fa-cloud-upload"></i>
+                                <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                            </button>
+                            <input type="file" name="userfile" />
+                        </div>
+                    </div>
+                    </br>
+                    <a href="#" onclick="openSideNav()">Show existing</a>
+                </div>
+            </div>
+        </div>
+     
+        <div class="save-act" style="position: unset !important;">
+            <button type="button" class="btn-cmn" onclick="closeCheck()">Cancel</button>
+            <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
+            <button type="submit" class="savebtn">Done</button>
+        </div>
+    </div>
+    <!-- End Add Check -->
+
+    <!-- Add Agency Sidebar -->
     <div id="overlay" class=""></div>
     <div id="side-menu" class="main-side-nav">
         <div class="side-title">
@@ -1347,6 +1692,8 @@ function closeFullNav() {
 
     function addRow() {
       row.clone(true, true).removeClass('hide table-line').appendTo("#participantTable");
+      var index =$('#participantTable tr').length -1;
+      $('#participantTable tr:eq('+index+') td:eq(1)').text(index-1);
     }
 
     function removeRow(button) {
@@ -1436,10 +1783,10 @@ function showData() {
 <script type="text/javascript">
     function trClickEdit()
     {
-        if($('#edit_expense_account').attr("type")== 'hidden')
+        if($('#edit_expense_account').css("display")== 'none')
         {
             $('.edit_expense_account').css('display','none');
-            $('#edit_expense_account').removeAttr('type','hidden');
+            $('#edit_expense_account').show();
             $('.hideme').show();
         }
         if($('#edit_service_charge').attr("type")== 'hidden')
@@ -1453,7 +1800,7 @@ function showData() {
     {
         $('.edit_expense_account').show();
         $('.edit_expense_account').text($('#edit_expense_account').val());
-        $('#edit_expense_account').attr('type','hidden');
+        $('#edit_expense_account').css('display','none');
         $('.edit_service_charge').show();
         $('.edit_service_charge').text($('#edit_service_charge').val());
         $('#edit_service_charge').attr('type','hidden');
@@ -1462,9 +1809,121 @@ function showData() {
     function crossClickEdit()
     {
         $('.edit_expense_account').show();
-        $('#edit_expense_account').attr('type','hidden');
+        $('#edit_expense_account').css('display','none');
         $('.edit_service_charge').show();
         $('#edit_service_charge').attr('type','hidden');
         $('.hideme').hide();
     }
+</script>
+<script type="text/javascript">
+function openPrintNav()
+{
+    closeFullNav()
+    jQuery("#side-menu-print-tx").addClass("open-side-nav");
+    jQuery("#side-menu-print-tx").css("width","100%");
+    jQuery("#side-menu-print-tx").css("overflow-y","auto");
+    jQuery("#side-menu-print-tx").css("overflow-x","hidden");
+    jQuery("#overlay-print-tx").addClass("overlay");
+}
+function closePrintNav() 
+{
+   
+    jQuery("#side-menu-print-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-print-tx").css("width","0%");
+    jQuery("#overlay-print-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+function Changecheck()
+{
+    if($('#print_service_charge_checkbox').prop("checked") == true)
+    {
+        $('#check_count').text('1 Checks selected');
+        $('#check_amount').text('$'+$('#print_service_charge').text());
+    }
+    else
+    {
+        $('#check_count').text('0 Checks selected');
+        $('#check_amount').text('$0.00');
+    }
+}
+</script>
+<script type="text/javascript">
+    function col_date_print()
+    {
+        if($('#chk_date_print').attr('checked'))
+        {
+            $('#chk_date_print').removeAttr('checked');
+            $('.date_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_date_print').attr('checked',"checked");
+            $('.date_print').css('display','');
+        }
+    }
+    function col_type_print()
+    {
+        if($('#chk_type_print').attr('checked'))
+        {
+            $('#chk_type_print').removeAttr('checked');
+            $('.type_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_type_print').attr('checked',"checked");
+            $('.type_print').css('display','');
+        }
+    }
+    function col_payee_print()
+    {
+        if($('#chk_payee_print').attr('checked'))
+        {
+            $('#chk_payee_print').removeAttr('checked');
+            $('.payee_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_payee_print').attr('checked',"checked");
+            $('.payee_print').css('display','');
+        }
+    }
+    function col_amount_print()
+    {
+        if($('#chk_amount_print').attr('checked'))
+        {
+            $('#chk_amount_print').removeAttr('checked');
+            $('.amount_print').css('display','none');
+
+        }
+        else
+        {
+            $('#chk_amount_print').attr('checked',"checked");
+            $('.amount_print').css('display','');
+        }
+    }
+</script>
+<script type="text/javascript">
+    $('#print_table').DataTable();
+</script>
+<script type="text/javascript">
+function addCheck()
+{
+    closePrintNav();
+    jQuery("#side-menu-check-tx").addClass("open-side-nav");
+    jQuery("#side-menu-check-tx").css("width","100%");
+    jQuery("#side-menu-check-tx").css("overflow-y","auto");
+    jQuery("#side-menu-check-tx").css("overflow-x","hidden");
+    jQuery("#overlay-check-tx").addClass("overlay");
+}
+function closeCheck() 
+{
+   
+    jQuery("#side-menu-check-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-check-tx").css("width","0%");
+    jQuery("#overlay-check-tx").removeClass("overlay");
+}
 </script>

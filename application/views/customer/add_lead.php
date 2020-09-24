@@ -138,22 +138,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group" id="customer_type_group">
-                                                                            <label for="">Sales Area <span class="required_field">*</span></label><br/>
-                                                                            <select id="fk_sa_id" name="fk_sa_id"  class="input_select" required>
+                                                                            <label for="">Sales Representative </label><br/>
+                                                                            <select id="fk_sr_id" name="fk_sr_id"  class="input_select">
                                                                                 <option value="">Select</option>
-                                                                                <?php foreach ($sales_area as $sa): ?>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->fk_sa_id == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
+                                                                                <?php foreach ($users as $user): ?>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->fk_assign_id == $user->id){ echo 'selected'; } } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                                                                                 <?php endforeach ?>
                                                                             </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group" id="customer_type_group">
-                                                                            <label for="">Sales Rep <span class="required_field">*</span></label><br/>
-                                                                            <select id="fk_sr_id" name="fk_sr_id"  class="input_select" required>
+                                                                            <label for=""> Assigned To <span class="required_field">*</span></label><br/>
+                                                                            <select id="fk_assign_id" name="fk_assign_id"  class="input_select" required>
                                                                                 <option value="">Select</option>
                                                                                 <?php foreach ($users as $user): ?>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->fk_sr_id == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>" value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->fk_sr_id == $user->id){ echo 'selected'; } } ?> value="<?= $user->id; ?>" value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                                                                                 <?php endforeach ?>
                                                                             </select>
                                                                         </div>
@@ -183,10 +183,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Middle Initial <span class="required_field">*</span></label>
+                                                                                <label for="">Middle Initial </label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <input type="text" class="form-control" maxlength="1" name="middle_initial" id="middle_initial" value="<?php if(isset($leads_data)){ echo $leads_data->middle_initial; } ?>" required/>
+                                                                                <input type="text" class="form-control" maxlength="1" name="middle_initial" id="middle_initial" value="<?php if(isset($leads_data)){ echo $leads_data->middle_initial; } ?>"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -221,141 +221,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Street Number</label>
+                                                                                <label for="">Address <span class="required_field">*</span></label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <input type="text" class="form-control" name="st_number" id="st_number" value="<?php if(isset($leads_data)){ echo $leads_data->st_number; } ?>"/>
+                                                                                <input type="text" class="form-control" name="address" id="address" value="<?php if(isset($leads_data)){ echo $leads_data->address; } ?>" required/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Street Direction</label>
+                                                                                <label for="">ZIP <span class="required_field">*</span></label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <select id="st_direction" name="st_direction" class="input_select">
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == ''){ echo 'selected'; }} ?> value="">Select</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'North'){ echo 'selected'; }} ?> value="North">North</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'East'){ echo 'selected'; }} ?> value="East">East</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'South'){ echo 'selected'; }} ?> value="South">South</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'West'){ echo 'selected'; }} ?> value="West">West</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'North East'){ echo 'selected'; }} ?> value="North East">North East</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'South East'){ echo 'selected'; }} ?> value="South East">South East</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'North West'){ echo 'selected'; }} ?> value="North West">North West</option>
-                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->st_direction == 'South West'){ echo 'selected'; }} ?> value="South West">South West</option>
-                                                                                </select>
+                                                                                <input type="text" class="form-control" name="zip" id="zip" value="<?php if(isset($leads_data)){ echo $leads_data->zip; } ?>" required/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Street Name</label>
+                                                                                <label for="">State <span class="required_field">*</span></label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <input type="text" class="form-control" name="st_name" id="st_name" value="<?php if(isset($leads_data)){ echo $leads_data->st_name; } ?>"/>
+                                                                                <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($leads_data)){ echo $leads_data->state; } ?>" required/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Street Type</label>
+                                                                                <label for="">City <span class="required_field">*</span></label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <select id="st_type" name="st_type" data-customer-source="dropdown" class="input_select">
-                                                                                    <option value="">Select</option>
-                                                                                    <option value="ALLEY">ALLEY</option>
-                                                                                    <option value="ARCH">ARCH</option>
-                                                                                    <option value="BOULEVARD">BOULEVARD</option>
-                                                                                    <option value="BUILDING">BUILDING</option>
-                                                                                    <option value="CENTER">CENTER</option>
-                                                                                    <option value="CIRCLE">CIRCLE</option>
-                                                                                    <option value="CLOSE">CLOSE</option>
-                                                                                    <option value="COURT">COURT</option>
-                                                                                    <option value="COVE">COVE</option>
-                                                                                    <option value="CRESCENT">CRESCENT</option>
-                                                                                    <option value="DALE">DALE</option>
-                                                                                    <option value="DRIVE">DRIVE</option>
-                                                                                    <option value="DRIVE">DRIVE</option>
-                                                                                    <option value="EXPRESSWAY">EXPRESSWAY</option>
-                                                                                    <option value="FREEWAY">FREEWAY</option>
-                                                                                    <option value="GARDEN">GARDEN</option>
-                                                                                    <option value="GROVE">GROVE</option>
-                                                                                    <option value="HEIGHTS">HEIGHTS</option>
-                                                                                    <option value="HIGHWAY">HIGHWAY</option>
-                                                                                    <option value="HILL">HILL</option>
-                                                                                    <option value="KNOLL">KNOLL</option>
-                                                                                    <option value="LANE">LANE</option>
-                                                                                    <option value="LOOP">LOOP</option>
-                                                                                    <option value="MALL">MALL</option>
-                                                                                    <option value="OVAL">OVAL</option>
-                                                                                    <option value="PARK">PARK</option>
-                                                                                    <option value="PARKWAY">PARKWAY</option>
-                                                                                    <option value="PATH">PATH</option>
-                                                                                    <option value="PIKE">PIKE</option>
-                                                                                    <option value="PLACE">PLACE</option>
-                                                                                    <option value="PLAZA">PLAZA</option>
-                                                                                    <option value="POINT">POINT</option>
-                                                                                    <option value="RISE">RISE</option>
-                                                                                    <option value="ROAD">ROAD</option>
-                                                                                    <option value="ROUTE">ROUTE</option>
-                                                                                    <option value="ROW">ROW</option>
-                                                                                    <option value="RUN">RUN</option>
-                                                                                    <option value="RURAL ROUTE">RURAL ROUTE</option>
-                                                                                    <option value="SQUARE">SQUARE</option>
-                                                                                    <option value="STREET">STREET</option>
-                                                                                    <option value="TERRACE">TERRACE</option>
-                                                                                    <option value="THRUWAY">THRUWAY</option>
-                                                                                    <option value="TRAIL">TRAIL</option>
-                                                                                    <option value="TURNPIKE">TURNPIKE</option>
-                                                                                    <option value="VIADUCT">VIADUCT</option>
-                                                                                    <option value="VIEW">VIEW</option>
-                                                                                    <option value="WALK">WALK</option>
-                                                                                    <option value="WAY">WAY</option>
-                                                                                    <option value="WYND">WYND</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-12 form-line">
-                                                                        <div class="row">
-                                                                            <div class="col-md-4">
-                                                                                <label for="">Apt/Ste/Space#</label>
-                                                                            </div>
-                                                                            <div class="col-md-8">
-                                                                                <input type="text" class="form-control" name="apt_ste_space" id="apt_ste_space" value="<?php if(isset($leads_data)){ echo $leads_data->apt_ste_space; } ?>"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-12 form-line">
-                                                                        <div class="row">
-                                                                            <div class="col-md-4">
-                                                                                <label for="">Condo Name</label>
-                                                                            </div>
-                                                                            <div class="col-md-8">
-                                                                                <input type="text" class="form-control" name="condo_name" id="condo_name" value="<?php if(isset($leads_data)){ echo $leads_data->condo_name; } ?>"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-12 form-line">
-                                                                        <div class="row">
-                                                                            <div class="col-md-4">
-                                                                                <label for="">ZIP State City</label>
-                                                                            </div>
-                                                                            <div class="col-md-8">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-3">
-                                                                                        <input type="text" class="form-control" name="zip" id="zip" value="<?php if(isset($leads_data)){ echo $leads_data->zip; } ?>" />
-                                                                                    </div>
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($leads_data)){ echo $leads_data->state; } ?>" />
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($leads_data)){ echo $leads_data->city; } ?>" />
-                                                                                    </div>
-                                                                                </div>
+                                                                                <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($leads_data)){ echo $leads_data->city; } ?>" required/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -365,7 +264,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                 <label for="">County</label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <input type="text" class="form-control" name="county" id="county" value="<?php if(isset($leads_data)){ echo $leads_data->county; } ?>"/>
+                                                                                <input type="text" class="form-control" name="county" id="county" value="<?php if(isset($leads_data)){ echo $leads_data->county; } ?>" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -375,7 +274,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                 <label for="">Country</label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <select id="country" name="country" class="input_select">
+                                                                                <select id="country" name="country" class="input_select" required>
                                                                                     <option <?php if(isset($leads_data)){ if($leads_data->country == 'USA'){ echo 'selected'; }} ?> value="USA">USA</option>
                                                                                     <option <?php if(isset($leads_data)){ if($leads_data->country == 'CANADA'){ echo 'selected'; }} ?> value="CANADA">CANADA</option>
                                                                                 </select>
@@ -388,54 +287,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                 <label for="">Home/Panel Phone</label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <div class="row">
-                                                                                    <?php
-                                                                                        if(isset($leads_data)){
-                                                                                            $phone = explode("-", $leads_data->phone_home);
-                                                                                        }
-                                                                                    ?>
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="tel" class="form-control" name="phone_home[]" id="phone_home" value="<?php if(isset($phone) && count($phone)>0){ echo $phone[0]; } ?>"/>
-                                                                                    </div>-
-                                                                                    <div class="col-md-3">
-                                                                                        <input type="tel" class="form-control" name="phone_home[]" id="phone_home" value="<?php if(isset($phone) && count($phone)>1){ echo $phone[1]; } ?>"/>
-                                                                                    </div>-
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="tel" class="form-control" name="phone_home[]" id="phone_home" value="<?php if(isset($phone) && count($phone)>2){ echo $phone[2]; } ?>"/>
-                                                                                    </div>
-                                                                                </div>
+                                                                                <input type="text" class="form-control phone_number" name="phone_home" id="phone_home" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?php if(isset($leads_data)){ echo $leads_data->phone_home; } ?>"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Cell Phone</label>
+                                                                                <label for="">Cell Phone <span class="required_field">*</span></label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <div class="row">
-                                                                                    <?php
-                                                                                    if(isset($leads_data)){
-                                                                                        $cell = explode("-", $leads_data->phone_cell);
-                                                                                    }
-                                                                                    ?>
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="tel" class="form-control" name="phone_cell[]" id="phone_home" value="<?php if(isset($cell) && count($cell)>0){ echo $cell[0]; } ?>"/>
-                                                                                    </div>-
-                                                                                    <div class="col-md-3">
-                                                                                        <input type="tel" class="form-control" name="phone_cell[]" id="phone_home" value="<?php if(isset($cell) && count($cell)>1){ echo $cell[1]; } ?>"/>
-                                                                                    </div>-
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="tel" class="form-control" name="phone_cell[]" id="phone_home" value="<?php if(isset($cell) && count($cell)>2){ echo $cell[2]; } ?>"/>
-                                                                                    </div>
-                                                                                </div>
+                                                                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_cell" id="phone_cell" value="<?php if(isset($leads_data)){ echo $leads_data->phone_cell; } ?>" required/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 form-line">
                                                                         <div class="row">
                                                                             <div class="col-md-4">
-                                                                                <label for="">Email Address</label>
+                                                                                <label for="">Email Address <span class="required_field">*</span></label>
                                                                             </div>
                                                                             <div class="col-md-8">
                                                                                 <input type="email" class="form-control" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>" required/>
@@ -448,22 +317,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                                 <label for="">Social Security Number</label>
                                                                             </div>
                                                                             <div class="col-md-8">
-                                                                                <div class="row">
-                                                                                    <?php
-                                                                                    if(isset($leads_data)){
-                                                                                        $ssn = explode("-", $leads_data->phone_cell);
-                                                                                    }
-                                                                                    ?>
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="tel" maxlength="3" class="form-control" name="sss_num[]" id="sss_num" value="<?php if(isset($ssn) && count($ssn)>0){ echo $ssn[0]; } ?>"/>
-                                                                                    </div>
-                                                                                    <div class="col-md-3">
-                                                                                        <input type="tel" maxlength="2" class="form-control" name="sss_num[]" id="sss_num" value="<?php if(isset($ssn) && count($ssn)>1){ echo $ssn[1]; } ?>"/>
-                                                                                    </div>
-                                                                                    <div class="col-md-4">
-                                                                                        <input type="tel" maxlength="3"  class="form-control" name="sss_num[]" id="sss_num" value="<?php if(isset($ssn) && count($ssn)>2){ echo $ssn[2]; } ?>"/>
-                                                                                    </div>
-                                                                                </div>
+                                                                                <input type="text" maxlength="11" placeholder="xxx-xx-xxxx" class="form-control" name="sss_num" id="sss_num" value="<?php if(isset($ssn) && count($ssn)>0){ echo $ssn[0]; } ?>"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -487,7 +341,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <div class="col-md-12 module_header">
                                                                         <p class="module_title">New Credit Report</p>
                                                                     </div>
-
                                                                     <div class="col-md-12">
                                                                         <div class="row">
                                                                             <div class="col-md-12">
@@ -578,6 +431,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
     $("#date_of_birth").datetimepicker({
         format: "L",
         //minDate: new Date(),
+    });
+
+    $(function () {
+        $('#sss_num').keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 6) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
+
+        $('.phone_number').keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
     });
 </script>
 

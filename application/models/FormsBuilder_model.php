@@ -5,6 +5,7 @@ class FormsBuilder_model extends MY_Model {
 	private $elements_table = "fb_forms_elements";
 	private $answers_table = "fb_forms_answers";
 	private $choices_table = "fb_choices";
+	private $images_table = "fb_forms_images";
 	private $products_table = "fb_forms_products";
 
 	public function __construct(){
@@ -137,6 +138,23 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 
+	public function getElementImages($element_id){
+		$this->db->select("*");
+		$this->db->where('element_id', $element_id);
+		$query = $this->db->get($this->images_table);
+		return $query->result();
+	}
+
+	public function addElementImages($data){
+		$this->db->insert($this->images_table, $data);
+		return array(
+			"status" => 1,
+			"id" => $this->db->insert_id()
+		);
+	}
+
+	// foreign data
+
 	public function addFormProducts($data){
 		$this->db->insert($this->products_table, $data);
 		return array(
@@ -145,8 +163,6 @@ class FormsBuilder_model extends MY_Model {
 		);
 	}
 
-	
-	// foreign data
 	public function getProductsList(){
 		$this->db->select("*");
 		$query=  $this->db->get('items');

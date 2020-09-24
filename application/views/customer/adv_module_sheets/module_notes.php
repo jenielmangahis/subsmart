@@ -25,14 +25,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                     <label for="">Assign</label>
                 </div>
-                <div class="col-md-8">
-                    <select id="assign" name="assign"  class="input_select">
-                        <option value="">Select</option>
-                        <?php foreach ($users as $user): ?>
-                            <option value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
-                        <?php endforeach ?>
-                    </select>
-                </div>
             </div>
         </div>
     </div>

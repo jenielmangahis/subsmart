@@ -20,6 +20,11 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get($this->attn_tbl);
         return $qry->result();
     }
+    public function employeeAttendance(){
+        $qry = $this->db->get($this->attn_tbl)->result();
+        return $qry;
+    }
+
     public function getWeekTotalDuration(){
         $qry = $this->db->get('ts_weekly_total_shift');
         return $qry->result();
@@ -626,14 +631,20 @@ class Timesheet_model extends MY_Model {
         return $total_users - $logged_in;
     }
     public function getInNow(){
-        $this->db->or_where('date_in',date('Y-m-d'));
-        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 1));
+//        $this->db->or_where('date_in',date('Y-m-d'));
+//        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $this->db->where('status',1);
+        $query = $this->db->get('timesheet_attendance');
         return $query->num_rows();
     }
     public function getOutNow(){
         $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_in'=>date('Y-m-d')));
         return $query->num_rows();
+    }
+    public function getAttendanceByDay($day){
+        $this->db->where('date_in',$day);
+        $query = $this->db->get('timesheet_attendance')->result();
+        return $query;
     }
 //    public function getInNowData(){
 //        $query = $this->db->get_where($this->db_table,array('action'=>'Check in'));
@@ -715,6 +726,7 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get_where('ts_settings_day',array('ts_settings_id'=>$ts_id,'start_date' => $data['start_date']));
         if ($qry->num_rows() == 0){
             $insert = array(
+                'user_id' => $data['user_id'],
                 'ts_settings_id' => $ts_id,
                 'start_date' => $data['start_date'],
                 'start_time' => $data['start_time'],

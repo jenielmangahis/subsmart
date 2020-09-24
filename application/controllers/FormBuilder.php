@@ -190,6 +190,38 @@ class FormBuilder extends MY_Controller {
 		exit;
 	}
 
+	public function getElementImages($element_id){
+		$data = array(
+			"status" => 1,
+			"data" => $this->formsbuilder_model->getElementImages($element_id)
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	public function addElementImages(){
+		$path = 'uploads/formbuilder/db/img/';
+		$temp = $this->input->post();
+		$temp["name"] = "img_".$temp["form_id"]."_".$temp["element_id"].".jpg";
+		$temp["path"] = $path."".$temp["element_id"]."/";
+		
+		
+		$query = $this->formsbuilder_model->addElementImages($temp);
+		$data = array(
+			"status" => 1
+		);
+		echo json_encode($data);
+		exit;
+	}
+
+	// this is a part of the function "addElementImages"
+	public function uploadElementImages(){
+		$files = $_FILES;
+		var_dump($files);
+		exit;
+	}
+
+
 	public function submitForm($form_id){
 		
 		$sid = rand(100000000,999999999);
@@ -270,6 +302,11 @@ class FormBuilder extends MY_Controller {
 		echo json_encode($data);
 		exit;
 	}
+
+
+
+
+	// foreign data
 
 	public function addFormProducts(){
 		$query = $this->formsbuilder_model->addFormProducts($this->input->post());

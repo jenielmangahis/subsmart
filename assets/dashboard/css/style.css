@@ -8933,7 +8933,7 @@ ul.text-dark-c1 li a {
     background: transparent no-repeat right center scroll;
 }
 #side-menu-edit,#side-menu-cus-tx,#side-menu-adjustment,
-#side-menu,#side-menu-full-tx {
+#side-menu,#side-menu-full-tx,#side-menu-print-tx,#side-menu-check-tx {
     background: #fff;
     position: fixed;
     top: 0;
@@ -8947,7 +8947,7 @@ ul.text-dark-c1 li a {
     width: 320px;
 }
 #side-menu-edit .mainMenu,#side-menu-cus-tx .mainMenu,#side-menu-adjustment .mainMenu,
-#side-menu .mainMenu,#side-menu-full-tx .mainMenu {
+#side-menu .mainMenu,#side-menu-full-tx .mainMenu,#side-menu-print-tx .mainMenu,#side-menu-check-tx .mainMenu {
     margin-top: 15px;
     display: block;
     padding: 0 0 0 0;
@@ -9109,6 +9109,14 @@ ul.text-dark-c1 li a {
 #side-menu-full-tx .save-act{text-align: left;}
 #side-menu-full-tx .save-act .btn-cmn{display: inline-block;float: none;padding: 8px 25px;}
 #side-menu-full-tx .save-act .savebtn{float: right;display: inline-block;}
+#side-menu-print-tx .mainMenu{margin: 0;}
+#side-menu-print-tx .save-act{text-align: left;}
+#side-menu-print-tx .save-act .btn-cmn{display: inline-block;float: none;padding: 8px 25px;}
+#side-menu-print-tx .save-act .savebtn{float: right;display: inline-block;}
+#side-menu-check-tx .mainMenu{margin: 0;}
+#side-menu-check-tx .save-act{text-align: left;}
+#side-menu-check-tx .save-act .btn-cmn{display: inline-block;float: none;padding: 8px 25px;}
+#side-menu-check-tx .save-act .savebtn{float: right;display: inline-block;}
 /* **** End Setting Tax Page **** */
 #rcdpay .modal-dialog,
 #revice-taxs .modal-dialog{

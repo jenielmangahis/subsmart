@@ -73,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Link :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->url; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo string_max_length($office_info->url,20); }; ?></b> </label>
                             </td>
                         </tr>
 

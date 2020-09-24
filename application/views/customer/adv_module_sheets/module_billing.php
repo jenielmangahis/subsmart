@@ -220,7 +220,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing Start Date</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control " name="bill_start_date" id="date_picker" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+                        <input type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
                     </div>
                 </div>
             </div>
@@ -230,7 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Billing End Date</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control " name="bill_end_date" id="date_picker" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
+                        <input type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
                     </div>
                 </div>
             </div>

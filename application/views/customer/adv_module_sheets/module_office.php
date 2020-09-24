@@ -222,7 +222,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Purchase Multiple</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="purchase_multiple" id="purchase_multiple" value="<?php if(isset($office_info)){ echo  $office_info->purchase_multiple; } ?>"/>
+                    <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select">
+                        <option <?php if(isset($office_info)){ if($office_info->purchase_multiple == ""){ echo 'selected'; } } ?> value="">Select</option>
+                        <?php
+                            for($pm=12;$pm<76;$pm++){
+                                ?>
+                                    <option <?php if(isset($office_info)){ if($office_info->purchase_multiple == $pm.'x'){ echo 'selected'; } } ?> value="<?= $pm.'x'; ?>"><?= $pm.'x'; ?></option>
+                                <?php
+                            }
+                        ?>
+                    </select>
                 </div>
             </div>
         </div>
@@ -300,8 +309,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-8">
                     <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
                         <option value="">Select</option>
-                        <?php foreach ($sales_area as $sa): ?>
-                            <option <?php if(isset($office_info)){ if($office_info->fk_sales_rep_office == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
+                        <?php foreach ($users as $user): ?>
+                            <option <?php if(isset($office_info)){ echo $office_info->assign_to ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                         <?php endforeach ?>
                     </select>
                 </div>
@@ -544,16 +553,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-md-4">
                 </div>
                 <div class="col-md-8">
-                    <input type="radio" name="way_of_pay[]" value="None" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'None' || $office_info->way_of_pay == '' || $office_info->way_of_pay == 'Email' ? 'checked': ''; } ?>  id="way_of_pay_none">
+                    <input type="radio" name="way_of_pay" value="None" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'None' || $office_info->way_of_pay == '' || $office_info->way_of_pay == 'Email' ? 'checked': ''; }else {echo 'checked'; } ?>  id="way_of_pay_none">
                     <label for="way_of_pay_none"><span>None</span></label>
 
-                    <input type="radio" name="way_of_pay[]" value="Check" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'Check'? 'checked': ''; } ?>  id="way_of_pay_check">
+                    <input type="radio" name="way_of_pay" value="Check" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'Check'? 'checked': ''; } ?>  id="way_of_pay_check">
                     <label for="way_of_pay_check"><span>Check</span></label>
 
-                    <input type="radio" name="way_of_pay[]" value="Credit" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'Credit'? 'checked': ''; } ?>  id="way_of_pay_credit">
+                    <input type="radio" name="way_of_pay" value="Credit" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'Credit'? 'checked': ''; } ?>  id="way_of_pay_credit">
                     <label for="way_of_pay_credit"><span>Credit</span></label>
 
-                    <input type="radio" name="way_of_pay[]" value="Paid" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'Paid'? 'checked': ''; } ?> id="way_of_pay_paid">
+                    <input type="radio" name="way_of_pay" value="Paid" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'Paid'? 'checked': ''; } ?> id="way_of_pay_paid">
                     <label for="way_of_pay_paid"><span>Paid</span></label>
                 </div>
             </div>
@@ -612,7 +621,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label for="">Warranty Type</label>
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="warranty_type" id="warranty_type" value="<?php if(isset($office_info)){ echo  $office_info->warranty_type; } ?>" />
+                    <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited. 90 Days</option>
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
+                        <option <?php if(isset($office_info)){ if($office_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
+                    </select>
                 </div>
             </div>
         </div>

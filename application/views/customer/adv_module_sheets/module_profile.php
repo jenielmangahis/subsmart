@@ -133,25 +133,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">Social Security Number</label>
+                        <label for="">Social Security No.</label>
                     </div>
                     <div class="col-md-8">
-                        <div class="row">
-                            <?php
-                                if(isset($profile_info)){
-                                    $ssn = explode("-", $profile_info->ssn);
-                                }
-                            ?>
-                            <div class="col-md-4">
-                                <input type="tel" pattern="\d*" maxlength="3" class="form-control" name="ssn[]" value="<?php if(isset($ssn) && count($ssn)>0){ echo $ssn[0]; } ?>" />
-                            </div>
-                            <div class="col-md-4">
-                                <input type="tel" maxlength="2" class="form-control" name="ssn[]" value="<?php if(isset($ssn) && count($ssn)>1){ echo $ssn[1]; } ?>"/>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="tel" maxlength="3" class="form-control" name="ssn[]" value="<?php if(isset($ssn) && count($ssn)>2){ echo $ssn[2]; } ?>"/>
-                            </div>
-                        </div>
+                         <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
                     </div>
                 </div>
             </div>
@@ -161,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Phone (H)</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
+                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
                     </div>
                 </div>
             </div>
@@ -171,17 +156,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <label for="">Phone (W)</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
+                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
                     </div>
                 </div>
             </div>
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">Phone (M)</label>
+                        <label for="">Phone (M)</label> <span class="required"> *</span>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
+                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
                     </div>
                 </div>
             </div>
@@ -198,17 +183,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">Mailing Address</label>
+                        <label for="">Address</label> <span class="required"> *</span>
                     </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" />
+                        <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
                     </div>
                 </div>
             </div>
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">City</label>
+                        <label for="">City</label> <span class="required"> *</span>
                     </div>
                     <div class="col-md-8">
                         <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
@@ -218,7 +203,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="col-md-12 form-line">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="">State</label>
+                        <label for="">State</label> <span class="required"> *</span>
                     </div>
                     <div class="col-md-8">
                         <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>

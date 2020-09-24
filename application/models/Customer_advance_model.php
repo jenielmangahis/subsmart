@@ -45,6 +45,13 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
+    public function get_leads_data(){
+        $this->db->from("ac_leads");
+        $this->db->select('ac_leads.*,users.FName,users.LName');
+        $this->db->join('users', 'users.id = ac_leads.fk_assign_id','left');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function get_customer_data($user_id){
         $this->db->from("acs_profile");

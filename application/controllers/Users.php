@@ -223,13 +223,83 @@ class Users extends MY_Controller {
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
 		$this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['user_roles'] = $this->users_model->getRoles();
+        $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
+        $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
 		
-		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-		
-		//$this->load->view('users/timesheet', $this->page_data);
-		//$this->load->view('users/timesheet-admin', $this->page_data);
+
 		$this->load->view('users/timelog', $this->page_data);
 	}
+
+	public function showTimeLogTable(){
+	    $date = $this->input->get('date');
+	    $users =  $this->users_model->getUsers();
+	    $user_roles = $this->users_model->getRoles();
+	    $ts_logs = $this->timesheet_model->getTimesheetLogs();
+	    $attendance = $this->timesheet_model->getAttendanceByDay(date('Y-m-d',strtotime($date)));
+
+	    $display = '';
+        $emp_role = null;
+        $clock_in = null;
+        $clock_out = null;
+        $shift_duration = null;
+        $entry_type = null;
+        foreach ($users as $user):
+            $name = $user->FName." ".$user->LName;
+            foreach ($user_roles as $role){
+                if ($user->role == $role->id){
+                    $emp_role = $role->title;
+                }
+            }
+            foreach ($attendance as $attn){
+                if ($attn->user_id == $user->id){
+                    foreach ($ts_logs as $log){
+                        if ($attn->id == $log->attendance_id){
+                            $entry_type = $log->entry_type;
+                            if ($log->action == 'Check in'){
+                                $clock_in = date('h:i A',$log->time);
+                            }elseif ($log->action == 'Check out'){
+                                $clock_out = date('h:i A',$log->time);
+                            }
+                        }
+                    }
+                    $difference = $attn->shift_duration;
+                    $seconds = ($difference * 3600);
+                    $hours = floor($difference);
+                    $seconds -= $hours * 3600;
+                    $minutes = floor($seconds / 60);
+                    $shift_duration = $this->lz($hours).":".$this->lz($minutes);
+                }
+            }
+	    $display .= '<tr>';
+	    $display .= '<td class="center">'.$clock_in.'</td>';
+	    $display .= '<td class="center">'.$clock_out.'</td>';
+	    $display .= '<td class="center">'.$shift_duration.'</td>';
+	    $display .= '<td>';
+	    $display .= '<div class="employee-section emp-photo">';
+	    $display .= '<img src="'.site_url().'/assets/img/timesheet/default-profile.png" alt="" class="employee-profile">';
+	    $display .= '</div>';
+	    $display .= '<div class="employee-section emp-details">';
+	    $display .= '<span class="employee-name">'.$name.'</span><span class="employee-role">'.$emp_role.'</span>';
+	    $display .= '</div>';
+	    $display .= '</td>';
+	    $display .= '<td class="center">'.$entry_type.'</td>';
+	    $display .= '<td class="center"></td>';
+	    $display .= '<td class="center">';
+	    $display .= '<a href="javascript:void (0)" title="View" data-toggle="tooltip" ><i class="btn-view fa fa-eye fa-lg"></i></a>';
+	    $display .= '</td>';
+	    $display .= '</tr>';
+            $clock_in = null;
+            $clock_out = null;
+            $shift_duration = null;
+            $entry_type = null;
+        endforeach;
+
+	    echo json_encode($display);
+    }
+    public function lz($num){
+        return (strlen($num) < 2) ? "0{$num}" : $num;
+    }
 
 	// function to calculate total logged time of user: daily
 	public function total_logged_day(){
