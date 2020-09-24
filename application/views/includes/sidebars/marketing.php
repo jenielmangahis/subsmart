@@ -32,8 +32,8 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'email_automation') ? "active" : "";  ?>"><a href="email_automation" title="Email Automation"><span class="fa fa-cube"></span>Email Automation</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'offers') ? "active" : "";  ?>"><a href="<?php echo base_url('offers'); ?>" title="Offers"><span class="fa fa-cube"></span>Offers</a></li>
         <li class="submenus  <?= ($this->uri->uri_string() == 'campaign_blast') ? "active" : "";  ?>"><a href="campaign_blast" title="Credentials"><span class="fa fa-cube"></span>Campaign Blast</a></li>
-        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Customer Finder 360</a></li>
-        <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>My Leads List</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'campaign') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign'); ?>" title="Campaign 360"><span class="fa fa-cube"></span>Campaign 360</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'my_inquires') ? "active" : "";  ?>"><a href="<?php echo base_url('my_inquires'); ?>" title="My Inquires List"><span class="fa fa-cube"></span>My Inquires List</a></li>
 
         <?php /*<li class="nav-header">Connectors </li>Q
         <li class="submenus"><a href="#" title="Credentials"><span class="fa fa-cube"></span>Connectors</a></li>

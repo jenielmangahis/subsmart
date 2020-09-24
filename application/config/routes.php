@@ -169,6 +169,8 @@ $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
 $route['offers'] = 'Offers';
 $route['campaign_blast'] = 'Campaign_Blast';
+$route['my_inquires'] = 'My_Inquires';
+$route['campaign'] = 'Campaign';
 
 $route['register/subscribe'] = 'register/subscribe';
 
