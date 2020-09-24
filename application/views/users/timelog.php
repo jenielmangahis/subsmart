@@ -1,6 +1,45 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+    #timeLogTable th{
+        text-align: center;
+    }
+    .employee-section{
+        display: inline-block;
+    }
+    .emp-photo{
+        width: 25%;
+        vertical-align: middle;
+    }
+    .emp-photo img{
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+    }
+    .emp-details{
+        width: 70%;
+    }
+    .emp-details .employee-name,.employee-role{
+        display: block;
+    }
+    .emp-details .employee-name{
+        font-weight: bold;
+    }
+    .emp-details .employee-role{
+        font-style: italic;
+        color: grey;
+    }
+    .center{
+        text-align: center;
+    }
+    #timeLogDate{
+        width: 210px;
+    }
+    .thead-title,.thead-sub{
+        display: block;
+    }
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
     <!-- page wrapper start -->
@@ -18,10 +57,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php ////if (hasPermissions('users_add')): ?>
-                                    <a href="<?php echo url('users/add_timesheet_entry') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Log Time
-                                    </a>
+                                <!--                                    <a href="--><?php //echo url('users/add_timesheet_entry') ?><!--" class="btn btn-primary"-->
+                                <!--                                       aria-expanded="false">-->
+                                <!--                                        <i class="mdi mdi-settings mr-2"></i> Log Time-->
+                                <!--                                    </a>-->
                                 <?php //endif ?>
                             </div>
                         </div>
@@ -33,184 +72,83 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="mt-0 header-title mb-5">List of Employees</h4>
                             <!-- Date Selector -->
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 20px">
                                 <div class="col-lg-3" style="">
-                                    <input type="text" class="form-control entry_date" name="timelog_date" placeholder="Select Date">
+                                    <input type="text" class="form-control" id="timeLogDate" name="timelog_date" value="<?php echo date('m/d/Y');?>">
                                 </div>
                             </div>
-                            <div class="row time-clock-mobile">
+                            <div class="row">
                                 <div class="col-lg-12 table-responsive">
-                                    <table id="dataTable1" class="table table-bordered table-striped">
+                                    <table id="timeLogTable" class="table table-bordered table-striped">
                                         <thead>
                                         <tr>
-                                            <th>Clock In - Out</th>
-                                            <!-- <th>Id</th>
-                                            <th>Image</th> -->
-                                            <th style="width: 150px !important;">Hours:Mins</th>
+                                            <th>Clock In</th>
+                                            <th>Clock Out</th>
+                                            <th><span class="thead-title">Shift Duration</span><span class="thead-sub">(HH:MM)</span></th>
                                             <th style="width: 150px !important;">Name</th>
-                                            <!-- <th>Email</th>
-                                            <th>Password</th>
-                                            <th>Role</th> -->
-
                                             <th style="width: 150px !important;">Type</th>
                                             <th>Notes</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <?php foreach ($users as $row): ?>
-                                            <tr>
-                                                <!-- last login -->
-                                                <td>
-                                                    <?php //echo ($row->last_login != '0000-00-00 00:00:00') ? date(setting('date_format'), strtotime($row->last_login)) : 'No Record' ?>
-
-                                                    <?php
-                                                        $data['user_id'] = $row->id;
-                                                        $clockin_arr = $this->timesheet_model->getClockInTimelog($data);
-                                                        $clockout_arr = $this->timesheet_model->getClockOut($data);
-                                                        //echo "<pre>"; print_r($clockin_arr); echo "</pre>";
-                                                    ?>
-
-                                                    <?php foreach($clockin_arr as $k => $clockin): ?>
-
-                                                        <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
-                                                            <?php echo '<b>'.date('d M Y', strtotime($clockin->timestamp)).'</b>&nbsp;&nbsp;&nbsp;&nbsp;'; ?>
-                                                            <?php if($clockin->action == "Clock In"):?>
-                                                                <?php echo date('h:iA', strtotime($clockin->timestamp))." In --- "; ?>
-                                                            <?php else: ?>
-                                                                <?php echo date('h:iA', strtotime($clockin->timestamp))." Out"; ?>
-                                                            <?php endif;?>
-
-                                                        <?php endif; ?>
-
-                                                    <?php endforeach; ?>
-
-                                                </td>
-                                                <!-- Tota Time/Hours -->
-                                                <td>
-                                                    <?php foreach($clockin_arr as $k => $clockin): ?>
-
-                                                        <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
-                                                            <?php if($clockin->action == "Clock In"):?>
-                                                                <?php
-                                                                    $date_clockin = strtotime($clockin->timestamp);
-                                                                ?>
-                                                            <?php elseif($clockin->action == "Clock Out"): ?>
-                                                                <?php
-                                                                    $date_clockout = strtotime($clockin->timestamp);
-                                                                ?>
-                                                            <?php endif;?>
-                                                            <?php
-                                                                /*echo $date_clockin.'asd';
-                                                                echo $date_clockout.'bcd';*/
-                                                                //$diff = abs($date_clockout - $date_clockin);
-                                                                //echo $diff.'hrs';
-                                                            ?>
-
-                                                        <?php endif; ?>
-
-                                                        <?php echo ' hrs';?>
-                                                    <?php endforeach; ?>
-
-
-                                                </td>
-                                                <!-- <td width="60"><?php //echo $row->id ?></td> -->
-                                                <!-- <td width="50" class="text-center"> -->
-                                                    <!-- <img src="<?php //echo userProfile($row->id) ?>" width="40"
-                                                         height="40" alt="" class="img-avtar"> -->
-                                                    <!-- <img src="<?php //echo base_url('uploads/users/default.png');?>" width="40" height="40" alt="" class="img-avatar" /> -->
-                                                <!-- </td> -->
-                                                <td>
-                                                    <?php //echo ucfirst($row->FName).' '.ucfirst($row->LName) ?>
-                                                    <img src="<?php echo base_url('uploads/users/default.png');?>" width="30" height="30" alt="" class="img-avatar" style="float: left; border-radius: 50%; margin-right: 10px;"/>
-                                                    <?php echo '<b>'.ucfirst($row->FName).' '.ucfirst($row->LName).'</b><br />'; ?>
-                                                        <?php
-                                                            if( !empty($this->roles_model->getById($row->role)->title) ){
-                                                                echo ucfirst($this->roles_model->getById($row->role)->title);
-                                                            }
-                                                        ?>
-                                                </td>
-                                                <!-- <td><?php //echo $row->email ?></td>
-                                                <td><?php //echo $row->password_plain ?></td> -->
-                                                <!-- <td>
-                                                    <?php
-                                                        //echo ucfirst($this->roles_model->getById($row->role)->title) ?>
-
-                                                        </td>
-                                                -->
-                                                <td>
-                                                    <?php //if (logged('id') !== $row->id): ?>
-                                                        <!-- <input type="checkbox" class="js-switch"
-                                                               onchange="updateUserStatus('<?php //echo $row->id ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' ?> /> -->
-                                                        <?php if( !empty($clockin_arr)): ?>
-                                                            <?php if( $row->status == 1 ): ?>
-                                                                <span>Clock In Out</span>
-                                                            <?php else: ?>
-                                                                <span>Clock In Out</span>
-                                                            <?php endif; ?>
-                                                        <?php endif; ?>
-
-                                                    <?php //endif ?>
-                                                </td>
-                                                <!-- Notes -->
-                                                <td>
-                                                    <?php foreach($clockin_arr as $k => $clockin): ?>
-                                                        <?php if($clockin->action == "Clock In" || $clockin->action == "Clock Out"):?>
-                                                            <?php if($clockin->action == "Clock In"):?>
-                                                                <?php if( !empty($clockin->notes) ): ?>
-                                                                    <?php echo $clockin->notes; ?>
-                                                                <?php else: ?>
-                                                                    <?php echo "N/A"?>
-                                                                <?php endif; ?>
-                                                            <?php endif; ?>
-                                                        <?php endif; ?>
-                                                    <?php endforeach; ?>
-                                                </td>
-
-                                                <td>
-                                                    <?php if (hasPermissions('users_edit')): ?>
-                                                        <a href="<?php echo url('users/edit/' . $row->id) ?>"
-                                                           class="btn btn-sm btn-default" title="Edit User"
-                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Edit</a>
-                                                    <?php endif ?>
-                                                    <?php if (hasPermissions('users_edit')): ?>
-                                                        <a href="<?php //echo url('users/edit/' . $row->id) ?>"
-                                                           class="btn btn-sm btn-default" title="Edit User"
-                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Day</a>
-                                                    <?php endif ?>
-                                                    <?php if (hasPermissions('users_edit')): ?>
-                                                        <a href="<?php //echo url('users/edit/' . $row->id) ?>"
-                                                           class="btn btn-sm btn-default" title="Edit User"
-                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Week</a>
-                                                    <?php endif ?>
-                                                    <?php if (hasPermissions('users_edit')): ?>
-                                                        <a href="<?php //echo url('users/edit/' . $row->id) ?>"
-                                                           class="btn btn-sm btn-default" title="Edit User"
-                                                           data-toggle="tooltip"><i class="fa fa-pencil"></i>Total Hours Month</a>
-                                                    <?php endif ?>
-                                                    <?php //if (hasPermissions('users_view')): ?>
-                                                        <a href="<?php echo url('users/view/' . $row->id) ?>"
-                                                           class="btn btn-sm btn-default" title="Cannot Edit or Delete this Record"
-                                                           data-toggle="tooltip"><i class="fa fa-eye"></i>View</a>
-                                                    <?php //endif ?>
-                                                    <?php if (hasPermissions('users_delete')): ?>
-                                                        <?php if ($row->id != 1 && logged('id') != $row->id): ?>
-                                                            <a href="<?php echo url('users/delete/' . $row->id) ?>"
-                                                               class="btn btn-sm btn-default"
-                                                               onclick="return confirm('Do you really want to delete this user ?')"
-                                                               title="Delete User" data-toggle="tooltip"><i
-                                                                        class="fa fa-trash"></i> Delete</a>
-                                                        <?php else: ?>
-                                                            <a href="#" class="btn btn-sm btn-default"
-                                                               title="You cannot Delete this User" data-toggle="tooltip"
-                                                               disabled><i class="fa fa-trash"></i> Delete</a>
-                                                        <?php endif ?>
-                                                    <?php endif ?>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach ?>
+                                        <tbody class="employee-tbody">
+<!--                                        --><?php
+//                                        $emp_role = null;
+//                                        $clock_in = null;
+//                                        $clock_out = null;
+//                                        $shift_duration = null;
+//                                        $entry_type = null;
+//                                        ?>
+<!--                                        --><?php //foreach ($users as $user): ?>
+<!--                                            --><?php
+//                                            $name = $user->FName." ".$user->LName;
+//                                            foreach ($user_roles as $role){
+//                                                if ($user->role == $role->id){
+//                                                    $emp_role = $role->title;
+//                                                }
+//                                            }
+//                                            foreach ($attendance as $attn){
+//                                                if ($attn->user_id == $user->id){
+//                                                    foreach ($ts_logs as $log){
+//                                                        if ($attn->id == $log->attendance_id){
+//                                                            $entry_type = $log->entry_type;
+//                                                            if ($log->action == 'Check in'){
+//                                                                $clock_in = date('h:i A',$log->time);
+//                                                            }elseif ($log->action == 'Check out'){
+//                                                                $clock_out = date('h:i A',$log->time);
+//                                                            }
+//                                                        }
+//                                                    }
+//                                                    $shift_duration = $attn->shift_duration;
+//                                                }
+//                                            }
+//                                            ?>
+<!--                                            <tr>-->
+<!--                                                <td class="center">--><?php //echo $clock_in; ?><!--</td>-->
+<!--                                                <td class="center">--><?php //echo $clock_out; ?><!--</td>-->
+<!--                                                <td class="center">--><?php //echo $shift_duration;?><!--</td>-->
+<!--                                                <td>-->
+<!--                                                    <div class="employee-section emp-photo">-->
+<!--                                                        <img src="--><?php //echo site_url()?><!--/assets/img/timesheet/default-profile.png" alt="" class="employee-profile">-->
+<!--                                                    </div>-->
+<!--                                                    <div class="employee-section emp-details">-->
+<!--                                                        <span class="employee-name">--><?php //echo $name;?><!--</span><span class="employee-role">--><?php //echo $emp_role;?><!--</span>-->
+<!--                                                    </div>-->
+<!--                                                </td>-->
+<!--                                                <td class="center">--><?php //echo $entry_type;?><!--</td>-->
+<!--                                                <td class="center"></td>-->
+<!--                                                <td class="center">-->
+<!--                                                    <a href="javascript:void (0)" title="View" data-toggle="tooltip"><i class="btn-view fa fa-eye fa-lg"></i></a>-->
+<!--                                                </td>-->
+<!--                                            </tr>-->
+<!--                                            --><?php
+//                                            $clock_in = null;
+//                                            $clock_out = null;
+//                                            $shift_duration = null;
+//                                            $entry_type = null;
+//                                            ?>
+<!--                                        --><?php //endforeach;?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -229,43 +167,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
-    //$('#dataTable1').DataTable();
-
     $(document).ready(function () {
-        $('#dataTable1').DataTable();
+        $('#timeLogDate').datepicker();
+        $(document).on('change','#timeLogDate',function () {
+             var date = $(this).val();
+             showTimeLogTbl(date);
 
-        $(".entry_date").datepicker();
+        });
+        var selected_day = $('#timeLogDate').val();
+        $('.employee-tbody').ready(showTimeLogTbl(selected_day));
+        function showTimeLogTbl(date) {
+            $("#timeLogTable").DataTable().destroy();
+            $.ajax({
+                url:"/users/showTimeLogTable",
+                type:"GET",
+                dataType:'json',
+                data:{date:date},
+                success:function (data) {
+                    $('.employee-tbody').html(data).tooltip({ selector: '[data-toggle=tooltip]' });
+                    $('#timeLogTable').DataTable({
+                        "sort": false
+                    });
+                }
+            });
+        }
+
     });
-
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-
-
-    elems.forEach(function (html) {
-
-        var switchery = new Switchery(html, {size: 'small'});
-
-    });
-
-
-    window.updateUserStatus = (id, status) => {
-
-        $.get('<?php echo url('users/change_status') ?>/' + id, {
-
-            status: status
-
-        }, (data, status) => {
-
-            if (data == 'done') {
-
-                // code
-
-            } else {
-
-                alert('Unable to change Status ! Try Again');
-
-            }
-
-        })
-
-    }
 </script>

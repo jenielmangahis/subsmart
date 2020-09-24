@@ -418,10 +418,9 @@ img.calendar-user-profile {
                                     <div class="row">
                                         <div class="col-xs-12 col-2 col-sm-2 col-md-2">
                                              <?php
-                                             $default_imp_img = base_url('uploads/users/default.png');
-                                              if( $recent_user->profile_img != null) {
-                                                    $img_filename = $recent_user->profile_img .'.'.$recent_user->img_type;
-                                                    $default_imp_img = base_url('uploads/users/'.$img_filename);
+                                               if( $recent_user->profile_img != null) {
+                                                    $img_filename = userProfileImage($recent_user->id);
+                                                    $default_imp_img = $img_filename;
                                                 } else {
                                                     $default_imp_img = base_url('uploads/users/default.png');
                                                 }
@@ -765,37 +764,6 @@ img.calendar-user-profile {
             loading: function (bool) {
 
             },
-            /* resources: [
-                {
-                    id: 'a',
-                    building: 'Employee',
-                    title: 'Bryann',
-                    imageurl:'http://www.completecocktails.com/img/d/l/ShotInTheDark.png'
-                },
-                {
-                    id: 'b',
-                    building: 'Employee',
-                    title: 'Tommy',
-                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU' }
-            ],
-            events:[
-                {
-                    resourceId:'a',
-                    title:"My repeating event",
-                    start:'2020-08-26 10:00',
-                    end:'2020-08-26 13:00',
-                    eventColor: '#378006',
-                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQCEqdsHyakSRTKbJ9cEgurC739Om2F83yubQ&usqp=CAU'
-                },
-                {
-                    resourceId:'b',
-                    title:"My repeating event",
-                    start:'2020-08-26 10:00',
-                    end:'2020-08-26 13:00',
-                    eventColor: '#378006',
-                    imageurl:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPcIhgnTSREaDHfqwV3CKITIW2hubGELCHwg&usqp=CAU'
-                }
-            ],      */
             resources: <?php echo json_encode($resources_users); ?>,
             events: <?php echo json_encode($resources_user_events); ?>,
 

@@ -53,22 +53,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                         <th>Name</th>
                                         <th>Address</th>
+                                        <th>Assigned To</th>
                                         <th>Email</th>
                                         <th>SSS Number</th>
                                         <th>Date of Birth</th>
                                         <th>Phone</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($leads as $lead) : ?>
                                             <tr>
-                                                <td><?=  $lead->firstname.' '.$lead->lastname; ?></td>
-                                                <td><?=  $lead->st_number.' '.$lead->st_direction.' '.$lead->st_name.' '.$lead->st_type; ?></td>
+                                                <td><?= $lead->firstname.' '.$lead->lastname; ?></td>
+                                                <td><?= $lead->address; ?></td>
+                                                <td><?= $lead->FName; ?></td>
                                                 <td><?= $lead->email_add; ?></td>
                                                 <td><?= $lead->sss_num; ?></td>
                                                 <td><?= $lead->date_of_birth; ?></td>
-                                                <td><?= $lead->phone_home; ?></td>
+                                                <td><?= $lead->phone_cell; ?></td>
+                                                <td><?= $lead->status; ?></td>
                                                 <td>
                                                     <a href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" >
                                                     <button class="btn btn-primary" type="button">
@@ -159,6 +163,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         Swal.fire({
             title: 'Good job!',
             text: information,
+
             icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#32243d',

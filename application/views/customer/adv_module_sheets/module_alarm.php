@@ -203,7 +203,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">System Type</label>
+                    <label for="">System Type</label> <span class="required"> *</span>
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="system_type" id="system_type" value="<?php if(isset($alarm_info)){ echo $alarm_info->system_type; } ?>" required/>

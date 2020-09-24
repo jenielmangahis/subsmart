@@ -435,6 +435,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php
                                         $u_role = null;
                                         $status = 'fa-times-circle';
+                                        $tooltip_status = 'Not logged in';
                                         $time_in = null;
                                         $time_out = null;
                                         $btn_action = 'employeeCheckIn';
@@ -481,12 +482,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 $indicator_out_break = 'display:none';
                                                                 $yesterday_in = null;
                                                                 $clock_in_2nd = 0;
+                                                                $tooltip_status = 'Logged in';
+                                                            }
+                                                            if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->date_out == date('Y-m-d') && $attn->status == 0){
+                                                                $time_in = date('h:i A',$log->time);
+                                                                $yesterday_in = "(Yesterday)";
                                                             }
                                                             if ($attn->id == $log->attendance_id && $attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
                                                                 $time_in = date('h:i A',$log->time);
                                                                 $yesterday_in = "(Yesterday)";
                                                                 $btn_action = 'employeeCheckOut';
+                                                                $indicator_in = 'display:block';
+                                                                $break = null;
+                                                                $break_id = 'employeeBreakIn';
                                                                 $clock_in_2nd = 1;
+                                                                $status = 'fa-check';
+                                                                $tooltip_status = 'Logged in';
                                                             }
                                                         }elseif($log->action == 'Check out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
                                                             if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
@@ -500,32 +511,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 $indicator_out = 'display:block';
                                                                 $indicator_in_break = 'display:none';
                                                                 $indicator_out_break = 'display:none';
+                                                                $tooltip_status = 'Logged out';
                                                             }
                                                             if ($user->id == $log->user_id && $attn->date_in == date('Y-m-d',strtotime('yesterday'))){
                                                                 $disabled = null;
                                                                 $btn_action = 'employeeCheckIn';
                                                             }
                                                         }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
-                                                            $break_id = 'employeeBreakOut';
-                                                            $status = 'fa-mug-hot';
-                                                            $break_in = date('h:i A',$log->time);
-                                                            $indicator_in = 'display:none';
-                                                            $indicator_out = 'display:none';
-                                                            $indicator_in_break = 'display:block';
-                                                            $indicator_out_break = 'display:none';
-//                                                                }
+                                                                if ($attn->id == $log->attendance_id && $attn->status == 1){
+                                                                    $break_id = 'employeeBreakOut';
+                                                                    $status = 'fa-mug-hot';
+                                                                    $break_in = date('h:i A',$log->time);
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:block';
+                                                                    $indicator_out_break = 'display:none';
+                                                                    $tooltip_status = 'On break';
+                                                                }
                                                         }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-//                                                                if ($attn->id == $log->attendance_id && $attn->date_out == date('Y-m-d')){
-                                                            $status = 'fa-check';
-                                                            $break_out = date('h:i A',$log->time);
-                                                            $break = 'disabled="disabled"';
-                                                            $break_id = null;
-                                                            $indicator_in = 'display:none';
-                                                            $indicator_out = 'display:none';
-                                                            $indicator_in_break = 'display:none';
-                                                            $indicator_out_break = 'display:block';
-//                                                                }
+                                                                if ($attn->id == $log->attendance_id && $attn->status == 1){
+                                                                    $status = 'fa-check';
+                                                                    $break_out = date('h:i A',$log->time);
+                                                                    $break = 'disabled="disabled"';
+                                                                    $break_id = null;
+                                                                    $indicator_in = 'display:none';
+                                                                    $indicator_out = 'display:none';
+                                                                    $indicator_in_break = 'display:none';
+                                                                    $indicator_out_break = 'display:block';
+                                                                    $tooltip_status = 'Back to work';
+                                                                }
                                                         }
 
                                                         foreach ($week_duration as $week){
@@ -550,15 +564,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td class="tbl-lunch-in"><div class="red-indicator" style="<?php echo $indicator_in_break?>"></div> <span class="break-in-time"><?php echo $break_in;?></span></td>
                                                 <td class="tbl-lunch-out"><div class="red-indicator" style="<?php echo $indicator_out_break?>"></div> <span class="break-out-time"><?php echo $break_out;?></span></td>
                                                 <td class="tbl-emp-action">
-                                                    <a href="javascript:void(0)" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                    <a href="javascript:void(0)" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-week="<?php echo $week_id?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-user-clock fa-lg"></i></a>
-                                                    <i class="fa <?php echo $status;?> status"></i>
+                                                    <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id?>" <?php echo $break;?> data-id="<?php echo $user->id?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-coffee fa-lg"></i></a>
+                                                    <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled?> id="<?php echo $btn_action;?>" data-week="<?php echo $week_id?>" data-attn="<?php echo $attn_id;?>" data-name="<?php echo $user->FName;?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id;?>" data-approved="<?php echo $this->session->userdata('logged')['id'];?>"><i class="fa fa-user-clock fa-lg"></i></a>
+                                                    <i class="fa <?php echo $status;?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
                                                 </td>
                                                 <td></td>
                                             </tr>
                                             <?php
                                             $u_role = null;
                                             $status = 'fa-times-circle';
+                                            $tooltip_status = 'Not logged in';
                                             $time_in = null;
                                             $time_out = null;
                                             $btn_action = 'employeeCheckIn';

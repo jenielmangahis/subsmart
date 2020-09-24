@@ -339,8 +339,23 @@ loadFormElements = (id, mode = null) => {
           }).responseText).data
         }
 
-        if(elementType >= 20 && elementType < 30){
+        if(elementType >= 15 && elementType < 30){
           document.querySelector('#windowPreviewContent').innerHTML += `
+          ${(elementType == 15)?`
+            <!-- Image -->
+            <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                <div class="btn-group" style="margin-y: auto">
+                  <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                  <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                  <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+              </div>
+              
+              <img src="${formBaseUrl}uploads/formbuilder/db/img/img_${el.fe_id}_${el.fe_form_id}.jpg" class="img-fluid w-100">
+            </div>
+          `:""}
+          
           ${(elementType == 20)?`
             <!-- Header -->
             <div id="form-element-${el.fe_id}" class="bg-primary text-white col-xs-12 col-sm-12 px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
@@ -456,12 +471,23 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 3)?`
                 <!-- Checkbox -->
                 <label for="feinput-${el.fe_id}"> ${(el.fe_is_required == 1)? `<span class="text-danger"><strong>*</strong></span>` :""} ${el.fe_label}</label>
-                ${choices.map((choice, i) => `
-                  <div class="form-check form-user-elements">
-                    <input type="checkbox" name="feinput-${el.fe_id}-chk-${i}" id="feinput-${el.fe_id}-chk" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
-                    <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
+                ${(el.fe_span == 1)?`
+                  ${choices.map((choice, i) => `
+                    <div class="form-check form-user-elements">
+                      <input type="checkbox" name="feinput-${el.fe_id}-chk-${i}" id="feinput-${el.fe_id}-chk" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
+                      <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
+                    </div>
+                    `).join("")}
+                `:`
+                  <div class="row container-fluid form-user-elements">
+                    ${choices.map((choice, i) => `
+                      <div class="col text-left form-check form-check-inline ">
+                        <input type="checkbox" name="feinput-${el.fe_id}-chk-${i}" id="feinput-${el.fe_id}-chk" class="form-check-input" placeholder="${el.fe_placeholder_text}" value="${choice.fc_choice}">
+                        <label for="feinput-${el.fe_id}-${i}">${choice.fc_choice}</label>
+                      </div>
+                    `).join("")}
                   </div>
-                `).join("")}
+                `}
               `:""}
               
               

@@ -84,6 +84,9 @@ $route['formbuilder/form/element/delete/(:any)'] = 'formbuilder/deleteFormElemen
 $route['formbuilder/form/element/choices/add'] = 'formbuilder/addElementChoices';
 $route['formbuilder/form/element/choices/delete/(:any)'] = 'formbuilder/deleteElementChoices/$1';
 $route['formbuilder/form/element/choices/(:any)'] = 'formbuilder/getElementChoices/$1';
+$route['formbuilder/form/element/images/add'] = 'formbuilder/addElementImages';
+$route['formbuilder/form/element/images/upload'] = 'formbuilder/uploadElementImages';
+$route['formbuilder/form/element/images/(:any)'] = 'formbuilder/getElementImages/$1';
 $route['form/submit/(:any)'] = 'formbuilder/submitForm/$1';
 
 //survey module

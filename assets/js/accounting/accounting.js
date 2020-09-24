@@ -1906,7 +1906,6 @@ $(document).ready(function () {
         var transaction_id = $(e.target).closest('.modal-body').find('.transaction_id').val();
         var expenses_id = $('.expenses-ID-'+transaction_id).val();
         var type =  $('.expenseType-'+transaction_id).val();
-        console.log(transaction_id);
         $.ajax({
             url:"/accounting/showExistingFile",
             method:"GET",

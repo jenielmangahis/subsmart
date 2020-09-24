@@ -146,7 +146,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <div class="form-group" id="imagePreview">
-                                        <img src="<?php echo userProfile($User->id) ?>" class="img-circle"
+                                        <img src="<?php echo userProfileImage($User->id) ?>" class="img-circle"
                                              alt="Uploaded Image Preview" width="100" height="100">
                                     </div>
                                 </div>

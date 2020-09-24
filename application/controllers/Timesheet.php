@@ -183,9 +183,7 @@ class Timesheet extends MY_Controller {
 		$this->page_data['users'] = $this->users_model->getUsers();
 		
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-		
-		//$this->load->view('users/timesheet', $this->page_data);
-		//$this->load->view('users/timesheet-admin', $this->page_data);
+
 		$this->load->view('users/timelog', $this->page_data);
 	}
 
@@ -581,7 +579,7 @@ class Timesheet extends MY_Controller {
         $users = $this->users_model->getUsers();
         $user_roles= $this->users_model->getRoles();
         $ts_logs = $this->timesheet_model->getTSByDate($week_check);
-        $attendance = $this->timesheet_model->getEmployeeAttendance();
+        $attendance = $this->timesheet_model->employeeAttendance();
         $week_duration = $this->timesheet_model->getWeekTotalDuration();
 
         $name = null;
@@ -760,10 +758,11 @@ class Timesheet extends MY_Controller {
             $total_hours = null;
 	        foreach ($users as $user):
                 $timesheet_settings = $this->timesheet_model->getTimeSheetByWeek($date_this_check);
+	            $total_week_hours = $this->timesheet_model->getTotalWeekDuration($date_this_check);
                 foreach ($timesheet_settings as $ts_settings_data){
                     if ($ts_settings_data->user_id == $user->id){
                         $timesheet_id = $ts_settings_data->id;
-                        $total_hours = $ts_settings_data->total_duration_w."h";
+                        $total_hours = $total_week_hours[0]->total_duration."h";
                         $timesheet_day = $this->timesheet_model->getTimeSheetDayById($timesheet_id);
                     foreach ($timesheet_day as $days){
                             if ($days->day == "Monday"){
@@ -868,7 +867,7 @@ class Timesheet extends MY_Controller {
         $user_roles = $this->users_model->getRoles();
         $ts_logs = $this->timesheet_model->getTSByDate($week_check);
         $week_duration = $this->timesheet_model->getWeekTotalDuration();
-        $attendance = $this->timesheet_model->getEmployeeAttendance();
+        $attendance = $this->timesheet_model->employeeAttendance();
         $display .= '<thead>';
         $display .= '<tr>';
         $display .= '<th></th>';
@@ -910,7 +909,6 @@ class Timesheet extends MY_Controller {
         $fri_id = null;
         $sat_id = null;
         $sun_id = null;
-        $missing = '#f71111bf';
         foreach ($users as $user):
             $user_id = $user->id;
             $name = $user->FName." ".$user->LName;
@@ -1133,34 +1131,54 @@ class Timesheet extends MY_Controller {
                             break;
                     }
                 }
-                if ($mon_status == null && $week_check[0] <= date('Y-m-d')){
-                    $mon_status = $missing;
-                }elseif ($tue_status == null && $week_check[1] <= date('Y-m-d')){
-                    $tue_status = $missing;
-                }elseif ($wed_status == null && $week_check[2] <= date('Y-m-d')){
-                    $wed_status = $missing;
-                }elseif ($thu_status == null && $week_check[3] <= date('Y-m-d')){
-                    $thu_status = $missing;
-                }elseif ($fri_status == null && $week_check[4] <= date('Y-m-d')){
-                    $fri_status = $missing;
-                }elseif ($sat_status == null && $week_check[5] <= date('Y-m-d')){
-                    $sat_status = $missing;
-                }elseif ($sun_status == null && $week_check[6] <= date('Y-m-d')){
-                    $sun_status = $missing;
+                if ($mon_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[0] < date('Y-m-d')){
+                        $mon_status = '#f71111bf';
+                    }
                 }
-            }
+                if ($tue_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[1] < date('Y-m-d')){
+                        $tue_status = '#f71111bf';
+                    }
+                }
+                if ($wed_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[2] < date('Y-m-d')){
+                        $wed_status = '#f71111bf';
+                    }
+                }
+                if ($thu_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[3] < date('Y-m-d')){
+                        $thu_status = '#f71111bf';
+                    }
+                }
+                if ($fri_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[4] < date('Y-m-d')){
+                        $fri_status = '#f71111bf';
+                    }
+                }
+                if ($sat_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[5] < date('Y-m-d')){
+                        $sat_status = '#f71111bf';
+                    }
+                }
+                if ($sun_logtime == null && $log->user_id == $user_id){
+                    if ($week_check[6] < date('Y-m-d')){
+                        $sun_status = '#f71111bf';
+                    }
+                }
 
+            }
             foreach ($week_duration as $week){
                 if ($week->user_id == $user_id){
                     $week_id = $week->id;
                 }
-
             }
             foreach ($attendance as $attn){
                 if ($attn->user_id == $user_id){
                     $attn_id = $attn->id;
                 }
             }
+
         $display .= '<tr>';
         $display .= '<td class="center"><input type="radio" name="selected" data-week="'.$week_id.'" data-attn="'.$attn_id.'" data-name="'.$name.'" value="'.$user_id.'"></td>';
         $display .= '<td><span class="list-emp-name">'.$name.'</span><span class="list-emp-role">'.$role.'</span></td>';

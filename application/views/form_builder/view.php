@@ -62,8 +62,14 @@
             }
           ?>
         <?= form_close();?>
+        <!-- <div class="card">
+            <div class="card-body">
+              <div class="d-flex w-100">
+                <canvas id="signaturePad" class="border"></canvas>
+              </div>
+            </div>
+        </div> -->
       </div>
-
     </div>
   </div>
 
@@ -71,12 +77,18 @@
   <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
   <script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
   <script>
     var selectedProducts = []
     var totalPrice = 0
     var tax = 0.25
-    
+    // var pad = document.querySelector('#signaturePad')
+    // var signaturePad = new SignaturePad(pad,{
+      
+    //   penColor: "rgb(0, 0, 0)"
+    // });
+
     window.onload = () => {
       loadFormElements(<?= $form->forms_id?>);
     }

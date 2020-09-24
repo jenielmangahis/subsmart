@@ -34,8 +34,8 @@
 
   /* form css */
   #windowPreviewTemplate .form-group{
-      margin: 0
-    }
+    margin: 0
+  }
 
     #windowPreviewTemplate .form-control{
     height: 1.5em
@@ -53,6 +53,11 @@
     padding: 0
   }
 
+  .element-buttons{
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+  }
   
   
 </style>
@@ -127,10 +132,11 @@
                         </li>
                         <div id="collapseCommonItemsMenu" class="collapse show " aria-labelledby="headingOne" data-parent="#accordion">
                           <div class="row" style="overflow-x: auto; height: 250px;">
+
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="1">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-dot-circle-o"></i> Radio Button</span>
                                   </div>
                                 </div>
@@ -139,7 +145,7 @@
                             <div class="col-xs-6 col-sm-6">
                               <div class="form-elements-draggable" data-element-id="2">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-caret-square-o-down"></i> Dropdown</span>
                                   </div>
                                 </div>
@@ -148,7 +154,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="3">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-check-square-o"></i> Checkbox</span>
                                   </div>
                                 </div>
@@ -157,7 +163,7 @@
                             <div class="col-xs-6 col-sm-6">
                               <div class="form-elements-draggable" data-element-id="4">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-envelope"></i> Email Address</span>
                                   </div>
                                 </div>
@@ -166,7 +172,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="5">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-text-width"></i> Long Answer</span>
                                   </div>
                                 </div>
@@ -175,7 +181,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="6">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-font"></i> Short Answer</span>
                                   </div>
                                 </div>
@@ -184,7 +190,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="7">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Calendar  </span>
                                   </div>
                                 </div>
@@ -193,7 +199,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="8">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-square-o"></i> Number</span>
                                   </div>
                                 </div>
@@ -202,7 +208,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="9">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-file"></i> File Upload</span>
                                   </div>
                                 </div>
@@ -211,7 +217,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="10">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-list"></i> Text List</span>
                                   </div>
                                 </div>
@@ -220,7 +226,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="11">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-star"></i> Rating</span>
                                   </div>
                                 </div>
@@ -229,7 +235,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="12">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-bar-chart"></i> Ranking</span>
                                   </div>
                                 </div>
@@ -247,7 +253,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="14">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-strikethrough"></i> Signature</span>
                                   </div>
                                 </div>
@@ -256,7 +262,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="15">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-image"></i> Image List</span>
                                   </div>
                                 </div>
@@ -265,7 +271,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="16">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calculator"></i> Calculation</span>
                                   </div>
                                 </div>
@@ -274,7 +280,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="17">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-credit-card"></i> Credit Card</span>
                                   </div>
                                 </div>
@@ -283,7 +289,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="18">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-address-book"></i> Contact Block</span>
                                   </div>
                                 </div>
@@ -292,7 +298,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="19">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-save"></i> Save and Return</span>
                                   </div>
                                 </div>
@@ -313,7 +319,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="20">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-dot-circle-o"></i> Heading</span>
                                   </div>
                                 </div>
@@ -322,7 +328,7 @@
                             <div class="col-xs-6 col-sm-6">
                               <div class="form-elements-draggable" data-element-id="21">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-caret-square-o-down"></i> Text</span>
                                   </div>
                                 </div>
@@ -331,7 +337,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="22">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-image"></i> Image</span>
                                   </div>
                                 </div>
@@ -340,7 +346,7 @@
                             <div class="col-xs-6 col-sm-6">
                               <div class="form-elements-draggable" data-element-id="23">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-link"></i> Link</span>
                                   </div>
                                 </div>
@@ -349,7 +355,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="24">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-text-width"></i> Custom Code</span>
                                   </div>
                                 </div>
@@ -358,7 +364,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="25">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-font"></i> Blank Space</span>
                                   </div>
                                 </div>
@@ -367,7 +373,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="26">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Page Break  </span>
                                   </div>
                                 </div>
@@ -385,7 +391,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="4">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Email Address</span>
                                   </div>
                                 </div>
@@ -394,7 +400,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="28">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Radio Button Email Routing </span>
                                   </div>
                                 </div>
@@ -403,7 +409,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="29">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Dropdown Email Routing</span>
                                   </div>
                                 </div>
@@ -412,7 +418,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="30">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Checkbox Email Routing</span>
                                   </div>
                                 </div>
@@ -430,7 +436,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="31">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-calendar"></i> Table List</span>
                                   </div>
                                 </div>
@@ -449,7 +455,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="45">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Radio Button Matrix</span>
                                   </div>
                                 </div>
@@ -458,7 +464,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="46">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Radio Button Multi-Scale</span>
                                   </div>
                                 </div>
@@ -467,7 +473,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="47">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Dropdown Matrix</span>
                                   </div>
                                 </div>
@@ -476,7 +482,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="48">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Dropdown Multi-Scale</span>
                                   </div>
                                 </div>
@@ -485,7 +491,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="49">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Checkbox Matrix</span>
                                   </div>
                                 </div>
@@ -494,7 +500,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="50">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Checkbox Multi-Scale</span>
                                   </div>
                                 </div>
@@ -503,7 +509,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="51">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Short Answer Matrix</span>
                                   </div>
                                 </div>
@@ -512,7 +518,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="52">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Long Answer Matrix</span>
                                   </div>
                                 </div>
@@ -521,7 +527,7 @@
                             <div class="col-xs-6 col-sm-6 m-0">
                               <div class="form-elements-draggable" data-element-id="52">
                                 <div class="card p-1">
-                                  <div class="card-content">
+                                  <div class="card-content element-buttons">
                                     <span><i class="fa fa-cog"></i> Star Matrix</span>
                                   </div>
                                 </div>
@@ -1008,7 +1014,7 @@
               
               <div class="form-group">
                 <label for="txtElementSettingsFieldLabel" class="form-label">Field Label:</label>
-                <input type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control">
+                <textarea type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control"></textarea>
               </div>
 
               <div class="row">
@@ -1039,6 +1045,25 @@
                       </select>
                     </div>
                   </div>
+
+                  <div id="modal-element-settings-images-section">
+                    <h4>Image</h4>
+                    <hr/>
+
+                    <div class="tab-content">
+
+                      <div class="tab-pane fade show active" id="choices-add-choice">
+                        <div class="form-group">
+                          <span id="elementSettingsImageText">Current Image: </span>
+                          <img src="<?= base_url()?>uploads/formbuilder/db/img/img_450_9.jpg" class="img-thumbnail">
+                          <input type="file" name="fileElementImage" id="fileElementImage" class="form-control-file" onchange="uploadImage()">
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                  
 
                   <div id="modal-element-settings-choices-section">
                     <h4>Choices</h4>
@@ -1257,6 +1282,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
 <script>
+  var reader = new FileReader()
   var formUserElements = document.getElementsByClassName('form-user-elements');
   let userFormData = {}
   let selectedElement = 0;
@@ -1267,6 +1293,8 @@
     showResultOptions: false
   }
   let elementChoices = []
+  
+  // task upload image
 
   document.querySelector('#btnEditorScrollDown').addEventListener('click', ()=>{
     console.log("test sscroll") ;
@@ -1387,6 +1415,15 @@
           document.querySelector('#modal-element-settings-choices-column-section').style.display = "block"
         }
 
+        
+        console.log(element);
+        if(element.fe_element_id == 15 ){
+          document.querySelector('#modal-element-settings-images-section').style.display = "block"
+        }else{
+          document.querySelector('#modal-element-settings-images-section').style.display = "none"
+        }
+
+
       }
     })
 
@@ -1417,7 +1454,9 @@
   }
   
   saveElementSettings = () => {
+    let imgFiles = document.querySelector('#fileElementImage').files
     
+
     let data = {
       "fe_label": document.querySelector('#txtElementSettingsFieldLabel').value,
       "fe_placeholder_text": document.querySelector('#txtElementSettingsPlaceholderText').value,
@@ -1428,7 +1467,40 @@
       "fe_enable_score": (document.querySelector('#chkElementSettingsScoringCheck').checked === true)? 1 : 0,
       // "fe_question_position": document.querySelector('#radElementSettingsQuestionPosition').value,
     }
+
     
+    
+    if(imgFiles.length != 0){
+      let imgData = {
+        "form_id": <?= $form->forms_id?>,
+        "element_id": selectedUserElement.fe_id,
+        "name": imgFiles[0].name
+      }
+
+
+      
+      $.ajax({
+        url: `${formBaseUrl}formbuilder/form/element/images/add`,
+        data: imgData,
+        dataType: 'json',
+        type: 'POST',
+        success: function(res){
+                
+          $.ajax({
+            url: `${formBaseUrl}formbuilder/form/element/images/upload`,
+            data: imgFiles[0],
+            dataType: 'json',
+            type: 'POST',
+            success: function(res){
+              console.log("test");
+              imgFiles = null;
+            }
+          })
+        }
+      })
+
+    }
+
     $.ajax({
       url: `${formBaseUrl}formbuilder/form/element/update/${selectedUserElement.fe_id}`,
       data: data,
