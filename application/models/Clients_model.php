@@ -48,5 +48,5 @@ class Clients_model extends MY_Model
     
 }
 
-/* End of file NsmartPlan_model.php */
-/* Location: ./application/models/NsmartPlan_model.php */
+/* End of file Clients_model.php */
+/* Location: ./application/models/Clients_model.php */

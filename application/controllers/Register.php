@@ -73,7 +73,8 @@ class Register extends MY_Controller {
                 	$uid = $this->session->userdata('regiserUserId');
 
                 	$this->Clients_model->update($cid, array(
-		        		'is_plan_active' => 1
+		        		'is_plan_active' => 1,
+                        'plan_date_registered' => date("Y-m-d H:i:s")
 		    		));
 
 		    		$this->users_model->update($uid,[
