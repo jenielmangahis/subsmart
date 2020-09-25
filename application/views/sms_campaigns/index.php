@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <p>Listing the campaigns that are currently running.</p>
               </div>
               <div class="pull-right">
-                <a href="<?php echo url('company/add') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Create SMS Blast</a><br />
+                <a href="<?php echo url('sms_campaigns/add_sms_blast') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Create SMS Blast</a><br />
                 <div style="margin-top: 30px;">                
                   <a href="#" style="color:#259e57 !important;margin-right: 10px;"><i class="fa fa-bar-chart"></i> Stats</a>
                   <a href="#" style="color:#259e57 !important;"><i class="fa fa-file-text-o fa-margin-right"></i> Orders & Payments</a>
