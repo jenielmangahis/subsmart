@@ -22,6 +22,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     font-weight: 600;
     font-size: 17px;
 }
+.radio-sec input:checked+label::before {
+    padding: 2px 0px 0px 6px;
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -70,16 +72,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label><b>Who are you sending to?</b></label>
                                     <div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="1" id="to_type_1" data-to="type" data-to="type" checked="checked">
+                                            <input type="radio" name="to_type" value="1" id="to_type_1" checked="checked">
                                             <label for="to_type_1">All my customers with phone</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="3" id="to_type_3" data-to="type" data-to="type" >
-                                            <label for="to_type_3">To a customer group</label>
-                                        </div>
-                                        <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="2" id="to_type_2" data-to="type" >
-                                            <label for="to_type_2">Only to certain customers</label>
+                                            <input type="radio" name="to_type" value="2" id="to_type_2">
+                                            <label for="to_type_2">Only to certain contacts</label>
                                         </div>
                                     </div>
                                 </div>
@@ -87,9 +85,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="validation-error" style="display: none;"></div>
 
-                            <div class="hide" data-to="type-cnt" data-id="1">
+                            <div class="sending-option-1">
                                 <div class="margin-bottom-ter">
-                                    <span class="customer-count" data-to="customer-count-all">0</span> customers have a valid phone (excluding unsubscribed).
+                                    <span class="customer-count" data-to="customer-count-all">0</span> contacts have a valid phone (excluding unsubscribed).
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <label><b>Customer Type</b></label>
@@ -107,6 +105,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="customer_type_service_1_2">Commercial customers</label>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Exclude Customer Groups</label>
+                                    <div class="help help-block help-sm">Optional, select the groups you would like to exclude from campaign.</div>
+                                    <div data-to="customer-group-list-exclude"></div>
+                                </div>
+                            </div>
+
+                            <div class="sending-option-2" style="display: none;">
+                                <div class="margin-bottom-ter">
+                                    <span class="contact-selected-count" style="font-weight: bold;">0</span> contact selected.
+                                </div>
+                                <div class="margin-bottom-sec">
+                                    <table id="dataTable1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:30px;"></th>
+                                                <th>Name</th>
+                                                <th>Phone</th>
+                                                <th>Subscribed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach($contacts as $c){ ?>
+                                                <tr>
+                                                    <td><input type="checkbox" class="form-control chk-contact"></td>
+                                                    <td><?= $c->name; ?></td>
+                                                    <td><?= $c->mobile; ?></td>
+                                                    <td><span class="fa fa-check text-ter"></span></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                                 <div class="form-group">
                                     <label>Exclude Customer Groups</label>
@@ -137,6 +168,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
+    $("#to_type_2").change(function(){
+        if( $(this).attr('checked', 'checked') ){
+            $(".sending-option-1").hide();
+            $(".sending-option-2").show();
+        }else{
+            $(".sending-option-1").show();
+            $(".sending-option-2").hide();
+        }
+    });
+
+    $("#to_type_1").change(function(){
+        if( $(this).attr('checked', 'checked') ){
+            $(".sending-option-1").show();
+            $(".sending-option-2").hide();
+        }else{
+            $(".sending-option-1").hide();
+            $(".sending-option-2").show();
+        }
+    });
+
+    $(".chk-contact").change(function(){
+        var contact_selected = $(".chk-contact:checked").length;
+        $(".contact-selected-count").html(contact_selected);
+    });
+
     $("#create_sms_blast").submit(function(e){
         e.preventDefault();
         var url = base_url + '/sms_campaigns/save_draft_campaign';
