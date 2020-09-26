@@ -19,7 +19,7 @@ class MarketingEmailAutomation_model extends MY_Model
         }
 
         $this->db->where('user_id', $id);
-        $this->db->order_by('sort', 'ASC');
+        $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();

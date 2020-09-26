@@ -29,10 +29,15 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'sms_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('sms_automation'); ?>" title="SMS Automation"><span class="fa fa-cube"></span>SMS Automation</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'voicemail_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('voicemail_campaigns'); ?>" title="Voicemail Blast"><span class="fa fa-cube"></span>Voicemail Blast</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'email_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('email_campaigns'); ?>" title="Email Blast"><span class="fa fa-cube"></span>Email Blast</a></li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'email_automation') ? "active" : "";  ?>"><a href="email_automation" title="Email Automation"><span class="fa fa-cube"></span>Email Automation</a></li>
+        <?php 
+            $email_automation_active = "";
+            if($this->uri->uri_string() == 'email_automation' || $this->uri->uri_string() == 'email_automation/templates') {
+                $email_automation_active = "active";
+            }
+        ?>
+        <li class="submenus <?= $email_automation_active; ?>"><a href="<?php echo base_url('email_automation'); ?>" title="Email Automation"><span class="fa fa-cube"></span>Email Automation</a></li>
 
         <li class="submenus <?= ($this->uri->uri_string() == 'campaign_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign_automation'); ?>" title="Campaign Automation"><span class="fa fa-cube"></span>Campaign Automation</a></li>
-
         <li class="submenus <?= ($this->uri->uri_string() == 'offers') ? "active" : "";  ?>"><a href="<?php echo base_url('offers'); ?>" title="Offers"><span class="fa fa-cube"></span>Offers</a></li>
         <li class="submenus  <?= ($this->uri->uri_string() == 'campaign_blast') ? "active" : "";  ?>"><a href="campaign_blast" title="Credentials"><span class="fa fa-cube"></span>Campaign Blast</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'campaign') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign'); ?>" title="Campaign 360"><span class="fa fa-cube"></span>Campaign 360</a></li>
