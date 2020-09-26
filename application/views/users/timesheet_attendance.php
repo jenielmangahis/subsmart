@@ -783,7 +783,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 success:function (data) {
                     $('#employee-out-now').text(data);
-                    var percentage = (data / total_employe) * 100;
+                    var percentage = (data / total_employee) * 100;
                     $('#progressOutNow').attr('aria-valuenow',percentage.toFixed(2));
                     $('#progressOutNow').css('width',percentage.toFixed(2)+'%');
                     $('#progressOutNow').text(percentage.toFixed(2)+'%');
@@ -796,7 +796,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 dataType:"json",
                 success:function (data) {
                     $('#employee-not-loggedin').text(data);
-                    var percentage = (100 - (((total_employe - data) / total_employe) * 100));
+                    var percentage = (100 - (((total_employee - data) / total_employee) * 100));
                     $('#progressNotLoggedIn').attr('aria-valuenow',percentage.toFixed(2));
                     $('#progressNotLoggedIn').css('width',percentage.toFixed(2)+'%');
                     $('#progressNotLoggedIn').text(percentage.toFixed(2)+'%');

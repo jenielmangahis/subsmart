@@ -23,7 +23,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div class="col-md-12 form-line">
             <div class="row">
                 <div class="col-md-4">
-                    <label for="">Assign</label>
+                    <label for="">Status</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Assigned'){ echo 'selected'; } } ?> value="Assigned">Assigned</option>
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Not Assign'){ echo 'selected'; } } ?> value="Not Assign">Not Assign</option>
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Converted'){ echo 'selected'; } } ?> value="Converted">Converted</option>
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Not Converted'){ echo 'selected'; } } ?> value="Not Converted">Not Converted</option>
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
+                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Completed '){ echo 'selected'; } } ?> value="Completed">Completed</option>
+                    </select>
                 </div>
             </div>
         </div>

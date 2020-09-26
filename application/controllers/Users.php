@@ -26,12 +26,14 @@ class Users extends MY_Controller {
 
 		$this->page_data['page']->menu = 'users';
 
-		add_css(array( 
+		add_css(array(
+            "assets/plugins/dropzone/dist/dropzone.css",
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
         ));
 
         // JS to add only Job module
         add_footer_js(array(
+            "assets/plugins/dropzone/dist/dropzone.js",
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
         ));
@@ -391,8 +393,132 @@ class Users extends MY_Controller {
 		$this->load->view('users/add', $this->page_data);
 
 	}
+	public function getRoles(){
+	    $role_title = $this->input->get('search');
+        $roles = $this->users_model->getRolesBySearch($role_title);
+        $data = array();
+        foreach ($roles as $role){
+            $data[] = array(
+                'id' => $role->id,
+                'text' => $role->title,
+                'selected' => true
+            );
+        }
+        echo json_encode($data);
 
+    }
+    public function checkEmailExist(){
+	    $email = $this->input->get('email');
+	    $check = $this->db->get_where('users',array('email' => $email))->num_rows();
 
+	    echo json_encode($check);
+    }
+    public function checkUsername(){
+	    $username = $this->input->get('username');
+	    $check = $this->db->get_where('users',array('username' => $username))->num_rows();
+	    echo json_encode($check);
+    }
+    public function addNewEmployee(){
+        $fname = $this->input->post('values[firstname]');
+        $lname = $this->input->post('values[lastname]');
+        $email = $this->input->post('values[email]');
+        $username = $this->input->post('values[username]');
+        $password = $this->input->post('values[password]');
+        $address = $this->input->post('values[address]');
+        $role = $this->input->post('values[role]');
+        $status = $this->input->post('values[status]');
+        $web_access = $this->input->post('values[web_access]');
+        $app_access = $this->input->post('values[app_access]');
+        $profile_img = $this->input->post('values[profile_photo]');
+        $cid=logged('company_id');
+        $add = array(
+            'FName' => $fname,
+            'LName' => $lname,
+            'username' => $username,
+            'email' => $email,
+            'password' => hash("sha256",$password),
+            'password_plain' => $password,
+            'role' => $role,
+            'status' => $status,
+            'company_id' => $cid,
+            'profile_img' => $profile_img
+        );
+        $query = $this->users_model->addNewEmployee($add);
+        if ($query == true){
+            echo json_encode(1);
+        }else{
+            echo json_encode(0);
+        }
+    }
+    public function getEmployeeData(){
+	    $user_id = $this->input->get('user_id');
+	    $get_data = $this->db->get_where('users',array('id'=>$user_id));
+	    $get_role = $this->db->get_where('roles',array('id' => $get_data->row()->role));
+
+	    $info = new stdClass();
+	    $info->fname = $get_data->row()->FName;
+	    $info->lname = $get_data->row()->LName;
+	    $info->email = $get_data->row()->email;
+	    $info->username = $get_data->row()->username;
+	    $info->role_id = $get_data->row()->role;
+	    $info->role = $get_role->row()->title;
+	    $info->status = $get_data->row()->status;
+	    $info->profile_image = $get_data->row()->profile_img;
+
+	    echo json_encode($info);
+
+    }
+    private $user_path = './uploads/users/user-profile/';
+    public function profilePhoto(){
+        if (! empty($_FILES)){
+            $config = array(
+                'upload_path' => './uploads/users/user-profile/',
+                'allowed_types' => '*',
+                'overwrite' => TRUE,
+                'max_size' => '20000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);
+            if ($this->upload->do_upload("file")){
+                $uploadData = $this->upload->data();
+                $data = array(
+                    'profile_image'=> $uploadData['file_name'],
+                    'date_created' => time()
+                );
+                $query = $this->users_model->addProfilePhoto($data);
+                $return = new stdClass();
+                $return->photo = $uploadData['file_name'];
+                $return->id = $query;
+                echo json_encode($return);
+            }
+        }else{
+            echo json_encode('error');
+        }
+    }
+
+    public function removeProfilePhoto(){
+        $file = $this->input->post('name');
+        $index = $this->input->post('index');
+        if ($file && file_exists($this->user_path. $file[$index])){
+            unlink( $this->user_path. $file[$index]);
+            $this->db->where('profile_image',$file[$index]);
+            $this->db->delete('user_profile_photo');
+            echo json_encode(1);
+        }
+    }
+    public function removeTemporaryImg(){
+        $file = $this->input->post('image');
+        $image_id = $this->input->post('image_id');
+        if ($file && file_exists($this->user_path. $file)){
+            unlink( $this->user_path. $file);
+            $this->db->where('id',$image_id);
+            $this->db->delete('user_profile_photo');
+            echo json_encode(1);
+        }
+    }
 
 	public function save(){
 		ifPermissions('users_add');

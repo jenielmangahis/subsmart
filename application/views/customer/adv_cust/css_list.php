@@ -74,6 +74,7 @@
         .module {
             width: 590px;
             max-width: 100%;
+            font-size: 10px !important;
         }
     }
     @media only screen and (max-width: 500px){
@@ -83,10 +84,10 @@
         }
     }
 
-    @media only screen and (max-width: 767px){
+    @media (min-width: 600px) and (max-width: 767px){
         .module {
-            width: 490px;
-            max-width: 90%;
+            width: 460px ;
+            max-width: 100%;
         }
     }
     @media only screen and (max-width: 375px){

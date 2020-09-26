@@ -145,6 +145,7 @@ class Customer extends MY_Controller
        // $input_profile['img_path'] = $input['img_path'];
         $input_profile['pay_history'] = $input['pay_history'];
         $input_profile['notes'] = $input['notes'];
+        $input_profile['status'] = $input['status'];
        // $input_profile['assign'] = $input['assign'];
 
         // billing data
