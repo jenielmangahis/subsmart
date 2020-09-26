@@ -185,15 +185,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         </td>
                                                                                         <td><?php echo ($customer) ? $customer->city : ''; ?></td>
                                                                                         <td><?php echo ($customer) ? $customer->state : ''; ?></td>
-                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->lead_source; ?></td>
                                                                                         <td><?php echo $customer->email; ?></td>
-                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->entered_by; ?></td>
                                                                                         <td><?php echo ($customer) ? $customer->FName. ' ' .$customer->LName : ''; ?></td>
-                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->technician; ?></td>
                                                                                         <td><?php echo $customer->system_type; ?></td>
                                                                                         <td><?php echo $customer->mmr; ?></td>
                                                                                         <td><?php echo $customer->phone_h; ?></td>
-                                                                                        <td></td>
+                                                                                        <td><?php echo $customer->status; ?></td>
                                                                                         <td>
                                                                                             <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
                                                                                                 <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
@@ -289,19 +289,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     </a>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
+                                                                                    <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
                                                                                         <img src="https://app.creditrepaircloud.com/application/images/email-icon.png" border="0" title="Internal Note">
                                                                                     </a>
-                                                                                    <a href="#" style="text-decoration:none; display:inline-block;" class="js-qwynlraxz">
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/comment_edit.png" border="0" title="Internal Note">
+                                                                                    <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none; display:inline-block;" >
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/comment_edit.png" border="0" title="Edit Customer">
                                                                                     </a>
-                                                                                    <a href="#"  style="text-decoration:none; display:inline-block;">
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="Team member assigned">
+                                                                                    <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
+                                                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
                                                                                     </a>
-                                                                                    <a href="#" style="text-decoration:none;display:inline-block;" class="js-qwynlraxz">
+                                                                                    <!--<a href="#" style="text-decoration:none;display:inline-block;" >
                                                                                         <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
-                                                                                    </a>
-                                                                                    <a href="#"  style="text-decoration:none;display:inline-block;" title="Delete client" class="js-qwynlraxz">
+                                                                                    </a>-->
+                                                                                    <a href="javascript:void(0);" class="delete_cust" id="<?php echo $customer->prof_id; ?>"  style="text-decoration:none;display:inline-block;" title="Delete Customer" >
                                                                                         <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
                                                                                     </a>
                                                                                 </td>
@@ -332,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                                 <br/><br/><br/>
-                                                <div class="col-sm-6 col-md-12 col-xl-12">
+                                                <div class="col-md-12">
                                                     <div class="banking-tab-container">
                                                         <div class="rb-01">
                                                             <ul class="nav nav-tabs border-0">
@@ -723,7 +723,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 <tr>
                                                                                     <td><?= $sa->sa_name; ?></td>
                                                                                     <td>
-                                                                                        <a href=""class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                                                        <a href="" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
                                                                                     </td>
                                                                                 </tr>
                                                                             <?php } ?>

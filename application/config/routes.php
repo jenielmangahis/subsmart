@@ -158,6 +158,9 @@ $route['sms_campaigns'] = 'Sms_Campaigns';
 $route['voicemail_campaigns'] = 'Voicemail_Campaigns';
 $route['email_campaigns'] = 'Email_Campaigns';
 $route['email_automation'] = 'Email_Automation';
+
+$route['campaign_automation'] = 'Campaign_Automation';
+
 $route['terms-and-condition'] = 'pages/terms_and_condition';
 $route['privacy-policy'] = 'pages/privacy_policy';
 $route['anti-spam-policy'] = 'pages/anti_spam_policy';
@@ -169,6 +172,8 @@ $route['before-after/add_photo'] = 'Before_after/addPhoto';
 
 $route['offers'] = 'Offers';
 $route['campaign_blast'] = 'Campaign_Blast';
+$route['my_inquires'] = 'My_Inquires';
+$route['campaign'] = 'Campaign';
 
 $route['register/subscribe'] = 'register/subscribe';
 
@@ -305,3 +310,9 @@ $route['video_estimate'] = 'Inquiries/video_estimate';
 
 //paypal
 $route['subscription/index'] = 'Subscription/index';
+
+//sms blast
+$route['sms_campaigns'] = 'Sms_Campaigns/index';
+$route['sms_campaigns/add_sms_blast'] = 'Sms_Campaigns/add_sms_blast';
+$route['sms_campaigns/save_draft_campaign'] = 'Sms_Campaigns/create_draft_campaign';
+$route['sms_campaigns/add_campaign_send_to'] = 'Sms_Campaigns/add_campaign_send_to';

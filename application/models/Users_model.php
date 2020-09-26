@@ -362,6 +362,26 @@ class Users_model extends MY_Model {
 	    $qry = $this->db->get('roles');
 	    return $qry->result();
     }
+    public function getRolesBySearch($search){
+        $this->db->like('title',$search);
+        $qry = $this->db->get('roles')->result();
+        return $qry;
+    }
+
+    public function addNewEmployee($add){
+	    $query = $this->db->get_where('users',array('email'=>$add['email'],'username'=>$add['username']))->num_rows();
+	    if ($query == 0){
+	        $this->db->insert('users',$add);
+	        return true;
+        }else{
+	        return false;
+        }
+    }
+
+    public function addProfilePhoto($photo){
+	    $this->db->insert('user_profile_photo',$photo);
+	    return $this->db->insert_id();
+    }
 }
 
 

@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     height: 150px !important;
 }
-.hide
+.hide,.Checkhide
 {
     display: none;
 }
@@ -219,7 +219,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
-                        <h6>Amount:<?=number_format($rows[0]->service_charge,2);?></h6>
+                        <h6 id="amount">Amount:<?=number_format($rows[0]->service_charge,2);?></h6>
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:20px">
@@ -267,7 +267,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </tr>
                         </thead>
                         <tbody>
-                            <tr onclick="trClickEdit()">
+                            <tr onclick="trClickEditMain()">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>1</td>
                                 <td>
@@ -283,18 +283,22 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     </select>
                                     <div class="edit_expense_account"><?=$rows[0]->expense_account?></div>
                                 </td>
-                                <td></td>
+                                <td>
+                                    <input type="hidden" id="edit_descp" name="edit_descp" value="" placeholder="What did you paid for?">
+                                    <div class="edit_descp"></div>
+                                </td>
                                 <td>
                                      <input type="hidden" id="edit_service_charge" name="edit_service_charge" value="<?=number_format($rows[0]->service_charge,2)?>">
                                     <div class="edit_service_charge"><?=number_format($rows[0]->service_charge,2)?></div>
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
-                            <tr>
+                            <tr onclick="trClickEdit(2)">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>2</td>
                                 <td>
-                                    <select name='edit_expense_account_' id='edit_expense_account_' class='' style="display: none;">
+                                    <select name='edit_expense_account_2' id='edit_expense_account_2' class='' style="display: none;">
+                                        <option value=""></option>
                                         <?php
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
@@ -304,12 +308,15 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                         }
                                         ?>
                                     </select>
-                                    <div class="edit_expense_account_"></div>
+                                    <div class="edit_expense_account_2"></div>
                                 </td>
-                                <td></td>
                                 <td>
-                                    <input type="hidden" id="edit_service_charge_" name="edit_service_charge_" value="">
-                                    <div class="edit_service_charge_"></div>
+                                    <input type="hidden" id="edit_descp_2" name="edit_descp_2" value="" placeholder="">
+                                    <div class="edit_descp_2"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="edit_service_charge_2" name="edit_service_charge_2" value="">
+                                    <div class="edit_service_charge_2"></div>
                                 </td>
                                 <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -318,6 +325,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <td>0</td>
                                 <td>
                                     <select name='edit_expense_account_' id='edit_expense_account_' class='' style="display: none;">
+                                        <option value=""></option>
                                         <?php
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
@@ -329,7 +337,10 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     </select>
                                     <div class="edit_expense_account_"></div>
                                 </td>
-                                <td></td>
+                                <td>
+                                    <input type="hidden" id="edit_descp_" name="edit_descp_" value="" placeholder="">
+                                    <div class="edit_descp_"></div>
+                                </td>
                                 <td>
                                     <input type="hidden" id="edit_service_charge_" name="edit_service_charge_" value="">
                                     <div class="edit_service_charge_"></div>
@@ -344,8 +355,8 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         <a href="javascript:void(0);" class="btn-add-bx clear">Clear All Lines</a>
                     </div>
                     <div class="btn-group hideme" style="display: none;">
-                        <a href="javascript:void(0);" class="btn-add-bx">Save<i class="fa fa-check" onclick="rightclick()"></i></a>
-                        <a href="javascript:void(0);" class="btn-add-bx">Cancel<i class="fa fa-close" onclick="crossClickEdit()"></i>
+                        <a href="javascript:void(0);" class="btn-add-bx" onclick="rightclick()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickEdit()">Cancel<i class="fa fa-close"></i>
                     </div>
                 </div>
             </section>
@@ -358,7 +369,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-2">
-                    <h6>Total : $<?=number_format($rows[0]->service_charge,2)?></h6>
+                    <h6 id="total">Total : $<?=number_format($rows[0]->service_charge,2)?></h6>
                 </div>
             </div>
             <div class="row" style="margin-bottom:20px">
@@ -553,7 +564,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
-                        <h6>Amount:$0.00</h6>
+                        <h6 id="checkamount">Amount:$0.00</h6>
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:20px">
@@ -601,11 +612,12 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </tr>
                         </thead>
                         <tbody>
-                            <tr onclick="trClickCheck()">
+                            <tr onclick="trClickCheckMain()">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>1</td>
                                 <td>
                                     <select name='check_expense_account' id='check_expense_account' class='' style="display: none;">
+                                        <option value=""></option>
                                         <?php
                                         foreach ($this->account_sub_account_model->get() as $rw)
                                         {
@@ -617,39 +629,81 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     </select>
                                     <div class="check_expense_account"></div>
                                 </td>
-                                <td></td>
+                                <td>
+                                    <input type="hidden" id="check_descp" name="check_descp" value="" placeholder="What did you paid for?">
+                                    <div class="check_descp"></div>
+                                </td>
                                 <td>
                                      <input type="hidden" id="check_service_charge" name="check_service_charge" value="">
                                     <div class="check_service_charge"></div>
                                 </td>
-                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                                <td><a href="javascript:void(0);" class="remove_check"><i class="fa fa-trash"></i></a></td>
                             </tr>
-                            <tr>
+                            <tr onclick="trClickCheck(2)">
                                 <td><i class="fa fa-th"></i></td>
                                 <td>2</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                                <td>
+                                    <select name='check_expense_account_2' id='check_expense_account_2' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="check_expense_account_2"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="check_descp_2" name="check_descp_2" value="" placeholder="What did you paid for?">
+                                    <div class="check_descp_2"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="check_service_charge_2" name="check_service_charge_2" value="">
+                                    <div class="check_service_charge_2"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_check"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <tr class="pr participantCheckRow Checkhide">
                                 <td><i class="fa fa-th"></i></td>
-                                <td>3</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><a href="javascript:void(0);" class="remove"><i class="fa fa-trash"></i></a></td>
+                                <td>0</td>
+                                <td>
+                                    <select name='check_expense_account_' id='check_expense_account_' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="check_expense_account_"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="check_descp_" name="check_descp_" value="" placeholder="What did you paid for?">
+                                    <div class="check_descp_"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="check_service_charge_" name="check_service_charge_" value="">
+                                    <div class="check_service_charge_"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_check"><i class="fa fa-trash"></i></a></td>
                             </tr>
+
                         </tbody>
                     </table>
 
                     <div class="btn-group">
-                        <a href="javascript:void(0);" class="btn-add-bx add">Add Lines</a>
-                        <a href="javascript:void(0);" class="btn-add-bx clear">Clear All Lines</a>
+                        <a href="javascript:void(0);" class="btn-add-bx add_check">Add Lines</a>
+                        <a href="javascript:void(0);" class="btn-add-bx clear_check">Clear All Lines</a>
                     </div>
-                    <div class="btn-group hideme" style="display: none;">
-                        <a href="javascript:void(0);" class="btn-add-bx">Save<i class="fa fa-check" onclick="rightclick()"></i></a>
-                        <a href="javascript:void(0);" class="btn-add-bx">Cancel<i class="fa fa-close" onclick="crossClickEdit()"></i>
+                    <div class="btn-group hidemecheck" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="rightclickCheck()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickCheck()">Cancel<i class="fa fa-close"></i>
                     </div>
                 </div>
             </section>
@@ -662,7 +716,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                 </div>
                 <div class="col-md-6"></div>
                 <div class="col-md-2">
-                    <h6>Total : $0.00</h6>
+                    <h6 id="checktotal">Total : $0.00</h6>
                 </div>
             </div>
             <div class="row" style="margin-bottom:20px">
@@ -1693,12 +1747,25 @@ function closeFullNav() {
     function addRow() {
       row.clone(true, true).removeClass('hide table-line').appendTo("#participantTable");
       var index =$('#participantTable tr').length -1;
+      var final_index = index-1;
+      $('#participantTable tr:eq('+index+')').attr("onclick","trClickEdit("+final_index+")");
       $('#participantTable tr:eq('+index+') td:eq(1)').text(index-1);
+      $('#participantTable tr:eq('+index+') td:eq(2)').find('select').attr("id","edit_expense_account_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(2)').find('select').attr("name","edit_expense_account_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(2)').find('div').attr("class","edit_expense_account_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(3)').find('input').attr("id","edit_descp_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(3)').find('input').attr("name","edit_descp_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(3)').find('div').attr("class","edit_descp_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(4)').find('input').attr("id","edit_service_charge_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(4)').find('input').attr("name","edit_service_charge_"+final_index);
+      $('#participantTable tr:eq('+index+') td:eq(4)').find('div').attr("class","edit_service_charge_"+final_index);
     }
 
     function removeRow(button) {
         console.log(button.closest("tr").text());
       button.closest("tr").remove();
+      var tot = $('#total').text().substr(9)-button.closest("tr").find('td:eq(4)').text().trim();
+      $('#total').text('Total : $'+tot.toFixed(2));
     }
     /* Doc ready */
     $(".add").on('click', function () {
@@ -1717,10 +1784,10 @@ function closeFullNav() {
     });
     $(".remove").on('click', function () {
       getP();
-      if($("#participantTable tr").length === 4) {
+      if($("#participantTable tr").length === 3) {
         //alert("Can't remove row.");
         $(".remove").hide();
-      } else if($("#participantTable tr").length - 1 ==4) {
+      } else if($("#participantTable tr").length - 1 ==3) {
         $(".remove").hide();
         removeRow($(this));
         var i = Number(p)-1;
@@ -1781,7 +1848,7 @@ function showData() {
 }
 </script>
 <script type="text/javascript">
-    function trClickEdit()
+    function trClickEditMain()
     {
         if($('#edit_expense_account').css("display")== 'none')
         {
@@ -1793,18 +1860,77 @@ function showData() {
         {
             $('.edit_service_charge').css('display','none');
             $('#edit_service_charge').removeAttr('type','hidden');
+            $('#edit_service_charge').attr('type','number');
+            $('.hideme').show();
+        }
+        if($('#edit_descp').attr("type")== 'hidden')
+        {
+            $('.edit_descp').css('display','none');
+            $('#edit_descp').removeAttr('type','hidden');
+            $('.hideme').show();
+        }
+    }
+</script>
+<script type="text/javascript">
+    function trClickEdit(index)
+    {
+        if($('#edit_expense_account_'+index).css("display")== 'none')
+        {
+            $('.edit_expense_account_'+index).css('display','none');
+            $('#edit_expense_account_'+index).show();
+            $('.hideme').show();
+        }
+        if($('#edit_service_charge_'+index).attr("type")== 'hidden')
+        {
+            $('.edit_service_charge_'+index).css('display','none');
+            $('#edit_service_charge_'+index).removeAttr('type','hidden');
+            $('#edit_service_charge_'+index).attr('type','number');
+            $('.hideme').show();
+        }
+        if($('#edit_descp_'+index).attr("type")== 'hidden')
+        {
+            $('.edit_descp_'+index).css('display','none');
+            $('#edit_descp_'+index).removeAttr('type','hidden');
             $('.hideme').show();
         }
     }
     function rightclick()
     {
+        length =$('#participantTable tr').length -2;
         $('.edit_expense_account').show();
         $('.edit_expense_account').text($('#edit_expense_account').val());
         $('#edit_expense_account').css('display','none');
         $('.edit_service_charge').show();
         $('.edit_service_charge').text($('#edit_service_charge').val());
         $('#edit_service_charge').attr('type','hidden');
+        $('.edit_descp').show();
+        $('.edit_descp').text($('#edit_descp').val());
+        $('#edit_descp').attr('type','hidden');
         $('.hideme').hide();
+
+        for(var i = 2 ; i <= length ; i++)
+        {
+            $('.edit_expense_account_'+i).show();
+            $('.edit_expense_account_'+i).text($('#edit_expense_account_'+i).val());
+            $('#edit_expense_account_'+i).css('display','none');
+            $('.edit_service_charge_'+i).show();
+            $('.edit_service_charge_'+i).text($('#edit_service_charge_'+i).val());
+            $('#edit_service_charge_'+i).attr('type','hidden');
+            $('.edit_descp_'+i).show();
+            $('.edit_descp_'+i).text($('#edit_descp_'+i).val());
+            $('#edit_descp_'+i).attr('type','hidden');
+        }
+
+        var total = 0;
+        total += parseInt($('.edit_service_charge').text());
+        for(var i = 2 ; i <= length ; i++)
+        {
+            if($('.edit_service_charge_'+i).text() != '')
+            {total += parseInt($('.edit_service_charge_'+i).text());}
+        }
+        $('#total').text('Total : $'+total.toFixed(2));
+        $('#amount').text('Amount : $'+total.toFixed(2));
+        
     }
     function crossClickEdit()
     {
@@ -1812,7 +1938,206 @@ function showData() {
         $('#edit_expense_account').css('display','none');
         $('.edit_service_charge').show();
         $('#edit_service_charge').attr('type','hidden');
+        $('.edit_descp').show();
+        $('#edit_descp').attr('type','hidden');
         $('.hideme').hide();
+        for(var i = 2 ; i <= length ; i++)
+        {
+            $('.edit_expense_account_'+i).show();
+            $('#edit_expense_account_'+i).css('display','none');
+            $('.edit_service_charge_'+i).show();
+            $('#edit_service_charge_'+i).attr('type','hidden');
+            $('.edit_descp_'+i).show();
+            $('#edit_descp_'+i).attr('type','hidden');
+        }
+    }
+</script>
+<script type="text/javascript">
+    /* Variables */
+    var p = 1;
+    var row_check = $(".participantCheckRow");
+
+    function addRowCheck() {
+      row_check.clone(true, true).removeClass('Checkhide table-line').appendTo("#participantCheckTable");
+      var index_check =$('#participantCheckTable tr').length -1;
+      var final_index_check = index_check-1;
+      $('#participantCheckTable tr:eq('+index_check+')').attr("onclick","trClickCheck("+final_index_check+")");
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(1)').text(index_check-1);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(2)').find('select').attr("id","check_expense_account_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(2)').find('select').attr("name","check_expense_account_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(2)').find('div').attr("class","check_expense_account_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(3)').find('input').attr("id","check_descp_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(3)').find('input').attr("name","check_descp_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(3)').find('div').attr("class","check_descp_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(4)').find('input').attr("id","check_service_charge_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(4)').find('input').attr("name","check_service_charge_"+final_index_check);
+      $('#participantCheckTable tr:eq('+index_check+') td:eq(4)').find('div').attr("class","check_service_charge_"+final_index_check);
+    }
+
+    function removeRowCheck(buttoncheck) {
+        console.log(buttoncheck.closest("tr").text());
+      buttoncheck.closest("tr").remove();
+      var totcheck = $('#checktotal').text().substr(9)-buttoncheck.closest("tr").find('td:eq(4)').text().trim();
+      alert(buttoncheck.closest("tr").find('td:eq(4)').text().trim());
+      $('#checktotal').text('Total : $'+totcheck.toFixed(2));
+    }
+    /* Doc ready */
+    $(".add_check").on('click', function () {
+      getP();
+      if($("#participantCheckTable tr").length < 17) {
+        addRowCheck();
+        var i = Number(p)+1;
+        $("#participants").val(i);
+      }
+      $(this).closest("tr").appendTo("#participantCheckTable");
+      if ($("#participantCheckTable tr").length === 3) {
+        $(".remove_check").hide();
+      } else {
+        $(".remove_check").show();
+      }
+    });
+    $(".remove_check").on('click', function () {
+      getP();
+      if($("#participantCheckTable tr").length === 3) {
+        //alert("Can't remove row.");
+        $(".remove_check").hide();
+      } else if($("#participantCheckTable tr").length - 1 ==3) {
+        $(".remove_check").hide();
+        removeRowCheck($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      } else {
+        removeRowCheck($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      }
+    });
+    $("#participants").change(function () {
+      var i = 0;
+      p = $("#participants").val();
+      var rowCount = $("#participantCheckTable tr").length - 2;
+      if(p > rowCount) {
+        for(i=rowCount; i<p; i+=1){
+          addRowCheck();
+        }
+        $("#participantCheckTable #addButtonRow").appendTo("#participantCheckTable");
+      } else if(p < rowCount) {
+      }
+    });
+    $(".clear_check").on('click', function () {
+      if($("#participantCheckTable tr").length - 1 >3) {
+        x = 1;
+        $('#participantCheckTable > tbody  > tr').each(function() {
+            if(x >3)
+            {
+                $(this).remove();
+            }
+            x = x+1;
+        });
+      }
+    });
+</script>
+<script type="text/javascript">
+    function trClickCheckMain()
+    {
+        if($('#check_expense_account').css("display")== 'none')
+        {
+            $('.check_expense_account').css('display','none');
+            $('#check_expense_account').show();
+            $('.hidemecheck').show();
+        }
+        if($('#check_service_charge').attr("type")== 'hidden')
+        {
+            $('.check_service_charge').css('display','none');
+            $('#check_service_charge').removeAttr('type','hidden');
+            $('#check_service_charge').attr('type','number');
+            $('.hidemecheck').show();
+        }
+        if($('#check_descp').attr("type")== 'hidden')
+        {
+            $('.check_descp').css('display','none');
+            $('#check_descp').removeAttr('type','hidden');
+            $('.hidemecheck').show();
+        }
+    }
+
+    function trClickCheck(index_check)
+    {
+        if($('#check_expense_account_'+index_check).css("display")== 'none')
+        {
+            $('.check_expense_account_'+index_check).css('display','none');
+            $('#check_expense_account_'+index_check).show();
+            $('.hidemecheck').show();
+        }
+        if($('#check_service_charge_'+index_check).attr("type")== 'hidden')
+        {
+            $('.check_service_charge_'+index_check).css('display','none');
+            $('#check_service_charge_'+index_check).removeAttr('type','hidden');
+            $('#check_service_charge_'+index_check).attr('type','number');
+            $('.hidemecheck').show();
+        }
+        if($('#check_descp_'+index_check).attr("type")== 'hidden')
+        {
+            $('.check_descp_'+index_check).css('display','none');
+            $('#check_descp_'+index_check).removeAttr('type','hidden');
+            $('.hidemecheck').show();
+        }
+    }
+    function rightclickCheck()
+    {
+        length_check =$('#participantCheckTable tr').length -2;
+        $('.check_expense_account').show();
+        $('.check_expense_account').text($('#check_expense_account').val());
+        $('#check_expense_account').css('display','none');
+        $('.check_service_charge').show();
+        $('.check_service_charge').text($('#check_service_charge').val());
+        $('#check_service_charge').attr('type','hidden');
+        $('.check_descp').show();
+        $('.check_descp').text($('#check_descp').val());
+        $('#check_descp').attr('type','hidden');
+        $('.hidemecheck').hide();
+
+        for(var i = 2 ; i <= length_check ; i++)
+        {
+            $('.check_expense_account_'+i).show();
+            $('.check_expense_account_'+i).text($('#check_expense_account_'+i).val());
+            $('#check_expense_account_'+i).css('display','none');
+            $('.check_service_charge_'+i).show();
+            $('.check_service_charge_'+i).text($('#check_service_charge_'+i).val());
+            $('#check_service_charge_'+i).attr('type','hidden');
+            $('.check_descp_'+i).show();
+            $('.check_descp_'+i).text($('#check_descp_'+i).val());
+            $('#check_descp_'+i).attr('type','hidden');
+        }
+
+        var total_check = 0;
+        total_check += parseInt($('.check_service_charge').text());
+        for(var i = 2 ; i <= length_check ; i++)
+        {
+            if($('.check_service_charge_'+i).text() != '')
+            {total_check += parseInt($('.check_service_charge_'+i).text());}
+        }
+        $('#checktotal').text('Total : $'+total_check.toFixed(2));
+        $('#checkamount').text('Amount : $'+total_check.toFixed(2));
+    }
+    function crossClickCheck()
+    {
+        $('.check_expense_account').show();
+        $('#check_expense_account').css('display','none');
+        $('.check_service_charge').show();
+        $('#check_service_charge').attr('type','hidden');
+        $('.check_descp').show();
+        $('#check_descp').attr('type','hidden');
+        $('.hidemecheck').hide();
+        for(var i = 2 ; i <= length_check ; i++)
+        {
+            $('.check_expense_account_'+i).show();
+            $('#check_expense_account_'+i).css('display','none');
+            $('.check_service_charge_'+i).show();
+            $('#check_service_charge_'+i).attr('type','hidden');
+            $('.check_descp_'+i).show();
+            $('#check_descp_'+i).attr('type','hidden');
+        }
     }
 </script>
 <script type="text/javascript">

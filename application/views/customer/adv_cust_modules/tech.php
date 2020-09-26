@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
                         <tr>
-                            <td width="50%" align="left" valign="top">
+                            <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >Departure Time :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
@@ -61,7 +61,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </td>
                         </tr>
                         <tr>
-                            <td width="50%" align="left" valign="top">
+                            <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >Date Given :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
@@ -69,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </td>
                         </tr>
                         <tr>
-                            <td width="50%" align="left" valign="top">
+                            <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >Link :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">

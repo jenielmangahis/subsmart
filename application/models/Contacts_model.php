@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Clients_model extends MY_Model
+class Contacts_model extends MY_Model
 {
-    public $table = 'clients';
+    public $table = 'contacts';
    
     public function getAll($filters=array())
     {
@@ -14,7 +14,7 @@ class Clients_model extends MY_Model
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('first_name', $filters['search'], 'both');
+                $this->db->like('campaign_name', $filters['search'], 'both');
             }
         }
 
@@ -24,7 +24,18 @@ class Clients_model extends MY_Model
         return $query->result();
     }
 
-    
+    public function getAllByCompanyId($company_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getById($id)
     {
@@ -39,14 +50,11 @@ class Clients_model extends MY_Model
         return $query;
     }
 
-    
-    public function deleteClient($id){
+    public function delete($id){
         $user_id = logged('id');
         $this->db->delete($this->table, array('id' => $id));
     } 
-
-    
 }
 
-/* End of file Clients_model.php */
-/* Location: ./application/models/Clients_model.php */
+/* End of file Contacts_model.php */
+/* Location: ./application/models/Contacts_model.php */
