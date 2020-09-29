@@ -1278,9 +1278,10 @@
 
 
 <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
+<script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-<script src="<?= base_url()?>/assets/js/formbuilder.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script>
   var reader = new FileReader()
   var formUserElements = document.getElementsByClassName('form-user-elements');

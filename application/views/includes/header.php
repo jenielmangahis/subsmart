@@ -91,12 +91,27 @@
                                 </a>
                             </li>
 							<li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i> <span class="badge badge-pill badge-danger noti-icon-badge">3</span></a>
+                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i> <?php if (getNotificationCount() != 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo getNotificationCount(); ?></span><?php }?></a>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->
                                     <h6 class="dropdown-item-text">Notifications (258)</h6>
                                     <div class="slimscroll notification-item-list">
-										<a href="javascript:void(0);" class="dropdown-item notify-item active"><div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div><p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
+                                        <?php
+                                            $notification = getTimesheetNotification();
+                                            if ($notification != null):
+                                                foreach ($notification as $notify):
+                                        ?>
+                                        <a href="<?php echo site_url();?>timesheet/attendance" class="dropdown-item notify-item active">
+                                            <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
+                                            <p class="notify-details"><?php echo $notify['title']?><span class="text-muted"><?php echo $notify['content'];?></span></p>
+                                        </a>
+                                        <?php
+                                            endforeach;
+                                            endif;
+                                        ?>
+										<a href="javascript:void(0);" class="dropdown-item notify-item active">
+                                            <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
+                                            <p class="notify-details">Your order is placed<span class="text-muted">Dummytext of the printing and typesetting industry.</span></p>
                                         </a>
 										<a href="javascript:void(0);" class="dropdown-item notify-item">
                                             <div class="notify-icon bg-warning"><i class="mdi mdi-message-text-outline"></i></div>
@@ -173,7 +188,7 @@
                                     </div>
                                     <div class="clock-section">
                                         <span class="clock-details-title">Shift Duration:</span>
-                                        <span class="clock-details-text" id="shiftDuration"><?php echo ($this->session->userdata('shift_duration'))?$this->session->userdata('shift_duration'):'-'; ?></span>
+                                        <span class="clock-details-text" id="shiftDuration"><?php echo ($this->session->userdata('shift_duration')!=null)?$this->session->userdata('shift_duration'):'-'; ?></span>
                                     </div>
                                 </div>
                             </li>

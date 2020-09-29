@@ -988,6 +988,28 @@ if (!function_exists('searchFilesOrFolders')) {
     }
 
 }
+if (!function_exists('getTimesheetNotification')){
+
+    function getTimesheetNotification(){
+        $CI = &get_instance();
+        $uid = logged('id');
+
+        $sql = 'select * from user_notification where user_id ='.$uid;
+
+        return $CI->db->query($sql)->result_array();
+    }
+}
+if (!function_exists('getNotificationCount')){
+
+    function getNotificationCount(){
+        $CI = &get_instance();
+        $uid = logged('id');
+
+        $sql = 'select * from user_notification where user_id ='.$uid.' and status = 1';
+
+        return $CI->db->query($sql)->num_rows();
+    }
+}
 
 if (!function_exists('getNewTasks')){
 

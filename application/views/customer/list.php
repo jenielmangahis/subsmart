@@ -113,11 +113,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <li class="nav-item">
                                                     <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";} ?>" data-toggle="tab" href="#basic">Customer Manager</a>
                                                 </li>
-                                                <?php //if (isset($profile_info)) :  ?>
                                                 <li class="nav-item">
                                                     <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab2'){echo "active";} ?>" data-toggle="tab" href="#advance">Customer Module Layout</a>
                                                 </li>
-                                                <?php //endif; ?>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab3'){echo "active";} ?>" data-toggle="tab" href="#settings">Settings</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -196,64 +197,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                         <td><?php echo $customer->status; ?></td>
                                                                                         <td>
                                                                                             <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                                                                                <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
+                                                                                                <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
                                                                                             </a>
-                                                                                            <a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
+                                                                                            <!--<a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
                                                                                                 <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
+                                                                                            </a>-->
+                                                                                            <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Email Customer">
                                                                                             </a>
-                                                                                           <!-- <div class="dropdown dropdown-btn open">
-                                                                                                <button class="btn btn-default dropdown-toggle" type="button"
-                                                                                                        id="dropdown-edit" data-toggle="dropdown"
-                                                                                                        aria-expanded="true">
-                                                                                                    <span class="btn-label">Manage</span><span
-                                                                                                            class="caret-holder"><span
-                                                                                                                class="caret"></span></span>
-                                                                                                </button>
-                                                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu"aria-labelledby="dropdown-edit">
-                                                                                                    <li role="presentation">
-                                                                                                        <a role="menuitem" tabindex="-1" href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>">
-                                                                                                            <span class="fa fa-user icon"></span> View
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-pencil-square-o icon"></span>
-                                                                                                            Edit</a></li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-pencil-square-o icon"></span>
-                                                                                                            Create Service Ticket</a></li>
-                                                                                                    <li role="separator" class="divider"></li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-calendar icon"></span> Schedule
-                                                                                                            Appointment</a></li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-money icon"></span> Create
-                                                                                                            Invoice</a></li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-file-text-o icon"></span>
-                                                                                                            Create Estimate</a></li>
-                                                                                                    <li role="separator" class="divider"></li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               data-inactive-modal="open"
-                                                                                                                               data-customer-id="400604"
-                                                                                                                               data-customer-info="Agnes Knox, "
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-user-times icon"></span> Mark
-                                                                                                            as inactive</a></li>
-                                                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                                                               data-delete-modal="open"
-                                                                                                                               data-customer-id=""
-                                                                                                                               onclick="return confirm('Do you really want to delete this item ?')"
-                                                                                                                               data-customer-info="Agnes Knox, "
-                                                                                                                               href="#"><span
-                                                                                                                    class="fa fa-trash-o icon"></span> Delete
-                                                                                                            customer</a></li>
-                                                                                                </ul>
-                                                                                            </div> -->
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_call.png" width="16px" height="16px" border="0" title="Call Customer">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_invoice.png" width="16px" height="16px" border="0" title="Invoice Customer">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_work.png" width="16px" height="16px" border="0" title="Create Work Order">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_ticket.png" width="16px" height="16px" border="0" title="Create Service Ticket">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_sched.png" width="16px" height="16px" border="0" title="Schedule">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Message Customer">
+                                                                                            </a>
+                                                                                            <!--<a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
+                                                                                                <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
+                                                                                            </a>-->
                                                                                         </td>
                                                                                     </tr>
                                                                                 <?php endforeach; ?>
@@ -261,54 +233,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                         </table>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-12">
-                                                    <div class="card card-mobile">
-                                                        <div class="row padding-mobile-cs">
-                                                            <div class="col-sm-12">
-                                                                <h6 class="page-title">Quick Action</h6>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <table class="table table-hover" id="customer_list_quick">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>Name</th>
-                                                                        <th>Actions</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php foreach ($profiles as $customer) : ?>
-                                                                            <tr>
-                                                                                <td >
-                                                                                    <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>" style="color:#32243d;">
-                                                                                        <?= $customer->first_name.' '.$customer->last_name; ?>
-                                                                                    </a>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/email-icon.png" border="0" title="Internal Note">
-                                                                                    </a>
-                                                                                    <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none; display:inline-block;" >
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/comment_edit.png" border="0" title="Edit Customer">
-                                                                                    </a>
-                                                                                    <a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
-                                                                                    </a>
-                                                                                    <!--<a href="#" style="text-decoration:none;display:inline-block;" >
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/pencil.png" width="16px" height="16px" border="0" title="Edit Client">
-                                                                                    </a>-->
-                                                                                    <a href="javascript:void(0);" class="delete_cust" id="<?php echo $customer->prof_id; ?>"  style="text-decoration:none;display:inline-block;" title="Delete Customer" >
-                                                                                        <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
-                                                                                    </a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        <?php endforeach; ?>
-                                                                    </tbody>
-                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -322,7 +246,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
 
                                         <div class="tab-pane <?php if($cust_tab=='tab2'){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
-
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
                                                     <div class="dropdown">
@@ -333,50 +256,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <br/><br/><br/>
                                                 <div class="col-md-12">
-                                                    <div class="banking-tab-container">
-                                                        <div class="rb-01">
-                                                            <ul class="nav nav-tabs border-0">
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt1' || $minitab==''){echo "active";} ?>" data-toggle="tab" href="#dashboard">Client Dashboard</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2'){echo "active";} ?>" data-toggle="tab" href="#widget1">Widget 1</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Widget 2</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4'){echo "active";} ?>" data-toggle="tab" href="#widget3">Widget 3</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt5'){echo "active";} ?>" data-toggle="tab" href="#profle">Profile</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt6'){echo "active";} ?>" data-toggle="tab" href="#educate">Educate</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt7'){echo "active";} ?>" data-toggle="tab" href="#messages">Messages</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt8'){echo "active";} ?>" data-toggle="tab" href="#notes">Internal Notes</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt9'){echo "active";} ?>" data-toggle="tab" href="#invoices">Invoices</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt10'){echo "active";} ?>" data-toggle="tab" href="#activity">Activity</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#details">Detail Sheet</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt12'){echo "active";} ?>" data-toggle="tab" href="#settings">Settings</a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="tab-content mt-4" >
-                                                        <div class="tab-pane <?php if($minitab=='mt1' || $minitab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="dashboard">
 
                                                             <div class="col-sm-12">
                                                                 <div class="col-sm-12 text-right-sm" style="align:right;">
@@ -409,366 +288,410 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     </div>
                                                                 </div>-->
                                                             </div>
-                                                        </div>
-                                                        <div class="tab-pane <?php if($minitab=='mt5'){echo "active";}else{echo "fade";} ?> standard-accordion" id="profle">
-                                                            <div class="card">
-                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                                    <div class="col-lg-12">
-                                                                        <h6>Profile</h6>
-                                                                        <div class="row">
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">First Name</label> <span class="required"> *</span>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->first_name; } ?>" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Middle Name</label> <span class="required"> *</span>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Last Name</label> <span class="required"> *</span>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Email</label>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Suffix</label>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="text" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Last 4 of SSN</label>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="text" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Phone (H)</label>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">Phone (M)</label>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Phone (W)</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                                    <div class="col-md-12 form-line">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-1">
-                                                                                                <label for="">DOB</label>
-                                                                                            </div>
-                                                                                            <div class="col-md-5">
-                                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Fax</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Mailing Address</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">City</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Zip Code</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">State</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Country</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <label for="notify_by_email"><span>Previous mailing address (only if at current mailing address for less than 2 years)</span></label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Status</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Assigned to</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Start Date</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Referred By</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <label for="notify_by_email"><span>Portal Access</span></label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Client's User ID (Email)</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
-                                                                                        <label for="">Language</label>
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12 form-line">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-1">
+                                                </div>
+                                            </div>
 
-                                                                                    </div>
-                                                                                    <div class="col-md-5">
-                                                                                        <button type="submit" class="btn btn-flat btn-primary">Submit</button>
-                                                                                    </div>
-                                                                                </div>
+                                        </div>
+
+                                        <div class="tab-pane standard-accordion" id="settings">
+                                            <div class="banking-tab-container">
+                                                <div class="rb-01">
+                                                    <ul class="nav nav-tabs border-0">
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2'){echo "active";} ?>" data-toggle="tab" href="#widget1">Widget 1</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3'){echo "active";} ?>" data-toggle="tab" href="#widget2">Widget 2</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4'){echo "active";} ?>" data-toggle="tab" href="#widget3">Widget 3</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt5'){echo "active";} ?>" data-toggle="tab" href="#profle">Profile</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt6'){echo "active";} ?>" data-toggle="tab" href="#educate">Educate</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt7'){echo "active";} ?>" data-toggle="tab" href="#messages">Messages</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt8'){echo "active";} ?>" data-toggle="tab" href="#notes">Internal Notes</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt9'){echo "active";} ?>" data-toggle="tab" href="#invoices">Invoices</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt10'){echo "active";} ?>" data-toggle="tab" href="#activity">Activity</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#details">Detail Sheet</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#others">Others</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-content mt-4" >
+                                                <div class="tab-pane <?php if($minitab=='mt5'){echo "active";}else{echo "fade";} ?> standard-accordion" id="profle">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Profile</h6>
+                                                                <div class="row">
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">First Name</label> <span class="required"> *</span>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->first_name; } ?>" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Middle Name</label> <span class="required"> *</span>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Last Name</label> <span class="required"> *</span>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Email</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Suffix</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Last 4 of SSN</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Phone (H)</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Phone (M)</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Phone (W)</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">DOB</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Fax</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Mailing Address</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">City</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Zip Code</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">State</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Country</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <label for="notify_by_email"><span>Previous mailing address (only if at current mailing address for less than 2 years)</span></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Status</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Assigned to</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Start Date</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Referred By</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="number" class="form-control" value="" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <input type="checkbox" name="notify_by" value="Email" id="notify_by_email">
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <label for="notify_by_email"><span>Portal Access</span></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Client's User ID (Email)</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+                                                                                <label for="">Language</label>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <input type="text" class="form-control" name="contact_name" id="contact_name" required/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-1">
+
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <button type="submit" class="btn btn-flat btn-primary">Submit</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade standard-accordion" id="others">
 
-                                                        <div class="tab-pane fade standard-accordion" id="settings">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="alert alert-success" id="alert_box" style="display:none;">
-                                                                        <strong>Success!</strong> Data has been added!
-                                                                    </div>
-
-                                                                </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="alert alert-success" id="alert_box" style="display:none;">
+                                                                <strong>Success!</strong> Data has been added!
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                                    <div class="col-lg-12 table-responsive">
-                                                                        <h6>Lead Types</h6>
-                                                                        <button data-toggle="modal" data-target="#modal_lead_type" class="btn btn-sm btn-default pull-right"  style="margin-bottom: 10px;">
-                                                                            <i class="fa fa-plus"></i>
-                                                                        </button>
-                                                                        <table id="leadtype" class="table table-bordered table-striped">
-                                                                            <thead>
-                                                                            <tr>
-                                                                                <th>Lead Type Name</th>
-                                                                                <th>Action</th>
-                                                                            </tr>
-                                                                            </thead>
-                                                                            <tbody id="leadtype_table_data">
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
 
-
-                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12 table-responsive">
+                                                                <h6>Lead Types</h6>
+                                                                <button data-toggle="modal" data-target="#modal_lead_type" class="btn btn-sm btn-default pull-right"  style="margin-bottom: 10px;">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                <table id="leadtype" class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Lead Type Name</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="leadtype_table_data">
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                                    <div class="col-lg-12 table-responsive">
-                                                                        <h6>Sales Area</h6>
-                                                                        <button data-toggle="modal" data-target="#modal_sales_area" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
-                                                                            <i class="fa fa-plus"></i>
-                                                                        </button>
-                                                                        <table id="salesarea" class="table table-bordered table-striped">
-                                                                            <thead>
-                                                                            <tr>
-                                                                                <th>Id</th>
-                                                                                <th>Action</th>
-                                                                            </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                            <?php foreach ($sales_area as $sa) { ?>
-                                                                                <tr>
-                                                                                    <td><?= $sa->sa_name; ?></td>
-                                                                                    <td>
-                                                                                        <a href="" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            <?php } ?>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                                <!--<div id="draggable" class="ui-widget-content">
-                                                                    <p>Drag me around</p>
-                                                                </div>
-                                                                <ul id="sortable">
-                                                                    <li class="ui-state-default">1</li>
-                                                                    <li class="ui-state-default">2</li>
-                                                                    <li class="ui-state-default">3</li>
-                                                                    <li class="ui-state-default">4</li>
-                                                                    <li class="ui-state-default">5</li>
-                                                                    <li class="ui-state-default">6</li>
-                                                                    <li class="ui-state-default">7</li>
-                                                                    <li class="ui-state-default">8</li>
-                                                                    <li class="ui-state-default">9</li>
-                                                                    <li class="ui-state-default">10</li>
-                                                                    <li class="ui-state-default">11</li>
-                                                                    <li class="ui-state-default">12</li>
-                                                                </ul>-->
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                                    <div class="col-lg-12 table-responsive">
-                                                                        <h6>Lead Source</h6>
-                                                                        <button id="add_ls" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
-                                                                            <i class="fa fa-plus"></i>
-                                                                        </button>
-                                                                        <table id="leadsource" class="table table-bordered table-striped">
-                                                                            <thead>
-                                                                            <tr>
-                                                                                <th>Lead Source</th>
-                                                                                <th>Action</th>
-                                                                            </tr>
-                                                                            </thead>
-                                                                            <tbody id="tb_leadsource">
 
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12 table-responsive">
+                                                                <h6>Sales Area</h6>
+                                                                <button data-toggle="modal" data-target="#modal_sales_area" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                <table id="salesarea" class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Id</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    <?php foreach ($sales_area as $sa) { ?>
+                                                                        <tr>
+                                                                            <td><?= $sa->sa_name; ?></td>
+                                                                            <td>
+                                                                                <a href="" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php } ?>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <!--<div id="draggable" class="ui-widget-content">
+                                                            <p>Drag me around</p>
+                                                        </div>
+                                                        <ul id="sortable">
+                                                            <li class="ui-state-default">1</li>
+                                                            <li class="ui-state-default">2</li>
+                                                            <li class="ui-state-default">3</li>
+                                                            <li class="ui-state-default">4</li>
+                                                            <li class="ui-state-default">5</li>
+                                                            <li class="ui-state-default">6</li>
+                                                            <li class="ui-state-default">7</li>
+                                                            <li class="ui-state-default">8</li>
+                                                            <li class="ui-state-default">9</li>
+                                                            <li class="ui-state-default">10</li>
+                                                            <li class="ui-state-default">11</li>
+                                                            <li class="ui-state-default">12</li>
+                                                        </ul>-->
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12 table-responsive">
+                                                                <h6>Lead Source</h6>
+                                                                <button id="add_ls" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                <table id="leadsource" class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Lead Source</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="tb_leadsource">
+
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>

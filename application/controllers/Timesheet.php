@@ -75,6 +75,10 @@ class Timesheet extends MY_Controller {
 	{	
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
+
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
@@ -104,6 +108,10 @@ class Timesheet extends MY_Controller {
 	{	
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
+
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
@@ -126,6 +134,10 @@ class Timesheet extends MY_Controller {
 	{	
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
+
         $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
@@ -150,6 +162,10 @@ class Timesheet extends MY_Controller {
 	{	
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
+
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		$this->page_data['users'] = $this->users_model->getUsers();
 		$this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
@@ -177,6 +193,9 @@ class Timesheet extends MY_Controller {
 		$this->load->model('timesheet_model');
 		$this->load->model('users_model');
 		//ifPermissions('users_list');
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
 
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
@@ -237,12 +256,15 @@ class Timesheet extends MY_Controller {
 	
 	public function index()
 
-	{	
+	{
+        $user_id = logged('id');
 		$this->load->model('users_model');
 		//ifPermissions('users_list');
 		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
 		
 		$this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
 
 		// echo '<pre>';print_r($this->page_data);die;
 
@@ -701,13 +723,13 @@ class Timesheet extends MY_Controller {
 	    $week = $this->input->get('week');
 	    $week_convert = date('Y-m-d',strtotime($week));
         $date_this_week = array(
-            "Monday" => date("M d,y",strtotime('monday this week',strtotime($week_convert))),
-            "Tuesday" => date("M d,y",strtotime('tuesday this week',strtotime($week_convert))),
-            "Wednesday" => date("M d,y",strtotime('wednesday this week',strtotime($week_convert))),
-            "Thursday" => date("M d,y",strtotime('thursday this week',strtotime($week_convert))),
-            "Friday" => date("M d,y",strtotime('friday this week',strtotime($week_convert))),
-            "Saturday" => date("M d,y",strtotime('saturday this week',strtotime($week_convert))),
-            "Sunday" => date("M d,y",strtotime('sunday this week',strtotime($week_convert))),
+            "Monday" => date("M d",strtotime('monday this week',strtotime($week_convert))),
+            "Tuesday" => date("M d",strtotime('tuesday this week',strtotime($week_convert))),
+            "Wednesday" => date("M d",strtotime('wednesday this week',strtotime($week_convert))),
+            "Thursday" => date("M d",strtotime('thursday this week',strtotime($week_convert))),
+            "Friday" => date("M d",strtotime('friday this week',strtotime($week_convert))),
+            "Saturday" => date("M d",strtotime('saturday this week',strtotime($week_convert))),
+            "Sunday" => date("M d",strtotime('sunday this week',strtotime($week_convert))),
         );
         $date_this_check = array(
             0 => date("Y-m-d",strtotime('monday this week',strtotime($week_convert))),
@@ -1333,6 +1355,10 @@ class Timesheet extends MY_Controller {
 	public function attendance(){
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
+        $user_id = logged('id');
+        $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
+        $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
+
         $this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
         $this->page_data['users'] = $this->users_model->getUsers();
 //        $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
@@ -2122,7 +2148,7 @@ class Timesheet extends MY_Controller {
                 'clock-out-time' => 'Pending...',
                 'attn-id' => $attn_id,
                 'lunch-in' => true,
-                'lunch-active' => false
+                'lunch-active' => 1
             );
             $this->session->set_userdata($session);
             $data = new stdClass();
@@ -2163,7 +2189,7 @@ class Timesheet extends MY_Controller {
             if($this->db->affected_rows() != 1){
                 echo json_encode(0);
             }else{
-                $unset = array('active','lunch-active');
+                $unset = array('active');
                 $this->session->unset_userdata($unset);
                 $session = array(
                     'clock-btn' => 'preventLogIn',
@@ -2200,7 +2226,7 @@ class Timesheet extends MY_Controller {
         $lunch_sess = array(
             'active' => 'clock-break',
             'lunch_in_time' => date('h:i A',$lunch_in),
-            'lunch-active' => true,
+            'lunch-active' => 2,
             'end_break' => $end_break
         );
         $this->session->set_userdata($lunch_sess);
@@ -2225,14 +2251,24 @@ class Timesheet extends MY_Controller {
             'status' => 1
         );
         $this->db->insert('timesheet_logs',$lunch);
-
+        //Employee Notification
+        if (explode(':',$remaining_time)[1] <= 0){
+            $data_notify = array(
+                'user_id' => $user_id,
+                'title' => 'Lunch break had ended.',
+                'content' => 'Your lunch break ended at '.date('h:i A',$lunch_out),
+                'date_created' => date('Y-m-d h:i:s'),
+                'status' => 1
+            );
+            $this->db->insert('user_notification',$data_notify);
+            $remaining_time = '00:00';
+        }
         $lunch_sess = array(
                 'active' => 'clock-active',
                 'remaining_time' => $remaining_time,
-                'lunch-active' => false
         );
         $this->session->set_userdata($lunch_sess);
-        $lunch_unset = array('lunch_in_time','end_break');
+        $lunch_unset = array('lunch_in_time','end_break','lunch-active');
         $this->session->unset_userdata($lunch_unset);
         $data = new stdClass();
         $data->lunch_out_time = date('h:i A',$lunch_out);

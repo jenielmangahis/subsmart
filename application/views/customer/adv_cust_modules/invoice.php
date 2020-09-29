@@ -72,7 +72,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <div class="invoicetext" style="margin-left:0px; margin-top:6px;">
                 <!-- updated on 10-11-2016 start (fixed invoice permission issue) -->
-                <a href="https://app.creditrepaircloud.com/invoices/add/NTk=" class="js-qwynlraxz">
+                <a style="color:#58bc4f;" href="https://app.creditrepaircloud.com/invoices/add/NTk=" class="js-qwynlraxz">
                     Create Invoice</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="https://app.creditrepaircloud.com/invoices/client_invoices_history/NTk=/item" class="js-qwynlraxz">
                     All Invoices</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
