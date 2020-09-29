@@ -1766,6 +1766,7 @@ function closeFullNav() {
       button.closest("tr").remove();
       var tot = $('#total').text().substr(9)-button.closest("tr").find('td:eq(4)').text().trim();
       $('#total').text('Total : $'+tot.toFixed(2));
+      $('#amount').text('Amount : $'+tot.toFixed(2));
     }
     /* Doc ready */
     $(".add").on('click', function () {
@@ -1817,6 +1818,9 @@ function closeFullNav() {
             if(x >3)
             {
                 $(this).remove();
+                var tot_clear = $('#total').text().substr(9)-$(this).closest("tr").find('td:eq(4)').text().trim();
+                $('#total').text('Total : $'+tot_clear.toFixed(2));
+                $('#amount').text('Amount : $'+tot_clear.toFixed(2));
             }
             x = x+1;
         });
@@ -1978,8 +1982,8 @@ function showData() {
         console.log(buttoncheck.closest("tr").text());
       buttoncheck.closest("tr").remove();
       var totcheck = $('#checktotal').text().substr(9)-buttoncheck.closest("tr").find('td:eq(4)').text().trim();
-      alert(buttoncheck.closest("tr").find('td:eq(4)').text().trim());
       $('#checktotal').text('Total : $'+totcheck.toFixed(2));
+      $('#checkamount').text('Amount : $'+totcheck.toFixed(2));
     }
     /* Doc ready */
     $(".add_check").on('click', function () {
@@ -2031,6 +2035,9 @@ function showData() {
             if(x >3)
             {
                 $(this).remove();
+                var totcheck_clear = $('#checktotal').text().substr(9)-$(this).closest("tr").find('td:eq(4)').text().trim();
+                $('#checktotal').text('Total : $'+totcheck_clear.toFixed(2));
+                $('#checkamount').text('Amount : $'+totcheck_clear.toFixed(2));
             }
             x = x+1;
         });

@@ -518,7 +518,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 $btn_action = 'employeeCheckIn';
                                                             }
                                                         }elseif ($log->action == 'Break in' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                                if ($attn->id == $log->attendance_id && $attn->status == 1){
                                                                     $break_id = 'employeeBreakOut';
                                                                     $status = 'fa-mug-hot';
                                                                     $break_in = date('h:i A',$log->time);
@@ -527,9 +526,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     $indicator_in_break = 'display:block';
                                                                     $indicator_out_break = 'display:none';
                                                                     $tooltip_status = 'On break';
-                                                                }
                                                         }elseif ($log->action == 'Break out' && $user->id == $log->user_id && $attn->id == $log->attendance_id){
-                                                                if ($attn->id == $log->attendance_id && $attn->status == 1){
                                                                     $status = 'fa-check';
                                                                     $break_out = date('h:i A',$log->time);
                                                                     $break = 'disabled="disabled"';
@@ -539,7 +536,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     $indicator_in_break = 'display:none';
                                                                     $indicator_out_break = 'display:block';
                                                                     $tooltip_status = 'Back to work';
-                                                                }
                                                         }
 
                                                         foreach ($week_duration as $week){
@@ -600,6 +596,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <?php endif; ?>
                             <!-- end row -->
                             <?php if ($this->session->userdata('logged')['role'] > 5): ?>
+                            <?php
+                                $lunch_active = null;
+                                if ($this->session->userdata('lunch-active') == 2){
+                                    $lunch_active = 'lunchOut';
+                                }elseif($this->session->userdata('lunch-active')== 1){
+                                    $lunch_active = 'lunchIn';
+                                }
+                            ?>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="tile-container user-logs-container">
@@ -609,7 +613,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="inner-content">
                                                         <div class="card-title user-card-title">
                                                             <span class="user-logs-title">Today's logs</span>
-                                                            <span class="user-logs-title right"><a href="javascript:void(0)" class="employeeLunch" id="<?php echo ($this->session->userdata('lunch-active')==true)?'lunchOut':null; ?>" <?php echo (empty($this->session->userdata('lunch-in')))?"disabled=disabled":null; ?>><i class="fa <?php echo ($this->session->userdata('lunch-active') == true)?'fa-mug-hot':'fa-coffee' ?> fa-lg"></i></a></span>
+                                                            <span class="user-logs-title right"><a href="javascript:void(0)" class="employeeLunch" id="<?php echo $lunch_active; ?>" <?php echo ($lunch_active == null)?"disabled=disabled":null; ?>><i class="fa <?php echo ($this->session->userdata('lunch-active') == 2)?'fa-mug-hot':'fa-coffee' ?> fa-lg"></i></a></span>
                                                         </div>
                                                         <?php
                                                             $clock_in = '-';
@@ -645,8 +649,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     }
                                                                 }
                                                             }
-//                                                        $session = array('active', 'clock-in-time','clock-out-time','attn-id','clock-btn','lunch-in','lunch-btn','lunch-active','end_break','shift_duration','remaining_time');
-//                                                        $this->session->unset_userdata($session);
+                                          /*              $session = array('active', 'clock-in-time','clock-out-time','attn-id','clock-btn','lunch-in','lunch-btn','lunch-active','end_break','shift_duration','remaining_time');
+                                                        $this->session->unset_userdata($session);*/
 
                                                         //Employee's task
                                                         foreach ($schedule as $sched){
@@ -813,12 +817,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var approved_by = $(this).attr('data-approved');
             Swal.fire({
                 title: 'Checking in?',
-                html: "Are you sure you want to Check-in this person?<br> <strong>"+emp_name+"</strong>",
+                html: "Are you sure you want to Clock-in this person?<br> <strong>"+emp_name+"</strong>",
                 imageUrl:"/assets/img/timesheet/default-profile.png",
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Check in this!'
+                confirmButtonText: 'Yes, Clock-in!'
             }).then((result) => {
                 if (result.value) {
                 $.ajax({
@@ -850,7 +854,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Success',
-                                    html: '<strong>'+emp_name+"</strong> has been Checked-in",
+                                    html: '<strong>'+emp_name+"</strong> has been Clock-in",
                                     icon: 'success'
                                 });
                         }else if(data == false){
@@ -879,13 +883,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             var entry = 'Manual';
             var approved_by = $(this).attr('data-approved');
             Swal.fire({
-                title: 'Checking out?',
-                html: "Are you sure you want to Check-Out this person?<br> <strong>"+emp_name+"</strong>",
+                title: 'Clock out?',
+                html: "Are you sure you want to Clock-out this person?<br> <strong>"+emp_name+"</strong>",
                 imageUrl:"/assets/img/timesheet/default-profile.png",
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Check-out this!'
+                confirmButtonText: 'Yes, Clock-out!'
             }).then((result) => {
                 if (result.value) {
                 $.ajax({
@@ -920,7 +924,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Success',
-                                    html: '<strong>'+emp_name+"</strong> has been Checked-out",
+                                    html: '<strong>'+emp_name+"</strong> has been Clock-out",
                                     icon: 'success'
                                 });
                         }else{

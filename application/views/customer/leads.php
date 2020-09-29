@@ -74,15 +74,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td><?= $lead->phone_cell; ?></td>
                                                 <td><?= $lead->status; ?></td>
                                                 <td>
-                                                    <a href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" >
-                                                    <button class="btn btn-primary" type="button">
-                                                        <span class="btn-label"><span class="fa fa-pencil-square-o icon"></span> Edit</span>
-                                                    </button>
+                                                    <a href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                        <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Lead">
                                                     </a>
-                                                    <button class="btn btn-primary delete_lead" id="<?php echo $lead->leads_id; ?>" type="button">
-                                                        <span class="btn-label"><span class="fa fa-trash-o icon"></span> Delete</span>
-                                                    </button>
-
+                                                    <a href="javascript:void(0);" id="<?php echo $lead->leads_id; ?>" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                        <img src="/assets/img/customer/actions/ac_delete.png" width="16px" height="16px" border="0" title="Delete Lead">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Send SMS">
+                                                    </a>
+                                                    <a href="mailto:<?= $lead->email_add; ?>" style="text-decoration:none; display:inline-block;" >
+                                                        <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Send Email">
+                                                    </a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

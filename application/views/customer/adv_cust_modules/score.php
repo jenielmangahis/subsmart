@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <button id="button" style="display:none">View the growth</button>
             <!--Start Date: 03/09/2020-->
             <div style="margin-right:15px; padding-top:0;padding-bottom:25px !important;" align="left" class="normaltext1">
-                <a href="#" style="color:#58bc4f;">Start Date</a>&nbsp;&nbsp;
+                <a href="#" style="color:#58bc4f;">Manual Entry</a>&nbsp;&nbsp;
             </div>
 
             <div style="margin-left:75px; padding-top:0;padding-bottom:25px !important;" class="widget_tab">

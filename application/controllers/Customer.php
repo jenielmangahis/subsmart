@@ -371,6 +371,13 @@ class Customer extends MY_Controller
 
         $convert_lead = $this->input->post('convert_customer');
         if(isset($convert_lead)){
+            if (!isset($input['leads_id'])) {
+                unset($input['credit_report']);
+                unset($input['report_history']);
+                unset($input['convert_customer']);
+                $this->customer_ad_model->add($input, "ac_leads");
+            }
+
             $input_profile = array();
             $input_profile['fk_user_id'] = logged('id');
             //$input_profile['fk_sa_id'] = $input['fk_sa_id'];

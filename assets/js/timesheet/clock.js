@@ -118,7 +118,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.value) {
             var time = new Date();
-            var end_of_break = time.setMinutes(time.getMinutes() + 60);
+            var end_of_break = time.setMinutes(time.getMinutes() + 1);
             $.ajax({
                 url:'/timesheet/lunchInEmployee',
                 type:"POST",
@@ -161,14 +161,42 @@ $(document).ready(function () {
         // Time calculations for minutes and seconds
         minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        if (!isNaN(minutes) && !isNaN(seconds)){
+        if (seconds >= 0){
             $('#break-duration').text(remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2));
             remaining_time = remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2);
         }else{
-            clearTimeout(countdown);
+            remaining_time = remainTwoDigit(minutes,2)+":"+remainTwoDigit(seconds,2);
+            var attn_id = $('#attendanceId').val();
+            $.ajax({
+                url:'/timesheet/lunchOutEmployee',
+                type:"POST",
+                dataType:'json',
+                data:{attn_id:attn_id,remaining_time:remaining_time},
+                success:function (data) {
+                    if (data != null){
+                        $('.clock').removeClass('clock-break').addClass('clock-active');
+                        $('#userLunchOut').text(data.lunch_out_time);
+                        $('#clock-end-time').val(data.remaining);
+                        $('.employeeLunch').attr('id',null).children('i').removeClass('fa-mug-hot').addClass('fa-coffee');
+                        stopCountdown();
+                        Swal.fire(
+                            {
+                                showConfirmButton: true,
+                                title: 'Success',
+                                html: "You are now Lunch-out",
+                                icon: 'success'
+                            });
+                    }
+                }
+            });
         }
         countdown = setTimeout(breakTime, 1000);
     }
+    // clearTimeout(countdown);
+    function stopCountdown() {
+        clearTimeout(countdown);
+    }
+    // clearTimeout(countdown);
     function remainTwoDigit(number, targetLength) {
         var output = number + '';
         while (output.length < targetLength) {

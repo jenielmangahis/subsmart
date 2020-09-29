@@ -14,6 +14,14 @@ class Timesheet_model extends MY_Model {
 //    {
 //        $this->db->insert($this->table, $data);
 //    }
+    public function getNotification($user_id){
+        $qry = $this->db->get_where('user_notification',array('user_id' => $user_id))->result();
+        return $qry;
+    }
+    public function getNotificationCount($user_id){
+        $qry = $this->db->get_where('user_notification',array('user_id' => $user_id,'status' => 1))->num_rows();
+        return $qry;
+    }
     public function getEmployeeAttendance(){
         $this->db->or_where('date_in',date('Y-m-d'));
         $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));

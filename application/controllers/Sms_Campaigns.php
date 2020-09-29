@@ -13,8 +13,9 @@ class Sms_Campaigns extends MY_Controller {
 		parent::__construct();
 
 		$this->load->model('SmsBlast_model');
-		$this->load->model('Users_model');
-		$this->load->model('Contacts_model');
+		$this->load->model('Users_model');		
+		$this->load->model('Customer_model');
+		$this->load->model('CustomerGroup_model');
 
 		$this->page_data['page']->title = 'SMS Campaigns';
 		$this->page_data['page']->menu = '';	
@@ -74,9 +75,11 @@ class Sms_Campaigns extends MY_Controller {
 		$user = $this->session->userdata('logged');
 		$cid  = logged('company_id');
 		
-		$contacts = $this->Contacts_model->getAllByCompanyId($cid);
+		$customers = $this->Customer_model->getAllByCompanyWithMobile($cid);
+		$customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
 
-		$this->page_data['contacts'] = $contacts;
+		$this->page_data['customers'] = $customers;
+		$this->page_data['customerGroups'] = $customerGroups;
 		$this->load->view('sms_campaigns/add_campaign_send_to', $this->page_data);
 	}
 }

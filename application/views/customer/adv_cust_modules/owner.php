@@ -57,6 +57,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_answer"><b> <?php if(isset($profile_info)){ echo $profile_info->pay_history; }; ?></b> </label>
                             </td>
                         </tr>
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >DOB :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($profile_info)){ echo $profile_info->date_of_birth; }; ?></b> </label>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                     <!--<label > <span >Monitoring Co:</span> <b class="pull-right">Guardian</b></label>

@@ -280,6 +280,8 @@ const elementsList = [
 //            VIEW PAGE
 // =====================================
 
+// for signature canvas
+
 
 // this function runs upon page load
 loadFormSettings = id => {
@@ -341,7 +343,8 @@ loadFormElements = (id, mode = null) => {
 
         if(elementType >= 15 && elementType < 30){
           document.querySelector('#windowPreviewContent').innerHTML += `
-          ${(elementType == 15)?`
+          
+          ${(elementType == 14)?`
             <!-- Image -->
             <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
               <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
@@ -531,6 +534,29 @@ loadFormElements = (id, mode = null) => {
                   <input type="file" name="feinput-${el.fe_id}" ${(el.fe_is_required == 1)?"required":""}  id="feinput-${el.fe_id}" >
                 </div>
               `:""}
+
+              ${(elementType == 14)?`
+                <!-- Signature -->
+                <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+                  <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
+                    <div class="btn-group" style="margin-y: auto">
+                      <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
+                      <button class="btn btn-sm btn-info" onclick="copyElement(${el.fe_id})"><i class="fa fa-copy"></i> Copy</button>
+                      <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
+                    </div>
+                  </div>
+                  <div class="form-group form-user-elements">
+                    <label for="${el.fe_id}">${el.fe_label}</label>
+                    <div class="container-fluid">
+                      <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" width="200" height="150" ></canvas>
+                    </div>
+
+                    <div class="d-flex justify-content-right">
+                      <button type="button" class="btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
+                    </div>
+                  </div>
+                </div>
+              `:""}
               
 
               ${(elementType == 44)?`
@@ -686,8 +712,13 @@ loadFormElements = (id, mode = null) => {
               
             </div>
           `;
-          
         }
+
+        // setup canvas
+        if(elementType == 14){
+          loadSignatureCanvas(elementType, el.fe_id)
+        }
+
       });
       
       return;
@@ -695,6 +726,17 @@ loadFormElements = (id, mode = null) => {
   })
 }
 
+loadSignatureCanvas = (elementType, id, size )=>{
+  setTimeout(() => {
+    let signaturePad = new SignaturePad(document.querySelector(`canvas#feinput-${id}`),{
+      backgroundColor: 'rgb(255, 255, 255)',
+    })
+  }, 1000);
+}
+
+clearCanvas = id => {
+  document.querySelector(`canvas#feInput-${id}`).clear()
+}
 
 // =====================================
 //            EDIT PAGE

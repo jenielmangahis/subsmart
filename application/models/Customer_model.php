@@ -44,6 +44,18 @@ class Customer_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanyWithMobile($company_id, $filter = array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('mobile !=', '');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0, $filter = array())
     {
 

@@ -383,7 +383,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                             <div class="col-md-12"><br>
                                                                                 <div class="form-group" id="customer_type_group">
                                                                                     <label for=""></label>
-                                                                                    <button type="submit" name="convert_customer" class="btn btn-primary" <?php if(!isset($leads_data)){ echo 'disabled'; } ?>><span class="fa fa-exchange"></span>  Convert to Customer </button>
+                                                                                    <button type="submit" name="convert_customer" class="btn btn-primary"><span class="fa fa-exchange"></span>  Convert to Customer </button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

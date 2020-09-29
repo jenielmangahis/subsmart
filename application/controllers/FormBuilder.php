@@ -223,6 +223,9 @@ class FormBuilder extends MY_Controller {
 
 
 	public function submitForm($form_id){
+		echo "<pre>";
+		var_dump($this->input->post());
+		exit;
 		
 		$sid = rand(100000000,999999999);
 		foreach($this->input->post() as $key => $answer){

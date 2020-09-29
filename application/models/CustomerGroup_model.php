@@ -18,6 +18,25 @@ class CustomerGroup_model extends MY_Model
 
         return $query->result();
     }
+
+    public function getAllByCompany($company_id, $filter = array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+
+        if (!empty($filter)) {
+
+            if (isset($filter['q'])) {
+
+                $this->db->like('name', $filter['q'], 'both');
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file CustomerGroup_model.php */

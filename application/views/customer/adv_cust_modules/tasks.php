@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     <td align="right" valign="top" class="normaltext1">
                                         <div style="margin-right:15px; padding-top:20px;" align="right" class="normaltext1">
-                                            <a href="#" style="color:#bc1440;">7 tasks</a>&nbsp;&nbsp;
+                                            <a href="#" style="color:#bc1440;">0 tasks</a>&nbsp;&nbsp;
 
                                             <!--  <a href="javascript:void(0);">Action/Notes</a>-->
                                         </div>
