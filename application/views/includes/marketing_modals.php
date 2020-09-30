@@ -88,3 +88,197 @@
       </div>
   <?php echo form_close(); ?>
 </div>
+
+<!-- Modal Delete Email Automation --> 
+<div class="modal fade" id="modalDeleteEmailAutomation" tabindex="-1" role="dialog" aria-labelledby="modalDeleteEmailAutomationTitle" aria-hidden="true">
+    <?php echo form_open_multipart('email_automation/delete_email_automation', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+    <?php echo form_input(array('name' => 'ea_id', 'type' => 'hidden', 'value' => '', 'id' => 'ea_id'));?>
+     <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Email Automation</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Delete selected email automation?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-danger">Yes</button>
+          </div>
+        </div>
+      </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Add Email Automation -->
+<div class="modal fade bd-example-modal-lg" id="modalAddEmailAutomation" tabindex="-1" role="dialog" aria-labelledby="modalAddEmailAutomationTitle" aria-hidden="true">
+  <?php echo form_open_multipart('email_automation/create_email_automation', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add Email Automation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-8">
+
+            <div class="form-group"><p>Select an event name and a time to send the email.</p></div>
+
+            <div class="form-group">
+              <label>On Event</label> <span class="help"></span>
+              <select name="rule_event" class="form-control" data-automation="rule_event">
+                <option value="" selected="selected">- select -</option>
+                <option value="estimate_submitted">Estimate Follow-up</option>
+                <option value="invoice_paid">Invoice Paid</option>
+                <option value="invoice_due">Invoice Due</option>
+                <option value="work_order_completed">Work Order Completed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Send</label> <span class="help"></span>
+              <select name="rule_notify_at" class="form-control">
+                <option value="P1D">1 day</option>
+                <option value="P2D">2 days</option>
+                <option value="P3D">3 days</option>
+                <option value="P4D">4 days</option>
+                <option value="P5D">5 days</option>
+                <option value="P6D">6 days</option>
+                <option value="P7D">7 days</option>
+                <option value="P1W">1 week</option>
+                <option value="P2W">2 weeks</option>
+                <option value="P3W">3 weeks</option>
+                <option value="P4W">4 weeks</option>
+                <option value="P1M">1 month</option>
+                <option value="P45D">45 days</option>
+                <option value="P3M">3 months</option>
+                <option value="P4M">4 months</option>
+                <option value="P6M">6 months</option>
+                <option value="P9M">9 months</option>
+                <option value="P12M">12 months</option>
+                <option value="P18M">1 year and a half</option>
+                <option value="P24M">2 years</option>
+                <option value="P36M">3 years</option>
+                <option value="P48M">4 years</option>
+              </select><br />
+
+              <div style="padding-top: 10px;">
+                  <label class="weight-normal margin-right-sec" data-automation="rule_notity_op_before"><input type="radio" name="rule_notify_op" value="0" checked="checked">
+                  <span data-automation="rule_notity_op_after_text">After event</span></label>
+                  <label class="weight-normal" data-automation="rule_notity_op_after"><input type="radio" name="rule_notify_op" value="1">
+                  <span data-automation="rule_notity_op_before_text">Before event</span></label>
+              </div>
+
+            </div>          
+
+            <div class="form-group">
+              <label>Automation Name</label> <span class="help">(Set a name for your own reference.)</span>
+              <input type="text" name="name" id="name" value="" class="form-control" autocomplete="off" required="">
+            </div>  
+
+            <div class="form-group">
+              <label>Customer Type</label> <span class="help"></span>
+              <select name="business_customer_type_service" class="form-control">
+                <option value="0" selected="selected">Both Residential and Commercial</option>
+                <option value="1">Residential customers</option>
+                <option value="2">Commercial customers</option>
+              </select>
+            </div>   
+            
+            <div class="form-group">
+              <label>Exclude Customer Groups</label> 
+              <span class="help">Optional, select the groups if you would like to exclude them from automation.</span>
+              <select name="exclude_customer_group" class="form-control">
+                <option value="0" selected="selected">Panel</option>
+                <option value="1">Test Group Only</option>
+              </select>
+            </div>                              
+
+          </div> 
+
+          <div class="col-md-4">
+            &nbsp;
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label>Subject</label> <span class="help"></span>
+              <input type="text" name="email_subject" id="email_subject" value="" class="form-control" autocomplete="off" required="">
+            </div>    
+
+            <div class="form-group">
+              <label>Email Body</label> <span class="help"></span>
+              <textarea name="email_body" id="email_body" cols="40" rows="5" class="form-control"></textarea>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+
+            <div class="panel-info">
+              <div class="margin-bottom-sec">
+                  <label>Use default template</label>
+                  <select name="template_id" class="form-control" data-template="dropdown">
+                    <option value="0">- select -</option>
+                    <option value="2295">Due for next service</option>
+                    <option value="2296">Estimate Follow-up</option>
+                    <option value="2297">Invoice Due Reminder</option>
+                    <option value="2294">Thank you</option>
+                  </select>
+              </div>
+              <button class="btn btn-primary margin-right" style="width: 80px;" data-template="select" data-on-click-label="Set...">Set</button>
+              <br /><a data-template="manage" href="#">Manage templates</a>
+              <hr>
+              <div class="form-group">
+                  <label>Placeholders</label>
+                  <p class="margin-bottom">Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.</p>
+                  <div>
+                      <a class="btn btn-default" href="#" data-tags-modal="open" data-template-default-id="">Insert Placeholders</a>
+                  </div>
+              </div>
+            </div>
+
+          </div>  
+
+        </div>      
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+  <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Edit Email Automation -->
+<div class="modal fade bd-example-modal-lg" id="modalEditAutomation" tabindex="-1" role="dialog" aria-labelledby="modalEditAutomationTitle" aria-hidden="true">
+  <?php echo form_open_multipart('email_automation/update_email_automation', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit Email Automation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div id="modal-edit-email-automation-container" class="modal-edit-email-automation-container"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
+    </div>
+  </div>
+  <?php echo form_close(); ?>
+</div>

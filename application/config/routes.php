@@ -160,9 +160,14 @@ $route['email_campaigns'] = 'Email_Campaigns';
 $route['email_automation'] = 'Email_Automation';
 $route['email_automation/templates'] = 'Email_Automation/templates';
 $route['email_automation/create_template'] = 'Email_Automation/save_template';
+$route['email_automation/create_email_automation'] = 'Email_Automation/save_email_automation';
 $route['email_automation/delete_template'] = 'Email_Automation/delete_template';
+$route['email_automation/delete_email_automation'] = 'Email_Automation/delete_email_automation';
 $route['email_automation/ajax_edit_template'] = 'Email_Automation/ajax_edit_template';
 $route['email_automation/update_template'] = 'Email_Automation/update_template';
+$route['email_automation/update_email_automation'] = 'Email_Automation/update_email_automation';
+$route['email_automation/ajax_edit_email_template'] = 'Email_Automation/ajax_edit_email_template';
+$route['email_automation/ajax_save_visible_status'] = 'email_automation/ajax_save_visible_status';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 
