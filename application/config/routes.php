@@ -326,3 +326,7 @@ $route['sms_campaigns'] = 'Sms_Campaigns/index';
 $route['sms_campaigns/add_sms_blast'] = 'Sms_Campaigns/add_sms_blast';
 $route['sms_campaigns/save_draft_campaign'] = 'Sms_Campaigns/create_draft_campaign';
 $route['sms_campaigns/add_campaign_send_to'] = 'Sms_Campaigns/add_campaign_send_to';
+
+//offers
+$route['offers/add_offer'] = 'Offers/add_offer';
+$route['offers/save_draft_offer'] = 'Offers/create_draft_offer';

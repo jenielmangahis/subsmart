@@ -3,9 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php //include viewPath('includes/sidebars/estimate'); ?>
     <?php include viewPath('includes/sidebars/marketing'); ?>
-    <?php //include viewPath('includes/notifications'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
@@ -15,10 +13,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- Content Header (Page header) -->
             <section class="content-header">
               <div class="pull-left">
-                <h1>Offers</h1>
+                <h1 style="text-align: left;">Offers</h1>              
+                <p>Listing the deals that are currently running.</p>
               </div>
               <div class="pull-right">
-                <a href="javascript:void(0);" class="btn btn-primary"><i class="fa fa-plus"></i> Create Offer</a><Br />
+                <a href="<?php echo url('offers/add_offer') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Create Offer</a><br />
+                <div style="margin-top: 30px;">                
+                  <a href="#" style="color:#259e57 !important;margin-right: 10px;"><i class="fa fa-bar-chart"></i> Stats</a>
+                  <a href="#" style="color:#259e57 !important;"><i class="fa fa-file-text-o fa-margin-right"></i> Orders & Payments</a>
+                </div>
               </div>              
               <div class="clearfix"></div>
             </section>
@@ -26,36 +29,98 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- Main content -->
             <section class="content">
 
-              <div class="center" style="margin-top:50px;">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h5 class="margin-bottom-sec">Promote Your Business with Exciting Offers!</h5>
-                        <div class="deals-info-header"><span class="fa fa-check-circle-o fa-icon deals-info-check"></span> Create your offer</div>
-                        <p class="margin-bottom-sec">
-                            You'll get a public deal page that you can share with existent or new customers.
-                            They will be able to book the deal instantly or contact you directly.
-                        </p>
-                        <div class="deals-info-header"><span class="fa fa-check-circle-o fa-icon deals-info-check"></span>
-                            Email the offer
-                        </div>
-                        <p class="margin-bottom-sec">
-                            Your deal can be emailed to all your customers, a group or selected customers.
-                        </p>
-                        <div class="deals-info-header"><span class="fa fa-check-circle-o fa-icon deals-info-check"></span> Monitor performance</div>
-                        <p class="margin-bottom">
-                            Check the reports for page views and bookings to track the success of running deals.
-                        </p>
-                        <a class="btn btn-primary" href="javascript:void(0);"><span class="fa fa-plus"></span> Create a Deal Now</a>
+              <!-- Default box -->
+              <div class="box">                
+                <div class="box-body" style="overflow-y: scroll;">                  
+                  <div class="card-header tab-card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                      <li class="nav-item">
+                          <a class="nav-link active" id="c-active-tab" data-toggle="tab" href="#active-offers" role="tab" aria-controls="One" aria-selected="true">Active Offers (0)</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" id="c-scheduled-tab" data-toggle="tab" href="#scheduled-offers" role="tab" aria-controls="Two" aria-selected="false">Scheduled (0)</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" id="c-closed-tab" data-toggle="tab" href="#ended-offers" role="tab" aria-controls="Three" aria-selected="false">Ended (0)</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" id="c-draft-tab" data-toggle="tab" href="#draft-offers" role="tab" aria-controls="Four" aria-selected="false">Draft (0)</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active p-3" id="active-offers" role="tabpanel" aria-labelledby="one-tab">
+                      
+                      <table class="table table-bordered table-striped dataTableCampaign">
+                        <thead>
+                          <tr>
+                            <th>Offer</th>
+                            <th>Views</th>
+                            <th>Bookings</th>
+                            <th>Valid</th>
+                            <th>Status</th>                            
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+
                     </div>
-                    <div class="col-sm-6">
-                        <div class="text-center">
-                            <?php $thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg') ?>
-                            <img style="width: 250px; margin: auto;" class="img-responsive deals-info-image" src="<?php echo $thumb_img; ?>">
-                            <div class="text-sm text-ter deals-info-image-caption">that's how your deal will look <br>on main listing page</div>
-                        </div>
+                    <div class="tab-pane fade p-3" id="scheduled-offers" role="tabpanel" aria-labelledby="two-tab">
+                      
+                      <table class="table table-bordered table-striped dataTableCampaign">
+                        <thead>
+                          <tr>
+                            <th>Offer</th>
+                            <th>Views</th>
+                            <th>Bookings</th>
+                            <th>Valid (schedule for)</th>
+                            <th>Status</th>                            
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+
                     </div>
+                    <div class="tab-pane fade p-3" id="ended-offers" role="tabpanel" aria-labelledby="three-tab">
+                      
+                      <table class="table table-bordered table-striped dataTableCampaign">
+                        <thead>
+                          <tr>
+                            <th>Offer</th>
+                            <th>Views</th>
+                            <th>Bookings</th>
+                            <th>Valid</th>
+                            <th>Status</th>                                 
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+
+                    </div>
+                    <div class="tab-pane fade p-3" id="draft-offers" role="tabpanel" aria-labelledby="four-tab">
+                      
+                      <table class="table table-bordered table-striped dataTableCampaign">
+                        <thead>
+                          <tr>
+                            <th>Offer</th>
+                            <th>Views</th>
+                            <th>Bookings</th>
+                            <th>Valid</th>
+                            <th>Status</th>                          
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+
+                    </div>
+                  </div>
+
+
                 </div>
-              </div>             
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
 
             </section>
             <!-- /.content -->
