@@ -321,3 +321,5 @@ $route['sms_campaigns'] = 'Sms_Campaigns/index';
 $route['sms_campaigns/add_sms_blast'] = 'Sms_Campaigns/add_sms_blast';
 $route['sms_campaigns/save_draft_campaign'] = 'Sms_Campaigns/create_draft_campaign';
 $route['sms_campaigns/add_campaign_send_to'] = 'Sms_Campaigns/add_campaign_send_to';
+$route['sms_campaigns/create_campaign_send_to'] = 'Sms_Campaigns/create_campaign_send_to';
+$route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
