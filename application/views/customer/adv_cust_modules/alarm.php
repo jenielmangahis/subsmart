@@ -233,15 +233,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             </div>
 
-            <div style="margin-right:15px; padding-top:30px;" align="left" class="normaltext1">
+            <div style="margin-left:30px;  padding-top:30px;" align="left" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">Account On Test</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
-            <div style="margin-right:15px; padding-top:30px;" align="right" class="normaltext1">
+            <div style="margin-left:30px;  padding-top:30px;" align="right" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">Website Url</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
-            <div style="margin-right:15px; padding-top:30px;" align="right" class="normaltext1">
+            <div style="margin-left:30px;  padding-top:30px;" align="right" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">Record Sheet</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>

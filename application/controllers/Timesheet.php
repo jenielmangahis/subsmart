@@ -780,11 +780,17 @@ class Timesheet extends MY_Controller {
             $total_hours = null;
 	        foreach ($users as $user):
                 $timesheet_settings = $this->timesheet_model->getTimeSheetByWeek($date_this_check);
-	            $total_week_hours = $this->timesheet_model->getTotalWeekDuration($date_this_check);
+	            $get_total_w_hours = $this->timesheet_model->getTotalWeekDuration($date_this_check);
                 foreach ($timesheet_settings as $ts_settings_data){
                     if ($ts_settings_data->user_id == $user->id){
                         $timesheet_id = $ts_settings_data->id;
-                        $total_hours = $total_week_hours[0]->total_duration."h";
+                        //Get total week hours
+                        foreach ($get_total_w_hours as $total_week_hours){
+                            if($total_week_hours->user_id == $user->id){
+                                $total_hours = $total_week_hours->total_duration."h";
+                            }
+                        }
+
                         $timesheet_day = $this->timesheet_model->getTimeSheetDayById($timesheet_id);
                     foreach ($timesheet_day as $days){
                             if ($days->day == "Monday"){
@@ -2142,7 +2148,6 @@ class Timesheet extends MY_Controller {
             echo json_encode(0);
         }else{
             $session = array(
-                'clock-btn' => 'clockOut',
                 'active' => 'clock-active',
                 'clock-in-time' => date('h:i A',$clock_in),
                 'clock-out-time' => 'Pending...',
@@ -2186,13 +2191,25 @@ class Timesheet extends MY_Controller {
             );
             $this->db->where('id',$attn_id);
             $this->db->update('timesheet_attendance',$update);
-            if($this->db->affected_rows() != 1){
+            $affected_row = $this->db->affected_rows();
+            //Update weekly total duration
+            $weekly_duration = 0;
+            $get_weekly = $this->db->get_where('timesheet_attendance',array('week_id'=>$check_attn->row()->week_id))->result();
+            foreach ($get_weekly as $total){
+                $weekly_duration += $total->shift_duration;
+            }
+            $weekly_update = array(
+                'total_shift' => $weekly_duration
+            );
+            $this->db->where('id',$check_attn->row()->week_id);
+            $this->db->update('ts_weekly_total_shift',$weekly_update);
+
+            if($affected_row != 1){
                 echo json_encode(0);
             }else{
-                $unset = array('active');
+                $unset = array('active','lunch-active');
                 $this->session->unset_userdata($unset);
                 $session = array(
-                    'clock-btn' => 'preventLogIn',
                     'clock-out-time' => date('h:i A',$clock_out),
                     'attn-id' => $attn_id,
                     'shift_duration' => $shift_duration
@@ -2252,6 +2269,7 @@ class Timesheet extends MY_Controller {
         );
         $this->db->insert('timesheet_logs',$lunch);
         //Employee Notification
+        $notification = '';
         if (explode(':',$remaining_time)[1] <= 0){
             $data_notify = array(
                 'user_id' => $user_id,
@@ -2262,6 +2280,19 @@ class Timesheet extends MY_Controller {
             );
             $this->db->insert('user_notification',$data_notify);
             $remaining_time = '00:00';
+            //Display notification
+            $notify = $this->db->order_by('id',"desc")->limit(1)->get('user_notification')->result();
+            foreach ($notify as $value){
+                if ($value->status == 1){
+                    $bg = '#e6e3e3';
+                }else{
+                    $bg = '#f8f9fa';
+                }
+                $notification .= '<a href="'.site_url().'timesheet/attendance" id="notificationDP" data-id="'.$value->id.'" class="dropdown-item notify-item active" style="background-color: '.$bg.'">';
+                $notification .= '<div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>';
+                $notification .= '<p class="notify-details">'.$value->title.'<span class="text-muted">'.$value->content.'</span></p>';
+                $notification .= '</a>';
+            }
         }
         $lunch_sess = array(
                 'active' => 'clock-active',
@@ -2273,64 +2304,85 @@ class Timesheet extends MY_Controller {
         $data = new stdClass();
         $data->lunch_out_time = date('h:i A',$lunch_out);
         $data->remaining = $remaining_time;
+        $data->notifications = $notification;
         echo json_encode($data);
     }
 
-    public function startBreak(){
-        $end_time = $this->input->post('break_time');
-        $today = date('Y-m-d');
-        $user_id =  $this->session->userdata('logged')['id'];
-        $query = $this->db->get_where('user_break',array('date'=>$today,'user_id'=>$user_id));
-        if ($query->num_rows() == 0){
-            $data = array(
-              'date' => $today,
-              'user_id' => $user_id,
-              'break_end_time' => date('Y-m-d H:i:s',strtotime($end_time)),
-              'duration' => '60:00',
-              'status' => 1
-            );
-            $this->db->insert('user_break',$data);
-            $break_id = $this->db->insert_id();
-            $break_end = $this->db->get_where('user_break',array('id' => $break_id));
-            $break_data = $break_end->result();
-            $break_session = array(
-                'break' => date('M d, Y H:i:s',strtotime($break_data[0]->break_end_time)),
-                'on_break' => 'clock-break',
-                'timer_icon' => 'style="color:red;" ',
-                'active' => 1
-            );
-            $this->session->set_userdata($break_session);
-
+    public function readNotification(){
+	    $id = $this->input->post('id');
+	    $query = $this->db->get_where('user_notification',array('id'=>$id));
+	    if ($query->num_rows() == 1){
+	        $readed = array('status' => 0);
+	        $this->db->where('id',$id);
+	        $this->db->update('user_notification',$readed);
         }
-        echo json_encode($this->session->userdata('break'));
     }
 
-    public function stopBreak(){
-        $unset = array('break','on_break','timer_icon');
-        $this->session->unset_userdata($unset);
-	    $remaining_min = $this->input->post('minutes');
-	    $remaining_sec = $this->input->post('seconds');
-	    $user_id =  $this->session->userdata('logged')['id'];
-        $duration = $remaining_min.' minute'.$remaining_min.' second';
-	    $check = array(
-	        'user_id' => $user_id,
-            'date' => date('Y-m-d')
-        );
-	    $update = array(
-	        'break_end_time' => date('Y-m-d H:i:s', strtotime($duration)),
-	        'duration' => $remaining_min.":".$remaining_sec,
-            'status' => 2
-        );
-	    $this->db->where($check);
-	    $this->db->update('user_break',$update);
-        $break_session = array(
-            'remaining_time' => $remaining_min.":".$remaining_sec
-        );
-        $this->session->set_userdata($break_session);
-        echo json_encode($this->session->userdata('remaining_time'));
+    public function timesheetWeeklyReport(){
+	    $msg = "This is only a test email report";
+        $msg = wordwrap($msg,70);
+        mail("rarecandy05@gmail.com","Timesheet Weekly Report",$msg);
+    }
 
+    public function notificationSchedule(){
 
     }
+
+//    public function startBreak(){
+//        $end_time = $this->input->post('break_time');
+//        $today = date('Y-m-d');
+//        $user_id =  $this->session->userdata('logged')['id'];
+//        $query = $this->db->get_where('user_break',array('date'=>$today,'user_id'=>$user_id));
+//        if ($query->num_rows() == 0){
+//            $data = array(
+//              'date' => $today,
+//              'user_id' => $user_id,
+//              'break_end_time' => date('Y-m-d H:i:s',strtotime($end_time)),
+//              'duration' => '60:00',
+//              'status' => 1
+//            );
+//            $this->db->insert('user_break',$data);
+//            $break_id = $this->db->insert_id();
+//            $break_end = $this->db->get_where('user_break',array('id' => $break_id));
+//            $break_data = $break_end->result();
+//            $break_session = array(
+//                'break' => date('M d, Y H:i:s',strtotime($break_data[0]->break_end_time)),
+//                'on_break' => 'clock-break',
+//                'timer_icon' => 'style="color:red;" ',
+//                'active' => 1
+//            );
+//            $this->session->set_userdata($break_session);
+//
+//        }
+//        echo json_encode($this->session->userdata('break'));
+//    }
+//
+//    public function stopBreak(){
+//        $unset = array('break','on_break','timer_icon');
+//        $this->session->unset_userdata($unset);
+//	    $remaining_min = $this->input->post('minutes');
+//	    $remaining_sec = $this->input->post('seconds');
+//	    $user_id =  $this->session->userdata('logged')['id'];
+//        $duration = $remaining_min.' minute'.$remaining_min.' second';
+//	    $check = array(
+//	        'user_id' => $user_id,
+//            'date' => date('Y-m-d')
+//        );
+//	    $update = array(
+//	        'break_end_time' => date('Y-m-d H:i:s', strtotime($duration)),
+//	        'duration' => $remaining_min.":".$remaining_sec,
+//            'status' => 2
+//        );
+//	    $this->db->where($check);
+//	    $this->db->update('user_break',$update);
+//        $break_session = array(
+//            'remaining_time' => $remaining_min.":".$remaining_sec
+//        );
+//        $this->session->set_userdata($break_session);
+//        echo json_encode($this->session->userdata('remaining_time'));
+//    }
+
+
 }
 
 

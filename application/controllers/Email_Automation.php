@@ -58,6 +58,39 @@ class Email_Automation extends MY_Controller {
         redirect('email_automation/templates');
     }	
 
+    public function save_email_automation()
+    {
+        postAllowed();
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ){
+            $this->load->model('MarketingEmailAutomation_model');
+
+            $data = array(
+                'user_id' => $user['id'],
+                'rule_event' => post('rule_event'),
+                'rule_notify_at' => post('rule_notify_at'),
+                'rule_notify_op' => post('rule_notify_op'),
+                'name' => post('name'),
+                'email_subject' => post('email_subject'),
+                'email_body' => post('email_body'),
+                'exclude_customer_group' => post('exclude_customer_group'),
+                'customer_type_service' => post('business_customer_type_service'),
+                'email_automation_template_id' => post('template_id'),
+                'is_active' => 1,
+                'date_created' => date("Y-m-d H:i:s")
+            );
+            $bookingServiceItem = $this->MarketingEmailAutomation_model->create($data);
+
+            $this->session->set_flashdata('message', 'Add Email Automation Successful');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+        }
+
+        redirect('email_automation');
+    }    
+
     public function ajax_edit_template()
     {
     	$id = post('tid');
@@ -66,7 +99,18 @@ class Email_Automation extends MY_Controller {
     	$this->page_data['template'] = $template;
     	$this->page_data['template_id'] = $id;
 		$this->load->view('email_automation/ajax_edit_template', $this->page_data);
-    }    
+    } 
+
+    public function ajax_edit_email_template() 
+    {
+        $id = post('tid');
+
+        $email_automation = $this->MarketingEmailAutomation_model->getById($id);
+
+        $this->page_data['email_automation'] = $email_automation;
+        $this->page_data['template_automation_id'] = $id;
+        $this->load->view('email_automation/ajax_edit_email_automation', $this->page_data);        
+    }   
 
     public function update_template()
     {
@@ -100,7 +144,75 @@ class Email_Automation extends MY_Controller {
         }
 
         redirect('email_automation/templates');
+    } 
+
+    public function update_email_automation()
+    {
+        postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+            $email_auth_id = $post['template_automation_id'];
+            $template = $this->MarketingEmailAutomation_model->getById($email_auth_id);
+
+            $to_update = array(
+                'name' => post('name'),
+                'rule_event' => post('rule_event'),
+                'rule_notify_at' => post('rule_notify_at'),
+                'rule_notify_op' => post('rule_notify_op'),
+                'name' => post('name'),
+                'customer_type_service' => post('business_customer_type_service'),
+                'exclude_customer_group' => post('exclude_customer_group'),
+                'email_subject' => post('email_subject'),
+                'email_body' => post('email_body'),
+                'date_modified' => date("Y-m-d H:i:s")
+            );
+
+            if($template) {
+                $this->MarketingEmailAutomation_model->update($template->id, $to_update);
+
+                $this->session->set_flashdata('message', 'Email automation was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            } else {
+                $this->session->set_flashdata('message', 'Email Automation not found');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+        } else {
+            $this->session->set_flashdata('message', 'Post value is empty');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('email_automation');
     }    
+
+    public function ajax_save_visible_status()
+    {
+        postAllowed();
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+            $id = $post['email_automation_id'];
+            $is_active = $post['is_active'];
+            $siid = $this->MarketingEmailAutomation_model->getById($id);
+
+            $to_update = array(
+                'is_active' => $is_active
+            );
+
+            if($siid) {
+                $this->MarketingEmailAutomation_model->update($siid->id, $to_update);
+                $is_success = true;
+            } else {
+                $is_success = false;
+            }
+        }
+
+        $json_data = array('is_success' => $is_success);
+
+        echo json_encode($json_data);
+    }       
 
     public function delete_template()
     {
@@ -114,6 +226,19 @@ class Email_Automation extends MY_Controller {
 		redirect('email_automation/templates');
     }  
 
+    public function delete_email_automation()
+    {
+        $post = $this->input->post();
+
+        $id = $this->MarketingEmailAutomation_model->delete(post('ea_id'));
+
+        $this->activity_model->add("Email Automation #$id Deleted by User:".logged('name'));
+
+        $this->session->set_flashdata('message', 'Template has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('email_automation');
+    }  
 }
 
 

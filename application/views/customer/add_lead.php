@@ -331,6 +331,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-md-12 form-line">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4">
+                                                                                <label for="">Status</label>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                <select id="status" name="status"  class="input_select" >
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->status == 'New'){echo "selected";} } ?> value="New">New</option>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->status == 'Contacted'){echo "selected";} } ?> value="Contacted">Contacted</option>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->status == 'Follow Up'){echo "selected";} } ?> value="Follow Up">Follow Up</option>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->status == 'Assigned'){echo "selected";} } ?> value="Assigned">Assigned</option>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->status == 'Converted'){echo "selected";} } ?> value="Converted">Converted</option>
+                                                                                    <option <?php if(isset($leads_data)){ if($leads_data->status == 'Closed'){echo "selected";} } ?> value="Closed">Closed</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </table>

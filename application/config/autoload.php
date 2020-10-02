@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array( 'session', 'database', 'parser', 'form_validation', 'uploadlib', 'email' );
+$autoload['libraries'] = array( 'session', 'database', 'parser', 'form_validation', 'uploadlib', 'email', 'googlemaps');
 
 /*
 | -------------------------------------------------------------------
@@ -160,5 +160,7 @@ $autoload['model'] = array(
     'reconcile_model',
     'file_folders_categories_model',
     'timesheet_model',
-    'AccountingVendors_model'
+    'AccountingVendors_model',
+    'file_folders_permissions_roles_model',
+    'file_folders_permissions_users_model'
 );

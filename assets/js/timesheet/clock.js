@@ -5,6 +5,7 @@ $(document).ready(function () {
     var remaining_time = 0;
     var get_server_time,countdown;
     var difference = 0;
+
     function serverTime () {
         var server_time;
             $.ajax({
@@ -19,12 +20,17 @@ $(document).ready(function () {
         get_server_time = setTimeout(serverTime, 1000);
         return server_time;
     }
-    // $('.clock-users').click(function () {
-    //     $('.preview-clock-details').removeClass('visible');
-    // });
-    // $('.clock-users').dblclick(function () {
-    //     $('.preview-clock-details').addClass('visible');
-    // });
+    $(document).on('click','#notificationDP',function () {
+        var id = $(this).attr('data-id');
+        $.ajax({
+           url:"/timesheet/readNotification",
+           type:"POST",
+           data:{id:id},
+           success:function (data) {
+
+           }
+        });
+    });
     $(document).on('click','#clockIn',function () {
         var selected = this;
         Swal.fire({
@@ -90,6 +96,7 @@ $(document).ready(function () {
                         $('.out').text(data.clock_out_time);
                         $('#userClockOut').text(data.clock_out_time);
                         $('#shiftDuration').text(data.shift_duration);
+                        $('.employeeLunch').attr('id',null).attr('disabled',true);
                         Swal.fire(
                             {
                                 showConfirmButton: false,
@@ -118,7 +125,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.value) {
             var time = new Date();
-            var end_of_break = time.setMinutes(time.getMinutes() + 1);
+            var end_of_break = time.setMinutes(time.getMinutes() + 60);
             $.ajax({
                 url:'/timesheet/lunchInEmployee',
                 type:"POST",
@@ -178,6 +185,11 @@ $(document).ready(function () {
                         $('#userLunchOut').text(data.lunch_out_time);
                         $('#clock-end-time').val(data.remaining);
                         $('.employeeLunch').attr('id',null).children('i').removeClass('fa-mug-hot').addClass('fa-coffee');
+                        $('#notifyBadge').css('visibility','visible').text(1);
+                        $('#notificationList').prepend(data.notifications);
+                        $('.layer-1').css('animation','animation-layer-1 5000ms infinite');
+                        $('.layer-2').css('animation','animation-layer-2 5000ms infinite');
+                        $('.layer-3').css('animation','animation-layer-3 5000ms infinite');
                         stopCountdown();
                         Swal.fire(
                             {

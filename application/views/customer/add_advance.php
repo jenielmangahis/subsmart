@@ -171,11 +171,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             <table cellpadding="0" cellspacing="0" width="911" style="border-collapse: collapse;">
                                                                 <tbody>
                                                                 <tr>
-                                                                    <td >
+                                                                    <td>
+                                                                        <?php
+                                                                            include viewPath('customer/adv_module_sheets/module_devices');
+                                                                        ?>
                                                                         <table width="" border="0" cellspacing="0" cellpadding="0">
-                                                                            <?php
-                                                                                include viewPath('customer/adv_module_sheets/module_devices');
-                                                                            ?>
                                                                         </table>
                                                                     </td>
                                                                 </tr>

@@ -83,10 +83,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
-                <a href="#" style="color:#58bc4f;">Best Contact</a>&nbsp;&nbsp;
+            <div style="margin-left:38px;  padding-top:10px;" align="left" class="normaltext1">
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+                <a href="#" style="text-decoration:none; display:inline-block;" >
+                    <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Send SMS">
+                </a>
+                <a href="mailto:" style="text-decoration:none; display:inline-block;" >
+                    <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Send Email">
+                </a>
+                <a href="#" style="text-decoration:none; display:inline-block;" >
+                    <img src="/assets/img/customer/actions/ac_call.png" width="16px" height="16px" border="0" title="Call Customer">
+                </a>
             </div>
+
 
         </div>
     </div>

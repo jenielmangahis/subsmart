@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="col-sm-12">
         <div class="row">
             <div id="momo_edit_btn" class="pencil">
-                jhghj			  	<!--<img width="16px" height="16px" src="https://app.creditrepaircloud.com/application/images/pencil.png">-->
+                			  	<!--<img width="16px" height="16px" src="https://app.creditrepaircloud.com/application/images/pencil.png">-->
             </div>
             <div id="memo_input_div" style="display:none;">
                 <div style=" width:100%; height:200px;">
@@ -20,7 +20,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <div style="margin-right:15px; padding-top:1px;" align="right" class="normaltext1">
                 <a href="#" style="color:#58bc4f;"><span class="fa fa-upload"></span> Upload File</a>&nbsp;&nbsp;
-
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
         </div>

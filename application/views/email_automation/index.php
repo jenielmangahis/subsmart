@@ -14,12 +14,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
             <!-- Content Header (Page header) -->
             <section class="content-header">
+
               <div class="pull-left">
                 <h1>Email Automation</h1>
                 <p>Listing all automations.</p>
               </div>
               <div class="pull-right">
-                <a href="<?php echo url('/') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Add Email Automation</a><br />
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddEmailAutomation">
+                <i class="fa fa-plus"></i> Add Email Automation
+                </button>
                 <a href="<?php echo base_url('email_automation/templates'); ?>" style="color:#259e57 !important; margin-top:10px; display: block;">Manage default templates</a>
               </div>              
               <div class="clearfix"></div>
@@ -28,14 +32,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- Main content -->
             <section class="content">
               <div class="card">
-
+                <div id="ajax-alert-container" class="ajax-alert-container"></div>
                 <?php if(!empty($email_automation_list)) { ?>
                   <table class="table table-hover table-to-list" id="dataTableAutomation" data-id="work_orders">
                       <thead>
                       <tr class="">
                           <th><strong>Automation Name</strong></th>
                           <th><strong>Event</strong></th>
-                          <th><strong>Details</strong></th>
                           <th><strong>Email Sent</strong></th>
                           <th><strong>Active</strong></th>
                           <th>&nbsp;</th>
@@ -45,18 +48,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php foreach($email_automation_list as $eul) { ?>
                           <tr class="">
                             <td><?php echo $eul->name; ?></td>
-                            <td><?php echo $eul->rule_event; ?></td>
-                            <td>-</td>
+                            <?php 
+                              $rule_event = str_replace("_"," ",$eul->rule_event);
+                              $rule_event = ucwords($rule_event);
+                            ?>
+                            <td><?php echo $rule_event; ?></td>
                             <td><?php echo '0' ?></td>
                             <td>
                               
                               <div class="onoffswitch">
-                                  <input type="checkbox" name="product-status[]" class="onoffswitch-checkbox onoffswitch-checkbox-productStatus" data-product-id="<?= $eul->id; ?>" id="product-status-<?= $eul->id; ?>" <?= $eul->is_active == 1 ? 'checked=""' : ''; ?> >
-                                  <label class="onoffswitch-label" for="product-status-<?= $eul->id; ?>">
+                                  <input type="checkbox" name="email-auto-status[]" class="onoffswitch-checkbox onoffswitch-checkbox-eAutomationStatus" data-email-automation-id="<?= $eul->id; ?>" id="email-auto-status-<?= $eul->id; ?>" <?= $eul->is_active == 1 ? 'checked=""' : ''; ?> >
+                                  <label class="onoffswitch-label" for="email-auto-status-<?= $eul->id; ?>">
                                       <span class="onoffswitch-inner"></span>
                                       <span class="onoffswitch-switch"></span>
                                   </label>
-                              </div>
+                              </div>                              
 
                             </td>
                             <td>
@@ -66,15 +72,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   </button>
                                   <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                       <li role="presentation">
-                                        <a style="" class="template-edit editItemBtn" data-category-edit-modal="open" data-id="<?php echo $eul->id; ?>" href="javascript:void(0);">
-                                            <span class="fa fa-pencil-square-o icon"></span> edit
+                                        <a style="" class="email-automation-edit editEmailAutomationBtn" data-category-edit-modal="open" data-id="<?php echo $eul->id; ?>" href="javascript:void(0);">
+                                              <span class="fa fa-pencil-square-o icon"></span> edit
                                         </a>
                                       </li>
                                       <li role="separator" class="divider"></li>
                                       <li role="presentation">
-                                        <a class="template-delete" data-category-delete-modal="open" data-id="<?php echo $eul->id; ?>" href="javascript:void(0);" data-name="<?php echo $eul->name; ?>">
+                                        <a class="email-automation-delete" data-category-delete-modal="open" data-id="<?php echo $eul->id; ?>" href="javascript:void(0);" data-name="<?php echo $eul->name; ?>">
                                             <span class="fa fa-trash-o icon"></span> Delete
-                                        </a>   
+                                        </a>  
                                       </li>
                                   </ul>
                               </div>                              
@@ -107,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 
-<?php include viewPath('includes/marketing_modals'); ?> 
+<?php include viewPath('includes/marketing_modals'); ?>  
 <?php include viewPath('includes/footer_marketing'); ?>
 
 <script>

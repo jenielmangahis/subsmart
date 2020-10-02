@@ -103,15 +103,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label><b>Customer Type</b></label>
                                     <div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="customer_type_service_1" value="0" id="customer-type-both" checked="checked">
+                                            <input type="radio" name="optionA[customer_type_service]" value="0" id="customer-type-both" checked="checked">
                                             <label for="customer-type-both">Both Residential and Commercial</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="customer_type_service_1" value="1" id="customer-type-residential">
+                                            <input type="radio" name="optionA[customer_type_service]" value="1" id="customer-type-residential">
                                             <label for="customer-type-residential">Residential customers</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="customer_type_service_1" value="2" id="customer-type-commercial">
+                                            <input type="radio" name="optionA[customer_type_service]" value="2" id="customer-type-commercial">
                                             <label for="customer-type-commercial">Commercial customers</label>
                                         </div>
                                     </div>
@@ -123,7 +123,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach($customerGroups as $cg){ ?>       
                                             <li>
                                                 <div class="checkbox checkbox-sm">
-                                                    <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="exclude_customer_group_id" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>">
+                                                    <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>">
                                                     <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                 </div> 
                                             </li>
@@ -152,7 +152,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <tr>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-contact" type="checkbox" name="customer_id" value="" id="chk-customer-<?= $c->id; ?>">
+                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->id; ?>]" value="<?= $c->id; ?>" id="chk-customer-<?= $c->id; ?>">
                                                             <label for="chk-customer-<?= $c->id; ?>"></label>
                                                         </div>
                                                     </td>
@@ -181,7 +181,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach($customerGroups as $cg){ ?>       
                                             <li>
                                                 <div class="checkbox checkbox-sm">
-                                                    <input class="checkbox-select chk-contact-group" type="checkbox" name="customer_group_id" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
+                                                    <input class="checkbox-select chk-contact-group" type="checkbox" name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
                                                     <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                 </div> 
                                             </li>
@@ -192,15 +192,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <label><b>Customer Type</b></label>
                                     <div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="customer_type_service_1" value="0" id="customer-group-type-both" checked="checked">
+                                            <input type="radio" name="optionC[customer_type_service]" value="0" id="customer-group-type-both" checked="checked">
                                             <label for="customer-group-type-both">Both Residential and Commercial</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="customer_type_service_1" value="1" id="customer-group-type-residential">
+                                            <input type="radio" name="optionC[customer_type_service]" value="1" id="customer-group-type-residential">
                                             <label for="customer-group-type-residential">Residential customers</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="customer_type_service_1" value="2" id="customer-group-type-commercial">
+                                            <input type="radio" name="optionC[customer_type_service]" value="2" id="customer-group-type-commercial">
                                             <label for="customer-group-type-commercial">Commercial customers</label>
                                         </div>
                                     </div>
@@ -265,7 +265,7 @@ $(function(){
 
     $("#create_campaign_send_to").submit(function(e){
         e.preventDefault();
-        var url = base_url + '/sms_campaigns/save_send_to_settings';
+        var url = base_url + '/sms_campaigns/create_campaign_send_to';
         $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({

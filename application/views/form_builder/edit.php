@@ -329,7 +329,7 @@
                               <div class="form-elements-draggable" data-element-id="21">
                                 <div class="card p-1">
                                   <div class="card-content element-buttons">
-                                    <span><i class="fa fa-caret-square-o-down"></i> Text</span>
+                                    <span><i class="fa fa-font"></i> Text</span>
                                   </div>
                                 </div>
                               </div>
@@ -365,7 +365,7 @@
                               <div class="form-elements-draggable" data-element-id="25">
                                 <div class="card p-1">
                                   <div class="card-content element-buttons">
-                                    <span><i class="fa fa-font"></i> Blank Space</span>
+                                    <span><i class="fa fa-square"></i> Blank Space</span>
                                   </div>
                                 </div>
                               </div>
@@ -379,11 +379,21 @@
                                 </div>
                               </div>
                             </div>
+                            <div class="col-xs-6 col-sm-6 m-0">
+                              <div class="form-elements-draggable" data-element-id="27">
+                                <div class="card p-1">
+                                  <div class="card-content element-buttons">
+                                    <span><i class="fa fa-square-o"></i> Block Text </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                           </div>
                         </div>
                     
     
-                        <li class="list-group-item" data-toggle="collapse" data-target="#collapseEmailItemsMenu" aria-expanded="true" aria-controls="collapse0">
+                        <!-- <li class="list-group-item" data-toggle="collapse" data-target="#collapseEmailItemsMenu" aria-expanded="true" aria-controls="collapse0">
                           Email Items
                         </li>
                         <div id="collapseEmailItemsMenu" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
@@ -426,7 +436,7 @@
                             </div>
                           </div>
                         </div>
-                    
+                     -->
     
                         <li class="list-group-item" data-toggle="collapse" data-target="#collapseOrderFormMenu" aria-expanded="true" aria-controls="collapse0">
                           Order Form Tables
@@ -969,7 +979,7 @@
 
 
 <!-- EDIT SETTINGS MODAL -->
-<div class="modal fade" id="modalElementSettings" data-backdroup="static">
+<div class="modal fade" id="modalElementSettings" data-backdrop="static">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -1014,7 +1024,7 @@
               
               <div class="form-group">
                 <label for="txtElementSettingsFieldLabel" class="form-label">Field Label:</label>
-                <textarea type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control"></textarea>
+                <textarea type="text" name="txtElementSettingsFieldLabel" id="txtElementSettingsFieldLabel" class="form-control" ></textarea>
               </div>
 
               <div class="row">

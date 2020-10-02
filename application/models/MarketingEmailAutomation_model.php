@@ -57,6 +57,12 @@ class MarketingEmailAutomation_model extends MY_Model
         return  $last_id;
     }
 
+    public function delete($id)
+    {
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
+    }      
+
 }
 
 /* End of file BookingCoupon_model.php */

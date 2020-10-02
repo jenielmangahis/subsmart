@@ -82,7 +82,7 @@
   <script>
     var selectedProducts = []
     var totalPrice = 0
-    var tax = 0.25
+    var tax = 7.5
     // var pad = document.querySelector('#signaturePad')
     // var signaturePad = new SignaturePad(pad,{
       
@@ -94,23 +94,29 @@
     }
 
     calculateTotalPrices = elementId => {
-      subTotalPrice = 0
+      // subTotalPrice = 0
+      totalPrice = 0
       selectedProducts.map(product => {
-        subTotalPrice += (product.quantity * product.data.price)
+        // subTotalPrice += (product.quantity * product.data.pric
+        
+        let vat = (product.data.price * tax) / 100
+        let finalPrice = (Number(product.data.price) + vat)
+        totalPrice += (product.quantity * finalPrice)
       })
       
-      totalPrice = subTotalPrice + (subTotalPrice * tax) ;
-      document.querySelector(`#table-product-tax-addition-${elementId}`).innerHTML = `Tax: <strong>${tax * 100}%</strong> (+ $${(subTotalPrice * tax).toFixed(2)})`
+      // totalPrice = subTotalPrice + (subTotalPrice * tax) ;
+      // document.querySelector(`#table-product-tax-addition-${elementId}`).innerHTML = `Tax: <strong>${tax * 100}%</strong> (+ $${(subTotalPrice * tax).toFixed(2)})`
       document.querySelector(`#table-product-total-price-all-${elementId}`).innerHTML = `Total: <strong>$${totalPrice.toFixed(2)}</strong>`
     }
 
     addQuantity = (elementId, productId) => {
       selectedProducts.map((product,i) => {
         if( product.data.id == productId){
-          
+          let vat = (product.data.price * tax) / 100
+          let finalPrice = (Number(product.data.price) + vat)
           selectedProducts[i].quantity++
           document.querySelector(`#table-product-quantity-text-${productId}`).innerHTML = product.quantity;
-          document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `<strong>$${(product.quantity * product.data.price).toFixed(2)}</strong> <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
+          document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `<strong>$${(product.quantity * finalPrice).toFixed(2)}</strong> <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
           calculateTotalPrices(elementId)
         }
       })
@@ -120,9 +126,11 @@
       selectedProducts.map((product,i) => {
         if( product.data.id == productId){
           if(product.quantity > 1){
+            let vat = (product.data.price * tax) / 100
+            let finalPrice = (Number(product.data.price) + vat)
             selectedProducts[i].quantity--
             document.querySelector(`#table-product-quantity-text-${productId}`).innerHTML = product.quantity;
-            document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `<strong>$ ${(product.quantity * product.data.price).toFixed(2)}</strong> <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
+            document.querySelector(`#table-product-total-price-${productId}`).innerHTML = `<strong>$ ${(product.quantity * finalPrice).toFixed(2)}</strong> <button type="button" onclick="deleteProductFromTable(${elementId}, ${productId})" class="btn btn-danger"><i class="fa fa-trash"></i></button>`;
           }
         }
       })
@@ -132,6 +140,10 @@
     addProductToTable = (elementId) => {
       let value = document.querySelector(`#selProduct-${elementId}`).value
       let temp = productsList.find(product => { return product.id == value })
+      let vat = (temp.price * tax) / 100
+
+      let finalPrice = (Number(temp.price) + vat)
+
       document.querySelector(`#table-product-list-${elementId}`).innerHTML += `
       <tr>
         <td><strong>${temp.title} ${(temp.brand == "")?``:`${temp.brand}`}</strong></td>
@@ -143,7 +155,7 @@
         <td>$${temp.price}</td>
         <td id="table-product-total-price-${temp.id}" class="text-right">
           <strong>
-            $${temp.price}
+            $${finalPrice.toFixed(2)}
           </strong>
           <button type="button" id="btnDelete${temp.id}" onclick="deleteProductFromTable(${elementId}, ${temp.id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
         </td>
@@ -219,7 +231,14 @@
     <?php
       if(!isset($_GET["preview"])){
         ?>
-          document.querySelector('#btnFormSubmit').addEventListener("click", (e) => {
+          document.querySelector('#btnFormSubmit').addEventListener("click", (e) => { 
+            var pads = document.querySelectorAll('canvas')
+
+            pads.forEach(pad => {
+              let signaturePad = new SignaturePad(pad);
+              console.log(signaturePad.toData())
+            })
+            
             selectedProducts.map(product => {
               let data = {
                 "fp_form_id": <?= $form->forms_id?>,
@@ -238,7 +257,7 @@
               })
             })
 
-            window.alert("form submitted")
+            window.alert("form submitted!!!")
           })
 
 

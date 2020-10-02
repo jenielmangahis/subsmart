@@ -13,7 +13,6 @@ class Vault extends MY_Controller {
 		$this->page_data['page']->menu = 'vault';
 
 		$this->company_folder = getCompanyFolder();
-		$this->load->model(array('file_folders_permissions_roles_model','file_folders_permissions_users_model'));
 	}
 
 	public function index()

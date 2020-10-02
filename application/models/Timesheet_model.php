@@ -14,6 +14,17 @@ class Timesheet_model extends MY_Model {
 //    {
 //        $this->db->insert($this->table, $data);
 //    }
+    public function getTSNotification(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id))->result();
+        return $qry;
+    }
+    public function getClockInSession(){
+        $this->db->or_where('date_in',date('Y-m-d'));
+        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $qry = $this->db->get($this->attn_tbl)->result();
+        return $qry;
+    }
     public function getNotification($user_id){
         $qry = $this->db->get_where('user_notification',array('user_id' => $user_id))->result();
         return $qry;
@@ -202,7 +213,11 @@ class Timesheet_model extends MY_Model {
         $this->db->insert($this->db_table,$data);
         return true;
     }
-
+    public function getTSLogsByUser(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $qry = $this->db->get_where($this->db_table,array('user_id' => $user_id,'status'=>1))->result();
+        return $qry;
+    }
     public function getTimesheetLogs(){
         $query = $this->db->get($this->db_table);
         return $query->result();
