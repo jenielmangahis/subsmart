@@ -830,7 +830,7 @@ if (!function_exists('getFolders')) {
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
         } else {
-            $category_filter = 'and a.category_id is null ';
+            $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
 
         $sql = 'select ' . 
@@ -896,7 +896,7 @@ if (!function_exists('getFiles')) {
         if($ofCategorized){
             $category_filter = 'and a.category_id is not null ';
         } else {
-            $category_filter = 'and a.category_id is null ';
+            $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
 
         $sql = 'select ' . 
@@ -992,11 +992,7 @@ if (!function_exists('getTimesheetNotification')){
 
     function getTimesheetNotification(){
         $CI = &get_instance();
-        $uid = logged('id');
-
-        $sql = 'select * from user_notification where user_id ='.$uid;
-
-        return $CI->db->query($sql)->result_array();
+        return $CI->timesheet_model->getTSNotification();
     }
 }
 if (!function_exists('getNotificationCount')){
@@ -1008,6 +1004,18 @@ if (!function_exists('getNotificationCount')){
         $sql = 'select * from user_notification where user_id ='.$uid.' and status = 1';
 
         return $CI->db->query($sql)->num_rows();
+    }
+}
+if (!function_exists('getClockInSession')){
+    function getClockInSession(){
+        $CI = &get_instance();
+        return $CI->timesheet_model->getClockInSession();
+    }
+}
+if (!function_exists('getEmployeeLogs')){
+    function getEmployeeLogs(){
+        $CI = &get_instance();
+        return $CI->timesheet_model->getTSLogsByUser();
     }
 }
 

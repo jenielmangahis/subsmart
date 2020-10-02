@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     height: 150px !important;
 }
-.hide,.Checkhide
+.hide,.Checkhide,.Recurrhide
 {
     display: none;
 }
@@ -395,6 +395,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         <div class="save-act" style="position: unset !important;">
             <button type="button" class="btn-cmn" onclick="closeFullNav()">Cancel</button>
             <a href="#" style="margin-left: 30%" onclick="openPrintNav()">Print check</a>
+            <a href="#" style="margin-left: 5%" onclick="OpenRecurr()">Make Recurring</a>
             <button type="submit" class="savebtn">Done</button>
         </div>
     </div>
@@ -746,6 +747,501 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
         </div>
     </div>
     <!-- End Add Check -->
+
+    <!-- Make recurring -->
+    <div id="overlay-recurr-tx" class=""></div>
+    <div id="side-menu-recurr-tx" class="main-side-nav">
+        <div style="background-color: #f4f5f8">
+            <div class="side-title">
+                <h4>#check</h4>
+                <a id="close-menu-recurr-tx" class="menuCloseButton" onclick="closeRecurr()"><span id="side-menu-close-text">
+                <i class="fa fa-times"></i></span></a>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <h2>Recurring Check</h2>
+                </div>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-2">
+                        <label>Template name</label>
+                        <input type="text" name="template_name" id="template_name" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Type</label>
+                        <select name="type_scheduled" id="type_scheduled" class="form-control">
+                            <option value="scheduled">Scheduled</option>
+                            <option value="reminder">Reminder</option>
+                            <option value="unscheduled">Unscheduled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="sched_">Create<input type="number" name="create_days" id="create_days" class="form-control">days in advance</div>
+                        <div id="remine_" style="display: none;">Remind<input type="number" name="create_days" id="create_days" class="form-control">days before the transaction date</div>
+                        <div id="unsched_" style="display: none;">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: 20px;" id="sched_section">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-2">
+                        <label>Interval</label>
+                        <select name="interval" id="interval" class="form-control">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="col-md-7">
+                        <div id="daily" style="display: none;">every<input type="number" name="daily_days" id="daily_days" class="form-control" style="width: 5% !important;display: inline;">day(s)</div>
+                        <div id="weekly" style="display: none;">
+                            every<input type="number" name="daily_weeks" id="daily_weeks" class="form-control" style="width: 5% !important;display: inline;">week(s) on
+                            <select name="weekly_option" id="weekly_option" class="form-control" style="width: 15% !important;">
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                                <option value="saturday">Saturday</option>
+                                <option value="sunday">Sunday</option>
+                            </select>
+                        </div>
+                        <div id="monthly">
+                            on
+                            <select name="monthlymain_option" id="monthlymain_option" class="form-control" style="width: 15% !important;">
+                                <option value="day">day</option>
+                                <option value="first">first</option>
+                                <option value="second">second</option>
+                                <option value="third">third</option>
+                                <option value="fourth">fourth</option>
+                                <option value="last">last</option>
+                            </select>
+                            <select name="monthlyday_option" id="monthlyday_option" class="form-control" style="width: 12% !important;">
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                                <option value="11th">11th</option>
+                                <option value="12th">12th</option>
+                                <option value="13th">13th</option>
+                                <option value="14th">14th</option>
+                                <option value="15th">15th</option>
+                                <option value="16th">16th</option>
+                                <option value="17th">17th</op1tion>
+                                <option value="18th">18th</option>
+                                <option value="19th">19th</option>
+                                <option value="20th">20th</option>
+                                <option value="21th">21th</option>
+                                <option value="22th">22th</option>
+                                <option value="23th">23th</option>
+                                <option value="24th">24th</option>
+                                <option value="25th">25th</option>
+                                <option value="26th">26th</option>
+                                <option value="27th">27th</option>
+                                <option value="28th">28th</option>
+                                <option value="last">Last</option>
+                            </select>
+                            <select name="monthlyweek_option" id="monthlyweek_option" class="form-control" style="display: none;width: 15% !important;">
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                                <option value="saturday">Saturday</option>
+                                <option value="sunday">Sunday</option>
+                            </select>
+                            of every<input type="number" name="monthly_days" id="monthly_days" size="1" class="form-control" style="width: 5% !important;display: inline;">month(s)
+                        </div>
+                        <div id="yearly" style="display: none;">
+                            every
+                            <select name="yearlymonth_option" id="yearlymonth_option" class="form-control" style="width: 15% !important;">
+                                <option value="january">January</option>
+                                <option value="february">February</option>
+                                <option value="march">March</option>
+                                <option value="april">April</option>
+                                <option value="may">May</option>
+                                <option value="june">June</option>
+                                <option value="july">July</option>
+                                <option value="august">August</option>
+                                <option value="september">September</option>
+                                <option value="october">October</option>
+                                <option value="november">November</option>
+                                <option value="december">December</option>
+                            </select>
+                            <select name="yearlyday_option" id="yearlyday_option" class="form-control" style="width: 12% !important;">
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                                <option value="11th">11th</option>
+                                <option value="12th">12th</option>
+                                <option value="13th">13th</option>
+                                <option value="14th">14th</option>
+                                <option value="15th">15th</option>
+                                <option value="16th">16th</option>
+                                <option value="17th">17th</op1tion>
+                                <option value="18th">18th</option>
+                                <option value="19th">19th</option>
+                                <option value="20th">20th</option>
+                                <option value="21th">21th</option>
+                                <option value="22th">22th</option>
+                                <option value="23th">23th</option>
+                                <option value="24th">24th</option>
+                                <option value="25th">25th</option>
+                                <option value="26th">26th</option>
+                                <option value="27th">27th</option>
+                                <option value="28th">28th</option>
+                                <option value="last">Last</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>StartDate</label>
+                        <div class="col-xs-10 date_picker">
+                            <input type="text" name="recurr_start_date" id="recurr_start_date" class="form-control" style="width: 35%!important">
+                        </div>
+                        <select class="form-control" name="recurr_select" id="recurr_select" style="width: 30%!important">
+                            <option value="none">None</option>
+                            <option value="by">By</option>
+                            <option value="after">After</option>
+                        </select>
+                        <div id="recurr_by" style="display: none;">
+                            <div class="col-xs-10 date_picker">
+                                <input type="text" name="recurr_end_date" id="recurr_end_date" class="form-control" style="width: 35%!important">
+                            </div>
+                        </div>
+                        <div id="recurr_after" style="display: none;"><input type="text" name="recurr_end_date" id="recurr_end_date" class="form-control" maxlength="3" style="display: inline;width: 5% !important"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-3">
+                        <select name="recurr_payee_popup" class="form-control">
+                            <option value="" disabled="" selected>Payee</option>
+                            <?php
+                            foreach($this->AccountingVendors_model->select() as $ro)
+                            {
+                            ?>
+                            <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" name="recurr_account_popup" id="recurr_account_popup">
+                            <?php
+                               $i=1;
+                               foreach($this->chart_of_accounts_model->select() as $row)
+                               {
+                                ?>
+                                <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                <?php endif ?>value="<?=$row->id?>"><?=$row->name?></option>
+                              <?php
+                              $i++;
+                              }
+                               ?>
+                            <option value="fa fa-plus-circle">&#xf2bb; Add new</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-2">
+                        <label>Mailing Address:</label>
+                        <textarea name="check_mailing_add" rows="4"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Payment date:</label>
+                        <div class="col-xs-10 date_picker">
+                            <input type="text" name="check_date_popup" class="form-control" value="<?=$rows[0]->ending_date?>"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <label>Check no.</label>
+                        <input type="text" name="recurr_checkno" value=""/>
+                        </br>
+                        </br>
+                        <input type="checkbox" name="recurr_print_check">Print Later
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-2">
+                        <label>Permit no.</label>
+                        <input type="text" name="recurr_permitno" value=""/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-left: 20px">
+            <section class="table-wrapper">
+                <div class="container">
+                    <table class="table" id="participantRecurrTable">
+                        <thead>
+                            <tr>
+                               <th></th>
+                               <th>#</th>
+                               <th>Category</th>
+                               <th>Description</th>
+                               <th>Amount</th>
+                               <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="trClickRecurrMain()">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>1</td>
+                                <td>
+                                    <select name='recurr_expense_account' id='recurr_expense_account' class='' style="display: none;">
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option <?php if($rows[0]->expense_account == $rw->sub_acc_name){ echo "selected"; } ?> value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_expense_account"><?=$rows[0]->expense_account?></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp" name="recurr_descp" value="" placeholder="What did you paid for?">
+                                    <div class="recurr_descp"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_service_charge" name="recurr_service_charge" value="<?=number_format($rows[0]->service_charge,2)?>">
+                                    <div class="recurr_service_charge"><?=number_format($rows[0]->service_charge,2)?></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr onclick="trClickRecurr(2)">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>2</td>
+                                <td>
+                                    <select name='recurr_expense_account_2' id='recurr_expense_account_2' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_expense_account_2"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_2" name="recurr_descp_2" value="" placeholder="What did you paid for?">
+                                    <div class="recurr_descp_2"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_service_charge_2" name="recurr_service_charge_2" value="">
+                                    <div class="recurr_service_charge_2"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <tr class="pr participantRecurrRow Recurrhide">
+                                <td><i class="fa fa-th"></i></td>
+                                <td>0</td>
+                                <td>
+                                    <select name='recurr_expense_account_' id='recurr_expense_account_' class='' style="display: none;">
+                                        <option value=""></option>
+                                        <?php
+                                        foreach ($this->account_sub_account_model->get() as $rw)
+                                        {
+                                            ?>
+                                           <option value="<?=$rw->sub_acc_name?>"><?=$rw->sub_acc_name?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <div class="recurr_expense_account_"></div>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="recurr_descp_" name="recurr_descp_" value="" placeholder="What did you paid for?">
+                                    <div class="recurr_descp_"></div>
+                                </td>
+                                <td>
+                                     <input type="hidden" id="recurr_service_charge_" name="recurr_service_charge_" value="">
+                                    <div class="recurr_service_charge_"></div>
+                                </td>
+                                <td><a href="javascript:void(0);" class="remove_recurr"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="btn-group">
+                        <a href="javascript:void(0);" class="btn-add-bx add_recurr">Add Lines</a>
+                        <a href="javascript:void(0);" class="btn-add-bx clear_recurr">Clear All Lines</a>
+                    </div>
+                    <div class="btn-group hidemerecurr" style="display: none;">
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="rightclickRecurr()">Save<i class="fa fa-check"></i></a>
+                        <a href="javascript:void(0);" class="btn-add-bx"  onclick="crossClickRecurr()">Cancel<i class="fa fa-close"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label>Memo</label>
+                    </br>
+                    <textarea name="recurr_memo" rows="4"><?=$rows[0]->memo_sc?></textarea>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-2">
+                    <h6 id="recurrtotal">Total : $<?=number_format($rows[0]->service_charge,2)?></h6>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-4">
+                    <label><i class="fa fa-paperclip"></i>Attachment</label>
+                    </br>
+                    <?php echo form_open_multipart('accounting/reconcile/do_upload/'.$rows[0]->chart_of_accounts_id);?>
+                    <div class="file-upload-block">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn ubw">
+                                <i class="fa fa-cloud-upload"></i>
+                                <h6>Drag and drop files here or <span>browse to upload</span></h6>
+                            </button>
+                            <input type="file" name="userfile" />
+                        </div>
+                    </div>
+                    </br>
+                    <a href="#" onclick="openSideNav()">Show existing</a>
+                </div>
+            </div>
+        </div>
+     
+        <div class="save-act" style="position: unset !important;">
+            <button type="button" class="btn-cmn" onclick="closeRecurr()">Cancel</button>
+            <button type="button" class="btn-cmn" onclick="openRecurr()" style="margin-left: 5% ">Revert</button>
+            <button type="submit" class="savebtn">Save template</button>
+        </div>
+    </div>
+    <!-- End Make recurring --><!-- Make recurring -->
+    <div id="overlay-account-tx" class=""></div>
+    <div id="side-menu-account-tx" class="main-side-nav" style="display: none;">
+        <?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="mt-0 header-title mb-5">New Chart of account</h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>Account</h3>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                     <label for="account_type">Account Type</label>
+                                    <select name="account_type" id="account_type" class="form-control select2" required>
+                                        <option value="">Select Account Type</option>
+                                        <?php foreach ($this->account_model->get() as $row): ?>
+                                            <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                                 <div class="col-md-4 form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" name="name" id="name" required
+                                           placeholder="Enter Name"
+                                           autofocus/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="detail_type">Detail Type</label>
+                                    <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required>
+                                        <?php foreach ($this->account_detail_model->get() as $row_detail): ?>
+                                            <option value="<?php echo $row_detail->acc_detail_id ?>" ><?php echo $row_detail->acc_detail_name ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="description">Description</label>
+                                    <textarea type="text" class="form-control" name="description" id="description"
+                                              placeholder="Enter Description" rows="3" required></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                          Use <b>Rents held in trust</b> to track deposits and rent held on behalf of the property owners. <br><br>
+                                          <p>Typically only property managers use this type of account.</p>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check()"/>
+                                    <label for="formClient-Status">Is sub account</label>
+                                    <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
+                                          <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
+                                            <option value="<?php echo $row_sub->sub_acc_id ?>" ><?php echo $row_sub->sub_acc_name ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                    <br>
+                                    <label for="choose_time">When do you want to start tracking your finances from this account in Nsmartrac?</label>
+                                    <span></span>
+                                    <select name="choose_time" id="choose_time" class="form-control select2" required onchange="showdiv()">
+                                            <option selected="selected" disabled="disabled">Choose one</option>
+                                            <option value="Beginning of this year">Beginning of this year</option>
+                                            <option value="Beginning of this month">Beginning of this month</option>
+                                            <option value="Today">Today</option>
+                                            <option value="Other" onclick="hidediv()">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group"></div>
+                                <div class="col-md-4 form-group hide-div" style="display: none;">
+                                     <label for="balance">Balance</label>
+                                    <input type="text" class="form-control" name="balance" id="balance" required
+                                           placeholder="Enter Balance"
+                                           autofocus/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group"></div>
+                                <div class="col-md-4 form-group hide-date" style="display: none;">
+                                     <label for="time_date">Date</label>
+                                     <div class="col-xs-10 date_picker">
+                                        <input type="text" class="form-control" name="time_date" id="time_date"
+                                           placeholder="Enter Date" onchange="showdiv2()" autofocus/>
+                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <button type="submit"  name="save" class="btn btn-flat btn-primary">Submit</button>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <a href="#" class="btn btn-flat btn-primary" onclick="closeAddaccount()">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
+            <?php echo form_close(); ?>
+    </div>
+    <!-- End Make recurring -->
 
     <!-- Add Agency Sidebar -->
     <div id="overlay" class=""></div>
@@ -2258,4 +2754,367 @@ function closeCheck()
     jQuery("#side-menu-check-tx").css("width","0%");
     jQuery("#overlay-check-tx").removeClass("overlay");
 }
+</script>
+<script type="text/javascript">
+function OpenRecurr()
+{
+    closeFullNav();
+    jQuery("#side-menu-recurr-tx").addClass("open-side-nav");
+    jQuery("#side-menu-recurr-tx").css("width","100%");
+    jQuery("#side-menu-recurr-tx").css("overflow-y","auto");
+    jQuery("#side-menu-recurr-tx").css("overflow-x","hidden");
+    jQuery("#overlay-recurr-tx").addClass("overlay");
+}
+function closeRecurr() 
+{
+    jQuery("#side-menu-recurr-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-recurr-tx").css("width","0%");
+    jQuery("#overlay-recurr-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+    /* Variables */
+    var p = 1;
+    var row_recurr = $(".participantRecurrRow");
+
+    function addRowRecurr() {
+      row_recurr.clone(true, true).removeClass('Recurrhide table-line').appendTo("#participantRecurrTable");
+      var index_recurr =$('#participantRecurrTable tr').length -1;
+      var final_index_recurr = index_recurr-1;
+      $('#participantRecurrTable tr:eq('+index_recurr+')').attr("onclick","trClickRecurr("+final_index_recurr+")");
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(1)').text(index_recurr-1);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(2)').find('select').attr("id","recurr_expense_account_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(2)').find('select').attr("name","recurr_expense_account_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(2)').find('div').attr("class","recurr_expense_account_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(3)').find('input').attr("id","recurr_descp_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(3)').find('input').attr("name","recurr_descp_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(3)').find('div').attr("class","recurr_descp_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(4)').find('input').attr("id","recurr_service_charge_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(4)').find('input').attr("name","recurr_service_charge_"+final_index_recurr);
+      $('#participantRecurrTable tr:eq('+index_recurr+') td:eq(4)').find('div').attr("class","recurr_service_charge_"+final_index_recurr);
+    }
+
+    function removeRowRecurr(buttonrecurr) {
+        console.log(buttonrecurr.closest("tr").text());
+      buttonrecurr.closest("tr").remove();
+      var totrecurr = $('#recurrtotal').text().substr(9)-buttonrecurr.closest("tr").find('td:eq(4)').text().trim();
+      $('#recurrtotal').text('Total : $'+totrecurr.toFixed(2));
+    }
+    /* Doc ready */
+    $(".add_recurr").on('click', function () {
+      getP();
+      if($("#participantRecurrTable tr").length < 17) {
+        addRowRecurr();
+        var i = Number(p)+1;
+        $("#participants").val(i);
+      }
+      $(this).closest("tr").appendTo("#participantRecurrTable");
+      if ($("#participantRecurrTable tr").length === 3) {
+        $(".remove_recurr").hide();
+      } else {
+        $(".remove_recurr").show();
+      }
+    });
+    $(".remove_recurr").on('click', function () {
+      getP();
+      if($("#participantRecurrTable tr").length === 3) {
+        //alert("Can't remove row.");
+        $(".remove_recurr").hide();
+      } else if($("#participantRecurrTable tr").length - 1 ==3) {
+        $(".remove_recurr").hide();
+        removeRowRecurr($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      } else {
+        removeRowRecurr($(this));
+        var i = Number(p)-1;
+        $("#participants").val(i);
+      }
+    });
+    $("#participants").change(function () {
+      var i = 0;
+      p = $("#participants").val();
+      var rowCount = $("#participantRecurrTable tr").length - 2;
+      if(p > rowCount) {
+        for(i=rowCount; i<p; i+=1){
+          addRowRecurr();
+        }
+        $("#participantRecurrTable #addButtonRow").appendTo("#participantRecurrTable");
+      } else if(p < rowCount) {
+      }
+    });
+    $(".clear_recurr").on('click', function () {
+      if($("#participantRecurrTable tr").length - 1 >3) {
+        x = 1;
+        $('#participantRecurrTable > tbody  > tr').each(function() {
+            if(x >3)
+            {
+                $(this).remove();
+                var totrecurr_clear = $('#recurrtotal').text().substr(9)-$(this).closest("tr").find('td:eq(4)').text().trim();
+                $('#recurrtotal').text('Total : $'+totrecurr_clear.toFixed(2));
+            }
+            x = x+1;
+        });
+      }
+    });
+</script>
+<script type="text/javascript">
+    function trClickRecurrMain()
+    {
+        if($('#recurr_expense_account').css("display")== 'none')
+        {
+            $('.recurr_expense_account').css('display','none');
+            $('#recurr_expense_account').show();
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_service_charge').attr("type")== 'hidden')
+        {
+            $('.recurr_service_charge').css('display','none');
+            $('#recurr_service_charge').removeAttr('type','hidden');
+            $('#recurr_service_charge').attr('type','number');
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_descp').attr("type")== 'hidden')
+        {
+            $('.recurr_descp').css('display','none');
+            $('#recurr_descp').removeAttr('type','hidden');
+            $('.hidemerecurr').show();
+        }
+    }
+
+    function trClickRecurr(index_recurr)
+    {
+        if($('#recurr_expense_account_'+index_recurr).css("display")== 'none')
+        {
+            $('.recurr_expense_account_'+index_recurr).css('display','none');
+            $('#recurr_expense_account_'+index_recurr).show();
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_service_charge_'+index_recurr).attr("type")== 'hidden')
+        {
+            $('.recurr_service_charge_'+index_recurr).css('display','none');
+            $('#recurr_service_charge_'+index_recurr).removeAttr('type','hidden');
+            $('#recurr_service_charge_'+index_recurr).attr('type','number');
+            $('.hidemerecurr').show();
+        }
+        if($('#recurr_descp_'+index_recurr).attr("type")== 'hidden')
+        {
+            $('.recurr_descp_'+index_recurr).css('display','none');
+            $('#recurr_descp_'+index_recurr).removeAttr('type','hidden');
+            $('.hidemerecurr').show();
+        }
+    }
+    function rightclickRecurr()
+    {
+        length_recurr =$('#participantRecurrTable tr').length -2;
+        $('.recurr_expense_account').show();
+        $('.recurr_expense_account').text($('#recurr_expense_account').val());
+        $('#recurr_expense_account').css('display','none');
+        $('.recurr_service_charge').show();
+        $('.recurr_service_charge').text($('#recurr_service_charge').val());
+        $('#recurr_service_charge').attr('type','hidden');
+        $('.recurr_descp').show();
+        $('.recurr_descp').text($('#recurr_descp').val());
+        $('#recurr_descp').attr('type','hidden');
+        $('.hidemerecurr').hide();
+
+        for(var i = 2 ; i <= length_recurr ; i++)
+        {
+            $('.recurr_expense_account_'+i).show();
+            $('.recurr_expense_account_'+i).text($('#recurr_expense_account_'+i).val());
+            $('#recurr_expense_account_'+i).css('display','none');
+            $('.recurr_service_charge_'+i).show();
+            $('.recurr_service_charge_'+i).text($('#recurr_service_charge_'+i).val());
+            $('#recurr_service_charge_'+i).attr('type','hidden');
+            $('.recurr_descp_'+i).show();
+            $('.recurr_descp_'+i).text($('#recurr_descp_'+i).val());
+            $('#recurr_descp_'+i).attr('type','hidden');
+        }
+
+        var total_recurr = 0;
+        total_recurr += parseInt($('.recurr_service_charge').text());
+        for(var i = 2 ; i <= length_recurr ; i++)
+        {
+            if($('.recurr_service_charge_'+i).text() != '')
+            {total_recurr += parseInt($('.recurr_service_charge_'+i).text());}
+        }
+        $('#recurrtotal').text('Total : $'+total_recurr.toFixed(2));
+    }
+    function crossClickRecurr()
+    {
+        $('.recurr_expense_account').show();
+        $('#recurr_expense_account').css('display','none');
+        $('.recurr_service_charge').show();
+        $('#recurr_service_charge').attr('type','hidden');
+        $('.recurr_descp').show();
+        $('#recurr_descp').attr('type','hidden');
+        $('.hidemerecurr').hide();
+        for(var i = 2 ; i <= length_recurr ; i++)
+        {
+            $('.recurr_expense_account_'+i).show();
+            $('#recurr_expense_account_'+i).css('display','none');
+            $('.recurr_service_charge_'+i).show();
+            $('#recurr_service_charge_'+i).attr('type','hidden');
+            $('.recurr_descp_'+i).show();
+            $('#recurr_descp_'+i).attr('type','hidden');
+        }
+    }
+</script>
+<script type="text/javascript">
+     $('#interval').on('change', function (e) {
+          if($('#interval').val() == 'daily')
+          {
+            $('#daily').show();
+            $('#weekly').hide();
+            $('#monthly').hide();
+            $('#yearly').hide();
+          }
+          else if($('#interval').val() == 'weekly')
+          {
+            $('#daily').hide();
+            $('#weekly').show();
+            $('#monthly').hide();
+            $('#yearly').hide();
+          }
+          else if($('#interval').val() == 'monthly')
+          {
+            $('#daily').hide();
+            $('#weekly').hide();
+            $('#monthly').show();
+            $('#yearly').hide();
+          }
+          else if($('#interval').val() == 'yearly')
+          {
+            $('#daily').hide();
+            $('#weekly').hide();
+            $('#monthly').hide();
+            $('#yearly').show();
+          }
+        });
+</script>
+<script type="text/javascript">
+    $('#type_scheduled').on('change', function (e) {
+          if($('#type_scheduled').val() == 'scheduled')
+          {
+            $('#sched_').show();
+            $('#unsched_').hide();
+            $('#remine_').hide();
+            $('#sched_section').show();
+          }
+          else if($('#type_scheduled').val() == 'unscheduled')
+          {
+            $('#sched_').hide();
+            $('#unsched_').show();
+            $('#remine_').hide();
+            $('#sched_section').hide();
+          }
+          else if($('#type_scheduled').val() == 'reminder')
+          {
+            $('#sched_').hide();
+            $('#unsched_').hide();
+            $('#remine_').show();
+            $('#sched_section').show();
+          }
+        });
+</script>
+<script type="text/javascript">
+    $('#recurr_select').on('change', function (e) {
+          if($('#recurr_select').val() == 'none')
+          {
+            $('#recurr_by').hide();
+            $('#recurr_after').hide();
+          }
+          else if($('#recurr_select').val() == 'by')
+          {
+            $('#recurr_by').show();
+            $('#recurr_after').hide();
+          }
+          else if($('#recurr_select').val() == 'after')
+          {
+            $('#recurr_by').hide();
+            $('#recurr_after').show();
+          }
+        });
+</script>
+<script type="text/javascript">
+    $('#recurr_account_popup').on('change', function (e) {
+          if($('#recurr_account_popup').val() == 'fa fa-plus-circle')
+          {
+           openAddAccount();
+          } 
+      });
+</script>
+<script type="text/javascript">
+function openAddAccount()
+{
+    jQuery("#side-menu-account-tx").show();
+    jQuery("#side-menu-account-tx").addClass("open-side-nav");
+    jQuery("#side-menu-account-tx").css("width","50%");
+    jQuery("#side-menu-account-tx").css("overflow-y","auto");
+    jQuery("#side-menu-account-tx").css("overflow-x","hidden");
+    jQuery("#overlay-account-tx").addClass("overlay");
+}
+function closeAddaccount() 
+{
+    jQuery("#side-menu-account-tx").removeClass("open-side-nav");
+    jQuery("#side-menu-account-tx").css("width","0%");
+    jQuery("#overlay-account-tx").removeClass("overlay");
+}
+</script>
+<script type="text/javascript">
+    $('#account_type').on('change', function() {
+      var account_id = this.value;
+      if(account_id!='')
+      {
+        $.ajax({
+            url:"<?php echo url('accounting/chart_of_accounts/fetch_acc_detail') ?>",
+            method: "POST",
+            data: {account_id:account_id},
+            success:function(data)
+            {
+                $("#detail_type").html(data);
+            }
+        })
+      }
+    });
+       
+    function showOptions(s) {
+        var option_text = document.getElementById(s[s.selectedIndex].id).innerHTML;
+        $('#name').val(option_text);
+    }
+
+    function check() {
+      var x = document.getElementById("check_sub").checked;
+      if(x == true)
+      {
+        $('#sub_account_type').removeAttr('disabled','disabled');
+      }
+      else
+      {
+        $('#sub_account_type').attr('disabled','disabled');
+      }
+    }
+
+    function showdiv() {
+        $('.hide-div').css('display','block');
+        if($('#choose_time').find(":selected").text()=='Other')
+        {
+            $('.hide-div').css('display','none');
+            $('.hide-date').css('display','block');
+        }
+        else
+        {
+            $('.hide-date').css('display','none');
+        }
+    }
+    function showdiv2() {
+        if($('.day').hasClass('active'))
+        {
+            $('.hide-div').css('display','block');
+        }
+        else
+        {
+            $('.hide-div').css('display','none');
+        }
+    }
 </script>

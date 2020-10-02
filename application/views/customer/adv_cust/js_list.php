@@ -25,10 +25,36 @@
         });
 
         var table_cust_list =$('#customer_list_table').DataTable({
-            "lengthChange": false,
+            "lengthChange": true,
             "searching" : true,
-            "pageLength": 20,
-            "info": false
+            "pageLength": 10,
+            "info": true,
+            "responsive": true,
+            "scrollY":        '60vh',
+            // "scrollY":        '200px',
+            "scrollX":        false,
+            "scrollCollapse": true,
+            // "autoWidth": true,
+            //"order": [[ 1, "asc" ]],
+            "order": [],
+            initComplete: function () {
+                this.api().columns([11]).every( function () {
+                    var column = this;
+                    var select = $('<select ><option value=""></option></select>').appendTo( $(column.header()))
+                        .on( 'change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column.search( val ? val : '', false, true ).draw();
+                        } );
+                    column.data().unique().sort().each( function ( d, j ) {
+                        //var val = $('<div/>').html(d).text();
+                        //select.append( '<option value="' + val + '">' + val + '</option>' );
+                        select.append( '<option value="'+d+'">'+d+'</option>' )
+                        //console.log(val);
+                    });
+                } );
+            }
         });
 
         // var table_clt =$('#customerListTable').DataTable({

@@ -104,31 +104,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 </div>
 
-<style>
-    .hid-deskx {
-        display: none !important;
-    }
-
-
-    @media only screen and (max-width: 600px) {
-        .hid-desk {
-            display: none !important;
-        }
-
-        .hid-deskx {
-            display: block !important;
-        }
-    }
-</style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script>
+    $(document).ready(function() {
     $('#leads_list_table').DataTable({
         "lengthChange": true,
         "searching" : true,
         "pageLength": 10,
-        "info": true
+        "info": true,
+        "responsive": true,
+        "scrollY":        '60vh',
+        // "scrollY":        '200px',
+        "scrollX":        false,
+        "scrollCollapse": true,
+        "autoWidth": true,
+        "order": [[ 1, "asc" ]],
+        initComplete: function () {
+            this.api().columns([7]).every( function () {
+                var column = this;
+                var select = $('<select >' +
+                    '<option value=""></option>' +
+                    '<option value="New">New</option>' +
+                    '<option value="Contacted">Contacted</option>' +
+                    '<option value="Follow Up">Follow Up</option>' +
+                    '<option value="Assigned">Assigned</option>' +
+                    '<option value="Converted">Converted</option>' +
+                    '<option value="Closed">Closed</option>' +
+                    '</select>').appendTo( $(column.header()))
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column.search( val ? val : '', false, true ).draw();
+                    } );
+                column.data().unique().sort().each( function ( d, j ) {
+                    //var val = $('<div/>').html(d).text();
+                    //select.append( '<option value="' + val + '">' + val + '</option>' );
+                   // select.append( '<option value="'+d+'">'+d+'</option>' )
+                    //console.log(val);
+                });
+            } );
+        }
+    });
     });
     $(".delete_lead").on( "click", function( event ) {
         var ID=this.id;

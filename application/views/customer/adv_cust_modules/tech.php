@@ -82,7 +82,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div style="margin-right:15px; padding-top:85px;" align="left" class="normaltext1">
+            <div style="margin-left:30px; padding-top:85px;" align="left" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">Send QR</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>

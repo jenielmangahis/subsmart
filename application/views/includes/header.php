@@ -33,6 +33,8 @@
     <!-- taxes page -->
 <!--    Clock CSS-->
     <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>css/notification/notification.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
     <style type="text/css">
@@ -79,31 +81,43 @@
                             </li>
 
 
-							<li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa fa-line-chart" aria-hidden="true"></i></a>
-
+							<li class="dropdown notification-list list-inline-item ml-auto">
+                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa fa-line-chart" aria-hidden="true"></i></a>
                             </li>
-
-
 							<li class="dropdown notification-list list-inline-item ml-auto">
                                 <a class="nav-link dropdown-toggle arrow-none" href="<?php echo base_url('settings/email_templates') ?>">
                                     <i class="fa fa-cog" aria-hidden="true"></i>
                                 </a>
                             </li>
-							<li class="dropdown notification-list list-inline-item ml-auto"><a
-                                    class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="index.html#" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i> <?php if (getNotificationCount() != 0){ ?><span class="badge badge-pill badge-danger noti-icon-badge"><?php echo getNotificationCount(); ?></span><?php }?></a>
+							<li class="dropdown notification-list list-inline-item ml-auto">
+<!--                                <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="javascript:void (0)" role="button" aria-haspopup="false" aria-expanded="false"><i class="fa fa-bell-o" aria-hidden="true"></i>-->
+<!--                                    <span class="badge badge-pill badge-danger noti-icon-badge" style="visibility: --><?php //echo (getNotificationCount() != 0)?'visible':'hidden'; ?><!--" id="notifyBadge">--><?php //echo (getNotificationCount() != 0)?getNotificationCount():null; ?><!--</span>-->
+<!--                                </a>-->
+                                <div class="wrapper-bell nav-link dropdown-toggle arrow-none" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <span class="badge badge-pill badge-danger noti-icon-badge notify-badge" style="visibility: <?php echo (getNotificationCount() != 0)?'visible':'hidden';?>;z-index: 20" id="notifyBadge"><?php echo (getNotificationCount() != 0)?getNotificationCount():null; ?></span>
+                                    <div class="bell" id="bell-1">
+                                        <div class="anchor-bell material-icons layer-1" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-1 5000ms infinite':'unset'?>">notifications_active</div>
+                                        <div class="anchor-bell material-icons layer-2" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-2 5000ms infinite':'unset'?>">notifications</div>
+                                        <div class="anchor-bell material-icons layer-3" style="animation:<?php echo (getNotificationCount() != 0)?'animation-layer-3 5000ms infinite':'unset'?>">notifications</div>
+                                    </div>
+                                </div>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                                     <!-- item-->
                                     <h6 class="dropdown-item-text">Notifications (258)</h6>
-                                    <div class="slimscroll notification-item-list">
+                                    <div class="slimscroll notification-item-list" id="notificationList">
                                         <?php
                                             $notification = getTimesheetNotification();
                                             if ($notification != null):
                                                 foreach ($notification as $notify):
+                                                    if ($notify->status == 1){
+                                                        $bg = '#e6e3e3';
+                                                    }else{
+                                                        $bg = '#f8f9fa';
+                                                    }
                                         ?>
-                                        <a href="<?php echo site_url();?>timesheet/attendance" class="dropdown-item notify-item active">
+                                        <a href="<?php echo site_url();?>timesheet/attendance" id="notificationDP" data-id="<?php echo $notify->id?>" class="dropdown-item notify-item active" style="background-color: <?php echo $bg;?>">
                                             <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
-                                            <p class="notify-details"><?php echo $notify['title']?><span class="text-muted"><?php echo $notify['content'];?></span></p>
+                                            <p class="notify-details"><?php echo $notify->title?><span class="text-muted"><?php echo $notify->content;?></span></p>
                                         </a>
                                         <?php
                                             endforeach;
@@ -154,13 +168,30 @@
                                     class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a>
                                 </div>
                             </li>
+                            <?php
+                                $clock_btn = 'clockIn';
+                                $user_id = $this->session->userdata('logged')['id'];
+                                $user_clock_in = getClockInSession();
+                                foreach ($user_clock_in as $in){
+                                    if ($in->user_id == $user_id && $in->status == 1){
+                                        $clock_btn = 'clockOut';
+                                    }else{
+                                        $clock_btn = null;
+                                    }
+                                    if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
+                                        $clock_btn = 'clockIn';
+                                    }
+
+                                }
+
+                            ?>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                                 <input type="hidden" id="clock-session" value="">
                                 <input type="hidden" id="clock-end-time" value="<?php echo ($this->session->userdata('end_break'))?$this->session->userdata('end_break'):null; ?>">
                                 <input type="hidden" id="clock-server-time" value="">
                                 <input type="hidden" id="clock-status" value="<?php echo ($this->session->userdata('active') == 'clock-break')?1:0; ?>">
                                 <input type="hidden" id="attendanceId" value="<?php echo $this->session->userdata('attn-id');?>">
-                                <div class="clock-users " id="<?php echo ($this->session->userdata('clock-btn'))?$this->session->userdata('clock-btn'):"clockIn";?>" >
+                                <div class="clock-users " id="<?php echo $clock_btn?>" >
                                     <div class="clock <?php echo $this->session->userdata('active'); ?>">
                                         <div class="hour">
                                             <div class="hr" id="hr"></div>
