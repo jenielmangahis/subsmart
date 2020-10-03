@@ -830,6 +830,136 @@ class Workcalender extends MY_Controller
         }
         $this->load->view('workcalender/reports/calender-print', $this->page_data);
     }
+
+    public function main_calendar_events()
+    {
+        $this->load->model('Event_model', 'event_model');
+        $this->load->model('GoogleAccounts_model');
+
+        $post = $this->input->post();
+        $role = logged('role');
+        
+        if ($role == 2 || $role == 3) {
+            $company_id = logged('company_id');
+            $events = $this->event_model->getAllByCompany($company_id);
+        }
+        if ($role == 4) {
+            $events = $this->event_model->getAllByUserId();
+        }
+
+        $resources_user_events = array();
+        $inc = 0;
+        if(!empty($events)) {            
+            foreach($events as $event) {
+
+                if($event->employee_id > 0) {
+                    $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                    $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                    $resources_user_events[$inc]['resourceId'] = $event->employee_id;
+                    $resources_user_events[$inc]['title'] = $event->event_description;
+                    $resources_user_events[$inc]['start'] = $start_date_time;
+                    $resources_user_events[$inc]['end'] = $start_date_end;
+                    $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                $inc++;
+                }elseif($event->employee_id == 0) {
+                    foreach($get_users as $get_user) {
+                        $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                        $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                        $resources_user_events[$inc]['resourceId'] = $get_user->id;
+                        $resources_user_events[$inc]['title'] = $event->event_description;
+                        $resources_user_events[$inc]['start'] = $start_date_time;
+                        $resources_user_events[$inc]['end'] = $start_date_end;
+                        $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                    $inc++; 
+                    }
+                   
+                }
+            }
+        }
+
+        //Google Events
+        $enabled_calendar = array();
+        $calendar_list    = array();
+        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        if( $google_user_api ){
+            $google_credentials = google_credentials();        
+
+            $access_token = "";
+            $refresh_token = "";
+            $google_client_id = "";
+            $google_secrect = "";
+            $calendar_list = array();
+
+            if(isset($google_user_api->google_access_token)) {
+                $access_token = $google_user_api->google_access_token;
+            }
+
+            if(isset($google_user_api->google_refresh_token)) {
+                $refresh_token = $google_user_api->google_refresh_token;
+            }
+
+            if(isset($google_credentials['client_id'])) {
+                $google_client_id = $google_credentials['client_id'];
+            }
+
+            if(isset($google_credentials['client_secret'])) {
+                $google_secrect = $google_credentials['client_secret'];
+            }    
+            
+            //Set Client
+            $client = new Google_Client();
+            $client->setClientId($google_client_id);
+            $client->setClientSecret($google_secrect);
+            $client->setAccessToken($access_token);
+            $client->refreshToken($refresh_token);
+            $client->setScopes(array(
+                'email',
+                'profile',
+                'https://www.googleapis.com/auth/calendar',
+            ));
+            $client->setApprovalPrompt('force');
+            $client->setAccessType('offline');
+
+            //Request
+            $access_token = $client->getAccessToken();
+            $calendar     = new Google_Service_Calendar($client);
+            $data = $calendar->calendarList->listCalendarList();
+
+            $calendar_list = $data->getItems(); 
+            $email = $google_user_api->google_email;
+            $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
+            foreach( $calendar_list as $cl ){
+                if(!in_array($cl['id'], $enabled_mini_calendar)){
+                    //Display in events
+                    $optParams = array(
+                      'orderBy' => 'startTime',
+                      'singleEvents' => TRUE,
+                      'timeMin' => $post['start'],
+                      'timeMax' => $post['end'],
+                    );
+                    $events = $calendar->events->listEvents($cl['id'],$optParams);
+                    $bgcolor = "#38a4f8";
+                    if( $cl->backgroundColor != '' ){
+                        $bgcolor = $cl->backgroundColor;
+                    }
+                    
+
+                    foreach( $events->items as $event ){  
+                        $resources_user_events[$inc]['resourceId'] = $cl['id'];
+                        $resources_user_events[$inc]['title'] = $event->summary;
+                        $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $event->start->date;
+                        $resources_user_events[$inc]['start'] = $event->start->date;
+                        $resources_user_events[$inc]['end'] = $event->end->date;
+                        $resources_user_events[$inc]['color'] = $bgcolor;
+
+                        $inc++;
+                    }
+                }
+            }
+        }
+
+        echo json_encode($resources_user_events);
+    }
 }
 
 

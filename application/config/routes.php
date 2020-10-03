@@ -334,3 +334,6 @@ $route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
 $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
+
+//workcalendar
+$route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';

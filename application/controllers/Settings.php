@@ -522,6 +522,8 @@ class Settings extends MY_Controller {
 
         $this->load->model('GoogleAccounts_model');
 
+        $post = $this->input->post();
+
         $googleAccount = $this->GoogleAccounts_model->getByAuthUser();
         $enabled_calendars = unserialize($googleAccount->enabled_calendars);
 
@@ -571,7 +573,14 @@ class Settings extends MY_Controller {
         $c_index = 0;
         foreach( $enabled_calendars as $c ){
             $calendarListEntry = $calendar->calendarList->get($c);
-            $events = $calendar->events->listEvents($c,[]);
+
+            $optParams = array(
+              'orderBy' => 'startTime',
+              'singleEvents' => TRUE,
+              'timeMin' => $post['start'],
+              'timeMax' => $post['end'],
+            );
+            $events = $calendar->events->listEvents($c,$optParams);
             //$colors = $calendar->colors->get();
 
             foreach( $events->items as $event ){  
