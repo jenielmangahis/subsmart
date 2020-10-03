@@ -170,6 +170,8 @@ $route['email_automation/ajax_edit_email_template'] = 'Email_Automation/ajax_edi
 $route['email_automation/ajax_save_visible_status'] = 'Email_Automation/ajax_save_visible_status';
 $route['email_automation/ajax_set_default_template'] = 'Email_Automation/ajax_set_default_template';
 $route['email_automation/ajax_set_default_template_edit'] = 'Email_Automation/ajax_set_default_template_edit';
+$route['email_automation/ajax_set_place_holder'] = 'Email_Automation/ajax_set_place_holder';
+$route['email_automation/ajax_set_place_holder_edit'] = 'Email_Automation/ajax_set_place_holder_edit';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 

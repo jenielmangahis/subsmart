@@ -133,7 +133,23 @@ class Email_Automation extends MY_Controller {
 
         $this->page_data['email_automation'] = $email_automation;
         $this->load->view('email_automation/ajax_set_default_template_edit', $this->page_data); 
-    }       
+    } 
+
+    public function ajax_set_place_holder() 
+    {
+        $post = $this->input->post();
+
+        $this->page_data['post_data'] = $post;
+        $this->load->view('email_automation/ajax_set_place_holder', $this->page_data); 
+    }  
+
+    public function ajax_set_place_holder_edit() 
+    {
+        $post = $this->input->post();
+
+        $this->page_data['post_data'] = $post;
+        $this->load->view('email_automation/ajax_set_place_holder_edit', $this->page_data); 
+    }        
 
     public function update_template()
     {

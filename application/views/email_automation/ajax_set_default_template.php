@@ -1,6 +1,6 @@
 <div class="form-group">
   <label>Subject</label> <span class="help"></span>
-  <input type="text" name="email_subject" id="email_subject" value="<?php echo $email_automation->email_subject; ?>" class="form-control" autocomplete="off" required="">
+  <input type="text" name="email_subject" id="email_subject" value="<?php echo $email_automation->email_subject; ?>" class="email_subject_create form-control" autocomplete="off" required="">
 </div>    
 
 <div class="form-group">

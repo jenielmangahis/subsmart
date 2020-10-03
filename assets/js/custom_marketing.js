@@ -38,6 +38,62 @@ $(document).ready(function() {
       }
     });
 
+    $("#customer_placeholder").change(function(){
+      var url = base_url + '/email_automation/ajax_set_place_holder';
+
+      var placeholder_name = $("#customer_placeholder").val();
+      var email_subject = $(".email_subject_create").val();
+      var email_body = CKEDITOR.instances['automation_email_body_create'].getData()
+
+      var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+      $("#subject-body-container").html(loading); 
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {
+              placeholder_name:placeholder_name,
+              email_subject:email_subject,
+              email_body:email_body
+             },
+             success: function(o)
+             {
+                $("#subject-body-container").html(o);
+             }
+          });
+      }, 1000);      
+
+    });
+
+    $("#business_placeholder").change(function(){
+      var url = base_url + '/email_automation/ajax_set_place_holder';
+
+      var placeholder_name = $("#business_placeholder").val();
+      var email_subject = $(".email_subject_create").val();
+      var email_body = CKEDITOR.instances['automation_email_body_create'].getData()
+
+      var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+      $("#subject-body-container").html(loading); 
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {
+              placeholder_name:placeholder_name,
+              email_subject:email_subject,
+              email_body:email_body
+             },
+             success: function(o)
+             {
+                $("#subject-body-container").html(o);
+             }
+          });
+      }, 1000);      
+
+    });    
+
     $(".template-delete").click(function(){
         var tid = $(this).attr("data-id");
         $("#tid").val(tid);

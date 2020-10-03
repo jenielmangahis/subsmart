@@ -213,7 +213,7 @@
           <div class="col-md-8" id="subject-body-container">
             <div class="form-group">
               <label>Subject</label> <span class="help"></span>
-              <input type="text" name="email_subject" id="email_subject" value="" class="form-control" autocomplete="off" required="">
+              <input type="text" name="email_subject" id="email_subject" value="" class="form-control email_subject_create" autocomplete="off" required="">
             </div>    
 
             <div class="form-group">
@@ -250,29 +250,40 @@
                           <li>
                               <div class="text-ter weight-medium tags-modal-tags-group-name">Customer</div>
                               <div>
-                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.name}}"><span>Name</span></div>
-                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.email}}"><span>Email</span></div>
-                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.phone}}"><span>Phone</span></div>
-                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.first_name}}"><span>First Name</span></div>
-                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.last_name}}"><span>Last Name</span></div>
-                                </div>
+                                <!-- <a onclick="insertPlaceholder('{{customer.name}}');" href="javascript:void(0);">Name</a><br />
+                                <a onclick="insertPlaceholder('{{customer.email}}');" href="javascript:void(0);">Email</a><br />
+                                <a onclick="insertPlaceholder('{{customer.phone}}');" href="javascript:void(0);">Phone</a><br />
+                                <a onclick="insertPlaceholder('{{customer.first_name}}');" href="javascript:void(0);">First Name</a><br />
+                                <a onclick="insertPlaceholder('{{customer.last_name}}');" href="javascript:void(0);">Last Name</a><br /> -->
+
+                                <select name="customer_placeholder" id="customer_placeholder" class="form-control" data-template="dropdown">
+                                  <option value="{{customer.name}}">Name</option>
+                                  <option value="{{customer.email}}">Email</option>
+                                  <option value="{{customer.phone}}">Phone</option>
+                                  <option value="{{customer.first_name}}">First Name</option>
+                                  <option value="{{customer.last_name}}">Last Name</option>
+                                </select>
+
+                              </div>
                             </li>
                           <li>
                               <br />
                               <div class="text-ter weight-medium tags-modal-tags-group-name">Business</div>
                               <div>
-                                    <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{business.name}}"><span>Name</span></div>
-                                    <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{business.email}}"><span>Email</span></div>
-                                    <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{business.phone}}"><span>Phone</span></div>
-                                </div>
+                                <select name="business_placeholder" id="business_placeholder" class="form-control" data-template="dropdown">
+                                  <option value="{{business.name}}">Name</option>
+                                  <option value="{{business.email}}">Email</option>
+                                  <option value="{{business.phone}}">Phone</option>
+                                </select>
+                              </div>
                           </li>
-                          <li>
+                          <!-- <li>
                             <br />
                             <div class="text-ter weight-medium tags-modal-tags-group-name">Booking Plugin</div>
                               <div>
                                      <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{widget_booking.url}}"><span>Online Booking URL</span></div>
                               </div>
-                          </li>
+                          </li> -->
                         </ul>        
                       </div>              
                   </div>
