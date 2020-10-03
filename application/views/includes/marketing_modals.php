@@ -27,7 +27,7 @@
 
 				    <div class="form-group">
               <label>Email Body</label> <span class="help"></span>
-              <textarea name="email_body" id="email_body" cols="40" rows="5" class="form-control"></textarea>
+              <textarea name="email_body" id="template_email_body_create" cols="40" rows="5" class="form-control"></textarea>              
             </div>     
 
 	      	</div>      		
@@ -209,7 +209,8 @@
         </div>
 
         <div class="row">
-          <div class="col-md-8">
+
+          <div class="col-md-8" id="subject-body-container">
             <div class="form-group">
               <label>Subject</label> <span class="help"></span>
               <input type="text" name="email_subject" id="email_subject" value="" class="form-control" autocomplete="off" required="">
@@ -217,7 +218,7 @@
 
             <div class="form-group">
               <label>Email Body</label> <span class="help"></span>
-              <textarea name="email_body" id="email_body" cols="40" rows="5" class="form-control"></textarea>
+              <textarea name="email_body" id="automation_email_body_create" cols="40" rows="5" class="email-body-create form-control"></textarea>
             </div>
           </div>
 
@@ -226,22 +227,54 @@
             <div class="panel-info">
               <div class="margin-bottom-sec">
                   <label>Use default template</label>
-                  <select name="template_id" class="form-control" data-template="dropdown">
+                  <select name="template_id" id="template_id" class="form-control" data-template="dropdown">
                     <option value="0">- select -</option>
-                    <option value="2295">Due for next service</option>
-                    <option value="2296">Estimate Follow-up</option>
-                    <option value="2297">Invoice Due Reminder</option>
-                    <option value="2294">Thank you</option>
+                    <?php foreach($email_automation_templates_list as $email_atl) { ?>
+                            <option value="<?php echo $email_atl->id ?>"><?php echo $email_atl->name ?></option>
+                    <?php } ?>
                   </select>
               </div>
-              <button class="btn btn-primary margin-right" style="width: 80px;" data-template="select" data-on-click-label="Set...">Set</button>
-              <br /><a data-template="manage" href="#">Manage templates</a>
+              <a id="set-default-template" class="btn btn-primary margin-right" style="width: 80px;" href="javascript:void(0);">Set</a>
+              <!-- <button id="set-default-template" class="btn btn-primary margin-right" style="width: 80px;" data-template="select" data-on-click-label="Set...">Set</button> -->
+              <br /><a data-template="manage" href="<?php echo url('email_automation/templates'); ?>">Manage templates</a>
               <hr>
               <div class="form-group">
                   <label>Placeholders</label>
                   <p class="margin-bottom">Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.</p>
                   <div>
-                      <a class="btn btn-default" href="#" data-tags-modal="open" data-template-default-id="">Insert Placeholders</a>
+                      <a class="btn btn-default toggle-placeholders" id="toggle-placeholders" href="javascript:void(0);">Add Placeholders</a>
+                      <div id="placeholders-list" class="placeholders-list" style="display: none;">
+                        <br >
+                        <p class="margin-bottom-sec">Click one of the placeholders below to insert.</p>
+                        <ul class="tags-modal-list" data-tags-modal="list">
+                          <li>
+                              <div class="text-ter weight-medium tags-modal-tags-group-name">Customer</div>
+                              <div>
+                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.name}}"><span>Name</span></div>
+                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.email}}"><span>Email</span></div>
+                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.phone}}"><span>Phone</span></div>
+                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.first_name}}"><span>First Name</span></div>
+                                  <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{customer.last_name}}"><span>Last Name</span></div>
+                                </div>
+                            </li>
+                          <li>
+                              <br />
+                              <div class="text-ter weight-medium tags-modal-tags-group-name">Business</div>
+                              <div>
+                                    <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{business.name}}"><span>Name</span></div>
+                                    <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{business.email}}"><span>Email</span></div>
+                                    <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{business.phone}}"><span>Phone</span></div>
+                                </div>
+                          </li>
+                          <li>
+                            <br />
+                            <div class="text-ter weight-medium tags-modal-tags-group-name">Booking Plugin</div>
+                              <div>
+                                     <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{widget_booking.url}}"><span>Online Booking URL</span></div>
+                              </div>
+                          </li>
+                        </ul>        
+                      </div>              
                   </div>
               </div>
             </div>

@@ -18,7 +18,9 @@ class Email_Automation extends MY_Controller {
 	public function index()
 	{	
 		$email_automation_list = $this->MarketingEmailAutomation_model->getAll();
+        $email_automation_templates_list = $this->MarketingEmailAutomationTemplate_model->getAll();
 
+        $this->page_data['email_automation_templates_list'] = $email_automation_templates_list;
 		$this->page_data['email_automation_list'] = $email_automation_list;
 		$this->load->view('email_automation/index', $this->page_data);
 	}
@@ -107,10 +109,31 @@ class Email_Automation extends MY_Controller {
 
         $email_automation = $this->MarketingEmailAutomation_model->getById($id);
 
+        $email_automation_templates_list = $this->MarketingEmailAutomationTemplate_model->getAll();
+
+        $this->page_data['email_automation_templates_list'] = $email_automation_templates_list;        
         $this->page_data['email_automation'] = $email_automation;
         $this->page_data['template_automation_id'] = $id;
         $this->load->view('email_automation/ajax_edit_email_automation', $this->page_data);        
-    }   
+    } 
+
+    public function ajax_set_default_template() 
+    {
+        $id = post('tid');
+        $email_automation = $this->MarketingEmailAutomationTemplate_model->getById($id);
+
+        $this->page_data['email_automation'] = $email_automation;
+        $this->load->view('email_automation/ajax_set_default_template', $this->page_data); 
+    }    
+
+    public function ajax_set_default_template_edit() 
+    {
+        $id = post('tid');
+        $email_automation = $this->MarketingEmailAutomationTemplate_model->getById($id);
+
+        $this->page_data['email_automation'] = $email_automation;
+        $this->load->view('email_automation/ajax_set_default_template_edit', $this->page_data); 
+    }       
 
     public function update_template()
     {

@@ -15,8 +15,17 @@
 
     <div class="form-group">
       <label>Email Body</label> <span class="help"></span>
-      <textarea name="email_body" id="email_body" cols="40" rows="5" class="form-control"><?php echo $template->email_body; ?></textarea>
+      <textarea name="email_body" id="template_email_body_edit" cols="40" rows="5" class="form-control"><?php echo $template->email_body; ?></textarea>
     </div>     
 
   </div>          
 </div>
+
+<script>
+  
+CKEDITOR.replace("template_email_body_edit",
+{
+  height: 360
+});
+
+</script>

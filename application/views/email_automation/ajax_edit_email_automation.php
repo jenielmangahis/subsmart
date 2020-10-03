@@ -94,7 +94,7 @@
 </div>
 
 <div class="row">
-  <div class="col-md-8">
+    <div class="col-md-8" id="subject-body-container-edit">
     <div class="form-group">
       <label>Subject</label> <span class="help"></span>
       <input type="text" name="email_subject" id="email_subject" value="<?php echo $email_automation->email_subject; ?>" class="form-control" autocomplete="off" required="">
@@ -102,7 +102,7 @@
 
     <div class="form-group">
       <label>Email Body</label> <span class="help"></span>
-      <textarea name="email_body" id="email_body" cols="40" rows="5" class="form-control"><?php echo $email_automation->email_body; ?></textarea>
+      <textarea name="email_body" id="automation_email_body_edit" cols="40" rows="5" class="form-control"><?php echo $email_automation->email_body; ?></textarea>
     </div>
   </div>
 
@@ -111,15 +111,14 @@
     <div class="panel-info">
       <div class="margin-bottom-sec">
           <label>Use default template</label>
-          <select name="template_id" class="form-control" data-template="dropdown">
+          <select id="template_id" name="template_id" class="template_id_edit form-control" data-template="dropdown">
             <option value="0">- select -</option>
-            <option value="2295">Due for next service</option>
-            <option value="2296">Estimate Follow-up</option>
-            <option value="2297">Invoice Due Reminder</option>
-            <option value="2294">Thank you</option>
+            <?php foreach($email_automation_templates_list as $email_atl) { ?>
+                    <option value="<?php echo $email_atl->id ?>"><?php echo $email_atl->name ?></option>
+            <?php } ?>
           </select>
       </div>
-      <button class="btn btn-primary margin-right" style="width: 80px;" data-template="select" data-on-click-label="Set...">Set</button>
+      <a id="set-default-template-edit" class="btn btn-primary margin-right" style="width: 80px;" href="javascript:void(0);">Set</a>
       <br /><a data-template="manage" href="#">Manage templates</a>
       <hr>
       <div class="form-group">
@@ -134,3 +133,40 @@
   </div>  
 
 </div>  
+
+<script>
+
+  CKEDITOR.replace("automation_email_body_edit",
+  {
+       height: 360
+  }); 
+
+  $(document).ready(function() {
+
+    $("#set-default-template-edit").click(function(){
+      var tid = $(".template_id_edit").val();
+      var url = base_url + '/email_automation/ajax_set_default_template_edit';
+
+      if(tid > 0) {
+        var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        $("#subject-body-container-edit").html(loading);    
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {tid:tid},
+               success: function(o)
+               {
+                  $("#subject-body-container-edit").html(o);
+               }
+            });
+        }, 1000);
+
+      }
+
+    });  
+
+  });
+
+</script>

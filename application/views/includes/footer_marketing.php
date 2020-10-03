@@ -19,6 +19,10 @@
 <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
+<script src="<?php echo $url->assets ?>plugins/ckeditor_4.15.0_basic/ckeditor.js"></script>
+<!-- <script src="<?php //echo $url->assets ?>plugins/ckeditor/ckeditor.js"></script> -->
+<!-- <script src="https://cdn.ckeditor.com/4.15.0/standard-all/ckeditor.js"></script> -->
+
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables.net/export/jszip.min.js"></script>
@@ -72,9 +76,7 @@
 
 
     });
-
 </script>
-
 
 <style>
 	.suggestions {

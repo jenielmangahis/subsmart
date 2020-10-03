@@ -1,5 +1,43 @@
 $(document).ready(function() {
 
+    CKEDITOR.replace("automation_email_body_create",
+    {
+      height: 360,
+    });   
+
+    CKEDITOR.replace("template_email_body_create",
+    {
+         height: 360
+    }); 
+
+    $( ".toggle-placeholders" ).click(function() {
+      $( "#placeholders-list" ).toggle( "slow", function() {
+      });
+    });    
+
+    $("#set-default-template").click(function(){
+      var tid = $("#template_id").val();
+      var url = base_url + '/email_automation/ajax_set_default_template';
+
+      if(tid > 0) {
+        var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        $("#subject-body-container").html(loading);    
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {tid:tid},
+               success: function(o)
+               {
+                  $("#subject-body-container").html(o);
+               }
+            });
+        }, 1000);
+
+      }
+    });
+
     $(".template-delete").click(function(){
         var tid = $(this).attr("data-id");
         $("#tid").val(tid);
@@ -100,8 +138,4 @@ $(document).ready(function() {
     });      
       
 });   
-
-
-
-
 
