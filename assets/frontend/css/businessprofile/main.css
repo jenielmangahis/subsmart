@@ -1,0 +1,114 @@
+.hide {
+    display: none;
+}
+
+.label-default {
+	background-color: #aaa;
+	font-size: 13px;
+	line-height: 13px;
+	padding: 3px 10px 4px 10px;
+}
+.label .icon {
+	padding-left: 10px;
+}
+.label-default a {
+	color: #fff;
+}
+
+.cat-selected .tag {
+	margin-right: 5px;
+	display: inline-block;	
+}
+.cat-selected .cat-tag-remove {
+	color: #fff;
+}
+
+.service-type {
+	padding-top: 20px;
+	padding-bottom: 5px;
+	border-top: 1px solid #dfdfdf;	
+}
+
+/* custom + and - checkbox-sec */
+.checkbox-sec {
+	display: inline-block;	
+	padding: 0;
+	margin: 12px 0;
+	line-height: 1.2em;
+	position: relative;
+	cursor: pointer;
+}
+.checkbox-sec .icon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	color: #bbb;
+	width: 24px;
+	text-align: center;
+	font-size: 22px;
+	font-weight: bold;
+	padding-top: 2px;	
+}
+.checkbox-sec label {
+	display: inline-block;
+	position: relative;
+	margin: 0;
+	padding: 3px 0 0 40px;
+	white-space: nowrap;
+	cursor: pointer;
+	user-select: none;	
+}
+.checkbox-sec label::before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 24px;
+	height: 24px;
+	border: 2px solid #d9d9d9;
+	background-color: #eeeeee; border-radius : 5px;	
+	border-radius: 5px;	
+}
+.checkbox-sec label:hover, input:focus+label {	
+}
+.checkbox-sec input:checked+label {	
+}
+.checkbox-sec.checkbox-checked label::before {	
+	color: #fff;
+	padding: 0px 0px 0px 2px;	
+	border: 2px solid #38c46e; /*2bde73; #52bfd1;*/
+	background-color: #64d38f;
+}
+.checkbox-sec.checkbox-checked .icon {
+	color: #fff;
+}
+
+/* section- */
+.section-header {
+    color: #002639;
+    font-size: 20px;
+}
+.section-body {
+    padding-left: 40px;       
+}
+.checkbox-sec .section-body {
+	margin-top: 20px;
+} 
+
+/* availability */
+.wd-weekday {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.wd-weekday li {
+	float: left;
+	margin: 0;
+	padding: 0 30px 0 0;
+	width: 14.27%;
+}
+.times-availability{
+	margin-bottom: 20px;
+}

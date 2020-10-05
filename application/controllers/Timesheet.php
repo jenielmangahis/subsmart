@@ -1373,7 +1373,7 @@ class Timesheet extends MY_Controller {
         $this->page_data['no_logged_in'] = $this->timesheet_model->getTotalUsersLoggedIn();
         $this->page_data['in_now'] = $this->timesheet_model->getInNow();
         $this->page_data['out_now'] = $this->timesheet_model->getOutNow();
-        $this->page_data['ts_logs'] = $this->timesheet_model->getTimesheetLogs();
+        $this->page_data['logs'] = $this->timesheet_model->getTimesheetLogs();
         $this->page_data['week_duration'] = $this->timesheet_model->getWeekTotalDuration();
         $this->page_data['attendance'] = $this->timesheet_model->getEmployeeAttendance();
         $this->page_data['schedule'] = $this->timesheet_model->getTimeSheetSettings();
@@ -2183,9 +2183,11 @@ class Timesheet extends MY_Controller {
             $this->db->insert('timesheet_logs',$out);
             $shift_duration = $this->timesheet_model->calculateShiftDuration($attn_id);
             $break_duration = $this->timesheet_model->calculateBreakDuration($attn_id);
+            $overtime = $this->timesheet_model->calculateOvertime($user_id,$attn_id);
             $update = array(
                 'shift_duration' => $shift_duration,
                 'break_duration' => $break_duration,
+                'overtime' => $overtime,
                 'date_out' => date('Y-m-d'),
                 'status' => 0
             );
@@ -2194,12 +2196,18 @@ class Timesheet extends MY_Controller {
             $affected_row = $this->db->affected_rows();
             //Update weekly total duration
             $weekly_duration = 0;
+            $weekly_break = 0;
+            $weekly_overtime = 0;
             $get_weekly = $this->db->get_where('timesheet_attendance',array('week_id'=>$check_attn->row()->week_id))->result();
             foreach ($get_weekly as $total){
                 $weekly_duration += $total->shift_duration;
+                $weekly_break += $total->break_duration;
+                $weekly_overtime += $total->overtime;
             }
             $weekly_update = array(
-                'total_shift' => $weekly_duration
+                'total_shift' => $weekly_duration,
+                'total_break' => $weekly_break,
+                'total_overtime' => $weekly_overtime
             );
             $this->db->where('id',$check_attn->row()->week_id);
             $this->db->update('ts_weekly_total_shift',$weekly_update);
@@ -2207,7 +2215,7 @@ class Timesheet extends MY_Controller {
             if($affected_row != 1){
                 echo json_encode(0);
             }else{
-                $unset = array('active','lunch-active');
+                $unset = array('active','lunch-active','attn-id');
                 $this->session->unset_userdata($unset);
                 $session = array(
                     'clock-out-time' => date('h:i A',$clock_out),
@@ -2294,6 +2302,10 @@ class Timesheet extends MY_Controller {
                 $notification .= '</a>';
             }
         }
+//        Update break remaining time
+        $update_lunch = array('break_remaining_time'=>$remaining_time);
+        $this->db->where('id',$attn_id);
+        $this->db->update('timesheet_attendance',$update_lunch);
         $lunch_sess = array(
                 'active' => 'clock-active',
                 'remaining_time' => $remaining_time,
@@ -2319,69 +2331,82 @@ class Timesheet extends MY_Controller {
     }
 
     public function timesheetWeeklyReport(){
-	    $msg = "This is only a test email report";
-        $msg = wordwrap($msg,70);
-        mail("rarecandy05@gmail.com","Timesheet Weekly Report",$msg);
+        $page = array(
+            'last_week' => $this->timesheet_model->getWeekTotalDuration()
+        );
+        //Load email library
+        $this->load->library('email');
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'nsmartrac@gmail.com',
+            'smtp_pass' => 'nSmarTrac2020',
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8',
+        );
+        $this->email->initialize($config);
+        $this->email->set_newline("\r\n");
+
+        $this->email->from('aic.jerry.cantrell@gmail.com','nSmartrac');
+        $this->email->to('support@nsmartrac.com');
+        $this->email->subject('Timesheet Weekly Report');
+        $message = $this->load->view('users/email_template',$page,TRUE);
+        $this->email->message($message);
+        //Send mail
+
+        if($this->email->send()) {
+            echo json_encode("Email Send Successfully.");
+        }else{
+            echo $this->email->print_debugger();
+        }
+    }
+
+    public function csvTimesheetReport(){
+        $start_date = date('M d',strtotime('monday last week'));
+        $date = date('M d, Y',strtotime('monday last week'));
+        $date = strtotime($date);
+        $date = strtotime("+6 day", $date);
+        $end_date = date('M d', $date);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename=Timesheet Report '.$start_date.' - '.$end_date.'.csv');
+
+        $week_of = date('Y-m-d',strtotime('monday last week'));
+        $data = $this->db->get_where('ts_weekly_total_shift',array('week_of' => $week_of))->result();
+        $users = $this->users_model->getUsers();
+        $fp = fopen('php://output', 'wb');
+        $shift = 0;
+        $break = 0;
+        $overtime = 0;
+        $headers = array("NAME","TOTAL SHIFT","TOTAL BREAK","TOTAL OVERTIME");
+        fputcsv($fp,$headers);
+        foreach ($users as $cnt => $user){
+            $name = $user->FName." ".$user->LName;
+            foreach ($data as $line) {
+                if ($user->id == $line->user_id){
+                    $shift = $line->total_shift;
+                    $break = $line->total_break;
+                    $overtime = $line->total_overtime;
+                }
+            }
+            $report = array($name,$shift,$break,$overtime);
+            $shift = 0;
+            $break = 0;
+            $overtime = 0;
+            fputcsv($fp,$report);
+        }
+        fclose($fp);
     }
 
     public function notificationSchedule(){
 
     }
-
-//    public function startBreak(){
-//        $end_time = $this->input->post('break_time');
-//        $today = date('Y-m-d');
-//        $user_id =  $this->session->userdata('logged')['id'];
-//        $query = $this->db->get_where('user_break',array('date'=>$today,'user_id'=>$user_id));
-//        if ($query->num_rows() == 0){
-//            $data = array(
-//              'date' => $today,
-//              'user_id' => $user_id,
-//              'break_end_time' => date('Y-m-d H:i:s',strtotime($end_time)),
-//              'duration' => '60:00',
-//              'status' => 1
-//            );
-//            $this->db->insert('user_break',$data);
-//            $break_id = $this->db->insert_id();
-//            $break_end = $this->db->get_where('user_break',array('id' => $break_id));
-//            $break_data = $break_end->result();
-//            $break_session = array(
-//                'break' => date('M d, Y H:i:s',strtotime($break_data[0]->break_end_time)),
-//                'on_break' => 'clock-break',
-//                'timer_icon' => 'style="color:red;" ',
-//                'active' => 1
-//            );
-//            $this->session->set_userdata($break_session);
-//
-//        }
-//        echo json_encode($this->session->userdata('break'));
-//    }
-//
-//    public function stopBreak(){
-//        $unset = array('break','on_break','timer_icon');
-//        $this->session->unset_userdata($unset);
-//	    $remaining_min = $this->input->post('minutes');
-//	    $remaining_sec = $this->input->post('seconds');
-//	    $user_id =  $this->session->userdata('logged')['id'];
-//        $duration = $remaining_min.' minute'.$remaining_min.' second';
-//	    $check = array(
-//	        'user_id' => $user_id,
-//            'date' => date('Y-m-d')
-//        );
-//	    $update = array(
-//	        'break_end_time' => date('Y-m-d H:i:s', strtotime($duration)),
-//	        'duration' => $remaining_min.":".$remaining_sec,
-//            'status' => 2
-//        );
-//	    $this->db->where($check);
-//	    $this->db->update('user_break',$update);
-//        $break_session = array(
-//            'remaining_time' => $remaining_min.":".$remaining_sec
-//        );
-//        $this->session->set_userdata($break_session);
-//        echo json_encode($this->session->userdata('remaining_time'));
-//    }
-
+    public function email(){
+	    $page = array(
+	        'last_week' => $this->timesheet_model->getWeekTotalDuration()
+        );
+        $this->load->view('users/email_template',$page);
+    }
 
 }
 

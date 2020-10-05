@@ -192,6 +192,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 </div>
                                                         </div>
                                                     </form>
+                                                    <div id="readroot" class="col-md-12" style="display: none;">
+                                                        <a align="left" style="color:#58bc4f; padding-top:1px;font-size: 10px !important;" href="javascript:void(0);" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" >
+                                                            <span class="fa fa-minus"></span>Remove</a>
+                                                        <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+                                                        <br>
+                                                        <label for="">Device Name</label>
+                                                        <input type="text" class="form-control col-md-2 device" name="device_name[]" id="device_name" />
+
+                                                        <label for="">Sold By</label>
+                                                        <input type="text" class="form-control col-md-2 device" name="sold_by[]" id="sold_by" />
+
+                                                        <label for="">Points</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="device_points[]" id="device_points" />
+
+                                                        <label for="">Retail Cost</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="retail_cost[]" id="retail_cost" />
+
+                                                        <br>
+                                                        <label for="">Purchase Price</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="purch_price[]" id="purch_price" />
+
+                                                        <label for="">Quantity</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="device_qty[]" id="device_qty" />
+
+                                                        <label for="">Total Points</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="total_points[]" id="total_points" />
+
+                                                        <label for="">Total Cost</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="total_cost[]" id="total_cost" />
+
+                                                        <br>
+                                                        <label for="">Total Purch Price</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="total_purch_price[]" id="total_purch_price" />
+
+                                                        <label for="">Net</label>
+                                                        <input type="number" class="form-control col-md-2 device" name="device_net[]" id="device_net" />
+                                                        <br>
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -366,5 +404,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 }
             });
         }
+
+        var counter = 0;
+
+        function moreFields() {
+            counter++;
+            var newFields = document.getElementById('readroot').cloneNode(true);
+            newFields.id = '';
+            newFields.style.display = 'inline';
+            var newField = newFields.childNodes;
+
+            //console.log(newField);
+            for (var i=0;i<newField.length;i++) {
+                var theName = newField[i].name;
+                if (theName){
+                  //  newField[i].name = theName+'[]';
+                }
+
+            }
+            var insertHere = document.getElementById('writeroot');
+            insertHere.parentNode.insertBefore(newFields,insertHere);
+        }
+       // window.onload = moreFields;
+        // $("#moreFields").on( "click", function( event ) {
+        //     alert("sf");
+        //
+        // });
+        // $("#moreFields").on( "click", function( event ) {
+        //     moreFields();
+        // });
+
+        $("body").delegate("#moreFields", "click", function(){
+            //alert("Delegated Button Clicked");
+            //moreFields();
+            counter++;
+            var newFields = document.getElementById('readroot').cloneNode(true);
+            newFields.id = '';
+            newFields.style.display = 'inline';
+            var newField = newFields.childNodes;
+
+            //console.log(newField);
+            for (var i=0;i<newField.length;i++) {
+                var theName = newField[i].name;
+                if (theName){
+                    //  newField[i].name = theName+'[]';
+                }
+
+            }
+            var insertHere = document.getElementById('writeroot');
+            insertHere.parentNode.insertBefore(newFields,insertHere);
+        });
+
     });
 </script>

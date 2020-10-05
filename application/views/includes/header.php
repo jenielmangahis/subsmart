@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
     <title>Home</title>
     <meta content="Admin Dashboard" name="description">
-
+    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="<?php echo $url->assets?>plugins/font-awesome/css/font-awesome.min.css">
     <!--Chartist Chart CSS -->
 
@@ -33,7 +33,7 @@
     <!-- taxes page -->
 <!--    Clock CSS-->
     <link href="<?php echo $url->assets ?>css/timesheet/clock.css" rel="stylesheet" type="text/css">
-    <link href="<?php echo $url->assets ?>css/notification/notification.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo $url->assets ?>css/notification/notification.css?v=<?php echo time()?>" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
@@ -175,24 +175,92 @@
                                 foreach ($user_clock_in as $in){
                                     if ($in->user_id == $user_id && $in->status == 1){
                                         $clock_btn = 'clockOut';
-                                    }else{
+                                    }
+                                    if ($in->user_id == $user_id && $in->status == 0){
                                         $clock_btn = null;
                                     }
                                     if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
                                         $clock_btn = 'clockIn';
                                     }
+                                    if ($in->user_id == $user_id && $in->status == 0 && $in->date_in == date('Y-m-d',strtotime('yesterday'))){
+                                        $clock_btn = 'clockIn';
+                                    }
 
                                 }
+                                //Employee display shift status
+                            $clock_in = '-';
+                            $clock_out = '-';
+                            $lunch_in = '-';
+                            $lunch_out = '-';
+                            $shift_duration = '-';
+                            $remaining_time = '60:00';
+                            $attendance = getEmployeeAttendance();
+                            $ts_logs = getEmployeeLogs();
+                            $analog_active = null;
+                            $attn_id = null;
+                            foreach ($attendance as $attn){
+                                if ($attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
+                                    $shift_duration = $attn->shift_duration;
+                                }
+                                if ($attn->user_id == $this->session->userdata('logged')['id']){
+                                    $attn_id = $attn->id;
+                                    foreach ($ts_logs as $log){
+                                        if ($log->attendance_id == $attn->id && $log->action == 'Check in'){
+                                            if ($attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
+                                                $clock_in = date('h:i A',$log->time);
+                                                $clock_out = 'Pending...';
+                                                $analog_active = 'clock-active';
+                                            }
+                                            if ($attn->date_in == date('Y-m-d')){
+                                                $clock_in = date('h:i A',$log->time);
+                                                $clock_out = 'Pending...';
+                                                $analog_active = 'clock-active';
+                                            }
+                                        }
+                                        if ($log->attendance_id == $attn->id && $log->action == 'Check out'){
+                                            if ($attn->date_in == date('Y-m-d',strtotime('yesterday')) && $attn->status == 1){
+                                                $clock_out = date('h:i A',$log->time);
+                                                $analog_active = null;
+                                            }
+                                            if ($attn->date_in == date('Y-m-d') && $attn->status == 0){
+                                                $clock_out = date('h:i A',$log->time);
+                                                $analog_active = null;
+                                            }
+                                        }
+                                        if ($log->attendance_id == $attn->id && $log->action == 'Break in'){
+                                            if($attn->date_in == date('Y-m-d')){
+                                                $lunch_in = date('h:i A',$log->time);
+                                                $analog_active = 'clock-break';
+                                            }
+                                        }
+                                        if ($log->attendance_id == $attn->id && $log->action == 'Break out'){
+                                            if($attn->date_in == date('Y-m-d')){
+                                                $lunch_out = date('h:i A',$log->time);
+                                                $analog_active = 'clock-active';
+                                                if ($attn->break_remaining_time != null){
+                                                    $remaining_time = $attn->break_remaining_time;
+                                                }
+                                            }
+                                        }
 
+                                    }
+                                }
+                            }
+                            //Removed session
+//                            clock-in-time
+//                            clock-out-time
+//                            remaining_time
+//                            active
+//                            attn-id
                             ?>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
                                 <input type="hidden" id="clock-session" value="">
                                 <input type="hidden" id="clock-end-time" value="<?php echo ($this->session->userdata('end_break'))?$this->session->userdata('end_break'):null; ?>">
-                                <input type="hidden" id="clock-server-time" value="">
-                                <input type="hidden" id="clock-status" value="<?php echo ($this->session->userdata('active') == 'clock-break')?1:0; ?>">
-                                <input type="hidden" id="attendanceId" value="<?php echo $this->session->userdata('attn-id');?>">
+<!--                                <input type="hidden" id="clock-server-time" value="">-->
+                                <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break')?1:0; ?>">
+                                <input type="hidden" id="attendanceId" value="<?php echo $attn_id;?>">
                                 <div class="clock-users " id="<?php echo $clock_btn?>" >
-                                    <div class="clock <?php echo $this->session->userdata('active'); ?>">
+                                    <div class="clock <?php echo $analog_active ?>">
                                         <div class="hour">
                                             <div class="hr" id="hr"></div>
                                         </div>
@@ -207,19 +275,19 @@
                                 <div class="preview-clock-details">
                                     <div class="clock-section">
                                         <span class="clock-details-title">Clock In:</span>
-                                        <span class="clock-details-text in"><?php echo ($this->session->userdata('clock-in-time'))?$this->session->userdata('clock-in-time'):'-' ?></span>
+                                        <span class="clock-details-text in"><?php echo  $clock_in;?></span>
                                     </div>
                                     <div class="clock-section">
                                         <span class="clock-details-title">Clock Out:</span>
-                                        <span class="clock-details-text out"><?php echo ($this->session->userdata('clock-out-time'))?$this->session->userdata('clock-out-time'):'-' ?></span>
+                                        <span class="clock-details-text out"><?php echo $clock_out ?></span>
                                     </div>
                                     <div class="clock-section">
                                         <span class="clock-details-title">Lunch:</span>
-                                        <span class="clock-details-text"><span id="break-duration"><?php echo (!empty($this->session->userdata('remaining_time')))?$this->session->userdata('remaining_time'):'60:00'; ?></span>
+                                        <span class="clock-details-text"><span id="break-duration"><?php echo $remaining_time;?></span>
                                     </div>
                                     <div class="clock-section">
                                         <span class="clock-details-title">Shift Duration:</span>
-                                        <span class="clock-details-text" id="shiftDuration"><?php echo ($this->session->userdata('shift_duration')!=null)?$this->session->userdata('shift_duration'):'-'; ?></span>
+                                        <span class="clock-details-text" id="shiftDuration"><?php echo $shift_duration; ?></span>
                                     </div>
                                 </div>
                             </li>

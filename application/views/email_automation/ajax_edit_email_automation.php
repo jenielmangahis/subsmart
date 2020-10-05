@@ -94,15 +94,15 @@
 </div>
 
 <div class="row">
-  <div class="col-md-8">
+    <div class="col-md-8" id="subject-body-container-edit">
     <div class="form-group">
       <label>Subject</label> <span class="help"></span>
-      <input type="text" name="email_subject" id="email_subject" value="<?php echo $email_automation->email_subject; ?>" class="form-control" autocomplete="off" required="">
+      <input type="text" name="email_subject" id="email_subject" value="<?php echo $email_automation->email_subject; ?>" class="email_subject_edit form-control" autocomplete="off" required="">
     </div>    
 
     <div class="form-group">
       <label>Email Body</label> <span class="help"></span>
-      <textarea name="email_body" id="email_body" cols="40" rows="5" class="form-control"><?php echo $email_automation->email_body; ?></textarea>
+      <textarea name="email_body" id="automation_email_body_edit" cols="40" rows="5" class="automation_email_body_edit form-control"><?php echo $email_automation->email_body; ?></textarea>
     </div>
   </div>
 
@@ -111,26 +111,161 @@
     <div class="panel-info">
       <div class="margin-bottom-sec">
           <label>Use default template</label>
-          <select name="template_id" class="form-control" data-template="dropdown">
+          <select id="template_id" name="template_id" class="template_id_edit form-control" data-template="dropdown">
             <option value="0">- select -</option>
-            <option value="2295">Due for next service</option>
-            <option value="2296">Estimate Follow-up</option>
-            <option value="2297">Invoice Due Reminder</option>
-            <option value="2294">Thank you</option>
+            <?php foreach($email_automation_templates_list as $email_atl) { ?>
+                    <option value="<?php echo $email_atl->id ?>"><?php echo $email_atl->name ?></option>
+            <?php } ?>
           </select>
       </div>
-      <button class="btn btn-primary margin-right" style="width: 80px;" data-template="select" data-on-click-label="Set...">Set</button>
+      <a id="set-default-template-edit" class="btn btn-primary margin-right" style="width: 80px;" href="javascript:void(0);">Set</a>
       <br /><a data-template="manage" href="#">Manage templates</a>
       <hr>
-      <div class="form-group">
-          <label>Placeholders</label>
-          <p class="margin-bottom">Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.</p>
-          <div>
-              <a class="btn btn-default" href="#" data-tags-modal="open" data-template-default-id="">Insert Placeholders</a>
-          </div>
-      </div>
+              <div class="form-group">
+                  <label>Placeholders</label>
+                  <p class="margin-bottom">Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.</p>
+                  <div>
+                      <a class="btn btn-default toggle-placeholders-edit" id="toggle-placeholders-edit" href="javascript:void(0);">Add Placeholders</a>
+                      <div id="placeholders-list-edit" class="placeholders-list-edit" style="display: none;">
+                        <br >
+                        <p class="margin-bottom-sec">Click one of the placeholders below to insert.</p>
+                        <ul class="tags-modal-list" data-tags-modal="list">
+                          <li>
+                              <div class="text-ter weight-medium tags-modal-tags-group-name">Customer</div>
+                              <div>
+
+                                <select name="customer_placeholder_edit" id="customer_placeholder_edit" class="form-control" data-template="dropdown">
+                                  <option value="{{customer.name}}">Name</option>
+                                  <option value="{{customer.email}}">Email</option>
+                                  <option value="{{customer.phone}}">Phone</option>
+                                  <option value="{{customer.first_name}}">First Name</option>
+                                  <option value="{{customer.last_name}}">Last Name</option>
+                                </select>
+
+                              </div>
+                            </li>
+                          <li>
+                              <br />
+                              <div class="text-ter weight-medium tags-modal-tags-group-name">Business</div>
+                              <div>
+                                <select name="business_placeholder_edit" id="business_placeholder_edit" class="business_placeholder_edit form-control" data-template="dropdown">
+                                  <option value="{{business.name}}">Name</option>
+                                  <option value="{{business.email}}">Email</option>
+                                  <option value="{{business.phone}}">Phone</option>
+                                </select>
+                              </div>
+                          </li>
+                          <!-- <li>
+                            <br />
+                            <div class="text-ter weight-medium tags-modal-tags-group-name">Booking Plugin</div>
+                              <div>
+                                     <div class="tags-modal-tag" data-tags-modal="tag" data-tag="{{widget_booking.url}}"><span>Online Booking URL</span></div>
+                              </div>
+                          </li> -->
+                        </ul>        
+                      </div>              
+                  </div>
+              </div>
     </div>
 
   </div>  
 
 </div>  
+
+<script>
+
+  CKEDITOR.replace("automation_email_body_edit",
+  {
+       height: 360
+  }); 
+
+  $(document).ready(function() {
+
+    $( ".toggle-placeholders-edit" ).click(function() {
+      $( "#placeholders-list-edit" ).toggle( "slow", function() {
+      });
+    });       
+
+    $("#customer_placeholder_edit").change(function(){
+      var url = base_url + '/email_automation/ajax_set_place_holder_edit';
+
+      var placeholder_name = $("#customer_placeholder").val();
+      var email_subject = $(".email_subject_edit").val();
+      var email_body = CKEDITOR.instances['automation_email_body_edit'].getData();
+
+      var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+      $("#subject-body-container-edit").html(loading); 
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {
+              placeholder_name:placeholder_name,
+              email_subject:email_subject,
+              email_body:email_body
+             },
+             success: function(o)
+             {
+                $("#subject-body-container-edit").html(o);
+             }
+          });
+      }, 1000);      
+
+    });
+
+    $("#business_placeholder_edit").change(function(){
+      var url = base_url + '/email_automation/ajax_set_place_holder_edit';
+
+      var placeholder_name = $("#business_placeholder").val();
+      var email_subject = $(".email_subject_edit").val();
+      var email_body = CKEDITOR.instances['automation_email_body_edit'].getData();
+
+      var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+      $("#subject-body-container-edit").html(loading); 
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {
+              placeholder_name:placeholder_name,
+              email_subject:email_subject,
+              email_body:email_body
+             },
+             success: function(o)
+             {
+                $("#subject-body-container-edit").html(o);
+             }
+          });
+      }, 1000);      
+
+    });      
+
+    $("#set-default-template-edit").click(function(){
+      var tid = $(".template_id_edit").val();
+      var url = base_url + '/email_automation/ajax_set_default_template_edit';
+
+      if(tid > 0) {
+        var loading = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
+        $("#subject-body-container-edit").html(loading);    
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {tid:tid},
+               success: function(o)
+               {
+                  $("#subject-body-container-edit").html(o);
+               }
+            });
+        }, 1000);
+
+      }
+
+    });  
+
+  });
+
+</script>

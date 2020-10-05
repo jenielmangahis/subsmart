@@ -122,8 +122,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </ul>
                                         </div>
                                     </div>
-
-                                    <div class="tab-content mt-4" >
+                                    <div class="tab-content mt-4">
                                         <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
                                                 <div class="col-xl-12">
@@ -243,7 +242,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 }
                                             </style>
                                         </div>
-
                                         <div class="tab-pane <?php if($cust_tab=='tab2'){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
@@ -291,8 +289,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
 
                                         </div>
-
-                                        <div class="tab-pane standard-accordion" id="settings">
+                                        <div class="tab-pane <?php if($cust_tab=='tab3'){echo "active";}else{echo "fade";} ?> standard-accordion" id="settings">
                                             <div class="banking-tab-container">
                                                 <div class="rb-01">
                                                     <ul class="nav nav-tabs border-0">
@@ -327,6 +324,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#details">Detail Sheet</a>
                                                         </li>
                                                         <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#custom">Customizable</a>
+                                                        </li>
+                                                        <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#others">Others</a>
                                                         </li>
                                                     </ul>
@@ -356,7 +356,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
-                                                                <h6>Widget 2</h6>
+                                                                <h6>Widget 3</h6>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -376,6 +376,66 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
                                                                 <h6>Educate</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="messages">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Messages</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="notes">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Internal Notes</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="invoices">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Invoices</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="activity">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Activity</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="details">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Detail Sheet</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane <?php //if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="custom">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Customizable</h6>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -488,7 +548,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- end card -->
         </div>
@@ -608,6 +667,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <script>
     $(document).ready(function() {
+
+
         //$(".module").draggable({axis:"y"});
         ///$( ".sortable2" ).sortable("disable");
         $('#onoff-customize').change(function() {
@@ -661,8 +722,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         $( ".sortable2" ).sortable( "disable" );
 
 
-        //-----------------^^^^
-
     });
+
+
+
 
 </script>

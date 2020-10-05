@@ -102,21 +102,13 @@ if (!function_exists('userProfileImage')) {
         $CI = &get_instance();
         $url = urlUpload('users/user-profile/p_' . $id . '.png?' . time());
         $user = $CI->users_model->getUser($id);
-        
         $img_ext = 'png';
-        if( $user->img_type != '' ){
-            $img_ext = $user->img_type;
-        }
-
-        $profile_img = 'default';
-        if( $user->profile_img != '' ){
-            $profile_img = $user->profile_img;
-        }
         
-        if ($profile_img != 'default'){
-            $url = urlUpload('users/user-profile/' . $profile_img . '.' . $img_ext . '?' . time());
+        if ($user->img_type != ''){
+            $img_ext = $user->img_type;
+            $url = urlUpload('users/user-profile/p_' . $id . '.' . $img_ext . '?' . time());
 
-            if( !file_exists(FCPATH."uploads/users/user-profile/".$profile_img . '.' . $img_ext) ){
+            if( !file_exists(FCPATH."uploads/users/user-profile/p_".$id . '.' . $img_ext) ){
                 $url = urlUpload('users/default.png');
             }
         }else{
@@ -139,7 +131,25 @@ if (!function_exists('companyProfileImage')) {
         // echo "<pre>fhdfhdfh"; print_r($res); die;
 
         if ($id != 'default')
-            $url = urlUpload('users/businessimg_' . $CI->business_model->getRowByWhere(['id' => $id], 'user_id') . '.' . $CI->business_model->getRowByWhere(['id' => $id], 'b_image') . '?' . time());
+            $url = urlUpload('users/businessimg_' . $CI->business_model->getRowByWhere(['id' => $id], 'user_id') . '.' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image') . '?' . time());
+
+        return $url;
+    }
+}
+
+if (!function_exists('businessProfileImage')) {
+
+    function businessProfileImage($id)
+    {
+
+        $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
+
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
+
+        if ($id != 'default')
+            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image') . '?' . time());
 
         return $url;
     }
@@ -828,7 +838,7 @@ if (!function_exists('getFolders')) {
         }
 
         if($ofCategorized){
-            $category_filter = 'and a.category_id is not null ';
+            $category_filter = 'and (a.category_id is not null and a.category_id > 0) ';
         } else {
             $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
@@ -894,7 +904,7 @@ if (!function_exists('getFiles')) {
         }
 
         if($ofCategorized){
-            $category_filter = 'and a.category_id is not null ';
+            $category_filter = 'and (a.category_id is not null and a.category_id > 0) ';
         } else {
             $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
@@ -1018,7 +1028,12 @@ if (!function_exists('getEmployeeLogs')){
         return $CI->timesheet_model->getTSLogsByUser();
     }
 }
-
+if (!function_exists('getEmployeeAttendance')){
+    function getEmployeeAttendance(){
+        $CI = &get_instance();
+        return $CI->timesheet_model->getEmployeeAttendance();
+    }
+}
 if (!function_exists('getNewTasks')){
 
     function getNewTasks(){

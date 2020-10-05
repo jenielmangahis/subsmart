@@ -213,9 +213,16 @@ img.calendar-user-profile {
   }
   .right-calendar-loading{
     position: absolute;
-    width: 90%;
-    left: 16px;  
+    width: 50%;
+    left: 28%;  
     top: 217px;
+    z-index: 99999;
+  }
+  .left-calendar-loading{
+    position: absolute;
+    width: 90%;
+    left: 5%;  
+    top: 50%;
     z-index: 99999;
   }
   .right-calendar-loading .alert-info{
@@ -349,6 +356,7 @@ img.calendar-user-profile {
 
 
                                     </div>
+                                    <div class="left-calendar-loading"></div>
                                     <div id='calendar'></div>
                                 </div>
                             </div>
@@ -367,7 +375,7 @@ img.calendar-user-profile {
                     <div id="right-calendar"></div>
                     <div class="calendar-tooltip"></div>
                 </div>
-                <div class="col-12" style="margin-top: 15px;">
+                <!-- <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">FILTER BY TIME OFF</h4>
 
 
@@ -377,7 +385,7 @@ img.calendar-user-profile {
                         <li><span class="dot dot-yellow"><i class="fa fa-check"></i></span> Interview</li>
                         <li><span class="dot dot-blue"><i class="fa fa-check"></i></span> Leave</li>
                     </ul>
-                </div>
+                </div> -->
                 <div class="col-12" style="margin-top: 15px;">
                     <h4  class="right-filter-header">CALENDARS</h4>
                     <?php if(!empty($calendar_list)){ ?>
@@ -677,6 +685,7 @@ img.calendar-user-profile {
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
+        var bc_events_url = base_url + "/calendar/_get_main_calendar_events";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -761,11 +770,21 @@ img.calendar-user-profile {
                     }
                 });
             },
-            loading: function (bool) {
-
+            loading: function (isLoading) {
+              if (isLoading) {
+                  $(".left-calendar-loading").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading Events...</div>');
+              }
+              else {                
+                  $(".left-calendar-loading").html('');
+              }
+             
             },
             resources: <?php echo json_encode($resources_users); ?>,
-            events: <?php echo json_encode($resources_user_events); ?>,
+            events: {
+              url: bc_events_url,
+              method: 'POST'
+            },
+            //events: <?php echo json_encode($resources_user_events); ?>,
 
         });
 
@@ -854,6 +873,9 @@ img.calendar-user-profile {
            success: function(o)
            {
               load_calendar();
+              var calendarEl = document.getElementById('calendar');
+              var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+              render_calender(calendarEl, timeZoneSelectorEl);
            }
         });
     });
@@ -861,6 +883,7 @@ img.calendar-user-profile {
     function load_calendar(){
         var events_url = base_url + "/settings/_get_google_enabled_calendars";
         var calendarEl = document.getElementById('right-calendar');
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
           schedulerLicenseKey: '0531798248-fcs-1598103289',
           initialView: 'dayGridMonth',      

@@ -29,6 +29,7 @@ class Users extends MY_Controller {
 		add_css(array(
             "assets/plugins/dropzone/dist/dropzone.css",
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'assets/frontend/css/businessprofile/main.css',
         ));
 
         // JS to add only Job module
@@ -40,25 +41,22 @@ class Users extends MY_Controller {
 
 	}
 
-
-
 	public function businessprofile()
 	{	
 		$user = (object)$this->session->userdata('logged');		
-		$profiledata = $this->business_model->getByWhere(array('id'=>$user->id));		
+		$profiledata = $this->business_model->getByWhere(array('id'=>$user->id));
 		$this->page_data['profiledata'] = $profiledata[0];
-		$this->load->view('businessprofile', $this->page_data);
+		$this->load->view('business_profile/businessprofile', $this->page_data);
 	}
 	
 	public function businessview()
 	{	
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
-		//print_r($user);die;
 		$cid=logged('id');
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
-		$this->load->view('business', $this->page_data);
+		$this->load->view('business_profile/business', $this->page_data);
 
 	}
 	public function businessdetail(){	
@@ -73,7 +71,17 @@ class Users extends MY_Controller {
 		
 		/* echo "<pre>"; print_r($this->page_data); die;  */
 		
-		$this->load->view('businessdetail', $this->page_data);
+		$this->load->view('business_profile/businessdetail', $this->page_data);
+	}
+
+	public function services()
+	{	
+		//ifPermissions('businessdetail');
+		$user = (object)$this->session->userdata('logged');		
+		//print_r($user);die;
+		$cid=logged('id');
+		$this->load->view('business_profile/services', $this->page_data);
+
 	}
 
 	public function credentials(){	
@@ -88,7 +96,37 @@ class Users extends MY_Controller {
 		
 		/* echo "<pre>"; print_r($this->page_data); die;  */
 		
-		$this->load->view('credentials', $this->page_data);
+		$this->load->view('business_profile/credentials', $this->page_data);
+	}
+
+	public function availability()
+	{	
+		//ifPermissions('businessdetail');
+		$user = (object)$this->session->userdata('logged');		
+		//print_r($user);die;
+		$cid=logged('id');
+		$this->load->view('business_profile/availability', $this->page_data);
+
+	}
+
+	public function workpictures()
+	{	
+		//ifPermissions('businessdetail');
+		$user = (object)$this->session->userdata('logged');		
+		//print_r($user);die;
+		$cid=logged('id');
+		$this->load->view('business_profile/work_pictures', $this->page_data);
+
+	}
+
+	public function profilesetting()
+	{	
+		//ifPermissions('businessdetail');
+		$user = (object)$this->session->userdata('logged');		
+		//print_r($user);die;
+		$cid=logged('id');
+		$this->load->view('business_profile/profile_settings', $this->page_data);
+
 	}
 
 	public function socialMedia(){	
@@ -103,10 +141,49 @@ class Users extends MY_Controller {
 		
 		/* echo "<pre>"; print_r($this->page_data); die;  */
 		
-		$this->load->view('social_media', $this->page_data);
+		$this->load->view('business_profile/social_media', $this->page_data);
+	}
+
+	public function saveBusinessNameImage() {
+		$pdata=$_POST;
+		$bid=$pdata['id'];
+		
+		if (!empty($_FILES['image']['name'])){
+
+			$comp_id = logged('company_id');
+			$target_dir = "./uploads/users/business_profile/$bid/";
+			
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+	
+			$business_image = $this->moveUploadedFile($bid);
+
+			$this->business_model->update($bid, ['business_image' => $business_image]);
+
+		}else{
+			copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
+		}
+
+		$this->business_model->update($bid, ['business_name' => $pdata['business_name']]);
+
+		redirect('users/businessview');
+	}
+
+	public function moveUploadedFile($bid) {
+		if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
+			$tmp_name = $_FILES['image']['tmp_name'];
+			$extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = basename($_FILES["image"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$name");
+
+			return $name;
+		}
 	}
 	
-	public function savebusinessdetail(){
+	public function savebusinessdetail() {
 		
 		$user = (object)$this->session->userdata('logged');	
 		/* echo "<pre>"; print_r($_POST); die; */
@@ -123,24 +200,20 @@ class Users extends MY_Controller {
 			$bid = $this->business_model->create($pdata);
 		}
 
-
 		if (!empty($_FILES['image']['name'])){
 
-			$path = $_FILES['image']['name'];
-			$ext = pathinfo($path, PATHINFO_EXTENSION);
-			$this->uploadlib->initialize([
-				'file_name' => 'businessimg_'.$imbid.'.'.$ext
-			]);
+			$target_dir = "./uploads/users/business_profile/$bid/";
 			
-			$image = $this->uploadlib->uploadImage('image', '/users');
-
-			if($image['status']){
-				$this->business_model->update($bid, ['b_image' => $ext]);
-			}else{
-				copy(FCPATH.'uploads/users/default.png', 'uploads/users/businessimg_'.$user->id.'.png');
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
 			}
+	
+			$business_image = $this->moveUploadedFile($bid);
+
+			$this->business_model->update($bid, ['business_image' => $business_image]);
+
 		}else{
-			copy(FCPATH.'uploads/users/default.png', 'uploads/users/businessimg_'.$user->id.'.png');
+			copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
 		}
 
 		// $this->activity_model->add('New User $'.$id.' Created by User:'.logged('name'), logged('id'));
@@ -164,7 +237,7 @@ class Users extends MY_Controller {
 //		$this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
 //		// get total numbers of "Out" employees
 //		$this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
-//		// get total numbers of "Not Logged In Today" employees
+//		// get total numbers of "Not Logged In Today" empl oyees
 //		$this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
 //		// get total numbers of "Not Logged In Today" employees
 //		$this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
@@ -260,7 +333,8 @@ class Users extends MY_Controller {
                             $entry_type = $log->entry_type;
                             if ($log->action == 'Check in'){
                                 $clock_in = date('h:i A',$log->time);
-                            }elseif ($log->action == 'Check out'){
+                            }
+                            if ($log->action == 'Check out'){
                                 $clock_out = date('h:i A',$log->time);
                             }
                         }
@@ -393,6 +467,7 @@ class Users extends MY_Controller {
 		$this->load->view('users/add', $this->page_data);
 
 	}
+	
 	public function getRoles(){
 	    $role_title = $this->input->get('search');
         $roles = $this->users_model->getRolesBySearch($role_title);

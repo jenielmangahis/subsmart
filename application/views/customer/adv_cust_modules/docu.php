@@ -7,26 +7,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
                 <tr>
-                    <td width="100%" align="left" valign="top" class="issued"> Issued/Received</td>
+                    <span style="margin-left:30px !important;" width="100%" align="left" valign="top" class="issued"> Issued/Received</span>
                 </tr>
                 <tr>
-                    <td align="left" valign="top" style="padding-right:10px;">
+                    <td align="left" valign="top"  >
                         <div  id="paper_place_load">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tbody>
-                                <tr>
+                                <tr >
                                     <td width="" align="center" valign="top">
                                         <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
-                                        <input type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_1" value="1" >
+                                        <input style="margin-left:30px !important;" type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_1" value="1" >
                                         <!-- updated on 10-11-2016 end -->
                                     </td>
-                                    <td align="left" valign="top">
+                                    <td align="" valign="top">
                                         <iframe id="frame1" style="display:none"></iframe>
                                         <form name="uploadDoc" id="uploadDoc_1" method="post" enctype="multipart/form-data" action="" style="width:100%;">
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="1">
                                                 <input type="hidden" name="paperworktxt" value="Client Agreement">
-                                                <label title="Client Agreement" for="chk_paperwork_1">Client Agreement</label>&nbsp;<br>
+                                                <label title="Client Agreement" for="chk_paperwork_1"> Client Agreement</label>&nbsp;<br>
 
                                                 <input type="file" name="upload_document" id="upload_document_1" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
@@ -46,15 +46,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </tr>
                                 <tr>
                                     <td width="" align="center" valign="top">
-                                        <input type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_4" value="4">
+                                        <input  style="margin-left:30px !important;" type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_4" value="4">
                                     </td>
                                     <td align="left" valign="top">
                                         <iframe id="frame1" style="display:none"></iframe>
-                                        <form name="uploadDoc" id="uploadDoc_4" method="post" enctype="multipart/form-data" action="" style="width:100%;">
+                                        action="" style="width:100%;">
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="4">
                                                 <input type="hidden" name="paperworktxt" value="Photo ID Copy">
-                                                <label title="Photo ID Copy" for="chk_paperwork_4">Photo ID Copy</label>&nbsp;<br>
+                                                <label title="Photo ID Copy" for="chk_paperwork_4"> Photo ID Copy</label>&nbsp;<br>
                                                 <input type="file" name="upload_document" id="upload_document_4" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
@@ -74,16 +74,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <tr>
                                     <td width="25" align="center" valign="top">
                                         <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
-                                        <input type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_6" value="6">
+                                        <input  style="margin-left:30px !important;"  type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_6" value="6">
                                         <!-- updated on 10-11-2016 end -->
                                     </td>
-                                    <td align="left" valign="top">
+                                    <td align="" valign="top">
                                         <iframe id="frame1" style="display:none"></iframe>
                                         <form name="uploadDoc" id="uploadDoc_6" method="post" enctype="multipart/form-data" action="" style="width:100%;">
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="6">
                                                 <input type="hidden" name="paperworktxt" value="Social Security Card (optional)">
-                                                <label title="Social Security Card (optional)" for="chk_paperwork_6">Proof of Residency</label>&nbsp;<br>
+                                                <label title="Social Security Card (optional)" for="chk_paperwork_6"> Proof of Residency</label>&nbsp;<br>
 
                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
@@ -104,16 +104,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <tr>
                                     <td width="25" align="center" valign="top">
                                         <!-- updated on 10-11-2016 start (fixed client agreement permission issue) -->
-                                        <input type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_6" value="6">
+                                        <input  style="margin-left:30px !important;" type="checkbox" class="cb" name="chk_paperwork[]" id="chk_paperwork_6" value="6">
                                         <!-- updated on 10-11-2016 end -->
                                     </td>
-                                    <td align="left" valign="top">
+                                    <td align="" valign="top">
                                         <iframe id="frame1" style="display:none"></iframe>
                                         <form name="uploadDoc" id="uploadDoc_6" method="post" enctype="multipart/form-data" action="" style="width:100%;">
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="6">
                                                 <input type="hidden" name="paperworktxt" value="Social Security Card (optional)">
-                                                <label title="Social Security Card (optional)" for="chk_paperwork_6">Personal Guarantee</label>&nbsp;<br>
+                                                <label title="Social Security Card (optional)" for="chk_paperwork_6"> Personal Guarantee</label>&nbsp;<br>
 
                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                             </div>

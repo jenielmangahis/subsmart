@@ -162,18 +162,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <td class="center"><?php echo $cnt+1; ?></td>
                                                 <td class="center">
-                                                    <!--                                                    <img src="--><?php //echo userProfileImage($row->id) ?><!--" width="40"-->
-                                                    <!--                                                         height="40" alt="" class="img-avtar">-->
-
-                                                    <?php
-                                                    if(!empty(userProfileImage($row->id))){
-                                                        $avatar = userProfileImage($row->id);
-                                                    }else{
-                                                        $avatar = base_url()."uploads/users/default.png";
-                                                    }
-                                                    ?>
-
-                                                    <img src="<?php echo $avatar;?>" width="40" height="40" alt="" class="img-avatar img-center" />
+                                                    <img src="<?php echo userProfileImage($row->id);?>" width="40" height="40" alt="" class="img-avatar img-center" />
                                                 </td>
                                                 <td><?php echo $row->FName.' '.$row->LName ?></td>
                                                 <td class="center"><?php echo $row->email ?></td>
@@ -361,6 +350,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="profile-container">
                                     <img src="/uploads/users/default.png" alt="Profile photo">
                                 </div>
+                                <label>Role and Access</label>
+                                <div class="help help-sm help-block">Select employee role</div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="role" value="2" id="role_2">
+                                        <label for="role_2"><span>Office Manager</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        ALL except high security file vault<br>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="role" value="3" id="role_3">
+                                        <label for="role_3"><span>Partner</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        ALL base on plan type
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Title</label>
+                                <select name="role" id="employeeRole" class="form-control select2-role"></select>
                             </div>
                         </div>
                     </div>
@@ -419,7 +436,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             width: 'resolve',
             delay:250,
             ajax:{
-                url:'/users/getRoles',
+                url:'users/getRoles',
                 type:"GET",
                 dataType:"json",
                 data:function (params) {
@@ -577,7 +594,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});
             var form = $('#modalAddEmployee').find('form');
             $.ajax({
-                url:"/users/getEmployeeData",
+                url:"users/getEmployeeData",
                 type:"GET",
                 dataType:'json',
                 data:{user_id:user_id},

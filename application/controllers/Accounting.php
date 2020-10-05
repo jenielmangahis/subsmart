@@ -22,7 +22,7 @@ class Accounting extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_sales_time_activity_model');
-        $this->load->model('ccounting_customers_model');
+        $this->load->model('accounting_customers_model');
         $this->load->library('excel');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(

@@ -167,7 +167,11 @@ $route['email_automation/ajax_edit_template'] = 'Email_Automation/ajax_edit_temp
 $route['email_automation/update_template'] = 'Email_Automation/update_template';
 $route['email_automation/update_email_automation'] = 'Email_Automation/update_email_automation';
 $route['email_automation/ajax_edit_email_template'] = 'Email_Automation/ajax_edit_email_template';
-$route['email_automation/ajax_save_visible_status'] = 'email_automation/ajax_save_visible_status';
+$route['email_automation/ajax_save_visible_status'] = 'Email_Automation/ajax_save_visible_status';
+$route['email_automation/ajax_set_default_template'] = 'Email_Automation/ajax_set_default_template';
+$route['email_automation/ajax_set_default_template_edit'] = 'Email_Automation/ajax_set_default_template_edit';
+$route['email_automation/ajax_set_place_holder'] = 'Email_Automation/ajax_set_place_holder';
+$route['email_automation/ajax_set_place_holder_edit'] = 'Email_Automation/ajax_set_place_holder_edit';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 
@@ -332,3 +336,6 @@ $route['sms_campaigns/build_sms'] = 'Sms_Campaigns/build_sms';
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
 $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
+
+//workcalendar
+$route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';

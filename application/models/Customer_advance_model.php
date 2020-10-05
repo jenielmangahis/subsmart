@@ -66,6 +66,12 @@ class Customer_advance_model extends MY_Model {
 
     }
 
+    public function get_all_by_id($fieldname,$fieldvalue,$tablename){
+        $this->db->where($fieldname, $fieldvalue);
+        $query = $this->db->get($tablename);
+        return $query->result();
+    }
+
     public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
     {
         if(!empty($orderBy) || $orderBy!= null){

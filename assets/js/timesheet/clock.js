@@ -6,19 +6,13 @@ $(document).ready(function () {
     var get_server_time,countdown;
     var difference = 0;
 
-    function serverTime () {
-        var server_time;
-            $.ajax({
-                url:"/timesheet/serverTime",
-                dataType:"json",
-                async: false,
-                success:function (data) {
-                    server_time = data.date_time;
-                    break_end_time = data.end_time;
-                }
-            });
-        get_server_time = setTimeout(serverTime, 1000);
-        return server_time;
+    function notificationRing() {
+        var url = '../assets/css/notification/notification_tone2.mp3';
+        const audio = new Audio(url);
+        audio.play();
+    }
+    if($('#clock-status').val() == 1){
+        breakTime();
     }
     $(document).on('click','#notificationDP',function () {
         var id = $(this).attr('data-id');
@@ -154,9 +148,6 @@ $(document).ready(function () {
         }
     });
     });
-    if($('#clock-status').val() == 1){
-        breakTime();
-    }
     function breakTime() {
         var end =  $('#clock-end-time').val();
         // Get today's date and time
@@ -185,11 +176,17 @@ $(document).ready(function () {
                         $('#userLunchOut').text(data.lunch_out_time);
                         $('#clock-end-time').val(data.remaining);
                         $('.employeeLunch').attr('id',null).children('i').removeClass('fa-mug-hot').addClass('fa-coffee');
-                        $('#notifyBadge').css('visibility','visible').text(1);
+                        var notify_count = $('#notifyBadge').text();
+                        if (notify_count == ''){
+                            notify_count = 0;
+                        }
+                        var count = parseInt(notify_count) + 1;
+                        $('#notifyBadge').css('visibility','visible').text(count);
                         $('#notificationList').prepend(data.notifications);
                         $('.layer-1').css('animation','animation-layer-1 5000ms infinite');
                         $('.layer-2').css('animation','animation-layer-2 5000ms infinite');
                         $('.layer-3').css('animation','animation-layer-3 5000ms infinite');
+                        notificationRing();
                         stopCountdown();
                         Swal.fire(
                             {

@@ -14,6 +14,34 @@ $(document).ready(function () {
         $("#hideMailAdd").hide();
         $("#addMailAdd").show();
     });
+
+    $("#exportAffiliates").click(function () {
+      exportItems();
+    });
+
+    $("#importAffiliateBtn").click(function () {
+      $("#importAffiliateFile").click();
+    });
+
+    $("#importAffiliateFile").change(function() {
+      document.getElementById("affiliateImportForm").submit();
+    });
+
+    $('#printAffiliateBtn').click(function(){
+      window.print();
+    });
+
+    $('#checkAffiliateURL').click(function(){
+      var link = document.createElement("a");
+      link.href = $("#websiteUrl").val();
+    
+      document.body.appendChild(link);
+      link.click();
+    });
+
+    $("#searchAffiliate").click(function() {
+      getAffiliatesByfilters();
+    });
   });
   
   function readURL(input, id) {
@@ -28,27 +56,36 @@ $(document).ready(function () {
       reader.readAsDataURL(input.files[0]);
     }
   }
+
+  function exportItems() {
+    var link = document.createElement("a");
+    link.href = base_url + "affiliate/exportAffiliates";
+  
+    document.body.appendChild(link);
+    link.click();
+  }
   
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-  
-  function getCustomers() {
-    var customers = [];
+
+  function filterReportsByMonths(startDate, endDate) {
     $.ajax({
+      url: options.urlFilterReports,
       type: "GET",
-      url: base_url + "job/getCustomers",
-      success: function (data) {
-        var result = jQuery.parseJSON(data);
-        $.each(result, function (key, val) {
-          customers.push({
-            id: val.id,
-            label:
-              capitalizeFirstLetter(val.FName) + capitalizeFirstLetter(val.LName),
-          });
-        });
+      data: { startDate: startDate, endDate: endDate },
+      beforeSend: function () {
+        $(".loader").show();
+        $("#reportTable").fadeOut();
+      },
+      success: function (response) {
+        var obj = JSON.parse(response);
+        $("#tableToListReport tbody").empty();
+        obj.monthly.forEach(monthlyCloseout);
+  
+        $(".loader").fadeOut();
+        $("#reportTable").fadeIn();
       },
     });
-    return customers;
   }
   
