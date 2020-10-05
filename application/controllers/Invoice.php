@@ -260,20 +260,20 @@ class Invoice extends MY_Controller {
             'job_name' => post('job_name'),
             'date_issued' => date('Y-m-d', strtotime(post('date_issued'))),
             'due_date' => date('Y-m-d', strtotime(post('due_date'))),
-            'purchase_order_number' => post('purchase_order'),
+            'po_number' => post('purchase_order'),
             'work_order_number' => post('work_order'),
             'invoice_number' => post('invoice_number'),
             'invoice_type' => post('invoice_type'),
-            'credit_card' => post('credit_card'),
-            'check' => post('check'),
-            'deposit' => post('deposit'),
-            'cash' => post('cash'),
+            'accept_credit_card' => post('credit_card'),
+            'accept_check' => post('check'),
+            'accept_direct_deposit' => post('deposit'),
+            'accept_cash' => post('cash'),
             'status' => 'Draft',
             'invoice_items' => $invoice_items,
             'invoice_totals' => serialize($invoice_totals),
             'deposit_request' => post('deposit_request'),
-            'customer_message' => post('message'),
-            'terms_conditions' => post('terms_conditions')
+            'message_to_customer' => post('message'),
+            'terms_and_conditions' => post('terms_conditions')
         ]);
             
         $this->activity_model->add('New Invoice $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -378,13 +378,13 @@ class Invoice extends MY_Controller {
             'customer_id' => post('customer_id'),
             'job_location' => post('job_location'),
             'job_name' => post('job_name'),
-            'purchase_order_number' => post('purchase_order'),
+            'po_number' => post('purchase_order'),
             'work_order_number' => post('work_order'),
             'invoice_type' => post('invoice_type'),
-            'credit_card' => post('credit_card'),
-            'check' => post('check'),
-            'deposit' => post('deposit'),
-            'cash' => post('cash'),
+            'accept_credit_card' => post('credit_card'),
+            'accept_check' => post('check'),
+            'accept_direct_deposit' => post('deposit'),
+            'accept_cash' => post('cash'),
             'start_on' => post('start_on'),
             'end_date' => $end_date,
             'due_terms' => post('due_terms'),
@@ -395,8 +395,8 @@ class Invoice extends MY_Controller {
             'invoice_items' => $invoice_items,
             'invoice_totals' => serialize($invoice_totals),
             'deposit_request' => post('deposit_request'),
-            'customer_message' => post('message'),
-            'terms_conditions' => post('terms_conditions')
+            'message_to_customer' => post('message'),
+            'terms_and_conditions' => post('terms_conditions')
         ]);
             
         $this->activity_model->add('New Recurring Invoice $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -597,19 +597,19 @@ class Invoice extends MY_Controller {
             'job_name' => post('job_name'),
             'date_issued' => date('Y-m-d', strtotime(post('date_issued'))),
             'due_date' => date('Y-m-d', strtotime(post('due_date'))),
-            'purchase_order_number' => post('purchase_order'),
+            'po_number' => post('purchase_order'),
             'work_order_number' => post('work_order'),
             'invoice_number' => post('invoice_number'),
             'invoice_type' => post('invoice_type'),
-            'credit_card' => post('credit_card'),
-            'check' => post('check'),
-            'deposit' => post('deposit'),
-            'cash' => post('cash'),
+            'accept_credit_card' => post('credit_card'),
+            'accept_check' => post('check'),
+            'accept_direct_deposit' => post('deposit'),
+            'accept_cash' => post('cash'),
             'invoice_items' => $invoice_items,
             'invoice_totals' => serialize($invoice_totals),
             'deposit_request' => post('deposit_request'),
-            'customer_message' => post('customer_message'),
-            'terms_conditions' => post('terms_conditions')
+            'message_to_customer' => post('customer_message'),
+            'terms_and_conditions' => post('terms_conditions')
         ]);
 
         $this->activity_model->add('New User $' . $user->id . ' Created by User:' . logged('name'), logged('id'));

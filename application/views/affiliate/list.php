@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Affiliate Name: </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Last name">
+                                            <input type="text" class="form-control" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -50,19 +50,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Email: </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Last name">
+                                            <input type="text" class="form-control" placeholder="Email">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 text-right-sm justify-content-end">
                                     <div class="row">
                                         <div class="col">
-                                            <a class="btn btn-default btn-md margin-left-sec" href="" target="_blank"><span
-                                                    class="fa fa-download"></span> &nbsp; Import CSV</a>
-                                            <a class="btn btn-default btn-md margin-left-sec" href="" target="_blank"><span
+                                        <form action="<?php echo base_url('affiliate/importAffiliates'); ?>" method="post" id="affiliateImportForm" enctype="multipart/form-data">
+                                            <input type="file" name="file" id="importAffiliateFile" style="display:none;"/>
+                                            <a class="btn btn-default btn-md margin-left-sec" id="importAffiliateBtn" href="javascript:void(0)"><span
+                                                    class="fa fa-upload"></span> &nbsp; Import CSV</a>
+                                            <a class="btn btn-default btn-md margin-left-sec" href="javascript:void(0)" id="exportAffiliates"><span
                                                     class="fa fa-download"></span> &nbsp; Export CSV</a>
-                                            <a class="btn btn-default btn-md margin-left-sec" href="" target="_blank"><span
-                                                    class="fa fa-download"></span> &nbsp; Print</a>
+                                            <a class="btn btn-default btn-md margin-left-sec" id="printAffiliate" data-toggle="modal" data-target="#modalPrintAffiliate" href="javascript:void(0)"><span
+                                                    class="fa fa-print"></span> &nbsp; Print</a>
+                                        </form>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Company: </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Last name">
+                                            <input type="text" class="form-control" placeholder="Company">
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-3 mt-4 justify-content-end">
                                     <div class="row">
                                         <div class="col">
-                                            <button type="submit" class="btn btn-primary mb-2">Search</button>
+                                            <button type="button" id="searchAffiliate" class="btn btn-primary mb-2">Search</button>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +140,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $affiliate->id; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('affiliate/edit?id='.$affiliate->id); ?>" class="editItemBtn" data-id="<?php echo $affiliate->id; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                             <li role="separator" class="divider"></li>
                                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('affiliate/delete?id='.$affiliate->id); ?>" class="deleteAffiliateCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
                                                         </ul>
@@ -147,7 +150,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php endforeach; ?>
                                         <tbody>
                                         </tbody>
-
                                     </table>
                             </div>
                         </div>
@@ -156,6 +158,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
+            <!-- Modal Service Address -->
+            <div class="modal fade" id="modalPrintAffiliate" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header" style="background-color:blue;">
+                        <h5 class="modal-title" id="addLocationLabel" style="color:white;">Print Affiliate Partners</h5>
+                        <button type="button" class="close" style="color:white;" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">  
+                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="printAffiliateTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><strong>Affiliate Name</strong></th>
+                                    <th scope="col"><strong>Company</strong></th>
+                                    <th scope="col"><strong>Client Reffered</strong></th>
+                                    <th scope="col"><strong>Email</strong></th>
+                                    <th scope="col"><strong>Phone</strong></th>
+                                    <th scope="col"><strong>Status</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($affiliates)) : ?>
+                                <?php foreach($affiliates as $emp) : ?>
+                                    <tr>
+                                        <td class="pl-3"><?php echo $emp->first_name . ' ' . $emp->last_name; ?></td>
+                                        <td class="pl-3"><?php echo $emp->company; ?></td>                                
+                                        <td class="pl-3"><?php echo 0; ?></td>                                
+                                        <td class="pl-3"><?php echo $emp->email; ?></td>                                
+                                        <td class="pl-3"><?php echo $emp->phone; ?></td>                                
+                                        <td class="pl-3"><?php echo $emp->status; ?></td>                                
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php endif;?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                        <button type="button" class="btn btn-primary" id="printAffiliateBtn">Print</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- end container-fluid -->
     </div>

@@ -133,7 +133,7 @@ class Vault extends MY_Controller {
 	}
 
 	public function delete(){
-		$uid = logged('uid');
+		$uid = logged('id');
 
 		$return = array(
 			'folder_id' => 0,

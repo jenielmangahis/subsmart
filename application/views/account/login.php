@@ -82,8 +82,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="col-xs-6">
         <a href="#" class="login-social fb-color"><i class="fa fa-facebook"></i> Sign In Facebook</a>
       </div>
-      <div class="col-xs-6">
-        <a href="#" class="login-social google-color"><i class="fa fa-google"></i>Sign In Gmail</a>
+      <div class="col-xs-6" style="padding-left:0px;">
+        <img src="<?php echo base_url()?>assets/dashboard/images/google/google.png" width="160" style="cursor:pointer;" alt="">
+        <!-- <a href="#" class="login-social google-color"><i class="fa fa-google"></i>Sign In Gmail</a> -->
       </div>
     </div>
     <a href="<?php echo url('login/forget?username='.post('username')) ?>">Forgot your password ?</a><br>

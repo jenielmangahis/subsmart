@@ -49,7 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">First Name<span style="color:red;">*</span> </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="first_name" required class="form-control" placeholder="First name">
+                                            <input type="hidden" name="affiliate_id" value="<?php echo (isset($affiliate)) ? $affiliate->id : ''; ?>">
+                                            <input type="text" name="first_name" required class="form-control" placeholder="First name" value="<?php echo (isset($affiliate)) ? $affiliate->first_name : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -59,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Last Name<span style="color:red;">*</span> </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="last_name" required class="form-control" placeholder="Last name">
+                                            <input type="text" name="last_name" required class="form-control" placeholder="Last name" value="<?php echo (isset($affiliate)) ? $affiliate->last_name : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -71,11 +72,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="col">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="genderRadioOptions" checked id="inlineRadio1" value="male">
+                                                <input class="form-check-input" type="radio" name="genderRadioOptions" <?php echo (isset($affiliate)) ? (($affiliate->gender === "Male") ? 'checked' : '') : ''; ?> id="inlineRadio1" value="Male">
                                                 <label class="form-check-label" for="inlineRadio1">Male</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="genderRadioOptions" id="inlineRadio2" value="female">
+                                                <input class="form-check-input" type="radio" name="genderRadioOptions" <?php echo (isset($affiliate)) ? (($affiliate->gender === "Female") ? 'checked' : '') : ''; ?> id="inlineRadio2" value="Female">
                                                 <label class="form-check-label" for="inlineRadio2">Female</label>
                                             </div>
                                         </div>
@@ -89,31 +90,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Company </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="company" class="form-control" placeholder="Company">
+                                            <input type="text" name="company" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->company : ''; ?>" placeholder="Company">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 mt-3">
+                                <div class="col-sm-6 mt-3">
                                      <div class="row">
                                         <div class="pt-2 pr-2">
                                             <label for="">Website URL </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="website_url" class="form-control" placeholder="">
+                                            <input type="text" name="website_url" id="websiteUrl" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->website_url : ''; ?>" placeholder="">
                                         </div>
                                         <div class="col mt-2">
-                                            <a href="#">Check URL</a>
+                                            <a href="javascript:void(0)" id="checkAffiliateURL">Check URL</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4"></div>
+                                <div class="col-sm-2"></div>
                                 <div class="col-sm-4 mt-3">
                                     <div class="row">
                                         <div class="pt-2 pr-5">
                                             <label for="">Email<span style="color:red;">*</span> </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="email" required class="form-control" placeholder="Email">
+                                            <input type="text" name="email" required class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->email : ''; ?>"  placeholder="Email">
                                         </div>
                                     </div>
                                 </div>
@@ -123,13 +124,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Phone<span style="color:red;">*</span> </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="phone" required class="form-control" placeholder="">
+                                            <input type="text" name="phone" required class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->phone : ''; ?>" placeholder="">
                                         </div>
                                         <div class="pt-2 pr-2">
                                             <label for="">Ext</label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="phone_ext" class="form-control" placeholder="">
+                                            <input type="text" name="phone_ext" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->phone_ext : ''; ?>" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +141,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Alternate Phone </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="alternate_phone" class="form-control" placeholder="">
+                                            <input type="text" name="alternate_phone" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->alternate_phone : ''; ?>" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -150,7 +151,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Fax </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="fax" class="form-control" placeholder="">
+                                            <input type="text" name="fax" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->fax : ''; ?>" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -165,7 +166,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Mailing Address </label>
                                         </div>
                                         <div class="col">
-                                            <textarea name="mailing_address" class="form-control"></textarea>
+                                            <textarea name="mailing_address" class="form-control"><?php echo (isset($affiliate)) ? $affiliate->mail_address : ''; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">City </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="city" class="form-control" placeholder="">
+                                            <input type="text" name="city" value="<?php echo (isset($affiliate)) ? $affiliate->city : ''; ?>" class="form-control" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +187,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">State </label>
                                         </div>
                                         <div class="col">
-                                            <select class="form-control"  name="state" id="exampleFormControlSelect1">
+                                            <select class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->state : ''; ?>" name="state" id="exampleFormControlSelect1">
                                                 <option value="all">All</option>
                                                 <option value="active">Active</option>
                                                 <option value="inactive">Inactive</option>
@@ -202,7 +203,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Zip code </label>
                                         </div>
                                         <div class="col">
-                                            <input type="text" name="zipcode" class="form-control" placeholder="">
+                                            <input type="text" name="zipcode" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->zipcode : ''; ?>" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -223,12 +224,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Status<span style="color:red;">*</span> </label>
                                         </div>
                                         <div class="col">
-                                            <select class="form-control" name="status" id="exampleFormControlSelect1">
-                                                <option value="" selected disabled>Select Status</option>
-                                                <option value="active">Active (recommended)</option>
-                                                <option value="inactive">Inactive</option>
-                                                <option value="pending">Pending</option>
-                                            </select>
+                                            <?php if (isset($affiliate)) : ?>
+                                                <select class="form-control" name="status" id="exampleFormControlSelect1">
+                                                    <option value="<?php echo $affiliate->status?>" selected><?php echo $affiliate->status?></option>
+                                                    <option value="Active">Active (recommended)</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                    <option value="Pending">Pending</option>
+                                                </select>
+                                            <?php else : ?>
+                                                <select class="form-control" name="status" id="exampleFormControlSelect1">
+                                                    <option value="" selected disabled>Select Status</option>
+                                                    <option value="active">Active (recommended)</option>
+                                                    <option value="inactive">Inactive</option>
+                                                    <option value="pending">Pending</option>
+                                                </select>
+                                            <?php endif;?>
                                         </div>
                                     </div>
                                 </div>
@@ -239,7 +249,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Notes (internal)</label>
                                         </div>
                                         <div class="col">
-                                            <textarea name="notes" class="form-control"></textarea>
+                                            <textarea name="notes" class="form-control"><?php echo (isset($affiliate)) ? $affiliate->notes : ''; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -250,7 +260,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="">Photo</label>
                                         </div>
                                         <div class="col pt-2 pr-2">
-                                        <div class="col-md-4 form-group">
+                                        <div class="form-group">
                                             <input type="file" class="form-control" name="image" id="formClient-Image"
                                                 placeholder="Upload Image" accept="image/*"
                                                 onchange="readURL(this, 'photoAffiliate');">
@@ -263,7 +273,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-12">
-                                    <img src="../uploads/users/default.png" width="180" id="photoAffiliate" alt="">
+                                    <?php if (isset($affiliate)) : ?>
+                                        <img src="../uploads/affiliate/<?php echo logged('company_id') . '/' . $affiliate->photo; ?>" width="180" id="photoAffiliate" alt="">
+                                    <?php else :?>
+                                        <img src="../uploads/users/default.png" width="180" id="photoAffiliate" alt="">
+                                    <?php endif ;?>
                                 </div>
                                 <div class="col-sm-8 mt-3">
                                      <div class="row">
@@ -291,7 +305,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                      <div class="row">
                                         <div class="pt-2 pr-2">
                                             <div class="checkbox checkbox-sm">
-                                                <input type="checkbox" name="add_masterlist" id="add_masterlist">
+                                                <input type="checkbox" <?php (isset($affiliate)) ? (($affiliate->add_master_contact_list) ? 'checked' : 'checked') : '' ?> name="add_masterlist" id="add_masterlist">
                                                 <label for="add_masterlist">Add to master contact list</label>
                                             </div>
                                         </div>

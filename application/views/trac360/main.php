@@ -33,9 +33,7 @@
       </div>               
       <div class="row">
          <div class="col-md-12">
-               <div id="map">
-
-               </div>
+          <?php echo $map ?>
          </div>
          <!-- end row -->           
       </div>
@@ -47,15 +45,7 @@
 <!-- page wrapper end -->
 
 <?php include viewPath('includes/footer'); ?>
+<?php echo $map_js; ?>
 <script>
-   function initMap() {
-     // The location of Uluru
-     var uluru = {lat: -25.344, lng: 131.036};
-     // The map, centered at Uluru
-     var map = new google.maps.Map(
-         document.getElementById('map'), {zoom: 4, center: uluru});
-     // The marker, positioned at Uluru
-     var marker = new google.maps.Marker({position: uluru, map: map});
-   }
+  
 </script>
-<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&callback=initMap"></script>

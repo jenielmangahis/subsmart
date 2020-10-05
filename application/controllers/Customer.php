@@ -99,6 +99,11 @@ class Customer extends MY_Controller
         }
     }
 
+
+    public function test_device(){
+        $input = $this->input->post();
+    }
+
     public function add_data_sheet(){
 
         $user_id = logged('id');
@@ -300,6 +305,28 @@ class Customer extends MY_Controller
             $this->customer_ad_model->add($input_office,"acs_office");
             $this->customer_ad_model->add($input_alarm,"acs_alarm");
             $this->customer_ad_model->add($input_billing,"acs_billing");
+
+
+            if(isset($input['device_name'])){
+                $devices = count($input['device_name']);
+                for($xx=0;$xx<$devices;$xx++){
+                    $device_data = array();
+                    $device_data['fk_prof_id'] = $fk_prod_id;
+                    $device_data['device_name'] = $input['device_name'][$xx];
+                    $device_data['sold_by'] = $input['sold_by'][$xx];
+                    $device_data['device_points'] = $input['device_points'][$xx];
+                    $device_data['retail_cost'] = $input['retail_cost'][$xx];
+                    $device_data['purch_price'] = $input['purch_price'][$xx];
+                    $device_data['device_qty'] = $input['device_qty'][$xx];
+                    $device_data['total_points'] = $input['total_points'][$xx];
+                    $device_data['total_cost'] = $input['total_cost'][$xx];
+                    $device_data['total_purch_price'] = $input['total_purch_price'][$xx];
+                    $device_data['device_net'] = $input['device_net'][$xx];
+                    $this->customer_ad_model->add($device_data,"acs_devices");
+                    unset($device_data);
+                }
+            }
+
             echo "Added";
         }else{
             $input_profile['prof_id'] = $fk_prod_id;
@@ -314,6 +341,28 @@ class Customer extends MY_Controller
             $this->customer_ad_model->update_data($input_office,"acs_office","fk_prof_id");
             $this->customer_ad_model->update_data($input_alarm,"acs_alarm","fk_prof_id");
             $this->customer_ad_model->update_data($input_billing,"acs_billing","fk_prof_id");
+
+            if(isset($input['device_name'])){
+                $devices = count($input['device_name']);
+                for($xx=0;$xx<$devices;$xx++){
+                    $device_data = array();
+                    $device_data['fk_prof_id'] = $fk_prod_id;
+                    $device_data['device_name'] = $input['device_name'][$xx];
+                    $device_data['sold_by'] = $input['sold_by'][$xx];
+                    $device_data['device_points'] = $input['device_points'][$xx];
+                    $device_data['retail_cost'] = $input['retail_cost'][$xx];
+                    $device_data['purch_price'] = $input['purch_price'][$xx];
+                    $device_data['device_qty'] = $input['device_qty'][$xx];
+                    $device_data['total_points'] = $input['total_points'][$xx];
+                    $device_data['total_cost'] = $input['total_cost'][$xx];
+                    $device_data['total_purch_price'] = $input['total_purch_price'][$xx];
+                    $device_data['device_net'] = $input['device_net'][$xx];
+                    $this->customer_ad_model->add($device_data,"acs_devices");
+                    unset($device_data);
+                }
+            }
+
+
             echo "Updated";
         }
     }
@@ -355,6 +404,7 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");

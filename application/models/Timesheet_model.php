@@ -48,7 +48,7 @@ class Timesheet_model extends MY_Model {
         $qry = $this->db->get('ts_weekly_total_shift');
         return $qry->result();
     }
-    public function attendance($user_id,$status,$attn_id,$shift,$break,$week_ID,$flag){
+    public function attendance($user_id,$status,$attn_id,$shift,$break,$week_ID,$flag,$overtime){
         if ($flag == 0){
             $week_id = $this->totalHoursShift($user_id,$week_ID);
         }
@@ -68,7 +68,8 @@ class Timesheet_model extends MY_Model {
                 'status' => $status,
                 'date_out' => date('Y-m-d'),
                 'shift_duration' => $shift,
-                'break_duration' => $break
+                'break_duration' => $break,
+                'overtime' => $overtime
             );
             $this->db->where('id',$attn_id);
             $this->db->update($this->attn_tbl,$update);
@@ -77,7 +78,7 @@ class Timesheet_model extends MY_Model {
     }
 
     public function checkInEmployee($user_id,$entry,$approved_by){
-        $attn_id = $this->attendance($user_id,1,0,null,null,0,0);
+        $attn_id = $this->attendance($user_id,1,0,null,null,0,0,0);
         $qry = $this->db->get_where($this->db_table,array('attendance_id'=>$attn_id,'action' => 'Check in'));
         if ($qry->num_rows() == 0){
             $data = array(
@@ -112,7 +113,8 @@ class Timesheet_model extends MY_Model {
             $this->db->insert($this->db_table,$data);
             $shift = $this->calculateShiftDuration($attn_id);
             $break = $this->calculateBreakDuration($attn_id);
-            $this->attendance($user_id,0,$attn_id,$shift,$break,$week_ID,1);
+            $overtime = $this->calculateOvertime($user_id,$attn_id);
+            $this->attendance($user_id,0,$attn_id,$shift,$break,$week_ID,1,$overtime);
             return true;
         }else{
             return false;
@@ -150,6 +152,22 @@ class Timesheet_model extends MY_Model {
             $result = null;
         }
         return $result;
+    }
+
+    public function calculateOvertime($user_id,$attn_id){
+        $shift = $this->calculateShiftDuration($attn_id);
+        $query = $this->db->get_where('ts_settings_day',array('user_id'=>$user_id,'start_date'=>date('Y-m-d')));
+        if ($query->num_rows() == 1){
+            $sched = $query->row()->duration;
+            if ($shift >= $sched){
+                $overtime = $shift - $sched;
+            }else{
+                $overtime = 0;
+            }
+        }else{
+            $overtime = $shift - 8;
+        }
+        return round($overtime,2);
     }
     private function totalHoursShift($user_id,$week_ID){
         $total_shift = 0;
@@ -219,8 +237,8 @@ class Timesheet_model extends MY_Model {
         return $qry;
     }
     public function getTimesheetLogs(){
-        $query = $this->db->get($this->db_table);
-        return $query->result();
+        $qry = $this->db->get('timesheet_logs');
+        return $qry->result();
     }
     public function getTSByDate($date_this_week){
         for ($x = 0; $x < count($date_this_week);$x++){
@@ -647,9 +665,12 @@ class Timesheet_model extends MY_Model {
         $query = $this->db->get();
         return $query->num_rows();
     }
+
     public function getTotalUsersLoggedIn(){
         $total_users = $this->users_model->getTotalUsers();
-        $query =  $this->db->get_where('timesheet_attendance',array('date_in'=>date('Y-m-d')));
+        $this->db->or_where('date_in',date('Y-m-d'));
+        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $query =  $this->db->get('timesheet_attendance');
         $logged_in = $query->num_rows();
         return $total_users - $logged_in;
     }
@@ -665,7 +686,8 @@ class Timesheet_model extends MY_Model {
         return $query->num_rows();
     }
     public function getAttendanceByDay($day){
-        $this->db->where('date_in',$day);
+        $this->db->or_where('date_in',$day);
+        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
         $query = $this->db->get('timesheet_attendance')->result();
         return $query;
     }

@@ -32,6 +32,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
     display: none;
 }
+.gmail:not(.show) {
+    display: none;
+}
 </style>
 <?php 
 $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_accounts_id);
@@ -778,27 +781,27 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                     </div>
                     <div class="col-md-2">
                         <div id="sched_">Create<input type="number" name="create_days" id="create_days" class="form-control">days in advance</div>
-                        <div id="remine_" style="display: none;">Remind<input type="number" name="create_days" id="create_days" class="form-control">days before the transaction date</div>
+                        <div id="remine_" style="display: none;">Remind<input type="number" name="remine_days" id="remine_days" class="form-control">days before the transaction date</div>
                         <div id="unsched_" style="display: none;">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</div>
                     </div>
                 </div>
             </div>
             <div style="margin-left: 20px;" id="sched_section">
                 <div class="row" style="margin-bottom:20px">
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <label>Interval</label>
-                        <select name="interval" id="interval" class="form-control">
+                        <select name="interval" id="interval" class="form-control" style="width: 120% !important;">
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
                             <option value="monthly" selected>Monthly</option>
                             <option value="yearly">Yearly</option>
                         </select>
                     </div>
-                    <div class="col-md-7">
-                        <div id="daily" style="display: none;">every<input type="number" name="daily_days" id="daily_days" class="form-control" style="width: 5% !important;display: inline;">day(s)</div>
+                    <div class="col-md-6" style="display: flex;">
+                        <div id="daily" style="display: none;">every<input type="number" name="daily_days" id="daily_days" class="form-control" style="width: 15% !important;display: inline;">day(s)</div>
                         <div id="weekly" style="display: none;">
-                            every<input type="number" name="daily_weeks" id="daily_weeks" class="form-control" style="width: 5% !important;display: inline;">week(s) on
-                            <select name="weekly_option" id="weekly_option" class="form-control" style="width: 15% !important;">
+                            every<input type="number" name="daily_weeks" id="daily_weeks" class="form-control" style="width: 10% !important;display: inline;">week(s) on
+                            <select name="weekly_option" id="weekly_option" class="form-control" style="width: 30% !important;">
                                 <option value="monday">Monday</option>
                                 <option value="tuesday">Tuesday</option>
                                 <option value="wednesday">Wednesday</option>
@@ -849,7 +852,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <option value="28th">28th</option>
                                 <option value="last">Last</option>
                             </select>
-                            <select name="monthlyweek_option" id="monthlyweek_option" class="form-control" style="display: none;width: 15% !important;">
+                            <select name="monthlyweek_option" id="monthlyweek_option" class="form-control" style="display: none;width: 20% !important;">
                                 <option value="monday">Monday</option>
                                 <option value="tuesday">Tuesday</option>
                                 <option value="wednesday">Wednesday</option>
@@ -862,7 +865,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                         </div>
                         <div id="yearly" style="display: none;">
                             every
-                            <select name="yearlymonth_option" id="yearlymonth_option" class="form-control" style="width: 15% !important;">
+                            <select name="yearlymonth_option" id="yearlymonth_option" class="form-control">
                                 <option value="january">January</option>
                                 <option value="february">February</option>
                                 <option value="march">March</option>
@@ -876,7 +879,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <option value="november">November</option>
                                 <option value="december">December</option>
                             </select>
-                            <select name="yearlyday_option" id="yearlyday_option" class="form-control" style="width: 12% !important;">
+                            <select name="yearlyday_option" id="yearlyday_option" class="form-control">
                                 <option value="1st">1st</option>
                                 <option value="2nd">2nd</option>
                                 <option value="3rd">3rd</option>
@@ -909,29 +912,29 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" style="display: flex;">
                         <label>StartDate</label>
                         <div class="col-xs-10 date_picker">
-                            <input type="text" name="recurr_start_date" id="recurr_start_date" class="form-control" style="width: 35%!important">
+                            <input type="text" name="recurr_start_date" id="recurr_start_date" class="form-control" style="width: 103%!important;">
                         </div>
-                        <select class="form-control" name="recurr_select" id="recurr_select" style="width: 30%!important">
+                        <select class="form-control" name="recurr_select" id="recurr_select" style="width: 35%!important">
                             <option value="none">None</option>
                             <option value="by">By</option>
                             <option value="after">After</option>
                         </select>
                         <div id="recurr_by" style="display: none;">
                             <div class="col-xs-10 date_picker">
-                                <input type="text" name="recurr_end_date" id="recurr_end_date" class="form-control" style="width: 35%!important">
+                                <input type="text" name="recurr_end_date" id="recurr_end_date" class="form-control">
                             </div>
                         </div>
-                        <div id="recurr_after" style="display: none;"><input type="text" name="recurr_end_date" id="recurr_end_date" class="form-control" maxlength="3" style="display: inline;width: 5% !important"></div>
+                        <div id="recurr_after" style="display: none;"><input type="text" name="recurr_after_occurrences" id="recurr_after_occurrences" class="form-control" maxlength="3"></div>
                     </div>
                 </div>
             </div>
             <div style="margin-left: 20px;">
                 <div class="row" style="margin-bottom:20px">
                     <div class="col-md-3">
-                        <select name="recurr_payee_popup" class="form-control">
+                        <select name="recurr_payee_popup" id="recurr_payee_popup" class="form-control fa">
                             <option value="" disabled="" selected>Payee</option>
                             <?php
                             foreach($this->AccountingVendors_model->select() as $ro)
@@ -941,10 +944,11 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             <?php
                             }
                             ?>
+                            <option value="fa fa-plus">&#xf067; Add new</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" name="recurr_account_popup" id="recurr_account_popup">
+                        <select class="form-control fa" name="recurr_account_popup" id="recurr_account_popup">
                             <?php
                                $i=1;
                                foreach($this->chart_of_accounts_model->select() as $row)
@@ -956,7 +960,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                               $i++;
                               }
                                ?>
-                            <option value="fa fa-plus-circle">&#xf2bb; Add new</option>
+                            <option value="fa fa-plus">&#xf067; Add new</option>
                         </select>
                     </div>
                     <div class="col-md-2"></div>
@@ -1138,7 +1142,9 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             <button type="submit" class="savebtn">Save template</button>
         </div>
     </div>
-    <!-- End Make recurring --><!-- Make recurring -->
+    <!-- End Make recurring -->
+
+    <!-- Make account -->
     <div id="overlay-account-tx" class=""></div>
     <div id="side-menu-account-tx" class="main-side-nav" style="display: none;">
         <?php echo form_open_multipart('accounting/chart_of_accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
@@ -1153,7 +1159,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 </div>
                                 <div class="col-md-4 form-group">
                                      <label for="account_type">Account Type</label>
-                                    <select name="account_type" id="account_type" class="form-control select2" required>
+                                    <select name="account_type" id="account_type" class="form-control " required>
                                         <option value="">Select Account Type</option>
                                         <?php foreach ($this->account_model->get() as $row): ?>
                                             <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
@@ -1170,7 +1176,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="detail_type">Detail Type</label>
-                                    <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required>
+                                    <select name="detail_type" id="detail_type" class="form-control " onchange="showOptions(this)" required>
                                         <?php foreach ($this->account_detail_model->get() as $row_detail): ?>
                                             <option value="<?php echo $row_detail->acc_detail_id ?>" ><?php echo $row_detail->acc_detail_name ?></option>
                                         <?php endforeach ?>
@@ -1190,7 +1196,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <div class="col-md-4 form-group">
                                     <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check()"/>
                                     <label for="formClient-Status">Is sub account</label>
-                                    <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
+                                    <select name="sub_account_type" id="sub_account_type" class="form-control " required disabled="disabled">
                                           <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
                                             <option value="<?php echo $row_sub->sub_acc_id ?>" ><?php echo $row_sub->sub_acc_name ?></option>
                                         <?php endforeach ?>
@@ -1198,7 +1204,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                     <br>
                                     <label for="choose_time">When do you want to start tracking your finances from this account in Nsmartrac?</label>
                                     <span></span>
-                                    <select name="choose_time" id="choose_time" class="form-control select2" required onchange="showdiv()">
+                                    <select name="choose_time" id="choose_time" class="form-control " required onchange="showdiv()">
                                             <option selected="selected" disabled="disabled">Choose one</option>
                                             <option value="Beginning of this year">Beginning of this year</option>
                                             <option value="Beginning of this month">Beginning of this month</option>
@@ -1241,7 +1247,59 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
             </div>
             <?php echo form_close(); ?>
     </div>
-    <!-- End Make recurring -->
+    <!-- End Make account -->
+
+    <!-- Add payee -->
+    <div id="overlay-payee-tx" class=""></div>
+    <div id="side-menu-payee-tx" class="main-side-nav">
+        <div style="background-color: #f4f5f8">
+            <div class="side-title">
+                <h4>New Name</h4>
+                <a id="close-menu-payee-tx" class="menuCloseButton" onclick="closePayee()"><span id="side-menu-close-text">
+                <i class="fa fa-times"></i></span></a>
+            </div>
+            <div style="margin-left: 20px;">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-6">
+                        <label>Name</label>
+                        <input type="text" name="paypop_name" id="paypop_name" class="form-control">
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-6">
+                        <label>Type</label>
+                        <select name="paypop_name" id="paypop_name" class="form-control">
+                            <option value="vendor">Vendor</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-6">
+                        <a href="#"><i class="fa fa-plus"></i>Details</a>
+                    </div>
+                    <div class="col-md-6 save-act">
+                        <button type="submit" class="savebtn">Save</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-md-12">
+                        <p><a href="#" data-toggle="collapse" data-target="#gmailExample" aria-expanded="false" aria-controls="gmailExample">
+                            <i class="fa fa-chevron-down"></i>Got a gmail account?
+                        </a></p>
+                        <div class="gmail" id="gmailExample">
+                            <div class="card card-body">
+                                <button type="button" class="savebtn">Connect your gmail account</button>
+                                <p>After you connect, your contacts will appear in a holding list.You can then choose which ones to add to nSmartrac.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Add payee -->
 
     <!-- Add Agency Sidebar -->
     <div id="overlay" class=""></div>
@@ -3038,9 +3096,15 @@ function closeRecurr()
 </script>
 <script type="text/javascript">
     $('#recurr_account_popup').on('change', function (e) {
-          if($('#recurr_account_popup').val() == 'fa fa-plus-circle')
+          if($('#recurr_account_popup').val() == 'fa fa-plus')
           {
            openAddAccount();
+          } 
+      });
+    $('#recurr_payee_popup').on('change', function (e) {
+          if($('#recurr_payee_popup').val() == 'fa fa-plus')
+          {
+           openPayee();
           } 
       });
 </script>
@@ -3062,6 +3126,21 @@ function closeAddaccount()
 }
 </script>
 <script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.form-validate').validate();
+
+        //Initialize Select2 Elements
+
+        $('.select2').select2()
+
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html, {size: 'small'});
+        });
+
+    })
     $('#account_type').on('change', function() {
       var account_id = this.value;
       if(account_id!='')
@@ -3116,5 +3195,22 @@ function closeAddaccount()
         {
             $('.hide-div').css('display','none');
         }
+    }
+</script>
+<script type="text/javascript">
+    function openPayee()
+    {
+        jQuery("#side-menu-payee-tx").show();
+        jQuery("#side-menu-payee-tx").addClass("open-side-nav");
+        jQuery("#side-menu-payee-tx").css("width","30%");
+        jQuery("#side-menu-payee-tx").css("overflow-y","auto");
+        jQuery("#side-menu-payee-tx").css("overflow-x","hidden");
+        jQuery("#overlay-payee-tx").addClass("overlay");
+    }
+    function closePayee() 
+    {
+        jQuery("#side-menu-payee-tx").removeClass("open-side-nav");
+        jQuery("#side-menu-payee-tx").css("width","0%");
+        jQuery("#overlay-payee-tx").removeClass("overlay");
     }
 </script>
