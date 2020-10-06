@@ -232,6 +232,13 @@ img.calendar-user-profile {
     display: inline-block;
     margin-right: 10px;
   }
+  .fc .fc-toolbar-title {
+  	font-size: 23px;
+  }
+  .btn-gcustom{
+  	min-width: 31px;
+    padding: 1px 8px;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -387,7 +394,7 @@ img.calendar-user-profile {
                     </ul>
                 </div> -->
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header">CALENDARS</h4>
+                    <h4  class="right-filter-header">CALENDARS <a class="btn btn-sm btn-info pull-right btn-add-gcalendar btn-gcustom" title="Add Calendar" href="javascript:void(0);"><i class="fa fa-plus"></i></a></h4>
                     <?php if(!empty($calendar_list)){ ?>
                       <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show in the mini calendar</p>
                       <?php if(!empty($calendar_list)) { ?>
@@ -406,7 +413,10 @@ img.calendar-user-profile {
                                             $rowBgColor = $calendar['backgroundColor'];
                                           }
                                       ?>
-                                      <li style="background-color: <?php echo $rowBgColor; ?>"><label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label></li>
+                                      <li style="background-color: <?php echo $rowBgColor; ?>">
+                                      	<label class="checkbox"><input type="checkbox" class="chk-calendar-entries" <?php echo $is_checked; ?> data-id="<?php echo $calendar['id']; ?>"> <?php echo $calendar['summary']; ?></label>
+                                      	<a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="fa fa-plus"></i></a>
+                                      </li>
                               <?php } ?> 
                           </ul>
                       <?php } ?>
@@ -483,6 +493,42 @@ img.calendar-user-profile {
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="button_submit_form">Confirm</button>
             </div>
+        </div>
+
+    </div>
+</div>
+<!-- MODAL CREATE GOOGLE CALENDAR EVENT -->
+<div id="modalCreateGoogleEvent" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Google Calendar Event</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <?php echo form_open_multipart('booking/create_coupon', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+            <div class="modal-body">
+                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
+				<div class="form-group" style="text-align: left;">
+				  <label>Event Name</label> <span class="form-required">*</span>
+				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
+				</div>				
+				<div class="form-group" style="text-align: left;">
+				  <label>Date from</label> <span class="form-required">*</span>
+				  <input type="text" name="gevent_date_from" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
+				</div>
+				<div class="form-group" style="text-align: left;">
+				  <label>Date to</label> <span class="form-required">*</span>
+				  <input type="text" name="gevent_date_to" value=""  class="form-control default-datepicker" required="" autocomplete="off" required />
+				</div>
+				<div class="create-gevent-validation-error" style="text-align: left;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-create-google-event">Save</button>
+            </div>
+            <?php echo form_close(); ?>
         </div>
 
     </div>
@@ -830,6 +876,49 @@ img.calendar-user-profile {
 
 
 <script>
+	$(".btn-add-gevent").click(function(){
+		var gid = $(this).attr("data-id");
+
+		$("#gevent_gcid").val(gid);
+		$("#modalCreateGoogleEvent").modal('show');
+	});
+
+	$('.default-datepicker').datepicker({
+	    format: 'yyyy-mm-dd',
+	    autoclose: true
+	});
+
+	$("#btn-create-google-event").click(function(){
+		var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
+        var url = base_url + '/calendar/_create_google_event';
+        $(".create-gevent-validation-error").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: $("#create-google-event").serialize(),
+               dataType: 'json',
+               success: function(o)
+               {
+               	  if( o.is_success ){
+               	  	var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
+               	  }else{
+               	  	var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
+               	  }
+
+                  $(".create-gevent-validation-error").html(msg);
+                  $("#modalCreateGoogleEvent").modal("hide");
+
+                  //Reload calendar
+                  load_calendar();
+	              var calendarEl = document.getElementById('calendar');
+	              var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+	              render_calender(calendarEl, timeZoneSelectorEl);
+               }
+            });
+        }, 1000);
+	});
+
     $(".btn-right-nav-hide-show").click(function(){
         if( $(this).hasClass("show-right") ){
             $(this).removeClass("show-right");

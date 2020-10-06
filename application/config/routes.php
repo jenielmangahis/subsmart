@@ -339,3 +339,4 @@ $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
 
 //workcalendar
 $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';
+$route['calendar/_create_google_event'] = 'Workcalender/ajax_create_google_event';

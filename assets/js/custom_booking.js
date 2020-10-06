@@ -159,7 +159,7 @@ $(document).ready(function() {
                     if(obj.is_success == true) {
                         $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times</button>Update Visible Status Successfull</div></div></div>');
                     } else {
-                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-dangel"><button type="button" class="close" data-dismiss="alert">&times</button>Error Updating Visible Status</div></div></div>');
+                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times</button>Error Updating Visible Status</div></div></div>');
                     }                  
                }
             });            
@@ -176,7 +176,7 @@ $(document).ready(function() {
                     if(obj.is_success == true) {
                         $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times</button>Update Visible Status Successfull</div></div></div>');
                     } else {
-                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-dangel"><button type="button" class="close" data-dismiss="alert">&times</button>Error Updating Visible Status</div></div></div>');
+                        $(".ajax-alert-container").html('<div class="row dashboard-container-1"><div class="col-md-12"><div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times</button>Error Updating Visible Status</div></div></div>');
                     }                  
                }
             });            
