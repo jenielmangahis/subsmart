@@ -152,6 +152,7 @@ $route['reports/main/report/(:any)'] = 'reports/report/$1';
 $route['features'] = 'features';
 $route['pricing'] = 'pricing';
 $route['registration'] = 'register';
+$route['register/authenticating_registration'] = 'Register/authenticating_registration';
 $route['contact'] = 'contact';
 $route['sms_automation'] = 'Sms_Automation';
 $route['sms_campaigns'] = 'Sms_Campaigns';

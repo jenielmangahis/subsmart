@@ -102,6 +102,44 @@ class Register extends MY_Controller {
 		$this->load->view('registration', $this->page_data);
 	}
 
+    
+    public function authenticating_registration()
+    {
+        /*
+         * To do: 
+        *   - Authenticate via email
+        *   - Authenticate via business name
+        *   - Authenticate via ip address
+        */
+
+        $post = $this->input->post();
+        $count_exist_email = 0;
+        $count_exist_business_name = 0;
+
+        $is_authentic = 1;
+
+        if(!empty($post)) {
+            $aemail = $post['a_email'];
+            $abname = $post['a_bname'];
+
+            $edata = $this->Clients_model->getByEmail($aemail); 
+            $edata_business = $this->Clients_model->getByBusinessName($abname); 
+
+            $count_exist_email = count($edata);
+            if($count_exist_email > 0) {
+                $is_authentic = 0;
+            }
+
+            $count_exist_business_name = count($edata_business);
+            if($count_exist_business_name > 0) {
+                $is_authentic = 0;
+            }
+        }
+
+        echo $is_authentic;
+    }
+
+
     function subscribe(){
 
         postAllowed();
