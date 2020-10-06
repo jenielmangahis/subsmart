@@ -3,132 +3,132 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
 <style>
-.steps-form {
-    display: table;
-    width: 100%;
-    position: relative;
-}
-.steps-form .steps-row {
-    display: table-row;
-}
-.steps-form .steps-row:before {
-    top: 14px;
-    bottom: 0;
-    position: absolute;
-    content: " ";
-    width: 100%;
-    height: 1px;
-    background-color: #ccc;
-}
-.steps-form .steps-row .steps-step {
-    display: table-cell;
-    text-align: center;
-    position: relative;
-}
-.steps-form .steps-row .steps-step p {
-    margin-top: 0.5rem;
-}
-.steps-form .steps-row .steps-step button[disabled] {
-    opacity: 1 !important;
-    filter: alpha(opacity=100) !important;
-}
-.form-control-dr {
-    display: block;
-    width: 100%;
-    height: 50px;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
-    background-position: calc(100% - 20px) calc(1em + 5px), calc(100% - 15px) calc(1em + 5px), calc(100% - 2.5em) 20em;
-    background-size: 5px 5px, 5px 5px, 1px 1.5em;
-    background-repeat: no-repeat;
-}
-.btn-circle {
-    width: 30px;
-    height: 30px;
-    text-align: center;
-    padding: 6px 0;
-    font-size: 12px;
-    line-height: 1.428571429;
-    border-radius: 15px;
-    margin-top: 0;
-}
-.btn-indigo {
-    color: #fff;
-    background-color: #3f51b5 !important;
-}
-.btn-default {
-    color: #fff;
-    background-color: #2bbbad;
-}
-.sc-pl-2 {
-  padding-left: 16px !important;
-}
-.reg-sc.btn-default {
-  background-color: #7d7d7d;
-}
-.reg-sc.btn-default:hover {
-  color:white !important;
-}
-.reg-s1 {
-    margin: 0 auto;
-    width: 100%;
-    display: block;
-    text-align: center;
-    position: relative;
-    top: 20px;
-}
-.step2-btn {
-    background: #000000 !important;
-    border: 0px solid #64477d !important;
-}
-.step2-btn:hover {
-    color: #fde89d !important;
-}
-.plan-list{
-	list-style: none;
-}
-.plan-list li{
-  display: inline-block;
-  width: 31%;
-  margin-bottom: 40px;
-  box-shadow: 0 0 9px -1px #222;
-  min-height: 300px;
-  vertical-align: middle;
-  margin: 4px;
-  background-color: #785aef;
-  padding-top: 10%;
-}
-h3.plan-list-text {
-  font-size: 22px !important;
-  font-weight: 800;
-  color: white;
-}
-p.plan-list-price {
-  font-size: 25px;
-  margin-top: 10px;
-  margin-bottom: 30px;
-  font-weight: 700;
-  color: #3ce405;
-  font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif !important;
-}
-@media only screen and (max-width: 700px) {
-  .plan-list li {
-      display: inline-block;
-      width: 100%;
-      margin-bottom: 40px;
-  }
-}
+	.steps-form {
+	    display: table;
+	    width: 100%;
+	    position: relative;
+	}
+	.steps-form .steps-row {
+	    display: table-row;
+	}
+	.steps-form .steps-row:before {
+	    top: 14px;
+	    bottom: 0;
+	    position: absolute;
+	    content: " ";
+	    width: 100%;
+	    height: 1px;
+	    background-color: #ccc;
+	}
+	.steps-form .steps-row .steps-step {
+	    display: table-cell;
+	    text-align: center;
+	    position: relative;
+	}
+	.steps-form .steps-row .steps-step p {
+	    margin-top: 0.5rem;
+	}
+	.steps-form .steps-row .steps-step button[disabled] {
+	    opacity: 1 !important;
+	    filter: alpha(opacity=100) !important;
+	}
+	.form-control-dr {
+	    display: block;
+	    width: 100%;
+	    height: 50px;
+	    padding: .375rem .75rem;
+	    font-size: 1rem;
+	    font-weight: 400;
+	    line-height: 1.5;
+	    color: #495057;
+	    background-color: #fff;
+	    background-clip: padding-box;
+	    border: 1px solid #ced4da;
+	    border-radius: .25rem;
+	    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	    -webkit-appearance: none;
+	    -moz-appearance: none;
+	    background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
+	    background-position: calc(100% - 20px) calc(1em + 5px), calc(100% - 15px) calc(1em + 5px), calc(100% - 2.5em) 20em;
+	    background-size: 5px 5px, 5px 5px, 1px 1.5em;
+	    background-repeat: no-repeat;
+	}
+	.btn-circle {
+	    width: 30px;
+	    height: 30px;
+	    text-align: center;
+	    padding: 6px 0;
+	    font-size: 12px;
+	    line-height: 1.428571429;
+	    border-radius: 15px;
+	    margin-top: 0;
+	}
+	.btn-indigo {
+	    color: #fff;
+	    background-color: #3f51b5 !important;
+	}
+	.btn-default {
+	    color: #fff;
+	    background-color: #2bbbad;
+	}
+	.sc-pl-2 {
+	  padding-left: 16px !important;
+	}
+	.reg-sc.btn-default {
+	  background-color: #7d7d7d;
+	}
+	.reg-sc.btn-default:hover {
+	  color:white !important;
+	}
+	.reg-s1 {
+	    margin: 0 auto;
+	    width: 100%;
+	    display: block;
+	    text-align: center;
+	    position: relative;
+	    top: 20px;
+	}
+	.step2-btn {
+	    background: #000000 !important;
+	    border: 0px solid #64477d !important;
+	}
+	.step2-btn:hover {
+	    color: #fde89d !important;
+	}
+	.plan-list{
+		list-style: none;
+	}
+	.plan-list li{
+	  display: inline-block;
+	  width: 31%;
+	  margin-bottom: 40px;
+	  box-shadow: 0 0 9px -1px #222;
+	  min-height: 300px;
+	  vertical-align: middle;
+	  margin: 4px;
+	  background-color: #785aef;
+	  padding-top: 10%;
+	}
+	h3.plan-list-text {
+	  font-size: 22px !important;
+	  font-weight: 800;
+	  color: white;
+	}
+	p.plan-list-price {
+	  font-size: 25px;
+	  margin-top: 10px;
+	  margin-bottom: 30px;
+	  font-weight: 700;
+	  color: #3ce405;
+	  font-family: "Avenir Next LT Pro","Avenir Next",Futura,sans-serif !important;
+	}
+	@media only screen and (max-width: 700px) {
+	  .plan-list li {
+	      display: inline-block;
+	      width: 100%;
+	      margin-bottom: 40px;
+	  }
+	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
 	<div class="f-height-v2">
@@ -196,9 +196,12 @@ p.plan-list-price {
 			  						          <ul class="plan-list">
 			  						          <?php foreach($ns_plans as $p){ ?>
 			  						          	<li>
-			  						          		<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
-
 			  						          		<?php if($p->plan_name != 'Industry Specific') { ?>
+			  						          			<h3 class="plan-list-text"><?= $p->plan_name; ?></h3>
+			  						          		<?php }else{ ?>
+			  						          			<h3 style="font-size: 20px !important;" class="plan-list-text"><?= $p->plan_name; ?></h3>
+			  						          		<?php } ?>
+			  						          		<?php //if($p->plan_name != 'Industry Specific') { ?>
 				  						          		<div class="discounted-price">
 				  						          			<p class="plan-list-price" style="text-decoration: line-through;font-size:18px;color: #ffe215;">$<?= number_format($p->price, 2); ?></p>
 				  						          			<?php
@@ -211,10 +214,10 @@ p.plan-list-price {
 				  						          		</div>
 			  						          			<br />
 			  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
-			  						          		<?php } else { ?>
-			  						          			<p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
-			  						          			<a class="btn btn-info" href="<?php echo url('/contact') ?>">Contact Us</a>
-			  						          		<?php } ?>
+			  						          		<?php //} else { ?>
+			  						          			<!-- <p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
+			  						          			<a class="btn btn-info" href="<?php //echo url('/contact') ?>">Contact Us</a> -->
+			  						          		<?php //} ?>
 			  						          	</li>
 			  						          <?php } ?>
 			  						      	  </ul>
@@ -242,7 +245,7 @@ p.plan-list-price {
 
 											<div class="col-md-6 float-left">
 												<div class="input-group z-100">
-													<input autocomplete="off" type="email" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+													<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
 												</div>
 											</div>
 
@@ -254,7 +257,7 @@ p.plan-list-price {
 
 											<div class="col-md-6 float-left">
 												<div class="input-group z-100">
-													<input id="google_search_place" type="text" name="business_name" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+													<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
 												</div>
 											</div>
 
@@ -303,6 +306,10 @@ p.plan-list-price {
 												<!-- <div class="input-group">
 													<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
 												</div> -->
+											</div>
+
+											<div class="col-md-12">
+												<div id="ajax-authentication-alert-container"></div>
 											</div>
 		                      			<div class="pl-3 pr-3">
 		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" data-key="step-1" type="button">Previous</button>
@@ -371,6 +378,7 @@ p.plan-list-price {
 <?php include viewPath('frontcommon/footer'); ?>
 <script>
 $(function(){
+	base_url = '<?php echo base_url(); ?>';
 	var allWells = $('.setup-content'),
         allNextBtn = $('.nextBtn'),
         allPrevBtn = $('.prevBtn'),
@@ -398,31 +406,86 @@ $(function(){
     });
 
     allNextBtn.click(function(){
+
         var step = $(this).attr("data-key");
         var curStep = $(this).closest(".setup-content");
         var curStepBtn = curStep.attr("id");
+        //var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
+
         var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
+        var curInputEmail  = curStep.find("input[type='email']");
+        console.log("Test Validation");
+        console.log(curInputs);
+
+
+
         var isValid = true;
+        var isValidEmail = true;
+
+        var emailErrMsg = "";
 
         $(".form-group").removeClass("has-error");
+
+        var req_inc = 0;
         for(var i=0; i< curInputs.length; i++){
             if (!curInputs[i].validity.valid){
                 isValid = false;
+                req_inc++;
                 $(curInputs[i]).closest(".form-group").addClass("has-error");
             }
         }
 
+        for(var i=0; i< curInputEmail.length; i++){
+            if (!curInputEmail[i].validity.valid){
+                isValidEmail = false;
+                emailErrMsg = "Please enter a correct email address";
+            }
+        }
+
         if( isValid ){
-	        $("span." + curStepBtn).removeClass("btn-indigo");
-	        $("span." + curStepBtn).addClass("btn-default");
-	        $("span." + step).addClass("btn-indigo");
-	        $("#" + step).show();
-	        $("#" + curStepBtn).hide();
-	        $("." + curStepBtn + "-error-msg").removeClass("alert alert-danger");
-	        $("." + curStepBtn + "-error-msg").html("");
+
+        	var a_email = $("#email_address").val(); 
+        	var a_bname = $(".business_name").val();
+
+        	var authenticating_url = base_url + '/register/authenticating_registration';
+        	var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Authenticating registration...</div>';
+        	$("#ajax-authentication-alert-container").html(aut_msg);
+
+	        setTimeout(function () {
+	            $.ajax({
+	               type: "POST",
+	               url: authenticating_url,
+	               data: {
+	               		a_email:a_email,
+	               		a_bname:a_bname
+	               	},
+	               success: function(obj)
+	               {
+	               		if(obj == 1) {
+					        $("span." + curStepBtn).removeClass("btn-indigo");
+					        $("span." + curStepBtn).addClass("btn-default");
+					        $("span." + step).addClass("btn-indigo");
+					        $("#" + step).show();
+					        $("#" + curStepBtn).hide();
+					        $("." + curStepBtn + "-error-msg").removeClass("alert alert-danger");
+					        $("." + curStepBtn + "-error-msg").html("");	               			
+	               		} else {
+	               			$("#ajax-authentication-alert-container").html('<div class="alert alert-info" role="alert">Your credential already register to our system, please try another.</div>');
+	               		}
+	                  	
+	               }
+	            });
+	        }, 500);        	
+
+
         }else{
         	$("." + curStepBtn + "-error-msg").addClass("alert alert-danger");
-        	$("." + curStepBtn + "-error-msg").html("Cannot empty required fields");
+
+        	if(req_inc == 1 && emailErrMsg != "") {
+        		$("." + curStepBtn + "-error-msg").html(emailErrMsg);
+        	} else {
+        		$("." + curStepBtn + "-error-msg").html("Cannot empty required fields");
+        	}
         }
     });
 
