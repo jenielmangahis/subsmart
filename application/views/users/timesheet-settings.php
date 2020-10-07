@@ -492,11 +492,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 start_hour = convertTime12to24($(this).parent('div').prev('div').children('input').val()).split(':')[0];
                 end_hour = convertTime12to24($(this).val()).split(':')[0];
             }
-            var duration = end_hour - start_hour;
-            if(end_hour != '' && start_hour != '' || duration < 0){
-                $('.total-duration').text(duration+"h");
+            var duration = "0h";
+            if(end_hour > start_hour || duration > 0){
+                duration = end_hour - start_hour+"h";
+            }else{
+                duration = 'Invalid';
             }
-
+            $('.total-duration').text(duration);
 
         }
         const convertTime12to24 = (time12h) => {

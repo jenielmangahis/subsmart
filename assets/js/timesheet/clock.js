@@ -253,50 +253,6 @@ $(document).ready(function () {
         }
     });
     });
-
-    // $('#startBreak').click(function (e) {
-    //     if ($(this).attr('disabled')){
-    //         e.preventDefault();
-    //     }else{
-    //         $('.clock').addClass('clock-break');
-    //         $(this).attr('disabled',true);
-    //         $.ajax({
-    //            url:'/timesheet/startBreak',
-    //            method:"POST",
-    //            dataType:"json",
-    //            data:{break_time:break_end_time},
-    //            success:function (data) {
-    //                end_of_break = new Date(data).getTime();
-    //            }
-    //         });
-    //     }
-    //     if ($('#clock-session').val() == 0){
-    //         $('#clock-session').val(1);
-    //         $('.clock-users + .preview-clock-details').addClass('visible');
-    //         $('#stopBreak').css('color','red');
-    //     }else{
-    //         $('#clock-session').val(0);
-    //         $('.clock-users + .preview-clock-details').removeClass('visible');
-    //     }
-    // });
-    // $('#stopBreak').click(function () {
-    //     $(this).css('color','grey');
-    //     $('.clock').removeClass('clock-break');
-    //     $('#startBreak').attr('disabled',false);
-    //     clearInterval(breakTime);
-    //     $('#clock-session').val(0);
-    //     // $('.clock-users + .preview-clock-details').removeClass('visible');
-    //     $.ajax({
-    //         url:"/timesheet/stopBreak",
-    //         type:"POST",
-    //         dataType:"json",
-    //         data:{minutes:minutes,seconds:seconds},
-    //         success:function (data) {
-    //             $('#break-duration').text(data);
-    //         }
-    //     })
-    // });
-
 });
 
 //Live Clock JS
@@ -312,5 +268,4 @@ let ss = day.getSeconds() * deg;
 hr.style.transform = 'rotateZ(' + (hh + (mm / 12)) + 'deg)';
 min.style.transform = 'rotateZ(' + mm + 'deg)';
 sec.style.transform = 'rotateZ(' + ss + 'deg)';
-
 });

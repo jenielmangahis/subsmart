@@ -114,11 +114,30 @@ class Timesheet_model extends MY_Model {
             $shift = $this->calculateShiftDuration($attn_id);
             $break = $this->calculateBreakDuration($attn_id);
             $overtime = $this->calculateOvertime($user_id,$attn_id);
+            $this->updateWeeklyReport($week_ID);
             $this->attendance($user_id,0,$attn_id,$shift,$break,$week_ID,1,$overtime);
             return true;
         }else{
             return false;
         }
+    }
+    public function updateWeeklyReport($week_ID){
+        $weekly_duration = 0;
+        $weekly_break = 0;
+        $weekly_overtime = 0;
+        $get_weekly = $this->db->get_where('timesheet_attendance',array('week_id'=>$week_ID))->result();
+        foreach ($get_weekly as $total){
+            $weekly_duration += $total->shift_duration;
+            $weekly_break += $total->break_duration;
+            $weekly_overtime += $total->overtime;
+        }
+        $weekly_update = array(
+            'total_shift' => $weekly_duration,
+            'total_break' => $weekly_break,
+            'total_overtime' => $weekly_overtime
+        );
+        $this->db->where('id',$week_ID);
+        $this->db->update('ts_weekly_total_shift',$weekly_update);
     }
     public function calculateShiftDuration($attn_id){
         $qry = $this->db->get_where($this->db_table,array('attendance_id' => $attn_id))->result();
@@ -199,7 +218,7 @@ class Timesheet_model extends MY_Model {
             return $tbl_total_shift->row()->id;
         }
     }
-    public function breakIn($user_id,$entry,$approved_by){
+    public function breakIn($user_id,$entry,$approved_by,$end_break){
         //Get timesheet_attendance id
         $attn_id = $this->db->get_where($this->attn_tbl,array('user_id'=>$user_id,'status' => 1))->row()->id;
         $data = array(
@@ -213,6 +232,10 @@ class Timesheet_model extends MY_Model {
             'status' => 1
         );
         $this->db->insert($this->db_table,$data);
+        //Update timesheet_attendance expected end break
+        $update = array('expected_endbreak'=>$end_break);
+        $this->db->where('id',$attn_id);
+        $this->db->update('timesheet_attendance',$update);
         return true;
     }
 
@@ -241,6 +264,7 @@ class Timesheet_model extends MY_Model {
         return $qry->result();
     }
     public function getTSByDate($date_this_week){
+            $this->db->or_where('date',date('Y-m-d',strtotime('yesterday')));
         for ($x = 0; $x < count($date_this_week);$x++){
             $this->db->or_where('date',$date_this_week[$x]);
         }
@@ -670,6 +694,7 @@ class Timesheet_model extends MY_Model {
         $total_users = $this->users_model->getTotalUsers();
         $this->db->or_where('date_in',date('Y-m-d'));
         $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
+        $this->db->where('status',1);
         $query =  $this->db->get('timesheet_attendance');
         $logged_in = $query->num_rows();
         return $total_users - $logged_in;
@@ -682,7 +707,7 @@ class Timesheet_model extends MY_Model {
         return $query->num_rows();
     }
     public function getOutNow(){
-        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_in'=>date('Y-m-d')));
+        $query = $this->db->get_where('timesheet_attendance',array('status' => 0,'date_out'=>date('Y-m-d')));
         return $query->num_rows();
     }
     public function getAttendanceByDay($day){

@@ -77,7 +77,7 @@
     }
 </style>
 <body style="font-family: "Gill Sans", sans-serif;">
-<div class="tile-container" style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 60%;height: 90%;margin: 0 auto;">
+<div class="tile-container" style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;height: 90%;margin: 0 auto;">
     <div class="inner-container">
         <div class="tileContent">
             <div class="clear">
@@ -106,8 +106,8 @@
                                         <strong>nSmartrac.</strong>
                                     </p>
                                 </div>
-                                <div class="email-attachment" style="margin: auto;width: 50%;">
-                                    <a href="<?php echo site_url()?>timesheet/csvTimesheetReport" class="btn btn-success btn-attachment" id="reportCSV" style="
+                                <div class="email-attachment" style="margin: auto;width: 30%;">
+                                    <a href="<?php echo site_url()?>timesheet/csvTimesheetReport" class="btn btn-success btn-attachment" style="
                                     text-decoration: none;
                                     display: block;
                                     margin-bottom: 10px;
@@ -119,11 +119,11 @@
                                     background-color: #28a745;
                                     font-weight: 400;
                                     border: 1px solid transparent;
-                                    padding: .375rem .75rem;
+                                    padding: 10px 25px;
                                     line-height: 1.5;
                                     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
                                     font-size: 15px;">DOWNLOAD .CSV</a>
-                                    <a href="#" class="btn btn-success btn-attachment" style="
+                                    <a href="<?php echo site_url()?>timesheet/pdfTimesheetReport" class="btn btn-success btn-attachment" target="_blank" style="
                                      text-decoration: none;
                                     display: block;
                                     margin-bottom: 10px;
@@ -135,11 +135,10 @@
                                     background-color: #28a745;
                                     font-weight: 400;
                                     border: 1px solid transparent;
-                                    padding: .375rem .75rem;
+                                    padding: 10px 25px;
                                     line-height: 1.5;
                                     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-                                    font-size: 15px;"
-                                    ">DOWNLOAD .PDF</a>
+                                    font-size: 15px;"">DOWNLOAD .PDF</a>
                                 </div>
                                 <?php
                                     $week_of =  date('Y-m-d',strtotime('monday last week'));

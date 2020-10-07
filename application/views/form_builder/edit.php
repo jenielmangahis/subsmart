@@ -64,7 +64,7 @@
 
 <div class="wrapper">
   <div __wrapper_section>
-    <div class="card my-2" style="height: 1000px">
+    <div class="card my-2" style="height: 1250px">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?php echo base_url()?>formbuilder">Form Builder</a></li>
@@ -589,7 +589,7 @@
 
                 <div class="tab-content">
                   <div id="windowEditor" class="tab-pane fade show active" style="height: 150px">
-                    <div id="windowPreviewTemplate" class="card" style="height:500px;">
+                    <div id="windowPreviewTemplate" class="card" style="height:700px;">
                       <div class="row container-fluid overflow-auto" id="windowPreviewContent">
                         <!-- MAIN WINDOW FOR THE FORM -->
                       </div>
@@ -1138,10 +1138,12 @@
                   <div class="form-group">
                     <label for="selElementSize">Element Size</label>
                     <select name="selElementSize" id="selElementSize" class="custom-select">
+                      <option value="5">0.5</option>
                       <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
+                      <option value="6">2</option>
+                      <option value="2">3</option>
+                      <option value="3">4</option>
+                      <option value="4">5</option>
                     </select>
                   </div>
 
@@ -1308,7 +1310,6 @@
   // task upload image
 
   document.querySelector('#btnEditorScrollDown').addEventListener('click', ()=>{
-    console.log("test sscroll") ;
     document.querySelector('#windowPreviewContent').scrollTo(0, 99999999);
   })
 
@@ -1466,7 +1467,6 @@
   
   saveElementSettings = () => {
     let imgFiles = document.querySelector('#fileElementImage').files
-    
 
     let data = {
       "fe_label": document.querySelector('#txtElementSettingsFieldLabel').value,
@@ -1786,9 +1786,7 @@
         }
       })
 
-      setTimeout(() => {
-        document.querySelector('#windowPreviewContent').scrollTo(0, 99999999);
-      }, 2000);
+      
       
     }
   })

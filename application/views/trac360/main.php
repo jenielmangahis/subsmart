@@ -13,7 +13,7 @@
 <!-- page wrapper start -->
 <!-- <div class="wrapper" role="wrapper"> -->
    <!--<div wrapper__section>-->
-   <div class="container" style="margin-top: 7rem">     
+   <div class="container-fluid" style="margin-top: 7rem">     
       <div class="row">
          <div class="col-md-12">
             <div class="page-title-box">
@@ -32,9 +32,31 @@
          </div>
       </div>               
       <div class="row">
-         <div class="col-md-12">
+        <div class="col-md-5">
+          <div class="table-responsive">
+            <table class="table table-bordered bg-white" id="table_users_positions">
+              <thead>
+                <th class="d-none"></th>
+                <th class="font-weight-bold" style="width: 60%">User</th>
+                <th class="font-weight-bold text-center" style="width: 20%">Latitude</th>
+                <th class="font-weight-bold text-center" style="width: 20%">Longitude</th>
+              </thead>
+              <tbody>
+                <?php foreach ($users_geo as $user_geo) { ?>
+                  <tr>
+                    <td class="d-none"><?php echo $user_geo->user_id; ?></td>
+                    <td><?php echo $user_geo->FName . ' ' . $user_geo->LName; ?></td>
+                    <td class="text-center"><?php echo $user_geo->latitude; ?></td>
+                    <td class="text-center"><?php echo $user_geo->longitude; ?></td>
+                  </tr>
+                <?php } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-7">
           <?php echo $map ?>
-         </div>
+        </div>
          <!-- end row -->           
       </div>
    </div>

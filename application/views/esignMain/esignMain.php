@@ -18,17 +18,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 			
 			<div class="col-md-2" style="margin-top:12px;">
 				<div class="shadow" style="background-color: #0d6f6d;text-align:center;">
-					<!-- <img src="<?=url("");?>uploads/image/scan.jpg" height="150" width="180" title="Scan"> -->
-					<i class="fa fa-plus-circle" aria-hidden="true" style="margin: 30px 0px;color: white;font-size:90px;"></i>
-					<button type="button" class="form-control btn btn-success">Create Template</button>
+						<!-- <img src="<?=url("");?>uploads/image/scan.jpg" height="150" width="180" title="Scan"> -->
+						<i class="fa fa-plus-circle" aria-hidden="true" style="margin: 30px 0px;color: white;font-size:90px;"></i>
+						<button type="button" class="form-control btn btn-success">Create Template</button>
 				</div>
 			</div>
 			
 			<div class="col-md-2 " style="margin-top:12px;">
-				<div class="shadow" style="background-color: white;text-align:center;">
-					<img src="<?=url("");?>uploads/image/scan.jpg" style="margin:0 auto;" height="150" width="180" title="Scan">
-					<button type="button" class="form-control btn btn-success">Scan</button>
-				</div>
+				<a href="<?php echo base_url('esign/createTemplate') ?>">
+					<div class="shadow" style="background-color: white;text-align:center;">
+						<img src="<?=url("");?>uploads/image/scan.jpg" style="margin:0 auto;" height="150" width="180" title="Scan">
+						<button type="button" class="form-control btn btn-success">Esign</button>
+					</div>
+				</a>
 			</div>
 			
 			<div class="col-md-2 " style="margin-top:12px;">
@@ -54,10 +56,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				</div>
 			</div>
 			<div class="col-md-2 " style="margin-top:12px;">
-				<div class="shadow" style="background-color: white;text-align:center;">
-					<img style="margin:0 auto;" src="<?=url("");?>uploads/image/files.png" height="150" width="180" title="Library">
-					<button type="button" class="form-control btn btn-success">Library</button>
-				</div>
+				<a href="<?php echo base_url('esign/templateLibrary') ?>">
+					<div class="shadow" style="background-color: white;text-align:center;">
+						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/files.png" height="150" width="180" title="Library">
+						<button type="button" class="form-control btn btn-success">Library</button>
+					</div>
+				</a>
 			</div>
 			<div class="col-md-2 " style="margin-top:12px;">
 				<div class="shadow" style="background-color: white;text-align:center;">

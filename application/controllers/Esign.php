@@ -73,6 +73,7 @@ class Esign extends MY_Controller {
 	}
 
 	public function Files(){
+		
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['file_id'] = $this->input->get('id');
@@ -81,9 +82,62 @@ class Esign extends MY_Controller {
 			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
 			$this->page_data['file_url'] = $query->row()->docFile;
 		} 
-		
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
+		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
+		$this->page_data['recipients'] = $queryRecipients->result_array();
 		$this->load->view('esign/files', $this->page_data);
+	}
+	
+	public function createTemplate(){
+		$getCategories = $this->db->from('esign_library_template')->where('user_id',logged('id') )->select('esignLibraryTemplateId, title, isActive')->get('esign_library_template');
+		
+		$this->load->view('esign/createTemplate', $this->page_data);
+	}
+	public function templateLibrary(){
+		$id = logged('id');
+		
+		$getTemplates = $this->db->from('esign_library_template')->where('user_id',logged('id') )->select('esignLibraryTemplateId, title, isActive')->get('esign_library_template');
+		$this->page_data['templates'] = $getTemplates->result_array();
+		// echo "<pre>";
+		// print_r($this->page_data);
+		// exit;
+		$this->load->view('esign/templateLibrary', $this->page_data);
+	}
+	public function editTemplate(){
+		$queryParams = $this->input->get();
+		if(!isset($queryParams['id'])){
+			redirect('esign/esignmain');
+		}
+		$getTemplate = $this->db->from('esign_library_template')->where('user_id',logged('id') )->where('esignLibraryTemplateId',$queryParams['id'])->get('esign_library_template');
+		$this->page_data['template'] = $getTemplate->row();
+		$this->load->view('esign/createTemplate', $this->page_data);
+	}
+	
+	public function saveCreatedTemplate(){
+		extract($this->input->post());
+		$data = [
+			'title' => $letterTitle,
+			'content' => $template,
+			'isActive' => $status,
+			'user_id' => logged('id'),
+		];
+		if(isset($esignLibraryTemplateId) && $esignLibraryTemplateId > 0 ){
+			$this->db->where('user_id' , logged('id'))->where('esignLibraryTemplateId' , $esignLibraryTemplateId);
+			$isUpdated = $this->db->update('esign_library_template',$data);
+			if($isUpdated){
+				redirect('esign/editTemplate?id='.$esignLibraryTemplateId.'&isSuccess=1');
+			}else{
+				redirect('esign/esignmain');
+			}
+		} else {
+			$isInserted = $this->db->insert('esign_library_template',$data);
+			if($isInserted){
+				$libraryId = $this->db->insert_id();
+				redirect('esign/editTemplate?id='.$libraryId.'&isSuccess=1');
+			}else{
+				redirect('esign/esignmain');
+			}
+		}
 	}
 
 
@@ -96,6 +150,7 @@ class Esign extends MY_Controller {
 					'docfile_id' => $_POST['file_id'],
 					'name' => $value,
 					'email' => $_POST['email'][$key],
+					'color' => $_POST['colors'][$key],
 				]);
 			}
 			redirect('esign/Files?id='.(isset($_POST['file_id'])?$_POST['file_id']:0).'&next_step=3');

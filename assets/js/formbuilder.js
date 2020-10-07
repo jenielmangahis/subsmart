@@ -1,8 +1,8 @@
 // import "https://formio.github.io/formio.js/#";
 
 
-// const formBaseUrl = "http://localhost/nsmartrac/"; // local
-const formBaseUrl = `${window.location.origin}/` ; // online
+const formBaseUrl = "http://localhost/nsmartrac/"; // local
+// const formBaseUrl = `${window.location.origin}/` ; // online
 
 // =====================================
 //     GLOBAL VALUES AND FUNCTIONS
@@ -341,7 +341,7 @@ loadFormElements = (id, mode = null) => {
           
             ${(elementType == 14)?`
               <!-- Image -->
-              <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                 <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                   <div class="btn-group" style="margin-y: auto">
                     <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -350,7 +350,7 @@ loadFormElements = (id, mode = null) => {
                   </div>
                 </div>
                 
-                <img src="${formBaseUrl}uploads/formbuilder/db/img/img_${el.fe_id}_${el.fe_form_id}.jpg" class="img-fluid w-100">
+                <img src="${formBaseUrl}uploads/formbuilder/db/img/img_${el.fe_id}_${el.fe_form_id}.jpg" class="img-fluid w-100 form-user-elements">
               </div>
             `:""}
             
@@ -370,7 +370,7 @@ loadFormElements = (id, mode = null) => {
 
             ${(elementType == 21)?`
               <!-- Text -->
-              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""}  ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                 <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                   <div class="btn-group" style="margin-y: auto">
                   
@@ -379,13 +379,13 @@ loadFormElements = (id, mode = null) => {
                     <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                   </div>
                 </div>
-                <p class="form-user-elements p-2">${el.fe_label}</p>
+                <p class="form-user-elements mt-3 ">${el.fe_label}</p>
               </div>
             `:""}
 
             ${(elementType == 22)?`
               <!-- Image -->
-              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                 <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                   <div class="btn-group" style="margin-y: auto">
                     <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -399,7 +399,7 @@ loadFormElements = (id, mode = null) => {
 
             ${(elementType == 23)?`
               <!-- Link -->
-              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                 <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                   <div class="btn-group" style="margin-y: auto">
                     <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -413,7 +413,7 @@ loadFormElements = (id, mode = null) => {
 
             ${(elementType == 25)?`
               <!-- Blank space -->
-              <div id="form-element-${el.fe_id}" class="col-xs-12 col-sm-12 form-user-elements" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} form-user-elements" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                 <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                   <div class="btn-group" style="margin-y: auto">
                     <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -424,13 +424,12 @@ loadFormElements = (id, mode = null) => {
                 <span class="form-user-elements"></span>
                 ${(mode == "edit")?"/ Blank space /":""}
                 <br/>
-                <br/>
               </div>
             `:""}
 
             ${(elementType == 27)?`
               <!-- Block Text -->
-              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+              <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                 <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                   <div class="btn-group" style="margin-y: auto">
                     <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -451,7 +450,7 @@ loadFormElements = (id, mode = null) => {
           `
         }else{
           document.querySelector('#windowPreviewContent').innerHTML += `
-            <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+            <div id="form-element-${el.fe_id}" class="col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2" ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
               ${(mode == "edit")?
                 `
                   <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
@@ -554,7 +553,7 @@ loadFormElements = (id, mode = null) => {
 
               ${(elementType == 14)?`
                 <!-- Signature -->
-                <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
+                <div id="form-element-${el.fe_id}" class=" col-xs-12 ${(el.fe_span == 5)?"col-sm-2":""} ${(el.fe_span == 1)?"col-sm-3":""} ${(el.fe_span == 6)?"col-sm-4":""} ${(el.fe_span == 2)?"col-sm-6":""} ${(el.fe_span == 3)?"col-sm-8":""} ${(el.fe_span == 4)?"col-sm-12":""} px-2 " ${(mode == "edit")?`onmouseover="toggleElementSettings(${el.fe_id}, 1)" onmouseleave="toggleElementSettings(${el.fe_id}, 0)"`:""}>
                   <div id="form-elements-settings-${el.fe_id}" class="form-elements-settings-hover" style="position: absolute; display: none">
                     <div class="btn-group" style="margin-y: auto">
                       <button class="btn btn-sm btn-info" onclick="editElement(${el.fe_id})"><i class="fa fa-edit"></i> Edit</button>
@@ -562,16 +561,13 @@ loadFormElements = (id, mode = null) => {
                       <button class="btn btn-sm btn-danger" onclick="deleteElement(${el.fe_id})"><i class="fa fa-trash"></i> Delete</button>
                     </div>
                   </div>
-                  <div class="form-group form-user-elements">
-                    <label for="${el.fe_id}">${el.fe_label}</label>
-                    <div class="container-fluid">
-                      <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" width="200" height="150" ></canvas>
-                    </div>
 
-                    <div class="d-flex justify-content-right">
-                      <button type="button" class="btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
-                    </div>
-                  </div>
+                    <label for="${el.fe_id}">${el.fe_label}</label>
+                    <canvas id="feinput-${el.fe_id}" name="feinput-${el.fe_id}" class="border" width="${(el.fe_span == 5)?"170":""} ${(el.fe_span == 1)?"260":""}  ${(el.fe_span == 6)?"330":""} ${(el.fe_span == 2)?"530":""}  ${(el.fe_span == 3)?"720":""} ${(el.fe_span == 4)?"1050":""} " height="150" ></canvas>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="clearCanvas(${el.fe_id})">clear</button>
+                    
+                    
+                    
                 </div>
               `:""}
               
@@ -622,9 +618,9 @@ loadFormElements = (id, mode = null) => {
                     }, 500)}
                   `
                 }
-                <div class="container-fluid form-user-elements">
+                <div class="container-fluid ">
                   <p>${el.fe_label}</p>
-                  <table class="table" id="table-${el.fe_id}">
+                  <table class="table form-user-elements" id="table-${el.fe_id}">
                     <thead>
                         <tr>
                             <th class="text-left">Product</th>
@@ -694,9 +690,10 @@ loadFormElements = (id, mode = null) => {
               ${(elementType == 50)?`
                 <!-- Short Answer Matrix -->
                 <table class="table table-hover form-user-elements">
+                <h5>${el.fe_label}</h5>
                   <thead>
                     <tr>
-                      <th>${el.fe_label}</th>
+                      <th>No.</th>
                       ${choices.map((choice, i) => 
                         choice.fc_row == null? `<th>${choice.fc_choice}</th>`:""
                       ).join('')}
@@ -707,7 +704,7 @@ loadFormElements = (id, mode = null) => {
                       ${choices.map((choice, rowIndex) => 
                         `<tr>
                           ${(choice.fc_column == null)?`
-                            <td>${choice.fc_choice}</td>
+                            <td>${rowIndex + 1}</td>
                             ${choices.map((cell, columnIndex) => 
                               `
                                 ${cell.fc_row == null?`

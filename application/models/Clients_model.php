@@ -24,8 +24,6 @@ class Clients_model extends MY_Model
         return $query->result();
     }
 
-    
-
     public function getById($id)
     {
         $user_id = logged('id');
@@ -39,6 +37,33 @@ class Clients_model extends MY_Model
         return $query;
     }
 
+    public function getByEmail($email)
+    {
+        $user_email = $email;
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('email_address', $user_email);
+
+        $query = $this->db->get()->row();
+
+        return $query;
+    }
+
+    public function getByBusinessName($business_name)
+    {
+        $b_name = $business_name;
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('business_name', $b_name);
+
+        $query = $this->db->get()->row();
+
+        return $query;
+    }
     
     public function deleteClient($id){
         $user_id = logged('id');
