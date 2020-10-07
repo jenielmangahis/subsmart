@@ -928,6 +928,7 @@ class Workcalender extends MY_Controller
             $calendar_list = $data->getItems(); 
             $email = $google_user_api->google_email;
             $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
+
             foreach( $calendar_list as $cl ){
                 if(!in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
@@ -1037,55 +1038,71 @@ class Workcalender extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function create_public_calendar()
+    public function ajax_create_google_calendar()
     {
-        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
-        if( $google_user_api ){
-            $google_credentials = google_credentials();        
+        $post = $this->input->post();
 
-            $google_credentials = google_credentials();        
+        $is_success = false;
+        $message    = 'Cannot create event';
 
-            $access_token = "";
-            $refresh_token = "";
-            $google_client_id = "";
-            $google_secrect = "";
-            $calendar_list = array();
+        if( $post['gcalendar_name'] != '' ){
+            $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+            if( $google_user_api ){
+                $google_credentials = google_credentials();        
 
-            if(isset($google_user_api->google_access_token)) {
-                $access_token = $google_user_api->google_access_token;
+                $google_credentials = google_credentials();        
+
+                $access_token = "";
+                $refresh_token = "";
+                $google_client_id = "";
+                $google_secrect = "";
+                $calendar_list = array();
+
+                if(isset($google_user_api->google_access_token)) {
+                    $access_token = $google_user_api->google_access_token;
+                }
+
+                if(isset($google_user_api->google_refresh_token)) {
+                    $refresh_token = $google_user_api->google_refresh_token;
+                }
+
+                if(isset($google_credentials['client_id'])) {
+                    $google_client_id = $google_credentials['client_id'];
+                }
+
+                if(isset($google_credentials['client_secret'])) {
+                    $google_secrect = $google_credentials['client_secret'];
+                }    
+                
+                //Set Client
+                $client = new Google_Client();
+                $client->setClientId($google_client_id);
+                $client->setClientSecret($google_secrect);
+                $client->setAccessToken($access_token);
+                $client->refreshToken($refresh_token);
+
+                //Request
+                $service = new Google_Service_Calendar($client);
+
+                $calendar = new Google_Service_Calendar_Calendar(array(
+                  'summary' => $post['gcalendar_name'],
+                  'timezone' => 'America/Los_Angeles'
+                ));
+                $event = $service->calendars->insert($calendar);
+
+                $is_success = true;
+                $message    = 'Google calendar was successfully created.';
             }
-
-            if(isset($google_user_api->google_refresh_token)) {
-                $refresh_token = $google_user_api->google_refresh_token;
-            }
-
-            if(isset($google_credentials['client_id'])) {
-                $google_client_id = $google_credentials['client_id'];
-            }
-
-            if(isset($google_credentials['client_secret'])) {
-                $google_secrect = $google_credentials['client_secret'];
-            }    
-            
-            //Set Client
-            $client = new Google_Client();
-            $client->setClientId($google_client_id);
-            $client->setClientSecret($google_secrect);
-            $client->setAccessToken($access_token);
-            $client->refreshToken($refresh_token);
-
-            //Request
-            $service = new Google_Service_Calendar($client);
-
-            $calendar = new Google_Service_Calendar_Calendar(array(
-              'summary' => "Sample Calendar abc",
-              'timezone' => 'America/Los_Angeles'
-            ));
-            $event = $service->calendars->insert($calendar);
-
-            $is_success = true;
-            $message    = 'Google event was successfully created.';
+        }else{
+            $message = 'Please enter calendar name';
         }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message 
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

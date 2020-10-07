@@ -507,7 +507,7 @@ img.calendar-user-profile {
                 <h4 class="modal-title">Create Google Calendar Event</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <?php echo form_open_multipart('booking/create_coupon', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+            <?php echo form_open_multipart('', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="modal-body">
                 <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
 				<div class="form-group" style="text-align: left;">
@@ -527,6 +527,34 @@ img.calendar-user-profile {
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="btn-create-google-event">Save</button>
+            </div>
+            <?php echo form_close(); ?>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL CREATE GOOGLE CALENDAR -->
+<div id="modalCreateGoogleCalendar" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Google Calendar</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <?php echo form_open_multipart('', ['id' => 'create-google-calendar', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+            <div class="modal-body">
+                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
+				<div class="form-group" style="text-align: left;">
+				  <label>Calendar Name</label> <span class="form-required">*</span>
+				  <input type="text" name="gcalendar_name" value=""  class="form-control" required="" autocomplete="off" required />
+				</div>	
+				<div class="create-gcalendar-validation-error" style="text-align: left;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-create-google-calendar">Save</button>
             </div>
             <?php echo form_close(); ?>
         </div>
@@ -881,6 +909,12 @@ img.calendar-user-profile {
 
 		$("#gevent_gcid").val(gid);
 		$("#modalCreateGoogleEvent").modal('show');
+    $('#create-google-event').trigger("reset");
+	});
+
+	$(".btn-add-gcalendar").click(function(){
+		$("#modalCreateGoogleCalendar").modal('show');
+    $('#create-google-calendar').trigger("reset");
 	});
 
 	$('.default-datepicker').datepicker({
@@ -914,6 +948,33 @@ img.calendar-user-profile {
 	              var calendarEl = document.getElementById('calendar');
 	              var timeZoneSelectorEl = document.getElementById('time-zone-selector');
 	              render_calender(calendarEl, timeZoneSelectorEl);
+               }
+            });
+        }, 1000);
+	});
+
+	$("#btn-create-google-calendar").click(function(){
+		var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
+        var url = base_url + '/calendar/_create_google_calendar';
+        $(".create-gcalendar-validation-error").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: $("#create-google-calendar").serialize(),
+               dataType: 'json',
+               success: function(o)
+               {
+               	  if( o.is_success ){
+               	  	var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
+               	  	$(".create-gcalendar-validation-error").html(msg);
+
+               	  	location.reload();
+
+               	  }else{
+               	  	var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
+               	  	$(".create-gcalendar-validation-error").html(msg);
+               	  }
                }
             });
         }, 1000);
