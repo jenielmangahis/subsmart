@@ -50,7 +50,7 @@
 
 	?>
 </script>
-<script src="<?php echo $url->assets;?>js/timesheet/clock.js?v=<?php echo time()?>"></script>
+<script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
 <script src="<?php echo $url->assets;?>js/accounting/sweetalert2@9.js"></script>
 
 <?php echo put_footer_assets(); ?>

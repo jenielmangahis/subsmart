@@ -45,6 +45,9 @@
                                                 <li class="nav-item">
                                                     <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#advance1">Advance Work Order 1</a>
                                                 </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" data-toggle="tab" href="#alarm1">Alarm Industry</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -52,6 +55,68 @@
                                         <div class="tab-pane active standard-accordion" id="basic">
                                             <div class="col-sm-6">
                                                 <h3 class="page-title">Basic Work Order</h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade standard-accordion" id="alarm1">
+                                            <div class="col-sm-6">
+                                                <h3 class="page-title">Alarm Industry</h3>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="row custom__border">
+                                                    <div class="col-xl-12">
+                                                        <div class="card">
+
+                                                            <div class="rb-01">
+                                                                <ul class="nav nav-tabs border-0">
+                                                                    <li class="nav-item">
+                                                                        <a href="#alarmform1" data-toggle="tab" class="h6 mb-0 nav-link banking-sub-tab active">Zone List</a>
+                                                                    </li>
+                                                                    <li class="nav-item">
+                                                                        <a href="#alarmform2" data-toggle="tab" class="h6 mb-0 nav-link banking-sub-tab">Schedule of Equipment and Services</a>
+                                                                    </li>
+                                                                    <li class="nav-item">
+                                                                        <a href="#alarmform3" data-toggle="tab" class="h6 mb-0 nav-link banking-sub-tab">Workorder Arrangement</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            
+                                                            <div class="tab-content mt-4">
+                                                                <div class="tab-pane standard-accordion active" id="alarmform1">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12 col-sm-6">
+                                                                            <img src="<?= base_url()?>/assets/formbuilder/forms/adillc.jpg" alt="zone-list-form">
+                                                                        </div>
+                                                                        <div class="col-xs-12 col-sm-6">
+                                                                            <iframe src="<?= base_url()?>/form/15?preview" frameborder="0" class="w-100" style="height: 800px"></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="tab-pane standard-accordion" id="alarmform2">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12 col-sm-6">
+                                                                            <img src="<?= base_url()?>/assets/formbuilder/forms/adischedule.jpg" alt="zone-list-form">
+                                                                        </div>
+                                                                        <div class="col-xs-12 col-sm-6">
+                                                                            <iframe src="<?= base_url()?>/form/14?preview" frameborder="0" class="w-100" style="height: 800px"></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="tab-pane standard-accordion" id="alarmform3">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12 col-sm-6">
+                                                                            <img src="<?= base_url()?>/assets/formbuilder/forms/adiworkorder.jpg" alt="zone-list-form">
+                                                                        </div>
+                                                                        <div class="col-xs-12 col-sm-6">
+                                                                            <iframe src="<?= base_url()?>/form/13?preview" frameborder="0" class="w-100" style="height: 800px"></iframe>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 

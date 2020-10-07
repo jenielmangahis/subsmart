@@ -176,9 +176,9 @@
                                     if ($in->user_id == $user_id && $in->status == 1){
                                         $clock_btn = 'clockOut';
                                     }
-                                    if ($in->user_id == $user_id && $in->status == 0){
-                                        $clock_btn = null;
-                                    }
+//                                    if ($in->user_id == $user_id && $in->status == 0){
+//                                        $clock_btn = null;
+//                                    }
                                     if($in->user_id == $user_id && $in->date_in == date('Y-m-d',strtotime('yesterday')) && $in->date_out == date('Y-m-d')){
                                         $clock_btn = 'clockIn';
                                     }
@@ -198,8 +198,9 @@
                             $ts_logs = getEmployeeLogs();
                             $analog_active = null;
                             $attn_id = null;
+                            $expected_endbreak = null;
                             foreach ($attendance as $attn){
-                                if ($attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
+                                if ($attn->user_id ==  $this->session->userdata('logged')['id'] && $attn->shift_duration > 0 && $attn->date_out == date('Y-m-d')){
                                     $shift_duration = $attn->shift_duration;
                                 }
                                 if ($attn->user_id == $this->session->userdata('logged')['id']){
@@ -231,6 +232,7 @@
                                             if($attn->date_in == date('Y-m-d')){
                                                 $lunch_in = date('h:i A',$log->time);
                                                 $analog_active = 'clock-break';
+                                                $expected_endbreak = $attn->expected_endbreak;
                                             }
                                         }
                                         if ($log->attendance_id == $attn->id && $log->action == 'Break out'){
@@ -252,10 +254,10 @@
 //                            remaining_time
 //                            active
 //                            attn-id
+//                            end_break
                             ?>
                             <li class="dropdown notification-list list-inline-item ml-auto" style="vertical-align: middle;min-width: 50px">
-                                <input type="hidden" id="clock-session" value="">
-                                <input type="hidden" id="clock-end-time" value="<?php echo ($this->session->userdata('end_break'))?$this->session->userdata('end_break'):null; ?>">
+                                <input type="hidden" id="clock-end-time" value="<?php echo ($expected_endbreak)?$expected_endbreak:null; ?>">
 <!--                                <input type="hidden" id="clock-server-time" value="">-->
                                 <input type="hidden" id="clock-status" value="<?php echo ($analog_active == 'clock-break')?1:0; ?>">
                                 <input type="hidden" id="attendanceId" value="<?php echo $attn_id;?>">
