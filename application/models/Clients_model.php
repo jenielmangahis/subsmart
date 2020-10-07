@@ -64,6 +64,20 @@ class Clients_model extends MY_Model
 
         return $query;
     }
+
+    public function getByIPAddress($ip_address)
+    {
+        $ip_address = $ip_address;
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('ip_address', $ip_address);
+
+        $query = $this->db->get()->row();
+
+        return $query;
+    }
     
     public function deleteClient($id){
         $user_id = logged('id');

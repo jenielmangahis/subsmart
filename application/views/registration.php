@@ -468,7 +468,8 @@ $(function(){
 					        $("#" + step).show();
 					        $("#" + curStepBtn).hide();
 					        $("." + curStepBtn + "-error-msg").removeClass("alert alert-danger");
-					        $("." + curStepBtn + "-error-msg").html("");	               			
+					        $("." + curStepBtn + "-error-msg").html("");	
+					        $("#ajax-authentication-alert-container").html("");               			
 	               		} else {
 	               			$("#ajax-authentication-alert-container").html('<div class="alert alert-info" role="alert">Your credential already register to our system, please try another.</div>');
 	               		}
