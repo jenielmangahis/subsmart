@@ -847,6 +847,7 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByUserId();
         }
 
+        $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
         if(!empty($events)) {            
